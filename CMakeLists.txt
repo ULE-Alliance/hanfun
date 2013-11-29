@@ -1,0 +1,78 @@
+# =============================================================================
+#
+#   \file CMakeLists.txt
+#
+#   HAN-FUN Library Top CMakeList
+#
+#   \author  Filipe Alves <filipe.alves@bithium.com>
+#
+#   \version x.x.x
+#
+#   Copyright (c) 2012 Bithium S.A.
+#
+# =============================================================================
+
+cmake_minimum_required (VERSION 2.8)
+
+project (HAN-FUN)
+
+# ==============================================================================
+# Default project setup.
+
+## Standard project paths.
+set( PROJECT_INCLUDE_DIR  "${PROJECT_SOURCE_DIR}/inc" )
+
+# setup default include-directories
+include_directories(
+  ${PROJECT_INCLUDE_DIR}
+  ${PROJECT_BINARY_DIR}
+)
+
+if( ${PROJECT_NAME}_BUILD_TESTS )
+    set(BUILD_TESTS true)
+else()
+    set(BUILD_TESTS false)
+endif()
+
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -Wextra -g3 -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g3 -O0 -std=c++0x")
+
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -std=c++0x")
+
+# ==============================================================================
+# Configuration
+# ==============================================================================
+
+# The version number.
+set(PROJECT_MAJOR_VERSION 0)
+set(PROJECT_MINOR_VERSION 1)
+set(PROJECT_PATCH_VERSION 0)
+
+set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
+
+configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
+                ${CMAKE_SOURCE_DIR}/inc/hanfun/version.h )
+
+configure_file( ${CMAKE_SOURCE_DIR}/config.h.in
+                ${CMAKE_SOURCE_DIR}/inc/hanfun/config.h )
+
+# ==============================================================================
+# Library
+# ==============================================================================
+
+add_subdirectory(src)
+
+# ==============================================================================
+# Tests
+# ==============================================================================
+
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif(BUILD_TESTS)
+
+# ==============================================================================
+# Documentation
+# ==============================================================================
+
+add_subdirectory(doc EXCLUDE_FROM_ALL)
