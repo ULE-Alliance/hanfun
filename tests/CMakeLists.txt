@@ -16,6 +16,20 @@
 # Configuration
 # ==============================================================================
 
+set(CPPUTEST_TESTS OFF CACHE BOOL "Disable CppUTest internal tests" FORCE)
+set(CPPUTEST_COVERAGE OFF CACHE BOOL "Enable CppUTest code coverage." FORCE)
+
+add_subdirectory(cpputest)
+
+find_package(CppUTest REQUIRED HINTS ${CMAKE_BINARY_DIR} )
+
+include_directories(
+    "${CPPUTEST_INCLUDE_DIRS}"
+    "."
+)
+
+enable_testing()
+
 # ==============================================================================
 # Tests Build
 # ==============================================================================
