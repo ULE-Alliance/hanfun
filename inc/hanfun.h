@@ -1,18 +1,14 @@
 // =============================================================================
 /*!
- * \file	inc/hanfun.h
+ * \file       inc/hanfun.h
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * \if DEV
+ * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \author 	Filipe Alves <filipe.alves@bithium.com>
+ * \version    x.x.x
  *
- * \version	x.x.x
- *
- * \copyright Copyright &copy; &nbsp; 2012 Bithium S.A.
- *
- * \endif
+ * \copyright  Copyright &copy; &nbsp; 2012 Bithium S.A.
  */
 // =============================================================================
 
