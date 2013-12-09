@@ -33,3 +33,15 @@ enable_testing()
 # ==============================================================================
 # Tests Build
 # ==============================================================================
+
+set(TESTS_HELPER_SRCS test_helper.cpp)
+
+set(TESTS_COMMON_SRCS test_common.cpp)
+set(TESTS_PROTOCOL_SRCS test_protocol.cpp)
+
+add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
+                            ${TESTS_PROTOCOL_SRCS} )
+
+target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
+
+add_custom_command(TARGET test_hanfun POST_BUILD COMMAND test_hanfun)

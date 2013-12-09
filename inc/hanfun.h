@@ -18,4 +18,8 @@
 #include "hanfun/version.h"
 #include "hanfun/config.h"
 
+#include "hanfun/common.h"
+
+#include "hanfun/protocol.h"
+
 #endif /* HANFUN_H */

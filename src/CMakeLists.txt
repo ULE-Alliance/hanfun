@@ -16,10 +16,13 @@
 # Configuration
 # ==============================================================================
 
+include_directories( "${PROJECT_INCLUDE_DIR}/hanfun" )
+
 # ==============================================================================
 # Build
 # ==============================================================================
 
+set(HF_COMMON_SRCS common.cpp)
+set(HF_PROTOCOL_SRCS protocol.cpp)
 
-
-
+add_library( hanfun  ${HF_COMMON_SRCS} ${HF_PROTOCOL_SRCS} )
