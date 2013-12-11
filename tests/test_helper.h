@@ -18,9 +18,12 @@
 #include <string.h>
 
 #include "CppUTest/TestHarness.h"
+#include "CppUTestExt/MockSupport.h"
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
+
+#include "hanfun/interface.h"
 
 using namespace HF;
 using namespace HF::Protocol;
@@ -72,26 +75,37 @@ namespace HF
       struct InterfaceHelper:public Base
       {
          Message::Address addr;
-         Message          *sendMsg;
+         Message          sendMsg;
 
          InterfaceHelper()
          {
-            sendMsg = NULL;
+            memset (&sendMsg, 0, sizeof(Message));
             memset (&addr, 0, sizeof(Message::Address));
          }
 
          virtual ~InterfaceHelper()
          {
-            if (sendMsg != NULL)
+            if (sendMsg.payload != nullptr)
             {
-               delete sendMsg;
+               delete sendMsg.payload;
             }
          }
 
-         void sendMessage (Message::Address &addr, Message *msg)
+         void sendMessage (Message::Address &addr, Protocol::Message &message)
          {
+            mock("Interface").actualCall("sendMessage");
+
             this->addr    = addr;
-            this->sendMsg = msg;
+            this->sendMsg = message;
+         }
+      };
+
+      template<class Base>
+      struct InterfaceParentHelper:public InterfaceHelper <Base>
+      {
+         Interface::Role role () const
+         {
+            return Interface::SERVER_ROLE;
          }
       };
 
