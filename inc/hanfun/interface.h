@@ -45,6 +45,7 @@ namespace HF
       {
          /* Functional Interfaces. */
          ALERT              = 0x0100, //!< Alert Interface UID
+         ON_OFF             = 0x0200, //!< ON-OFF Interface UID
 
          /* Reserved */
          RESERVED = 0x7F00,           //!< Proprietary interfaces.

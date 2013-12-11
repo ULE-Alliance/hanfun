@@ -40,7 +40,8 @@ set(TESTS_COMMON_SRCS test_common.cpp)
 set(TESTS_PROTOCOL_SRCS test_protocol.cpp)
 
 set(TESTS_INTERFACES_SRCS "test_interfaces.cpp"
-                          "interfaces/test_alert.cpp")
+                          "interfaces/test_alert.cpp"
+                          "interfaces/test_on_off.cpp")
 
 add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_PROTOCOL_SRCS}

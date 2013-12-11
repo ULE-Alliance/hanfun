@@ -93,7 +93,7 @@ namespace HF
 
          void sendMessage (Message::Address &addr, Protocol::Message &message)
          {
-            mock("Interface").actualCall("sendMessage");
+            mock ("Interface").actualCall ("sendMessage");
 
             this->addr    = addr;
             this->sendMsg = message;
