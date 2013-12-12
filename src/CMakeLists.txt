@@ -30,7 +30,10 @@ set(HF_INTERFACES_SRCS interfaces/alert.cpp
                        interfaces/on_off_server.cpp
                        interfaces/on_off_client.cpp
                        interfaces/level_control_server.cpp
-                       interfaces/level_control_client.cpp )
+                       interfaces/level_control_client.cpp
+                       interfaces/simple_power_meter.cpp
+                       interfaces/simple_power_meter_server.cpp
+                       interfaces/simple_power_meter_client.cpp )
 
 add_library( hanfun  ${HF_COMMON_SRCS} ${HF_PROTOCOL_SRCS}
                      ${HF_INTERFACES_SRCS} )

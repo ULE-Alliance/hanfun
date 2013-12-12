@@ -42,5 +42,8 @@
 #include "hanfun/interfaces/alert.h"
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/level_control.h"
+#include "hanfun/interfaces/simple_power_meter.h"
+
+// =============================================================================
 
 #endif /* HANFUN_H */
