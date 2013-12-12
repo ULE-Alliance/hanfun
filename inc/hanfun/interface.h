@@ -46,10 +46,17 @@ namespace HF
          /* Functional Interfaces. */
          ALERT              = 0x0100, //!< Alert Interface UID
          ON_OFF             = 0x0200, //!< ON-OFF Interface UID
+         LEVEL_CONTROL      = 0x0201, //!< Level Control Interface UID
+         SIMPLE_POWER_METER = 0x0300, //!< Simple Power Meter Interface UID
 
          /* Reserved */
          RESERVED = 0x7F00,           //!< Proprietary interfaces.
          MAX_UID  = 0x7FFF            //!< Max interface UID value.
+      };
+
+      enum Commands
+      {
+         MAX_CMD_ID = 0xFF,           //! Maximum value for command ids.
       };
 
       // =============================================================================
@@ -117,6 +124,11 @@ namespace HF
    {
       bool handle (Message &message, ByteArray &payload, size_t offset)
       {
+         return handle (message, payload, offset, 0);
+      }
+
+      bool handle (Message &message, ByteArray &payload, size_t offset, size_t payload_size)
+      {
          UNUSED (payload);
          UNUSED (offset);
 
@@ -124,6 +136,16 @@ namespace HF
          // from the complementing role.
          if (uid () == message.itf.uid && role () != message.itf.role)
          {
+            // Check payload size.
+            if (payload_size != 0)
+            {
+               if (message.length < payload_size || payload.size () < offset ||
+                   (payload.size () - offset) < payload_size)
+               {
+                  return false;
+               }
+            }
+
             return true;
          }
          else

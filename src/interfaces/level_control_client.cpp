@@ -1,8 +1,8 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/alert_server.cpp
+ * \file       src/interfaces/on_off_client.cpp
  *
- * This file contains the implementation of the Alert interface : Client role.
+ * This file contains the implementation of the Level Control interface : Client role.
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
@@ -12,36 +12,31 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/alert.h"
+#include "hanfun/interfaces/level_control.h"
 
 using namespace HF;
 using namespace HF::Interfaces;
 
 // =============================================================================
-// Alert Interface : Client Role
+// Level Control Interface : Client Role
 // =============================================================================
 
 // =============================================================================
-// AlertClient::handle
+// LevelControl::level
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool AlertClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+void LevelControlClient::level (Protocol::Message::Address &addr, uint8_t new_level)
 {
-   Message alert_msg;
+   Protocol::Message message;
 
-   // Check for correct interface and command.
-   if (!AbstractInterface::handle (message, payload, offset, alert_msg.size ()) ||
-       message.itf.member != Alert::STATUS_CMD)
-   {
-      return false;
-   }
+   message.itf.role   = role ();
+   message.itf.uid    = uid ();
+   message.itf.member = SET_LEVEL_CMD;
 
-   alert_msg.unpack (payload, offset);
+   message.payload    = new Message (new_level);
 
-   status (alert_msg);
-
-   return true;
+   sendMessage (addr, message);
 }

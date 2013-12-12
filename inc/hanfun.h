@@ -41,5 +41,6 @@
 #include "hanfun/interface.h"
 #include "hanfun/interfaces/alert.h"
 #include "hanfun/interfaces/on_off.h"
+#include "hanfun/interfaces/level_control.h"
 
 #endif /* HANFUN_H */
