@@ -45,12 +45,16 @@ set(TESTS_INTERFACES_SRCS "test_interfaces.cpp"
                           "interfaces/test_level_control.cpp"
                           "interfaces/test_simple_power_meter.cpp")
 
-set(TESTS_PROFILES_SRCS   "test_profiles.cpp")
+set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
+
+set(TESTS_DEVICES_SRCS   "test_devices.cpp")
+
 
 add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_PROTOCOL_SRCS}
                             ${TESTS_INTERFACES_SRCS}
-                            ${TESTS_PROFILES_SRCS} )
+                            ${TESTS_PROFILES_SRCS}
+                            ${TESTS_DEVICES_SRCS} )
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 

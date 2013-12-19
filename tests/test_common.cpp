@@ -186,3 +186,222 @@ TEST (ByteArray_Read, DWord)
 
    LONGS_EQUAL (0xFF5AA5CC, temp);
 }
+
+// =============================================================================
+// HF::UID
+// =============================================================================
+
+TEST_GROUP (UID)
+{};
+
+TEST (UID, NONE)
+{
+   UID uid;
+
+   LONGS_EQUAL (UID::NONE, uid.type ());
+
+   size_t size = uid.size ();
+
+   LONGS_EQUAL (1, size);
+
+   uint8_t data[] = {0xAA, 0xAA, 0xAA,
+                     0x00, // UID size.
+                     0xAA, 0xAA, 0xAA};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray array (size + 6);
+
+   for (int i = 0; i < 3; i++)
+   {
+      array[i] = 0xAA;
+   }
+
+   for (int i = 4; i < 7; i++)
+   {
+      array[i] = 0xAA;
+   }
+
+   size_t wsize = uid.pack (array, 3);
+   LONGS_EQUAL (size, wsize);
+
+   CHECK_EQUAL (expected, array);
+
+   size_t rsize = uid.unpack (array, 3);
+   LONGS_EQUAL (size, rsize);
+}
+
+TEST (UID, IPUI)
+{
+   IPUI uid;
+
+   LONGS_EQUAL (UID::IPUI, uid.type ());
+
+   size_t size = uid.size ();
+
+   LONGS_EQUAL (1 + 5, size);
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x05,                         // UID size.
+                     0x00, 0x73, 0x70,0x5A,  0xA5, // IPUI value.
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray array (size + 6);
+
+   uid.value[0] = 0x00;
+   uid.value[1] = 0x73;
+   uid.value[2] = 0x70;
+   uid.value[3] = 0x5A;
+   uid.value[4] = 0xA5;
+
+   size_t wsize = uid.pack (array, 3);
+   LONGS_EQUAL (size, wsize);
+
+   CHECK_EQUAL (expected, array);
+
+   memset (uid.value, 0xFF, sizeof(uid.value));
+
+   size_t rsize = uid.unpack (array, 3);
+   LONGS_EQUAL (size, rsize);
+
+   BYTES_EQUAL (0x00, uid.value[0]);
+   BYTES_EQUAL (0x73, uid.value[1]);
+   BYTES_EQUAL (0x70, uid.value[2]);
+   BYTES_EQUAL (0x5A, uid.value[3]);
+   BYTES_EQUAL (0xA5, uid.value[4]);
+}
+
+TEST (UID, MAC)
+{
+   MAC uid;
+
+   LONGS_EQUAL (UID::MAC, uid.type ());
+
+   size_t size = uid.size ();
+
+   LONGS_EQUAL (1 + 6, size);
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x06,                               // UID size.
+                     0x12, 0x34, 0x56,0x78,  0x9A, 0xBC, // MAC value.
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray array (size + 6);
+
+   uid.value[0] = 0x12;
+   uid.value[1] = 0x34;
+   uid.value[2] = 0x56;
+   uid.value[3] = 0x78;
+   uid.value[4] = 0x9A;
+   uid.value[5] = 0xBC;
+
+   size_t wsize = uid.pack (array, 3);
+   LONGS_EQUAL (size, wsize);
+
+   CHECK_EQUAL (expected, array);
+
+   memset (uid.value, 0xFF, sizeof(uid.value));
+
+   size_t rsize = uid.unpack (array, 3);
+   LONGS_EQUAL (size, rsize);
+
+   BYTES_EQUAL (0x12, uid.value[0]);
+   BYTES_EQUAL (0x34, uid.value[1]);
+   BYTES_EQUAL (0x56, uid.value[2]);
+   BYTES_EQUAL (0x78, uid.value[3]);
+   BYTES_EQUAL (0x9A, uid.value[4]);
+   BYTES_EQUAL (0xBC, uid.value[5]);
+}
+
+TEST (UID, URI)
+{
+   URI uid;
+
+   LONGS_EQUAL (UID::URI, uid.type ());
+
+   uid.value = "Hello World !";
+
+   size_t size = uid.size ();
+
+   LONGS_EQUAL (1 + 13, size);
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x0D, // UID size.
+                     0x48, // H
+                     0x65, // e
+                     0x6c, // l
+                     0x6c, // l
+                     0x6f, // o
+                     0x20, //
+                     0x57, // W
+                     0x6f, // o
+                     0x72, // r
+                     0x6c, // l
+                     0x64, // d
+                     0x20, //
+                     0x21, // !
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray array (size + 6);
+
+   size_t    wsize = uid.pack (array, 3);
+   LONGS_EQUAL (size, wsize);
+
+   CHECK_EQUAL (expected, array);
+
+   uid.value = "";
+
+   size_t rsize = uid.unpack (array, 3);
+   LONGS_EQUAL (size, rsize);
+
+   CHECK_EQUAL ("Hello World !", uid.value);
+}
+
+TEST (UID, Equals)
+{
+   UID  *temp;
+
+   IPUI ipui;
+   IPUI ipui2;
+
+   ipui.value[0] = 0x00;
+   ipui.value[1] = 0x73;
+   ipui.value[2] = 0x70;
+   ipui.value[3] = 0xAA;
+   ipui.value[4] = 0xBB;
+
+   temp          = &ipui;
+   ipui2         = ipui;
+
+   CHECK_EQUAL (ipui, *temp);
+   CHECK_EQUAL (ipui, ipui2);
+
+   MAC mac;
+   MAC mac2;
+
+   ipui.value[0] = 0x00;
+   ipui.value[1] = 0x73;
+   ipui.value[2] = 0x70;
+   ipui.value[3] = 0xAA;
+   ipui.value[4] = 0xBB;
+   ipui.value[4] = 0xCC;
+
+   temp          = &mac;
+   mac2          = mac;
+
+   CHECK_EQUAL (mac, *temp);
+   CHECK_EQUAL (mac, mac2);
+
+   URI uri;
+   URI uri2;
+
+   uri.value = "sn://1234567890";
+
+   temp      = &uri;
+   uri2      = uri;
+
+   CHECK_EQUAL (uri, *temp);
+   CHECK_EQUAL (uri, uri2);
+}

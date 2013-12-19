@@ -18,7 +18,9 @@
 #include <cstdlib>
 #include <cstdint>
 #include <cstddef>
+#include <cstring>
 
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -196,6 +198,266 @@ namespace HF
        * @return  the number of bytes read.
        */
       virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
+   };
+
+   struct UID:public Serializable
+   {
+      //! Types of UID available.
+      enum Type
+      {
+         NONE = 0x00,         //!< Empty UID.
+         IPUI = 0x01,         //!< International Portable User Identifier.
+         MAC  = 0x02,         //!< Media Access Control (IEEE-MAC-48)
+         URI  = 0x03,         //!< Uniform Resource Identifier.
+      };
+
+      //! Type of the UID.
+      virtual uint8_t type () const
+      {
+         return NONE;
+      }
+
+      //! \see HF::Serializable::size.
+      size_t size () const
+      {
+         return 1;
+      }
+
+      //! \see HF::Serializable::pack.
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         size_t start = offset;
+         offset += array.write (offset, (uint8_t) 0);
+         return offset - start;
+      }
+
+      //! \see HF::Serializable::unpack.
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         uint8_t size;
+         size_t  start = offset;
+         offset += array.read (offset, size);
+         return offset - start;
+      }
+
+      bool operator ==(const HF::UID &other)
+      {
+         return type () == other.type ();
+      }
+
+      bool operator !=(const HF::UID &other)
+      {
+         return !(*this == other);
+      }
+   };
+
+   template<UID::Type _type>
+   struct AbstractUID:public UID
+   {
+      uint8_t type () const
+      {
+         return _type;
+      }
+   };
+
+   struct IPUI:public AbstractUID <UID::IPUI>
+   {
+      uint8_t value[5];
+
+      //! \see HF::Serializable::size.
+      size_t size () const
+      {
+         return UID::size () + sizeof(value);
+      }
+
+      //! \see HF::Serializable::pack.
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         size_t start = offset;
+
+         offset += array.write (offset, (uint8_t) sizeof(value));
+
+         for (uint8_t i = 0; i < sizeof(value); i++)
+         {
+            offset += array.write (offset, value[i]);
+         }
+
+         return offset - start;
+      }
+
+      //! \see HF::Serializable::unpack.
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         uint8_t size;
+         size_t  start = offset;
+
+         offset += array.read (offset, size);
+
+         for (uint8_t i = 0; size == sizeof(value) && i < size; i++)
+         {
+            offset += array.read (offset, value[i]);
+         }
+
+         return offset - start;
+      }
+
+      // ===================================================================
+      // Operators
+      // ===================================================================
+
+      bool operator ==(const HF::UID &other)
+      {
+         if (type () != other.type ())
+         {
+            return false;
+         }
+
+         if (memcmp (value, ((IPUI *) &other)->value, 5) != 0)
+         {
+            return false;
+         }
+
+         return true;
+      }
+
+
+      bool operator !=(const HF::UID &other)
+      {
+         return !(*this == other);
+      }
+   };
+
+   struct MAC:public AbstractUID <UID::MAC>
+   {
+      uint8_t value[6];
+
+      //! \see HF::Serializable::size.
+      size_t size () const
+      {
+         return UID::size () + sizeof(value);
+      }
+
+      //! \see HF::Serializable::pack.
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         size_t start = offset;
+
+         offset += array.write (offset, (uint8_t) sizeof(value));
+
+         for (uint8_t i = 0; i < sizeof(value); i++)
+         {
+            offset += array.write (offset, value[i]);
+         }
+
+         return offset - start;
+      }
+
+      //! \see HF::Serializable::unpack.
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         uint8_t size;
+         size_t  start = offset;
+
+         offset += array.read (offset, size);
+
+         for (uint8_t i = 0; size == sizeof(value) && i < size; i++)
+         {
+            offset += array.read (offset, value[i]);
+         }
+
+         return offset - start;
+      }
+
+      // ===================================================================
+      // Operators
+      // ===================================================================
+
+      bool operator ==(const HF::UID &other)
+      {
+         if (type () != other.type ())
+         {
+            return false;
+         }
+
+         if (memcmp (value, ((MAC *) &other)->value, 6) != 0)
+         {
+            return false;
+         }
+
+         return true;
+      }
+
+
+      bool operator !=(const HF::UID &other)
+      {
+         return !(*this == other);
+      }
+   };
+
+   struct URI:public AbstractUID <UID::URI>
+   {
+      string value;
+
+      //! \see HF::Serializable::size.
+      size_t size () const
+      {
+         return UID::size () + value.size ();
+      }
+
+      //! \see HF::Serializable::pack.
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         size_t start = offset;
+         size_t size  = value.size ();
+
+         offset += array.write (offset, (uint8_t) size);
+
+         for (uint8_t i = 0; i < (size & 0xFF); i++)
+         {
+            offset += array.write (offset, (uint8_t) value[i]);
+         }
+
+         return offset - start;
+      }
+
+      //! \see HF::Serializable::unpack.
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         uint8_t size;
+         size_t  start = offset;
+
+         offset += array.read (offset, size);
+
+         value   = string (size, 0);
+
+         for (uint8_t i = 0; i < size; i++)
+         {
+            uint8_t c;
+            offset  += array.read (offset, c);
+            value[i] = c;
+         }
+
+         return offset - start;
+      }
+
+      // ===================================================================
+      // Operators
+      // ===================================================================
+
+      bool operator ==(const HF::UID &other)
+      {
+         if (type () != other.type ())
+         {
+            return false;
+         }
+
+         return value == ((URI *) &other)->value;
+      }
+
+      bool operator !=(const HF::UID &other)
+      {
+         return !(*this == other);
+      }
    };
 
    // =============================================================================
