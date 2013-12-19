@@ -40,6 +40,10 @@ using namespace std;
  */
 namespace HF
 {
+   constexpr uint8_t CORE_VERSION       = 0;
+   constexpr uint8_t PROFILES_VERSION   = 0;
+   constexpr uint8_t INTERFACES_VERSION = 0;
+
    /*!
     * This class represents a byte array.
     *
