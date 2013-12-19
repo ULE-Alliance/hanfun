@@ -120,7 +120,7 @@ namespace HF
          struct Interface:public Serializable
          {
             uint16_t role : 1;         //!< Interface role : Server or Client.
-            uint16_t uid  : 15;        //!< Identifier of the interface. \see hf_itf_uid_t.
+            uint16_t uid  : 15;        //!< Identifier of the interface. \see Interface::UID.
 
             uint8_t  member;           //!< Interface destination member.
 
