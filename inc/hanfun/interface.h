@@ -105,16 +105,6 @@ namespace HF
        * @param [in] time    current system clock value in seconds.
        */
       virtual void periodic (uint32_t time) = 0;
-
-      protected:
-
-      /*!
-       * Send message \c msg to the network address given by \c addr.
-       *
-       * @param [in] addr        HF network address.
-       * @param [in] message     pointer to the message to be sent to the network.
-       */
-      virtual void sendMessage (Message::Address &addr, Message &message) = 0;
    };
 
    /*!
@@ -169,6 +159,16 @@ namespace HF
       {
          return !(*this == other);
       }
+
+      protected:
+
+      /*!
+       * Send message \c msg to the network address given by \c addr.
+       *
+       * @param [in] addr        HF network address.
+       * @param [in] message     pointer to the message to be sent to the network.
+       */
+      virtual void sendMessage (Message::Address &addr, Message &message) = 0;
    };
 
    /*!
@@ -189,6 +189,9 @@ namespace HF
          }
       };
 
+      /*!
+       * Class template for all interfaces role implementations.
+       */
       template<typename Itf, Interface::Role _role>
       struct InterfaceRole:public Itf
       {
