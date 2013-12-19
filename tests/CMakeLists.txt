@@ -49,12 +49,14 @@ set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
+set(TESTS_CORE_SRCS      "core/test_device_management.cpp")
 
 add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_PROTOCOL_SRCS}
                             ${TESTS_INTERFACES_SRCS}
                             ${TESTS_PROFILES_SRCS}
-                            ${TESTS_DEVICES_SRCS} )
+                            ${TESTS_DEVICES_SRCS}
+                            ${TESTS_CORE_SRCS} )
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 

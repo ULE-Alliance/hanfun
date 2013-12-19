@@ -43,6 +43,9 @@ namespace HF
        */
       enum UID
       {
+         /* Core Services */
+         DEVICE_MANAGEMENT  = 0x001,  //!< Device Manangement Interface UID.
+
          /* Functional Interfaces. */
          ALERT              = 0x0100, //!< Alert Interface UID
          ON_OFF             = 0x0200, //!< ON-OFF Interface UID
