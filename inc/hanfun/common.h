@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+#include "hanfun/config.h"
+
 using namespace std;
 
 // =============================================================================

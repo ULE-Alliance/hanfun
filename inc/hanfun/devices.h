@@ -22,6 +22,11 @@
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
+#include "hanfun/core.h"
+#include "hanfun/core/device_information.h"
+
+using namespace HF::Core;
+
 namespace HF
 {
    // Forward declaration for IUnit interface.
@@ -54,27 +59,66 @@ namespace HF
        *
        * @return  pointer to a HF::Core::DeviceInformation.
        */
-      virtual DeviceInformation *info () const = 0;
+      virtual DeviceInformation *info () = 0;
+
    };
 
+   /*!
+    * This class provides the basic implementation for the Device API.
+    */
+   class AbstractDevice:public IDevice
+   {
+      protected:
 
+      std::vector <IUnit *> _units;
 
+      uint16_t _address;
 
+      DeviceInformation _info;
 
+      public:
 
+      // =============================================================================
+      // IDevice API
+      // =============================================================================
 
-
+      uint16_t address () const
       {
+         return _address;
+      }
 
+      const std::vector <IUnit *> &units () const
       {
+         return _units;
+      }
 
       /*!
+       * Add unit to devices unit lists.
        *
+       * @param unit    pointer to the unit to add to the list.
        */
+      void add (IUnit *unit);
 
       /*!
+       * Remove unit from device's unit list.
        *
+       * @param unit    pointer to the unit to remove from the list.
        */
+      void remove (IUnit *unit);
+
+      DeviceInformation *info ()
+      {
+         return &_info;
+      }
+
+      //! \see Interface::sendMessage
+      void sendMessage (Message::Address &addr, Message &message);
+
+      protected:
+
+      AbstractDevice(uint16_t address = Protocol::BROADCAST_ADDR):
+         _address (address), _info (this) {}
+
    };
 
 }  // namespace HF
