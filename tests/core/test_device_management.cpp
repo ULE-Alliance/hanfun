@@ -12,6 +12,8 @@
  */
 // =============================================================================
 
+#include <string>
+
 #include "hanfun/core/device_management.h"
 
 #include "test_helper.h"
@@ -607,4 +609,147 @@ TEST (DeviceManagement, GetEntriesResponse)
    {
       CHECK_EQUAL (response.entries[i], other.entries[i]);
    }
+}
+
+// =============================================================================
+// DeviceManagementClient
+// =============================================================================
+
+TEST_GROUP (DeviceManagementClient)
+{
+   Testing::Device *device;
+
+   Testing::Unit   *unit1;
+   Testing::Unit   *unit2;
+   Testing::Unit   *unit3;
+
+   struct TestDeviceManagementClient:public DeviceManagementClient
+   {
+      TestDeviceManagementClient(AbstractDevice *device):DeviceManagementClient (device) {}
+
+      void registered (RegisterResponse &response)
+      {
+         mock ("DeviceManagementClient").actualCall ("registered");
+         DeviceManagementClient::registered (response);
+      }
+   };
+
+   TestDeviceManagementClient *dev_mgt;
+
+   UID uid;
+
+   TEST_SETUP ()
+   {
+      device      = new Testing::Device ();
+
+      unit1       = new Testing::Unit (1, device);
+      unit2       = new Testing::Unit (2, device);
+      unit3       = new Testing::Unit (3, device);
+
+      unit1->_uid = 0xFF01;
+      unit2->_uid = 0xFF02;
+      unit3->_uid = 0xFF03;
+
+      uid         = URI ("http://www.example.com");
+
+      device->info ()->device_uid (&uid);
+
+      dev_mgt = new TestDeviceManagementClient (device);
+
+      mock ().ignoreOtherCalls ();
+   }
+
+   TEST_TEARDOWN ()
+   {
+      delete unit1;
+      delete unit2;
+      delete unit3;
+
+      delete device;
+
+      delete dev_mgt;
+
+      mock ().clear ();
+   }
+
+};
+
+TEST (DeviceManagementClient, RegisterMessage)
+{
+   mock ("Device").expectOneCall ("sendMessage");
+
+   dev_mgt->register_device ();
+
+   mock ("Device").checkExpectations ();
+
+   CHECK_TRUE (device->sendMsg.payload != nullptr);
+
+   LONGS_EQUAL (Interface::CLIENT_ROLE, device->sendMsg.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), device->sendMsg.itf.uid);
+   LONGS_EQUAL (DeviceManagement::REGISTER_CMD, device->sendMsg.itf.member);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, device->sendMsg.type);
+
+   DeviceManagement::RegisterMessage *payload =
+      static_cast <DeviceManagement::RegisterMessage *>(device->sendMsg.payload);
+
+   LONGS_EQUAL (0x0000, payload->emc);
+
+   CHECK_TRUE (payload->uid () != nullptr);
+   CHECK_EQUAL (uid, *payload->uid ());
+
+   LONGS_EQUAL (device->units ().size (), payload->units.size ());
+
+   LONGS_EQUAL (unit1->id (), payload->units[0].id);
+   LONGS_EQUAL (unit1->uid (), payload->units[0].profile);
+
+   LONGS_EQUAL (unit2->id (), payload->units[1].id);
+   LONGS_EQUAL (unit2->uid (), payload->units[1].profile);
+
+   LONGS_EQUAL (unit3->id (), payload->units[2].id);
+   LONGS_EQUAL (unit3->uid (), payload->units[2].profile);
+}
+
+TEST (DeviceManagementClient, RegisterMessage_EMC)
+{
+   device->info ()->emc (0x1234);
+
+   mock ("Device").expectOneCall ("sendMessage");
+
+   dev_mgt->register_device ();
+
+   mock ("Device").checkExpectations ();
+
+   CHECK_TRUE (device->sendMsg.payload != nullptr);
+
+   DeviceManagement::RegisterMessage *payload =
+      static_cast <DeviceManagement::RegisterMessage *>(device->sendMsg.payload);
+
+   LONGS_EQUAL (0x1234, payload->emc);
+}
+
+TEST (DeviceManagementClient, RegisterResponse_OK)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     Protocol::Response::OK, // Responce Code.
+                     0x42, 0x43,             // Device Address.
+                     0x00, 0x00, 0x00};
+
+   ByteArray payload (data, sizeof(data));
+
+   Message   message;
+
+   message.length     = sizeof(data);
+
+   message.itf.role   = Interface::SERVER_ROLE;
+   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
+   message.itf.member = DeviceManagement::REGISTER_CMD;
+
+   mock ("DeviceManagementClient").expectOneCall ("registered");
+
+   CHECK_TRUE (dev_mgt->handle (message, payload, 3));
+
+   mock ("DeviceManagementClient").checkExpectations ();
+
+   LONGS_EQUAL (0x4243, device->address ());
 }

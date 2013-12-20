@@ -35,7 +35,10 @@ set(HF_INTERFACES_SRCS interfaces/alert.cpp
                        interfaces/simple_power_meter_server.cpp
                        interfaces/simple_power_meter_client.cpp )
 
-set(HF_CORE_SRCS       core.cpp core/device_management.cpp )
+set(HF_CORE_SRCS       core.cpp
+                       core/device_management.cpp
+                       core/device_management_client.cpp )
+
 set(HF_DEVICES_SRCS    devices.cpp )
 
 add_library( hanfun  ${HF_COMMON_SRCS} ${HF_PROTOCOL_SRCS}

@@ -36,7 +36,7 @@ namespace HF
       /*!
        * Parent class for the Device Management interface implementation.
        */
-      struct DeviceManagement:public Base <Interface::DEVICE_MANAGEMENT>
+      struct DeviceManagement:public Service <Interface::DEVICE_MANAGEMENT>
       {
          //! Commands.
          enum CMD
@@ -259,6 +259,14 @@ namespace HF
             //! \see HF::Protocol::Response::unpack.
             size_t unpack (const ByteArray &array, size_t offset = 0);
          };
+
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         protected:
+
+         DeviceManagement(AbstractDevice *_device):Service (_device) {}
       };
 
       /*!
@@ -271,8 +279,47 @@ namespace HF
       /*!
        * Device Management interface : Client side.
        */
-      class DeviceManagementClient : public InterfaceRole<DeviceManagement, Interface::CLIENT_ROLE>
+      class DeviceManagementClient:public ServiceRole <DeviceManagement, Interface::CLIENT_ROLE>
       {
+         public:
+
+         DeviceManagementClient(AbstractDevice *_device):ServiceRole (_device) {}
+
+         //! \see Interface::handle
+         bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+
+         // ======================================================================
+         // Commands
+         // ======================================================================
+         //! \name Commands
+         //! @{
+
+         /*!
+          * Send a register message.
+          *
+          * @param device  pointer to the device to register.
+          */
+         void register_device ();
+
+         //! @}
+         // ======================================================================
+
+         // ======================================================================
+         // Events
+         // ======================================================================
+         //! \name Events
+         //! @{
+
+         /*!
+          * This method is called when a response to a registration message
+          * is received.
+          *
+          * @param [in] response  the register response that was received.
+          */
+         virtual void registered (RegisterResponse &response);
+
+         //! @}
+         // ======================================================================
       };
 
    }  // namespace Core

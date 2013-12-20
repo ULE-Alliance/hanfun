@@ -24,6 +24,10 @@
 #include "hanfun/protocol.h"
 
 #include "hanfun/interface.h"
+#include "hanfun/profiles.h"
+#include "hanfun/devices.h"
+
+#include "hanfun/units.h"
 
 using namespace HF;
 using namespace HF::Protocol;
@@ -49,6 +53,8 @@ namespace HF
          size_t fake_size;
 
          Payload(size_t fake_size = 0):fake_size (fake_size & Protocol::MAX_PAYLOAD) {}
+
+         virtual ~Payload() {}
 
          size_t size () const
          {
@@ -106,6 +112,68 @@ namespace HF
          Interface::Role role () const
          {
             return Interface::SERVER_ROLE;
+         }
+      };
+
+      struct TestInterface:public AbstractInterface
+      {
+         uint16_t        _uid;
+         Interface::Role _role;
+
+         uint16_t uid () const
+         {
+            return _uid;
+         }
+
+         Interface::Role role () const
+         {
+            return Interface::SERVER_ROLE;
+         }
+      };
+
+      struct Profile:public IProfile, public TestInterface
+      {
+         uint16_t _uid;
+
+         uint16_t uid () const
+         {
+            return _uid;
+         }
+      };
+
+      struct Unit:public HF::Unit <Profile>
+      {
+         Unit(uint16_t id, AbstractDevice *device):
+            HF::Unit <Profile>(id, device) {}
+      };
+
+      struct Device:public AbstractDevice
+      {
+         Message::Address msg_addr;
+         Message          sendMsg;
+         IUnit            *unit;
+
+         Device()
+         {
+            memset (&sendMsg, 0, sizeof(Message));
+            memset (&msg_addr, 0, sizeof(Message::Address));
+         }
+
+         virtual ~Device()
+         {
+            if (sendMsg.payload != nullptr)
+            {
+               delete sendMsg.payload;
+            }
+         }
+
+         void sendMessage (IUnit &unit, Message::Address &addr, Protocol::Message &message)
+         {
+            mock ("Device").actualCall ("sendMessage");
+
+            this->msg_addr = addr;
+            this->sendMsg  = message;
+            this->unit     = &unit;
          }
       };
 

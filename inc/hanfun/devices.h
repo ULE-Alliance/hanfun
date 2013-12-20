@@ -68,9 +68,9 @@ namespace HF
    {
       protected:
 
-      std::vector <IUnit *> _units;
-
       uint16_t _address;
+
+      std::vector <IUnit *> _units;
 
       DeviceInformation _info;
 
@@ -83,6 +83,11 @@ namespace HF
       uint16_t address () const
       {
          return _address;
+      }
+
+      void address (uint16_t value)
+      {
+         _address = value & Protocol::BROADCAST_ADDR;
       }
 
       const std::vector <IUnit *> &units () const
@@ -108,9 +113,18 @@ namespace HF
       {
          return &_info;
       }
-
-      //! \see Interface::sendMessage
-      void sendMessage (Message::Address &addr, Message &message);
+      //!
+      /*!
+       * Send the \c message to the network the device with the the given address,
+       * indicating the unit that is sending the message.
+       *
+       * \see Interface::sendMessage
+       *
+       * @param unit       unit that is sending the message.
+       * @param addr       network address to send the message to.
+       * @param message    the message to be sent.
+       */
+      virtual void sendMessage (IUnit &unit, Message::Address &addr, Message &message);
 
       protected:
 

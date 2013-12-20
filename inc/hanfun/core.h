@@ -31,23 +31,34 @@ namespace HF
     */
    namespace Core
    {
-      class AbstractService
+      class AbstractService:public IUnit, public AbstractInterface
       {
+         //! Id number of this unit on the device.
+         uint8_t id () const
+         {
+            return 0;
+         }
+
          protected:
 
-         AbstractDevice *device;
+         AbstractDevice *_device;
 
-         AbstractService(AbstractDevice *_device):device (_device) {}
+         AbstractService(AbstractDevice *device):_device (device) {}
 
-         void sendMessage (Message::Address &addr, Message &message);
+         void sendMessage (Message::Address &addr, Protocol::Message &message);
       };
 
       /*!
        * Class template for all core services implementations.
        */
       template<Interface::UID _uid>
-      class Service:public Interfaces::Base <_uid>, AbstractService
+      struct Service:public AbstractService
       {
+         uint16_t uid () const
+         {
+            return _uid;
+         }
+
          protected:
 
          Service(AbstractDevice *_device):AbstractService (_device) {}
@@ -57,6 +68,25 @@ namespace HF
             AbstractService::sendMessage (addr, message);
          }
       };
+
+      /*!
+       * Class template for all interfaces role implementations.
+       */
+      template<class Parent, Interface::Role _role>
+      struct ServiceRole:public Parent
+      {
+         ServiceRole(AbstractDevice *device):Parent (device) {}
+
+         //! \see Interface::role
+         Interface::Role role () const
+         {
+            return _role;
+         }
+      };
+
+      class DeviceManagementClient;
+
+      class DeviceManagementServer;
 
    }  // namespace Core
 

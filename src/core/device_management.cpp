@@ -245,9 +245,9 @@ size_t DeviceManagement::Device::unpack (const ByteArray &array, size_t offset)
 
 DeviceManagement::RegisterMessage::~RegisterMessage()
 {
-   units.clear();
+   units.clear ();
 
-   if( _uid != nullptr )
+   if (_uid != nullptr)
    {
       delete _uid;
    }
