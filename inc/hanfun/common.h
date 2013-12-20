@@ -69,6 +69,9 @@ namespace HF
        */
       ByteArray(const uint8_t data[], const size_t size);
 
+      //! Destructor
+      virtual ~ByteArray() {}
+
       /*!
        * Write a byte into the array at the given \c offset.
        *
@@ -178,6 +181,9 @@ namespace HF
    {
       public:
 
+      //! Destructor
+      virtual ~Serializable() {}
+
       /*!
        * Number bytes needed to serialize the message.
        *
@@ -206,7 +212,21 @@ namespace HF
       virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
    };
 
-   struct UID:public Serializable
+   /*!
+    * This class represents the interface that cloneable objects need
+    * to implement.
+    */
+   struct Cloneable
+   {
+      /*!
+       * Create a clone object of the object where this method is being called.
+       *
+       * @return  a new object that is a clone of this object.
+       */
+      virtual Cloneable *clone () const = 0;
+   };
+
+   struct UID:public Serializable, public Cloneable
    {
       //! Types of UID available.
       enum Type
@@ -224,13 +244,13 @@ namespace HF
       }
 
       //! \see HF::Serializable::size.
-      size_t size () const
+      virtual size_t size () const
       {
          return 1;
       }
 
       //! \see HF::Serializable::pack.
-      size_t pack (ByteArray &array, size_t offset = 0) const
+      virtual size_t pack (ByteArray &array, size_t offset = 0) const
       {
          size_t start = offset;
          offset += array.write (offset, (uint8_t) 0);
@@ -238,12 +258,17 @@ namespace HF
       }
 
       //! \see HF::Serializable::unpack.
-      size_t unpack (const ByteArray &array, size_t offset = 0)
+      virtual size_t unpack (const ByteArray &array, size_t offset = 0)
       {
          uint8_t size;
          size_t  start = offset;
          offset += array.read (offset, size);
          return offset - start;
+      }
+
+      UID *clone () const
+      {
+         return new UID (*this);
       }
 
       bool operator ==(const HF::UID &other)
@@ -305,6 +330,15 @@ namespace HF
          }
 
          return offset - start;
+      }
+
+      // ===================================================================
+      // Cloneable
+      // ===================================================================
+
+      IPUI *clone () const
+      {
+         return new IPUI (*this);
       }
 
       // ===================================================================
@@ -375,6 +409,15 @@ namespace HF
       }
 
       // ===================================================================
+      // Cloneable
+      // ===================================================================
+
+      MAC *clone () const
+      {
+         return new MAC (*this);
+      }
+
+      // ===================================================================
       // Operators
       // ===================================================================
 
@@ -403,6 +446,8 @@ namespace HF
    struct URI:public AbstractUID <UID::URI>
    {
       string value;
+
+      URI(string value = ""):value (value) {}
 
       //! \see HF::Serializable::size.
       size_t size () const
@@ -444,6 +489,15 @@ namespace HF
          }
 
          return offset - start;
+      }
+
+      // ===================================================================
+      // Cloneable
+      // ===================================================================
+
+      URI *clone () const
+      {
+         return new URI (*this);
       }
 
       // ===================================================================

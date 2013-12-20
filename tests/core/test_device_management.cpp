@@ -254,7 +254,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
       ipui->value[3] = 0xAA;
       ipui->value[4] = 0xBB;
 
-      message->uid   = ipui;
+      message->uid (ipui);
    }
 
    TEST_TEARDOWN ()
@@ -288,8 +288,6 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    CHECK_EQUAL (expected, array);
 
-   message->uid = NULL;    // We what to keep the UID for later comparison.
-
    delete message;
 
    message = new DeviceManagement::RegisterMessage ();
@@ -299,7 +297,7 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    LONGS_EQUAL (0x0000, message->emc);
 
-   CHECK_EQUAL (*ipui, *message->uid);
+   CHECK_EQUAL (*ipui, *message->uid ());
 
    CHECK_EQUAL (3, message->units.size ());
 
@@ -336,8 +334,6 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    CHECK_EQUAL (expected, array);
 
-   message->uid = NULL;    // We what to keep the UID for later comparison.
-
    delete message;
 
    message = new DeviceManagement::RegisterMessage ();
@@ -347,7 +343,7 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    LONGS_EQUAL (0x4243, message->emc);
 
-   CHECK_EQUAL (*ipui, *message->uid);
+   CHECK_EQUAL (*ipui, *message->uid ());
 
    CHECK_EQUAL (3, message->units.size ());
 

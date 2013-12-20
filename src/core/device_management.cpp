@@ -245,9 +245,11 @@ size_t DeviceManagement::Device::unpack (const ByteArray &array, size_t offset)
 
 DeviceManagement::RegisterMessage::~RegisterMessage()
 {
-   if (uid != NULL)
+   units.clear();
+
+   if( _uid != nullptr )
    {
-      delete uid;
+      delete _uid;
    }
 }
 
@@ -262,7 +264,7 @@ size_t DeviceManagement::RegisterMessage::size () const
 {
    size_t result = sizeof(uint8_t);    // Discriminator Type.
 
-   result += uid->size ();
+   result += _uid->size ();
 
    if (emc != 0x0000)
    {
@@ -290,7 +292,7 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
 {
    size_t  start = offset;
 
-   uint8_t temp  = uid->type ();
+   uint8_t temp  = _uid->type ();
 
    if (emc != 0x0000)
    {
@@ -299,7 +301,7 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
 
    offset += array.write (offset, temp);
 
-   offset += uid->pack (array, offset);
+   offset += _uid->pack (array, offset);
 
    if (emc != 0x0000)
    {
@@ -338,22 +340,22 @@ size_t DeviceManagement::RegisterMessage::unpack (const ByteArray &array, size_t
    switch (type)
    {
       case HF::UID::NONE:
-         uid = new HF::UID ();
+         _uid = new HF::UID ();
          break;
       case HF::UID::IPUI:
-         uid = new HF::IPUI ();
+         _uid = new HF::IPUI ();
          break;
       case HF::UID::MAC:
-         uid = new HF::MAC ();
+         _uid = new HF::MAC ();
          break;
       case HF::UID::URI:
-         uid = new HF::URI ();
+         _uid = new HF::URI ();
          break;
       default:
          break;
    }
 
-   offset += uid->unpack (array, offset);
+   offset += _uid->unpack (array, offset);
 
    if (emc)
    {

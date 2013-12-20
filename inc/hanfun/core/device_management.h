@@ -121,9 +121,11 @@ namespace HF
           */
          struct RegisterMessage:public Serializable
          {
-            HF::UID       *uid;    //! Device UID.
             uint16_t      emc;     //! Device EMC if applicable, 0 otherwise.
             vector <Unit> units;   //! Device units listing.
+
+            RegisterMessage(uint16_t emc = 0x0000, HF::UID *_uid = nullptr):
+               emc (emc), _uid ((_uid != nullptr ? _uid->clone () : _uid)) {}
 
             virtual ~RegisterMessage();
 
@@ -135,6 +137,25 @@ namespace HF
 
             //! \see HF::Serializable::unpack.
             size_t unpack (const ByteArray &array, size_t offset = 0);
+
+            HF::UID *uid () const
+            {
+               return _uid;
+            }
+
+            void uid (HF::UID *uid)
+            {
+               if (_uid != nullptr)
+               {
+                  delete _uid;
+               }
+
+               _uid = uid->clone ();
+            }
+
+            protected:
+
+            HF::UID *_uid;     //! Device UID.
          };
 
          /*!
