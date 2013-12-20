@@ -29,8 +29,6 @@ using namespace HF::Core;
 
 namespace HF
 {
-   // Forward declaration for IUnit interface.
-   class IUnit;
 
    /*!
     * This class represents the interface that all devices MUST implement.

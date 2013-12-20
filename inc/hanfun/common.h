@@ -46,6 +46,10 @@ namespace HF
    constexpr uint8_t PROFILES_VERSION   = 0;
    constexpr uint8_t INTERFACES_VERSION = 0;
 
+   // =============================================================================
+   // Helper Classes.
+   // =============================================================================
+
    /*!
     * This class represents a byte array.
     *
@@ -174,6 +178,10 @@ namespace HF
       }
    };
 
+   // =============================================================================
+   // Common Interfaces
+   // =============================================================================
+
    /*!
     * This represents the common interface for message serialization.
     */
@@ -226,6 +234,25 @@ namespace HF
       virtual Cloneable *clone () const = 0;
    };
 
+   /*!
+    * This class represents the interface implemented by all Units.
+    */
+   struct IUnit
+   {
+      //! Id number of this unit on the device.
+      virtual uint8_t id () const = 0;
+
+      //! UID for the profile/interface contained in the unit.
+      virtual uint16_t uid () const = 0;
+   };
+
+   // =============================================================================
+   // UID implementation
+   // =============================================================================
+
+   /*!
+    * Parent UID class.
+    */
    struct UID:public Serializable, public Cloneable
    {
       //! Types of UID available.
@@ -291,6 +318,9 @@ namespace HF
       }
    };
 
+   /*!
+    * IPUI UID class.
+    */
    struct IPUI:public AbstractUID <UID::IPUI>
    {
       uint8_t value[5];
@@ -367,6 +397,9 @@ namespace HF
       }
    };
 
+   /*!
+    * IEEE MAC-48b UID class.
+    */
    struct MAC:public AbstractUID <UID::MAC>
    {
       uint8_t value[6];
@@ -443,6 +476,9 @@ namespace HF
       }
    };
 
+   /*!
+    * URI UID class.
+    */
    struct URI:public AbstractUID <UID::URI>
    {
       string value;
