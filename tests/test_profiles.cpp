@@ -32,38 +32,46 @@ using namespace HF::Testing;
 // Helper Test Classes
 // =============================================================================
 
-HELPER_CLASS (SimpleOnOffSwitchable) {};
-HELPER_CLASS (SimpleOnOffSwitch) {};
-HELPER_CLASS (SimpleLevelControllable) {};
-HELPER_CLASS (SimpleLevelControl) {};
-HELPER_CLASS (SimpleLevelControllableSwitchable) {};
-HELPER_CLASS (SimpleLevelControlSwitch) {};
-HELPER_CLASS (AC_Outlet) {};
-HELPER_CLASS (AC_OutletWithPowerMetering) {};
-HELPER_CLASS (SimpleLight) {};
-HELPER_CLASS (DimmableLight) {};
-HELPER_CLASS (DimmerSwitch) {};
-HELPER_CLASS (SimpleDoorLock) {};
+namespace HF
+{
+   namespace Testing
+   {
+      HELPER_CLASS (SimpleOnOffSwitchable) {};
+      HELPER_CLASS (SimpleOnOffSwitch) {};
+      HELPER_CLASS (SimpleLevelControllable) {};
+      HELPER_CLASS (SimpleLevelControl) {};
+      HELPER_CLASS (SimpleLevelControllableSwitchable) {};
+      HELPER_CLASS (SimpleLevelControlSwitch) {};
+      HELPER_CLASS (AC_Outlet) {};
+      HELPER_CLASS (AC_OutletWithPowerMetering) {};
+      HELPER_CLASS (SimpleLight) {};
+      HELPER_CLASS (DimmableLight) {};
+      HELPER_CLASS (DimmerSwitch) {};
+      HELPER_CLASS (SimpleDoorLock) {};
 
-HELPER_CLASS (DoorBell) {};
-HELPER_CLASS (SimplePowerMeter) {};
+      HELPER_CLASS (DoorBell) {};
+      HELPER_CLASS (SimplePowerMeter) {};
 
-HELPER_CLASS (SimpleDetector) {};
-HELPER_CLASS (DoorOpenCloseDetector) {};
-HELPER_CLASS (WindowOpenCloseDetector) {};
-HELPER_CLASS (MotionDetector) {};
-HELPER_CLASS (SmokeDetector) {};
-HELPER_CLASS (GasDetector) {};
-HELPER_CLASS (FloodDetector) {};
-HELPER_CLASS (GlassBreakDetector) {};
-HELPER_CLASS (VibrationDetector) {};
-HELPER_CLASS (Siren) {};
+      HELPER_CLASS (SimpleDetector) {};
+      HELPER_CLASS (DoorOpenCloseDetector) {};
+      HELPER_CLASS (WindowOpenCloseDetector) {};
+      HELPER_CLASS (MotionDetector) {};
+      HELPER_CLASS (SmokeDetector) {};
+      HELPER_CLASS (GasDetector) {};
+      HELPER_CLASS (FloodDetector) {};
+      HELPER_CLASS (GlassBreakDetector) {};
+      HELPER_CLASS (VibrationDetector) {};
+      HELPER_CLASS (Siren) {};
 
-HELPER_CLASS (SimplePendant) {};
+      HELPER_CLASS (SimplePendant) {};
 
-HELPER_CLASS (UserInterface) {};
+      HELPER_CLASS (UserInterface) {};
 
-HELPER_CLASS (GenericApplicationLogic) {};
+      HELPER_CLASS (GenericApplicationLogic) {};
+
+   }  // namespace Testing
+
+}  // namespace HF
 
 // =============================================================================
 // Profiles UIDs Tests
@@ -142,7 +150,7 @@ TEST (Profiles, UIDs)
    CHECK_EQUAL (IProfile::DOOR_BELL, profile->uid ());
    delete profile;
 
-   profile = new SimplePowerMeter ();
+   profile = new Testing::SimplePowerMeter ();
    CHECK_EQUAL (IProfile::SIMPLE_POWER_METER, profile->uid ());
    delete profile;
 
