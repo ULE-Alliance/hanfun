@@ -130,7 +130,6 @@ namespace HF
 
       AbstractDevice(uint16_t address = Protocol::BROADCAST_ADDR):
          _address (address), _info (this) {}
-
    };
 
 }  // namespace HF

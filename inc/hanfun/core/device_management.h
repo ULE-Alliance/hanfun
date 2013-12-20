@@ -22,7 +22,6 @@
 #include "hanfun/protocol.h"
 
 #include "hanfun/interface.h"
-#include "hanfun/devices.h"
 
 #include "hanfun/core.h"
 
@@ -272,7 +271,7 @@ namespace HF
       /*!
        * Device Management interface : Server side.
        */
-      class DeviceManagementServer : public InterfaceRole<DeviceManagement, Interface::SERVER_ROLE>
+      class DeviceManagementServer:public ServiceRole <DeviceManagement, Interface::SERVER_ROLE>
       {
       };
 

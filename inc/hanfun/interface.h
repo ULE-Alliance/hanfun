@@ -48,10 +48,10 @@ namespace HF
          DEVICE_INFORMATION  = 0x0005,  //!< Device Information Interface UID.
 
          /* Functional Interfaces. */
-         ALERT               = 0x0100, //!< Alert Interface UID
-         ON_OFF              = 0x0200, //!< ON-OFF Interface UID
-         LEVEL_CONTROL       = 0x0201, //!< Level Control Interface UID
-         SIMPLE_POWER_METER  = 0x0300, //!< Simple Power Meter Interface UID
+         ALERT              = 0x0100,  //!< Alert Interface UID
+         ON_OFF             = 0x0200,  //!< ON-OFF Interface UID
+         LEVEL_CONTROL      = 0x0201,  //!< Level Control Interface UID
+         SIMPLE_POWER_METER = 0x0300,  //!< Simple Power Meter Interface UID
 
          /* Reserved */
          RESERVED = 0x7F00,           //!< Proprietary interfaces.

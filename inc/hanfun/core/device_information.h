@@ -218,7 +218,7 @@ namespace HF
           *
           * @param [in] id    pointer to the UID to set as the device UID.
           */
-         virtual void uid (HF::UID *id)
+         virtual void device_uid (HF::UID *id)
          {
             _uid = id;
          }
