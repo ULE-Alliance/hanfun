@@ -2,3 +2,6 @@ build/
 inc/hanfun/config.h
 inc/hanfun/version.h
 *.log
+doc/html
+doc/latex
+doc/rtf
