@@ -24,7 +24,7 @@ add_subdirectory(cpputest)
 find_package(CppUTest REQUIRED HINTS ${CMAKE_BINARY_DIR} )
 
 include_directories(
-    "${CPPUTEST_INCLUDE_DIRS}"
+    ${CPPUTEST_INCLUDE_DIRS}
     "."
 )
 
