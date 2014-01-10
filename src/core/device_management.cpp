@@ -264,7 +264,7 @@ size_t DeviceManagement::RegisterMessage::size () const
 {
    size_t result = sizeof(uint8_t);    // Discriminator Type.
 
-   result += _uid->size ();
+   result += ( _uid ? _uid->size () : 1 );
 
    if (emc != 0x0000)
    {

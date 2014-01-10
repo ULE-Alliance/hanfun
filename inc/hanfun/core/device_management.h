@@ -149,7 +149,12 @@ namespace HF
                   delete _uid;
                }
 
-               _uid = uid->clone ();
+               _uid = nullptr;
+
+               if( uid != nullptr )
+               {
+                  _uid = uid->clone ();
+               }
             }
 
             protected:

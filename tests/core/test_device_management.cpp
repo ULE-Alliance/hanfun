@@ -309,6 +309,14 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
    }
 }
 
+TEST (DeviceManagement_RegisterMessage, No_UID)
+{
+   message->uid (nullptr);
+
+   size_t size = message->size ();
+   LONGS_EQUAL (1 + 1 + 1 + 3 * unit.size (), size);
+}
+
 TEST (DeviceManagement_RegisterMessage, EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
