@@ -202,10 +202,10 @@ size_t ByteArray::read (size_t offset, uint16_t &data) const
 // =============================================================================
 size_t ByteArray::read (size_t offset, uint32_t &data) const
 {
-   data  = ((uint32_t) at (offset)) << 24;
-   data |= at (offset + 1) << 16;
-   data |= at (offset + 2) << 8;
-   data |= at (offset + 3);
+   data  = ((uint32_t) at (offset))     << 24;
+   data |= ((uint32_t) at (offset + 1)) << 16;
+   data |= ((uint32_t) at (offset + 2)) << 8;
+   data |= ((uint32_t) at (offset + 3));
 
    return sizeof(uint32_t);
 }
