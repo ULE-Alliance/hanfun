@@ -219,9 +219,10 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (0x3333, device.address);
    LONGS_EQUAL (3, device.units.size ());
 
-   for (auto _unit : device.units)
+   for ( vector<DeviceManagement::Unit>::const_iterator _unit = device.units.begin();
+         _unit != device.units.end(); ++_unit)
    {
-      CHECK_EQUAL (unit, _unit);
+      CHECK_EQUAL (unit, *_unit);
    }
 }
 
@@ -303,9 +304,10 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for (auto _unit : message->units)
+   for ( vector<DeviceManagement::Unit>::const_iterator _unit = message->units.begin();
+         _unit != message->units.end(); ++_unit)
    {
-      CHECK_EQUAL (unit, _unit);
+      CHECK_EQUAL (unit, *_unit);
    }
 }
 
@@ -357,9 +359,10 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for (auto _unit : message->units)
+   for ( vector<DeviceManagement::Unit>::const_iterator _unit = message->units.begin();
+         _unit != message->units.end(); ++_unit)
    {
-      CHECK_EQUAL (unit, _unit);
+      CHECK_EQUAL (unit, *_unit);
    }
 }
 

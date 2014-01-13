@@ -42,11 +42,12 @@ void DeviceManagementClient::register_device ()
    RegisterMessage * payload = new RegisterMessage( _device->info()->emc(),
                                                     _device->info()->device_uid());
 
-   for( auto dev_unit : _device->units() )
+   for( std::vector <IUnit *>::const_iterator dev_unit = _device->units().begin();
+         dev_unit != _device->units().end(); ++dev_unit )
    {
       Unit unit;
-      unit.id = dev_unit->id();
-      unit.profile = dev_unit->uid();
+      unit.id = (*dev_unit)->id();
+      unit.profile = (*dev_unit)->uid();
 
       payload->units.push_back(unit);
    }

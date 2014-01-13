@@ -122,9 +122,9 @@ size_t DeviceManagement::Unit::pack (ByteArray &array, size_t offset) const
    {
       offset += array.write (offset, (uint8_t) opt_ift.size ());
 
-      for (auto itf : opt_ift)
+      for( vector<Interface>::const_iterator itf = opt_ift.begin(); itf != opt_ift.end() ; ++itf )
       {
-         offset += itf.pack (array, offset);
+         offset += itf->pack (array, offset);
       }
    }
 
@@ -182,9 +182,9 @@ size_t DeviceManagement::Device::size () const
    size_t result = sizeof(uint16_t) +  // Device Address.
                    sizeof(uint8_t);    // Number of units.
 
-   for (auto unit : units)
+   for( vector <Unit>::const_iterator unit = units.begin(); unit != units.end(); ++unit )
    {
-      result += unit.size ();
+      result += unit->size ();
    }
 
    return result;
@@ -205,9 +205,9 @@ size_t DeviceManagement::Device::pack (ByteArray &array, size_t offset) const
 
    offset += array.write (offset, (uint8_t) units.size ());
 
-   for (auto unit : units)
+   for( vector <Unit>::const_iterator unit = units.begin(); unit != units.end(); ++unit )
    {
-      offset += unit.pack (array, offset);
+      offset += unit->pack (array, offset);
    }
 
    return offset - start;
@@ -273,9 +273,9 @@ size_t DeviceManagement::RegisterMessage::size () const
 
    result += sizeof(uint8_t); // Number of units.
 
-   for (auto unit : units)
+   for( vector <Unit>::const_iterator unit = units.begin(); unit != units.end(); ++unit )
    {
-      result += unit.size ();
+      result += unit->size ();
    }
 
    return result;
@@ -311,9 +311,9 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
    temp    = units.size ();
    offset += array.write (offset, temp);
 
-   for (auto unit : units)
+   for( vector <Unit>::const_iterator unit = units.begin(); unit != units.end(); ++unit )
    {
-      offset += unit.pack (array, offset);
+      offset += unit->pack (array, offset);
    }
 
    return offset - start;
@@ -603,9 +603,9 @@ size_t DeviceManagement::GetEntriesResponse::size () const
    size_t result = Response::size () + // Parent size.
                    sizeof(uint8_t);    // Number of entries.
 
-   for (auto dev : entries)
+   for( vector<Device>::const_iterator device = entries.begin(); device != entries.end(); ++device )
    {
-      result += dev.size ();
+      result += device->size ();
    }
 
    return result;
@@ -625,9 +625,9 @@ size_t DeviceManagement::GetEntriesResponse::pack (ByteArray &array, size_t offs
    offset += Response::pack (array, offset);
    offset += array.write (offset, (uint8_t) entries.size ());
 
-   for (auto device : entries)
+   for( vector<Device>::const_iterator device = entries.begin(); device != entries.end(); ++device )
    {
-      offset += device.pack (array, offset);
+      offset += device->pack (array, offset);
    }
 
    return offset - start;
