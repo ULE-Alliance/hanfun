@@ -35,26 +35,26 @@ void DeviceManagementClient::register_device ()
    Protocol::Address addr;
    Protocol::Message message;
 
-   message.itf.role = role();
-   message.itf.uid = uid();
+   message.itf.role   = role ();
+   message.itf.uid    = uid ();
    message.itf.member = REGISTER_CMD;
 
-   RegisterMessage * payload = new RegisterMessage( _device->info()->emc(),
-                                                    _device->info()->device_uid());
+   RegisterMessage *payload = new RegisterMessage (_device->info ()->emc (),
+                                                   _device->info ()->device_uid ());
 
-   for( std::vector <IUnit *>::const_iterator dev_unit = _device->units().begin();
-         dev_unit != _device->units().end(); ++dev_unit )
+   for (std::vector <IUnit *>::const_iterator dev_unit = _device->units ().begin ();
+        dev_unit != _device->units ().end (); ++dev_unit)
    {
       Unit unit;
-      unit.id = (*dev_unit)->id();
-      unit.profile = (*dev_unit)->uid();
+      unit.id      = (*dev_unit)->id ();
+      unit.profile = (*dev_unit)->uid ();
 
-      payload->units.push_back(unit);
+      payload->units.push_back (unit);
    }
 
    message.payload = payload;
 
-   sendMessage( addr, message );
+   sendMessage (addr, message);
 }
 
 // =============================================================================
@@ -73,14 +73,14 @@ bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payl
    switch (message.itf.member)
    {
       case REGISTER_CMD:
-         payload_size = registration.size();
+         payload_size = registration.size ();
          break;
       default:
-         payload_size = numeric_limits<size_t>::max();
+         payload_size = numeric_limits <size_t>::max ();
          break;
    }
 
-   if( !AbstractInterface::handle( message, payload, offset, payload_size ) )
+   if (!AbstractInterface::handle (message, payload, offset, payload_size))
    {
       return false;
    }
@@ -88,11 +88,11 @@ bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payl
    switch (message.itf.member)
    {
       case REGISTER_CMD:
-         registration.unpack( payload, offset );
-         registered(registration);
+         registration.unpack (payload, offset);
+         registered (registration);
          break;
       default:
-         payload_size = numeric_limits<size_t>::max();
+         payload_size = numeric_limits <size_t>::max ();
          break;
    }
 

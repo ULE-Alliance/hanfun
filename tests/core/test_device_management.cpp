@@ -219,8 +219,8 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (0x3333, device.address);
    LONGS_EQUAL (3, device.units.size ());
 
-   for ( vector<DeviceManagement::Unit>::const_iterator _unit = device.units.begin();
-         _unit != device.units.end(); ++_unit)
+   for (vector <DeviceManagement::Unit>::const_iterator _unit = device.units.begin ();
+        _unit != device.units.end (); ++_unit)
    {
       CHECK_EQUAL (unit, *_unit);
    }
@@ -304,8 +304,8 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for ( vector<DeviceManagement::Unit>::const_iterator _unit = message->units.begin();
-         _unit != message->units.end(); ++_unit)
+   for (vector <DeviceManagement::Unit>::const_iterator _unit = message->units.begin ();
+        _unit != message->units.end (); ++_unit)
    {
       CHECK_EQUAL (unit, *_unit);
    }
@@ -359,8 +359,8 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for ( vector<DeviceManagement::Unit>::const_iterator _unit = message->units.begin();
-         _unit != message->units.end(); ++_unit)
+   for (vector <DeviceManagement::Unit>::const_iterator _unit = message->units.begin ();
+        _unit != message->units.end (); ++_unit)
    {
       CHECK_EQUAL (unit, *_unit);
    }
@@ -676,9 +676,9 @@ TEST_GROUP (DeviceManagementClient)
       delete unit2;
       delete unit3;
 
-      delete device;
-
       delete dev_mgt;
+
+      delete device;
 
       mock ().clear ();
    }
@@ -764,3 +764,29 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 
    LONGS_EQUAL (0x4243, device->address ());
 }
+
+TEST (DeviceManagementClient, RegisterResponse_FAIL)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     Protocol::Response::FAIL_RESOURCES, // Responce Code.
+                     0x00, 0x00, 0x00};
+
+   ByteArray payload (data, sizeof(data));
+
+   Message   message;
+
+   message.length     = sizeof(data);
+
+   message.itf.role   = Interface::SERVER_ROLE;
+   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
+   message.itf.member = DeviceManagement::REGISTER_CMD;
+
+   mock ("DeviceManagementClient").expectOneCall ("registered");
+
+   CHECK_TRUE (dev_mgt->handle (message, payload, 3));
+
+   mock ("DeviceManagementClient").checkExpectations ();
+
+   LONGS_EQUAL (Protocol::BROADCAST_ADDR, device->address ());
+}
+
