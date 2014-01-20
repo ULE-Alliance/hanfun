@@ -32,8 +32,8 @@
 // =============================================================================
 void DeviceManagementClient::register_device ()
 {
-   Message::Address addr;
-   Message message;
+   Protocol::Address addr;
+   Protocol::Message message;
 
    message.itf.role = role();
    message.itf.uid = uid();
@@ -106,10 +106,10 @@ bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payl
  *
  */
 // =============================================================================
-void DeviceManagementClient::registered( RegisterResponse &response)
+void DeviceManagementClient::registered (RegisterResponse &response)
 {
-   if( response.code == Response::OK )
+   if (response.code == Protocol::Response::OK)
    {
-      _device->address(response.address);
+      _device->address (response.address);
    }
 }

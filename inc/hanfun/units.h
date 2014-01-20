@@ -23,11 +23,11 @@ namespace HF
    /*!
     * This is the parent class for all Units.
     */
-   class AbstractUnit: public IUnit
+   class AbstractUnit:public IUnit
    {
       protected:
 
-      AbstractDevice * _device;
+      AbstractDevice *_device;
       uint8_t _id;
 
       public:
@@ -46,14 +46,13 @@ namespace HF
 
       protected:
 
-      AbstractUnit (uint8_t index, AbstractDevice *device) :
-            _device(device), _id(index)
-      {
-      }
+      AbstractUnit(uint8_t index, AbstractDevice *device):
+         _device (device), _id (index)
+      {}
 
-      void sendMessage (Message::Address &addr, Protocol::Message &message)
+      void sendMessage (Protocol::Address &addr, Protocol::Message &message)
       {
-         _device->sendMessage( *this, addr, message);
+         _device->sendMessage (*this, addr, message);
       }
    };
 
@@ -61,29 +60,29 @@ namespace HF
     * This the base template for all the Units.
     */
    template<class Profile>
-   class Unit: public AbstractUnit, public Profile
+   class Unit:public AbstractUnit, public Profile
    {
       public:
 
-      Unit (uint8_t index, AbstractDevice *device) :
-            AbstractUnit(index, device)
+      Unit(uint8_t index, AbstractDevice *device):
+         AbstractUnit (index, device)
       {
-         if( device != nullptr )
+         if (device != nullptr)
          {
-            device->add(this);
+            device->add (this);
          }
       }
 
-      uint16_t uid() const
+      uint16_t uid () const
       {
-         return Profile::uid();
+         return Profile::uid ();
       }
 
       protected:
 
-      void sendMessage (Message::Address &addr, Protocol::Message &message)
+      void sendMessage (Protocol::Address &addr, Protocol::Message &message)
       {
-         AbstractUnit::sendMessage(addr, message);
+         AbstractUnit::sendMessage (addr, message);
       }
    };
 

@@ -70,7 +70,7 @@ namespace HF
          // ======================================================================
 
          //! \see Interface::handle.
-         bool handle (Message &message, ByteArray &payload, size_t offset);
+         bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
 
          // ======================================================================
          // Events
@@ -137,21 +137,21 @@ namespace HF
           *
           * @param addr    the address of the device to send the message to.
           */
-         void on (Protocol::Message::Address &addr);
+         void on (Protocol::Address &addr);
 
          /*!
           * Send a \c OnOff::OFF_CMD message to the device at the given address.
           *
           * @param addr    the address of the device to send the message to.
           */
-         void off (Protocol::Message::Address &addr);
+         void off (Protocol::Address &addr);
 
          /*!
           * Send a \c OnOff::TOGGLE_CMD message to the device at the given address.
           *
           * @param addr    the address of the device to send the message to.
           */
-         void toggle (Protocol::Message::Address &addr);
+         void toggle (Protocol::Address &addr);
 
          //@}
       };

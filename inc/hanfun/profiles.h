@@ -214,7 +214,7 @@ namespace HF
       using AbstractProfile <_uid>::uid;
 
       //! \see AlertServer::status()
-      void alert (Protocol::Message::Address &addr, bool state)
+      void alert (Protocol::Address &addr, bool state)
       {
          AlertServer::state (0, state);
          AlertServer::status (addr, Detector::uid ());

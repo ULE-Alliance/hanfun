@@ -29,7 +29,6 @@ using namespace HF::Core;
 
 namespace HF
 {
-
    /*!
     * This class represents the interface that all devices MUST implement.
     */
@@ -113,7 +112,7 @@ namespace HF
       {
          return &_info;
       }
-      //!
+
       /*!
        * Send the \c message to the network the device with the the given address,
        * indicating the unit that is sending the message.
@@ -124,7 +123,7 @@ namespace HF
        * @param addr       network address to send the message to.
        * @param message    the message to be sent.
        */
-      virtual void sendMessage (IUnit &unit, Message::Address &addr, Message &message);
+      virtual void sendMessage (IUnit &unit, Protocol::Address &addr, Protocol::Message &message);
 
       protected:
 

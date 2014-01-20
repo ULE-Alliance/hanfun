@@ -74,47 +74,6 @@ namespace HF
          };
 
          /*!
-          * Network Address.
-          */
-         struct Address:public Serializable
-         {
-            uint16_t mod    : 1;    //!< Address modifier.
-            uint16_t device : 15;   //!< Device Address.
-
-            uint8_t  unit;          //!< Source Unit.
-
-            /*!
-             * HAN-FUN Network Destination Address Types.
-             */
-            enum DestinationType
-            {
-               DEVICE_ADDR = 0,   //!< Destination address is for single device.
-               GROUP_ADDR  = 1,   //!< Destination address is for a group of devices.
-            };
-
-            /*!
-             * Create a new message address.
-             *
-             * @param _dev    device address. Default \c HF_BROADCAST_ADDR.
-             * @param _unit   unit address. Default \c HF_BROADCAST_UNIT.
-             * @param _mod    address modifier. Default \c DEVICE_ADDR.
-             */
-            Address(uint16_t _dev = BROADCAST_ADDR, uint8_t _unit = BROADCAST_UNIT,
-                    DestinationType _mod = DEVICE_ADDR)
-               :mod (_mod), device (_dev), unit (_unit)
-            {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const;
-
-            //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
-         };
-
-         /*!
           * Interface Address.
           */
          struct Interface:public Serializable
@@ -159,8 +118,8 @@ namespace HF
          //! The payload length value read when unpacking the message.
          uint16_t length;
 
-         Message(Type _type, Interface itf, Serializable *payload = nullptr):
-            reference (0), type (_type), itf (itf), payload (payload), length (0) {}
+         Message(Type _type, Interface itf, Serializable *payload = nullptr, uint8_t reference = 0):
+            reference (reference), type (_type), itf (itf), payload (payload), length (0) {}
 
          Message(Type _type = COMMAND_REQ):
             reference (0), type (_type), payload (nullptr), length (0) {}
@@ -183,12 +142,53 @@ namespace HF
       };
 
       /*!
+       * Network Address.
+       */
+      struct Address:public Serializable
+      {
+         uint16_t mod    : 1;    //!< Address modifier.
+         uint16_t device : 15;   //!< Device Address.
+
+         uint8_t  unit;          //!< Source Unit.
+
+         /*!
+          * HAN-FUN Network Destination Address Types.
+          */
+         enum DestinationType
+         {
+            DEVICE_ADDR = 0,   //!< Destination address is for single device.
+            GROUP_ADDR  = 1,   //!< Destination address is for a group of devices.
+         };
+
+         /*!
+          * Create a new message address.
+          *
+          * @param _dev    device address. Default \c HF_BROADCAST_ADDR.
+          * @param _unit   unit address. Default \c HF_BROADCAST_UNIT.
+          * @param _mod    address modifier. Default \c DEVICE_ADDR.
+          */
+         Address(uint16_t _dev = BROADCAST_ADDR, uint8_t _unit = BROADCAST_UNIT,
+                 DestinationType _mod = DEVICE_ADDR)
+            :mod (_mod), device (_dev), unit (_unit)
+         {}
+
+         //! \see HF::Serializable::size.
+         size_t size () const;
+
+         //! \see HF::Serializable::pack.
+         size_t pack (ByteArray &array, size_t offset = 0) const;
+
+         //! \see HF::Serializable::unpack.
+         size_t unpack (const ByteArray &array, size_t offset = 0);
+      };
+
+      /*!
        * HAN-FUN Protocol Packet.
        */
       struct Packet:public Serializable
       {
-         Message::Address source;           //!< Source Address.
-         Message::Address destination;      //!< Destination Address.
+         Address source;           //!< Source Address.
+         Address destination;      //!< Destination Address.
 
          /*!
           * Packet message payload;
@@ -199,15 +199,15 @@ namespace HF
 
          Packet(Message &message):message (message) {}
 
-         Packet(Message::Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
+         Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
             destination (dst_addr), message (message)
          {
-            source.mod    = Message::Address::DEVICE_ADDR;
+            source.mod    = Address::DEVICE_ADDR;
             source.device = BROADCAST_ADDR;
             source.unit   = unit;
          }
 
-         Packet(Message::Address &src_addr, Message::Address &dst_addr, Message &message):
+         Packet(Address &src_addr, Address &dst_addr, Message &message):
             source (src_addr), destination (dst_addr), message (message) {}
 
          //! \see HF::Serializable::size.

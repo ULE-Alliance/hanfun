@@ -28,7 +28,7 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-void LevelControlClient::level (Protocol::Message::Address &addr, uint8_t new_level)
+void LevelControlClient::level (Protocol::Address &addr, uint8_t new_level)
 {
    Protocol::Message message;
 

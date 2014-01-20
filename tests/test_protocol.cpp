@@ -30,7 +30,7 @@ TEST_GROUP (Message_Address)
    ByteArray expected_1;
    ByteArray expected_2;
 
-   Message::Address addr;
+   Protocol::Address addr;
 
    TEST_SETUP ()
    {
@@ -317,7 +317,7 @@ TEST_GROUP (Packet)
 
 TEST (Packet, Size)
 {
-   Message::Address addr;
+   Protocol::Address addr;
 
    size_t size = 2 * addr.size () +       // Network address
                  sizeof(uint16_t) +       // Transport header.
@@ -328,11 +328,11 @@ TEST (Packet, Size)
 
 TEST (Packet, Pack)
 {
-   packet->source.mod         = Message::Address::DEVICE_ADDR;
+   packet->source.mod         = Protocol::Address::DEVICE_ADDR;
    packet->source.device      = 0x7AAA;
    packet->source.unit        = 0x55;
 
-   packet->destination.mod    = Message::Address::GROUP_ADDR;
+   packet->destination.mod    = Protocol::Address::GROUP_ADDR;
    packet->destination.device = 0x7555;
    packet->destination.unit   = 0xAA;
 
@@ -359,11 +359,11 @@ TEST (Packet, Unpack)
    size_t rsize = packet->unpack (expected, 3);
    LONGS_EQUAL (6 + 2 + 7, rsize);
 
-   LONGS_EQUAL (Message::Address::DEVICE_ADDR, packet->source.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->source.mod);
    LONGS_EQUAL (0x7AAA, packet->source.device);
    LONGS_EQUAL (0x55, packet->source.unit);
 
-   LONGS_EQUAL (Message::Address::GROUP_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::GROUP_ADDR, packet->destination.mod);
    LONGS_EQUAL (0x7555, packet->destination.device);
    LONGS_EQUAL (0xAA, packet->destination.unit);
 

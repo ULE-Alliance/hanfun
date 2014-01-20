@@ -284,7 +284,7 @@ TEST (AlertServer, Status2)
    server->clear ();
    server->state (3, true);
 
-   Message::Address addr;
+   Protocol::Address addr;
 
    mock ("Interface").expectOneCall ("sendMessage");
 

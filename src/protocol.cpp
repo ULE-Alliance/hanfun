@@ -22,17 +22,17 @@ using namespace HF;
 using namespace HF::Protocol;
 
 // =============================================================================
-// Message / Address
+// Address
 // =============================================================================
 
 // =============================================================================
-// Message::Address::size
+// Address::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t Message::Address::size () const
+size_t Address::size () const
 {
    return sizeof(uint16_t) + // Device Address + Flag.
           sizeof(uint8_t);   // Unit Address.
@@ -45,7 +45,7 @@ size_t Message::Address::size () const
  *
  */
 // =============================================================================
-size_t Message::Address::pack (ByteArray &array, size_t offset) const
+size_t Address::pack (ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -64,7 +64,7 @@ size_t Message::Address::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Message::Address::unpack (const ByteArray &array, size_t offset)
+size_t Address::unpack (const ByteArray &array, size_t offset)
 {
    uint16_t dev;
    size_t   start = offset;

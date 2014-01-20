@@ -51,7 +51,7 @@ TEST_GROUP (OnOffClient)
    {};
 
    TestOnOffClient client;
-   Protocol::Message::Address addr;
+   Protocol::Address addr;
 
    TEST_SETUP ()
    {

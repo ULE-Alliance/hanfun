@@ -60,9 +60,9 @@ void AbstractDevice::remove (IUnit *unit)
  *
  */
 // =============================================================================
-void AbstractDevice::sendMessage (IUnit &unit, Message::Address &addr, Message &message)
+void AbstractDevice::sendMessage (IUnit &unit, Protocol::Address &addr, Protocol::Message &message)
 {
-   UNUSED(unit);
-   UNUSED(addr);
-   UNUSED(message);
+   UNUSED (unit);
+   UNUSED (addr);
+   UNUSED (message);
 }

@@ -29,7 +29,7 @@
  *
  */
 // =============================================================================
-void AbstractService::sendMessage (Message::Address &addr, Message &message)
+void AbstractService::sendMessage (Protocol::Address &addr, Protocol::Message &message)
 {
-   _device->sendMessage( *this, addr, message);
+   _device->sendMessage (*this, addr, message);
 }

@@ -109,7 +109,7 @@ TEST_GROUP (LevelControlClient)
    {};
 
    TestLevelControlClient client;
-   Protocol::Message::Address addr;
+   Protocol::Address addr;
 
    TEST_SETUP ()
    {

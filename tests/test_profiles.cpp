@@ -220,10 +220,10 @@ TEST (Profiles, UIDs)
 
 TEST (Profiles, Detector)
 {
-   Protocol::Message::Address addr;
-   SimpleDetector detector;
+   Protocol::Address addr;
+   SimpleDetector    detector;
 
-   addr.mod    = Protocol::Message::Address::DEVICE_ADDR;
+   addr.mod    = Protocol::Address::DEVICE_ADDR;
    addr.device = 42;
    addr.unit   = 33;
 
@@ -240,7 +240,7 @@ TEST (Profiles, Detector)
    CHECK_EQUAL (1, status_msg->state);
    CHECK_EQUAL (detector.uid (), status_msg->type);
 
-   LONGS_EQUAL (Protocol::Message::Address::DEVICE_ADDR, detector.addr.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, detector.addr.mod);
    LONGS_EQUAL (42, detector.addr.device);
    LONGS_EQUAL (33, detector.addr.unit);
 }

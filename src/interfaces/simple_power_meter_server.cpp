@@ -93,8 +93,8 @@ void SimplePowerMeterServer::periodic (uint32_t time)
 {
    if (_report_interval > 0 && abs ((int64_t) _last_periodic - time) >= _report_interval)
    {
-      Message::Address addr;
-      Message message;
+      Protocol::Address addr;
+      Protocol::Message message;
 
       message.itf.role   = role ();
       message.itf.uid    = uid ();

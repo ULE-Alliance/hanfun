@@ -28,7 +28,7 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-bool OnOffServer::handle (Message &message, ByteArray &payload, size_t offset)
+bool OnOffServer::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
    // Check for correct interface and command.
    if (!AbstractInterface::handle (message, payload, offset))

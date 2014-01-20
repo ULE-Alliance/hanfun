@@ -146,7 +146,7 @@ namespace HF
           * @param [in] addr       network address to send the message to.
           * @param [in] new_level    level value to send in the message.
           */
-         void level (Protocol::Message::Address &addr, uint8_t new_level);
+         void level (Protocol::Address &addr, uint8_t new_level);
 
          //@}
       };

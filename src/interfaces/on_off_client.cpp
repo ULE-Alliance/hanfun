@@ -28,9 +28,9 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-void OnOffClient::on (Protocol::Message::Address &addr)
+void OnOffClient::on (Protocol::Address &addr)
 {
-   Message message;
+   Protocol::Message message;
 
    message.itf.role   = role ();
    message.itf.uid    = uid ();
@@ -46,9 +46,9 @@ void OnOffClient::on (Protocol::Message::Address &addr)
  *
  */
 // =============================================================================
-void OnOffClient::off (Protocol::Message::Address &addr)
+void OnOffClient::off (Protocol::Address &addr)
 {
-   Message message;
+   Protocol::Message message;
 
    message.itf.role   = role ();
    message.itf.uid    = uid ();
@@ -64,9 +64,9 @@ void OnOffClient::off (Protocol::Message::Address &addr)
  *
  */
 // =============================================================================
-void OnOffClient::toggle (Protocol::Message::Address &addr)
+void OnOffClient::toggle (Protocol::Address &addr)
 {
-   Message message;
+   Protocol::Message message;
 
    message.itf.role   = role ();
    message.itf.uid    = uid ();

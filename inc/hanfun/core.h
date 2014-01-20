@@ -45,7 +45,7 @@ namespace HF
 
          AbstractService(AbstractDevice *device):_device (device) {}
 
-         void sendMessage (Message::Address &addr, Protocol::Message &message);
+         void sendMessage (Protocol::Address &addr, Protocol::Message &message);
       };
 
       /*!
@@ -63,7 +63,7 @@ namespace HF
 
          Service(AbstractDevice *_device):AbstractService (_device) {}
 
-         void sendMessage (Message::Address &addr, Message &message)
+         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
             AbstractService::sendMessage (addr, message);
          }

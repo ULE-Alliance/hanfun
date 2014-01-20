@@ -18,8 +18,6 @@
 
 #include "protocol.h"
 
-using namespace HF::Protocol;
-
 namespace HF
 {
    /*!
@@ -116,12 +114,12 @@ namespace HF
     */
    struct AbstractInterface:public Interface
    {
-      bool handle (Message &message, ByteArray &payload, size_t offset)
+      bool handle (Protocol::Message &message, ByteArray &payload, size_t offset)
       {
          return handle (message, payload, offset, 0);
       }
 
-      bool handle (Message &message, ByteArray &payload, size_t offset, size_t payload_size)
+      bool handle (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
       {
          UNUSED (payload);
          UNUSED (offset);
@@ -172,7 +170,7 @@ namespace HF
        * @param [in] addr        HF network address.
        * @param [in] message     pointer to the message to be sent to the network.
        */
-      virtual void sendMessage (Message::Address &addr, Message &message) = 0;
+      virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
    };
 
    /*!

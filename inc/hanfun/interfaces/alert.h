@@ -191,7 +191,7 @@ namespace HF
           * @param [in] addr       the network address to send the message to.
           * @param [in] unit_type  the unit type ( \see hf_profile_uid_t ) sending the message.
           */
-         void status (Protocol::Message::Address &addr, uint16_t unit_type);
+         void status (Protocol::Address &addr, uint16_t unit_type);
 
          //! @}
          // ======================================================================

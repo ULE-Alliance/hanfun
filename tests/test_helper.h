@@ -80,13 +80,13 @@ namespace HF
       template<class Base>
       struct InterfaceHelper:public Base
       {
-         Message::Address addr;
-         Message          sendMsg;
+         Protocol::Address addr;
+         Protocol::Message sendMsg;
 
          InterfaceHelper()
          {
-            memset (&sendMsg, 0, sizeof(Message));
-            memset (&addr, 0, sizeof(Message::Address));
+            memset (&sendMsg, 0, sizeof(Protocol::Message));
+            memset (&addr, 0, sizeof(Protocol::Address));
          }
 
          virtual ~InterfaceHelper()
@@ -97,7 +97,7 @@ namespace HF
             }
          }
 
-         void sendMessage (Message::Address &addr, Protocol::Message &message)
+         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
             mock ("Interface").actualCall ("sendMessage");
 
@@ -149,14 +149,16 @@ namespace HF
 
       struct Device:public AbstractDevice
       {
-         Message::Address msg_addr;
-         Message          sendMsg;
+         Protocol::Address msg_addr;
+         Protocol::Message sendMsg;
          IUnit            *unit;
 
          Device()
          {
-            memset (&sendMsg, 0, sizeof(Message));
-            memset (&msg_addr, 0, sizeof(Message::Address));
+            memset (&sendMsg, 0, sizeof(Protocol::Message));
+            memset (&msg_addr, 0, sizeof(Protocol::Address));
+
+            unit   = nullptr;
          }
 
          virtual ~Device()
@@ -167,7 +169,7 @@ namespace HF
             }
          }
 
-         void sendMessage (IUnit &unit, Message::Address &addr, Protocol::Message &message)
+         void sendMessage (IUnit &unit, Protocol::Address &addr, Protocol::Message &message)
          {
             mock ("Device").actualCall ("sendMessage");
 
