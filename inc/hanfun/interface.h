@@ -129,16 +129,7 @@ namespace HF
          if (uid () == message.itf.uid && role () != message.itf.role)
          {
             // Check payload size.
-            if (payload_size != 0)
-            {
-               if (message.length < payload_size || payload.size () < offset ||
-                   (payload.size () - offset) < payload_size)
-               {
-                  return false;
-               }
-            }
-
-            return true;
+            return check_payload_size (message, payload, offset, payload_size);
          }
          else
          {
@@ -171,6 +162,20 @@ namespace HF
        * @param [in] message     pointer to the message to be sent to the network.
        */
       virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+
+      bool check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
+      {
+         if (payload_size != 0)
+         {
+            if (message.length < payload_size || payload.size () < offset ||
+                (payload.size () - offset) < payload_size)
+            {
+               return false;
+            }
+         }
+
+         return true;
+      }
    };
 
    /*!
