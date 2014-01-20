@@ -16,6 +16,7 @@
 #define HF_TEST_HELPER_H
 
 #include <string.h>
+#include <sstream>
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -39,6 +40,20 @@ using namespace HF::Protocol;
 SimpleString StringFrom (const HF::ByteArray &array);
 
 SimpleString StringFrom (const HF::Serializable &data);
+
+template<typename _type>
+void check_index (_type expected, _type actual, uint32_t index, const char *header, const char *fileName, int lineNumber)
+{
+   if (actual != expected)
+   {
+      std::ostringstream error;
+      error << header << " at index " << index << std::endl
+            << "\t\t expected : " << expected << std::endl
+            << "\t\t but was  : " << actual;
+
+      FAIL_TEST_LOCATION (error.str ().c_str (), fileName, lineNumber);
+   }
+}
 
 // =============================================================================
 // Helper Test Classes

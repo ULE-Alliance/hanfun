@@ -12,7 +12,6 @@
  */
 // =============================================================================
 #include <string>
-#include <sstream>
 
 #include "hanfun/interfaces/alert.h"
 
@@ -129,23 +128,10 @@ TEST_GROUP (AlertServer)
       delete server;
       mock ().clear ();
    }
-
-   void check_alarm (bool expected, bool state, uint32_t index, const char *fileName, int lineNumber)
-   {
-      if (state != expected)
-      {
-         std::ostringstream error;
-         error << "Alarm at index " << index << std::endl
-               << "\t\t expected : " << expected << std::endl
-               << "\t\t but was  : " << state;
-         FAIL_TEST_LOCATION (error.str ().c_str (), fileName, lineNumber);
-      }
-   }
-
 };
 
 #define CHECK_ALARM(_expected, _state, _index) \
-   check_alarm (_expected, _state, _index, __FILE__, __LINE__)
+   check_index <bool>(_expected, _state, _index, "Alarm", __FILE__, __LINE__)
 
 //! \test Should disable all alarms.
 TEST (AlertServer, DisableAll)
