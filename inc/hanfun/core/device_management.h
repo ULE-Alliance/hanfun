@@ -12,11 +12,11 @@
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
 // =============================================================================
-
 #ifndef HF_DEVICE_MANGEMENT_H
 #define HF_DEVICE_MANGEMENT_H
 
 #include <vector>
+#include <map>
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
@@ -37,14 +37,16 @@ namespace HF
        */
       struct DeviceManagement:public Service <Interface::DEVICE_MANAGEMENT>
       {
+         static constexpr uint16_t START_ADDR = 0x0001;
+
          //! Commands.
          enum CMD
          {
-            REGISTER_CMD      = 0x01,  //!< Register device command.
-            DEREGISTER_CMD    = 0x02,  //!< De-register device command.
-            START_SESSION_CMD = 0x03,  //!< Start Session Read Registration Info.
-            END_SESSION_CMD   = 0x04,  //!< End Session Read Registration Info.
-            GET_ENTRIES_CMD   = 0x05,  //!< Get Entries Command.
+            REGISTER_CMD      = 0x01, //!< Register device command.
+            DEREGISTER_CMD    = 0x02, //!< De-register device command.
+            START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
+            END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
+            GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
          };
 
          // =============================================================================
@@ -54,11 +56,12 @@ namespace HF
           */
          struct Interface:public Serializable
          {
-            uint16_t role :  1;     //!< Interface role. \see Interface::Role.
-            uint16_t uid  : 15;     //!< Interface UID. \see Interface::UID.
+            uint16_t role : 1;    //!< Interface role. \see Interface::Role.
+            uint16_t uid  : 15;   //!< Interface UID. \see Interface::UID.
 
             Interface(uint16_t role = 0, uint16_t uid = 0):
-               role (role), uid (uid) {}
+               role (role), uid (uid)
+            {}
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -75,13 +78,14 @@ namespace HF
           */
          struct Unit:public Serializable
          {
-            uint8_t            id;        //!< Unit Id.
-            uint16_t           profile;   //!< Unit UID. \see IProfile::UID.
+            uint8_t            id;      //!< Unit Id.
+            uint16_t           profile; //!< Unit UID. \see IProfile::UID.
 
             vector <Interface> opt_ift;    //!< Optional interfaces.
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
-               id (id), profile (profile) {}
+               id (id), profile (profile)
+            {}
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -100,6 +104,14 @@ namespace HF
          {
             uint16_t      address; //!< Device Address.
             vector <Unit> units;   //!< Unit list of the interface.
+
+            uint16_t      emc; //! Device EMC if applicable, 0 otherwise.
+
+            HF::UID       *uid; //! Device UID.
+
+            // =============================================================================
+            // Serializable API
+            // =============================================================================
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -120,11 +132,12 @@ namespace HF
           */
          struct RegisterMessage:public Serializable
          {
-            uint16_t      emc;     //! Device EMC if applicable, 0 otherwise.
-            vector <Unit> units;   //! Device units listing.
+            uint16_t      emc;   //! Device EMC if applicable, 0 otherwise.
+            vector <Unit> units; //! Device units listing.
 
-            RegisterMessage(uint16_t emc = 0x0000, HF::UID *_uid = nullptr):
-               emc (emc), _uid ((_uid != nullptr ? _uid->clone () : _uid)) {}
+            RegisterMessage(uint16_t emc = 0x0000):
+               emc (emc), _uid (nullptr)
+            {}
 
             virtual ~RegisterMessage();
 
@@ -151,7 +164,7 @@ namespace HF
 
                _uid = nullptr;
 
-               if( uid != nullptr )
+               if (uid != nullptr)
                {
                   _uid = uid->clone ();
                }
@@ -171,7 +184,8 @@ namespace HF
             uint16_t emc;        //!< HAN-FUN Concentrator EMC if applicable.
 
             RegisterResponse(uint16_t address = 0, uint16_t emc = 0):
-               address (address & Protocol::BROADCAST_ADDR), emc (emc) {}
+               address (address & Protocol::BROADCAST_ADDR), emc (emc)
+            {}
 
             //! \see HF::Protocol::Response::size.
             size_t size () const;
@@ -194,7 +208,9 @@ namespace HF
          {
             uint16_t address;    //!< Address of the device to de-register.
 
-            DeregisterMessage(uint16_t address = 0):address (address) {}
+            DeregisterMessage(uint16_t address = 0):
+               address (address)
+            {}
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -217,7 +233,9 @@ namespace HF
          {
             uint16_t count;   //!< Number of device entries.
 
-            StartSessionResponse(uint16_t count = 0):count (count) {}
+            StartSessionResponse(uint16_t count = 0):
+               count (count)
+            {}
 
             //! \see HF::Protocol::Response::size.
             size_t size () const;
@@ -234,11 +252,12 @@ namespace HF
           */
          struct GetEntriesMessage:public Serializable
          {
-            uint16_t offset;  //! Start index for the first entry to be provided.
-            uint8_t  count;   //! Number of entries to be sent in the response.
+            uint16_t offset; //! Start index for the first entry to be provided.
+            uint8_t  count;  //! Number of entries to be sent in the response.
 
             GetEntriesMessage(uint16_t offset = 0, uint8_t count = 0):
-               offset (offset), count (count) {}
+               offset (offset), count (count)
+            {}
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -270,7 +289,9 @@ namespace HF
 
          protected:
 
-         DeviceManagement(AbstractDevice *_device):Service (_device) {}
+         DeviceManagement(IDevice *_device):
+            Service (_device)
+         {}
       };
 
       /*!
@@ -278,6 +299,33 @@ namespace HF
        */
       class DeviceManagementServer:public ServiceRole <DeviceManagement, Interface::SERVER_ROLE>
       {
+         public:
+
+         //! \see Interface::handle
+         bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+
+         protected:
+
+         DeviceManagementServer(IDevice *_device):
+            ServiceRole (_device)
+         {}
+
+         // ======================================================================
+         // Events
+         // ======================================================================
+         //! \name Events
+         //! @{
+
+         /*!
+          * This method is called when a registration message is received.
+          *
+          * \see DeviceManagementServer::handle
+          */
+         virtual bool register_device (Protocol::Message &message, ByteArray &payload,
+                                       size_t offset);
+
+         //! @}
+         // ======================================================================
       };
 
       /*!
@@ -285,12 +333,28 @@ namespace HF
        */
       class DeviceManagementClient:public ServiceRole <DeviceManagement, Interface::CLIENT_ROLE>
       {
+         protected:
+
+         uint16_t _address;   //! Device HAN-FUN Address.
+
          public:
 
-         DeviceManagementClient(AbstractDevice *_device):ServiceRole (_device) {}
+         DeviceManagementClient(IDevice *_device):
+            ServiceRole (_device), _address (Protocol::BROADCAST_ADDR)
+         {}
 
          //! \see Interface::handle
-         bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+         virtual bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+
+         /*!
+          * Return the address given by the HF Concentrator to the Device.
+          *
+          * @return  the device HAN-FUN address.
+          */
+         virtual uint16_t address () const
+         {
+            return _address;
+         }
 
          // ======================================================================
          // Commands

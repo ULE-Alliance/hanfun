@@ -17,6 +17,9 @@
 
 #include "hanfun/common.h"
 #include "hanfun/interface.h"
+#include "hanfun/protocol.h"
+
+#include "hanfun/units.h"
 
 // =============================================================================
 // API
@@ -24,14 +27,35 @@
 
 namespace HF
 {
-   class AbstractDevice;
-
-   /*!
-    * Namespace for the Core Services and Interfaces implementation.
-    */
    namespace Core
    {
-      class AbstractService:public IUnit, public AbstractInterface
+      /*!
+       * This is the interface common to all Services.
+       */
+      struct IService:public HF::Interface
+      {
+         /*!
+          * Handle the incoming packet from the network.
+          *
+          * \sa HF::Interface::handle
+          *
+          * @param [in]    packet   the packet received from the network.
+          *
+          * @param [in]    payload  the byte array containing the data received from the
+          *                         network.
+          *
+          * @param [in]    offset   the offset the payload start at in the byte array.
+          *
+          * @retval  true     if the message was handled by this interface,
+          * @retval  false    otherwise.
+          */
+         virtual bool handle (Protocol::Packet &packet, ByteArray payload, size_t offset) = 0;
+
+         //! The device this unit is associated with.
+         virtual IDevice *device () = 0;
+      };
+
+      struct AbstractService:public IService, public HF::AbstractInterface, public HF::AbstractUnit
       {
          //! Id number of this unit on the device.
          uint8_t id () const
@@ -39,13 +63,27 @@ namespace HF
             return 0;
          }
 
+         //! \see HF::Core::IService::handle
+         virtual bool handle (Protocol::Packet &packet, ByteArray payload, size_t offset)
+         {
+            return AbstractInterface::handle (packet.message, payload, offset);
+         }
+
+         IDevice *device ()
+         {
+            return HF::AbstractUnit::device ();
+         }
+
+         virtual void periodic (uint32_t time)
+         {
+            UNUSED (time);
+         }
+
          protected:
 
-         AbstractDevice *_device;
-
-         AbstractService(AbstractDevice *device):_device (device) {}
-
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message);
+         AbstractService(IDevice *_device):
+            HF::AbstractUnit (_device)
+         {}
       };
 
       /*!
@@ -61,11 +99,13 @@ namespace HF
 
          protected:
 
-         Service(AbstractDevice *_device):AbstractService (_device) {}
+         Service(IDevice *_device):
+            AbstractService (_device)
+         {}
 
          void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
-            AbstractService::sendMessage (addr, message);
+            AbstractUnit::sendMessage (addr, message);
          }
       };
 
@@ -75,7 +115,9 @@ namespace HF
       template<class Parent, Interface::Role _role>
       struct ServiceRole:public Parent
       {
-         ServiceRole(AbstractDevice *device):Parent (device) {}
+         ServiceRole(IDevice *device):
+            Parent (device)
+         {}
 
          //! \see Interface::role
          Interface::Role role () const
@@ -84,13 +126,8 @@ namespace HF
          }
       };
 
-      class DeviceManagementClient;
-
-      class DeviceManagementServer;
-
    }  // namespace Core
 
-}  // namespace HF
-
+} // namespace HF
 
 #endif /* HF_CORE_H */

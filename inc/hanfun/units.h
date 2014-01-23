@@ -16,7 +16,6 @@
 
 #include "hanfun/common.h"
 #include "hanfun/profiles.h"
-#include "hanfun/devices.h"
 
 namespace HF
 {
@@ -42,8 +41,7 @@ namespace HF
    {
       protected:
 
-      AbstractDevice *_device;
-      uint8_t _id;
+      IDevice *_device;
 
       public:
 
@@ -53,21 +51,19 @@ namespace HF
          return _device;
       }
 
-      //! \see IUnit::id
-      uint8_t id () const
-      {
-         return _id;
-      }
-
       protected:
 
-      AbstractUnit(uint8_t index, AbstractDevice *device):
-         _device (device), _id (index)
+      AbstractUnit(IDevice *device):
+         _device (device)
       {}
 
-      void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+      virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message)
       {
-         _device->sendMessage (*this, addr, message);
+         Protocol::Packet *packet = new Protocol::Packet (message);
+         packet->destination   = addr;
+         packet->source.device = device ()->address ();
+         packet->source.unit   = id ();
+         device ()->send (packet);
       }
    };
 
@@ -77,10 +73,14 @@ namespace HF
    template<class Profile>
    class Unit:public AbstractUnit, public Profile
    {
+      protected:
+
+      uint8_t _id;
+
       public:
 
-      Unit(uint8_t index, AbstractDevice *device):
-         AbstractUnit (index, device)
+      Unit(uint8_t index, IDevice *device):
+         AbstractUnit (device), _id (index)
       {
          if (device != nullptr)
          {
@@ -91,6 +91,12 @@ namespace HF
       uint16_t uid () const
       {
          return Profile::uid ();
+      }
+
+      //! \see IUnit::id
+      uint8_t id () const
+      {
+         return _id;
       }
 
       protected:

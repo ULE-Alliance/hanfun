@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <type_traits>
 
 #include "hanfun/config.h"
 
@@ -544,6 +545,67 @@ namespace HF
       {
          return !(*this == other);
       }
+   };
+
+   // Forward declaration of the Unit's interface.
+   struct IUnit;
+
+   // Forward declaration of the protocol namespace.
+   namespace Protocol
+   {
+      // Forward declaration of the protocol packet structure.
+      struct Packet;
+
+   }  // namespace Protocol
+
+   /*!
+    * This class represents the interface that all devices MUST implement.
+    */
+   struct IDevice
+   {
+      /*!
+       * Return the device address on the HAN-FUN network, when the device is registered,
+       * or \c HF_BROADCAST_ADDR otherwise.
+       *
+       * @return  the device address on the HAN-FUN network,
+       *          \c HF_BROADCAST_ADDR otherwise.
+       */
+      virtual uint16_t address () const = 0;
+
+      /*!
+       * Return the list of units registered in this device.
+       *
+       * @return     vector containing the device's registered units.
+       */
+      virtual const std::vector <IUnit *> &units () const = 0;
+
+      /*!
+       * Add unit to devices unit lists.
+       *
+       * @param unit    pointer to the unit to add to the list.
+       */
+      virtual void add (IUnit *unit) = 0;
+
+      /*!
+       * Remove unit from device's unit list.
+       *
+       * @param unit    pointer to the unit to remove from the list.
+       */
+      virtual void remove (IUnit *unit) = 0;
+
+      /*!
+       * Send given \c packet into the HAN-FUN network.
+       *
+       * @param packet  pointer to the packet to send to the network.
+       */
+      virtual void send (Protocol::Packet *packet) = 0;
+
+      /*!
+       * Receive a packet from the HAN-FUN network.
+       *
+       * @param packet  pointer to the received packet.
+       */
+      virtual void receive (Protocol::Packet *packet) = 0;
    };
 
    // =============================================================================

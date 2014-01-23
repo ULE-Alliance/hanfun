@@ -15,9 +15,11 @@
 #include <limits>
 
 #include "hanfun/profiles.h"
-#include "hanfun/units.h"
 
+#include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+
+using namespace HF::Core;
 
 // =============================================================================
 // DeviceManagementClient
@@ -39,8 +41,7 @@ void DeviceManagementClient::register_device ()
    message.itf.uid    = uid ();
    message.itf.member = REGISTER_CMD;
 
-   RegisterMessage *payload = new RegisterMessage (_device->info ()->emc (),
-                                                   _device->info ()->device_uid ());
+   RegisterMessage *payload = new RegisterMessage (DeviceInformation::EMC);
 
    for (std::vector <IUnit *>::const_iterator dev_unit = _device->units ().begin ();
         dev_unit != _device->units ().end (); ++dev_unit)
@@ -110,6 +111,6 @@ void DeviceManagementClient::registered (RegisterResponse &response)
 {
    if (response.code == Protocol::Response::OK)
    {
-      _device->address (response.address);
+      this->_address = response.address;
    }
 }

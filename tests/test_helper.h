@@ -11,7 +11,6 @@
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
 // =============================================================================
-
 #ifndef HF_TEST_HELPER_H
 #define HF_TEST_HELPER_H
 
@@ -28,6 +27,9 @@
 #include "hanfun/profiles.h"
 #include "hanfun/devices.h"
 
+#include "hanfun/core/device_information.h"
+#include "hanfun/core/device_management.h"
+
 #include "hanfun/units.h"
 
 using namespace HF;
@@ -42,14 +44,18 @@ SimpleString StringFrom (const HF::ByteArray &array);
 SimpleString StringFrom (const HF::Serializable &data);
 
 template<typename _type>
-void check_index (_type expected, _type actual, uint32_t index, const char *header, const char *fileName, int lineNumber)
+void check_index (_type expected, _type actual, uint32_t index, const char *header,
+                  const char *fileName,
+                  int lineNumber)
 {
    if (actual != expected)
    {
       std::ostringstream error;
       error << header << " at index " << index << std::endl
-            << "\t\t expected : " << expected << std::endl
-            << "\t\t but was  : " << actual;
+            << "\t\t expected : "
+            << expected << std::endl
+            << "\t\t but was  : "
+            << actual;
 
       FAIL_TEST_LOCATION (error.str ().c_str (), fileName, lineNumber);
    }
@@ -67,9 +73,12 @@ namespace HF
       {
          size_t fake_size;
 
-         Payload(size_t fake_size = 0):fake_size (fake_size & Protocol::MAX_PAYLOAD) {}
+         Payload(size_t fake_size = 0):
+            fake_size (fake_size & Protocol::MAX_PAYLOAD)
+         {}
 
-         virtual ~Payload() {}
+         virtual ~Payload()
+         {}
 
          size_t size () const
          {
@@ -158,45 +167,58 @@ namespace HF
 
       struct Unit:public HF::Unit <Profile>
       {
-         Unit(uint16_t id, AbstractDevice *device):
-            HF::Unit <Profile>(id, device) {}
+         Unit(uint16_t id, IDevice *device):
+            HF::Unit <Profile>(id, device)
+         {}
       };
 
-      struct Device:public AbstractDevice
+      template<class Parent>
+      struct AbstractDevice:public Parent
       {
-         Protocol::Address msg_addr;
-         Protocol::Message sendMsg;
-         IUnit            *unit;
+         uint16_t         _address;
 
-         Device()
+         Protocol::Packet *packet;
+
+         AbstractDevice():
+            _address (Protocol::BROADCAST_ADDR), packet (nullptr)
+         {}
+
+         virtual ~AbstractDevice()
          {
-            memset (&sendMsg, 0, sizeof(Protocol::Message));
-            memset (&msg_addr, 0, sizeof(Protocol::Address));
-
-            unit   = nullptr;
-         }
-
-         virtual ~Device()
-         {
-            if (sendMsg.payload != nullptr)
+            if (packet != nullptr)
             {
-               delete sendMsg.payload;
+               if (packet->message.payload != nullptr)
+               {
+                  delete packet->message.payload;
+               }
+
+               delete packet;
             }
          }
 
-         void sendMessage (IUnit &unit, Protocol::Address &addr, Protocol::Message &message)
+         void send (Protocol::Packet *packet)
          {
-            mock ("Device").actualCall ("sendMessage");
+            mock ("AbstractDevice").actualCall ("send");
+            this->packet = packet;
+         }
 
-            this->msg_addr = addr;
-            this->sendMsg  = message;
-            this->unit     = &unit;
+         void receive (Protocol::Packet *packet)
+         {
+            mock ("AbstractDevice").actualCall ("receive");
+            this->packet = packet;
          }
       };
 
-   }  // namespace Testing
+      struct Device:public AbstractDevice <
+         HF::Device < HF::Core::DefaultDeviceInformation, HF::Core::DeviceManagementClient >>
+      {};
 
-}  // namespace HF
+      struct Concentrator:public AbstractDevice <
+         HF::Concentrator < HF::Core::DefaultDeviceInformation, HF::Core::DeviceManagementServer >>
+      {};
 
+   } // namespace Testing
+
+} // namespace HF
 
 #endif /* HF_TEST_HELPER_H */

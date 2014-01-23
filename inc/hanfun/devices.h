@@ -22,72 +22,25 @@
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
-#include "hanfun/core.h"
 #include "hanfun/core/device_information.h"
-
-using namespace HF::Core;
+#include "hanfun/core/device_management.h"
 
 namespace HF
 {
    /*!
-    * This class represents the interface that all devices MUST implement.
-    */
-   struct IDevice
-   {
-      /*!
-       * Return the device address on the HAN-FUN network, when the device is registered,
-       * or \c HF_BROADCAST_ADDR otherwise.
-       *
-       * @return  the device address on the HAN-FUN network,
-       *          \c HF_BROADCAST_ADDR otherwise.
-       */
-      virtual uint16_t address () const = 0;
-
-      /*!
-       * Return the list of units registered in this device.
-       *
-       * @return     vector containing the device's registered units.
-       */
-      virtual const std::vector <IUnit *> &units () const = 0;
-
-      /*!
-       * Return a pointer to the HF::Core::DeviceInformation object associated
-       * with the device.
-       *
-       * @return  pointer to a HF::Core::DeviceInformation.
-       */
-      virtual DeviceInformation *info () = 0;
-
-   };
-
-   /*!
     * This class provides the basic implementation for the Device API.
     */
-   class AbstractDevice:public IDevice
+   template<typename DeviceInfo>
+   struct AbstractDevice:public IDevice
    {
-      protected:
+      DeviceInfo info;
 
-      uint16_t _address;
-
-      std::vector <IUnit *> _units;
-
-      DeviceInformation _info;
-
-      public:
+      static_assert (is_base_of <HF::Core::DeviceInformation, DeviceInfo>::value,
+                     "DeviceInfo must be of type HF::Core::DeviceInformation");
 
       // =============================================================================
       // IDevice API
       // =============================================================================
-
-      uint16_t address () const
-      {
-         return _address;
-      }
-
-      void address (uint16_t value)
-      {
-         _address = value & Protocol::BROADCAST_ADDR;
-      }
 
       const std::vector <IUnit *> &units () const
       {
@@ -99,36 +52,65 @@ namespace HF
        *
        * @param unit    pointer to the unit to add to the list.
        */
-      void add (IUnit *unit);
+      void add (IUnit *unit)
+      {
+         _units.push_back (unit);
+      }
 
       /*!
        * Remove unit from device's unit list.
        *
        * @param unit    pointer to the unit to remove from the list.
        */
-      void remove (IUnit *unit);
-
-      DeviceInformation *info ()
+      void remove (IUnit *unit)
       {
-         return &_info;
+         UNUSED (unit);
       }
-
-      /*!
-       * Send the \c message to the network the device with the the given address,
-       * indicating the unit that is sending the message.
-       *
-       * \see Interface::sendMessage
-       *
-       * @param unit       unit that is sending the message.
-       * @param addr       network address to send the message to.
-       * @param message    the message to be sent.
-       */
-      virtual void sendMessage (IUnit &unit, Protocol::Address &addr, Protocol::Message &message);
 
       protected:
 
-      AbstractDevice(uint16_t address = Protocol::BROADCAST_ADDR):
-         _address (address), _info (this) {}
+      //! Vector containing pointer to the units present in the device.
+      std::vector <IUnit *> _units;
+
+      AbstractDevice():info (DeviceInfo (this)) {}
+   };
+
+   /*!
+    * Template for HAN-FUN devices.
+    */
+   template<typename DeviceInfo, typename DeviceMgt>
+   struct Device:public AbstractDevice <DeviceInfo>
+   {
+      DeviceMgt management;
+
+      static_assert (is_base_of <HF::Core::DeviceManagementClient, DeviceMgt>::value,
+                     "DeviceMgt must be of type HF::Core::DeviceInformationClient");
+
+      uint16_t address () const
+      {
+         return management.address ();
+      }
+
+      protected:
+
+      Device():management (DeviceMgt (this)) {}
+   };
+
+   /*!
+    * HAN-FUN Concentrator implementation.
+    */
+   template<typename DeviceInfo, typename DeviceMgt>
+   struct Concentrator:public AbstractDevice <DeviceInfo>
+   {
+      DeviceMgt management;
+
+      static_assert (std::is_base_of <HF::Core::DeviceManagementServer, DeviceMgt>::value,
+                     "DeviceMgt must be of type HF::Core::DeviceInformationServer");
+
+      uint16_t address () const
+      {
+         return 0;
+      }
    };
 
 }  // namespace HF
