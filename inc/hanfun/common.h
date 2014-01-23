@@ -234,17 +234,7 @@ namespace HF
       virtual Cloneable *clone () const = 0;
    };
 
-   /*!
-    * This class represents the interface implemented by all Units.
-    */
-   struct IUnit
-   {
-      //! Id number of this unit on the device.
-      virtual uint8_t id () const = 0;
 
-      //! UID for the profile/interface contained in the unit.
-      virtual uint16_t uid () const = 0;
-   };
 
    // =============================================================================
    // UID implementation
