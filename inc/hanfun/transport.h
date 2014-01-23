@@ -38,7 +38,7 @@ namespace HF
           *
           * @return             number of bytes that were read from the ByteArray to be sent.
           */
-         virtual size_t write (ByteArray * array, size_t offset, size_t size) = 0;
+         virtual size_t write (ByteArray *array, size_t offset, size_t size) = 0;
 
          /*!
           * Helper method : \see Link::write(ByteArray *, size_t, size_t)
@@ -56,9 +56,9 @@ namespace HF
           *
           * \endcode
           */
-         virtual size_t write (ByteArray * array, size_t offset = 0)
+         virtual size_t write (ByteArray *array, size_t offset = 0)
          {
-            return this->write(array, offset, array->size() - offset);
+            return this->write (array, offset, array->size () - offset);
          }
 
          /*!
@@ -70,7 +70,7 @@ namespace HF
           *
           * @return             number of bytes placed in the ByteArray.
           */
-         virtual size_t read (ByteArray * array, size_t offset, size_t size) = 0;
+         virtual size_t read (ByteArray *array, size_t offset, size_t size) = 0;
 
          /*!
           * Helper method : \see Link::read(ByteArray *, size_t, size_t)
@@ -88,9 +88,9 @@ namespace HF
           *
           * \endcode
           */
-         virtual size_t read (ByteArray * array, size_t offset = 0)
+         virtual size_t read (ByteArray *array, size_t offset = 0)
          {
-            return this->read(array, offset, this->available());
+            return this->read (array, offset, this->available ());
          }
 
          /*!
@@ -117,7 +117,7 @@ namespace HF
           *
           * @return  pointer to the transport layer that created this link.
           */
-         virtual HF::Transport * transport () = 0;
+         virtual HF::Transport *transport () = 0;
       };
 
       /*!
@@ -141,7 +141,7 @@ namespace HF
           *
           * @param link    pointer to the created link.
           */
-         virtual void connected (Link * link) = 0;
+         virtual void connected (Link *link) = 0;
 
          /*!
           * Callback to the report that the given transport \c link no longer is
@@ -152,7 +152,7 @@ namespace HF
           *
           * @param link    pointer to the link disconnected.
           */
-         virtual void disconnected (Link * link) = 0;
+         virtual void disconnected (Link *link) = 0;
 
          /*!
           * Callback to report that the given transport \c link has data available
@@ -160,7 +160,7 @@ namespace HF
           *
           * @param link    pointer to the link were data is available.
           */
-         virtual void receive (Link * link) = 0;
+         virtual void receive (Link *link) = 0;
 
          //! @}
          // ======================================================================
@@ -181,7 +181,7 @@ namespace HF
        *
        * @param [in] ep    end-point to register in the transport layer.
        */
-      virtual void initialize (Endpoint * ep) = 0;
+      virtual void initialize (Endpoint *ep) = 0;
 
       /*!
        * Free the system resources associated with the given \c Endpoint,
@@ -194,7 +194,7 @@ namespace HF
        *
        * @param ep   pointer to the endpoint to remove from the transport layer.
        */
-      virtual void destroy (Endpoint * ep = nullptr) = 0;
+      virtual void destroy (Endpoint *ep = nullptr) = 0;
 
       /*!
        * Return the UID of the local device on this transport layer.

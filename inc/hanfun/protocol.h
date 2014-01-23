@@ -14,8 +14,6 @@
 #ifndef HF_PROTOCOL_H
 #define HF_PROTOCOL_H
 
-#include <iostream>
-
 #include <vector>
 
 #include "hanfun/common.h"

@@ -141,10 +141,10 @@ namespace HF
          // Use an ID from within the specified range to identify a proprietary unit type.
 
          //! Proprietary profiles UID start value.
-         PROPRIETATY_START = 0xFF00,
+         PROPRIETARY_START = 0xFF00,
 
          //! Proprietary profiles UID end value.
-         PROPRIETATY_END = 0xFFFF,
+         PROPRIETARY_END = 0xFFFF,
       };
 
       /*!

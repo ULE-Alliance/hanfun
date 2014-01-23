@@ -42,8 +42,8 @@ namespace HF
       enum UID
       {
          /* Core Services */
-         DEVICE_MANAGEMENT   = 0x0001,  //!< Device Management Interface UID.
-         DEVICE_INFORMATION  = 0x0005,  //!< Device Information Interface UID.
+         DEVICE_MANAGEMENT  = 0x0001,   //!< Device Management Interface UID.
+         DEVICE_INFORMATION = 0x0005,   //!< Device Information Interface UID.
 
          /* Functional Interfaces. */
          ALERT              = 0x0100,  //!< Alert Interface UID
@@ -88,8 +88,7 @@ namespace HF
       /*!
        * Handle incoming messages from the network.
        *
-       * @param [inout] message  the message receive from the network.
-       *                         This will updated if a response is to send back.
+       * @param [in]    message  the message receive from the network.
        *
        * @param [in]    payload  the byte array containing the data received from the
        *                         network.

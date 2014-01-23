@@ -57,7 +57,7 @@ TEST (DeviceManagement, InterfaceServer)
 
    LONGS_EQUAL (Interface::SERVER_ROLE, itf.role);
    LONGS_EQUAL (0x7AAA, itf.uid);
-};
+}
 
 TEST (DeviceManagement, InterfaceClient)
 {
@@ -88,7 +88,7 @@ TEST (DeviceManagement, InterfaceClient)
 
    LONGS_EQUAL (Interface::CLIENT_ROLE, itf.role);
    LONGS_EQUAL (0x7555, itf.uid);
-};
+}
 
 // =============================================================================
 // DeviceManagement::Unit
@@ -444,8 +444,7 @@ TEST (DeviceManagement_RegisterResponce, EMC)
    LONGS_EQUAL (Protocol::Response::FAIL_AUTH, response.code);
    LONGS_EQUAL (0x4243, response.address);
    LONGS_EQUAL (0xAABB, response.emc);
-};
-
+}
 
 // =============================================================================
 // DeviceManagement::DeregisterMessage
