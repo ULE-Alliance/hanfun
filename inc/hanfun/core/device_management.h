@@ -109,6 +109,13 @@ namespace HF
 
             HF::UID       *uid; //! Device UID.
 
+            Device():address (Protocol::BROADCAST_ADDR), emc (0), uid (nullptr) {}
+
+            virtual ~Device()
+            {
+               delete uid;
+            }
+
             // =============================================================================
             // Serializable API
             // =============================================================================

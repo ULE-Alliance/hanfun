@@ -210,7 +210,7 @@ TEST (DeviceManagement, Device)
 
    device = DeviceManagement::Device ();
 
-   LONGS_EQUAL (0x0, device.address);
+   LONGS_EQUAL (Protocol::BROADCAST_ADDR, device.address);
    LONGS_EQUAL (0, device.units.size ());
 
    size_t rsize = device.unpack (expected, 3);
@@ -270,7 +270,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
 TEST (DeviceManagement_RegisterMessage, No_EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x01,                         // Discriminator Type.
+                     0x02,                         // Discriminator Type.
                      0x05,                         // Size of UID.
                      0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                      0x03,                         // Number of units.
@@ -322,7 +322,7 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 TEST (DeviceManagement_RegisterMessage, EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x81,                         // Discriminator Type.
+                     0x82,                         // Discriminator Type.
                      0x05,                         // Size of UID.
                      0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                      0x42, 0x43,                   // EMC.
@@ -784,4 +784,3 @@ TEST (DeviceManagementClient, RegisterResponse_FAIL)
 
    LONGS_EQUAL (Protocol::BROADCAST_ADDR, device->address ());
 }
-

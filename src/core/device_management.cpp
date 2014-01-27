@@ -342,6 +342,9 @@ size_t DeviceManagement::RegisterMessage::unpack (const ByteArray &array, size_t
       case HF::UID::NONE:
          _uid = new HF::UID ();
          break;
+      case HF::UID::RFPI:
+         _uid = new HF::RFPI ();
+         break;
       case HF::UID::IPUI:
          _uid = new HF::IPUI ();
          break;
@@ -355,7 +358,10 @@ size_t DeviceManagement::RegisterMessage::unpack (const ByteArray &array, size_t
          break;
    }
 
-   offset += _uid->unpack (array, offset);
+   if (_uid != nullptr)
+   {
+      offset += _uid->unpack (array, offset);
+   }
 
    if (emc)
    {

@@ -250,9 +250,10 @@ namespace HF
       enum Type
       {
          NONE = 0x00,         //!< Empty UID.
-         IPUI = 0x01,         //!< International Portable User Identifier.
-         MAC  = 0x02,         //!< Media Access Control (IEEE-MAC-48)
-         URI  = 0x03,         //!< Uniform Resource Identifier.
+         RFPI = 0x01,         //!< Radio Fixed Part Identifier.
+         IPUI = 0x02,         //!< International Portable User Identifier.
+         MAC  = 0x03,         //!< Media Access Control (IEEE-MAC-48)
+         URI  = 0x04,         //!< Uniform Resource Identifier.
       };
 
       //! Type of the UID.
