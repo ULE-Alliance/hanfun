@@ -292,12 +292,31 @@ namespace HF
 
       bool operator ==(const HF::UID &other)
       {
-         return type () == other.type ();
+         return (this->compare (&other) == 0);
       }
 
       bool operator !=(const HF::UID &other)
       {
          return !(*this == other);
+      }
+
+      /*!
+       * Compare the current UID with the given UID.
+       *
+       * This function returns a value less that 0 if the current UID object
+       * order is lower that the given UID, 0 if the UIDs represent the same
+       * entity and a value greater that 0 if current UID object is above the given
+       * UID.
+       *
+       * @param [in] other  a pointer to a UID object to compare to.
+       *
+       * @retval     < 0, the current UID is lower that the given UID.
+       * @retval     0  , the current UID is the same as given UID.
+       * @retval     > 0, the current UID is greater that the given UID.
+       */
+      virtual int compare (const UID *other) const
+      {
+         return (other != nullptr ? type () - other->type () : type ());
       }
    };
 
@@ -310,12 +329,10 @@ namespace HF
       }
    };
 
-   /*!
-    * IPUI UID class.
-    */
-   struct IPUI:public AbstractUID <UID::IPUI>
+   template<typename _Class, uint8_t _size, UID::Type _type>
+   struct ByteArrayUID:public AbstractUID <_type>
    {
-      uint8_t value[5];
+      uint8_t value[_size];
 
       //! \see HF::Serializable::size.
       size_t size () const
@@ -354,6 +371,37 @@ namespace HF
          return offset - start;
       }
 
+      // ===================================================================
+      // API
+      // ===================================================================
+
+      int compare (const UID *other) const
+      {
+         int res = UID::compare (other);
+         return (res == 0 ? memcmp (value, ((_Class *) other)->value, sizeof(value)) : res);
+      }
+   };
+
+   /*!
+    * RFPI UID class.
+    */
+   struct RFPI:public ByteArrayUID <RFPI, 5, UID::RFPI>
+   {
+      // ===================================================================
+      // Cloneable
+      // ===================================================================
+
+      RFPI *clone () const
+      {
+         return new RFPI (*this);
+      }
+   };
+
+   /*!
+    * IPUI UID class.
+    */
+   struct IPUI:public ByteArrayUID <IPUI, 5, UID::IPUI>
+   {
       // ===================================================================
       // Cloneable
       // ===================================================================
@@ -362,77 +410,13 @@ namespace HF
       {
          return new IPUI (*this);
       }
-
-      // ===================================================================
-      // Operators
-      // ===================================================================
-
-      bool operator ==(const HF::UID &other)
-      {
-         if (type () != other.type ())
-         {
-            return false;
-         }
-
-         if (memcmp (value, ((IPUI *) &other)->value, 5) != 0)
-         {
-            return false;
-         }
-
-         return true;
-      }
-
-
-      bool operator !=(const HF::UID &other)
-      {
-         return !(*this == other);
-      }
    };
 
    /*!
     * IEEE MAC-48b UID class.
     */
-   struct MAC:public AbstractUID <UID::MAC>
+   struct MAC:public ByteArrayUID <MAC, 6, UID::MAC>
    {
-      uint8_t value[6];
-
-      //! \see HF::Serializable::size.
-      size_t size () const
-      {
-         return UID::size () + sizeof(value);
-      }
-
-      //! \see HF::Serializable::pack.
-      size_t pack (ByteArray &array, size_t offset = 0) const
-      {
-         size_t start = offset;
-
-         offset += array.write (offset, (uint8_t) sizeof(value));
-
-         for (uint8_t i = 0; i < sizeof(value); i++)
-         {
-            offset += array.write (offset, value[i]);
-         }
-
-         return offset - start;
-      }
-
-      //! \see HF::Serializable::unpack.
-      size_t unpack (const ByteArray &array, size_t offset = 0)
-      {
-         uint8_t size;
-         size_t  start = offset;
-
-         offset += array.read (offset, size);
-
-         for (uint8_t i = 0; size == sizeof(value) && i < size; i++)
-         {
-            offset += array.read (offset, value[i]);
-         }
-
-         return offset - start;
-      }
-
       // ===================================================================
       // Cloneable
       // ===================================================================
@@ -440,31 +424,6 @@ namespace HF
       MAC *clone () const
       {
          return new MAC (*this);
-      }
-
-      // ===================================================================
-      // Operators
-      // ===================================================================
-
-      bool operator ==(const HF::UID &other)
-      {
-         if (type () != other.type ())
-         {
-            return false;
-         }
-
-         if (memcmp (value, ((MAC *) &other)->value, 6) != 0)
-         {
-            return false;
-         }
-
-         return true;
-      }
-
-
-      bool operator !=(const HF::UID &other)
-      {
-         return !(*this == other);
       }
    };
 
@@ -529,22 +488,13 @@ namespace HF
       }
 
       // ===================================================================
-      // Operators
+      // API
       // ===================================================================
 
-      bool operator ==(const HF::UID &other)
+      int compare (const UID *other) const
       {
-         if (type () != other.type ())
-         {
-            return false;
-         }
-
-         return value == ((URI *) &other)->value;
-      }
-
-      bool operator !=(const HF::UID &other)
-      {
-         return !(*this == other);
+         int res = UID::compare (other);
+         return (res == 0 ? value.compare (((URI *) other)->value) : res);
       }
    };
 
@@ -578,7 +528,7 @@ namespace HF
        *
        * @return     vector containing the device's registered units.
        */
-      virtual const std::vector <IUnit *> &units () const = 0;
+      virtual const vector <IUnit *> &units () const = 0;
 
       /*!
        * Add unit to devices unit lists.
@@ -646,5 +596,21 @@ namespace HF
    void hf_ntoh (uint32_t &value);
 
 }  // namespace HF
+
+/*
+ * This provides a template specialization to use in ordered collections
+ * containing pointer to UID classes.
+ */
+namespace std
+{
+   template<>
+   struct less <HF::UID *> :public binary_function <HF::UID *, HF::UID *, bool>
+   {
+      bool operator ()(HF::UID *lhs, HF::UID *rhs) const
+      {
+         return lhs->compare (rhs) < 0;
+      }
+   };
+}
 
 #endif /* HF_COMMON_H */

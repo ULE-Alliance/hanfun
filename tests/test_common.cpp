@@ -405,3 +405,198 @@ TEST (UID, Equals)
    CHECK_EQUAL (uri, *temp);
    CHECK_EQUAL (uri, uri2);
 }
+
+TEST (UID, Order)
+{
+   UID  none;
+   UID  none2;
+
+   RFPI rfpi;
+   RFPI rfpi2;
+
+   IPUI ipui;
+   IPUI ipui2;
+
+   MAC  mac;
+   MAC  mac2;
+
+   URI  uri;
+   URI  uri2;
+
+   rfpi.value[0]  = rfpi2.value[0] = 0x12;
+   rfpi.value[1]  = rfpi2.value[1] = 0x23;
+   rfpi.value[2]  = rfpi2.value[2] = 0x45;
+   rfpi.value[3]  = rfpi2.value[3] = 0x67;
+
+   rfpi.value[4]  = 0x89;
+
+   rfpi2.value[4] = rfpi.value[4] + 2;
+
+   ipui.value[0]  = ipui2.value[0] = 0x12;
+   ipui.value[1]  = ipui2.value[1] = 0x23;
+   ipui.value[2]  = ipui2.value[2] = 0x45;
+   ipui.value[3]  = ipui2.value[3] = 0x67;
+
+   ipui.value[4]  = 0x89;
+
+   ipui2.value[4] = ipui.value[4] + 3;
+
+   mac.value[0]   = mac2.value[0] = 0x12;
+   mac.value[1]   = mac2.value[1] = 0x23;
+   mac.value[2]   = mac2.value[2] = 0x45;
+   mac.value[3]   = mac2.value[3] = 0x67;
+   mac.value[4]   = mac2.value[4] = 0x89;
+   mac.value[5]   = 0x9A;
+
+   mac2.value[5]  = mac.value[5] + 4;
+
+   uri.value      = "hf://www.example.com";
+
+   uri2.value     = "hf://www.example1.com";
+
+   // Check if operation works.
+
+   less <UID *> comp;
+
+   CHECK_FALSE (comp (&none, &none));
+   CHECK_FALSE (comp (&rfpi, &rfpi));
+   CHECK_FALSE (comp (&ipui, &ipui));
+   CHECK_FALSE (comp (&mac, &mac));
+   CHECK_FALSE (comp (&uri, &uri));
+
+   CHECK_TRUE (comp (&none, &rfpi));
+   CHECK_TRUE (comp (&none, &ipui));
+   CHECK_TRUE (comp (&none, &mac));
+   CHECK_TRUE (comp (&none, &uri));
+
+   CHECK_FALSE (comp (&rfpi, &none));
+   CHECK_TRUE (comp (&rfpi, &ipui));
+   CHECK_TRUE (comp (&rfpi, &mac));
+   CHECK_TRUE (comp (&rfpi, &uri));
+
+   CHECK_FALSE (comp (&ipui, &none));
+   CHECK_FALSE (comp (&ipui, &rfpi));
+   CHECK_TRUE (comp (&ipui, &mac));
+   CHECK_TRUE (comp (&ipui, &uri));
+
+   CHECK_FALSE (comp (&mac, &none));
+   CHECK_FALSE (comp (&mac, &rfpi));
+   CHECK_FALSE (comp (&mac, &ipui));
+   CHECK_TRUE (comp (&mac, &uri));
+
+   CHECK_FALSE (comp (&uri, &none));
+   CHECK_FALSE (comp (&uri, &rfpi));
+   CHECK_FALSE (comp (&uri, &ipui));
+   CHECK_FALSE (comp (&uri, &mac));
+
+   // Using it on an ordered collection.
+
+   map <UID *, string> test_db;
+
+   // Only one NONE UID is possible.
+
+   string temp;
+   test_db[&none] = temp = "This is the NONE UID.";
+
+   LONGS_EQUAL (1, test_db.size ());
+
+   test_db[&none2] = temp = "This is the Other NONE UID.";
+
+   LONGS_EQUAL (1, test_db.size ());
+
+   STRCMP_EQUAL (temp.c_str (), test_db[&none].c_str ());
+
+   // All other UID should increase size value.
+
+   uint8_t size = test_db.size ();
+
+   test_db[&rfpi] = "This is the RFPI UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&rfpi2] = "This is the other RFPI UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&ipui] = "This is the IPUI UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&ipui2] = "This is the other IPUI UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&mac] = "This is the MAC UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&mac2] = "This is the other MAC UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&uri] = "This is the URI UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   test_db[&uri2] = "This is the other URI UID.";
+   LONGS_EQUAL (++size, test_db.size ());
+
+   RFPI rfpi3;
+
+   rfpi3.value[0] = rfpi.value[0];
+   rfpi3.value[1] = rfpi.value[1];
+   rfpi3.value[2] = rfpi.value[2];
+   rfpi3.value[3] = rfpi.value[3];
+   rfpi3.value[4] = rfpi.value[4];
+
+   STRCMP_EQUAL ("This is the RFPI UID.", test_db[&rfpi3].c_str ());
+
+   rfpi3.value[0] = rfpi2.value[0];
+   rfpi3.value[1] = rfpi2.value[1];
+   rfpi3.value[2] = rfpi2.value[2];
+   rfpi3.value[3] = rfpi2.value[3];
+   rfpi3.value[4] = rfpi2.value[4];
+
+   STRCMP_EQUAL ("This is the other RFPI UID.", test_db[&rfpi3].c_str ());
+
+   IPUI ipui3;
+
+   ipui3.value[0] = ipui.value[0];
+   ipui3.value[1] = ipui.value[1];
+   ipui3.value[2] = ipui.value[2];
+   ipui3.value[3] = ipui.value[3];
+   ipui3.value[4] = ipui.value[4];
+
+   STRCMP_EQUAL ("This is the IPUI UID.", test_db[&ipui3].c_str ());
+
+   ipui3.value[0] = ipui2.value[0];
+   ipui3.value[1] = ipui2.value[1];
+   ipui3.value[2] = ipui2.value[2];
+   ipui3.value[3] = ipui2.value[3];
+   ipui3.value[4] = ipui2.value[4];
+
+   STRCMP_EQUAL ("This is the other IPUI UID.", test_db[&ipui3].c_str ());
+
+   MAC mac3;
+
+   mac3.value[0] = mac.value[0];
+   mac3.value[1] = mac.value[1];
+   mac3.value[2] = mac.value[2];
+   mac3.value[3] = mac.value[3];
+   mac3.value[4] = mac.value[4];
+   mac3.value[5] = mac.value[5];
+
+   STRCMP_EQUAL ("This is the MAC UID.", test_db[&mac3].c_str ());
+
+   mac3.value[0] = mac2.value[0];
+   mac3.value[1] = mac2.value[1];
+   mac3.value[2] = mac2.value[2];
+   mac3.value[3] = mac2.value[3];
+   mac3.value[4] = mac2.value[4];
+   mac3.value[5] = mac2.value[5];
+
+   STRCMP_EQUAL ("This is the other MAC UID.", test_db[&mac3].c_str ());
+
+   URI uri3;
+
+   uri3.value = uri.value;
+
+   STRCMP_EQUAL ("This is the URI UID.", test_db[&uri3].c_str ());
+
+   uri3.value = uri2.value;
+
+   STRCMP_EQUAL ("This is the other URI UID.", test_db[&uri3].c_str ());
+}
