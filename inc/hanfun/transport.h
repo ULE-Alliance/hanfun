@@ -29,6 +29,8 @@ namespace HF
        */
       struct Link
       {
+         virtual ~Link() {}
+
          /*!
           * Write the data present in the given ByteArray to the network.
           *
@@ -110,7 +112,7 @@ namespace HF
           *
           * @return  the UID of the remote device of this link.
           */
-         virtual UID uid () = 0;
+         virtual UID *uid () = 0;
 
          /*!
           * Return the transport layer implementation this link belongs to.

@@ -61,9 +61,9 @@ namespace HF
             return mock ("Link").actualCall ("available").returnValue ().getIntValue ();
          }
 
-         virtual HF::UID uid ()
+         virtual HF::UID *uid ()
          {
-            return _uid;
+            return &_uid;
          }
 
          virtual HF::Transport *transport ()
