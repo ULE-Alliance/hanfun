@@ -718,13 +718,13 @@ TEST (DeviceManagementClient, RegisterMessage)
    LONGS_EQUAL (unit3->uid (), payload->units[2].profile);
 }
 
-IGNORE_TEST (DeviceManagementClient, RegisterMessage_EMC)
+TEST (DeviceManagementClient, RegisterMessage_EMC)
 {
-   mock ("Device").expectOneCall ("send");
+   mock ("AbstractDevice").expectOneCall ("send");
 
    dev_mgt->register_device ();
 
-   mock ("Device").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
 
    CHECK_TRUE (device->packet != nullptr);
 

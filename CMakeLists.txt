@@ -54,8 +54,13 @@ set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT
 configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
                 ${CMAKE_SOURCE_DIR}/inc/hanfun/version.h )
 
-configure_file( ${CMAKE_SOURCE_DIR}/config.h.in
-                ${CMAKE_SOURCE_DIR}/inc/hanfun/config.h )
+if(BUILD_TESTS)
+    configure_file( ${CMAKE_SOURCE_DIR}/tests/config.h.in
+                    ${CMAKE_SOURCE_DIR}/inc/hanfun/config.h )
+else()
+    configure_file( ${CMAKE_SOURCE_DIR}/config.h.in
+                    ${CMAKE_SOURCE_DIR}/inc/hanfun/config.h )
+endif()
 
 # ==============================================================================
 # Library
