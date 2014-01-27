@@ -26,6 +26,8 @@
 
 #include "hanfun/config.h"
 
+#include "hanfun/gcc.h"
+
 using namespace std;
 
 // =============================================================================

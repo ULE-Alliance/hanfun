@@ -1,13 +1,4 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#if __GNUC__ > 4 || \
-    (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || \
-        (__GNUC_MINOR__ == 6 && \
-            __GNUC_PATCHLEVEL__ >= 0)))
-    // Greater than or equal to 4.6.0
-#else
-   #define nullptr   NULL
-#endif
-
 #endif  /* CONFIG_H */
