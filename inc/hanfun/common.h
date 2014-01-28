@@ -24,7 +24,8 @@
 #include <vector>
 #include <type_traits>
 
-#include "hanfun/config.h"
+#include "version.h"
+#include "config.h"
 
 #include "hanfun/gcc.h"
 

@@ -52,14 +52,14 @@ set(PROJECT_PATCH_VERSION 0)
 set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
 
 configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
-                ${CMAKE_SOURCE_DIR}/inc/hanfun/version.h )
+                ${CMAKE_BINARY_DIR}/version.h )
 
 if(BUILD_TESTS)
     configure_file( ${CMAKE_SOURCE_DIR}/tests/config.h.in
-                    ${CMAKE_SOURCE_DIR}/inc/hanfun/config.h )
+                    ${CMAKE_BINARY_DIR}/config.h )
 else()
     configure_file( ${CMAKE_SOURCE_DIR}/config.h.in
-                    ${CMAKE_SOURCE_DIR}/inc/hanfun/config.h )
+                    ${CMAKE_BINARY_DIR}/config.h )
 endif()
 
 # ==============================================================================
