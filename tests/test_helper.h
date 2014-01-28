@@ -187,13 +187,17 @@ namespace HF
 
          virtual ~AbstractDevice()
          {
-            for_each( packets.begin(), packets.end(), [](Protocol::Packet * packet) {
+            /* *INDENT-OFF* */
+            for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
+            {
                if (packet->message.payload != nullptr)
                {
                   delete packet->message.payload;
                }
+
                delete packet;
             });
+            /* *INDENT-ON* */
 
             packets.clear ();
          }

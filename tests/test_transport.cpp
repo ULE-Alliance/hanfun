@@ -78,18 +78,17 @@ namespace HF
 
          ~Transport()
          {
-            for_each (links.begin (), links.end (),
-                      [endpoints](Link *link)
-                      {
-                         for_each (endpoints.begin (), endpoints.end (),
-                                   [link](Endpoint *ep)
-                                   {
-                                      ep->disconnected (link);
-                                   }
-                                  );
-                         delete link;
-                      }
-                     );
+            /* *INDENT-OFF* */
+            for_each(links.begin(), links.end(), [endpoints](Link *link)
+            {
+               for_each (endpoints.begin (), endpoints.end (), [link](Endpoint *ep)
+               {
+                  ep->disconnected (link);
+               }
+               );
+               delete link;
+            });
+            /* *INDENT-ON* */
          }
 
          virtual void initialize (HF::Transport::Endpoint *ep)
@@ -127,13 +126,12 @@ namespace HF
 
          virtual void destroy_link (Link *link)
          {
-            for_each (endpoints.begin (), endpoints.end (),
-                      [link](Endpoint *ep)
-                      {
-                         ep->disconnected (link);
-                      }
-                     );
-         }
+            /* *INDENT-OFF* */
+            for_each(endpoints.begin(), endpoints.end(), [link](Endpoint *ep)
+            {
+               ep->disconnected (link);
+            });
+            /* *INDENT-ON* */}
       };
 
    }  // namespace Testing
