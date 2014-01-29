@@ -28,12 +28,14 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-bool OnOffServer::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result OnOffServer::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
    // Check for correct interface and command.
-   if (!AbstractInterface::handle (message, payload, offset))
+   Result result = AbstractInterface::handle (message, payload, offset);
+
+   if (result != Result::OK)
    {
-      return false;
+      return result;
    }
 
    OnOff::CMD cmd = static_cast <OnOff::CMD>(message.itf.member);
@@ -50,10 +52,10 @@ bool OnOffServer::handle (Protocol::Message &message, ByteArray &payload, size_t
          toggle ();
          break;
       default:
-         return false;
+         return Result::FAIL_SUPPORT;
    }
 
-   return true;
+   return Result::OK;
 }
 
 // =============================================================================

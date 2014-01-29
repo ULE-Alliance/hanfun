@@ -23,10 +23,8 @@ namespace HF
    /*!
     * Common interface for all Interfaces.
     */
-   class Interface
+   struct Interface
    {
-      public:
-
       /*!
        * Interface roles.
        */
@@ -95,10 +93,9 @@ namespace HF
        *
        * @param [in]    offset   the offset the payload start at in the byte array.
        *
-       * @retval  true     if the message was handled by this interface,
-       * @retval  false    otherwise.
+       * @return        the result of the messsage processing.
        */
-      virtual bool handle (Protocol::Message &message, ByteArray &payload, size_t offset) = 0;
+      virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset) = 0;
 
       /*!
        * Handle periodic processing.
@@ -113,12 +110,12 @@ namespace HF
     */
    struct AbstractInterface:public Interface
    {
-      bool handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+      Result handle (Protocol::Message &message, ByteArray &payload, size_t offset)
       {
          return handle (message, payload, offset, 0);
       }
 
-      bool handle (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
+      Result handle (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
       {
          UNUSED (payload);
          UNUSED (offset);
@@ -132,7 +129,7 @@ namespace HF
          }
          else
          {
-            return false;
+            return (uid () != message.itf.uid ? Result::FAIL_ID : Result::FAIL_SUPPORT);
          }
       }
 
@@ -162,18 +159,18 @@ namespace HF
        */
       virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
 
-      bool check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
+      Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
       {
          if (payload_size != 0)
          {
             if (message.length < payload_size || payload.size () < offset ||
                 (payload.size () - offset) < payload_size)
             {
-               return false;
+               return Result::FAIL_ARG;
             }
          }
 
-         return true;
+         return Result::OK;
       }
    };
 

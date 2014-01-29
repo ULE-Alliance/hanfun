@@ -376,7 +376,7 @@ TEST_GROUP (DeviceManagement_RegisterResponce)
 TEST (DeviceManagement_RegisterResponce, No_EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Protocol::Response::FAIL_AUTH, // Responce Code.
+                     Result::FAIL_AUTH, // Responce Code.
                      0x42, 0x43,                    // Device Address.
                      0x00, 0x00, 0x00};
 
@@ -384,7 +384,7 @@ TEST (DeviceManagement_RegisterResponce, No_EMC)
 
    DeviceManagement::RegisterResponse response;
 
-   response.code    = Protocol::Response::FAIL_AUTH;
+   response.code    = Result::FAIL_AUTH;
    response.address = 0x4243;
 
    size_t size = response.size ();
@@ -402,23 +402,23 @@ TEST (DeviceManagement_RegisterResponce, No_EMC)
    size_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Protocol::Response::FAIL_AUTH, response.code);
+   LONGS_EQUAL (Result::FAIL_AUTH, response.code);
    LONGS_EQUAL (0x4243, response.address);
 }
 
 TEST (DeviceManagement_RegisterResponce, EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Protocol::Response::FAIL_AUTH, // Responce Code.
-                     0xC2, 0x43,                    // Device Address.
-                     0xAA, 0xBB,                    // EMC
+                     Result::FAIL_AUTH, // Responce Code.
+                     0xC2, 0x43,        // Device Address.
+                     0xAA, 0xBB,        // EMC
                      0x00, 0x00, 0x00};
 
    ByteArray expected = ByteArray (data, sizeof(data));
 
    DeviceManagement::RegisterResponse response;
 
-   response.code    = Protocol::Response::FAIL_AUTH;
+   response.code    = Result::FAIL_AUTH;
    response.address = 0x4243;
    response.emc     = 0xAABB;
 
@@ -441,7 +441,7 @@ TEST (DeviceManagement_RegisterResponce, EMC)
    size_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Protocol::Response::FAIL_AUTH, response.code);
+   LONGS_EQUAL (Result::FAIL_AUTH, response.code);
    LONGS_EQUAL (0x4243, response.address);
    LONGS_EQUAL (0xAABB, response.emc);
 }
@@ -490,11 +490,11 @@ TEST (DeviceManagement, StartSessionResponse)
    size_t size = response.size ();
    LONGS_EQUAL (1 + 2, size);
 
-   response.code  = Protocol::Response::FAIL_READ_SESSION;
+   response.code  = Result::FAIL_READ_SESSION;
    response.count = 0x4243;
 
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Protocol::Response::FAIL_READ_SESSION, // Response code.
+                     Result::FAIL_READ_SESSION, // Response code.
                      0x42, 0x43,                            // Device Address.
                      0x00, 0x00, 0x00};
 
@@ -506,13 +506,13 @@ TEST (DeviceManagement, StartSessionResponse)
 
    CHECK_EQUAL (expected, array);
 
-   response.code  = Protocol::Response::OK;
+   response.code  = Result::OK;
    response.count = 0;
 
    size_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Protocol::Response::FAIL_READ_SESSION, response.code);
+   LONGS_EQUAL (Result::FAIL_READ_SESSION, response.code);
    LONGS_EQUAL (0x4243, response.count);
 }
 
@@ -580,23 +580,23 @@ TEST (DeviceManagement, GetEntriesResponse)
    size_t size = response.size ();
    LONGS_EQUAL (1 + 1 + device.size () * 3, size);
 
-   response.code = Protocol::Response::FAIL_READ_SESSION;
+   response.code = Result::FAIL_READ_SESSION;
 
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Protocol::Response::FAIL_READ_SESSION, // Response code.
-                     0x03,                                  // Number of entries.
-                                                            // Device 1
-                     0x43, 0x21,                            //  + Device Address.
-                     0x01,                                  //  + Number of units.
-                     0x03, 0x42, 0x5A,0xA5,                 //  + Unit 1.
-                                                            // Device 2
-                     0x43, 0x22,                            //  + Device Address.
-                     0x01,                                  //  + Number of units.
-                     0x03, 0x42, 0x5A,0xA5,                 //  + Unit 1.
-                                                            // Device 3
-                     0x43, 0x23,                            //  + Device Address.
-                     0x01,                                  //  + Number of units.
-                     0x03, 0x42, 0x5A,0xA5,                 //  + Unit 1.
+                     Result::FAIL_READ_SESSION, // Response code.
+                     0x03,                      // Number of entries.
+                                                // Device 1
+                     0x43, 0x21,                //  + Device Address.
+                     0x01,                      //  + Number of units.
+                     0x03, 0x42, 0x5A,0xA5,     //  + Unit 1.
+                                                // Device 2
+                     0x43, 0x22,                //  + Device Address.
+                     0x01,                      //  + Number of units.
+                     0x03, 0x42, 0x5A,0xA5,     //  + Unit 1.
+                                                // Device 3
+                     0x43, 0x23,                //  + Device Address.
+                     0x01,                      //  + Number of units.
+                     0x03, 0x42, 0x5A,0xA5,     //  + Unit 1.
                      0x00, 0x00, 0x00};
 
    ByteArray expected (data, sizeof(data));
@@ -612,7 +612,7 @@ TEST (DeviceManagement, GetEntriesResponse)
    size_t rsize = other.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Protocol::Response::FAIL_READ_SESSION, other.code);
+   LONGS_EQUAL (Result::FAIL_READ_SESSION, other.code);
    LONGS_EQUAL (3, other.entries.size ());
 
    for (uint8_t i = 0; i < 3; i++)
@@ -664,7 +664,6 @@ TEST_GROUP (DeviceManagementClient)
       unit2->_uid = 0xFF02;
       unit3->_uid = 0xFF03;
 
-      // dev_mgt = new TestDeviceManagementClient(device);
       dev_mgt = &(device->management);
 
       mock ().ignoreOtherCalls ();
@@ -676,7 +675,6 @@ TEST_GROUP (DeviceManagementClient)
       delete unit2;
       delete unit3;
 
-      //      delete dev_mgt;
 
       delete device;
 
@@ -693,16 +691,20 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    mock ("AbstractDevice").checkExpectations ();
 
-   CHECK_TRUE (device->packet != nullptr);
+   LONGS_EQUAL (1, device->packets.size ());
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, device->packet->message.itf.role);
-   LONGS_EQUAL (dev_mgt->uid (), device->packet->message.itf.uid);
-   LONGS_EQUAL (DeviceManagement::REGISTER_CMD, device->packet->message.itf.member);
+   Protocol::Packet *packet = device->packets.back ();
 
-   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, device->packet->message.type);
+   CHECK_TRUE (packet != nullptr);
+
+   LONGS_EQUAL (Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
+   LONGS_EQUAL (DeviceManagement::REGISTER_CMD, packet->message.itf.member);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
 
    DeviceManagement::RegisterMessage *payload =
-      static_cast <DeviceManagement::RegisterMessage *>(device->packet->message.payload);
+      static_cast <DeviceManagement::RegisterMessage *>(packet->message.payload);
 
    LONGS_EQUAL (DeviceInformation::EMC, payload->emc);
 
@@ -726,10 +728,12 @@ TEST (DeviceManagementClient, RegisterMessage_EMC)
 
    mock ("AbstractDevice").checkExpectations ();
 
-   CHECK_TRUE (device->packet != nullptr);
+   LONGS_EQUAL (1, device->packets.size ());
+
+   Protocol::Packet *packet                   = device->packets.back ();
 
    DeviceManagement::RegisterMessage *payload =
-      static_cast <DeviceManagement::RegisterMessage *>(device->packet->message.payload);
+      static_cast <DeviceManagement::RegisterMessage *>(packet->message.payload);
 
    LONGS_EQUAL (0x1234, payload->emc);
 }
@@ -737,7 +741,7 @@ TEST (DeviceManagementClient, RegisterMessage_EMC)
 TEST (DeviceManagementClient, RegisterResponse_OK)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Protocol::Response::OK, // Responce Code.
+                     Result::OK, // Response Code.
                      0x42, 0x43,             // Device Address.
                      0x00, 0x00, 0x00};
 
@@ -753,7 +757,8 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
 
-   CHECK_TRUE (dev_mgt->handle (message, payload, 3));
+   Result result = dev_mgt->handle (message, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    mock ("DeviceManagementClient").checkExpectations ();
 
@@ -763,7 +768,7 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 TEST (DeviceManagementClient, RegisterResponse_FAIL)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Protocol::Response::FAIL_RESOURCES, // Responce Code.
+                     Result::FAIL_RESOURCES, // Response Code.
                      0x00, 0x00, 0x00};
 
    ByteArray payload (data, sizeof(data));
@@ -778,7 +783,8 @@ TEST (DeviceManagementClient, RegisterResponse_FAIL)
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
 
-   CHECK_TRUE (dev_mgt->handle (message, payload, 3));
+   Result result = dev_mgt->handle (message, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    mock ("DeviceManagementClient").checkExpectations ();
 

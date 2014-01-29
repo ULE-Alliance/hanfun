@@ -46,10 +46,9 @@ namespace HF
           *
           * @param [in]    offset   the offset the payload start at in the byte array.
           *
-          * @retval  true     if the message was handled by this interface,
-          * @retval  false    otherwise.
+          * @result        the result of the processing of the packet by the service interface.
           */
-         virtual bool handle (Protocol::Packet &packet, ByteArray payload, size_t offset) = 0;
+         virtual Result handle (Protocol::Packet &packet, ByteArray payload, size_t offset) = 0;
 
          //! The device this unit is associated with.
          virtual IDevice *device () = 0;
@@ -64,9 +63,15 @@ namespace HF
          }
 
          //! \see HF::Core::IService::handle
-         virtual bool handle (Protocol::Packet &packet, ByteArray payload, size_t offset)
+         virtual Result handle (Protocol::Packet &packet, ByteArray payload, size_t offset)
          {
             return AbstractInterface::handle (packet.message, payload, offset);
+         }
+
+         //! \see HF::Interface::handle
+         virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+         {
+            return AbstractInterface::handle (message, payload, offset);
          }
 
          IDevice *device ()
@@ -115,6 +120,9 @@ namespace HF
       template<class Parent, Interface::Role _role>
       struct ServiceRole:public Parent
       {
+         static_assert (is_base_of <HF::Core::AbstractService, Parent>::value,
+                        "Parent must be of type HF::Core::AbstractService");
+
          ServiceRole(IDevice *device):
             Parent (device)
          {}

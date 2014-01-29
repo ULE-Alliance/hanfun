@@ -28,20 +28,26 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-bool AlertClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result AlertClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
    Message alert_msg;
 
    // Check for correct interface and command.
-   if (!AbstractInterface::handle (message, payload, offset, alert_msg.size ()) ||
-       message.itf.member != Alert::STATUS_CMD)
+   Result result = AbstractInterface::handle (message, payload, offset, alert_msg.size ());
+
+   if (result != Result::OK)
    {
-      return false;
+      return result;
+   }
+
+   if (message.itf.member != Alert::STATUS_CMD)
+   {
+      return Result::FAIL_SUPPORT;
    }
 
    alert_msg.unpack (payload, offset);
 
    status (alert_msg);
 
-   return true;
+   return Result::OK;
 }

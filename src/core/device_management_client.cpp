@@ -65,7 +65,7 @@ void DeviceManagementClient::register_device ()
  *
  */
 // =============================================================================
-bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
    RegisterResponse registration;
 
@@ -77,13 +77,14 @@ bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payl
          payload_size = registration.size ();
          break;
       default:
-         payload_size = numeric_limits <size_t>::max ();
-         break;
+         return Result::FAIL_SUPPORT;
    }
 
-   if (!AbstractInterface::handle (message, payload, offset, payload_size))
+   Result result = AbstractInterface::handle (message, payload, offset, payload_size);
+
+   if (result != Result::OK)
    {
-      return false;
+      return result;
    }
 
    switch (message.itf.member)
@@ -93,11 +94,10 @@ bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payl
          registered (registration);
          break;
       default:
-         payload_size = numeric_limits <size_t>::max ();
          break;
    }
 
-   return true;
+   return Result::OK;
 }
 
 // =============================================================================
@@ -109,7 +109,7 @@ bool DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payl
 // =============================================================================
 void DeviceManagementClient::registered (RegisterResponse &response)
 {
-   if (response.code == Protocol::Response::OK)
+   if (response.code == Result::OK)
    {
       this->_address = response.address;
    }

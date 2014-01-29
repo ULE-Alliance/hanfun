@@ -223,30 +223,13 @@ namespace HF
        */
       struct Response:public Serializable
       {
-         /*!
-          * Message response codes.
-          */
-         enum Code
-         {
-            OK                = 0x00, //!< Request OK
-            FAIL_AUTH         = 0x01, //!< Fail - Not Authorized
-            FAIL_ARG          = 0x02, //!< Fail - Invalid Argument
-            FAIL_SUPPORT      = 0x03, //!< Fail - Not Supported
-            FAIL_RO_ATTR      = 0x04, //!< Fail - Read only attribute.
-            FAIL_READ_SESSION = 0x20, //!< Fail - Read Session not established
-            FAIL_MODIFIED     = 0x21, //!< Fail - Entries table modified
-            FAIL_ID           = 0x23, //!< Fail - ID Not Found
-            FAIL_RESOURCES    = 0xFE, //!< Fail - Not enough resources
-            FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
-         };
-
          // =============================================================================
          // API
          // =============================================================================
 
-         Code code;
+         Result code;
 
-         Response(Code code = OK):code (code) {}
+         Response(Result code = OK):code (code) {}
 
          //! \see HF::Serializable::size.
          size_t size () const;

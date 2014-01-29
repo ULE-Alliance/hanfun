@@ -29,12 +29,18 @@ using namespace HF::Interfaces;
  * TODO This needs more validation when reading a report received.
  */
 // =============================================================================
-bool SimplePowerMeterClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result SimplePowerMeterClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
-   if (!AbstractInterface::handle (message, payload, offset) ||
-       message.itf.member != SimplePowerMeter::REPORT_CMD)
+   Result result = AbstractInterface::handle (message, payload, offset);
+
+   if (result != Result::OK)
    {
-      return false;
+      return result;
+   }
+
+   if (message.itf.member != SimplePowerMeter::REPORT_CMD)
+   {
+      return Result::FAIL_SUPPORT;
    }
 
    SimplePowerMeter::Report report;
@@ -43,5 +49,5 @@ bool SimplePowerMeterClient::handle (Protocol::Message &message, ByteArray &payl
 
    this->report (report);
 
-   return true;
+   return Result::OK;
 }

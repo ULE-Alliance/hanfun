@@ -390,9 +390,11 @@ TEST_GROUP (Response)
 
    TEST_SETUP ()
    {
-      uint8_t data[] = {0x00,              0x00, 0x00,
-                        Response::FAIL_ID,
-                        0x00,              0x00, 0x00};
+      /* *INDENT-OFF* */
+      uint8_t data[] = { 0x00, 0x00, 0x00,
+                         Result::FAIL_ID,
+                         0x00, 0x00, 0x00 };
+      /* *INDENT-ON* */
 
       expected = ByteArray (data, sizeof(data));
       response = new Response ();
@@ -411,7 +413,7 @@ TEST (Response, Size)
 
 TEST (Response, Pack)
 {
-   response->code = Response::FAIL_ID;
+   response->code = Result::FAIL_ID;
 
    size_t size = response->size ();
 
@@ -428,5 +430,5 @@ TEST (Response, Unpack)
    size_t rsize = response->unpack (expected, 3);
    LONGS_EQUAL (1, rsize);  // Response code.
 
-   LONGS_EQUAL (Response::FAIL_ID, response->code);
+   LONGS_EQUAL (Result::FAIL_ID, response->code);
 }

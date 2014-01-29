@@ -223,7 +223,7 @@ size_t Response::unpack (const ByteArray &array, size_t offset)
    uint8_t code  = 0;
    offset    += array.read (offset, code);
 
-   this->code = static_cast <Code>(code);
+   this->code = static_cast <Result>(code);
 
    return offset - start;
 }

@@ -201,7 +201,8 @@ TEST (OnOffServer, Handle_Valid_On_Message)
 
    message.itf.member = OnOff::ON_CMD;
 
-   CHECK_TRUE (server.handle (message, expected, 3));
+   Result result = server.handle (message, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
 }
@@ -213,7 +214,8 @@ TEST (OnOffServer, Handle_Valid_Off_Message)
 
    message.itf.member = OnOff::OFF_CMD;
 
-   CHECK_TRUE (server.handle (message, expected, 3));
+   Result result = server.handle (message, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
 }
@@ -225,7 +227,8 @@ TEST (OnOffServer, Handle_Valid_Toggle_Message)
 
    message.itf.member = OnOff::TOGGLE_CMD;
 
-   CHECK_TRUE (server.handle (message, expected, 3));
+   Result result = server.handle (message, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
 }
@@ -235,7 +238,7 @@ TEST (OnOffServer, Handle_Invalid_Role)
 {
    message.itf.role = Interface::SERVER_ROLE;
 
-   CHECK_FALSE (server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (message, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
@@ -243,5 +246,5 @@ TEST (OnOffServer, Handle_Invalid_UID)
 {
    message.itf.uid = server.uid () + 1;
 
-   CHECK_FALSE (server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, server.handle (message, expected, 3));
 }

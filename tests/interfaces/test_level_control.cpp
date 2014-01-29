@@ -206,7 +206,8 @@ TEST (LevelControlServer, Handle_Valid_Message)
 {
    mock ("LevelControlServer").expectOneCall ("level_change");
 
-   CHECK_TRUE (server.handle (message, expected, 3));
+   Result result = server.handle (message, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    LONGS_EQUAL (0xAA, server.level ());
 
@@ -218,7 +219,7 @@ TEST (LevelControlServer, Handle_Invalid_Role)
 {
    message.itf.role = Interface::SERVER_ROLE;
 
-   CHECK_FALSE (server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (message, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
@@ -226,7 +227,7 @@ TEST (LevelControlServer, Handle_Invalid_UID)
 {
    message.itf.uid = server.uid () + 1;
 
-   CHECK_FALSE (server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, server.handle (message, expected, 3));
 }
 
 //! \test Should not handle message with invalid payload size.
@@ -235,11 +236,11 @@ TEST (LevelControlServer, Handle_Invalid_Payload_Size)
    LevelControl::Message level_msg;
    message.length = level_msg.size () - 1;
 
-   CHECK_FALSE (server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, server.handle (message, expected, 3));
 }
 
 //! \test Should not handle message with not enough payload / offset.
 TEST (LevelControlServer, Handle_Invalid_Payload)
 {
-   CHECK_FALSE (server.handle (message, expected, 8));
+   CHECK_EQUAL (Result::FAIL_ARG, server.handle (message, expected, 10));
 }

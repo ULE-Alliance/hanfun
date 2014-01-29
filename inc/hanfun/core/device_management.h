@@ -21,8 +21,6 @@
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
-#include "hanfun/interface.h"
-
 #include "hanfun/core.h"
 
 using namespace HF;
@@ -351,7 +349,7 @@ namespace HF
          {}
 
          //! \see Interface::handle
-         virtual bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+         virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
 
          /*!
           * Return the address given by the HF Concentrator to the Device.

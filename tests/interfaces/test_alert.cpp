@@ -344,7 +344,8 @@ TEST (AlertClient, Handle_Valid_Message)
 {
    mock ("AlertClient").expectOneCall ("status");
 
-   CHECK_TRUE (client->handle (message, expected, 3));
+   Result result = client->handle (message, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
 
    LONGS_EQUAL (0x5AA5, client->profile_uid);
    LONGS_EQUAL (0xFFA55ABB, client->state);
@@ -357,7 +358,7 @@ TEST (AlertClient, Handle_Invalid_Role)
 {
    message.itf.role = Interface::CLIENT_ROLE;
 
-   CHECK_FALSE (client->handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (message, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
@@ -365,7 +366,7 @@ TEST (AlertClient, Handle_Invalid_UID)
 {
    message.itf.uid = client->uid () + 1;
 
-   CHECK_FALSE (client->handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, client->handle (message, expected, 3));
 }
 
 //! \test Should not handle message with invalid payload size.
@@ -374,11 +375,11 @@ TEST (AlertClient, Handle_Invalid_Payload_Size)
    Alert::Message alert_msg;
    message.length = alert_msg.size () - 1;
 
-   CHECK_FALSE (client->handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, client->handle (message, expected, 3));
 }
 
 //! \test Should not handle message with not enough payload.
 TEST (AlertClient, Handle_Invalid_Payload)
 {
-   CHECK_FALSE (client->handle (message, expected, 10));
+   CHECK_EQUAL (Result::FAIL_ARG, client->handle (message, expected, 10));
 }

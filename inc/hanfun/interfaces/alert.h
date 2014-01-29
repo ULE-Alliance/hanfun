@@ -218,7 +218,7 @@ namespace HF
       struct AlertClient:public InterfaceRole <Alert, Interface::CLIENT_ROLE>
       {
          //! \see Interface::handle.
-         bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+         Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
 
          // ======================================================================
          // Events

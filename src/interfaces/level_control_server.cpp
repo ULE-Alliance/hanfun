@@ -54,21 +54,28 @@ void LevelControlServer::level (uint8_t new_level)
  *
  */
 // =============================================================================
-bool LevelControlServer::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result LevelControlServer::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
    Message level_msg;
 
    // Check for correct interface and command.
-   if (!AbstractInterface::handle (message, payload, offset, level_msg.size ()))
+   Result result = AbstractInterface::handle (message, payload, offset, level_msg.size ());
+
+   if (result != Result::OK)
    {
-      return false;
+      return result;
+   }
+
+   if (message.itf.member != LevelControl::SET_LEVEL_CMD)
+   {
+      return Result::FAIL_SUPPORT;
    }
 
    level_msg.unpack (payload, offset);
 
    level_change (level_msg.level);
 
-   return true;
+   return Result::OK;
 }
 
 // =============================================================================

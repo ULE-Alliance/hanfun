@@ -58,14 +58,14 @@ TEST (AbstractInterface, Handle)
 
    itf._role        = Interface::CLIENT_ROLE;
 
-   CHECK_TRUE (itf.handle (message, array, 0));
+   CHECK_EQUAL (Result::OK, itf.handle (message, array, 0));
 
    itf._role = Interface::SERVER_ROLE;
 
-   CHECK_FALSE (itf.handle (message, array, 0));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, itf.handle (message, array, 0));
 
    message.itf.role = Interface::SERVER_ROLE;
    message.itf.uid  = 0x7AAA;
 
-   CHECK_FALSE (itf.handle (message, array, 0));
+   CHECK_EQUAL (Result::FAIL_ID, itf.handle (message, array, 0));
 }

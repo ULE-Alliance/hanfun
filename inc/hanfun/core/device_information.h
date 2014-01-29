@@ -152,14 +152,6 @@ namespace HF
          {
             return Interface::SERVER_ROLE;
          }
-
-         virtual bool handle (Protocol::Message &message, ByteArray &payload, size_t offset)
-         {
-            UNUSED (message);
-            UNUSED (payload);
-            UNUSED (offset);
-            return false;
-         }
       };
 
       /*!
