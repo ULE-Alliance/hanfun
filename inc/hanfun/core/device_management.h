@@ -335,10 +335,20 @@ namespace HF
 
          /*!
           * Send a register message.
-          *
-          * @param device  pointer to the device to register.
           */
          void register_device ();
+
+         /*!
+          * Send a de-register message for the given \c address.
+          *
+          * @param [in] address    the address of the device to de-register.
+          */
+         void deregister (uint16_t address);
+
+         void deregister ()
+         {
+            deregister (_address);
+         }
 
          //! @}
          // ======================================================================
@@ -356,6 +366,14 @@ namespace HF
           * @param [in] response  the register response that was received.
           */
          virtual void registered (RegisterResponse &response);
+
+         /*!
+          * This method is called when a response to a de-registration message
+          * is received.
+          *
+          * @param [in] response    the response received.
+          */
+         virtual void deregistered (Protocol::Response &response);
 
          //! @}
          // ======================================================================

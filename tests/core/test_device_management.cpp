@@ -637,10 +637,18 @@ TEST_GROUP (DeviceManagementClient)
          DeviceManagementClient (device)
       {}
 
+      using DeviceManagementClient::_address;
+
       void registered (RegisterResponse &response)
       {
          mock ("DeviceManagementClient").actualCall ("registered");
          DeviceManagementClient::registered (response);
+      }
+
+      void deregistered (Protocol::Response &response)
+      {
+         mock ("DeviceManagementClient").actualCall ("deregistered");
+         DeviceManagementClient::deregistered (response);
       }
    };
 
@@ -789,6 +797,91 @@ TEST (DeviceManagementClient, RegisterResponse_FAIL)
    mock ("DeviceManagementClient").checkExpectations ();
 
    LONGS_EQUAL (Protocol::BROADCAST_ADDR, device->address ());
+}
+
+TEST (DeviceManagementClient, DeregisterMessage)
+{
+   mock ("AbstractDevice").expectOneCall ("send");
+
+   dev_mgt->deregister (0x5A5A);
+
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (1, device->packets.size ());
+
+   Protocol::Packet *packet = device->packets.back ();
+
+   CHECK_TRUE (packet != nullptr);
+
+   LONGS_EQUAL (0, packet->destination.device);
+   LONGS_EQUAL (0, packet->destination.unit);
+
+   LONGS_EQUAL (Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
+   LONGS_EQUAL (DeviceManagement::DEREGISTER_CMD, packet->message.itf.member);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
+
+   DeviceManagement::DeregisterMessage *payload =
+      static_cast <DeviceManagement::DeregisterMessage *>(packet->message.payload);
+
+   LONGS_EQUAL (0x5A5A, payload->address);
+}
+
+TEST (DeviceManagementClient, DeregisterResponse_OK)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     Result::OK, // Response Code.
+                     0x00, 0x00, 0x00};
+
+   ByteArray payload (data, sizeof(data));
+
+   Message   message;
+
+   message.length     = sizeof(data);
+
+   message.itf.role   = Interface::SERVER_ROLE;
+   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
+   message.itf.member = DeviceManagement::DEREGISTER_CMD;
+
+   mock ("DeviceManagementClient").expectOneCall ("deregistered");
+
+   Result result = dev_mgt->handle (message, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementClient").checkExpectations ();
+
+   LONGS_EQUAL (Protocol::BROADCAST_ADDR, device->address ());
+}
+
+TEST (DeviceManagementClient, DeregisterResponse_FAIL)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     Result::FAIL_AUTH, // Response Code.
+                     0x00, 0x00, 0x00};
+
+   ByteArray payload (data, sizeof(data));
+
+   Message   message;
+
+   message.length     = sizeof(data);
+
+   message.itf.role   = Interface::SERVER_ROLE;
+   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
+   message.itf.member = DeviceManagement::DEREGISTER_CMD;
+
+   dev_mgt->_address  = 0x5A5A;
+
+   mock ("DeviceManagementClient").expectOneCall ("deregistered");
+
+   // XXX This needs to use a temporary variable
+   // otherwise the handle method will be called twice.
+   Result result = dev_mgt->handle (message, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementClient").checkExpectations ();
+
+   LONGS_EQUAL (0x5A5A, device->address ());
 }
 
 // =============================================================================

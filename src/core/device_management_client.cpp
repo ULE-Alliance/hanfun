@@ -59,6 +59,29 @@ void DeviceManagementClient::register_device ()
 }
 
 // =============================================================================
+// DeviceManagementClient::deregister
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void DeviceManagementClient::deregister (uint16_t address)
+{
+   Protocol::Address addr (0, 0);
+   Protocol::Message message;
+
+   message.itf.role   = role ();
+   message.itf.uid    = uid ();
+   message.itf.member = DEREGISTER_CMD;
+
+   DeregisterMessage *payload = new DeregisterMessage (address);
+
+   message.payload = payload;
+
+   sendMessage (addr, message);
+}
+
+// =============================================================================
 // DeviceManagementClient::handle
 // =============================================================================
 /*!
@@ -69,12 +92,17 @@ Result DeviceManagementClient::handle (Protocol::Message &message, ByteArray &pa
 {
    RegisterResponse registration;
 
+   Protocol::Response response;
+
    size_t payload_size = 0;
 
    switch (message.itf.member)
    {
       case REGISTER_CMD:
          payload_size = registration.size ();
+         break;
+      case DEREGISTER_CMD:
+         payload_size = response.size ();
          break;
       default:
          return Result::FAIL_SUPPORT;
@@ -92,6 +120,10 @@ Result DeviceManagementClient::handle (Protocol::Message &message, ByteArray &pa
       case REGISTER_CMD:
          registration.unpack (payload, offset);
          registered (registration);
+         break;
+      case DEREGISTER_CMD:
+         response.unpack (payload, offset);
+         deregistered (response);
          break;
       default:
          break;
@@ -112,5 +144,13 @@ void DeviceManagementClient::registered (RegisterResponse &response)
    if (response.code == Result::OK)
    {
       this->_address = response.address;
+   }
+}
+
+void DeviceManagementClient::deregistered (Protocol::Response &response)
+{
+   if (response.code == Result::OK)
+   {
+      this->_address = Protocol::BROADCAST_ADDR;
    }
 }

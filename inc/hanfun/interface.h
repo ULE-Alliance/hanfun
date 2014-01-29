@@ -117,9 +117,6 @@ namespace HF
 
       Result handle (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
       {
-         UNUSED (payload);
-         UNUSED (offset);
-
          // Only handle message that are for this interface and are
          // from the complementing role.
          if (uid () == message.itf.uid && role () != message.itf.role)
