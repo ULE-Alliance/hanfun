@@ -16,6 +16,8 @@
 
 #include <string.h>
 #include <sstream>
+#include <algorithm>
+#include <iostream>
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -175,37 +177,37 @@ namespace HF
       template<class Parent>
       struct AbstractDevice:public Parent
       {
-         uint16_t         _address;
+         uint16_t                    _address;
 
-         Protocol::Packet *packet;
+         vector <Protocol::Packet *> packets;
 
          AbstractDevice():
-            _address (Protocol::BROADCAST_ADDR), packet (nullptr)
+            _address (Protocol::BROADCAST_ADDR) // , packet (nullptr)
          {}
 
          virtual ~AbstractDevice()
          {
-            if (packet != nullptr)
-            {
+            for_each( packets.begin(), packets.end(), [](Protocol::Packet * packet) {
                if (packet->message.payload != nullptr)
                {
                   delete packet->message.payload;
                }
-
                delete packet;
-            }
+            });
+
+            packets.clear ();
          }
 
          void send (Protocol::Packet *packet)
          {
             mock ("AbstractDevice").actualCall ("send");
-            this->packet = packet;
+            packets.push_back (packet);
          }
 
          void receive (Protocol::Packet *packet)
          {
             mock ("AbstractDevice").actualCall ("receive");
-            this->packet = packet;
+            packets.push_back (packet);
          }
       };
 
@@ -214,8 +216,56 @@ namespace HF
       {};
 
       struct Concentrator:public AbstractDevice <
-         HF::Concentrator < HF::Core::DefaultDeviceInformation, HF::Core::DeviceManagementServer >>
+         HF::Concentrator < HF::Core::DefaultDeviceInformation, HF::Core::DefaultDeviceManagementServer >>
       {};
+
+      struct Link:public HF::Transport::Link
+      {
+         HF::UID       *_uid;
+         HF::Transport *tsp;
+
+         Link(HF::UID *uid, HF::Transport *tsp):
+            _uid (uid), tsp (tsp)
+         {}
+
+         virtual ~Link()
+         {
+            delete _uid;
+         }
+
+         virtual size_t write (ByteArray *array, size_t offset, size_t size)
+         {
+            UNUSED (array);
+            UNUSED (offset);
+            UNUSED (size);
+
+            return mock ("Link").actualCall ("write").returnValue ().getIntValue ();
+         }
+
+         virtual size_t read (ByteArray *array, size_t offset, size_t size)
+         {
+            UNUSED (array);
+            UNUSED (offset);
+            UNUSED (size);
+
+            return mock ("Link").actualCall ("read").returnValue ().getIntValue ();
+         }
+
+         virtual size_t available ()
+         {
+            return mock ("Link").actualCall ("available").returnValue ().getIntValue ();
+         }
+
+         virtual HF::UID *uid ()
+         {
+            return _uid;
+         }
+
+         virtual HF::Transport *transport ()
+         {
+            return tsp;
+         }
+      };
 
    } // namespace Testing
 

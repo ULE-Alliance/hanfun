@@ -790,3 +790,126 @@ TEST (DeviceManagementClient, RegisterResponse_FAIL)
 
    LONGS_EQUAL (Protocol::BROADCAST_ADDR, device->address ());
 }
+
+// =============================================================================
+// DeviceManagementServer
+// =============================================================================
+
+#define CHECK_DEVICE_ADDRESS(_expected, _current, _index) \
+   check_index <uint16_t>(_expected, _current, _index, "Device Address", __FILE__, __LINE__)
+
+TEST_GROUP (DeviceManagementServer)
+{
+   Testing::Device *device;
+
+   struct TestDeviceManagementServer:public DefaultDeviceManagementServer
+   {
+      TestDeviceManagementServer(IDevice *device):
+         DefaultDeviceManagementServer (device)
+      {}
+
+      Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      {
+         mock ("DeviceManagementServer").actualCall ("register_device");
+         return DefaultDeviceManagementServer::register_device (packet, payload, offset);
+      }
+
+      using DefaultDeviceManagementServer::save;
+   };
+
+   TestDeviceManagementServer *dev_mgt;
+
+   Protocol::Packet packet;
+   ByteArray expected;
+
+   Testing::Link *link;
+
+   TEST_SETUP ()
+   {
+      device  = new Testing::Device ();
+
+      dev_mgt = new TestDeviceManagementServer (device);
+
+      uint8_t data[] = {0x00, 0x00, 0x00,
+                        0x02,                         // Discriminator Type.
+                        0x05,                         // Size of UID.
+                        0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                        0x03,                         // Number of units.
+                        0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                        0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                        0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                        0x00, 0x00, 0x00};
+
+      expected                  = ByteArray (data, sizeof(data));
+
+      packet.message.itf.role   = Interface::CLIENT_ROLE;
+      packet.message.itf.uid    = dev_mgt->uid ();
+      packet.message.itf.member = DeviceManagement::REGISTER_CMD;
+
+      packet.message.length     = expected.size ();
+
+      UID *uid = new URI ("hf://device@example.com");
+
+      link        = new Testing::Link (uid, nullptr);
+      packet.link = link;
+
+      mock ().ignoreOtherCalls ();
+   }
+
+   TEST_TEARDOWN ()
+   {
+      delete dev_mgt;
+
+      delete device;
+
+      delete link;
+
+      mock ().clear ();
+   }
+};
+
+TEST (DeviceManagementServer, Handle)
+{
+   mock ("AbstractDevice").expectOneCall ("send");
+   mock ("DeviceManagementServer").expectOneCall ("register_device");
+
+   Result result = dev_mgt->handle (packet, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementClient").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (1, dev_mgt->entries_count ());
+
+   // Should not add entry for same device.
+   mock ("AbstractDevice").expectOneCall ("send");
+   mock ("DeviceManagementServer").expectOneCall ("register_device");
+
+   result = dev_mgt->handle (packet, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (1, dev_mgt->entries_count ());
+
+   // Should add entry for other device.
+
+   delete link;
+
+   UID *uid = new URI ("hf://device2@example.com");
+
+   link        = new Testing::Link (uid, nullptr);
+   packet.link = link;
+
+   mock ("AbstractDevice").expectOneCall ("send");
+   mock ("DeviceManagementServer").expectOneCall ("register_device");
+
+   result = dev_mgt->handle (packet, expected, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (2, dev_mgt->entries_count ());
+}

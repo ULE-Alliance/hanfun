@@ -37,7 +37,8 @@ set(HF_INTERFACES_SRCS interfaces/alert.cpp
 
 set(HF_CORE_SRCS       core.cpp
                        core/device_management.cpp
-                       core/device_management_client.cpp )
+                       core/device_management_client.cpp
+                       core/device_management_server.cpp )
 
 add_library( hanfun  ${HF_COMMON_SRCS} ${HF_PROTOCOL_SRCS}
                      ${HF_INTERFACES_SRCS} ${HF_CORE_SRCS} )

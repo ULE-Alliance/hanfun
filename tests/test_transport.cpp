@@ -29,49 +29,6 @@ namespace HF
 {
    namespace Testing
    {
-      struct Link:public HF::Transport::Link
-      {
-         HF::UID       _uid;
-         HF::Transport *tsp;
-
-         Link(HF::UID &uid, HF::Transport *tsp):
-            _uid (uid), tsp (tsp)
-         {}
-
-         virtual size_t write (ByteArray *array, size_t offset, size_t size)
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            UNUSED (size);
-
-            return mock ("Link").actualCall ("write").returnValue ().getIntValue ();
-         }
-
-         virtual size_t read (ByteArray *array, size_t offset, size_t size)
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            UNUSED (size);
-
-            return mock ("Link").actualCall ("read").returnValue ().getIntValue ();
-         }
-
-         virtual size_t available ()
-         {
-            return mock ("Link").actualCall ("available").returnValue ().getIntValue ();
-         }
-
-         virtual HF::UID *uid ()
-         {
-            return &_uid;
-         }
-
-         virtual HF::Transport *transport ()
-         {
-            return tsp;
-         }
-      };
-
       struct Endpoint:public HF::Transport::Endpoint
       {
          typedef list <HF::Transport::Link *> links_t;
@@ -130,7 +87,6 @@ namespace HF
                                       ep->disconnected (link);
                                    }
                                   );
-
                          delete link;
                       }
                      );
@@ -158,7 +114,7 @@ namespace HF
             return _uid;
          }
 
-         virtual void create_link (HF::UID &uid)
+         virtual void create_link (HF::UID *uid)
          {
             Testing::Link *link = new Testing::Link (uid, this);
             links.push_back (link);
@@ -234,7 +190,7 @@ TEST (Transport, LinkSetup)
 {
    tsp->initialize (&ep1);
 
-   URI uri = URI ("dev://user1@example.com");
+   URI *uri = new URI ("dev://user1@example.com");
 
    tsp->create_link (uri);
 
@@ -242,7 +198,7 @@ TEST (Transport, LinkSetup)
 
    tsp->initialize (&ep2);
 
-   uri = URI ("dev://user2@example.com");
+   uri = new URI ("dev://user2@example.com");
    tsp->create_link (uri);
 
    LONGS_EQUAL (2, ep1.links.size ());
@@ -263,7 +219,7 @@ TEST (Transport, Receive)
 {
    tsp->initialize (&ep1);
 
-   URI uri = URI ("dev://user1@example.com");
+   URI *uri = new URI ("dev://user1@example.com");
 
    tsp->create_link (uri);
 
@@ -277,7 +233,7 @@ TEST (Transport, Receive2)
 {
    tsp->initialize (&ep2);
 
-   URI uri = URI ("dev://user1@example.com");
+   URI *uri = new URI ("dev://user1@example.com");
 
    tsp->create_link (uri);
 

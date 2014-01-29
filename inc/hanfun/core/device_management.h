@@ -300,40 +300,6 @@ namespace HF
       };
 
       /*!
-       * Device Management interface : Server side.
-       */
-      class DeviceManagementServer:public ServiceRole <DeviceManagement, Interface::SERVER_ROLE>
-      {
-         public:
-
-         //! \see Interface::handle
-         bool handle (Protocol::Message &message, ByteArray &payload, size_t offset);
-
-         protected:
-
-         DeviceManagementServer(IDevice *_device):
-            ServiceRole (_device)
-         {}
-
-         // ======================================================================
-         // Events
-         // ======================================================================
-         //! \name Events
-         //! @{
-
-         /*!
-          * This method is called when a registration message is received.
-          *
-          * \see DeviceManagementServer::handle
-          */
-         virtual bool register_device (Protocol::Message &message, ByteArray &payload,
-                                       size_t offset);
-
-         //! @}
-         // ======================================================================
-      };
-
-      /*!
        * Device Management interface : Client side.
        */
       class DeviceManagementClient:public ServiceRole <DeviceManagement, Interface::CLIENT_ROLE>
@@ -395,9 +361,169 @@ namespace HF
          // ======================================================================
       };
 
-   }  // namespace Core
+      /*!
+       * Device Management interface : Server side.
+       */
+      struct DeviceManagementServer:public ServiceRole <DeviceManagement, Interface::SERVER_ROLE>
+      {
+         //! \see Service::handle
+         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
 
-}  // namespace HF
+         /*!
+          * Return the Device entry for the given address.
+          *
+          * @param [in] address    the device address.
+          *
+          * @retval  a pointer the Device entry associated with the given address,
+          * @retval  nullptr if the entry does not exist.
+          */
+         virtual Device *entry (uint16_t address) = 0;
+
+         /*!
+          * Return the Device entry for the given UID.
+          *
+          * @param [in] UID   the device UID.
+          *
+          * @retval  a pointer the Device entry associated with the given UID,
+          * @retval  nullptr if the entry does not exist.
+          */
+         virtual Device *entry (HF::UID *uid) = 0;
+
+         /*!
+          * Store the given Device entry to persistent storage.
+          *
+          * @param [in] device   the device entry to store.
+          *
+          * @return     if the device entry was saved.
+          */
+         virtual Result save (Device *device) = 0;
+
+         /*!
+          * Return the number of Device entries available.
+          *
+          * @return  number of Device entries present.
+          */
+         virtual uint16_t entries_count () const = 0;
+
+         /*!
+          * Return the a vector with \c count Device entries starting at \c offset.
+          *
+          * @param [in] offset   the offset to start at.
+          * @param [in] count    the
+          * @return
+          */
+         virtual vector <Device *> entries (uint16_t offset, uint16_t count) = 0;
+
+         /*!
+          * Return all device entries starting at \c offset.
+          *
+          * @param [in] offset   the offset to start at.
+          *
+          * @return a vector containing the requested entries.
+          */
+         vector <Device *> entries (uint16_t offset = 0)
+         {
+            return entries (offset, entries_count () - offset);
+         }
+
+         protected:
+
+         virtual uint16_t next_address () = 0;
+
+         DeviceManagementServer(IDevice *_device):
+            ServiceRole (_device)
+         {}
+
+         // ======================================================================
+         // Events
+         // ======================================================================
+         //! \name Events
+         //! @{
+
+         /*!
+          * This method is called when a registration message is received.
+          *
+          * \see DeviceManagementServer::handle
+          */
+         virtual Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         //! @}
+         // ======================================================================
+      };
+
+      // =========================================================================
+      // Default API Implementations
+      // =========================================================================
+
+      /*!
+       * This class provide a simple RAM based implementation of the DeviceManagementServer
+       * interface.
+       */
+      class DefaultDeviceManagementServer:public DeviceManagementServer
+      {
+         protected:
+
+         vector <Device *> _entries;
+
+         map <uint16_t, Device *>  _addr2device;
+         map <HF::UID *, Device *> _uid2device;
+
+         public:
+
+         DefaultDeviceManagementServer(IDevice *_device):DeviceManagementServer (_device)
+         {}
+
+         virtual ~DefaultDeviceManagementServer();
+
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         Device *entry (uint16_t address)
+         {
+            return (_addr2device.count (address) != 0 ? _addr2device.at (address) : nullptr);
+         }
+
+         Device *entry (HF::UID *uid)
+         {
+            return (_uid2device.count (uid) != 0 ? _uid2device.at (uid) : nullptr);
+         }
+
+         virtual Result save (Device *device)
+         {
+            // Add new entry into the database.
+            if (_uid2device.count (device->uid) == 0)
+            {
+               _entries.push_back (device);
+               _addr2device[device->address] = device;
+               _uid2device[device->uid]      = device;
+            }
+
+            return Result::OK;
+         }
+
+         uint16_t entries_count () const
+         {
+            return _entries.size ();
+         }
+
+         vector <DeviceManagement::Device *> entries (uint16_t offset, uint16_t count);
+
+         using DeviceManagementServer::entries;
+
+         protected:
+
+         uint16_t next_address ()
+         {
+            return _entries.size () + 1;
+         }
+
+      };
+
+   }
+   // namespace Core
+
+} // namespace HF
 
 // =============================================================================
 // Helper Functions

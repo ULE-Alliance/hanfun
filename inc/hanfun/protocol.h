@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "hanfun/common.h"
+#include "hanfun/transport.h"
 
 // =============================================================================
 // API
@@ -191,7 +192,9 @@ namespace HF
          /*!
           * Packet message payload;
           */
-         Message message;
+         Message         message;
+
+         Transport::Link *link;     //! Link where this packet originated from.
 
          Packet() {}
 
