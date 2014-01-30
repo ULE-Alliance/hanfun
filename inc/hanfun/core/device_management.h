@@ -126,6 +126,27 @@ namespace HF
 
             //! \see HF::Serializable::unpack.
             size_t unpack (const ByteArray &array, size_t offset = 0);
+
+            // =============================================================================
+            // Operators
+            // =============================================================================
+
+            bool operator ==(Device &other)
+            {
+               if (this->address != other.address || this->uid != other.uid)
+               {
+                  return false;
+               }
+               else
+               {
+                  return true;
+               }
+            }
+
+            bool operator !=(Device &other)
+            {
+               return !(*this == other);
+            }
          };
 
          // =============================================================================
