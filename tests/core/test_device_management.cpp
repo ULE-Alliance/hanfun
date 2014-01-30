@@ -377,7 +377,7 @@ TEST (DeviceManagement_RegisterResponce, No_EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
                      Result::FAIL_AUTH, // Responce Code.
-                     0x42, 0x43,                    // Device Address.
+                     0x42, 0x43,        // Device Address.
                      0x00, 0x00, 0x00};
 
    ByteArray expected = ByteArray (data, sizeof(data));
@@ -495,7 +495,7 @@ TEST (DeviceManagement, StartSessionResponse)
 
    uint8_t data[] = {0x00, 0x00, 0x00,
                      Result::FAIL_READ_SESSION, // Response code.
-                     0x42, 0x43,                            // Device Address.
+                     0x42, 0x43,                // Device Address.
                      0x00, 0x00, 0x00};
 
    ByteArray expected (data, sizeof(data));
@@ -672,7 +672,7 @@ TEST_GROUP (DeviceManagementClient)
       unit2->_uid = 0xFF02;
       unit3->_uid = 0xFF03;
 
-      dev_mgt = &(device->management);
+      dev_mgt     = &(device->management);
 
       mock ().ignoreOtherCalls ();
    }
@@ -682,7 +682,6 @@ TEST_GROUP (DeviceManagementClient)
       delete unit1;
       delete unit2;
       delete unit3;
-
 
       delete device;
 
@@ -750,7 +749,7 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
                      Result::OK, // Response Code.
-                     0x42, 0x43,             // Device Address.
+                     0x42, 0x43, // Device Address.
                      0x00, 0x00, 0x00};
 
    ByteArray payload (data, sizeof(data));

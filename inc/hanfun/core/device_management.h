@@ -15,8 +15,8 @@
 #ifndef HF_DEVICE_MANGEMENT_H
 #define HF_DEVICE_MANGEMENT_H
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
@@ -429,7 +429,7 @@ namespace HF
          virtual Device *entry (HF::UID *uid) = 0;
 
          /*!
-          * Store the given Device entry to persistent storage.
+          * Store the given \c device entry to persistent storage.
           *
           * @param [in] device   the device entry to store.
           *
@@ -467,11 +467,16 @@ namespace HF
 
          protected:
 
-         virtual uint16_t next_address () = 0;
-
          DeviceManagementServer(IDevice *_device):
             ServiceRole (_device)
          {}
+
+         /*!
+          * Return next available address for registering a device.
+          *
+          * @return  the address to use in the next registration.
+          */
+         virtual uint16_t next_address () = 0;
 
          // ======================================================================
          // Events
@@ -498,17 +503,8 @@ namespace HF
        * This class provide a simple RAM based implementation of the DeviceManagementServer
        * interface.
        */
-      class DefaultDeviceManagementServer:public DeviceManagementServer
+      struct DefaultDeviceManagementServer:public DeviceManagementServer
       {
-         protected:
-
-         vector <Device *> _entries;
-
-         map <uint16_t, Device *>  _addr2device;
-         map <HF::UID *, Device *> _uid2device;
-
-         public:
-
          DefaultDeviceManagementServer(IDevice *_device):DeviceManagementServer (_device)
          {}
 
@@ -518,28 +514,12 @@ namespace HF
          // API
          // =============================================================================
 
-         Device *entry (uint16_t address)
-         {
-            return (_addr2device.count (address) != 0 ? _addr2device.at (address) : nullptr);
-         }
+         virtual Device *entry (uint16_t address);
 
-         Device *entry (HF::UID *uid)
-         {
-            return (_uid2device.count (uid) != 0 ? _uid2device.at (uid) : nullptr);
-         }
+         virtual Device *entry (HF::UID *uid);
 
-         virtual Result save (Device *device)
-         {
-            // Add new entry into the database.
-            if (_uid2device.count (device->uid) == 0)
-            {
-               _entries.push_back (device);
-               _addr2device[device->address] = device;
-               _uid2device[device->uid]      = device;
-            }
+         virtual Result save (Device *device);
 
-            return Result::OK;
-         }
 
          uint16_t entries_count () const
          {
@@ -552,15 +532,21 @@ namespace HF
 
          protected:
 
+         vector <Device *>         _entries;
+
+         map <uint16_t, Device *>  _addr2device;
+         map <HF::UID *, Device *> _uid2device;
+
+
          uint16_t next_address ()
          {
             return _entries.size () + 1;
          }
 
+         virtual bool authorized (uint8_t member, Device *source, Device *destination);
       };
 
-   }
-   // namespace Core
+   } // namespace Core
 
 } // namespace HF
 

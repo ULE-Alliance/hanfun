@@ -60,11 +60,13 @@ Result DeviceManagementServer::handle (Protocol::Packet &packet, ByteArray &payl
  *
  */
 // =============================================================================
-Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteArray &payload,
+                                                size_t offset)
 {
    RegisterMessage reg_msg;
 
-   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset, reg_msg.size ());
+   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset,
+                                                          reg_msg.size ());
 
    if (result != Result::OK)
    {
@@ -89,7 +91,7 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 
    RegisterResponse *reg_res = new RegisterResponse ();
 
-   reg_res->emc = DeviceInformation::EMC;
+   reg_res->emc     = DeviceInformation::EMC;
 
    reg_res->code    = save (device);
 
@@ -97,7 +99,8 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 
    Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, REGISTER_CMD);
 
-   Protocol::Message response (Protocol::Message::COMMAND_RES, itf, reg_res, packet.message.reference);
+   Protocol::Message response (Protocol::Message::COMMAND_RES, itf, reg_res,
+                               packet.message.reference);
 
    Protocol::Address res_addr (address, 0);
 
@@ -109,6 +112,7 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 // =============================================================================
 // DefaultDeviceManagementServer API
 // =============================================================================
+
 DefaultDeviceManagementServer::~DefaultDeviceManagementServer()
 {
    _addr2device.clear ();
@@ -137,4 +141,53 @@ vector <DeviceManagement::Device *> DefaultDeviceManagementServer::entries (uint
    vector <Device *>::iterator end = start + count;
 
    return vector <Device *>(start, end);
+}
+
+// =============================================================================
+// DefaultDeviceManagementServer::entry
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+DeviceManagement::Device *DefaultDeviceManagementServer::entry (uint16_t address)
+{
+   return (_addr2device.count (address) != 0 ? _addr2device.at (address) : nullptr);
+}
+
+// =============================================================================
+// DefaultDeviceManagementServer::entry
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+DeviceManagement::Device *DefaultDeviceManagementServer::entry (HF::UID *uid)
+{
+   return (_uid2device.count (uid) != 0 ? _uid2device.at (uid) : nullptr);
+}
+
+// =============================================================================
+// DefaultDeviceManagementServer::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Result DefaultDeviceManagementServer::save (DeviceManagement::Device *device)
+{
+   if (device == nullptr)
+   {
+      return Result::FAIL_UNKNOWN;
+   }
+
+   // Add new entry into the database.
+   if (_uid2device.count (device->uid) == 0)
+   {
+      _entries.push_back (device);
+      _addr2device[device->address] = device;
+      _uid2device[device->uid]      = device;
+   }
+
+   return Result::OK;
 }
