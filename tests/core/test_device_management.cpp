@@ -906,39 +906,35 @@ TEST_GROUP (DeviceManagementServer)
          return DefaultDeviceManagementServer::register_device (packet, payload, offset);
       }
 
+      Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      {
+         mock ("DeviceManagementServer").actualCall ("deregister_device");
+         return DefaultDeviceManagementServer::deregister_device (packet, payload, offset);
+      }
+
       using DefaultDeviceManagementServer::save;
    };
 
    TestDeviceManagementServer *dev_mgt;
 
    Protocol::Packet packet;
-   ByteArray expected;
 
-   Testing::Link *link;
+   Testing::Link    *link;
 
    TEST_SETUP ()
    {
-      device  = new Testing::Device ();
+      device                    = new Testing::Device ();
 
-      dev_mgt = new TestDeviceManagementServer (device);
+      dev_mgt                   = new TestDeviceManagementServer (device);
 
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        0x02,                         // Discriminator Type.
-                        0x05,                         // Size of UID.
-                        0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
-                        0x03,                         // Number of units.
-                        0x03, 0x42, 0x5A,0xA5,        // Unit 1.
-                        0x03, 0x42, 0x5A,0xA5,        // Unit 2.
-                        0x03, 0x42, 0x5A,0xA5,        // Unit 3.
-                        0x00, 0x00, 0x00};
+      packet.destination.device = 0;
+      packet.destination.unit   = 0;
 
-      expected                  = ByteArray (data, sizeof(data));
+      packet.source.device      = Protocol::BROADCAST_ADDR;
+      packet.source.unit        = Protocol::BROADCAST_UNIT;
 
       packet.message.itf.role   = Interface::CLIENT_ROLE;
       packet.message.itf.uid    = dev_mgt->uid ();
-      packet.message.itf.member = DeviceManagement::REGISTER_CMD;
-
-      packet.message.length     = expected.size ();
 
       UID *uid = new URI ("hf://device@example.com");
 
@@ -960,15 +956,31 @@ TEST_GROUP (DeviceManagementServer)
    }
 };
 
-TEST (DeviceManagementServer, Handle)
+TEST (DeviceManagementServer, Handle_Register)
 {
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x02,                         // Discriminator Type.
+                     0x05,                         // Size of UID.
+                     0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                     0x03,                         // Number of units.
+                     0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                     0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                     0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected = ByteArray (data, sizeof(data));
+
+   packet.message.itf.member = DeviceManagement::REGISTER_CMD;
+
+   packet.message.length     = expected.size ();
+
    mock ("AbstractDevice").expectOneCall ("send");
    mock ("DeviceManagementServer").expectOneCall ("register_device");
 
    Result result = dev_mgt->handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
-   mock ("DeviceManagementClient").checkExpectations ();
+   mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
    LONGS_EQUAL (1, dev_mgt->entries_count ());
@@ -1004,4 +1016,53 @@ TEST (DeviceManagementServer, Handle)
    mock ("AbstractDevice").checkExpectations ();
 
    LONGS_EQUAL (2, dev_mgt->entries_count ());
+}
+
+TEST (DeviceManagementServer, Handle_Deregister)
+{
+   for (uint8_t i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = 0x5A50 + i;
+      ostringstream uri;
+      uri << "hf://device" << i << "@example.com";
+      dev->uid = new URI (uri.str ());
+      dev_mgt->save (dev);
+   }
+
+   size_t size = dev_mgt->entries_count ();
+
+   packet.source.device = 0x5A51;
+
+   DeviceManagement::DeregisterMessage message (0x5A5A);
+
+   ByteArray expected (message.size ());
+
+   message.pack (expected);
+
+   packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
+
+   packet.message.length     = expected.size ();
+
+   mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+
+   Result result = dev_mgt->handle (packet, expected, 0);
+   CHECK_EQUAL (Result::FAIL_AUTH, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+
+   LONGS_EQUAL (size, dev_mgt->entries_count ());
+
+   packet.source.device = 0x5A5A;
+
+   mock ("AbstractDevice").expectOneCall ("send");
+   mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+
+   result = dev_mgt->handle (packet, expected, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
 }

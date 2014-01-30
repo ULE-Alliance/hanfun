@@ -15,6 +15,7 @@
 #ifndef HF_DEVICE_MANGEMENT_H
 #define HF_DEVICE_MANGEMENT_H
 
+#include <algorithm>
 #include <map>
 #include <vector>
 
@@ -438,6 +439,15 @@ namespace HF
          virtual Result save (Device *device) = 0;
 
          /*!
+          * Remove the given \c device entry from persistent storage.
+          *
+          * @param [in] device   the device entry to remove.
+          *
+          * @return     if the device entry was removed.
+          */
+         virtual Result destroy (Device *device) = 0;
+
+         /*!
           * Return the number of Device entries available.
           *
           * @return  number of Device entries present.
@@ -491,6 +501,36 @@ namespace HF
           */
          virtual Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
 
+         /*!
+          * This method is called when a deregistration message is received.
+          *
+          * \see DeviceManagementServer::handle
+          */
+         virtual Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         //! @}
+         // ======================================================================
+
+         // ======================================================================
+         // Commands
+         // ======================================================================
+         //! \name Commands
+         //! @{
+
+         /*!
+          * This method serves to indicate if a given \c member of the interface
+          * can be used by the \c source device affecting the \c destination
+          * device configuration on the system.
+          *
+          * @param [in] member       interface member UID.
+          * @param [in] source       device entry for the requesting device.
+          * @param [in] destination  device entry for the affected device.
+          *
+          * @retval  true     the operation is allowed,
+          * @retval  false    otherwise.
+          */
+         virtual bool authorized (uint8_t member, Device *source, Device *destination) = 0;
+
          //! @}
          // ======================================================================
       };
@@ -520,6 +560,7 @@ namespace HF
 
          virtual Result save (Device *device);
 
+         virtual Result destroy (Device *device);
 
          uint16_t entries_count () const
          {

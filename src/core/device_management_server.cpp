@@ -48,6 +48,10 @@ Result DeviceManagementServer::handle (Protocol::Packet &packet, ByteArray &payl
    {
       case REGISTER_CMD:
          return register_device (packet, payload, offset);
+
+      case DEREGISTER_CMD:
+         return deregister_device (packet, payload, offset);
+
       default:
          return Result::FAIL_SUPPORT;
    }
@@ -103,6 +107,65 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
                                packet.message.reference);
 
    Protocol::Address res_addr (address, 0);
+
+   sendMessage (res_addr, response);
+
+   return Result::OK;
+}
+
+// =============================================================================
+// DeviceManagementServer::deregister_device
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Result DeviceManagementServer::deregister_device (Protocol::Packet &packet, ByteArray &payload,
+                                                  size_t offset)
+{
+   DeregisterMessage incomming;
+
+   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset,
+                                                          incomming.size ());
+
+   if (result != Result::OK)
+   {
+      return result;
+   }
+
+   Device *source = entry (packet.source.device);
+
+   if (source == nullptr)
+   {
+      return Result::FAIL_AUTH;
+   }
+
+   offset += incomming.unpack (payload, offset);
+
+   Device *destination = entry (incomming.address);
+
+   if (destination == nullptr)
+   {
+      return Result::FAIL_ARG;
+   }
+
+   if (!authorized (DEREGISTER_CMD, source, destination))
+   {
+      return Result::FAIL_AUTH;
+   }
+
+   result = destroy (destination);
+
+   // TODO Remove group information.
+   // TODO Remove binding information.
+
+   Protocol::Response *res = new Protocol::Response (result);
+
+   Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, DEREGISTER_CMD);
+
+   Protocol::Message response (Protocol::Message::COMMAND_RES, itf, res, packet.message.reference);
+
+   Protocol::Address res_addr (packet.source.device, 0);
 
    sendMessage (res_addr, response);
 
@@ -190,4 +253,65 @@ Result DefaultDeviceManagementServer::save (DeviceManagement::Device *device)
    }
 
    return Result::OK;
+}
+
+// =============================================================================
+// DefaultDeviceManagementServer::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Result DefaultDeviceManagementServer::destroy (DeviceManagement::Device *device)
+{
+   if (device == nullptr)
+   {
+      return Result::FAIL_UNKNOWN;
+   }
+
+   if (_addr2device.count (device->address) == 0 ||
+       _uid2device.count (device->uid) == 0)
+   {
+      return Result::FAIL_ARG;
+   }
+
+   vector <DeviceManagement::Device *>::iterator it = find (_entries.begin (), _entries.end (), device);
+
+   if (it == _entries.end ())
+   {
+      return Result::FAIL_ARG;
+   }
+
+   DeviceManagement::Device *entry = *it;
+
+   _entries.erase (it);
+   _addr2device.erase (device->address);
+   _uid2device.erase (device->uid);
+
+   delete entry;
+
+   return Result::OK;
+}
+
+// =============================================================================
+// DefaultDeviceManagementServer::authorized
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool DefaultDeviceManagementServer::authorized (uint8_t member, DeviceManagement::Device *source, DeviceManagement::Device *destination)
+{
+   if (source == nullptr || destination == nullptr)
+   {
+      return false;
+   }
+   else if (member == DEREGISTER_CMD && source->address != destination->address)
+   {
+      return false;
+   }
+   else
+   {
+      return true;
+   }
 }
