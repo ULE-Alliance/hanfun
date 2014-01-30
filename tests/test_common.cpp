@@ -600,3 +600,16 @@ TEST (UID, Order)
 
    STRCMP_EQUAL ("This is the other URI UID.", test_db[&uri3].c_str ());
 }
+
+TEST (UID, Order_NULL)
+{
+   UID uid;
+
+   less <UID *> comp;
+
+   CHECK_TRUE (comp (nullptr, &uid));
+
+   CHECK_TRUE (comp (nullptr, nullptr));
+
+   CHECK_FALSE (comp (&uid, nullptr));
+}

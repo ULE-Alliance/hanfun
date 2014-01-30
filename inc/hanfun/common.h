@@ -626,7 +626,18 @@ namespace std
    {
       bool operator ()(HF::UID *lhs, HF::UID *rhs) const
       {
-         return lhs->compare (rhs) < 0;
+         if (lhs == nullptr)
+         {
+            return true;
+         }
+         else if (rhs == nullptr)
+         {
+            return false;
+         }
+         else
+         {
+            return lhs->compare (rhs) < 0;
+         }
       }
    };
 }
