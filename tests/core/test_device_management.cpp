@@ -1066,3 +1066,50 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
    LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
 }
+
+TEST (DeviceManagementServer, Entries)
+{
+   IPUI ipui;
+
+   ipui.value[0] = 0x12;
+   ipui.value[1] = 0x34;
+   ipui.value[2] = 0x56;
+   ipui.value[3] = 0x78;
+   ipui.value[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      IPUI *temp                    = ipui.clone ();
+      dev->address    = i + 1;
+      temp->value[4] += i;
+      dev->uid        = temp;
+
+      dev_mgt->save (dev);
+   }
+
+   LONGS_EQUAL (20, dev_mgt->entries_count ());
+
+   vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
+
+   LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
+
+   entries = dev_mgt->entries (14);
+
+   LONGS_EQUAL (6, entries.size ());
+
+   entries = dev_mgt->entries (16, 10);
+
+   LONGS_EQUAL (4, entries.size ());
+
+   entries = dev_mgt->entries (5, 10);
+
+   LONGS_EQUAL (10, entries.size ());
+
+   LONGS_EQUAL (entries.front ()->address + 10 - 1, entries.back ()->address);
+
+   for (uint16_t i = 0; i < entries.size (); i++)
+   {
+      CHECK_DEVICE_ADDRESS (6 + i, entries[i]->address, i);
+   }
+}
