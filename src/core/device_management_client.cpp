@@ -19,6 +19,7 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 
+using namespace HF;
 using namespace HF::Core;
 
 // =============================================================================

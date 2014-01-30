@@ -24,9 +24,6 @@
 
 #include "hanfun/core.h"
 
-using namespace HF;
-using namespace HF::Interfaces;
-
 namespace HF
 {
    namespace Core
