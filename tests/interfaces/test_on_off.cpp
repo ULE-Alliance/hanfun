@@ -73,7 +73,7 @@ TEST (OnOffClient, On)
 
    mock ("Interface").checkExpectations ();
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
    LONGS_EQUAL (OnOff::ON_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -88,7 +88,7 @@ TEST (OnOffClient, Off)
 
    mock ("Interface").checkExpectations ();
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
    LONGS_EQUAL (OnOff::OFF_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -103,7 +103,7 @@ TEST (OnOffClient, Toggle)
 
    mock ("Interface").checkExpectations ();
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
    LONGS_EQUAL (OnOff::TOGGLE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -153,7 +153,7 @@ TEST_GROUP (OnOffServer)
 
    TEST_SETUP ()
    {
-      message.itf.role   = Interface::CLIENT_ROLE;
+      message.itf.role   = Interface::SERVER_ROLE;
       message.itf.uid    = server.uid ();
       message.itf.member = 0xFF;
    }

@@ -612,7 +612,7 @@ TEST (SimplePowerMeterServer, periodic)
 
    CHECK_FALSE (server->sendMsg.payload == nullptr);
 
-   CHECK_EQUAL (Interface::SERVER_ROLE, server->sendMsg.itf.role);
+   CHECK_EQUAL (Interface::CLIENT_ROLE, server->sendMsg.itf.role);
    CHECK_EQUAL (server->uid (), server->sendMsg.itf.uid);
    CHECK_EQUAL (SimplePowerMeter::REPORT_CMD, server->sendMsg.itf.member);
 
@@ -677,7 +677,7 @@ TEST_GROUP (SimplePowerMeterClient)
 
       expected           = ByteArray (unpack_data, sizeof(unpack_data));
 
-      message.itf.role   = Interface::SERVER_ROLE;
+      message.itf.role   = Interface::CLIENT_ROLE;
       message.itf.uid    = client.uid ();
       message.itf.member = SimplePowerMeter::REPORT_CMD;
 
@@ -704,7 +704,7 @@ TEST (SimplePowerMeterClient, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (SimplePowerMeterClient, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::CLIENT_ROLE;
+   message.itf.role = Interface::SERVER_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, client.handle (message, expected, 3));
 }

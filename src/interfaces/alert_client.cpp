@@ -30,8 +30,6 @@ using namespace HF::Interfaces;
 // =============================================================================
 Result AlertClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
-   Message alert_msg;
-
    // Check for correct interface and command.
    Result result = AbstractInterface::handle (message, payload, offset);
 
@@ -44,6 +42,8 @@ Result AlertClient::handle (Protocol::Message &message, ByteArray &payload, size
    {
       return Result::FAIL_SUPPORT;
    }
+
+   Message alert_msg;
 
    alert_msg.unpack (payload, offset);
 

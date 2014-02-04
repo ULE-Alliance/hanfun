@@ -96,7 +96,7 @@ void SimplePowerMeterServer::periodic (uint32_t time)
       Protocol::Address addr;
       Protocol::Message message;
 
-      message.itf.role   = role ();
+      message.itf.role   = CLIENT_ROLE;
       message.itf.uid    = uid ();
       message.itf.member = REPORT_CMD;
 

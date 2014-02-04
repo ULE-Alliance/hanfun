@@ -660,6 +660,8 @@ TEST_GROUP (DeviceManagementClient)
 
    TestDeviceManagementClient *dev_mgt;
 
+   Message message;
+
    TEST_SETUP ()
    {
       device      = new Device ();
@@ -675,6 +677,12 @@ TEST_GROUP (DeviceManagementClient)
       dev_mgt     = &(device->management);
 
       mock ().ignoreOtherCalls ();
+
+      message          = Protocol::Message ();
+
+      message.type     = Protocol::Message::COMMAND_RES;
+      message.itf.role = Interface::SERVER_ROLE;
+      message.itf.uid  = Interface::DEVICE_MANAGEMENT;
    }
 
    TEST_TEARDOWN ()
@@ -704,7 +712,7 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    CHECK_TRUE (packet != nullptr);
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
    LONGS_EQUAL (DeviceManagement::REGISTER_CMD, packet->message.itf.member);
 
@@ -754,12 +762,7 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 
    ByteArray payload (data, sizeof(data));
 
-   Message   message;
-
    message.length     = sizeof(data);
-
-   message.itf.role   = Interface::SERVER_ROLE;
-   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
    message.itf.member = DeviceManagement::REGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
@@ -780,12 +783,7 @@ TEST (DeviceManagementClient, RegisterResponse_FAIL)
 
    ByteArray payload (data, sizeof(data));
 
-   Message   message;
-
    message.length     = sizeof(data);
-
-   message.itf.role   = Interface::SERVER_ROLE;
-   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
    message.itf.member = DeviceManagement::REGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
@@ -815,7 +813,7 @@ TEST (DeviceManagementClient, DeregisterMessage)
    LONGS_EQUAL (0, packet->destination.device);
    LONGS_EQUAL (0, packet->destination.unit);
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
    LONGS_EQUAL (DeviceManagement::DEREGISTER_CMD, packet->message.itf.member);
 
@@ -835,12 +833,7 @@ TEST (DeviceManagementClient, DeregisterResponse_OK)
 
    ByteArray payload (data, sizeof(data));
 
-   Message   message;
-
    message.length     = sizeof(data);
-
-   message.itf.role   = Interface::SERVER_ROLE;
-   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
    message.itf.member = DeviceManagement::DEREGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("deregistered");
@@ -861,12 +854,7 @@ TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 
    ByteArray payload (data, sizeof(data));
 
-   Message   message;
-
    message.length     = sizeof(data);
-
-   message.itf.role   = Interface::SERVER_ROLE;
-   message.itf.uid    = Interface::DEVICE_MANAGEMENT;
    message.itf.member = DeviceManagement::DEREGISTER_CMD;
 
    dev_mgt->_address  = 0x5A5A;
@@ -933,7 +921,7 @@ TEST_GROUP (DeviceManagementServer)
       packet.source.device      = Protocol::BROADCAST_ADDR;
       packet.source.unit        = Protocol::BROADCAST_UNIT;
 
-      packet.message.itf.role   = Interface::CLIENT_ROLE;
+      packet.message.itf.role   = Interface::SERVER_ROLE;
       packet.message.itf.uid    = dev_mgt->uid ();
 
       UID *uid = new URI ("hf://device@example.com");

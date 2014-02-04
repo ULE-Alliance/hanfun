@@ -32,7 +32,7 @@ void OnOffClient::on (Protocol::Address &addr)
 {
    Protocol::Message message;
 
-   message.itf.role   = role ();
+   message.itf.role   = SERVER_ROLE;
    message.itf.uid    = uid ();
    message.itf.member = ON_CMD;
 
@@ -50,7 +50,7 @@ void OnOffClient::off (Protocol::Address &addr)
 {
    Protocol::Message message;
 
-   message.itf.role   = role ();
+   message.itf.role   = SERVER_ROLE;
    message.itf.uid    = uid ();
    message.itf.member = OFF_CMD;
 
@@ -68,7 +68,7 @@ void OnOffClient::toggle (Protocol::Address &addr)
 {
    Protocol::Message message;
 
-   message.itf.role   = role ();
+   message.itf.role   = SERVER_ROLE;
    message.itf.uid    = uid ();
    message.itf.member = TOGGLE_CMD;
 

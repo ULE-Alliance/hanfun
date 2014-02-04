@@ -38,7 +38,7 @@ void DeviceManagementClient::register_device ()
    Protocol::Address addr;
    Protocol::Message message;
 
-   message.itf.role   = role ();
+   message.itf.role   = SERVER_ROLE;
    message.itf.uid    = uid ();
    message.itf.member = REGISTER_CMD;
 
@@ -71,7 +71,7 @@ void DeviceManagementClient::deregister (uint16_t address)
    Protocol::Address addr (0, 0);
    Protocol::Message message;
 
-   message.itf.role   = role ();
+   message.itf.role   = SERVER_ROLE;
    message.itf.uid    = uid ();
    message.itf.member = DEREGISTER_CMD;
 

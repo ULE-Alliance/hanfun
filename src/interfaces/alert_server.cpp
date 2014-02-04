@@ -232,7 +232,7 @@ Alert::Message *AlertServer::status (uint16_t profile_uid)
 // =============================================================================
 void AlertServer::status (Protocol::Address &addr, uint16_t profile_uid)
 {
-   Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::ALERT, STATUS_CMD);
+   Protocol::Message::Interface itf (CLIENT_ROLE, HF::Interface::ALERT, STATUS_CMD);
 
    Alert::Message *alert_msg = status (profile_uid);
 

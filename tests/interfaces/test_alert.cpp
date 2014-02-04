@@ -280,7 +280,7 @@ TEST (AlertServer, Status2)
 
    CHECK_TRUE (server->sendMsg.payload != nullptr);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, server->sendMsg.itf.role);
+   LONGS_EQUAL (Interface::CLIENT_ROLE, server->sendMsg.itf.role);
    LONGS_EQUAL (server->uid (), server->sendMsg.itf.uid);
    LONGS_EQUAL (Alert::STATUS_CMD, server->sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, server->sendMsg.type);
@@ -325,7 +325,7 @@ TEST_GROUP (AlertClient)
                         0x00, 0x00, 0x00};
       expected           = ByteArray (data, sizeof(data));
 
-      message.itf.role   = Interface::SERVER_ROLE;
+      message.itf.role   = Interface::CLIENT_ROLE;
       message.itf.uid    = client->uid ();
       message.itf.member = Alert::STATUS_CMD;
 
@@ -356,7 +356,7 @@ TEST (AlertClient, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (AlertClient, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::CLIENT_ROLE;
+   message.itf.role = Interface::SERVER_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (message, expected, 3));
 }

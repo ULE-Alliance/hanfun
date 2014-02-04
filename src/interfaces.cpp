@@ -16,6 +16,7 @@
 #include "hanfun/interface.h"
 
 using namespace HF;
+using namespace HF::Protocol;
 
 // =============================================================================
 // AbstractInterface API.
@@ -28,18 +29,44 @@ using namespace HF;
  *
  */
 // =============================================================================
-Result AbstractInterface::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result AbstractInterface::handle (Message &message, ByteArray &payload, size_t offset)
 {
-   // Only handle message that are for this interface and are
-   // from the complementing role.
-   if (uid() == message.itf.uid && role() != message.itf.role)
+   if (uid () != message.itf.uid)
    {
-      return check_payload_size(message, payload, offset);
+      return Result::FAIL_ID;
    }
-   else
+
+   switch (message.type)
    {
-      return (uid() != message.itf.uid ? Result::FAIL_ID : Result::FAIL_SUPPORT);
+      case Message::COMMAND_REQ:
+      case Message::COMMAND_RESP_REQ:
+      case Message::GET_ATTR_REQ:
+      case Message::SET_ATTR_REQ:
+      case Message::SET_ATTR_RESP_REQ:
+      case Message::SET_ATTR_PACK_REQ:
+      case Message::SET_ATTR_PACK_RESP_REQ:
+      {
+         if (role () != message.itf.role)
+         {
+            return Result::FAIL_SUPPORT;
+         }
+
+         break;
+      }
+      case Message::COMMAND_RES:
+      {
+         if (role () == message.itf.role)
+         {
+            return Result::FAIL_SUPPORT;
+         }
+
+         break;
+      }
+      default:
+         break;
    }
+
+   return check_payload_size (message, payload, offset);
 }
 
 // =============================================================================
@@ -49,15 +76,14 @@ Result AbstractInterface::handle (Protocol::Message &message, ByteArray &payload
  *
  */
 // =============================================================================
-Result AbstractInterface::check_payload_size (Protocol::Message &message, ByteArray &payload,
-                                                size_t offset)
+Result AbstractInterface::check_payload_size (Message &message, ByteArray &payload, size_t offset)
 {
-   size_t _payload_size = payload_size(message.itf);
+   size_t _payload_size = payload_size (message.itf);
 
    if (_payload_size != 0)
    {
-      if (message.length < _payload_size || payload.size() < offset ||
-          (payload.size() - offset) < _payload_size)
+      if (message.length < _payload_size || payload.size () < offset ||
+          (payload.size () - offset) < _payload_size)
       {
          return Result::FAIL_ARG;
       }

@@ -131,7 +131,7 @@ TEST (LevelControlClient, Level)
 
    mock ("Interface").checkExpectations ();
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
    LONGS_EQUAL (LevelControl::SET_LEVEL_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -181,7 +181,7 @@ TEST_GROUP (LevelControlServer)
 
       expected           = ByteArray (data, sizeof(data));
 
-      message.itf.role   = Interface::CLIENT_ROLE;
+      message.itf.role   = Interface::SERVER_ROLE;
       message.itf.uid    = server.uid ();
       message.itf.member = LevelControl::SET_LEVEL_CMD;
 
@@ -217,7 +217,7 @@ TEST (LevelControlServer, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (LevelControlServer, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::SERVER_ROLE;
+   message.itf.role = Interface::CLIENT_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (message, expected, 3));
 }
