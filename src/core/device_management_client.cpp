@@ -82,6 +82,21 @@ void DeviceManagementClient::deregister (uint16_t address)
    sendMessage (addr, message);
 }
 
+size_t DeviceManagementClient::payload_size (Protocol::Message::Interface &itf) const
+{
+   switch (itf.member)
+   {
+      case REGISTER_CMD:
+         return payload_size_helper <RegisterResponse>();
+
+      case DEREGISTER_CMD:
+         return payload_size_helper <Protocol::Response>();
+
+      default:
+         return 0;
+   }
+}
+
 // =============================================================================
 // DeviceManagementClient::handle
 // =============================================================================
@@ -91,25 +106,7 @@ void DeviceManagementClient::deregister (uint16_t address)
 // =============================================================================
 Result DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
 {
-   RegisterResponse registration;
-
-   Protocol::Response response;
-
-   size_t payload_size = 0;
-
-   switch (message.itf.member)
-   {
-      case REGISTER_CMD:
-         payload_size = registration.size ();
-         break;
-      case DEREGISTER_CMD:
-         payload_size = response.size ();
-         break;
-      default:
-         return Result::FAIL_SUPPORT;
-   }
-
-   Result result = AbstractInterface::handle (message, payload, offset, payload_size);
+   Result result = AbstractInterface::handle (message, payload, offset);
 
    if (result != Result::OK)
    {
@@ -119,13 +116,21 @@ Result DeviceManagementClient::handle (Protocol::Message &message, ByteArray &pa
    switch (message.itf.member)
    {
       case REGISTER_CMD:
+      {
+         RegisterResponse registration;
          registration.unpack (payload, offset);
          registered (registration);
+
          break;
+      }
       case DEREGISTER_CMD:
+      {
+         Protocol::Response response;
          response.unpack (payload, offset);
          deregistered (response);
+
          break;
+      }
       default:
          break;
    }

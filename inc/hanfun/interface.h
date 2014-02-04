@@ -110,25 +110,8 @@ namespace HF
     */
    struct AbstractInterface:public Interface
    {
-      Result handle (Protocol::Message &message, ByteArray &payload, size_t offset)
-      {
-         return handle (message, payload, offset, 0);
-      }
-
-      Result handle (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
-      {
-         // Only handle message that are for this interface and are
-         // from the complementing role.
-         if (uid () == message.itf.uid && role () != message.itf.role)
-         {
-            // Check payload size.
-            return check_payload_size (message, payload, offset, payload_size);
-         }
-         else
-         {
-            return (uid () != message.itf.uid ? Result::FAIL_ID : Result::FAIL_SUPPORT);
-         }
-      }
+      //! \see Interface::handle
+      Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
 
       //! \see Interface::periodic
       void periodic (uint32_t time)
@@ -156,18 +139,27 @@ namespace HF
        */
       virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
 
-      Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset, size_t payload_size)
-      {
-         if (payload_size != 0)
-         {
-            if (message.length < payload_size || payload.size () < offset ||
-                (payload.size () - offset) < payload_size)
-            {
-               return Result::FAIL_ARG;
-            }
-         }
+      /*!
+       * Check if \c payload data size if sufficient for processing the \c message.
+       *
+       * \see Interface::handle.
+       */
+      Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset);
 
-         return Result::OK;
+      virtual size_t payload_size (Protocol::Message::Interface &itf) const
+      {
+         UNUSED (itf);
+         return 0;
+      }
+
+      template<typename _Message_T>
+      size_t payload_size_helper () const
+      {
+         static_assert (is_base_of <HF::Serializable, _Message_T>::value,
+                        "_Message_T must be of type HF::Serializable");
+
+         _Message_T message;
+         return message.size ();
       }
    };
 

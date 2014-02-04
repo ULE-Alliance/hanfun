@@ -67,6 +67,15 @@ namespace HF
                return offset - start;
             }
          };
+
+
+         protected:
+
+         size_t payload_size (Protocol::Message::Interface &itf) const
+         {
+            UNUSED (itf);
+            return payload_size_helper <Message>();
+         }
       };
 
       /*!

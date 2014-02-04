@@ -396,6 +396,10 @@ namespace HF
 
          //! @}
          // ======================================================================
+
+         protected:
+
+         size_t payload_size (Protocol::Message::Interface &itf) const;
       };
 
       /*!
@@ -530,6 +534,10 @@ namespace HF
 
          //! @}
          // ======================================================================
+
+         protected:
+
+         size_t payload_size (Protocol::Message::Interface &itf) const;
       };
 
       // =========================================================================

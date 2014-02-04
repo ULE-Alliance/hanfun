@@ -33,7 +33,7 @@ Result AlertClient::handle (Protocol::Message &message, ByteArray &payload, size
    Message alert_msg;
 
    // Check for correct interface and command.
-   Result result = AbstractInterface::handle (message, payload, offset, alert_msg.size ());
+   Result result = AbstractInterface::handle (message, payload, offset);
 
    if (result != Result::OK)
    {

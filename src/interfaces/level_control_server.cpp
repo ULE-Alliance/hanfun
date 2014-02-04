@@ -59,7 +59,7 @@ Result LevelControlServer::handle (Protocol::Message &message, ByteArray &payloa
    Message level_msg;
 
    // Check for correct interface and command.
-   Result result = AbstractInterface::handle (message, payload, offset, level_msg.size ());
+   Result result = AbstractInterface::handle (message, payload, offset);
 
    if (result != Result::OK)
    {

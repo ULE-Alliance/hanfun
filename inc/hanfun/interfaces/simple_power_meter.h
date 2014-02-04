@@ -160,6 +160,15 @@ namespace HF
             //! \see HF::Serializable::unpack.
             size_t unpack (const ByteArray &array, size_t offset = 0);
          };
+
+         protected:
+
+         size_t payload_size (Protocol::Message::Interface &itf) const
+         {
+            UNUSED (itf);
+            return payload_size_helper <Report>();
+         }
+
       };
 
       /*!

@@ -23,6 +23,21 @@ using namespace HF::Core;
 // DeviceManagementServer API
 // =============================================================================
 
+size_t DeviceManagementServer::payload_size (Protocol::Message::Interface &itf) const
+{
+   switch (itf.member)
+   {
+      case REGISTER_CMD:
+         return payload_size_helper <RegisterMessage>();
+
+      case DEREGISTER_CMD:
+         return payload_size_helper <DeregisterMessage>();
+
+      default:
+         return 0;
+   }
+}
+
 // =============================================================================
 // DeviceManagementServer::handle
 // =============================================================================
@@ -67,15 +82,14 @@ Result DeviceManagementServer::handle (Protocol::Packet &packet, ByteArray &payl
 Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteArray &payload,
                                                 size_t offset)
 {
-   RegisterMessage reg_msg;
-
-   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset,
-                                                          reg_msg.size ());
+   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
    if (result != Result::OK)
    {
       return result;
    }
+
+   RegisterMessage reg_msg;
 
    offset += reg_msg.unpack (payload, offset);
 
@@ -123,10 +137,7 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 Result DeviceManagementServer::deregister_device (Protocol::Packet &packet, ByteArray &payload,
                                                   size_t offset)
 {
-   DeregisterMessage incomming;
-
-   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset,
-                                                          incomming.size ());
+   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
    if (result != Result::OK)
    {
@@ -139,6 +150,8 @@ Result DeviceManagementServer::deregister_device (Protocol::Packet &packet, Byte
    {
       return Result::FAIL_AUTH;
    }
+
+   DeregisterMessage incomming;
 
    offset += incomming.unpack (payload, offset);
 
