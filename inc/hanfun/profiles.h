@@ -188,13 +188,13 @@ namespace HF
       using AbstractProfile <_uid>::uid;
 
       //! \see Interface::handle()
-      virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+      virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
       {
-         Result result = Interface1::handle (message, payload, offset);
+         Result result = Interface1::handle (packet, payload, offset);
 
          if (result == Result::FAIL_ID)
          {
-            return Interface2::handle (message, payload, offset);
+            return Interface2::handle (packet, payload, offset);
          }
          else
          {

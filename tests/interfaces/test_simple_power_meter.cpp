@@ -669,19 +669,19 @@ TEST_GROUP (SimplePowerMeterClient)
    TestSimplePowerMeterClient client;
    ByteArray expected;
 
-   Protocol::Message message;
+   Protocol::Packet packet;
 
    TEST_SETUP ()
    {
-      client             = TestSimplePowerMeterClient ();
+      client                    = TestSimplePowerMeterClient ();
 
-      expected           = ByteArray (unpack_data, sizeof(unpack_data));
+      expected                  = ByteArray (unpack_data, sizeof(unpack_data));
 
-      message.itf.role   = Interface::CLIENT_ROLE;
-      message.itf.uid    = client.uid ();
-      message.itf.member = SimplePowerMeter::REPORT_CMD;
+      packet.message.itf.role   = Interface::CLIENT_ROLE;
+      packet.message.itf.uid    = client.uid ();
+      packet.message.itf.member = SimplePowerMeter::REPORT_CMD;
 
-      message.length     = expected.size ();
+      packet.message.length     = expected.size ();
    }
 
    TEST_TEARDOWN ()
@@ -695,7 +695,7 @@ TEST (SimplePowerMeterClient, Handle_Valid_Message)
 {
    mock ("SimplePowerMeterClient").expectOneCall ("report");
 
-   Result result = client.handle (message, expected, 3);
+   Result result = client.handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("SimplePowerMeterClient").checkExpectations ();
@@ -704,30 +704,30 @@ TEST (SimplePowerMeterClient, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (SimplePowerMeterClient, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::SERVER_ROLE;
+   packet.message.itf.role = Interface::SERVER_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, client.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, client.handle (packet, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
 TEST (SimplePowerMeterClient, Handle_Invalid_UID)
 {
-   message.itf.uid = client.uid () + 1;
+   packet.message.itf.uid = client.uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, client.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, client.handle (packet, expected, 3));
 }
 
 //! \test FIXME Should not handle message with invalid payload size.
 IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload_Size)
 {
    SimplePowerMeter::Report report;
-   message.length = report.size () - 1;
+   packet.message.length = report.size () - 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
 }
 
 //! \test FIXME Should not handle message with not enough payload.
 IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload)
 {
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (message, expected, 10));
+   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 10));
 }

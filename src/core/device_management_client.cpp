@@ -82,6 +82,13 @@ void DeviceManagementClient::deregister (uint16_t address)
    sendMessage (addr, message);
 }
 
+// =============================================================================
+// DeviceManagementClient::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t DeviceManagementClient::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
@@ -98,22 +105,16 @@ size_t DeviceManagementClient::payload_size (Protocol::Message::Interface &itf) 
 }
 
 // =============================================================================
-// DeviceManagementClient::handle
+// DeviceManagementClient::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Result DeviceManagementClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result DeviceManagementClient::handle_command (Protocol::Packet &packet, ByteArray &payload,
+                                               size_t offset)
 {
-   Result result = AbstractInterface::handle (message, payload, offset);
-
-   if (result != Result::OK)
-   {
-      return result;
-   }
-
-   switch (message.itf.member)
+   switch (packet.message.itf.member)
    {
       case REGISTER_CMD:
       {

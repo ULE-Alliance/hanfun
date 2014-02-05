@@ -168,7 +168,7 @@ TEST_GROUP (LevelControlServer)
 
    TestLevelControlServer server;
 
-   Protocol::Message message;
+   Protocol::Packet packet;
    ByteArray expected;
 
    TEST_SETUP ()
@@ -179,13 +179,13 @@ TEST_GROUP (LevelControlServer)
                         0xAA, // Level value.
                         0x00, 0x00, 0x00};
 
-      expected           = ByteArray (data, sizeof(data));
+      expected                  = ByteArray (data, sizeof(data));
 
-      message.itf.role   = Interface::SERVER_ROLE;
-      message.itf.uid    = server.uid ();
-      message.itf.member = LevelControl::SET_LEVEL_CMD;
+      packet.message.itf.role   = Interface::SERVER_ROLE;
+      packet.message.itf.uid    = server.uid ();
+      packet.message.itf.member = LevelControl::SET_LEVEL_CMD;
 
-      message.length     = expected.size ();
+      packet.message.length     = expected.size ();
    }
 
    TEST_TEARDOWN ()
@@ -206,7 +206,7 @@ TEST (LevelControlServer, Handle_Valid_Message)
 {
    mock ("LevelControlServer").expectOneCall ("level_change");
 
-   Result result = server.handle (message, expected, 3);
+   Result result = server.handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
    LONGS_EQUAL (0xAA, server.level ());
@@ -217,30 +217,30 @@ TEST (LevelControlServer, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (LevelControlServer, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::CLIENT_ROLE;
+   packet.message.itf.role = Interface::CLIENT_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
 TEST (LevelControlServer, Handle_Invalid_UID)
 {
-   message.itf.uid = server.uid () + 1;
+   packet.message.itf.uid = server.uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
 }
 
 //! \test Should not handle message with invalid payload size.
 TEST (LevelControlServer, Handle_Invalid_Payload_Size)
 {
    LevelControl::Message level_msg;
-   message.length = level_msg.size () - 1;
+   packet.message.length = level_msg.size () - 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 3));
 }
 
 //! \test Should not handle message with not enough payload / offset.
 TEST (LevelControlServer, Handle_Invalid_Payload)
 {
-   CHECK_EQUAL (Result::FAIL_ARG, server.handle (message, expected, 10));
+   CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 10));
 }

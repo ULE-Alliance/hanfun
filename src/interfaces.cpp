@@ -29,8 +29,47 @@ using namespace HF::Protocol;
  *
  */
 // =============================================================================
-Result AbstractInterface::handle (Message &message, ByteArray &payload, size_t offset)
+Result AbstractInterface::handle (Packet &packet, ByteArray &payload, size_t offset)
 {
+   Result result = check_message (packet.message, payload, offset);
+
+   if (result != Result::OK)
+   {
+      return result;
+   }
+
+   result = check_payload_size (packet.message, payload, offset);
+
+   if (result != Result::OK)
+   {
+      return result;
+   }
+
+   if (packet.message.type >= Message::COMMAND_REQ && packet.message.type <= Message::COMMAND_RES)
+   {
+      return handle_command (packet, payload, offset);
+   }
+   else if (packet.message.type >= Message::GET_ATTR_REQ && packet.message.type <= Message::SET_ATTR_PACK_RES)
+   {
+      return handle_attribute (packet, payload, offset);
+   }
+
+   return Result::FAIL_UNKNOWN;
+}
+
+
+// =============================================================================
+// AbstractInterface::check_message
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Result AbstractInterface::check_message (Message &message, ByteArray &payload, size_t offset)
+{
+   UNUSED (payload);
+   UNUSED (offset);
+
    if (uid () != message.itf.uid)
    {
       return Result::FAIL_ID;
@@ -66,7 +105,7 @@ Result AbstractInterface::handle (Message &message, ByteArray &payload, size_t o
          break;
    }
 
-   return check_payload_size (message, payload, offset);
+   return Result::OK;
 }
 
 // =============================================================================
@@ -90,4 +129,38 @@ Result AbstractInterface::check_payload_size (Message &message, ByteArray &paylo
    }
 
    return Result::OK;
+}
+
+
+// =============================================================================
+// AbstractInterface::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Result AbstractInterface::handle_command (Packet &packet, ByteArray &payload, size_t offset)
+{
+   UNUSED (packet);
+   UNUSED (payload);
+   UNUSED (offset);
+
+   return Result::FAIL_UNKNOWN;
+}
+
+// =============================================================================
+// AbstractInterface::handle_attributes
+// =============================================================================
+/*!
+ *
+ *
+ */
+// =============================================================================
+Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, size_t offset)
+{
+   UNUSED (packet);
+   UNUSED (payload);
+   UNUSED (offset);
+
+   return Result::FAIL_UNKNOWN;
 }

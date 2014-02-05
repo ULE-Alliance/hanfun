@@ -2,7 +2,8 @@
 /*!
  * \file			tests/core/test_device_management.cpp
  *
- * This file contains the implementation of the Simple Power Meter interface.
+ * This file contains the implementation of the Device Management service
+ * interface.
  *
  * \author		Filipe Alves <filipe.alves@bithium.com>
  *
@@ -660,7 +661,7 @@ TEST_GROUP (DeviceManagementClient)
 
    TestDeviceManagementClient *dev_mgt;
 
-   Message message;
+   Protocol::Packet packet;
 
    TEST_SETUP ()
    {
@@ -678,11 +679,11 @@ TEST_GROUP (DeviceManagementClient)
 
       mock ().ignoreOtherCalls ();
 
-      message          = Protocol::Message ();
+      packet                  = Protocol::Packet ();
 
-      message.type     = Protocol::Message::COMMAND_RES;
-      message.itf.role = Interface::SERVER_ROLE;
-      message.itf.uid  = Interface::DEVICE_MANAGEMENT;
+      packet.message.type     = Protocol::Message::COMMAND_RES;
+      packet.message.itf.role = Interface::SERVER_ROLE;
+      packet.message.itf.uid  = Interface::DEVICE_MANAGEMENT;
    }
 
    TEST_TEARDOWN ()
@@ -762,12 +763,12 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 
    ByteArray payload (data, sizeof(data));
 
-   message.length     = sizeof(data);
-   message.itf.member = DeviceManagement::REGISTER_CMD;
+   packet.message.length     = sizeof(data);
+   packet.message.itf.member = DeviceManagement::REGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
 
-   Result result = dev_mgt->handle (message, payload, 3);
+   Result result = dev_mgt->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("DeviceManagementClient").checkExpectations ();
@@ -783,12 +784,12 @@ TEST (DeviceManagementClient, RegisterResponse_FAIL)
 
    ByteArray payload (data, sizeof(data));
 
-   message.length     = sizeof(data);
-   message.itf.member = DeviceManagement::REGISTER_CMD;
+   packet.message.length     = sizeof(data);
+   packet.message.itf.member = DeviceManagement::REGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
 
-   Result result = dev_mgt->handle (message, payload, 3);
+   Result result = dev_mgt->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("DeviceManagementClient").checkExpectations ();
@@ -833,12 +834,12 @@ TEST (DeviceManagementClient, DeregisterResponse_OK)
 
    ByteArray payload (data, sizeof(data));
 
-   message.length     = sizeof(data);
-   message.itf.member = DeviceManagement::DEREGISTER_CMD;
+   packet.message.length     = sizeof(data);
+   packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("deregistered");
 
-   Result result = dev_mgt->handle (message, payload, 3);
+   Result result = dev_mgt->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("DeviceManagementClient").checkExpectations ();
@@ -854,16 +855,16 @@ TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 
    ByteArray payload (data, sizeof(data));
 
-   message.length     = sizeof(data);
-   message.itf.member = DeviceManagement::DEREGISTER_CMD;
+   packet.message.length     = sizeof(data);
+   packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
 
-   dev_mgt->_address  = 0x5A5A;
+   dev_mgt->_address         = 0x5A5A;
 
    mock ("DeviceManagementClient").expectOneCall ("deregistered");
 
    // XXX This needs to use a temporary variable
    // otherwise the handle method will be called twice.
-   Result result = dev_mgt->handle (message, payload, 3);
+   Result result = dev_mgt->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("DeviceManagementClient").checkExpectations ();

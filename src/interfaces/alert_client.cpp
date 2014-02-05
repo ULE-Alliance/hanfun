@@ -22,23 +22,15 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 // =============================================================================
-// AlertClient::handle
+// AlertClient::handle_commands
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Result AlertClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result AlertClient::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
 {
-   // Check for correct interface and command.
-   Result result = AbstractInterface::handle (message, payload, offset);
-
-   if (result != Result::OK)
-   {
-      return result;
-   }
-
-   if (message.itf.member != Alert::STATUS_CMD)
+   if (packet.message.itf.member != Alert::STATUS_CMD)
    {
       return Result::FAIL_SUPPORT;
    }

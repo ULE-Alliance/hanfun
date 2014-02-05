@@ -333,9 +333,6 @@ namespace HF
             ServiceRole (_device), _address (Protocol::BROADCAST_ADDR)
          {}
 
-         //! \see Interface::handle
-         virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
-
          /*!
           * Return the address given by the HF Concentrator to the Device.
           *
@@ -400,6 +397,8 @@ namespace HF
          protected:
 
          size_t payload_size (Protocol::Message::Interface &itf) const;
+
+         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
 
       /*!
@@ -407,9 +406,6 @@ namespace HF
        */
       struct DeviceManagementServer:public ServiceRole <DeviceManagement, Interface::SERVER_ROLE>
       {
-         //! \see Service::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
-
          /*!
           * Return the Device entry for the given address.
           *
@@ -535,9 +531,9 @@ namespace HF
          //! @}
          // ======================================================================
 
-         protected:
-
          size_t payload_size (Protocol::Message::Interface &itf) const;
+
+         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
 
       // =========================================================================

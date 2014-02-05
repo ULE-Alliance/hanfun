@@ -147,15 +147,15 @@ TEST_GROUP (OnOffServer)
 
    };
 
-   TestOnOffServer server;
-   Protocol::Message message;
+   TestOnOffServer  server;
+   Protocol::Packet packet;
    ByteArray expected;
 
    TEST_SETUP ()
    {
-      message.itf.role   = Interface::SERVER_ROLE;
-      message.itf.uid    = server.uid ();
-      message.itf.member = 0xFF;
+      packet.message.itf.role   = Interface::SERVER_ROLE;
+      packet.message.itf.uid    = server.uid ();
+      packet.message.itf.member = 0xFF;
    }
 
    TEST_TEARDOWN ()
@@ -199,9 +199,9 @@ TEST (OnOffServer, Handle_Valid_On_Message)
 {
    mock ("OnOffServer").expectOneCall ("on");
 
-   message.itf.member = OnOff::ON_CMD;
+   packet.message.itf.member = OnOff::ON_CMD;
 
-   Result result = server.handle (message, expected, 3);
+   Result result = server.handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
@@ -212,9 +212,9 @@ TEST (OnOffServer, Handle_Valid_Off_Message)
 {
    mock ("OnOffServer").expectOneCall ("off");
 
-   message.itf.member = OnOff::OFF_CMD;
+   packet.message.itf.member = OnOff::OFF_CMD;
 
-   Result result = server.handle (message, expected, 3);
+   Result result = server.handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
@@ -225,9 +225,9 @@ TEST (OnOffServer, Handle_Valid_Toggle_Message)
 {
    mock ("OnOffServer").expectOneCall ("toggle");
 
-   message.itf.member = OnOff::TOGGLE_CMD;
+   packet.message.itf.member = OnOff::TOGGLE_CMD;
 
-   Result result = server.handle (message, expected, 3);
+   Result result = server.handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
@@ -236,15 +236,15 @@ TEST (OnOffServer, Handle_Valid_Toggle_Message)
 //! \test Should not handle message from invalid role.
 TEST (OnOffServer, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::SERVER_ROLE;
+   packet.message.itf.role = Interface::SERVER_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
 TEST (OnOffServer, Handle_Invalid_UID)
 {
-   message.itf.uid = server.uid () + 1;
+   packet.message.itf.uid = server.uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, server.handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
 }

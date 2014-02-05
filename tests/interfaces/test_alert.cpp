@@ -308,9 +308,9 @@ TEST_GROUP (AlertClient)
       }
    };
 
-   TestAlertClient *client;
+   TestAlertClient  *client;
 
-   Protocol::Message message;
+   Protocol::Packet packet;
    ByteArray expected;
 
    TEST_SETUP ()
@@ -323,13 +323,13 @@ TEST_GROUP (AlertClient)
                         0x5A, 0xA5,            // Unit Type.
                         0xFF, 0xA5, 0x5A,0xBB, // State.
                         0x00, 0x00, 0x00};
-      expected           = ByteArray (data, sizeof(data));
+      expected                  = ByteArray (data, sizeof(data));
 
-      message.itf.role   = Interface::CLIENT_ROLE;
-      message.itf.uid    = client->uid ();
-      message.itf.member = Alert::STATUS_CMD;
+      packet.message.itf.role   = Interface::CLIENT_ROLE;
+      packet.message.itf.uid    = client->uid ();
+      packet.message.itf.member = Alert::STATUS_CMD;
 
-      message.length     = expected.size ();
+      packet.message.length     = expected.size ();
    }
 
    TEST_TEARDOWN ()
@@ -344,7 +344,7 @@ TEST (AlertClient, Handle_Valid_Message)
 {
    mock ("AlertClient").expectOneCall ("status");
 
-   Result result = client->handle (message, expected, 3);
+   Result result = client->handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
 
    LONGS_EQUAL (0x5AA5, client->profile_uid);
@@ -356,30 +356,30 @@ TEST (AlertClient, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (AlertClient, Handle_Invalid_Role)
 {
-   message.itf.role = Interface::SERVER_ROLE;
+   packet.message.itf.role = Interface::SERVER_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (packet, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
 TEST (AlertClient, Handle_Invalid_UID)
 {
-   message.itf.uid = client->uid () + 1;
+   packet.message.itf.uid = client->uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, client->handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ID, client->handle (packet, expected, 3));
 }
 
 //! \test Should not handle message with invalid payload size.
 TEST (AlertClient, Handle_Invalid_Payload_Size)
 {
    Alert::Message alert_msg;
-   message.length = alert_msg.size () - 1;
+   packet.message.length = alert_msg.size () - 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, client->handle (message, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 3));
 }
 
 //! \test Should not handle message with not enough payload.
 TEST (AlertClient, Handle_Invalid_Payload)
 {
-   CHECK_EQUAL (Result::FAIL_ARG, client->handle (message, expected, 10));
+   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 10));
 }

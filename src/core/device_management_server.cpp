@@ -23,6 +23,13 @@ using namespace HF::Core;
 // DeviceManagementServer API
 // =============================================================================
 
+// =============================================================================
+// DeviceManagementServer::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t DeviceManagementServer::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
@@ -39,15 +46,16 @@ size_t DeviceManagementServer::payload_size (Protocol::Message::Interface &itf) 
 }
 
 // =============================================================================
-// DeviceManagementServer::handle
+// DeviceManagementServer::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Result DeviceManagementServer::handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Result DeviceManagementServer::handle_command (Protocol::Packet &packet, ByteArray &payload,
+                                               size_t offset)
 {
-   Result result = AbstractInterface::handle (packet.message, payload, offset);
+   Result result = AbstractInterface::check_message (packet.message, payload, offset);
 
    if (result != Result::OK)
    {

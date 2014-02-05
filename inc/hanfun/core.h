@@ -34,22 +34,6 @@ namespace HF
        */
       struct IService:public HF::Interface
       {
-         /*!
-          * Handle the incoming packet from the network.
-          *
-          * \sa HF::Interface::handle
-          *
-          * @param [in]    packet   the packet received from the network.
-          *
-          * @param [in]    payload  the byte array containing the data received from the
-          *                         network.
-          *
-          * @param [in]    offset   the offset the payload start at in the byte array.
-          *
-          * @result        the result of the processing of the packet by the service interface.
-          */
-         virtual Result handle (Protocol::Packet &packet, ByteArray payload, size_t offset) = 0;
-
          //! The device this unit is associated with.
          virtual IDevice *device () = 0;
       };
@@ -62,16 +46,10 @@ namespace HF
             return 0;
          }
 
-         //! \see HF::Core::IService::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray payload, size_t offset)
-         {
-            return AbstractInterface::handle (packet.message, payload, offset);
-         }
-
          //! \see HF::Interface::handle
-         virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
          {
-            return AbstractInterface::handle (message, payload, offset);
+            return AbstractInterface::handle (packet, payload, offset);
          }
 
          IDevice *device ()

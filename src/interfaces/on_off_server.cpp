@@ -22,23 +22,18 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 // =============================================================================
-// OnOffServer::handle
+// OnOffServer::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Result OnOffServer::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result OnOffServer::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
 {
-   // Check for correct interface and command.
-   Result result = AbstractInterface::handle (message, payload, offset);
+   UNUSED (payload);
+   UNUSED (offset);
 
-   if (result != Result::OK)
-   {
-      return result;
-   }
-
-   OnOff::CMD cmd = static_cast <OnOff::CMD>(message.itf.member);
+   OnOff::CMD cmd = static_cast <OnOff::CMD>(packet.message.itf.member);
 
    switch (cmd)
    {

@@ -66,13 +66,6 @@ namespace HF
          virtual ~OnOffServer() {}
 
          // ======================================================================
-         // API
-         // ======================================================================
-
-         //! \see Interface::handle.
-         Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
-
-         // ======================================================================
          // Events
          // ======================================================================
          //! \name Events
@@ -115,6 +108,10 @@ namespace HF
           * @retval  \c false if the interface is OFF.
           */
          bool state ();
+
+         protected:
+
+         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
 
       /*!
@@ -154,6 +151,7 @@ namespace HF
          void toggle (Protocol::Address &addr);
 
          //@}
+         // =============================================================================
       };
 
 

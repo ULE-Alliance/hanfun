@@ -23,22 +23,15 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 // =============================================================================
-// SimplePowerMeterClient::handle
+// SimplePowerMeterClient::handle_command
 // =============================================================================
 /*!
  * TODO This needs more validation when reading a report received.
  */
 // =============================================================================
-Result SimplePowerMeterClient::handle (Protocol::Message &message, ByteArray &payload, size_t offset)
+Result SimplePowerMeterClient::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
 {
-   Result result = AbstractInterface::handle (message, payload, offset);
-
-   if (result != Result::OK)
-   {
-      return result;
-   }
-
-   if (message.itf.member != SimplePowerMeter::REPORT_CMD)
+   if (packet.message.itf.member != SimplePowerMeter::REPORT_CMD)
    {
       return Result::FAIL_SUPPORT;
    }

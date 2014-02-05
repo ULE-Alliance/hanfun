@@ -16,7 +16,7 @@
 
 #include "hanfun/common.h"
 
-#include "protocol.h"
+#include "hanfun/protocol.h"
 
 namespace HF
 {
@@ -86,7 +86,7 @@ namespace HF
       /*!
        * Handle incoming messages from the network.
        *
-       * @param [in]    message  the message receive from the network.
+       * @param [in]    packet   the packet receive from the network.
        *
        * @param [in]    payload  the byte array containing the data received from the
        *                         network.
@@ -95,7 +95,7 @@ namespace HF
        *
        * @return        the result of the messsage processing.
        */
-      virtual Result handle (Protocol::Message &message, ByteArray &payload, size_t offset) = 0;
+      virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
 
       /*!
        * Handle periodic processing.
@@ -111,7 +111,7 @@ namespace HF
    struct AbstractInterface:public Interface
    {
       //! \see Interface::handle
-      Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
+      Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
 
       //! \see Interface::periodic
       void periodic (uint32_t time)
@@ -140,6 +140,17 @@ namespace HF
       virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
 
       /*!
+       * Check if message has correct attributes to be processed by the interface.
+       *
+       * The attributes checked are :
+       * - Interface UID;
+       * - Interface Role;
+       *
+       * \see Interface::handle.
+       */
+      Result check_message (Protocol::Message &message, ByteArray &payload, size_t offset);
+
+      /*!
        * Check if \c payload data size if sufficient for processing the \c message.
        *
        * \see Interface::handle.
@@ -161,6 +172,29 @@ namespace HF
          _Message_T message;
          return message.size ();
       }
+
+      /*!
+       * Handle command request/response messages, i.e. :
+       *  - Protocol::Message:Type::COMMAND_REQ;
+       *  - Protocol::Message:Type::COMMAND_RESP_REQ;
+       *  - Protocol::Message:Type::COMMAND_RES;
+       *
+       * \see Interface::handle
+       */
+      virtual Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+      /*!
+       * Handle attributes request/response messages, i.e. :
+       *  - Protocol::Message:Type::GET_ATTR_REQ;
+       *  - Protocol::Message:Type::SET_ATTR_REQ;
+       *  - Protocol::Message:Type::SET_ATTR_RESP_REQ;
+       *  - Protocol::Message:Type::GET_ATTR_PACK_REQ;
+       *  - Protocol::Message:Type::SET_ATTR_PACK_REQ;
+       *  - Protocol::Message:Type::SET_ATTR_PACK_RESP_REQ;
+       *
+       * \see Interface::handle
+       */
+      virtual Result handle_attribute (Protocol::Packet &packet, ByteArray &payload, size_t offset);
    };
 
    /*!

@@ -225,9 +225,6 @@ namespace HF
        */
       struct AlertClient:public InterfaceRole <Alert, Interface::CLIENT_ROLE>
       {
-         //! \see Interface::handle.
-         Result handle (Protocol::Message &message, ByteArray &payload, size_t offset);
-
          // ======================================================================
          // Events
          // ======================================================================
@@ -242,6 +239,10 @@ namespace HF
 
          //! @}
          // ======================================================================
+
+         protected:
+
+         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
 
    }  // namespace Interfaces
