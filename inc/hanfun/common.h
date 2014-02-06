@@ -118,6 +118,12 @@ namespace HF
        */
       size_t write (size_t offset, uint32_t data);
 
+      //! \see  ByteArray::write (size_t, uint8_t)
+      size_t write (size_t offset, bool data)
+      {
+         return write (offset, static_cast <uint8_t>(data));
+      }
+
       /*!
        * Read the byte at \c offset into \c data.
        *
@@ -153,6 +159,17 @@ namespace HF
        * @return  number of bytes read (4).
        */
       size_t read (size_t offset, uint32_t &data) const;
+
+      //! \see  ByteArray::read (size_t, uint8_t)
+      size_t read (size_t offset, bool &data) const
+      {
+         uint8_t temp;
+         size_t  result = read (offset, temp);
+
+         data = (temp & 0x01) != 0;
+
+         return result;
+      }
 
       using vector::size;
       using vector::operator [];
