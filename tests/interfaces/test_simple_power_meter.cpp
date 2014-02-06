@@ -56,7 +56,7 @@ TEST_GROUP (SimplePowerMeter_Measurement)
       measurement = SimplePowerMeter::Measurement ();
 
       uint8_t data[] = {0x00,                              0x00, 0x00,
-                        SimplePowerMeter::MICRO_PRECISION,
+                        Precision::MICRO,
                         0xFF,                              0x5A, 0xA5,0xCC,
                         0x00,                              0x00, 0x00};
 
@@ -73,7 +73,7 @@ TEST (SimplePowerMeter_Measurement, Size)
 //! \test Should pack the measurement correctly.
 TEST (SimplePowerMeter_Measurement, Pack)
 {
-   measurement.unit  = SimplePowerMeter::MICRO_PRECISION;
+   measurement.unit  = Precision::MICRO;
    measurement.value = 0xFF5AA5CC;
 
    ByteArray array (measurement.size () + 6);
@@ -88,14 +88,14 @@ TEST (SimplePowerMeter_Measurement, Pack)
 //! \test Should unpack the measurement correctly.
 TEST (SimplePowerMeter_Measurement, Unpack)
 {
-   LONGS_EQUAL (SimplePowerMeter::BASE_PRECISION, measurement.unit);
+   LONGS_EQUAL (Precision::BASE, measurement.unit);
    LONGS_EQUAL (0, measurement.value);
 
    size_t rsize = measurement.unpack (expected, 3);
 
    LONGS_EQUAL (measurement.size (), rsize);
 
-   LONGS_EQUAL (SimplePowerMeter::MICRO_PRECISION, measurement.unit);
+   LONGS_EQUAL (Precision::MICRO, measurement.unit);
    LONGS_EQUAL (0xFF5AA5CC, measurement.value);
 }
 
@@ -128,23 +128,23 @@ static const uint8_t pack_data[] =
    0x0A,                              // Number of attributes.
 
    SimplePowerMeter::ENERGY_ATTR,     // Energy measurement.
-   SimplePowerMeter::BASE_PRECISION,
+   Precision::BASE,
    0xFF,                              0x5A, 0xA5,0xC1,
 
    SimplePowerMeter::ENERGY_AT_RESET_ATTR, // Energy measurement at last reset.
-   SimplePowerMeter::MILI_PRECISION,
+   Precision::MILI,
    0xFF,                              0x5A, 0xA5,0xC2,
 
    SimplePowerMeter::TIME_AT_RESET_ATTR, // Device time measurement at last reset.
-   SimplePowerMeter::UPTIME,
+   Time::UPTIME,
    0xFF,                              0x5A, 0xA5,0xC3,
 
    SimplePowerMeter::POWER_ATTR,      // Instantaneous Power measurement.
-   SimplePowerMeter::MICRO_PRECISION,
+   Precision::MICRO,
    0xFF,                              0x5A, 0xA5,0xC4,
 
    SimplePowerMeter::AVG_POWER_ATTR,  // Average Power measurement.
-   SimplePowerMeter::NANO_PRECISION,
+   Precision::NANO,
    0xFF,                              0x5A, 0xA5,0xC5,
 
    SimplePowerMeter::AVG_POWER_INTERVAL_ATTR, // Average Power Interval.
@@ -154,15 +154,15 @@ static const uint8_t pack_data[] =
    0xAA,
 
    SimplePowerMeter::VOLTAGE_ATTR,    // Voltage measurement.
-   SimplePowerMeter::MEGA_PRECISION,
+   Precision::MEGA,
    0xFF,                              0x5A, 0xA5,0xC6,
 
    SimplePowerMeter::CURRENT_ATTR,    // Current measurement.
-   SimplePowerMeter::GIGA_PRECISION,
+   Precision::GIGA,
    0xFF,                              0x5A, 0xA5,0xC7,
 
    SimplePowerMeter::FREQUENCY_ATTR,
-   SimplePowerMeter::TERA_PRECISION,  // Frequency measurement.
+   Precision::TERA,  // Frequency measurement.
    0xFF,                              0x5A, 0xA5,0xC8,
    0x00,                              0x00, 0x00
 };
@@ -174,32 +174,32 @@ TEST (SimplePowerMeter_Report, Pack)
 
    uint32_t  value = 0xFF5AA5C1;
 
-   report.energy.unit        = SimplePowerMeter::BASE_PRECISION;
+   report.energy.unit        = Precision::BASE;
    report.energy.value       = value++;
 
-   report.last_energy.unit   = SimplePowerMeter::MILI_PRECISION;
+   report.last_energy.unit   = Precision::MILI;
    report.last_energy.value  = value++;
 
-   report.last_time.unit     = SimplePowerMeter::UPTIME;
+   report.last_time.unit     = Time::UPTIME;
    report.last_time.value    = value++;
 
-   report.power.unit         = SimplePowerMeter::MICRO_PRECISION;
+   report.power.unit         = Precision::MICRO;
    report.power.value        = value++;
 
-   report.avg_power.unit     = SimplePowerMeter::NANO_PRECISION;
+   report.avg_power.unit     = Precision::NANO;
    report.avg_power.value    = value++;
 
    report.avg_power_interval = 0x5AA5;
 
    report.power_factor       = 0xAA;
 
-   report.voltage.unit       = SimplePowerMeter::MEGA_PRECISION;
+   report.voltage.unit       = Precision::MEGA;
    report.voltage.value      = value++;
 
-   report.current.unit       = SimplePowerMeter::GIGA_PRECISION;
+   report.current.unit       = Precision::GIGA;
    report.current.value      = value++;
 
-   report.frequency.unit     = SimplePowerMeter::TERA_PRECISION;
+   report.frequency.unit     = Precision::TERA;
    report.frequency.value    = value++;
 
    ByteArray array (report.size () + 6);
@@ -219,27 +219,27 @@ static const uint8_t unpack_data[] =
    0x0A,                              // Number of attributes.
 
    SimplePowerMeter::TIME_AT_RESET_ATTR, // Device time measurement at last reset.
-   SimplePowerMeter::UPTIME,
+   Time::UPTIME,
    0xFF,                              0x5A, 0xA5,0xC3,
 
    SimplePowerMeter::ENERGY_ATTR,     // Energy measurement.
-   SimplePowerMeter::BASE_PRECISION,
+   Precision::BASE,
    0xFF,                              0x5A, 0xA5,0xC1,
 
    SimplePowerMeter::FREQUENCY_ATTR,
-   SimplePowerMeter::TERA_PRECISION,  // Frequency measurement.
+   Precision::TERA,  // Frequency measurement.
    0xFF,                              0x5A, 0xA5,0xC8,
 
    SimplePowerMeter::POWER_ATTR,      // Instantaneous Power measurement.
-   SimplePowerMeter::MICRO_PRECISION,
+   Precision::MICRO,
    0xFF,                              0x5A, 0xA5,0xC4,
 
    SimplePowerMeter::CURRENT_ATTR,    // Current measurement.
-   SimplePowerMeter::GIGA_PRECISION,
+   Precision::GIGA,
    0xFF,                              0x5A, 0xA5,0xC7,
 
    SimplePowerMeter::ENERGY_AT_RESET_ATTR, // Energy measurement at last reset.
-   SimplePowerMeter::MILI_PRECISION,
+   Precision::MILI,
    0xFF,                              0x5A, 0xA5,0xC2,
 
    SimplePowerMeter::AVG_POWER_INTERVAL_ATTR, // Average Power Interval.
@@ -249,11 +249,11 @@ static const uint8_t unpack_data[] =
    0xAA,
 
    SimplePowerMeter::VOLTAGE_ATTR,    // Voltage measurement.
-   SimplePowerMeter::MEGA_PRECISION,
+   Precision::MEGA,
    0xFF,                              0x5A, 0xA5,0xC6,
 
    SimplePowerMeter::AVG_POWER_ATTR,  // Average Power measurement.
-   SimplePowerMeter::NANO_PRECISION,
+   Precision::NANO,
    0xFF,                              0x5A, 0xA5,0xC5,
 
    0x00,                              0x00, 0x00,
@@ -270,32 +270,32 @@ TEST (SimplePowerMeter_Report, Unpack)
 
    uint32_t value = 0xFF5AA5C1;
 
-   LONGS_EQUAL (SimplePowerMeter::BASE_PRECISION, report.energy.unit);
+   LONGS_EQUAL (Precision::BASE, report.energy.unit);
    LONGS_EQUAL (value++, report.energy.value);
 
-   LONGS_EQUAL (SimplePowerMeter::MILI_PRECISION, report.last_energy.unit);
+   LONGS_EQUAL (Precision::MILI, report.last_energy.unit);
    LONGS_EQUAL (value++, report.last_energy.value);
 
-   LONGS_EQUAL (SimplePowerMeter::UPTIME, report.last_time.unit);
+   LONGS_EQUAL (Time::UPTIME, report.last_time.unit);
    LONGS_EQUAL (value++, report.last_time.value);
 
-   LONGS_EQUAL (SimplePowerMeter::MICRO_PRECISION, report.power.unit);
+   LONGS_EQUAL (Precision::MICRO, report.power.unit);
    LONGS_EQUAL (value++, report.power.value);
 
-   LONGS_EQUAL (SimplePowerMeter::NANO_PRECISION, report.avg_power.unit);
+   LONGS_EQUAL (Precision::NANO, report.avg_power.unit);
    LONGS_EQUAL (value++, report.avg_power.value);
 
    LONGS_EQUAL (0x5AA5, report.avg_power_interval);
 
    LONGS_EQUAL (0xAA, report.power_factor);
 
-   LONGS_EQUAL (SimplePowerMeter::MEGA_PRECISION, report.voltage.unit);
+   LONGS_EQUAL (Precision::MEGA, report.voltage.unit);
    LONGS_EQUAL (value++, report.voltage.value);
 
-   LONGS_EQUAL (SimplePowerMeter::GIGA_PRECISION, report.current.unit);
+   LONGS_EQUAL (Precision::GIGA, report.current.unit);
    LONGS_EQUAL (value++, report.current.value);
 
-   LONGS_EQUAL (SimplePowerMeter::TERA_PRECISION, report.frequency.unit);
+   LONGS_EQUAL (Precision::TERA, report.frequency.unit);
    LONGS_EQUAL (value, report.frequency.value);
 }
 
@@ -323,10 +323,10 @@ TEST_GROUP (SimplePowerMeterServer)
    {
       server        = new TestSimplePowerMeterServer ();
 
-      initial.unit  = SimplePowerMeter::BASE_PRECISION;
+      initial.unit  = Precision::BASE;
       initial.value = 0;
 
-      other.unit    = SimplePowerMeter::MEGA_PRECISION;
+      other.unit    = Precision::MEGA;
       other.value   = 42;
 
       temp          = other;
@@ -391,15 +391,15 @@ TEST (SimplePowerMeterServer, last_energy)
 
 TEST (SimplePowerMeterServer, last_time)
 {
-   initial.unit = SimplePowerMeter::UPTIME;
-   other.unit   = SimplePowerMeter::UPTIME;
+   initial.unit = Time::UPTIME;
+   other.unit   = Time::UPTIME;
    temp         = other;
 
    check_equal (initial, server->last_time ());
 
    server->last_time (other);
 
-   other.unit   = SimplePowerMeter::UTC;
+   other.unit   = Time::UTC;
    other.value += 42;
 
    check_not_equal (other, server->last_time ());
@@ -525,10 +525,10 @@ TEST (SimplePowerMeterServer, report)
    uint16_t report_interval;
 
    uint32_t value = 1;
-   uint8_t  unit  = SimplePowerMeter::MILI_PRECISION;
+   uint8_t  unit  = Precision::MILI;
 
    last_time.value   = value++;
-   last_time.unit    = SimplePowerMeter::UPTIME;
+   last_time.unit    = Time::UPTIME;
 
    last_energy.value = value++;
    last_energy.unit  = unit++;

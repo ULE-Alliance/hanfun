@@ -57,31 +57,6 @@ namespace HF
             REPORT_INTERVAL_ATTR    = 0x0B, //!< Report Interval Attribute ID.
          };
 
-         /*!
-          * These constants represent precisions that a measurement can be in.
-          */
-         enum Precision
-         {
-            BASE_PRECISION  = 0x00,
-            MILI_PRECISION  = 0x10,
-            MICRO_PRECISION = 0x11,
-            NANO_PRECISION  = 0x12,
-            PICO_PRECISION  = 0x13,
-            KILO_PRECISION  = 0x20,
-            MEGA_PRECISION  = 0x21,
-            GIGA_PRECISION  = 0x22,
-            TERA_PRECISION  = 0x23,
-         };
-
-         /*!
-          * This represents the type of time that is associated with a
-          * time measurement.
-          */
-         enum Time
-         {
-            UPTIME = 0x00, //!< Uptime.
-            UTC    = 0x01, //!< UTC time.
-         };
 
          /*!
           * This represents a measurement for a given attribute.

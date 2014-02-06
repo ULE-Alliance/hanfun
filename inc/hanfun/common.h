@@ -55,6 +55,32 @@ namespace HF
    // =============================================================================
 
    /*!
+    * These constants represent precisions that a measurement can be in.
+    */
+   typedef enum
+   {
+      BASE  = 0x00,
+      MILI  = 0x10,
+      MICRO = 0x11,
+      NANO  = 0x12,
+      PICO  = 0x13,
+      KILO  = 0x20,
+      MEGA  = 0x21,
+      GIGA  = 0x22,
+      TERA  = 0x23,
+   } Precision;
+
+   /*!
+    * This represents the type of time that is associated with a
+    * time measurement.
+    */
+   typedef enum
+   {
+      UPTIME = 0x00, //!< Uptime.
+      UTC    = 0x01, //!< UTC time.
+   } Time;
+
+   /*!
     * This class represents a byte array.
     *
     * The method in this class are used to serialize the messages to be sent over the
