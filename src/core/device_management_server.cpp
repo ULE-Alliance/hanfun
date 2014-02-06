@@ -125,8 +125,7 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 
    Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, REGISTER_CMD);
 
-   Protocol::Message response (Protocol::Message::COMMAND_RES, itf, reg_res,
-                               packet.message.reference);
+   Protocol::Message response (reg_res, packet.message);
 
    Protocol::Address res_addr (address, 0);
 
@@ -184,7 +183,7 @@ Result DeviceManagementServer::deregister_device (Protocol::Packet &packet, Byte
 
    Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, DEREGISTER_CMD);
 
-   Protocol::Message response (Protocol::Message::COMMAND_RES, itf, res, packet.message.reference);
+   Protocol::Message response (res, packet.message);
 
    Protocol::Address res_addr (packet.source.device, 0);
 

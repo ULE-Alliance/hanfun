@@ -51,7 +51,7 @@ namespace HF
          /*!
           * Message types.
           */
-         enum Type
+         typedef enum
          {
             COMMAND_REQ            = 0x01, //!< Command request
             COMMAND_RESP_REQ       = 0x02, //!< Command request with response required.
@@ -70,7 +70,7 @@ namespace HF
             SET_ATTR_PACK_REQ      = 0x0B, //!< Set pack attributes request.
             SET_ATTR_PACK_RESP_REQ = 0x0C, //!< Set pack attributes request with response required.
             SET_ATTR_PACK_RES      = 0x0D, //!< Set pack attributes response.
-         };
+         } Type;
 
          /*!
           * Interface Address.
@@ -122,6 +122,8 @@ namespace HF
 
          Message(Type _type = COMMAND_REQ):
             reference (0), type (_type), payload (nullptr), length (0) {}
+
+         Message(Serializable *payload, Message &parent);
 
          //! \see HF::Serializable::size.
          size_t size () const;

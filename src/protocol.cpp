@@ -141,6 +141,41 @@ size_t Message::Interface::unpack (const ByteArray &array, size_t offset)
 // Message
 // =============================================================================
 
+Message::Message(Serializable *payload, Message &parent):
+   reference (parent.reference), itf (parent.itf), payload (payload), length (0)
+{
+   switch (parent.type)
+   {
+      case COMMAND_REQ:
+      case COMMAND_RESP_REQ:
+         type = COMMAND_RES;
+         break;
+      case GET_ATTR_REQ:
+         type = GET_ATTR_RES;
+         break;
+      case SET_ATTR_REQ:
+      case SET_ATTR_RESP_REQ:
+         type = SET_ATTR_RES;
+         break;
+      case GET_ATTR_PACK_REQ:
+         type = GET_ATTR_PACK_RES;
+         break;
+      case SET_ATTR_PACK_REQ:
+      case SET_ATTR_PACK_RESP_REQ:
+         type = SET_ATTR_PACK_RES;
+         break;
+      default:
+         break;
+   }
+}
+
+// =============================================================================
+// Message::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Message::size () const
 {
    return sizeof(uint8_t) +   // Application Reference.
@@ -150,6 +185,13 @@ size_t Message::size () const
           payload_length ();  // Payload Length.
 }
 
+// =============================================================================
+// Message::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Message::pack (ByteArray &array, size_t offset) const
 {
    size_t start = offset;
@@ -176,6 +218,13 @@ size_t Message::pack (ByteArray &array, size_t offset) const
    return offset - start;
 }
 
+// =============================================================================
+// Message::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Message::unpack (const ByteArray &array, size_t offset)
 {
    size_t start = offset;
@@ -202,11 +251,25 @@ size_t Message::unpack (const ByteArray &array, size_t offset)
 // Response
 // =============================================================================
 
+// =============================================================================
+// Response::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Response::size () const
 {
    return sizeof(uint8_t);
 }
 
+// =============================================================================
+// Response::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Response::pack (ByteArray &array, size_t offset) const
 {
    size_t start = offset;
@@ -216,6 +279,13 @@ size_t Response::pack (ByteArray &array, size_t offset) const
    return offset - start;
 }
 
+// =============================================================================
+// Response::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Response::unpack (const ByteArray &array, size_t offset)
 {
    size_t  start = offset;
@@ -232,6 +302,13 @@ size_t Response::unpack (const ByteArray &array, size_t offset)
 // Packet
 // =============================================================================
 
+// =============================================================================
+// Packet::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Packet::size () const
 {
    return source.size () +       // Source Address.
@@ -240,6 +317,13 @@ size_t Packet::size () const
           message.size ();       // Message payload size.
 }
 
+// =============================================================================
+// Packet::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Packet::pack (ByteArray &array, size_t offset) const
 {
    uint16_t transport = 0;
@@ -255,6 +339,13 @@ size_t Packet::pack (ByteArray &array, size_t offset) const
    return offset - start;
 }
 
+// =============================================================================
+// Packet::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 size_t Packet::unpack (const ByteArray &array, size_t offset)
 {
    uint16_t transport = 0;

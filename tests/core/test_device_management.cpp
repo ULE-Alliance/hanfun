@@ -377,7 +377,7 @@ TEST_GROUP (DeviceManagement_RegisterResponce)
 TEST (DeviceManagement_RegisterResponce, No_EMC)
 {
    uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_AUTH, // Responce Code.
+                     Result::FAIL_AUTH, // Response Code.
                      0x42, 0x43,        // Device Address.
                      0x00, 0x00, 0x00};
 
