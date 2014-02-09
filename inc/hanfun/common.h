@@ -198,6 +198,37 @@ namespace HF
          return result;
       }
 
+      /*!
+       * Check if the array as at least \c expected bytes
+       * available from the given \c offset.
+       *
+       * @param offset     the offset from where to start counting.
+       * @param expected   the number of byte required.
+       *
+       * @retval  true if enough data is available,
+       * @retval  false otherwise.
+       */
+      bool available (size_t offset, size_t expected) const
+      {
+         return expected <= available (offset);
+      }
+
+      /*!
+       * Return the number of data bytes available from the given \c offset.
+       *
+       * @param offset     the offset from where to start counting.
+       *
+       * @return  number of data bytes available from the given \c offset.
+       */
+      size_t available (size_t offset) const
+      {
+         return (size () >= offset ? size () - offset : 0);
+      }
+
+      // =============================================================================
+      // Vector API.
+      // =============================================================================
+
       using vector::size;
       using vector::operator [];
       using vector::operator =;

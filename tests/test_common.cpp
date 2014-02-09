@@ -187,6 +187,25 @@ TEST (ByteArray_Read, DWord)
    LONGS_EQUAL (0xFF5AA5CC, temp);
 }
 
+
+TEST (ByteArray_Read, Available)
+{
+   LONGS_EQUAL (10, array.available (0));
+   LONGS_EQUAL (5, array.available (5));
+
+   LONGS_EQUAL (1, array.available (9));
+   LONGS_EQUAL (0, array.available (10));
+
+   LONGS_EQUAL (0, array.available (11));
+
+   CHECK_TRUE (array.available (0, 5));
+   CHECK_TRUE (array.available (4, 5));
+
+   CHECK_FALSE (array.available (6, 5));
+
+   CHECK_FALSE (array.available (10, 1));
+}
+
 // =============================================================================
 // HF::UID
 // =============================================================================
