@@ -53,23 +53,27 @@ namespace HF
           */
          typedef enum
          {
-            COMMAND_REQ            = 0x01, //!< Command request
-            COMMAND_RESP_REQ       = 0x02, //!< Command request with response required.
-            COMMAND_RES            = 0x03, //!< Command response.
+            COMMAND_REQ                   = 0x01, //!< Command request
+            COMMAND_RESP_REQ              = 0x02, //!< Command request with response required.
+            COMMAND_RES                   = 0x03, //!< Command response.
 
-            GET_ATTR_REQ           = 0x04, //!< Get attributes request.
-            GET_ATTR_RES           = 0x05, //!< Get attributes response.
+            GET_ATTR_REQ                  = 0x04, //!< Get attributes request.
+            GET_ATTR_RES                  = 0x05, //!< Get attributes response.
 
-            SET_ATTR_REQ           = 0x06, //!< Set attributes request.
-            SET_ATTR_RESP_REQ      = 0x07, //!< Set attributes request with response required.
-            SET_ATTR_RES           = 0x08, //!< Set attributes response.
+            SET_ATTR_REQ                  = 0x06, //!< Set attributes request.
+            SET_ATTR_RESP_REQ             = 0x07, //!< Set attributes request with response required.
+            SET_ATTR_RES                  = 0x08, //!< Set attributes response.
 
-            GET_ATTR_PACK_REQ      = 0x09, //!< Get pack attributes request.
-            GET_ATTR_PACK_RES      = 0x0A, //!< Get pack attributes response.
+            GET_ATTR_PACK_REQ             = 0x09, //!< Get pack attributes request.
+            GET_ATTR_PACK_RES             = 0x0A, //!< Get pack attributes response.
 
-            SET_ATTR_PACK_REQ      = 0x0B, //!< Set pack attributes request.
-            SET_ATTR_PACK_RESP_REQ = 0x0C, //!< Set pack attributes request with response required.
-            SET_ATTR_PACK_RES      = 0x0D, //!< Set pack attributes response.
+            SET_ATTR_PACK_REQ             = 0x0B, //!< Set pack attributes request.
+            SET_ATTR_PACK_RESP_REQ        = 0x0C, //!< Set pack attributes request with response required.
+            SET_ATTR_PACK_RES             = 0x0D, //!< Set pack attributes response.
+
+            ATOMIC_SET_ATTR_PACK_REQ      = 0x0E, //!< Atomic set pack attributes request.
+            ATOMIC_SET_ATTR_PACK_RESP_REQ = 0x0F, //!< Atomic set pack attributes request with response required.
+            ATOMIC_SET_ATTR_PACK_RES      = 0x10, //!< Atomic set pack attributes response.
          } Type;
 
          /*!

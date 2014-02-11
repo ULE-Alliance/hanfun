@@ -614,3 +614,90 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
    LONGS_EQUAL (0x04, response->results[1].uid);
    LONGS_EQUAL (Result::FAIL_SUPPORT, response->results[1].code);
 }
+
+// =============================================================================
+// AbstractInterface::AtomicSetAttributePack
+// =============================================================================
+
+//! \test Should handle atomic set attribute pack requests.
+TEST (AbstractInterface, Handle_AtomicSetAttributePack)
+{
+   packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
+   packet.message.itf.member = 0;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x01,             // Number of attributes
+                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0xCCCC, itf->attr3);
+}
+
+//! \test Should handle atomic set attribute pack requests.
+TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
+{
+   packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
+   packet.message.itf.member = 0;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x02,             // Number of attributes
+                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
+                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+}
+
+//! \test Should handle atomic set attribute pack requests.
+TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
+{
+   packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
+   packet.message.itf.member = 0;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x02,             // Number of attributes
+                     0x03, 0xBB, 0xBB, // Attribute 2 - Valid/RW
+                     0x04, 0xCC, 0xCC, // Attribute 4 - Invalid
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+}

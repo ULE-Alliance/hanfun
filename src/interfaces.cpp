@@ -33,6 +33,7 @@ using namespace HF::Protocol;
  * @param [in] uid      the UID of the attribute to update.
  * @param [in] payload  the ByteArray containing the value to update the attribute.
  * @param [in] offset   the offset to read the payload from.
+ * @param [in] nop      if \c true, do everything except change the attribute value.
  *
  * @retval Result::OK            if the attribute was updated;
  * @retval Result::FAIL_SUPPORT  if the attribute does not exist;
@@ -40,7 +41,8 @@ using namespace HF::Protocol;
  * @retval Result::FAIL_UNKNOWN  otherwise.
  */
 // =============================================================================
-static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload, size_t &offset)
+static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload, size_t &offset,
+                                bool nop = false)
 {
    Result result    = Result::FAIL_UNKNOWN;
 
@@ -54,8 +56,12 @@ static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload,
    {
       if (payload.available (offset, attr->size ()))
       {
-         offset += attr->unpack (payload, offset);
-         result  = Result::OK;
+         if (!nop)
+         {
+            offset += attr->unpack (payload, offset);
+         }
+
+         result = Result::OK;
       }
       else
       {
@@ -64,9 +70,9 @@ static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload,
    }
    else
    {
-      offset += attr->size();
+      offset += attr->size ();
 
-      result = Result::FAIL_RO_ATTR;
+      result  = Result::FAIL_RO_ATTR;
    }
 
    delete attr;
@@ -85,12 +91,14 @@ static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload,
  * @param [in]    payload    the ByteArray containing the new values for the attributes.
  * @param [inout] offset     the offset at the ByteArray to start reading the values from.
  * @param [in]    resp       boolean indicating if a response is necessary.
+ * @param [in]    nop        if \c true, do everything except change the attribute value.
  *
  * @return  pointer to a SetAttributePack::Response instance if a response
  *          is necessary, \c nullptr otherwise.
  */
 // =============================================================================
-static SetAttributePack::Response *update_attributes (Interface *itf, ByteArray &payload, size_t &offset, bool resp)
+static SetAttributePack::Response *update_attributes (Interface *itf, ByteArray &payload,
+                                                      size_t &offset, bool resp, bool nop = false)
 {
    SetAttributePack::Request request;
 
@@ -98,14 +106,13 @@ static SetAttributePack::Response *update_attributes (Interface *itf, ByteArray 
 
    SetAttributePack::Response *result = (resp ? new SetAttributePack::Response () : nullptr);
 
-
    for (uint8_t i = 0; i < request.count; i++)
    {
       SetAttributePack::Response::Result attr_res;
 
       offset       += payload.read (offset, attr_res.uid);
 
-      attr_res.code = update_attribute (itf, attr_res.uid, payload, offset);
+      attr_res.code = update_attribute (itf, attr_res.uid, payload, offset, nop);
 
       if (resp)
       {
@@ -119,6 +126,59 @@ static SetAttributePack::Response *update_attributes (Interface *itf, ByteArray 
    }
 
    return result;
+}
+
+// =============================================================================
+// update_attributes_atomic
+// =============================================================================
+/*!
+ * Update the given interface (\c itf) attributes with the values present in the
+ * ByteArray \c payload, if all values can be set.
+ *
+ * @param [in]    itf        the interface instance to update the attributes on.
+ * @param [in]    payload    the ByteArray containing the new values for the attributes.
+ * @param [inout] offset     the offset at the ByteArray to start reading the values from.
+ * @param [in]    resp       boolean indicating if a response is necessary.
+ *
+ * @return  pointer to a HF::Response instance if a response is necessary, \c nullptr otherwise.
+ */
+// =============================================================================
+static Response *update_attributes_atomic (Interface *itf, ByteArray &payload, size_t &offset,
+                                           bool resp)
+{
+   size_t start                         = offset;
+
+   SetAttributePack::Response *attr_res = update_attributes (itf, payload, offset, true, true);
+
+   Result result                        = Result::OK;
+
+   for (SetAttributePack::Response::results_t::iterator it = attr_res->results.begin ();
+        it != attr_res->results.end (); ++it)
+   {
+      result = it->code;
+
+      if (result != Result::OK)
+      {
+         break;
+      }
+   }
+
+   delete attr_res;
+
+   if (result == Result::OK)
+   {
+      offset = start;
+      update_attributes (itf, payload, offset, false);
+   }
+
+   if (resp)
+   {
+      return new Response (result);
+   }
+   else
+   {
+      return nullptr;
+   }
 }
 
 // =============================================================================
@@ -152,7 +212,7 @@ Result AbstractInterface::handle (Packet &packet, ByteArray &payload, size_t off
    {
       return handle_command (packet, payload, offset);
    }
-   else if (packet.message.type >= Message::GET_ATTR_REQ && packet.message.type <= Message::SET_ATTR_PACK_RES)
+   else if (packet.message.type >= Message::GET_ATTR_REQ && packet.message.type <= Message::ATOMIC_SET_ATTR_PACK_RES)
    {
       return handle_attribute (packet, payload, offset);
    }
@@ -392,6 +452,26 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
          break;
       }
       case Message::SET_ATTR_PACK_RES:
+      {
+         // Do nothing.
+         break;
+      }
+      case Message::ATOMIC_SET_ATTR_PACK_REQ:
+      {
+         update_attributes_atomic (this, payload, offset, false);
+         break;
+      }
+      case Message::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         Serializable *attr_response = update_attributes_atomic (this, payload, offset, true);
+
+         Message response (attr_response, packet.message);
+
+         sendMessage (packet.source, response);
+
+         break;
+      }
+      case Message::ATOMIC_SET_ATTR_PACK_RES:
       {
          // Do nothing.
          break;
