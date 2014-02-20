@@ -52,7 +52,7 @@ SimplePowerMeterServer::SimplePowerMeterServer()
 #endif
 
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
-   _power_factor       = 0;                              // Power Factor.
+   _power_factor = 0;                                    // Power Factor.
 #endif
 
 #if HF_ITF_SPM_VOLTAGE_ATTR
@@ -153,6 +153,7 @@ void SimplePowerMeterServer::periodic (uint32_t time)
    UNUSED (time);
 
 #if HF_ITF_SPM_REPORT_CMD
+
    if (_report_interval > 0 && abs ((int64_t) _last_periodic - time) >= _report_interval)
    {
       Protocol::Address addr;
@@ -168,6 +169,7 @@ void SimplePowerMeterServer::periodic (uint32_t time)
 
       _last_periodic = time;
    }
+
 #endif
 }
 
@@ -187,77 +189,77 @@ IAttribute *SimplePowerMeterServer::attribute (uint8_t uid)
 #if HF_ITF_SPM_ENERGY_ATTR
       case ENERGY_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), ENERGY_ATTR, _energy);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
       case ENERGY_AT_RESET_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), ENERGY_AT_RESET_ATTR, _last_energy);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
       case TIME_AT_RESET_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), TIME_AT_RESET_ATTR, _last_time);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_POWER_ATTR
       case POWER_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), POWER_ATTR, _power);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_AVG_POWER_ATTR
       case AVG_POWER_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), AVG_POWER_ATTR, _avg_power);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
       case AVG_POWER_INTERVAL_ATTR:
       {
-         return new Attribute <uint16_t &>(this->uid(), AVG_POWER_INTERVAL_ATTR, _avg_power_interval, true);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_VOLTAGE_ATTR
       case VOLTAGE_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), VOLTAGE_ATTR, _voltage);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_CURRENT_ATTR
       case CURRENT_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), CURRENT_ATTR, _current);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_FREQUENCY_ATTR
       case FREQUENCY_ATTR:
       {
-         return new Attribute <Measurement>(this->uid(), FREQUENCY_ATTR, _frequency);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
       case POWER_FACTOR_ATTR:
       {
-         return new Attribute <uint8_t>(this->uid(), POWER_FACTOR_ATTR, _power_factor);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
 
 #if HF_ITF_SPM_REPORT_INTERVAL_ATTR
       case REPORT_INTERVAL_ATTR:
       {
-         return new Attribute <uint16_t &>(this->uid(), REPORT_INTERVAL_ATTR, _report_interval, true);
+         return Interfaces::create_attribute (this, uid);
       }
 #endif
       default:

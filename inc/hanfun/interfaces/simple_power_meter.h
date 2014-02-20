@@ -58,6 +58,10 @@ namespace HF
 {
    namespace Interfaces
    {
+      struct SimplePowerMeterServer;
+
+      IAttribute *create_attribute (SimplePowerMeterServer *server, uint8_t uid);
+
       /*!
        * Simple Power Meter Interface : Parent.
        *
@@ -174,6 +178,11 @@ namespace HF
             //! \see HF::Serializable::unpack.
             size_t unpack (const ByteArray &array, size_t offset = 0);
          };
+
+         static IAttribute *create_attribute (uint8_t uid)
+         {
+            return Interfaces::create_attribute ((SimplePowerMeterServer *)nullptr, uid);
+         }
 
          protected:
 
@@ -510,6 +519,8 @@ namespace HF
          //! \see Interface::attribute
          IAttribute *attribute (uint8_t uid);
 
+         friend IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *, uint8_t);
+
          protected:
 
          /*!
@@ -550,6 +561,8 @@ namespace HF
 
          Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
+
+
 
    }  // namespace Interfaces
 

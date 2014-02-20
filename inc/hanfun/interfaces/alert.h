@@ -33,6 +33,10 @@ namespace HF
 {
    namespace Interfaces
    {
+      struct AlertServer;
+
+      IAttribute *create_attribute (AlertServer *server, uint8_t uid);
+
       /*!
        * Alert Interface : Parent.
        *
@@ -108,6 +112,11 @@ namespace HF
                Attribute <uint32_t>(Interface::ALERT, ID, data, WRITABBLE)
             {}
          };
+
+         static IAttribute * create_attribute(uint8_t uid)
+         {
+            return Interfaces::create_attribute (((AlertServer *)nullptr), uid);
+         }
 
          protected:
 
@@ -237,7 +246,12 @@ namespace HF
          // =============================================================================
 
          //! \see Interface::attribute
-         IAttribute *attribute (uint8_t uid);
+         IAttribute *attribute (uint8_t uid)
+         {
+            return Interfaces::create_attribute (this, uid);
+         }
+
+         friend IAttribute *Interfaces::create_attribute (AlertServer *, uint8_t);
 
          // ======================================================================
          // Commands

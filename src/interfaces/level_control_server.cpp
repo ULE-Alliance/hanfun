@@ -81,24 +81,3 @@ void LevelControlServer::level_change (uint8_t new_level)
 {
    level (new_level);
 }
-
-// =============================================================================
-// LevelControlServer::attribute
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-IAttribute *LevelControlServer::attribute (uint8_t uid)
-{
-   Attributes attr = static_cast <Attributes>(uid);
-
-   switch (attr)
-   {
-      case LEVEL_ATTR:
-         return new Attribute<uint8_t &> (this->uid(), attr, _level, Level::WRITABBLE);
-
-      default:
-         return nullptr;
-   }
-}

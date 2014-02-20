@@ -22,6 +22,10 @@ namespace HF
 {
    namespace Interfaces
    {
+      struct OnOffServer;
+
+      IAttribute *create_attribute (OnOffServer *server, uint8_t uid);
+
       /*!
        * On-Off Interface : Parent.
        *
@@ -57,6 +61,11 @@ namespace HF
                Attribute <bool>(Interface::ON_OFF, ID, state, WRITABBLE)
             {}
          };
+
+         static IAttribute * create_attribute(uint8_t uid)
+         {
+            return Interfaces::create_attribute( (OnOffServer *)nullptr, uid);
+         }
       };
 
       /*!
@@ -132,7 +141,12 @@ namespace HF
          // Attribute API.
          // =============================================================================
 
-         IAttribute *attribute (uint8_t uid);
+         IAttribute *attribute (uint8_t uid)
+         {
+            return Interfaces::create_attribute (this, uid);
+         }
+
+         friend IAttribute *Interfaces::create_attribute (OnOffServer *server, uint8_t uid);
 
          protected:
 
@@ -188,7 +202,6 @@ namespace HF
          //@}
          // =============================================================================
       };
-
 
    }  // namespace Interfaces
 

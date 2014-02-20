@@ -22,6 +22,10 @@ namespace HF
 {
    namespace Interfaces
    {
+      struct LevelControlServer;
+
+      IAttribute *create_attribute (LevelControlServer *server, uint8_t uid);
+
       /*!
        * Level Control Interface : Parent.
        *
@@ -86,6 +90,11 @@ namespace HF
                Attribute <uint8_t>(Interface::ALERT, ID, level, WRITABBLE)
             {}
          };
+
+         static IAttribute * create_attribute(uint8_t uid)
+         {
+            return Interfaces::create_attribute( (LevelControlServer *)nullptr, uid);
+         }
 
          protected:
 
@@ -152,7 +161,12 @@ namespace HF
          // =============================================================================
 
          //! \see Interface::attribute
-         IAttribute *attribute (uint8_t uid);
+         IAttribute *attribute (uint8_t uid)
+         {
+            return Interfaces::create_attribute (this, uid);
+         }
+
+         friend IAttribute *Interfaces::create_attribute (LevelControlServer *server, uint8_t uid);
 
          protected:
 
@@ -196,6 +210,8 @@ namespace HF
          //@}
          // =============================================================================
       };
+
+      IAttribute *create_attribute (LevelControlServer *server, uint8_t uid);
 
    }  // namespace Interfaces
 
