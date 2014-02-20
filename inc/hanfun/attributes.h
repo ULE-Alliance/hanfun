@@ -541,6 +541,201 @@ namespace HF
 
    }  // namespace GetAttributePack
 
+   /*!
+    * This namespace contains the classes that implement the HF::Message::SET_ATTR_PACK_REQ
+    * and HF::Message::SET_ATTR_PACK_RESP_REQ messages.
+    */
+   namespace SetAttributePack
+   {
+      /*!
+       * This class represents the message payload of a HF::Message::SET_ATTR_PACK_REQ
+       * or HF::Message::SET_ATTR_PACK_RESP_REQ message.
+       */
+      struct Request:public Serializable
+      {
+         AttributeList attributes;   //!< List containing the attributes to send.
+
+         /*!
+          * Unpack attribute count.
+          *
+          * \warning This value will not be used as the number of attributes, when
+          *          packing the request.
+          */
+         uint8_t count;
+
+         virtual ~Request()
+         {
+            /* *INDENT-OFF* */
+            for_each (attributes.begin (), attributes.end (), [](IAttribute *attr)
+            {
+               delete attr;
+            });
+            /* *INDENT-ON* */
+         }
+
+         //! \see Serializable::size
+         size_t size () const
+         {
+            size_t result = sizeof(uint8_t);
+
+            /* *INDENT-OFF* */
+            for_each ( attributes.begin(), attributes.end(), [&result](IAttribute * attr)
+            {
+               result += attr->size(true);
+            });
+            /* *INDENT-ON* */
+
+            return result;
+         }
+
+         //! \see Serializable::pack
+         size_t pack (ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += array.write (offset, (uint8_t) attributes.size ());
+
+            /* *INDENT-OFF* */
+            for_each (attributes.begin (), attributes.end (), [&array,&offset](IAttribute * attr)
+            {
+               offset += attr->pack (array, offset, true);
+            });
+            /* *INDENT-ON* */
+
+            return offset - start;
+         }
+
+         //! \see Serializable::unpack
+         size_t unpack (const ByteArray &array, size_t offset = 0)
+         {
+            size_t start = offset;
+
+            offset += array.read (offset, count);
+
+            return offset - start;
+         }
+      };
+
+      /*!
+       * This class represents the payload of a HF::Message::SET_ATTR_PACK_RES message.
+       */
+      struct Response:public Serializable
+      {
+         /*!
+          * Set attribute operation result.
+          */
+         struct Result:public Serializable
+         {
+            uint8_t    uid;  //!< Attribute UID.
+            HF::Result code; //!< Command result.
+
+            Result() {}
+
+            Result(uint8_t uid, HF::Result code):
+               uid (uid), code (code)
+            {}
+
+            //! \see Serializable::size
+            static constexpr size_t Size = sizeof(uint8_t) + sizeof(uint8_t);
+
+            //! \see Serializable::size
+            size_t size () const
+            {
+               return Result::Size;
+            }
+
+            //! \see Serializable::pack
+            size_t pack (ByteArray &array, size_t offset = 0) const
+            {
+               size_t start = offset;
+
+               offset += array.write (offset, (uint8_t) uid);
+               offset += array.write (offset, (uint8_t) code);
+
+               return offset - start;
+            }
+
+            //! \see Serializable::unpack
+            size_t unpack (const ByteArray &array, size_t offset = 0)
+            {
+               size_t  start = offset;
+
+               uint8_t temp;
+               offset += array.read (offset, temp);
+               uid     = temp;
+
+               offset += array.read (offset, temp);
+               code    = static_cast <HF::Result>(temp);
+
+               return offset - start;
+            }
+         };
+
+         typedef vector <Result> results_t;
+
+         results_t results;
+
+         /*!
+          * Unpack the results count.
+          *
+          * \warning This value will not be used as the number of results, when
+          *          packing the response.
+          */
+         uint8_t count;
+
+         //! \see Serializable::size
+         size_t size () const
+         {
+            size_t result = sizeof(uint8_t); // Number of attribute results.
+
+            result += results.size () * (sizeof(uint8_t) + sizeof(uint8_t));
+
+            return result;
+         }
+
+         //! \see Serializable::pack
+         size_t pack (ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += array.write (offset, (uint8_t) results.size ());
+
+            /* *INDENT-OFF* */
+            for_each (results.begin (), results.end (), [&array,&offset](Result result)
+            {
+               offset += result.pack (array, offset);
+            });
+            /* *INDENT-ON* */
+
+            return offset - start;
+         }
+
+         //! \see Serializable::unpack
+         size_t unpack (const ByteArray &array, size_t offset = 0)
+         {
+            size_t start = offset;
+
+            offset += array.read (offset, count);
+
+            for (int i = 0; i < count; i++)
+            {
+               if (!array.available (offset, Result::Size))
+               {
+                  break;
+               }
+
+               Result result;
+               offset += result.unpack (array, offset);
+
+               results.push_back (result);
+            }
+
+            return offset - start;
+         }
+      };
+
+   }  // namespace SetAttributePack
+
 }  // namespace HF
 
 #endif /* HF_ATTRIBUTES_H */

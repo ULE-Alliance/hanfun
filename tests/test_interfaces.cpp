@@ -94,6 +94,10 @@ TEST (AbstractInterface, Handle_RequestResp)
 // AbstractInterface::Attributes
 // =============================================================================
 
+// =============================================================================
+// AbstractInterface::GetAttribute
+// =============================================================================
+
 //! \test Should handle valid get attribute requests.
 TEST (AbstractInterface, Handle_GetAttribute_Valid)
 {
@@ -148,6 +152,9 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
    CHECK_TRUE (attr_res->attribute == nullptr);
 }
 
+// =============================================================================
+// AbstractInterface::SetAttribute
+// =============================================================================
 //! \test Should handle valid set attribute requests.
 TEST (AbstractInterface, Handle_SetAttribute_Valid)
 {
@@ -307,6 +314,10 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
+
+// =============================================================================
+// AbstractInterface::GetAttributePack
+// =============================================================================
 
 //! \test Should handle valid get attribute pack requests for mandatory attributes.
 TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
@@ -472,4 +483,134 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
    attr = attr_resp->attributes[TestInterface::ATTR3];
 
    CHECK_TRUE (attr != nullptr);
+}
+
+// =============================================================================
+// AbstractInterface::SetAttributePack
+// =============================================================================
+
+//! \test Should handle set attribute pack requests.
+TEST (AbstractInterface, Handle_SetAttributePack)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_PACK_REQ;
+   packet.message.itf.member = 0;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x04,             // Number of attributes
+                     0x01, 0xAA, 0xAA, // Attribute 1 - Valid/RO
+                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
+                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
+                     0x04, 0xDD, 0xDD, // Attribute 4 - Invalid
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0xCCCC, itf->attr3);
+}
+
+//! \test Should handle valid set response pack response required attribute requests.
+TEST (AbstractInterface, Handle_SetAttributePackResponse)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
+   packet.message.itf.member = 0;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x04,             // Number of attributes
+                     0x01, 0xAA, 0xAA, // Attribute 1 - Valid/RO
+                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
+                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
+                     0x04, 0xDD, 0xDD, // Attribute 4 - Invalid
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0xCCCC, itf->attr3);
+
+   SetAttributePack::Response *response = static_cast <SetAttributePack::Response *>(itf->sendMsg.payload);
+
+   CHECK_TRUE (response != nullptr)
+
+   LONGS_EQUAL (4, response->results.size ());
+
+   LONGS_EQUAL (TestInterface::ATTR1, response->results[0].uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, response->results[0].code);
+
+   LONGS_EQUAL (TestInterface::ATTR2, response->results[1].uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, response->results[1].code);
+
+   LONGS_EQUAL (TestInterface::ATTR3, response->results[2].uid);
+   LONGS_EQUAL (Result::OK, response->results[2].code);
+
+   LONGS_EQUAL (0x04, response->results[3].uid);
+   LONGS_EQUAL (Result::FAIL_SUPPORT, response->results[3].code);
+}
+
+//! \test Should fast fail on set response pack requests.
+TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
+   packet.message.itf.member = 0;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x04,             // Number of attributes
+                     0x01, 0xAA, 0xAA, // Attribute 1 - Valid/RO
+                     0x04, 0xDD, 0xDD, // Attribute 4 - Invalid
+                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
+                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL (0x5A52, itf->attr2);
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   SetAttributePack::Response *response = static_cast <SetAttributePack::Response *>(itf->sendMsg.payload);
+
+   CHECK_TRUE (response != nullptr)
+
+   LONGS_EQUAL (2, response->results.size ());
+
+   LONGS_EQUAL (TestInterface::ATTR1, response->results[0].uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, response->results[0].code);
+
+   LONGS_EQUAL (0x04, response->results[1].uid);
+   LONGS_EQUAL (Result::FAIL_SUPPORT, response->results[1].code);
 }

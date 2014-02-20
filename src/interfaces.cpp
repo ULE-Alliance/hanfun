@@ -52,15 +52,71 @@ static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload,
    }
    else if (attr->isWritable ())
    {
-      offset += attr->unpack (payload, offset);
-      result  = Result::OK;
+      if (payload.available (offset, attr->size ()))
+      {
+         offset += attr->unpack (payload, offset);
+         result  = Result::OK;
+      }
+      else
+      {
+         result = Result::FAIL_UNKNOWN;
+      }
    }
    else
    {
+      offset += attr->size();
+
       result = Result::FAIL_RO_ATTR;
    }
 
    delete attr;
+
+   return result;
+}
+
+// =============================================================================
+// update_attributes
+// =============================================================================
+/*!
+ * Update the given interface (\c itf) attributes with the values present in the
+ * ByteArray \c payload.
+ *
+ * @param [in]    itf        the interface instance to update the attributes on.
+ * @param [in]    payload    the ByteArray containing the new values for the attributes.
+ * @param [inout] offset     the offset at the ByteArray to start reading the values from.
+ * @param [in]    resp       boolean indicating if a response is necessary.
+ *
+ * @return  pointer to a SetAttributePack::Response instance if a response
+ *          is necessary, \c nullptr otherwise.
+ */
+// =============================================================================
+static SetAttributePack::Response *update_attributes (Interface *itf, ByteArray &payload, size_t &offset, bool resp)
+{
+   SetAttributePack::Request request;
+
+   offset += request.unpack (payload, offset);
+
+   SetAttributePack::Response *result = (resp ? new SetAttributePack::Response () : nullptr);
+
+
+   for (uint8_t i = 0; i < request.count; i++)
+   {
+      SetAttributePack::Response::Result attr_res;
+
+      offset       += payload.read (offset, attr_res.uid);
+
+      attr_res.code = update_attribute (itf, attr_res.uid, payload, offset);
+
+      if (resp)
+      {
+         result->results.push_back (attr_res);
+      }
+
+      if (attr_res.code == Result::FAIL_SUPPORT || attr_res.code == Result::FAIL_UNKNOWN)
+      {
+         break;
+      }
+   }
 
    return result;
 }
@@ -224,9 +280,6 @@ Result AbstractInterface::handle_command (Packet &packet, ByteArray &payload, si
 // =============================================================================
 Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, size_t offset)
 {
-   UNUSED (payload);
-   UNUSED (offset);
-
    switch (packet.message.type)
    {
       case Message::GET_ATTR_REQ:
@@ -320,6 +373,25 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
          break;
       }
       case Message::GET_ATTR_PACK_RES:
+      {
+         // Do nothing.
+         break;
+      }
+      case Message::SET_ATTR_PACK_REQ:
+      {
+         update_attributes (this, payload, offset, false);
+         break;
+      }
+      case Message::SET_ATTR_PACK_RESP_REQ:
+      {
+         SetAttributePack::Response *attr_response = update_attributes (this, payload, offset, true);
+
+         Message response (attr_response, packet.message);
+
+         sendMessage (packet.source, response);
+         break;
+      }
+      case Message::SET_ATTR_PACK_RES:
       {
          // Do nothing.
          break;

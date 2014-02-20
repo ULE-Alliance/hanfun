@@ -557,3 +557,139 @@ TEST (AttributesProtocol, GetAttributePack_Response_Unpack)
 
    LONGS_EQUAL (0xCCCC, attr_proper->get ());
 }
+
+// =============================================================================
+// SetAttributePack::Request
+// =============================================================================
+
+TEST (AttributesProtocol, SetAttributePack_Request_Pack)
+{
+   Testing::TestInterface itf;
+   SetAttributePack::Request request;
+
+   itf.attr1 = 0xAAAA;
+   itf.attr2 = 0xBBBB;
+   itf.attr3 = 0xCCCC;
+
+   request.attributes.push_back (itf.attribute (itf.ATTR1));
+   request.attributes.push_back (itf.attribute (itf.ATTR2));
+   request.attributes.push_back (itf.attribute (itf.ATTR3));
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x03,                                                 // Number of attribute uid's.
+                     0x01, 0xAA, 0xAA,0x02,  0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray result (sizeof(data));
+
+   fill (result.begin (), result.end (), 0);
+
+   request.pack (result, 3);
+
+   CHECK_EQUAL (expected, result);
+}
+
+TEST (AttributesProtocol, SetAttributePack_Request_Unpack)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x03,             // Number of attribute uid's.
+                     0x01, 0xAA, 0xAA, // Attribute 1
+                     0x02, 0xBB, 0xBB, // Attribute 2
+                     0x03, 0xCC, 0xCC, // Attribute 3
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+
+   Testing::TestInterface itf;
+   SetAttributePack::Request request;
+
+   CHECK_FALSE (itf.attr1 == 0xAAAA);
+   CHECK_FALSE (itf.attr2 == 0xBBBB);
+   CHECK_FALSE (itf.attr3 == 0xCCCC);
+
+   request.unpack (expected, 3);
+
+   LONGS_EQUAL (3, request.count);
+
+   CHECK_FALSE (itf.attr1 == 0xAAAA);
+   CHECK_FALSE (itf.attr2 == 0xBBBB);
+   CHECK_FALSE (itf.attr3 == 0xCCCC);
+}
+
+// =============================================================================
+// SetAttributePack::Response
+// =============================================================================
+
+TEST (AttributesProtocol, SetAttributePack_Response_Pack)
+{
+   SetAttributePack::Response response;
+
+   SetAttributePack::Response::Result temp;
+
+   temp.uid  = Testing::TestInterface::ATTR1;
+   temp.code = Result::OK;
+
+   response.results.push_back (temp);
+
+   temp.uid  = Testing::TestInterface::ATTR2;
+   temp.code = Result::FAIL_RO_ATTR;
+
+   response.results.push_back (temp);
+
+   temp.uid  = Testing::TestInterface::ATTR3 + 3;
+   temp.code = Result::FAIL_SUPPORT;
+
+   response.results.push_back (temp);
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x03,                       // Number of attribute uid's.
+                     0x01, Result::OK,           // Attribute 1
+                     0x02, Result::FAIL_RO_ATTR, // Attribute 2
+                     0x06, Result::FAIL_SUPPORT, // Attribute 3
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray result (sizeof(data));
+
+   fill (result.begin (), result.end (), 0);
+
+   response.pack (result, 3);
+
+   CHECK_EQUAL (expected, result);
+}
+
+TEST (AttributesProtocol, SetAttributePack_Response_Unpack)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x03,                       // Number of attribute uid's.
+                     0x01, Result::OK,           // Attribute 1
+                     0x02, Result::FAIL_RO_ATTR, // Attribute 2
+                     0x06, Result::FAIL_SUPPORT, // Attribute 3
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+
+   SetAttributePack::Response response;
+
+   response.unpack (expected, 3);
+
+   LONGS_EQUAL (3, response.results.size ());
+
+   SetAttributePack::Response::Result result;
+
+   result = response.results[0];
+
+   LONGS_EQUAL (0x01, result.uid);
+   LONGS_EQUAL (Result::OK, result.code);
+
+   result = response.results[1];
+
+   LONGS_EQUAL (0x02, result.uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, result.code);
+
+   result = response.results[2];
+
+   LONGS_EQUAL (0x06, result.uid);
+   LONGS_EQUAL (Result::FAIL_SUPPORT, result.code);
+}
