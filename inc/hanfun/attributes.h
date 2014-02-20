@@ -336,6 +336,42 @@ namespace HF
       }
    };
 
+   /*!
+    * This class represents the response sent when a
+    * Protocol::Message::GET_ATTR_REQ request.
+    */
+   struct AttributeResponse : public Protocol::Response
+   {
+      IAttribute * attribute;
+
+      AttributeResponse(IAttribute * attribute = nullptr): attribute(attribute) {}
+
+      virtual ~AttributeResponse()
+      {
+         delete attribute;
+      }
+
+      //! \see HF::Serializable::size.
+      size_t size () const
+      {
+         return Protocol::Response::size() + ( attribute != nullptr ? attribute->size() : 0 );
+      }
+
+      //! \see HF::Serializable::pack.
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         return Protocol::Response::pack(array, offset) +
+                 ( attribute != nullptr ? attribute->pack(array, offset) : 0 );
+      }
+
+      //! \see HF::Serializable::unpack.
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         return Protocol::Response::unpack(array, offset) +
+                 ( attribute != nullptr ? attribute->unpack(array, offset) : 0 );
+      }
+   };
+
 }  // namespace HF
 
 #endif /* HF_ATTRIBUTES_H */

@@ -158,9 +158,29 @@ Result AbstractInterface::handle_command (Packet &packet, ByteArray &payload, si
 // =============================================================================
 Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, size_t offset)
 {
-   UNUSED (packet);
    UNUSED (payload);
    UNUSED (offset);
 
-   return Result::FAIL_UNKNOWN;
+   switch (packet.message.type)
+   {
+      case Message::GET_ATTR_REQ:
+      {
+         AttributeResponse *attr_res = new AttributeResponse (attribute (packet.message.itf.member));
+         attr_res->code = (attr_res->attribute != nullptr ? Result::OK : Result::FAIL_SUPPORT);
+
+         Message response (attr_res, packet.message);
+
+         sendMessage (packet.source, response);
+         break;
+      }
+      case Message::GET_ATTR_RES:
+      {
+         // Do nothing.
+         break;
+      }
+      default:
+         break;
+   }
+
+   return Result::OK;
 }

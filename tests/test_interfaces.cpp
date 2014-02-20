@@ -88,3 +88,61 @@ TEST (AbstractInterface, Handle_RequestResp)
 
    CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
 }
+
+// =============================================================================
+// AbstractInterface::Attributes
+// =============================================================================
+
+//! \test Should handle valid get attribute requests.
+TEST (AbstractInterface, Handle_GetAttribute_Valid)
+{
+   packet.message.type       = Protocol::Message::GET_ATTR_REQ;
+   packet.message.itf.member = TestInterface::ATTR1;
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL (TestInterface::ATTR1, itf->sendMsg.itf.member);
+
+   AttributeResponse *attr_res = static_cast <AttributeResponse *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::OK, attr_res->code);
+
+   CHECK_TRUE (attr_res->attribute != nullptr);
+
+   CHECK_FALSE (attr_res->attribute->isWritable ());
+
+   LONGS_EQUAL (TestInterface::ATTR1, attr_res->attribute->uid ());
+
+   LONGS_EQUAL (itf->uid (), attr_res->attribute->interface ());
+}
+
+//! \test Should handle invalid get attribute requests.
+TEST (AbstractInterface, Handle_GetAttribute_Invalid)
+{
+   packet.message.type       = Protocol::Message::GET_ATTR_REQ;
+   packet.message.itf.member = TestInterface::ATTR3 + 4;
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
+
+   AttributeResponse *attr_res = static_cast <AttributeResponse *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_res->code);
+
+   CHECK_TRUE (attr_res->attribute == nullptr);
+}
