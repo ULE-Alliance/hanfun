@@ -158,11 +158,9 @@ namespace HF
    /*!
     * Class template for all profile implementations.
     */
-   template<IProfile::UID _uid>
-   class AbstractProfile:public IProfile
+   template<uint16_t _uid>
+   struct AbstractProfile:public IProfile
    {
-      public:
-
       //! \see IProfile::uid()
       uint16_t uid () const
       {
@@ -173,7 +171,7 @@ namespace HF
    /*!
     * Class template for profiles containing only one interface.
     */
-   template<IProfile::UID _uid, class Interface>
+   template<uint16_t _uid, class Interface>
    struct Profile:public AbstractProfile <_uid>, public Interface
    {
       using AbstractProfile <_uid>::uid;
@@ -182,25 +180,82 @@ namespace HF
    /*!
     * Class template for profiles containing two interfaces.
     */
-   template<IProfile::UID _uid, class Interface1, class Interface2>
-   struct Profile2:public Profile <_uid, Interface1>, public Interface2
+   template<uint16_t _uid, typename Interface1, typename Interface2>
+   struct Profile2:public AbstractProfile <_uid>
    {
-      using AbstractProfile <_uid>::uid;
+      typedef Profile2 <_uid, Interface1, Interface2> profile_t;
 
-      //! \see Interface::handle()
+      template<typename Itf>
+      struct InterfaceProxy:public Itf
+      {
+         profile_t *proxy;
+
+         InterfaceProxy(profile_t *proxy = nullptr):
+            proxy (proxy)
+         {}
+
+         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+         {
+            if (proxy != nullptr)
+            {
+               proxy->sendMessage (addr, message);
+            }
+         }
+      };
+
+      typedef InterfaceProxy <Interface1> first_itf_t;
+      typedef InterfaceProxy <Interface2> second_itf_t;
+
+      static_assert (is_base_of <AbstractInterface, Interface1>::value && is_base_of <AbstractInterface, Interface2>::value,
+                     "Interface1 and Interface 2 MUST be of type HF::AbstractInterface !");
+
+      //! \see Interface::handle
       virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
       {
-         Result result = Interface1::handle (packet, payload, offset);
+         Result result = interfaces.first.handle (packet, payload, offset);
 
-         if (result == Result::FAIL_ID)
-         {
-            return Interface2::handle (packet, payload, offset);
-         }
-         else
+         if (result == Result::OK || result == Result::FAIL_SUPPORT)
          {
             return result;
          }
+         else
+         {
+            return interfaces.second.handle (packet, payload, offset);
+         }
       }
+
+      /*!
+       * Pointer to the first interface instance.
+       *
+       * @return  pointer to the interface instance.
+       */
+      Interface1 *first ()
+      {
+         return static_cast <Interface1 *>(&(this->interfaces.first));
+      }
+
+      /*!
+       * Pointer to the second interface instance.
+       *
+       * @return  pointer to the interface instance.
+       */
+      Interface2 *second ()
+      {
+         return static_cast <Interface2 *>(&(this->interfaces.second));
+      }
+
+      //! \see AbstractInterface::sendMessage
+      virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+
+      protected:
+
+      Profile2()
+      {
+         interfaces.first  = first_itf_t (this);
+         interfaces.second = second_itf_t (this);
+      }
+
+      pair <first_itf_t, second_itf_t> interfaces;
    };
 
    /*!
@@ -262,16 +317,50 @@ namespace HF
       /*!
        * Simple Level Controllable Switchable profile implementation.
        */
-      class SimpleLevelControllableSwitchable:
-         public Profile2 <IProfile::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, Interfaces::OnOffServer, Interfaces::LevelControlServer>
-      {};
+      template<typename OnOffServer        = Interfaces::OnOffServer,
+               typename LevelControlServer = Interfaces::LevelControlServer>
+      struct SimpleLevelControllableSwitchable:
+         public Profile2 <IProfile::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
+      {
+         static_assert (is_base_of <Interfaces::OnOffServer, OnOffServer>::value,
+                        "OnOffServer MUST be of type Interfaces::OnOffServer !");
+         static_assert (is_base_of <Interfaces::LevelControlServer, LevelControlServer>::value,
+                        "LevelControlServer MUST be of type Interfaces::LevelControlServer !");
+
+         Interfaces::OnOffServer *on_off ()
+         {
+            return this->first ();
+         }
+
+         Interfaces::LevelControlServer *level_control ()
+         {
+            return this->second ();
+         }
+      };
 
       /*!
        * Simple Level Control Switch profile implementation.
        */
+      template<typename OnOffClient        = Interfaces::OnOffClient,
+               typename LevelControlClient = Interfaces::LevelControlClient>
       class SimpleLevelControlSwitch:
-         public Profile2 <IProfile::SIMPLE_LEVEL_CONTROL_SWITCH, Interfaces::OnOffClient, Interfaces::LevelControlClient>
-      {};
+         public Profile2 <IProfile::SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
+      {
+         static_assert (is_base_of <Interfaces::OnOffClient, OnOffClient>::value,
+                        "OnOffClient MUST be of type Interfaces::OnOffClient !");
+         static_assert (is_base_of <Interfaces::LevelControlClient, LevelControlClient>::value,
+                        "LevelControlClient MUST be of type Interfaces::LevelControlClient !");
+
+         Interfaces::OnOffClient *on_off ()
+         {
+            return this->first ();
+         }
+
+         Interfaces::LevelControlClient *level_control ()
+         {
+            return this->second ();
+         }
+      };
 
       /*!
        * AC Outlet profile implementation.
@@ -282,9 +371,26 @@ namespace HF
       /*!
        * AC Outlet profile implementation.
        */
+      template<typename OnOffServer            = Interfaces::OnOffServer,
+               typename SimplePowerMeterServer = Interfaces::SimplePowerMeterServer>
       class AC_OutletWithPowerMetering:
-         public Profile2 <IProfile::AC_OUTLET_WITH_POWER_METERING, Interfaces::OnOffServer, Interfaces::SimplePowerMeterServer>
-      {};
+         public Profile2 <IProfile::AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
+      {
+         static_assert (is_base_of <Interfaces::OnOffServer, OnOffServer>::value,
+                        "OnOffServer MUST be of type Interfaces::OnOffServer !");
+         static_assert (is_base_of <Interfaces::SimplePowerMeterServer, SimplePowerMeterServer>::value,
+                        "SimplePowerMeterServer MUST be of type Interfaces::SimplePowerMeterServer !");
+
+         Interfaces::OnOffServer *on_off ()
+         {
+            return this->first ();
+         }
+
+         Interfaces::SimplePowerMeterServer *power_meter ()
+         {
+            return this->second ();
+         }
+      };
 
       /*!
        * Simple Light profile implementation.
@@ -295,14 +401,48 @@ namespace HF
       /*!
        * Dimmable Light profile implementation.
        */
-      class DimmableLight:public Profile2 <IProfile::DIMMABLE_LIGHT, Interfaces::OnOffServer, Interfaces::LevelControlClient>
-      {};
+      template<typename OnOffServer        = Interfaces::OnOffServer,
+               typename LevelControlClient = Interfaces::LevelControlClient>
+      class DimmableLight:public Profile2 <IProfile::DIMMABLE_LIGHT, OnOffServer, LevelControlClient>
+      {
+         static_assert (is_base_of <Interfaces::OnOffServer, OnOffServer>::value,
+                        "OnOffServer MUST be of type Interfaces::OnOffServer !");
+         static_assert (is_base_of <Interfaces::LevelControlClient, LevelControlClient>::value,
+                        "LevelControlClient MUST be of type Interfaces::LevelControlClient !");
+
+         Interfaces::OnOffServer *on_off ()
+         {
+            return this->first ();
+         }
+
+         Interfaces::LevelControlClient *level_control ()
+         {
+            return this->second ();
+         }
+      };
 
       /*!
        * Dimmer Switch profile implementation.
        */
-      class DimmerSwitch:public Profile2 <IProfile::DIMMER_SWITCH, Interfaces::OnOffServer, Interfaces::LevelControlServer>
-      {};
+      template<typename OnOffServer        = Interfaces::OnOffServer,
+               typename LevelControlServer = Interfaces::LevelControlServer>
+      class DimmerSwitch:public Profile2 <IProfile::DIMMER_SWITCH, OnOffServer, LevelControlServer>
+      {
+         static_assert (is_base_of <Interfaces::OnOffServer, OnOffServer>::value,
+                        "OnOffServer MUST be of type Interfaces::OnOffServer !");
+         static_assert (is_base_of <Interfaces::LevelControlServer, LevelControlServer>::value,
+                        "LevelControlServer MUST be of type Interfaces::LevelControlServer !");
+
+         Interfaces::OnOffServer *on_off ()
+         {
+            return this->first ();
+         }
+
+         Interfaces::LevelControlServer *level_control ()
+         {
+            return this->second ();
+         }
+      };
 
       /*!
        * Simple Door Lock profile implementation.

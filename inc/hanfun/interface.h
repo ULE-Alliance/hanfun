@@ -122,10 +122,10 @@ namespace HF
    struct AbstractInterface:public Interface
    {
       //! \see Interface::handle
-      Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+      virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
 
       //! \see Interface::periodic
-      void periodic (uint32_t time)
+      virtual void periodic (uint32_t time)
       {
          UNUSED (time);
       }

@@ -28,6 +28,11 @@ using namespace HF::Testing;
    class _name:public InterfaceHelper<Profiles::_name>
 /* *INDENT-ON* */
 
+/* *INDENT-OFF* */
+#define HELPER_CLASS2(_name) \
+   class _name:public InterfaceHelper<Profiles::_name<>>
+/* *INDENT-ON* */
+
 // =============================================================================
 // Helper Test Classes
 // =============================================================================
@@ -40,13 +45,8 @@ namespace HF
       HELPER_CLASS (SimpleOnOffSwitch) {};
       HELPER_CLASS (SimpleLevelControllable) {};
       HELPER_CLASS (SimpleLevelControl) {};
-      HELPER_CLASS (SimpleLevelControllableSwitchable) {};
-      HELPER_CLASS (SimpleLevelControlSwitch) {};
       HELPER_CLASS (AC_Outlet) {};
-      HELPER_CLASS (AC_OutletWithPowerMetering) {};
       HELPER_CLASS (SimpleLight) {};
-      HELPER_CLASS (DimmableLight) {};
-      HELPER_CLASS (DimmerSwitch) {};
       HELPER_CLASS (SimpleDoorLock) {};
 
       HELPER_CLASS (DoorBell) {};
@@ -69,6 +69,12 @@ namespace HF
 
       HELPER_CLASS (GenericApplicationLogic) {};
 
+      HELPER_CLASS2 (SimpleLevelControllableSwitchable) {};
+      HELPER_CLASS2 (SimpleLevelControlSwitch) {};
+      HELPER_CLASS2 (AC_OutletWithPowerMetering) {};
+      HELPER_CLASS2 (DimmableLight) {};
+      HELPER_CLASS2 (DimmerSwitch) {};
+
    }  // namespace Testing
 
 }  // namespace HF
@@ -79,6 +85,9 @@ namespace HF
 
 TEST_GROUP (Profiles)
 {
+   struct TestProfile:public InterfaceHelper < Profile2 < 0x5A5A, TestInterface, TestInterface >>
+   {};
+
    TEST_SETUP ()
    {
       mock ().ignoreOtherCalls ();
@@ -157,6 +166,7 @@ TEST (Profiles, UIDs)
    // =============================================================================
    // Security Unit Types
    // =============================================================================
+
    profile = new SimpleDetector ();
    CHECK_EQUAL (IProfile::SIMPLE_DETECTOR, profile->uid ());
    delete profile;
@@ -243,4 +253,44 @@ TEST (Profiles, Detector)
    LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, detector.addr.mod);
    LONGS_EQUAL (42, detector.addr.device);
    LONGS_EQUAL (33, detector.addr.unit);
+}
+
+TEST (Profiles, Profile2_Handle)
+{
+   ByteArray data;
+   Protocol::Packet packet;
+
+   TestProfile profile;
+
+   profile.first ()->_uid   = 0x5A51;
+   profile.second ()->_uid  = 0x5A52;
+
+   profile.first ()->_role  = Interface::SERVER_ROLE;
+   profile.second ()->_role = Interface::CLIENT_ROLE;
+
+   packet.message.type = Message::COMMAND_REQ;
+
+   // Call first interface.
+
+   packet.message.itf.role = profile.first ()->_role;
+   packet.message.itf.uid  = profile.first ()->_uid;
+
+   mock ("Interface").expectOneCall ("handle_command").onObject (profile.first ());
+
+   Result result = profile.handle (packet, data, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("Interface").checkExpectations ();
+
+   // Call second interface.
+
+   packet.message.itf.role = profile.second ()->_role;
+   packet.message.itf.uid  = profile.second ()->_uid;
+
+   mock ("Interface").expectOneCall ("handle_command").onObject (profile.second ());
+
+   result = profile.handle (packet, data, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("Interface").checkExpectations ();
 }
