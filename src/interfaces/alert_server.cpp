@@ -240,3 +240,27 @@ void AlertServer::status (Protocol::Address &addr, uint16_t profile_uid)
 
    sendMessage (addr, message);
 }
+
+// =============================================================================
+// AlertServer::attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *AlertServer::attribute (uint8_t uid)
+{
+   Attributes attr = static_cast <Attributes>(uid);
+
+   switch (attr)
+   {
+      case STATE_ATTR:
+         return new Attribute<uint32_t &>( this->uid(), attr, _state, State::WRITABBLE );
+
+      case ENABLE_ATTR:
+         return new Attribute<uint32_t &>( this->uid(), attr, _enabled, Enable::WRITABBLE );
+
+      default:
+         return nullptr;
+   }
+}

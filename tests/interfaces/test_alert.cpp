@@ -286,6 +286,36 @@ TEST (AlertServer, Status2)
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, server->sendMsg.type);
 }
 
+//! \test Should return attribute.
+TEST (AlertServer, Attribute)
+{
+   IAttribute *attr = server->attribute (Alert::__LAST_ATTR__ + 1);
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = server->attribute (Alert::STATE_ATTR);
+
+   CHECK_TRUE (attr != nullptr);
+
+   LONGS_EQUAL (Alert::STATE_ATTR, attr->uid ());
+   CHECK_FALSE (attr->isWritable ());
+
+   LONGS_EQUAL (server->uid (), attr->interface ());
+
+   delete attr;
+
+   attr = server->attribute (Alert::ENABLE_ATTR);
+
+   CHECK_TRUE (attr != nullptr);
+
+   LONGS_EQUAL (Alert::ENABLE_ATTR, attr->uid ());
+   CHECK_TRUE (attr->isWritable ());
+
+   LONGS_EQUAL (server->uid (), attr->interface ());
+
+   delete attr;
+}
+
 // =============================================================================
 // AlertClient
 // =============================================================================

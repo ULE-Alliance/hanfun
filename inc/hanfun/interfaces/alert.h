@@ -41,10 +41,18 @@ namespace HF
       struct Alert:public Base <Interface::ALERT>
       {
          //! Command IDs.
-         enum
+         typedef enum
          {
             STATUS_CMD = 0x01       //! Alert Status Command ID.
-         };
+         } CMD;
+
+         //! Attributes
+         typedef enum
+         {
+            STATE_ATTR    = 0x01, //!< State attribute UID.
+            ENABLE_ATTR   = 0x02, //!< Enable attribute UID.
+            __LAST_ATTR__ = ENABLE_ATTR,
+         } Attributes;
 
          struct Message:public Serializable
          {
@@ -61,6 +69,44 @@ namespace HF
 
             //! \see HF::Serializable::unpack.
             size_t unpack (const ByteArray &array, size_t offset = 0);
+         };
+
+         /*!
+          * Helper class to handle the State attribute for the Alert interface.
+          *
+          * \warning This class is not meant to be instantiated. It only serves as a
+          *          helper type to cast created IAttribute into a class that has
+          *          methods to manipulate the underling data.
+          */
+         struct State:public Attribute <uint32_t>
+         {
+            static constexpr uint8_t ID        = STATE_ATTR;
+            static constexpr bool    WRITABBLE = false;
+
+            private:
+
+            State(uint32_t data):
+               Attribute <uint32_t>(Interface::ALERT, ID, data, WRITABBLE)
+            {}
+         };
+
+         /*!
+          * Helper class to handle the Enabled attribute for the Alert interface.
+          *
+          * \warning This class is not meant to be instantiated. It only serves as a
+          *          helper type to cast created IAttribute into a class that has methods
+          *          to manipulate the underling data.
+          */
+         struct Enable:public Attribute <uint32_t>
+         {
+            static constexpr uint8_t ID        = ENABLE_ATTR;
+            static constexpr bool    WRITABBLE = true;
+
+            private:
+
+            Enable(uint32_t data):
+               Attribute <uint32_t>(Interface::ALERT, ID, data, WRITABBLE)
+            {}
          };
 
          protected:
@@ -186,6 +232,13 @@ namespace HF
           */
          void disableAll ();
 
+         // =============================================================================
+         // Attributes API
+         // =============================================================================
+
+         //! \see Interface::attribute
+         IAttribute *attribute (uint8_t uid);
+
          // ======================================================================
          // Commands
          // ======================================================================
@@ -216,6 +269,15 @@ namespace HF
           *                      be allocated.
           */
          Alert::Message *status (uint16_t unit_type);
+
+         //! \see AbstractInterface::attribute_uids
+         attribute_uids_t attribute_uids (bool optional = false) const
+         {
+            UNUSED (optional);
+            /* *INDENT-OFF* */
+            return attribute_uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
+            /* *INDENT-ON* */
+         }
       };
 
       /*!
