@@ -54,6 +54,27 @@ Result OnOffServer::handle_command (Protocol::Packet &packet, ByteArray &payload
 }
 
 // =============================================================================
+// OnOffServer::attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *OnOffServer::attribute (uint8_t uid)
+{
+   Attributes attr = static_cast <Attributes>(uid);
+
+   switch (attr)
+   {
+      case STATE_ATTR:
+         return new Attribute<bool &> (this->uid(), attr, _state, State::WRITABBLE);
+
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
 // OnOffServer::on
 // =============================================================================
 /*!

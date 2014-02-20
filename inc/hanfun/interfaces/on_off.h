@@ -32,11 +32,30 @@ namespace HF
          public:
 
          //! Command IDs.
-         enum CMD
+         typedef enum
          {
-            ON_CMD     = 0x01,      //! On Command ID.
-            OFF_CMD    = 0x02,      //! Off Command ID.
-            TOGGLE_CMD = 0x03,      //! Toggle Command ID.
+            ON_CMD     = 0x01,       //! On Command ID.
+            OFF_CMD    = 0x02,       //! Off Command ID.
+            TOGGLE_CMD = 0x03,       //! Toggle Command ID.
+         } CMD;
+
+         //! Attributes
+         typedef enum
+         {
+            STATE_ATTR    = 0x01,  //!< State attribute UID.
+            __LAST_ATTR__ = STATE_ATTR,
+         } Attributes;
+
+         struct State:public Attribute <bool>
+         {
+            static constexpr uint8_t ID        = STATE_ATTR;
+            static constexpr bool    WRITABBLE = false;
+
+            private:
+
+            State(bool state = false):
+               Attribute <bool>(Interface::ON_OFF, ID, state, WRITABBLE)
+            {}
          };
       };
 
@@ -109,9 +128,25 @@ namespace HF
           */
          bool state ();
 
+         // =============================================================================
+         // Attribute API.
+         // =============================================================================
+
+         IAttribute *attribute (uint8_t uid);
+
          protected:
 
+         //! \see AbstractInterface::handle_command
          Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         //! \see AbstractInterface::attribute_uids
+         attribute_uids_t attribute_uids (bool optional = false) const
+         {
+            UNUSED (optional);
+            /* *INDENT-OFF* */
+            return attribute_uids_t ({ OnOff::STATE_ATTR });
+            /* *INDENT-ON* */
+         }
       };
 
       /*!

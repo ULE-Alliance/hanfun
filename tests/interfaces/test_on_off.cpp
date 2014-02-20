@@ -248,3 +248,22 @@ TEST (OnOffServer, Handle_Invalid_UID)
 
    CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
 }
+
+//! \test Should return attribute.
+TEST (OnOffServer, Attribute)
+{
+   IAttribute *attr = server.attribute (OnOff::__LAST_ATTR__ + 1);
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = server.attribute (OnOff::STATE_ATTR);
+
+   CHECK_TRUE (attr != nullptr);
+
+   LONGS_EQUAL (OnOff::STATE_ATTR, attr->uid ());
+   CHECK_FALSE (attr->isWritable ());
+
+   LONGS_EQUAL (server.uid (), attr->interface ());
+
+   delete attr;
+}
