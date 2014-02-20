@@ -30,10 +30,17 @@ namespace HF
       struct LevelControl:public Base <Interface::LEVEL_CONTROL>
       {
          //! Command IDs.
-         enum
+         typedef enum
          {
             SET_LEVEL_CMD = 0x01       //!< Set Level Command ID.
-         };
+         } CMD;
+
+         //! Attributes
+         typedef enum
+         {
+            LEVEL_ATTR    = 0x01, //!< State attribute UID.
+            __LAST_ATTR__ = LEVEL_ATTR,
+         } Attributes;
 
          struct Message:public Serializable
          {
@@ -68,6 +75,17 @@ namespace HF
             }
          };
 
+         struct Level:public Attribute <uint8_t>
+         {
+            static constexpr uint8_t ID        = LEVEL_ATTR;
+            static constexpr bool    WRITABBLE = false;
+
+            private:
+
+            Level(uint8_t level = 0):
+               Attribute <uint8_t>(Interface::ALERT, ID, level, WRITABBLE)
+            {}
+         };
 
          protected:
 
@@ -129,9 +147,26 @@ namespace HF
          //! @}
          // =============================================================================
 
+         // =============================================================================
+         // Attributes API
+         // =============================================================================
+
+         //! \see Interface::attribute
+         IAttribute *attribute (uint8_t uid);
+
          protected:
 
+         //! \see AbstractInterface::handle_command
          Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         //! \see AbstractInterface::attribute_uids
+         attribute_uids_t attribute_uids (bool optional = false) const
+         {
+            UNUSED (optional);
+            /* *INDENT-OFF* */
+            return attribute_uids_t ({ LevelControl::LEVEL_ATTR });
+            /* *INDENT-ON* */
+         }
       };
 
       /*!

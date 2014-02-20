@@ -244,3 +244,22 @@ TEST (LevelControlServer, Handle_Invalid_Payload)
 {
    CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 10));
 }
+
+//! \test Should return attribute.
+TEST (LevelControlServer, Attribute)
+{
+   IAttribute *attr = server.attribute (LevelControl::__LAST_ATTR__ + 1);
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = server.attribute (LevelControl::LEVEL_ATTR);
+
+   CHECK_TRUE (attr != nullptr);
+
+   LONGS_EQUAL (LevelControl::LEVEL_ATTR, attr->uid ());
+   CHECK_FALSE (attr->isWritable ());
+
+   LONGS_EQUAL (server.uid (), attr->interface ());
+
+   delete attr;
+}
