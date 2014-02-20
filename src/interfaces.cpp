@@ -19,6 +19,53 @@ using namespace HF;
 using namespace HF::Protocol;
 
 // =============================================================================
+// Helper Functions
+// =============================================================================
+
+
+// =============================================================================
+// update_attribute
+// =============================================================================
+/*!
+ * Update the attribute with the given \c uid at given interface.
+ *
+ * @param [in] itf      pointer to the interface to update the attribute at.
+ * @param [in] uid      the UID of the attribute to update.
+ * @param [in] payload  the ByteArray containing the value to update the attribute.
+ * @param [in] offset   the offset to read the payload from.
+ *
+ * @retval Result::OK            if the attribute was updated;
+ * @retval Result::FAIL_SUPPORT  if the attribute does not exist;
+ * @retval Result::FAIL_RO_ATTR  if the attribute does not exist;
+ * @retval Result::FAIL_UNKNOWN  otherwise.
+ */
+// =============================================================================
+static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload, size_t &offset)
+{
+   Result result    = Result::FAIL_UNKNOWN;
+
+   IAttribute *attr = itf->attribute (uid);
+
+   if (attr == nullptr)
+   {
+      result = Result::FAIL_SUPPORT;
+   }
+   else if (attr->isWritable ())
+   {
+      offset += attr->unpack (payload, offset);
+      result  = Result::OK;
+   }
+   else
+   {
+      result = Result::FAIL_RO_ATTR;
+   }
+
+   delete attr;
+
+   return result;
+}
+
+// =============================================================================
 // AbstractInterface API.
 // =============================================================================
 
@@ -176,6 +223,22 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
       case Message::GET_ATTR_RES:
       {
          // Do nothing.
+         break;
+      }
+      case Message::SET_ATTR_REQ:
+      {
+         update_attribute (this, packet.message.itf.member, payload, offset);
+         break;
+      }
+      case Message::SET_ATTR_RESP_REQ:
+      {
+         Result result  = update_attribute (this, packet.message.itf.member, payload, offset);
+         Response *resp = new Response (result);
+
+         Message  response (resp, packet.message);
+
+         sendMessage (packet.source, response);
+
          break;
       }
       default:

@@ -14,6 +14,7 @@
 // =============================================================================
 
 #include "hanfun/interface.h"
+#include "hanfun/attributes.h"
 
 #include "test_helper.h"
 
@@ -145,4 +146,164 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
    CHECK_EQUAL (Result::FAIL_SUPPORT, attr_res->code);
 
    CHECK_TRUE (attr_res->attribute == nullptr);
+}
+
+//! \test Should handle valid set attribute requests.
+TEST (AbstractInterface, Handle_SetAttribute_Valid)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_REQ;
+   packet.message.itf.member = TestInterface::ATTR3;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x5A, 0xAA, // Attribute value.
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5AAA, itf->attr3);
+}
+
+//! \test Should handle invalid set attribute requests.
+TEST (AbstractInterface, Handle_SetAttribute_Invalid)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_REQ;
+   packet.message.itf.member = TestInterface::ATTR3 + 4;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x5A, 0xAA, // Attribute value.
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+}
+
+//! \test Should handle invalid set attribute requests.
+TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_REQ;
+   packet.message.itf.member = TestInterface::ATTR1;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x5A, 0xAA, // Attribute value.
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+
+   mock ("Interface").expectNCalls (0, "sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+}
+
+//! \test Should handle valid set response required attribute requests.
+TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
+   packet.message.itf.member = TestInterface::ATTR3;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x5A, 0xAA, // Attribute value.
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A53, itf->attr3);
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (0x5AAA, itf->attr3);
+}
+
+//! \test Should handle invalid set response required attribute requests.
+TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
+   packet.message.itf.member = TestInterface::ATTR3 + 4;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x5A, 0xAA, // Attribute value.
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
+
+   Response *res = static_cast <Response *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::FAIL_SUPPORT, res->code);
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+}
+
+//! \test Should handle invalid set response required attribute requests.
+TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
+{
+   packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
+   packet.message.itf.member = TestInterface::ATTR1;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x5A, 0xAA, // Attribute value.
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
+
+   Response *res = static_cast <Response *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::FAIL_RO_ATTR, res->code);
+
+   LONGS_EQUAL (0x5A51, itf->attr1);
 }
