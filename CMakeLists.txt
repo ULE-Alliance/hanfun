@@ -54,6 +54,8 @@ set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT
 configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
                 ${CMAKE_BINARY_DIR}/version.h )
 
+include("cmake/options.cmake")
+
 if(BUILD_TESTS)
     configure_file( ${CMAKE_SOURCE_DIR}/tests/config.h.in
                     ${CMAKE_BINARY_DIR}/config.h )

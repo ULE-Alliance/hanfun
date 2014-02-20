@@ -55,10 +55,10 @@ TEST_GROUP (SimplePowerMeter_Measurement)
    {
       measurement = SimplePowerMeter::Measurement ();
 
-      uint8_t data[] = {0x00,                              0x00, 0x00,
-                        Precision::MICRO,
-                        0xFF,                              0x5A, 0xA5,0xCC,
-                        0x00,                              0x00, 0x00};
+      uint8_t data[] = {0x00, 0x00, 0x00,
+                        Precision::MICRO,      // Measurement precision.
+                        0xFF, 0x5A, 0xA5,0xCC, // Measurement value.
+                        0x00, 0x00, 0x00};
 
       expected = ByteArray (data, sizeof(data));
    }
@@ -117,55 +117,156 @@ TEST_GROUP (SimplePowerMeter_Report)
 //! \test Should report correct size.
 TEST (SimplePowerMeter_Report, Size)
 {
-   LONGS_EQUAL (1 + 10 + 8 * 5 + 2 + 1, report.size ());
+   size_t expected = 0;
+   size_t delta    = 1;
+
+   LONGS_EQUAL (expected + delta, report.size ());
+
+   /* *INDENT-OFF* */
+   // =============================================================================
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.energy.size());
+
+   report.enabled[SimplePowerMeter::ENERGY_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.last_energy.size());
+
+   report.enabled[SimplePowerMeter::ENERGY_AT_RESET_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.last_time.size());
+
+   report.enabled[SimplePowerMeter::TIME_AT_RESET_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.power.size());
+
+   report.enabled[SimplePowerMeter::POWER_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.avg_power.size());
+
+   report.enabled[SimplePowerMeter::AVG_POWER_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + sizeof(report.avg_power_interval));
+
+   report.enabled[SimplePowerMeter::AVG_POWER_INTERVAL_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.voltage.size());
+
+   report.enabled[SimplePowerMeter::VOLTAGE_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.current.size());
+
+   report.enabled[SimplePowerMeter::CURRENT_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + report.frequency.size());
+
+   report.enabled[SimplePowerMeter::FREQUENCY_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+
+   expected += delta;
+   delta = (sizeof(uint8_t) + sizeof(report.power_factor));
+
+   report.enabled[SimplePowerMeter::POWER_FACTOR_ATTR] = true;
+
+   LONGS_EQUAL(expected + delta, report.size());
+
+   // =============================================================================
+   /* *INDENT-ON* */
 }
 
+/* *INDENT-OFF* */
 // Data used to check SimplePowerMeter::Report::pack.
 static const uint8_t pack_data[] =
 {
-   0x00,                              0x00, 0x00,
+    0x00, 0x00, 0x00,
 
-   0x0A,                              // Number of attributes.
+    0x0A,                             // Number of attributes.
 
-   SimplePowerMeter::ENERGY_ATTR,     // Energy measurement.
-   Precision::BASE,
-   0xFF,                              0x5A, 0xA5,0xC1,
+    SimplePowerMeter::ENERGY_ATTR,    // Energy measurement.
+    Precision::BASE,
+    0xFF, 0x5A, 0xA5, 0xC1,
 
-   SimplePowerMeter::ENERGY_AT_RESET_ATTR, // Energy measurement at last reset.
-   Precision::MILI,
-   0xFF,                              0x5A, 0xA5,0xC2,
+    SimplePowerMeter::ENERGY_AT_RESET_ATTR, // Energy measurement at last reset.
+    Precision::MILI,
+    0xFF, 0x5A, 0xA5, 0xC2,
 
-   SimplePowerMeter::TIME_AT_RESET_ATTR, // Device time measurement at last reset.
-   Time::UPTIME,
-   0xFF,                              0x5A, 0xA5,0xC3,
+    SimplePowerMeter::TIME_AT_RESET_ATTR, // Device time measurement at last reset.
+    Time::UPTIME,
+    0xFF, 0x5A, 0xA5, 0xC3,
 
-   SimplePowerMeter::POWER_ATTR,      // Instantaneous Power measurement.
-   Precision::MICRO,
-   0xFF,                              0x5A, 0xA5,0xC4,
+    SimplePowerMeter::POWER_ATTR,     // Instantaneous Power measurement.
+    Precision::MICRO,
+    0xFF, 0x5A, 0xA5, 0xC4,
 
-   SimplePowerMeter::AVG_POWER_ATTR,  // Average Power measurement.
-   Precision::NANO,
-   0xFF,                              0x5A, 0xA5,0xC5,
+    SimplePowerMeter::AVG_POWER_ATTR, // Average Power measurement.
+    Precision::NANO,
+    0xFF, 0x5A, 0xA5, 0xC5,
 
-   SimplePowerMeter::AVG_POWER_INTERVAL_ATTR, // Average Power Interval.
-   0x5A,                              0xA5,
+    SimplePowerMeter::AVG_POWER_INTERVAL_ATTR, // Average Power Interval.
+    0x5A, 0xA5,
 
-   SimplePowerMeter::POWER_FACTOR_ATTR, // Power Factor.
-   0xAA,
+    SimplePowerMeter::POWER_FACTOR_ATTR, // Power Factor.
+    0xAA,
 
-   SimplePowerMeter::VOLTAGE_ATTR,    // Voltage measurement.
-   Precision::MEGA,
-   0xFF,                              0x5A, 0xA5,0xC6,
+    SimplePowerMeter::VOLTAGE_ATTR,   // Voltage measurement.
+    Precision::MEGA,
+    0xFF, 0x5A, 0xA5, 0xC6,
 
-   SimplePowerMeter::CURRENT_ATTR,    // Current measurement.
-   Precision::GIGA,
-   0xFF,                              0x5A, 0xA5,0xC7,
+    SimplePowerMeter::CURRENT_ATTR,   // Current measurement.
+    Precision::GIGA,
+    0xFF, 0x5A, 0xA5, 0xC7,
 
-   SimplePowerMeter::FREQUENCY_ATTR,
-   Precision::TERA,  // Frequency measurement.
-   0xFF,                              0x5A, 0xA5,0xC8,
-   0x00,                              0x00, 0x00
+    SimplePowerMeter::FREQUENCY_ATTR,
+    Precision::TERA,                  // Frequency measurement.
+    0xFF, 0x5A, 0xA5, 0xC8,
+
+    0x00, 0x00, 0x00
 };
+/* *INDENT-ON* */
+
+// =============================================================================
 
 //! \test Should pack the measurement correctly.
 TEST (SimplePowerMeter_Report, Pack)
@@ -174,33 +275,43 @@ TEST (SimplePowerMeter_Report, Pack)
 
    uint32_t  value = 0xFF5AA5C1;
 
-   report.energy.unit        = Precision::BASE;
-   report.energy.value       = value++;
+   report.enabled[SimplePowerMeter::ENERGY_ATTR]             = true;
+   report.energy.unit                                        = Precision::BASE;
+   report.energy.value                                       = value++;
 
-   report.last_energy.unit   = Precision::MILI;
-   report.last_energy.value  = value++;
+   report.enabled[SimplePowerMeter::ENERGY_AT_RESET_ATTR]    = true;
+   report.last_energy.unit                                   = Precision::MILI;
+   report.last_energy.value                                  = value++;
 
-   report.last_time.unit     = Time::UPTIME;
-   report.last_time.value    = value++;
+   report.enabled[SimplePowerMeter::TIME_AT_RESET_ATTR]      = true;
+   report.last_time.unit                                     = Time::UPTIME;
+   report.last_time.value                                    = value++;
 
-   report.power.unit         = Precision::MICRO;
-   report.power.value        = value++;
+   report.enabled[SimplePowerMeter::POWER_ATTR]              = true;
+   report.power.unit                                         = Precision::MICRO;
+   report.power.value                                        = value++;
 
-   report.avg_power.unit     = Precision::NANO;
-   report.avg_power.value    = value++;
+   report.enabled[SimplePowerMeter::AVG_POWER_ATTR]          = true;
+   report.avg_power.unit                                     = Precision::NANO;
+   report.avg_power.value                                    = value++;
 
-   report.avg_power_interval = 0x5AA5;
+   report.enabled[SimplePowerMeter::AVG_POWER_INTERVAL_ATTR] = true;
+   report.avg_power_interval                                 = 0x5AA5;
 
-   report.power_factor       = 0xAA;
+   report.enabled[SimplePowerMeter::POWER_FACTOR_ATTR]       = true;
+   report.power_factor                                       = 0xAA;
 
-   report.voltage.unit       = Precision::MEGA;
-   report.voltage.value      = value++;
+   report.enabled[SimplePowerMeter::VOLTAGE_ATTR]            = true;
+   report.voltage.unit                                       = Precision::MEGA;
+   report.voltage.value                                      = value++;
 
-   report.current.unit       = Precision::GIGA;
-   report.current.value      = value++;
+   report.enabled[SimplePowerMeter::CURRENT_ATTR]            = true;
+   report.current.unit                                       = Precision::GIGA;
+   report.current.value                                      = value++;
 
-   report.frequency.unit     = Precision::TERA;
-   report.frequency.value    = value++;
+   report.enabled[SimplePowerMeter::FREQUENCY_ATTR]          = true;
+   report.frequency.unit                                     = Precision::TERA;
+   report.frequency.value                                    = value++;
 
    ByteArray array (report.size () + 6);
 
@@ -211,53 +322,55 @@ TEST (SimplePowerMeter_Report, Pack)
    CHECK_EQUAL (expected, array);
 }
 
+/* *INDENT-OFF* */
 // Data used to check SimplePowerMeter::Report::unpack.
 static const uint8_t unpack_data[] =
 {
-   0x00,                              0x00, 0x00,
+   0x00, 0x00, 0x00,
 
-   0x0A,                              // Number of attributes.
+   0x0A,                             // Number of attributes.
 
    SimplePowerMeter::TIME_AT_RESET_ATTR, // Device time measurement at last reset.
    Time::UPTIME,
-   0xFF,                              0x5A, 0xA5,0xC3,
+   0xFF, 0x5A, 0xA5, 0xC3,
 
-   SimplePowerMeter::ENERGY_ATTR,     // Energy measurement.
+   SimplePowerMeter::ENERGY_ATTR,    // Energy measurement.
    Precision::BASE,
-   0xFF,                              0x5A, 0xA5,0xC1,
+   0xFF, 0x5A, 0xA5, 0xC1,
 
    SimplePowerMeter::FREQUENCY_ATTR,
-   Precision::TERA,  // Frequency measurement.
-   0xFF,                              0x5A, 0xA5,0xC8,
+   Precision::TERA,                  // Frequency measurement.
+   0xFF, 0x5A, 0xA5, 0xC8,
 
-   SimplePowerMeter::POWER_ATTR,      // Instantaneous Power measurement.
+   SimplePowerMeter::POWER_ATTR,     // Instantaneous Power measurement.
    Precision::MICRO,
-   0xFF,                              0x5A, 0xA5,0xC4,
+   0xFF, 0x5A, 0xA5, 0xC4,
 
-   SimplePowerMeter::CURRENT_ATTR,    // Current measurement.
+   SimplePowerMeter::CURRENT_ATTR,   // Current measurement.
    Precision::GIGA,
-   0xFF,                              0x5A, 0xA5,0xC7,
+   0xFF, 0x5A, 0xA5, 0xC7,
 
    SimplePowerMeter::ENERGY_AT_RESET_ATTR, // Energy measurement at last reset.
    Precision::MILI,
-   0xFF,                              0x5A, 0xA5,0xC2,
+   0xFF, 0x5A, 0xA5, 0xC2,
 
    SimplePowerMeter::AVG_POWER_INTERVAL_ATTR, // Average Power Interval.
-   0x5A,                              0xA5,
+   0x5A, 0xA5,
 
    SimplePowerMeter::POWER_FACTOR_ATTR, // Power Factor.
    0xAA,
 
-   SimplePowerMeter::VOLTAGE_ATTR,    // Voltage measurement.
+   SimplePowerMeter::VOLTAGE_ATTR,   // Voltage measurement.
    Precision::MEGA,
-   0xFF,                              0x5A, 0xA5,0xC6,
+   0xFF, 0x5A, 0xA5, 0xC6,
 
-   SimplePowerMeter::AVG_POWER_ATTR,  // Average Power measurement.
+   SimplePowerMeter::AVG_POWER_ATTR, // Average Power measurement.
    Precision::NANO,
-   0xFF,                              0x5A, 0xA5,0xC5,
+   0xFF, 0x5A, 0xA5, 0xC5,
 
-   0x00,                              0x00, 0x00,
+   0x00, 0x00, 0x00,
 };
+/* *INDENT-ON* */
 
 //! \test Should unpack the report correctly.
 TEST (SimplePowerMeter_Report, Unpack)
@@ -647,6 +760,36 @@ TEST (SimplePowerMeterServer, periodic_disabled)
    CHECK_TRUE (server->sendMsg.payload == nullptr);
 }
 
+//! \test Should return attribute.
+TEST (SimplePowerMeterServer, Attribute)
+{
+   IAttribute *attr = server->attribute (SimplePowerMeterServer::__LAST_ATTR__ + 1);
+
+   CHECK_TRUE (attr == nullptr);
+
+   for (uint8_t uid = SimplePowerMeterServer::ENERGY_ATTR; uid <= SimplePowerMeterServer::__LAST_ATTR__; uid++)
+   {
+      attr = server->attribute (uid);
+
+      CHECK_TRUE (attr != nullptr);
+
+      LONGS_EQUAL (uid, attr->uid ());
+
+      if (uid == SimplePowerMeterServer::AVG_POWER_INTERVAL_ATTR ||
+          uid == SimplePowerMeterServer::REPORT_INTERVAL_ATTR)
+      {
+         CHECK_TRUE (attr->isWritable ());
+      }
+      else
+      {
+         CHECK_FALSE (attr->isWritable ());
+      }
+
+      LONGS_EQUAL (server->uid (), attr->interface ());
+
+      delete attr;
+   }
+}
 
 // =============================================================================
 // SimplePowerMeterClient

@@ -14,8 +14,41 @@
 #ifndef HF_ITF_SIMPLE_POWER_METER_H
 #define HF_ITF_SIMPLE_POWER_METER_H
 
+#include "hanfun/common.h"
+
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
+
+// =============================================================================
+// Configuration
+// =============================================================================
+
+#if HF_ITF_SPM_REPORT_CMD
+
+   #if !HF_ITF_SPM_REPORT_INTERVAL_ATTR
+      #define HF_ITF_SPM_REPORT_INTERVAL_ATTR   1
+   #endif
+
+#endif
+
+#if HF_ITF_SPM_RESET_CMD
+
+   #if !HF_ITF_SPM_ENERGY_ATTR
+      #undef HF_ITF_SPM_ENERGY_ATTR
+      #define HF_ITF_SPM_ENERGY_ATTR            1
+   #endif
+
+   #if !HF_ITF_SPM_ENERGY_AT_RESET_ATTR
+      #undef HF_ITF_SPM_ENERGY_AT_RESET_ATTR
+      #define HF_ITF_SPM_ENERGY_AT_RESET_ATTR   1
+   #endif
+
+   #if !HF_ITF_SPM_TIME_AT_RESET_ATTR
+      #undef HF_ITF_SPM_TIME_AT_RESET_ATTR
+      #define HF_ITF_SPM_TIME_AT_RESET_ATTR     1
+   #endif
+
+#endif
 
 // =============================================================================
 // API
@@ -33,16 +66,16 @@ namespace HF
       struct SimplePowerMeter:public Base <Interface::SIMPLE_POWER_METER>
       {
          //! Commands IDs.
-         enum Commands
+         typedef enum
          {
             REPORT_CMD            = 0x01, //!< Report command ID.
             MEASUREMENT_RESET_CMD = 0x01  //!< Measurement Reset command ID.
-         };
+         } CMD;
 
          /*!
           * Attributes IDs.
           */
-         enum Attribute
+         typedef enum
          {
             ENERGY_ATTR             = 0x01, //!< Energy Attribute ID.
             ENERGY_AT_RESET_ATTR    = 0x02, //!< Energy at Last Reset Attribute ID.
@@ -55,8 +88,8 @@ namespace HF
             FREQUENCY_ATTR          = 0x09, //!< Frequency Attribute ID.
             POWER_FACTOR_ATTR       = 0x0A, //!< Power Factor Attribute ID.
             REPORT_INTERVAL_ATTR    = 0x0B, //!< Report Interval Attribute ID.
-         };
-
+            __LAST_ATTR__           = REPORT_INTERVAL_ATTR,
+         } Attributes;
 
          /*!
           * This represents a measurement for a given attribute.
@@ -124,6 +157,12 @@ namespace HF
             Measurement current;             //!< Current measurement.
             Measurement frequency;           //!< Frequency measurement.
 
+            /*!
+             * This array contains an indication of with attributes should packed or
+             * with were unpacked.
+             */
+            array <bool, __LAST_ATTR__ + 1> enabled;
+
             Report();
 
             //! \see HF::Serializable::size.
@@ -156,25 +195,51 @@ namespace HF
          protected:
 
          /* Attributes */
-
+#if HF_ITF_SPM_ENERGY_ATTR
          Measurement _energy;              //!< Energy measurement attribute.
+#endif
 
+#if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
          Measurement _last_energy;         //!< Energy measurement at last reset attribute.
+#endif
+
+#if HF_ITF_SPM_TIME_AT_RESET_ATTR
          Measurement _last_time;           //!< Device time measurement at last reset attribute.
+#endif
 
+#if HF_ITF_SPM_POWER_ATTR
          Measurement _power;               //!< Instantaneous Power measurement attribute.
+#endif
+
+#if HF_ITF_SPM_AVG_POWER_ATTR
          Measurement _avg_power;           //!< Average Power measurement attribute.
+#endif
 
-         uint16_t    _avg_power_interval;  //!< Average Power Interval attribute.
+#if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
+         uint16_t _avg_power_interval;     //!< Average Power Interval attribute.
+#endif
+
+#if HF_ITF_SPM_POWER_FACTOR_ATTR
          uint8_t _power_factor;            //!< Power Factor attribute.
+#endif
 
+#if HF_ITF_SPM_VOLTAGE_ATTR
          Measurement _voltage;             //!< Voltage measurement attribute.
+#endif
+
+#if HF_ITF_SPM_CURRENT_ATTR
          Measurement _current;             //!< Current measurement attribute.
+#endif
+
+#if HF_ITF_SPM_FREQUENCY_ATTR
          Measurement _frequency;           //!< Frequency measurement attribute.
+#endif
 
-         uint16_t    _report_interval;     //!< Report Interval attribute.
+#if HF_ITF_SPM_REPORT_CMD
+         uint16_t _report_interval;        //!< Report Interval attribute.
 
-         uint32_t    _last_periodic;       //! Time in seconds of the last report message sent.
+         uint32_t _last_periodic;          //! Time in seconds of the last report message sent.
+#endif
 
          public:
 
@@ -194,6 +259,7 @@ namespace HF
          //! \name Getters & Setters
          //! @{
 
+#if HF_ITF_SPM_ENERGY_ATTR
          /*!
           * Retrieve the energy measurement value for the meter.
           *
@@ -213,7 +279,9 @@ namespace HF
          {
             _energy = value;
          }
+#endif
 
+#if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
          /*!
           * Retrieve the energy measurement value at the last reset.
           *
@@ -233,7 +301,9 @@ namespace HF
          {
             _last_energy = value;
          }
+#endif
 
+#if HF_ITF_SPM_TIME_AT_RESET_ATTR
          /*!
           * Retrieve the device time value at the last reset.
           *
@@ -253,7 +323,9 @@ namespace HF
          {
             _last_time = value;
          }
+#endif
 
+#if HF_ITF_SPM_POWER_ATTR
          /*!
           * Retrieve the instantaneous power measurement value for the meter.
           *
@@ -273,7 +345,9 @@ namespace HF
          {
             _power = value;
          }
+#endif
 
+#if HF_ITF_SPM_AVG_POWER_ATTR
          /*!
           * Retrieve the average power measurement value for the meter.
           *
@@ -293,7 +367,9 @@ namespace HF
          {
             _avg_power = value;
          }
+#endif
 
+#if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
          /*!
           * Retrieve the average power interval value for the meter.
           *
@@ -313,67 +389,9 @@ namespace HF
          {
             _avg_power_interval = value;
          }
+#endif
 
-         /*!
-          * Retrieve the voltage measurement value for the meter.
-          *
-          * @return  the current measurement for the voltage attribute.
-          */
-         Measurement voltage ()
-         {
-            return _voltage;
-         }
-
-         /*!
-          * Set the voltage measurement value for the meter.
-          *
-          * @param value   the measurement value to set the voltage attribute to.
-          */
-         void voltage (Measurement &value)
-         {
-            _voltage = value;
-         }
-
-         /*!
-          * Retrieve the current measurement value for the meter.
-          *
-          * @return  the measurement for the current attribute.
-          */
-         Measurement current ()
-         {
-            return _current;
-         }
-
-         /*!
-          * Set the current measurement value for the meter.
-          *
-          * @param value   the measurement value to set the current attribute to.
-          */
-         void current (Measurement &value)
-         {
-            _current = value;
-         }
-
-         /*!
-          * Retrieve the frequency measurement value for the meter.
-          *
-          * @return  the measurement for the frequency attribute.
-          */
-         Measurement frequency ()
-         {
-            return _frequency;
-         }
-
-         /*!
-          * Set the frequency energy measurement value for the meter.
-          *
-          * @param value   the measurement value to set the frequency attribute to.
-          */
-         void frequency (Measurement &value)
-         {
-            _frequency = value;
-         }
-
+#if HF_ITF_SPM_POWER_FACTOR_ATTR
          /*!
           * Retrieve the power factor value for the meter.
           *
@@ -393,7 +411,75 @@ namespace HF
          {
             _power_factor = value;
          }
+#endif
 
+#if HF_ITF_SPM_VOLTAGE_ATTR
+         /*!
+          * Retrieve the voltage measurement value for the meter.
+          *
+          * @return  the current measurement for the voltage attribute.
+          */
+         Measurement voltage ()
+         {
+            return _voltage;
+         }
+
+         /*!
+          * Set the voltage measurement value for the meter.
+          *
+          * @param value   the measurement value to set the voltage attribute to.
+          */
+         void voltage (Measurement &value)
+         {
+            _voltage = value;
+         }
+#endif
+
+#if HF_ITF_SPM_CURRENT_ATTR
+         /*!
+          * Retrieve the current measurement value for the meter.
+          *
+          * @return  the measurement for the current attribute.
+          */
+         Measurement current ()
+         {
+            return _current;
+         }
+
+         /*!
+          * Set the current measurement value for the meter.
+          *
+          * @param value   the measurement value to set the current attribute to.
+          */
+         void current (Measurement &value)
+         {
+            _current = value;
+         }
+#endif
+
+#if HF_ITF_SPM_FREQUENCY_ATTR
+         /*!
+          * Retrieve the frequency measurement value for the meter.
+          *
+          * @return  the measurement for the frequency attribute.
+          */
+         Measurement frequency ()
+         {
+            return _frequency;
+         }
+
+         /*!
+          * Set the frequency energy measurement value for the meter.
+          *
+          * @param value   the measurement value to set the frequency attribute to.
+          */
+         void frequency (Measurement &value)
+         {
+            _frequency = value;
+         }
+#endif
+
+#if HF_ITF_SPM_REPORT_CMD
          /*!
           * Retrieve the report interval value for the meter.
           *
@@ -413,8 +499,16 @@ namespace HF
          {
             _report_interval = value;
          }
+#endif
 
          //! @}
+
+         // =============================================================================
+         // Attribute API
+         // =============================================================================
+
+         //! \see Interface::attribute
+         IAttribute *attribute (uint8_t uid);
 
          protected:
 
@@ -424,6 +518,9 @@ namespace HF
           * @return  message to send or \c nullptr if the message cannot be created.
           */
          virtual Report *report ();
+
+         //! \see AbstractInterface::attribute_uids
+         attribute_uids_t attribute_uids (bool optional = false) const;
       };
 
       /*!

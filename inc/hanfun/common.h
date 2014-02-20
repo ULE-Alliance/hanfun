@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 #include <type_traits>
 
 #include "version.h"

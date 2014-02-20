@@ -1,18 +1,47 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define HF_DEVICE_SW_VERSION          "x.x.X"
+// =============================================================================
+// DeviceInformation Configuration
+// =============================================================================
 
-#define HF_DEVICE_HW_VERSION          "revZ"
+#define HF_DEVICE_SW_VERSION                 "x.x.X"
 
-#define HF_DEVICE_MANUFACTURER_CODE   0x1234
+#define HF_DEVICE_HW_VERSION                 "revZ"
 
-#define HF_DEVICE_MANUFACTURER_NAME   "Bithium - Testing"
+#define HF_DEVICE_MANUFACTURER_CODE          0x1234
 
-#define HF_DEVICE_LOCATION            "The Universe"
+#define HF_DEVICE_MANUFACTURER_NAME          "Bithium - Testing"
 
-#define HF_DEVICE_FRIENDLY_NAME       "The Matrix"
+#define HF_DEVICE_LOCATION                   "The Universe"
 
-#define HF_DEVICE_SERIAL_NUMBER       "0123456789"
+#define HF_DEVICE_FRIENDLY_NAME              "The Matrix"
+
+#define HF_DEVICE_SERIAL_NUMBER              "0123456789"
+
+// =============================================================================
+// SimplePowerMeter Configuration
+// =============================================================================
+
+// In testing mode support all attributes.
+
+#define HF_ITF_SPM_ENERGY_ATTR               1
+#define HF_ITF_SPM_POWER_ATTR                1
+#define HF_ITF_SPM_ENERGY_AT_RESET_ATTR      1
+#define HF_ITF_SPM_TIME_AT_RESET_ATTR        1
+#define HF_ITF_SPM_AVG_POWER_ATTR            1
+#define HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR   1
+#define HF_ITF_SPM_VOLTAGE_ATTR              1
+#define HF_ITF_SPM_CURRENT_ATTR              1
+#define HF_ITF_SPM_FREQUENCY_ATTR            1
+#define HF_ITF_SPM_POWER_FACTOR_ATTR         1
+#define HF_ITF_SPM_REPORT_INTERVAL_ATTR      1
+
+// In testing mode support all commands.
+
+#define HF_ITF_SPM_REPORT_CMD                1
+#define HF_ITF_SPM_RESET_CMD                 1
+
+// =============================================================================
 
 #endif  /* CONFIG_H */

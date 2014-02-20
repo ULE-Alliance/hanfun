@@ -41,6 +41,8 @@ SimplePowerMeter::Report::Report()
    memset (&voltage, 0, sizeof(Measurement));         // Voltage measurement.
    memset (&current, 0, sizeof(Measurement));         // Current measurement.
    memset (&frequency, 0, sizeof(Measurement));       // Frequency measurement.
+
+   fill (enabled.begin (), enabled.end (), false);
 }
 
 // =============================================================================
@@ -54,22 +56,55 @@ size_t SimplePowerMeter::Report::size () const
 {
    size_t result = sizeof(uint8_t);           // Number of attributes.
 
-   result += (sizeof(uint8_t) + energy.size ()); // Energy measurement.
+   if (enabled[SimplePowerMeter::ENERGY_ATTR])
+   {
+      result += (sizeof(uint8_t) + energy.size ()); // Energy measurement.
+   }
 
-   result += (sizeof(uint8_t) + last_energy.size ()); // Energy measurement at last reset.
-   result += (sizeof(uint8_t) + last_time.size ());   // Device time measurement at last reset.
+   if (enabled[SimplePowerMeter::ENERGY_AT_RESET_ATTR])
+   {
+      result += (sizeof(uint8_t) + last_energy.size ()); // Energy measurement at last reset.
+   }
 
-   result += (sizeof(uint8_t) + power.size ());     // Instantaneous Power measurement.
-   result += (sizeof(uint8_t) + avg_power.size ()); // Average Power measurement.
+   if (enabled[SimplePowerMeter::TIME_AT_RESET_ATTR])
+   {
+      result += (sizeof(uint8_t) + last_time.size ());   // Device time measurement at last reset.
+   }
 
-   result += (sizeof(uint8_t) + sizeof(avg_power_interval)); // Average Power Interval.
+   if (enabled[SimplePowerMeter::POWER_ATTR])
+   {
+      result += (sizeof(uint8_t) + power.size ());     // Instantaneous Power measurement.
+   }
 
-   result += (sizeof(uint8_t) + sizeof(power_factor)); // Power Factor.
+   if (enabled[SimplePowerMeter::AVG_POWER_ATTR])
+   {
+      result += (sizeof(uint8_t) + avg_power.size ()); // Average Power measurement.
+   }
 
-   result += (sizeof(uint8_t) + voltage.size ()); // Voltage measurement.
-   result += (sizeof(uint8_t) + current.size ()); // Current measurement.
+   if (enabled[SimplePowerMeter::AVG_POWER_INTERVAL_ATTR])
+   {
+      result += (sizeof(uint8_t) + sizeof(avg_power_interval)); // Average Power Interval.
+   }
 
-   result += (sizeof(uint8_t) + frequency.size ()); // Frequency measurement.
+   if (enabled[SimplePowerMeter::POWER_FACTOR_ATTR])
+   {
+      result += (sizeof(uint8_t) + sizeof(power_factor)); // Power Factor.
+   }
+
+   if (enabled[SimplePowerMeter::VOLTAGE_ATTR])
+   {
+      result += (sizeof(uint8_t) + voltage.size ()); // Voltage measurement.
+   }
+
+   if (enabled[SimplePowerMeter::CURRENT_ATTR])
+   {
+      result += (sizeof(uint8_t) + current.size ()); // Current measurement.
+   }
+
+   if (enabled[SimplePowerMeter::FREQUENCY_ATTR])
+   {
+      result += (sizeof(uint8_t) + frequency.size ()); // Frequency measurement.
+   }
 
    return result;
 }
@@ -88,58 +123,96 @@ size_t SimplePowerMeter::Report::pack (ByteArray &array, size_t offset) const
    uint8_t id    = 0;
 
    // Number of attributes.
-   id      = 10;
+
+   id      = count (enabled.begin (), enabled.end (), true);
    offset += array.write (offset, id);
 
    // Energy measurement.
-   id      = static_cast <uint8_t>(SimplePowerMeter::ENERGY_ATTR);
-   offset += array.write (offset, id);
-   offset += energy.pack (array, offset);
+   id = static_cast <uint8_t>(SimplePowerMeter::ENERGY_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += energy.pack (array, offset);
+   }
 
    // Energy measurement at last reset.
-   id      = static_cast <uint8_t>(SimplePowerMeter::ENERGY_AT_RESET_ATTR);
-   offset += array.write (offset, id);
-   offset += last_energy.pack (array, offset);
+   id = static_cast <uint8_t>(SimplePowerMeter::ENERGY_AT_RESET_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += last_energy.pack (array, offset);
+   }
 
    // Device time measurement at last reset.
-   id      = static_cast <uint8_t>(SimplePowerMeter::TIME_AT_RESET_ATTR);
-   offset += array.write (offset, id);
-   offset += last_time.pack (array, offset);
+   id = static_cast <uint8_t>(SimplePowerMeter::TIME_AT_RESET_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += last_time.pack (array, offset);
+   }
 
    // Instantaneous Power measurement.
-   id      = static_cast <uint8_t>(SimplePowerMeter::POWER_ATTR);
-   offset += array.write (offset, id);
-   offset += power.pack (array, offset);
+   if (enabled[id])
+   {
+      id      = static_cast <uint8_t>(SimplePowerMeter::POWER_ATTR);
+      offset += array.write (offset, id);
+      offset += power.pack (array, offset);
+   }
 
    // Average Power measurement.
-   id      = static_cast <uint8_t>(SimplePowerMeter::AVG_POWER_ATTR);
-   offset += array.write (offset, id);
-   offset += avg_power.pack (array, offset);
+   if (enabled[id])
+   {
+      id      = static_cast <uint8_t>(SimplePowerMeter::AVG_POWER_ATTR);
+      offset += array.write (offset, id);
+      offset += avg_power.pack (array, offset);
+   }
 
    // Average Power Interval.
-   id      = static_cast <uint8_t>(SimplePowerMeter::AVG_POWER_INTERVAL_ATTR);
-   offset += array.write (offset, id);
-   offset += array.write (offset, avg_power_interval);
+   if (enabled[id])
+   {
+      id      = static_cast <uint8_t>(SimplePowerMeter::AVG_POWER_INTERVAL_ATTR);
+      offset += array.write (offset, id);
+      offset += array.write (offset, avg_power_interval);
+   }
 
    // Power Factor.
-   id      = static_cast <uint8_t>(SimplePowerMeter::POWER_FACTOR_ATTR);
-   offset += array.write (offset, id);
-   offset += array.write (offset, power_factor);
+   id = static_cast <uint8_t>(SimplePowerMeter::POWER_FACTOR_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += array.write (offset, power_factor);
+   }
 
    // Voltage measurement.
-   id      = static_cast <uint8_t>(SimplePowerMeter::VOLTAGE_ATTR);
-   offset += array.write (offset, id);
-   offset += voltage.pack (array, offset);
+   id = static_cast <uint8_t>(SimplePowerMeter::VOLTAGE_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += voltage.pack (array, offset);
+   }
 
    // Current measurement.
-   id      = static_cast <uint8_t>(SimplePowerMeter::CURRENT_ATTR);
-   offset += array.write (offset, id);
-   offset += current.pack (array, offset);
+   id = static_cast <uint8_t>(SimplePowerMeter::CURRENT_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += current.pack (array, offset);
+   }
 
    // Frequency measurement.
-   id      = static_cast <uint8_t>(SimplePowerMeter::FREQUENCY_ATTR);
-   offset += array.write (offset, id);
-   offset += frequency.pack (array, offset);
+   id = static_cast <uint8_t>(SimplePowerMeter::FREQUENCY_ATTR);
+
+   if (enabled[id])
+   {
+      offset += array.write (offset, id);
+      offset += frequency.pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -163,6 +236,13 @@ size_t SimplePowerMeter::Report::unpack (const ByteArray &array, size_t offset)
    {
       uint8_t id = 0;
       offset += array.read (offset, id);
+
+      if (id < ENERGY_ATTR || id > __LAST_ATTR__)
+      {
+         break;
+      }
+
+      enabled[id] = true;
 
       switch (id)
       {
