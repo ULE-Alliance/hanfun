@@ -29,16 +29,16 @@ namespace HF
       /*!
        * Interface roles.
        */
-      enum Role
+      typedef enum
       {
          CLIENT_ROLE = 0,   //!< Client Role.
          SERVER_ROLE = 1,   //!< Server Role.
-      };
+      } Role;
 
       /*!
        * Interfaces Unique Identifiers (UID).
        */
-      enum UID
+      typedef enum
       {
          /* Core Services */
          DEVICE_MANAGEMENT  = 0x0001,   //!< Device Management Interface UID.
@@ -53,7 +53,7 @@ namespace HF
          /* Reserved */
          RESERVED = 0x7F00,           //!< Proprietary interfaces.
          MAX_UID  = 0x7FFF            //!< Max interface UID value.
-      };
+      } UID;
 
       enum Commands
       {
@@ -94,7 +94,7 @@ namespace HF
        *
        * @param [in]    offset   the offset the payload start at in the byte array.
        *
-       * @return        the result of the messsage processing.
+       * @return        the result of the message processing.
        */
       virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
 
@@ -106,32 +106,14 @@ namespace HF
       virtual void periodic (uint32_t time) = 0;
 
       /*!
-       * Return a vector with pointers to the interface attributes.
-       *
-       * @return  vector of pointers for the interface's attributes.
-       */
-      virtual AttributeList attributes () = 0;
-
-      /*!
        * Return a pointer to the interface attribute with the given \c uid.
        *
        * @param [in] uid   identifier of the attribute in the interface.
        *
-       * @return     a pointer to the attributeif it exists,
+       * @return     a pointer to the attribute if it exists,
        *             \c nullptr otherwise.
        */
       virtual IAttribute *attribute (uint8_t uid) = 0;
-
-      /*!
-       * Return a vector containing all the attribute UIDs. If \c optional is \c false,
-       * then only the mandatory attributes will be returned.
-       *
-       * @param [in] optional   if \c true the optional attributes will be included in the list,
-       *                        otherwise only the mandatory attributes will be present.
-       *
-       * @return  vector containing the attributes UIDs.
-       */
-      virtual attribute_uids_t attribute_uids (bool optional = false) const = 0;
    };
 
    /*!
@@ -148,24 +130,11 @@ namespace HF
          UNUSED (time);
       }
 
-      //! \see Interface::attributes
-      virtual AttributeList attributes ()
-      {
-         return AttributeList ();
-      }
-
       //! \see Interface::attribute
       virtual IAttribute *attribute (uint8_t uid)
       {
          UNUSED (uid);
          return nullptr;
-      }
-
-      //! \see Interface::attribute_uids
-      virtual attribute_uids_t attribute_uids (bool optional = false) const
-      {
-         UNUSED (optional);
-         return attribute_uids_t ();
       }
 
       bool operator ==(AbstractInterface &other)
@@ -206,6 +175,24 @@ namespace HF
        */
       Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset);
 
+      /*!
+       * Return the minimal payload size that should be present for the given
+       * message.
+       *
+       * @param message message that was received.
+       *
+       * @return  the minimum size in bytes that the packet payload should hold.
+       */
+      virtual size_t payload_size (Protocol::Message &message) const;
+
+      /*!
+       * Return the minimal payload size that a message should hold when
+       * addressed at the given interface.
+       *
+       * @param itf  the interface being address.
+       *
+       * @return  the minimum number of bytes for the message for the interface.
+       */
       virtual size_t payload_size (Protocol::Message::Interface &itf) const
       {
          UNUSED (itf);
@@ -244,6 +231,21 @@ namespace HF
        * \see Interface::handle
        */
       virtual Result handle_attribute (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+      /*!
+       * Return a vector containing all the attribute UIDs. If \c optional is \c false,
+       * then only the mandatory attributes will be returned.
+       *
+       * @param [in] optional   if \c true the optional attributes will be included in the list,
+       *                        otherwise only the mandatory attributes will be present.
+       *
+       * @return  vector containing the attributes UIDs.
+       */
+      virtual attribute_uids_t attributes (bool optional = false) const
+      {
+         UNUSED (optional);
+         return attribute_uids_t ();
+      }
    };
 
    /*!

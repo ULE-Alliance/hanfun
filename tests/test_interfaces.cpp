@@ -307,3 +307,169 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
+
+//! \test Should handle valid get attribute pack requests for mandatory attributes.
+TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
+{
+   packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
+   packet.message.itf.member = GetAttributePack::Type::MANDATORY;
+
+   uint8_t data[] = {0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+
+   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::OK, attr_resp->code);
+
+   LONGS_EQUAL (1, attr_resp->attributes.size ());
+
+   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR2];
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR3];
+
+   CHECK_TRUE (attr != nullptr);
+}
+
+//! \test Should handle valid get attribute pack requests for all attributes.
+TEST (AbstractInterface, Handle_GetAttributePack_All)
+{
+   packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
+   packet.message.itf.member = GetAttributePack::Type::ALL;
+
+   uint8_t data[] = {0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+
+   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::OK, attr_resp->code);
+
+   LONGS_EQUAL (3, attr_resp->attributes.size ());
+
+   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+
+   CHECK_TRUE (attr != nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR2];
+
+   CHECK_TRUE (attr != nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR3];
+
+   CHECK_TRUE (attr != nullptr);
+}
+
+//! \test Should handle valid get attribute pack requests.
+TEST (AbstractInterface, Handle_GetAttributePack_Valid)
+{
+   packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
+   packet.message.itf.member = GetAttributePack::Type::DYNAMIC;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x02, // Number of attribute uid's.
+                           // Attribute uid's.
+                     0x01, 0x03,
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+
+   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::OK, attr_resp->code);
+
+   LONGS_EQUAL (2, attr_resp->attributes.size ());
+
+   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+
+   CHECK_TRUE (attr != nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR2];
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR3];
+
+   CHECK_TRUE (attr != nullptr);
+}
+
+//! \test Should handle invalid get attribute requests.
+TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
+{
+   packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
+   packet.message.itf.member = GetAttributePack::Type::DYNAMIC;
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x03, // Number of attribute uid's.
+                           // Attribute uid's.
+                     0x01, 0x03, 0x04,
+                     0x00, 0x00, 0x00};
+
+   payload = ByteArray (data, sizeof(data));
+
+   mock ("Interface").expectOneCall ("sendMessage");
+
+   Result result = itf->handle (packet, payload, 3);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+
+   LONGS_EQUAL (Message::GET_ATTR_PACK_RES, itf->sendMsg.type);
+
+   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+
+   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_resp->code);
+
+   LONGS_EQUAL (2, attr_resp->attributes.size ());
+
+   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+
+   CHECK_TRUE (attr != nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR2];
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = attr_resp->attributes[TestInterface::ATTR3];
+
+   CHECK_TRUE (attr != nullptr);
+}

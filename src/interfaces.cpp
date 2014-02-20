@@ -178,6 +178,25 @@ Result AbstractInterface::check_payload_size (Message &message, ByteArray &paylo
    return Result::OK;
 }
 
+// =============================================================================
+// AbstractInterface::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t AbstractInterface::payload_size (Message &message) const
+{
+   if (message.type == Message::GET_ATTR_PACK_REQ)
+   {
+      GetAttributePack::Request req;
+      return req.size ();
+   }
+   else
+   {
+      return payload_size (message.itf);
+   }
+}
 
 // =============================================================================
 // AbstractInterface::handle_command
@@ -239,6 +258,70 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
 
          sendMessage (packet.source, response);
 
+         break;
+      }
+      case Message::GET_ATTR_PACK_REQ:
+      {
+         Result result = Result::OK;
+         GetAttributePack::Request request;
+
+         attribute_uids_t attributes;
+
+         switch (packet.message.itf.member)
+         {
+            case GetAttributePack::Type::MANDATORY:
+            {
+               attributes = this->attributes ();
+               break;
+            }
+            case GetAttributePack::Type::ALL:
+            {
+               attributes = this->attributes (true);
+               break;
+            }
+            case GetAttributePack::Type::DYNAMIC:
+            {
+               offset    += request.unpack (payload, offset);
+               attributes = request.attributes;
+               break;
+            }
+            default:
+               result = Result::FAIL_ARG;
+               break;
+         }
+
+         GetAttributePack::Response *attr_response = new GetAttributePack::Response ();
+
+         if (result == Result::OK)
+         {
+            /* *INDENT-OFF* */
+            for_each (attributes.begin (), attributes.end (),
+                       [attr_response, &result, this](uint8_t uid)
+            {
+               IAttribute *attr = attribute (uid);
+               if (attr != nullptr)
+               {
+                  attr_response->attributes.push_back (attr);
+               }
+               else
+               {
+                  result = Result::FAIL_SUPPORT;
+               }
+            });
+            /* *INDENT-ON* */
+         }
+
+         attr_response->code = result;
+
+         Message response (attr_response, packet.message);
+
+         sendMessage (packet.source, response);
+
+         break;
+      }
+      case Message::GET_ATTR_PACK_RES:
+      {
+         // Do nothing.
          break;
       }
       default:

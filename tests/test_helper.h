@@ -144,6 +144,8 @@ namespace HF
 
       struct TestInterface:public InterfaceHelper <AbstractInterface>
       {
+         static const uint16_t UID = 0x5A5A;
+
          typedef enum
          {
             ATTR1 = 0x01,
@@ -153,12 +155,11 @@ namespace HF
 
          Interface::Role _role;
          uint16_t        _uid;
-
          uint16_t        attr1;
          uint16_t        attr2;
          uint16_t        attr3;
 
-         TestInterface() {}
+         TestInterface():_role (Interface::SERVER_ROLE), _uid (UID) {}
 
          TestInterface(Role role, uint16_t _uid):
             _role (role), _uid (_uid), attr1 (0x5A51), attr2 (0x5A52), attr3 (0x5A53)
@@ -176,17 +177,59 @@ namespace HF
 
          IAttribute *attribute (uint8_t uid)
          {
+            return create_attribute (this, uid);
+         }
+
+         static IAttribute *create_attribute (uint8_t uid)
+         {
+            return create_attribute (nullptr, uid);
+         }
+
+         static IAttribute *create_attribute (TestInterface *itf, uint8_t uid)
+         {
+            uint16_t itf_uid = (itf != nullptr ? itf->uid () : TestInterface::UID);
             switch (uid)
             {
                case ATTR1:
-                  return new Attribute <uint16_t >(this->uid(), ATTR1, attr1);
-
-               case ATTR2:
-                  return new Attribute <uint16_t >(this->uid(), ATTR2, attr2);
+               {
+                  if (itf == nullptr)
+                  {
+                     return new Attribute <uint16_t>(itf_uid, uid);
+                  }
+                  else
+                  {
+                     return new Attribute <uint16_t &>(itf_uid, uid, itf->attr1);
+                  }
 
                   break;
+               }
+
+               case ATTR2:
+               {
+                  if (itf == nullptr)
+                  {
+                     return new Attribute <uint16_t>(itf_uid, uid);
+                  }
+                  else
+                  {
+                     return new Attribute <uint16_t &>(itf_uid, uid, itf->attr2);
+                  }
+
+                  break;
+               }
                case ATTR3:
-                  return new Attribute <uint16_t &>(this->uid(), ATTR3, attr3, true);
+               {
+                  if (itf == nullptr)
+                  {
+                     return new Attribute <uint16_t>(itf_uid, uid, true);
+                  }
+                  else
+                  {
+                     return new Attribute <uint16_t &>(itf_uid, uid, itf->attr3, true);
+                  }
+
+                  break;
+               }
 
                default:
                   return nullptr;
@@ -204,6 +247,22 @@ namespace HF
             mock ("Interface").actualCall ("handle_command").onObject (this);
 
             return Result::OK;
+         }
+
+         //! \see AbstractInterface::attribute_uids
+         attribute_uids_t attributes (bool optional = false) const
+         {
+            attribute_uids_t result;
+
+            if (optional)
+            {
+               result.push_back (ATTR1);
+               result.push_back (ATTR2);
+            }
+
+            result.push_back (ATTR3);
+
+            return result;
          }
       };
 

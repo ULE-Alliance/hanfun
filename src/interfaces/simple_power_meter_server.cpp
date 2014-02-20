@@ -274,7 +274,7 @@ IAttribute *SimplePowerMeterServer::attribute (uint8_t uid)
  *
  */
 // =============================================================================
-attribute_uids_t SimplePowerMeterServer::attribute_uids (bool optional) const
+attribute_uids_t SimplePowerMeterServer::attributes (bool optional) const
 {
    attribute_uids_t result;
 

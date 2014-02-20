@@ -432,3 +432,128 @@ TEST (Response, Unpack)
 
    LONGS_EQUAL (Result::FAIL_ID, response->code);
 }
+
+// =============================================================================
+// Attributes Messages
+// =============================================================================
+
+TEST_GROUP (AttributesProtocol)
+{};
+
+// =============================================================================
+// GetAttributePack::Request
+// =============================================================================
+
+TEST (AttributesProtocol, GetAttributePack_Request_Pack)
+{
+   GetAttributePack::Request request;
+
+   for (uint8_t i = 1; i <= 20; i++)
+   {
+      request.attributes.push_back (i);
+   }
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x14, // Number of attribute uid's.
+                           // Attribute uid's.
+                     0x01, 0x02, 0x03,0x04,  0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
+                     0x0B, 0x0C, 0x0D,0x0E,  0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray result (sizeof(data));
+
+   fill (result.begin (), result.end (), 0);
+
+   request.pack (result, 3);
+
+   CHECK_EQUAL (expected, result);
+}
+
+TEST (AttributesProtocol, GetAttributePack_Request_Unpack)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x14, // Number of attribute uid's.
+                           // Attribute uid's.
+                     0x01, 0x02, 0x03,0x04,  0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
+                     0x0B, 0x0C, 0x0D,0x0E,  0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+
+   GetAttributePack::Request request;
+
+   request.unpack (expected, 3);
+
+   LONGS_EQUAL (20, request.attributes.size ());
+
+   for (uint8_t i = 1; i <= 20; i++)
+   {
+      check_index <int>((int) i, (int) request.attributes[i - 1], i - 1, "Attribute UID", __FILE__, __LINE__);
+   }
+}
+
+// =============================================================================
+// GetAttributePack::Response
+// =============================================================================
+
+TEST (AttributesProtocol, GetAttributePack_Response_Pack)
+{
+   Testing::TestInterface itf;
+   GetAttributePack::Response response;
+
+   itf.attr1 = 0xAAAA;
+   itf.attr2 = 0xBBBB;
+   itf.attr3 = 0xCCCC;
+
+   response.attributes.push_back (itf.attribute (itf.ATTR1));
+   response.attributes.push_back (itf.attribute (itf.ATTR2));
+   response.attributes.push_back (itf.attribute (itf.ATTR3));
+
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     Result::OK,                                           // Response code.
+                     0x03,                                                 // Number of attribute uid's.
+                     0x01, 0xAA, 0xAA,0x02,  0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray result (sizeof(data));
+
+   fill (result.begin (), result.end (), 0);
+
+   response.pack (result, 3);
+
+   CHECK_EQUAL (expected, result);
+}
+
+TEST (AttributesProtocol, GetAttributePack_Response_Unpack)
+{
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     Result::OK,                                           // Response code.
+                     0x03,                                                 // Number of attribute uid's.
+                     0x01, 0xAA, 0xAA,0x02,  0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
+                     0x00, 0x00, 0x00};
+
+   ByteArray expected (data, sizeof(data));
+
+   GetAttributePack::Response response (Testing::TestInterface::create_attribute);
+
+   response.unpack (expected, 3);
+
+   LONGS_EQUAL (3, response.attributes.size ());
+
+   IAttribute *attr                  = response.attributes[Testing::TestInterface::ATTR1];
+   Attribute <uint16_t> *attr_proper = static_cast <Attribute <uint16_t> *>(attr);
+
+   LONGS_EQUAL (0xAAAA, attr_proper->get ());
+
+   attr        = response.attributes[Testing::TestInterface::ATTR2];
+   attr_proper = static_cast <Attribute <uint16_t> *>(attr);
+
+   LONGS_EQUAL (0xBBBB, attr_proper->get ());
+
+   attr        = response.attributes[Testing::TestInterface::ATTR3];
+   attr_proper = static_cast <Attribute <uint16_t> *>(attr);
+
+   LONGS_EQUAL (0xCCCC, attr_proper->get ());
+}

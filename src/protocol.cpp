@@ -360,3 +360,69 @@ size_t Packet::unpack (const ByteArray &array, size_t offset)
 
    return offset - start;
 }
+
+// =============================================================================
+// Attributes API
+// =============================================================================
+
+// =============================================================================
+// AtrributePackResponse
+// =============================================================================
+
+// =============================================================================
+// AtrributePackResponse::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t GetAttributePack::Response::unpack (const ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += Protocol::Response::unpack (array, offset);
+
+   if (!array.available (offset, sizeof(count)))
+   {
+      count = 0;
+      goto _end;
+   }
+
+   offset += array.read (offset, count);
+
+   if (attribute_factory == nullptr)
+   {
+      goto _end;
+   }
+
+   for (uint8_t i = 0; i < count; i++)
+   {
+      uint8_t uid;
+
+      if (!array.available (offset, sizeof(uid)))
+      {
+         goto _end;
+      }
+
+      offset += array.read (offset, uid);
+
+      IAttribute *attr = attribute_factory (uid);
+
+      if (attr == nullptr)
+      {
+         goto _end;
+      }
+
+      if (!array.available (offset, attr->size ()))
+      {
+         goto _end;
+      }
+
+      offset += attr->unpack (array, offset);
+
+      attributes.push_back (attr);
+   }
+
+   _end:
+   return offset - start;
+}

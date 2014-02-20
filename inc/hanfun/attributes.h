@@ -83,6 +83,9 @@ namespace HF
 
       //! \see Serializable::unpack
       virtual size_t unpack (const ByteArray &array, size_t offset) = 0;
+
+      //! Attribute factory function type.
+      typedef IAttribute * (*Factory)(uint8_t);
    };
 
    typedef vector <uint8_t> attribute_uids_t;
@@ -120,7 +123,6 @@ namespace HF
    template<typename T, typename = void>
    struct SerializableHelper:public Serializable
    {
-
       static_assert (is_same <bool, T>::value || is_same <uint8_t, T>::value ||
                      is_same <uint16_t, T>::value || is_same <uint32_t, T>::value ||
                      is_base_of <HF::Serializable, T>::value,
@@ -201,7 +203,6 @@ namespace HF
 
       SerializableHelper(T data):data (data)
       {}
-
       size_t size () const
       {
          return data.size ();
@@ -340,11 +341,12 @@ namespace HF
     * This class represents the response sent when a
     * Protocol::Message::GET_ATTR_REQ request.
     */
-   struct AttributeResponse : public Protocol::Response
+   struct AttributeResponse:public Protocol::Response
    {
-      IAttribute * attribute;
+      IAttribute *attribute;
 
-      AttributeResponse(IAttribute * attribute = nullptr): attribute(attribute) {}
+      AttributeResponse(IAttribute *attribute = nullptr):
+         attribute (attribute) {}
 
       virtual ~AttributeResponse()
       {
@@ -354,23 +356,190 @@ namespace HF
       //! \see HF::Serializable::size.
       size_t size () const
       {
-         return Protocol::Response::size() + ( attribute != nullptr ? attribute->size() : 0 );
+         return Protocol::Response::size () + (attribute != nullptr ? attribute->size () : 0);
       }
 
       //! \see HF::Serializable::pack.
       size_t pack (ByteArray &array, size_t offset = 0) const
       {
-         return Protocol::Response::pack(array, offset) +
-                 ( attribute != nullptr ? attribute->pack(array, offset) : 0 );
+         return Protocol::Response::pack (array, offset) +
+                (attribute != nullptr ? attribute->pack (array, offset) : 0);
       }
 
       //! \see HF::Serializable::unpack.
       size_t unpack (const ByteArray &array, size_t offset = 0)
       {
-         return Protocol::Response::unpack(array, offset) +
-                 ( attribute != nullptr ? attribute->unpack(array, offset) : 0 );
+         return Protocol::Response::unpack (array, offset) +
+                (attribute != nullptr ? attribute->unpack (array, offset) : 0);
       }
    };
+
+   /*!
+    * This namespace contains the classes that implement the HF::Message::GET_ATTR_PACK_REQ
+    * messages.
+    */
+   namespace GetAttributePack
+   {
+      /*!
+       * Attribute Pack Special IDs.
+       *
+       * These IDs when received on a HF::Message::GET_ATTR_PACK_REQ, allow the return of all
+       * mandatory/optional attributes, without the need to indicate all the attribute UIDs.
+       */
+      typedef enum
+      {
+         MANDATORY = 0x00, //!< Return all mandatory attributes for the interface.
+         ALL       = 0xFE, //!< Return all mandatory and optional attributes for the interface.
+         DYNAMIC   = 0xFF, //!< Return the attributes with the given attributes.
+      } Type;
+
+      /*!
+       * This class represents the payload of a HF::Message::GET_ATTR_PACK_REQ request,
+       * when the payload is Type::DYNAMIC.
+       */
+      struct Request:public Serializable
+      {
+         attribute_uids_t attributes;   //!< Vector containing the attributes UID's to get.
+
+         /*!
+          * Unpack attribute count.
+          *
+          * \warning This value will not be used as the number of attributes, when
+          *          packing the request.
+          */
+         uint8_t count;
+
+         Request():count (0) {}
+
+         Request(attribute_uids_t &attributes):
+            attributes (attributes), count (0)
+         {}
+
+         //! \see HF::Serializable::size.
+         size_t size () const
+         {
+            return sizeof(uint8_t) + sizeof(uint8_t) * attributes.size ();
+         }
+
+         //! \see HF::Serializable::pack.
+         size_t pack (ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += array.write (offset, (uint8_t) attributes.size ());
+
+            /* *INDENT-OFF* */
+            for_each (attributes.begin(), attributes.end(), [&array, &offset] (uint8_t uid)
+            {
+               offset += array.write( offset, uid );
+            });
+            /* *INDENT-ON* */
+
+            return offset - start;
+         }
+
+         //! \see HF::Serializable::unpack.
+         size_t unpack (const ByteArray &array, size_t offset = 0)
+         {
+            size_t start = offset;
+
+            offset += array.read (offset, count);
+
+            if (array.available (offset, count * sizeof(uint8_t)))
+            {
+               for (uint8_t i = 0; i < count; i++)
+               {
+                  uint8_t uid;
+                  offset += array.read (offset, uid);
+                  attributes.push_back (uid);
+               }
+            }
+
+            return offset - start;
+         }
+      };
+
+      /*!
+       * This class represents the payload of a HF::Message::GET_ATTR_PACK_RES message.
+       *
+       * The payload contains the attribute values that were requested.
+       */
+      struct Response:public Protocol::Response
+      {
+         //! Pointer to the function to request the attribute instances to unpack the response.
+         IAttribute::Factory attribute_factory;
+
+         //!< List containing the attributes to send.
+         AttributeList attributes;
+
+         /*!
+          * Unpack attribute count.
+          *
+          * \warning This value will not be used as the number of attributes, when
+          *          packing the request.
+          */
+         uint8_t count;
+
+         Response():attribute_factory (nullptr)
+         {}
+
+         Response(AttributeList &attributes):
+            attribute_factory (nullptr), attributes (attributes)
+         {}
+
+         Response(IAttribute::Factory factory):
+            attribute_factory (factory)
+         {}
+
+         virtual ~Response()
+         {
+            /* *INDENT-OFF* */
+            for_each (attributes.begin (), attributes.end (), [](IAttribute *attr)
+            {
+               delete attr;
+            });
+            /* *INDENT-ON* */
+         }
+
+         //! \see HF::Serializable::size.
+         size_t size () const
+         {
+            size_t result = Protocol::Response::size ();
+
+            /* *INDENT-OFF* */
+            for_each (attributes.begin(), attributes.end(), [&result](IAttribute *attr)
+            {
+               result += attr->size(true);
+            });
+            /* *INDENT-ON* */
+
+            return result;
+         }
+
+         //! \see HF::Serializable::pack.
+         size_t pack (ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += Protocol::Response::pack (array, offset);
+
+            offset += array.write (offset, (uint8_t) attributes.size ());
+
+            /* *INDENT-OFF* */
+            for_each (attributes.begin(), attributes.end(), [&array, &offset] (IAttribute * attr)
+            {
+               offset += attr->pack(array, offset, true);
+            });
+            /* *INDENT-ON* */
+
+            return offset - start;
+         }
+
+         //! \see HF::Serializable::unpack.
+         size_t unpack (const ByteArray &array, size_t offset = 0);
+      };
+
+   }  // namespace GetAttributePack
 
 }  // namespace HF
 

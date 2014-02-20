@@ -284,8 +284,8 @@ namespace HF
           */
          Alert::Message *status (uint16_t unit_type);
 
-         //! \see AbstractInterface::attribute_uids
-         attribute_uids_t attribute_uids (bool optional = false) const
+         //! \see AbstractInterface::attributes
+         attribute_uids_t attributes (bool optional = false) const
          {
             UNUSED (optional);
             /* *INDENT-OFF* */

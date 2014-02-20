@@ -173,8 +173,8 @@ namespace HF
          //! \see AbstractInterface::handle_command
          Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
 
-         //! \see AbstractInterface::attribute_uids
-         attribute_uids_t attribute_uids (bool optional = false) const
+         //! \see AbstractInterface::attributes
+         attribute_uids_t attributes (bool optional = false) const
          {
             UNUSED (optional);
             /* *INDENT-OFF* */
