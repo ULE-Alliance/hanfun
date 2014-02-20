@@ -613,3 +613,122 @@ TEST (UID, Order_NULL)
 
    CHECK_FALSE (comp (&uid, nullptr));
 }
+
+// =============================================================================
+// Attributes
+// =============================================================================
+
+TEST_GROUP (Attributes)
+{
+   struct TestInterface:public Testing::InterfaceHelper <Testing::TestInterface>
+   {};
+
+   struct TestMeasure:public Serializable
+   {
+      uint8_t  type;
+      uint16_t value;
+
+      size_t size () const
+      {
+         return sizeof(type) + sizeof(value);
+      }
+
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         size_t start = offset;
+
+         offset += array.write (offset, type);
+         offset += array.write (offset, value);
+
+         return offset - start;
+      }
+
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         size_t start = offset;
+
+         offset += array.read (offset, type);
+         offset += array.read (offset, value);
+
+         return offset - start;
+      }
+   };
+};
+
+TEST (Attributes, API)
+{
+   uint8_t  data  = 0x5A;
+   uint16_t data2 = 0x5A50;
+   uint32_t data3 = 0x5A50;
+
+   TestInterface itf;
+   Attribute <uint8_t &>  attr (itf.uid (), 0x5B, data);
+   Attribute <uint16_t &> attr2 (itf.uid (), 0x5A, data2);
+   Attribute <uint32_t &> attr3 (itf.uid (), 0x5C, data3);
+
+   LONGS_EQUAL (data2, attr2.value ());
+
+   data2 = 0x1234;
+
+   LONGS_EQUAL (0x1234, attr2.value ());
+   LONGS_EQUAL (0x1234, attr2.get ());
+
+   LONGS_EQUAL (1, attr.size ());
+   LONGS_EQUAL (2, attr2.size ());
+   LONGS_EQUAL (4, attr3.size ());
+}
+
+TEST (Attributes, API2)
+{
+   TestMeasure data;
+
+   TestInterface itf;
+   Attribute <TestMeasure &> attr (itf.uid (), 0x5A, data, true);
+
+   data.type  = 0x55;
+   data.value = 0x5A5A;
+
+   LONGS_EQUAL (data.type, attr.value ().type);
+   LONGS_EQUAL (data.value, attr.value ().value);
+}
+
+TEST (Attributes, Serialize_Pack)
+{
+   uint8_t  data[] = {0x00, 0x00, 0x00,
+                      0x12,  0x34,
+                      0x00,  0x00, 0x00};
+
+   uint16_t attr = 0x1234;
+
+   TestInterface itf;
+   Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
+
+   ByteArray expected (data, sizeof(data));
+   ByteArray result (sizeof(data));
+
+   fill (result.begin (), result.end (), 0);
+
+   size_t w_size = attr_wrapper.pack (result, 3);
+   LONGS_EQUAL (sizeof(attr), w_size);
+
+   CHECK_EQUAL (expected, result);
+}
+
+TEST (Attributes, Serialize_Unpack)
+{
+   uint8_t  data[] = {0x00, 0x00, 0x00,
+                      0x12,  0x34,
+                      0x00,  0x00, 0x00};
+
+   uint16_t attr = 0x6666;
+
+   TestInterface itf;
+   Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
+
+   ByteArray expected (data, sizeof(data));
+
+   size_t    r_size = attr_wrapper.unpack (expected, 3);
+   LONGS_EQUAL (sizeof(attr), r_size);
+
+   CHECK_EQUAL (0x1234, attr);
+}

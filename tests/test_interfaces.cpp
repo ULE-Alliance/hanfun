@@ -18,6 +18,7 @@
 #include "test_helper.h"
 
 using namespace HF;
+using namespace HF::Testing;
 
 // =============================================================================
 // AbstractInterface
@@ -26,32 +27,26 @@ using namespace HF;
 //! AbstractInterface test group.
 TEST_GROUP (AbstractInterface)
 {
-   struct TestInterface:public Testing::InterfaceHelper <AbstractInterface>
+   TestInterface *itf;
+   Protocol::Packet packet;
+   ByteArray payload;
+
+   TEST_SETUP ()
    {
-      Role     _role;
-      uint16_t _uid;
+      itf                     = new TestInterface (Interface::SERVER_ROLE, 0x5AA5);
 
-      Interface::Role role () const
-      {
-         return _role;
-      }
+      packet.message.itf.uid  = itf->uid ();
+      packet.message.itf.role = itf->role ();
 
-      uint16_t uid () const
-      {
-         return _uid;
-      }
+      mock ().ignoreOtherCalls ();
+   }
 
-      protected:
+   TEST_TEARDOWN ()
+   {
+      delete itf;
 
-      Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
-      {
-         UNUSED (packet);
-         UNUSED (payload);
-         UNUSED (offset);
-
-         return Result::OK;
-      }
-   };
+      mock ().clear ();
+   }
 };
 
 /*!
@@ -60,27 +55,18 @@ TEST_GROUP (AbstractInterface)
  */
 TEST (AbstractInterface, Handle_Request)
 {
-   TestInterface itf;
-   Protocol::Packet packet;
-   ByteArray array;
+   packet.message.type = Message::COMMAND_REQ;
 
-   packet.message.type     = Message::COMMAND_REQ;
+   CHECK_EQUAL (Result::OK, itf->handle (packet, payload, 0));
 
-   itf._uid                = packet.message.itf.uid = 0x5AA5;
-   packet.message.itf.role = Interface::SERVER_ROLE;
+   itf->_role = Interface::CLIENT_ROLE;
 
-   itf._role               = Interface::SERVER_ROLE;
-
-   CHECK_EQUAL (Result::OK, itf.handle (packet, array, 0));
-
-   itf._role = Interface::CLIENT_ROLE;
-
-   CHECK_EQUAL (Result::FAIL_SUPPORT, itf.handle (packet, array, 0));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, itf->handle (packet, payload, 0));
 
    packet.message.itf.role = Interface::SERVER_ROLE;
    packet.message.itf.uid  = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ID, itf.handle (packet, array, 0));
+   CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
 }
 
 /*!
@@ -89,25 +75,16 @@ TEST (AbstractInterface, Handle_Request)
  */
 TEST (AbstractInterface, Handle_RequestResp)
 {
-   TestInterface itf;
-   Protocol::Packet packet;
-   ByteArray array;
+   packet.message.type = Message::COMMAND_RESP_REQ;
 
-   packet.message.type     = Message::COMMAND_RESP_REQ;
+   CHECK_EQUAL (Result::OK, itf->handle (packet, payload, 0));
 
-   itf._uid                = packet.message.itf.uid = 0x5AA5;
-   packet.message.itf.role = Interface::SERVER_ROLE;
+   itf->_role = Interface::CLIENT_ROLE;
 
-   itf._role               = Interface::SERVER_ROLE;
-
-   CHECK_EQUAL (Result::OK, itf.handle (packet, array, 0));
-
-   itf._role = Interface::CLIENT_ROLE;
-
-   CHECK_EQUAL (Result::FAIL_SUPPORT, itf.handle (packet, array, 0));
+   CHECK_EQUAL (Result::FAIL_SUPPORT, itf->handle (packet, payload, 0));
 
    packet.message.itf.role = Interface::SERVER_ROLE;
    packet.message.itf.uid  = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ID, itf.handle (packet, array, 0));
+   CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
 }

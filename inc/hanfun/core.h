@@ -62,6 +62,24 @@ namespace HF
             UNUSED (time);
          }
 
+         //! \see Interface::attributes
+         AttributeList attributes ()
+         {
+            return AbstractInterface::attributes ();
+         }
+
+         //! \see Interface::attribute
+         IAttribute *attribute (uint8_t uid)
+         {
+            return AbstractInterface::attribute (uid);
+         }
+
+         //! \see Interface::attribute_uids
+         virtual attribute_uids_t attribute_uids (bool optional = false) const
+         {
+            return AbstractInterface::attribute_uids (optional);
+         }
+
          protected:
 
          AbstractService(IDevice *_device):

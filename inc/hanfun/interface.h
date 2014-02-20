@@ -15,6 +15,7 @@
 #define HF_INTERFACE_H
 
 #include "hanfun/common.h"
+#include "hanfun/attributes.h"
 
 #include "hanfun/protocol.h"
 
@@ -103,6 +104,34 @@ namespace HF
        * @param [in] time    current system clock value in seconds.
        */
       virtual void periodic (uint32_t time) = 0;
+
+      /*!
+       * Return a vector with pointers to the interface attributes.
+       *
+       * @return  vector of pointers for the interface's attributes.
+       */
+      virtual AttributeList attributes () = 0;
+
+      /*!
+       * Return a pointer to the interface attribute with the given \c uid.
+       *
+       * @param [in] uid   identifier of the attribute in the interface.
+       *
+       * @return     a pointer to the attributeif it exists,
+       *             \c nullptr otherwise.
+       */
+      virtual IAttribute *attribute (uint8_t uid) = 0;
+
+      /*!
+       * Return a vector containing all the attribute UIDs. If \c optional is \c false,
+       * then only the mandatory attributes will be returned.
+       *
+       * @param [in] optional   if \c true the optional attributes will be included in the list,
+       *                        otherwise only the mandatory attributes will be present.
+       *
+       * @return  vector containing the attributes UIDs.
+       */
+      virtual attribute_uids_t attribute_uids (bool optional = false) const = 0;
    };
 
    /*!
@@ -117,6 +146,26 @@ namespace HF
       void periodic (uint32_t time)
       {
          UNUSED (time);
+      }
+
+      //! \see Interface::attributes
+      virtual AttributeList attributes ()
+      {
+         return AttributeList ();
+      }
+
+      //! \see Interface::attribute
+      virtual IAttribute *attribute (uint8_t uid)
+      {
+         UNUSED (uid);
+         return nullptr;
+      }
+
+      //! \see Interface::attribute_uids
+      virtual attribute_uids_t attribute_uids (bool optional = false) const
+      {
+         UNUSED (optional);
+         return attribute_uids_t ();
       }
 
       bool operator ==(AbstractInterface &other)

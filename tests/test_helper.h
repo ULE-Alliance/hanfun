@@ -23,6 +23,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 #include "hanfun/common.h"
+#include "hanfun/attributes.h"
 #include "hanfun/protocol.h"
 
 #include "hanfun/interface.h"
@@ -141,10 +142,27 @@ namespace HF
          }
       };
 
-      struct TestInterface:public AbstractInterface
+      struct TestInterface:public InterfaceHelper <AbstractInterface>
       {
-         uint16_t        _uid;
+         typedef enum
+         {
+            ATTR1 = 0x01,
+            ATTR2 = 0x02,
+            ATTR3 = 0x03,
+         } Attributes;
+
          Interface::Role _role;
+         uint16_t        _uid;
+
+         uint16_t        attr1;
+         uint16_t        attr2;
+         uint16_t        attr3;
+
+         TestInterface() {}
+
+         TestInterface(Role role, uint16_t _uid):
+            _role (role), _uid (_uid), attr1 (0x5A51), attr2 (0x5A52), attr3 (0x5A53)
+         {}
 
          uint16_t uid () const
          {
@@ -153,7 +171,39 @@ namespace HF
 
          Interface::Role role () const
          {
-            return Interface::SERVER_ROLE;
+            return _role;
+         }
+
+         IAttribute *attribute (uint8_t uid)
+         {
+            switch (uid)
+            {
+               case ATTR1:
+                  return new Attribute <uint16_t >(this->uid(), ATTR1, attr1);
+
+               case ATTR2:
+                  return new Attribute <uint16_t >(this->uid(), ATTR2, attr2);
+
+                  break;
+               case ATTR3:
+                  return new Attribute <uint16_t &>(this->uid(), ATTR3, attr3, true);
+
+               default:
+                  return nullptr;
+            }
+         }
+
+         protected:
+
+         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         {
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
+
+            mock ("Interface").actualCall ("handle_command").onObject (this);
+
+            return Result::OK;
          }
       };
 
