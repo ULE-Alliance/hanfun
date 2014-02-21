@@ -11,7 +11,7 @@ PROJECT_DIR="$(git rev-parse --show-toplevel)"
 pushd $PROJECT_DIR > format.log
 
 echo -n "Generating file list ... "
-git ls-files $@ | grep ".*\.\(c\(pp\)\?\|h\)$" > $FILES
+git ls-files --exclude-standard $@ | grep ".*\.\(c\(pp\)\?\|h\)$" > $FILES
 echo "done !"
 
 UNCRUSTIFY_CONFIG="$PROJECT_DIR/scripts/uncrustify.cfg"
