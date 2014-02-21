@@ -862,7 +862,7 @@ TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 
    mock ("DeviceManagementClient").expectOneCall ("deregistered");
 
-   // XXX This needs to use a temporary variable
+   // This needs to use a temporary variable
    // otherwise the handle method will be called twice.
    Result result = dev_mgt->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);

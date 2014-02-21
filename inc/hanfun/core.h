@@ -32,13 +32,13 @@ namespace HF
       /*!
        * This is the interface common to all Services.
        */
-      struct IService:public HF::Interface
+      struct IService:virtual public HF::Interface
       {
          //! The device this unit is associated with.
          virtual IDevice *device () = 0;
       };
 
-      struct AbstractService:public IService, public HF::AbstractInterface, public HF::AbstractUnit
+      struct AbstractService:virtual public IService, virtual public HF::AbstractInterface, public HF::AbstractUnit
       {
          //! Id number of this unit on the device.
          uint8_t id () const

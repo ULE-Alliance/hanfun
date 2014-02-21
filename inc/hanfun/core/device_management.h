@@ -28,6 +28,10 @@ namespace HF
 {
    namespace Core
    {
+      struct DeviceManagementServer;
+
+      IAttribute *create_attribute (DeviceManagementServer * server, uint8_t uid);
+
       /*!
        * Parent class for the Device Management interface implementation.
        */
@@ -36,14 +40,20 @@ namespace HF
          static constexpr uint16_t START_ADDR = 0x0001;
 
          //! Commands.
-         enum CMD
+         typedef enum
          {
             REGISTER_CMD      = 0x01, //!< Register device command.
             DEREGISTER_CMD    = 0x02, //!< De-register device command.
             START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
             END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
             GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
-         };
+         } CMD;
+
+         //! Attributes.
+         typedef enum
+         {
+            NUMBER_OF_ENTRIES_ATTR = 0x01,   //!< Number of entries attribute.
+         } Attributes;
 
          // =============================================================================
 
@@ -311,6 +321,13 @@ namespace HF
          // API
          // =============================================================================
 
+         IAttribute * create_attribute(uint8_t uid)
+         {
+            return Core::create_attribute( (DeviceManagementServer *)nullptr, uid);
+         }
+
+         // =============================================================================
+
          protected:
 
          DeviceManagement(IDevice *_device):
@@ -396,8 +413,10 @@ namespace HF
 
          protected:
 
+         //! \see AbstractInterface::payload_size
          size_t payload_size (Protocol::Message::Interface &itf) const;
 
+         //! \see AbstractInterface::handle_command
          Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
 
@@ -472,11 +491,29 @@ namespace HF
             return entries (offset, entries_count () - offset);
          }
 
+         // =============================================================================
+         // Interface Attribute API.
+         // =============================================================================
+
+         //! \see Interface::attribute
+         IAttribute *attribute (uint8_t uid)
+         {
+            UNUSED(uid);
+            return Core::create_attribute(this, uid);
+         }
+
          protected:
 
          DeviceManagementServer(IDevice *_device):
             ServiceRole (_device)
          {}
+
+         //! \see AbstractInterface::attributes
+         attribute_uids_t attributes (bool optional = false) const
+         {
+            UNUSED (optional);
+            return attribute_uids_t ({NUMBER_OF_ENTRIES_ATTR});
+         }
 
          /*!
           * Return next available address for registering a device.
@@ -531,8 +568,10 @@ namespace HF
          //! @}
          // ======================================================================
 
+         //! \see AbstractInterface::payload_size
          size_t payload_size (Protocol::Message::Interface &itf) const;
 
+         //! \see AbstractInterface::handle_command
          Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
       };
 

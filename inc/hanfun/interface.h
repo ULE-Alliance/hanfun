@@ -119,7 +119,7 @@ namespace HF
    /*!
     * Common implementation of Interface functionality.
     */
-   struct AbstractInterface:public Interface
+   struct AbstractInterface:virtual public Interface
    {
       //! \see Interface::handle
       virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);

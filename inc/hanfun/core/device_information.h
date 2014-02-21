@@ -10,6 +10,8 @@
  * \version    x.x.x
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
+ *
+ * TODO Add support for attributes SET/GET.
  */
 // =============================================================================
 #ifndef HF_DEVICE_INFORMATION_H

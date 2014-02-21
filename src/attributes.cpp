@@ -20,11 +20,18 @@
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/simple_power_meter.h"
 
+#include "hanfun/core/device_management.h"
+
 using namespace HF;
 using namespace HF::Interfaces;
+using namespace HF::Core;
 
 // =============================================================================
 // Attribute Factories
+// =============================================================================
+
+// =============================================================================
+// Interfaces
 // =============================================================================
 
 // =============================================================================
@@ -348,6 +355,26 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
          }
       }
 
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// Core Services & Interfaces
+// =============================================================================
+
+IAttribute * Core::create_attribute (DeviceManagementServer * server, uint8_t uid)
+{
+   DeviceManagement::Attributes attr = static_cast<DeviceManagement::Attributes>(uid);
+
+   switch (attr)
+   {
+      case DeviceManagement::NUMBER_OF_ENTRIES_ATTR:
+      {
+         uint16_t value = (server != nullptr ? server->entries_count() : 0);
+         return new Attribute<uint16_t>( Interface::DEVICE_MANAGEMENT, attr, value);
+      }
       default:
          return nullptr;
    }

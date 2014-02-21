@@ -188,6 +188,7 @@ namespace HF
          static IAttribute *create_attribute (TestInterface *itf, uint8_t uid)
          {
             uint16_t itf_uid = (itf != nullptr ? itf->uid () : TestInterface::UID);
+
             switch (uid)
             {
                case ATTR1:
