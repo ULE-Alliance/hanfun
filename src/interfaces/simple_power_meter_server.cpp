@@ -274,11 +274,11 @@ IAttribute *SimplePowerMeterServer::attribute (uint8_t uid)
  *
  */
 // =============================================================================
-attribute_uids_t SimplePowerMeterServer::attributes (bool optional) const
+attribute_uids_t SimplePowerMeterServer::attributes (uint8_t pack_id) const
 {
    attribute_uids_t result;
 
-   if (optional)
+   if (pack_id == AttributePack::ALL)
    {
 #if HF_ITF_SPM_POWER_ATTR
       result.push_back (SimplePowerMeter::POWER_ATTR);
@@ -304,9 +304,9 @@ attribute_uids_t SimplePowerMeterServer::attributes (bool optional) const
    }
 
 #if HF_ITF_SPM_ENERGY_ATTR
-   #if HF_ITF_SPM_RESET_ATTR
+   #if !HF_ITF_SPM_RESET_CMD
 
-   if (optional)
+   if (pack_id == AttributePack::ALL)
    #endif
    {
       result.push_back (SimplePowerMeter::ENERGY_ATTR);
@@ -315,10 +315,10 @@ attribute_uids_t SimplePowerMeterServer::attributes (bool optional) const
 #endif
 
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
-   #if HF_ITF_SPM_RESET_ATTR
+   #if !HF_ITF_SPM_RESET_CMD
 
-   if (optional)
-   #endif
+   if (pack_id == AttributePack::ALL)
+#endif
    {
       result.push_back (SimplePowerMeter::ENERGY_AT_RESET_ATTR);
    }
@@ -326,10 +326,10 @@ attribute_uids_t SimplePowerMeterServer::attributes (bool optional) const
 #endif
 
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
-   #if HF_ITF_SPM_RESET_ATTR
+   #if !HF_ITF_SPM_RESET_CMD
 
-   if (optional)
-   #endif
+   if (pack_id == AttributePack::ALL)
+#endif
    {
       result.push_back (SimplePowerMeter::TIME_AT_RESET_ATTR);
    }
@@ -337,9 +337,9 @@ attribute_uids_t SimplePowerMeterServer::attributes (bool optional) const
 #endif
 
 #if HF_ITF_SPM_REPORT_INTERVAL_ATTR
-   #if HF_ITF_SPM_REPORT_CMD
+   #if !HF_ITF_SPM_REPORT_CMD
 
-   if (optional)
+   if (pack_id == AttributePack::ALL)
    #endif
    {
       result.push_back (SimplePowerMeter::REPORT_INTERVAL_ATTR);

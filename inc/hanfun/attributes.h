@@ -375,24 +375,24 @@ namespace HF
    };
 
    /*!
+    * Attribute Pack Special IDs.
+    *
+    * These IDs when received on a HF::Message::GET_ATTR_PACK_REQ, allow the return of all
+    * mandatory/optional attributes, without the need to indicate all the attribute UIDs.
+    */
+   typedef enum
+   {
+      MANDATORY = 0x00, //!< Return all mandatory attributes for the interface.
+      ALL       = 0xFE, //!< Return all mandatory and optional attributes for the interface.
+      DYNAMIC   = 0xFF, //!< Return the attributes with the given attributes.
+   } AttributePack;
+
+   /*!
     * This namespace contains the classes that implement the HF::Message::GET_ATTR_PACK_REQ
     * messages.
     */
    namespace GetAttributePack
    {
-      /*!
-       * Attribute Pack Special IDs.
-       *
-       * These IDs when received on a HF::Message::GET_ATTR_PACK_REQ, allow the return of all
-       * mandatory/optional attributes, without the need to indicate all the attribute UIDs.
-       */
-      typedef enum
-      {
-         MANDATORY = 0x00, //!< Return all mandatory attributes for the interface.
-         ALL       = 0xFE, //!< Return all mandatory and optional attributes for the interface.
-         DYNAMIC   = 0xFF, //!< Return the attributes with the given attributes.
-      } Type;
-
       /*!
        * This class represents the payload of a HF::Message::GET_ATTR_PACK_REQ request,
        * when the payload is Type::DYNAMIC.

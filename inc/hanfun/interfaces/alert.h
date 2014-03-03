@@ -285,9 +285,9 @@ namespace HF
          Alert::Message *status (uint16_t unit_type);
 
          //! \see AbstractInterface::attributes
-         attribute_uids_t attributes (bool optional = false) const
+         attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
          {
-            UNUSED (optional);
+            UNUSED (pack_id);
             /* *INDENT-OFF* */
             return attribute_uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
             /* *INDENT-ON* */

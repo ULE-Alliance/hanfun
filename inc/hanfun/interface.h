@@ -233,17 +233,15 @@ namespace HF
       virtual Result handle_attribute (Protocol::Packet &packet, ByteArray &payload, size_t offset);
 
       /*!
-       * Return a vector containing all the attribute UIDs. If \c optional is \c false,
-       * then only the mandatory attributes will be returned.
+       * Return a vector containing the attribute UIDs, for the given pack ID.
        *
-       * @param [in] optional   if \c true the optional attributes will be included in the list,
-       *                        otherwise only the mandatory attributes will be present.
+       * @param [in] pack_id     the Attribute pack ID to get the attributes UIDs for.
        *
        * @return  vector containing the attributes UIDs.
        */
-      virtual attribute_uids_t attributes (bool optional = false) const
+      virtual attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
       {
-         UNUSED (optional);
+         UNUSED (pack_id);
          return attribute_uids_t ();
       }
    };

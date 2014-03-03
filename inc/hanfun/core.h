@@ -68,17 +68,18 @@ namespace HF
             return AbstractInterface::attribute (uid);
          }
 
-         //! \see AbstractInterface::attributes
-         virtual attribute_uids_t attributes (bool optional = false) const
-         {
-            return AbstractInterface::attributes (optional);
-         }
 
          protected:
 
          AbstractService(IDevice *_device):
             HF::AbstractUnit (_device)
          {}
+
+         //! \see AbstractInterface::attributes
+         virtual attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
+         {
+            return AbstractInterface::attributes (pack_id);
+         }
       };
 
       /*!

@@ -509,9 +509,9 @@ namespace HF
          {}
 
          //! \see AbstractInterface::attributes
-         attribute_uids_t attributes (bool optional = false) const
+         attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
          {
-            UNUSED (optional);
+            UNUSED (pack_id);
             return attribute_uids_t ({NUMBER_OF_ENTRIES_ATTR});
          }
 

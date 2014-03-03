@@ -250,12 +250,12 @@ namespace HF
             return Result::OK;
          }
 
-         //! \see AbstractInterface::attribute_uids
-         attribute_uids_t attributes (bool optional = false) const
+         //! \see AbstractInterface::attributes
+         attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
          {
             attribute_uids_t result;
 
-            if (optional)
+            if (pack_id == AttributePack::ALL)
             {
                result.push_back (ATTR1);
                result.push_back (ATTR2);

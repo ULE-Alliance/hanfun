@@ -380,27 +380,14 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
 
          attribute_uids_t attributes;
 
-         switch (packet.message.itf.member)
+         if (packet.message.itf.member == AttributePack::DYNAMIC)
          {
-            case GetAttributePack::Type::MANDATORY:
-            {
-               attributes = this->attributes ();
-               break;
-            }
-            case GetAttributePack::Type::ALL:
-            {
-               attributes = this->attributes (true);
-               break;
-            }
-            case GetAttributePack::Type::DYNAMIC:
-            {
-               offset    += request.unpack (payload, offset);
-               attributes = request.attributes;
-               break;
-            }
-            default:
-               result = Result::FAIL_ARG;
-               break;
+            offset    += request.unpack (payload, offset);
+            attributes = request.attributes;
+         }
+         else
+         {
+            attributes = this->attributes (packet.message.itf.member);
          }
 
          GetAttributePack::Response *attr_response = new GetAttributePack::Response ();

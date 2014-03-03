@@ -2,7 +2,7 @@
 /*!
  * \file       tests/test_interfaces.cpp
  *
- * This file contains the implementation of the tests for the common functionalaty
+ * This file contains the implementation of the tests for the common functionality
  * of the interfaces.
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
@@ -323,7 +323,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = GetAttributePack::Type::MANDATORY;
+   packet.message.itf.member = AttributePack::MANDATORY;
 
    uint8_t data[] = {0x00, 0x00, 0x00};
 
@@ -362,7 +362,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
 TEST (AbstractInterface, Handle_GetAttributePack_All)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = GetAttributePack::Type::ALL;
+   packet.message.itf.member = AttributePack::ALL;
 
    uint8_t data[] = {0x00, 0x00, 0x00};
 
@@ -401,7 +401,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_All)
 TEST (AbstractInterface, Handle_GetAttributePack_Valid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = GetAttributePack::Type::DYNAMIC;
+   packet.message.itf.member = AttributePack::DYNAMIC;
 
    uint8_t data[] = {0x00, 0x00, 0x00,
                      0x02, // Number of attribute uid's.
@@ -444,7 +444,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Valid)
 TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = GetAttributePack::Type::DYNAMIC;
+   packet.message.itf.member = AttributePack::DYNAMIC;
 
    uint8_t data[] = {0x00, 0x00, 0x00,
                      0x03, // Number of attribute uid's.

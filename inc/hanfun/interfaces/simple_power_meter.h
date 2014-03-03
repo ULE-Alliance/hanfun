@@ -530,7 +530,7 @@ namespace HF
          virtual Report *report ();
 
          //! \see AbstractInterface::attributes
-         attribute_uids_t attributes (bool optional = false) const;
+         attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const;
       };
 
       /*!
