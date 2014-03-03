@@ -189,11 +189,6 @@ namespace HF
    template<typename T, typename = void>
    struct SerializableHelper:public Serializable
    {
-      static_assert (is_same <bool, T>::value || is_same <uint8_t, T>::value ||
-                     is_same <uint16_t, T>::value || is_same <uint32_t, T>::value ||
-                     is_base_of <HF::Serializable, T>::value,
-                     "T must be a uint8_t or uint16_t or uint32_t or Serializable.");
-
       size_t size () const
       {
          return 0;
@@ -282,6 +277,37 @@ namespace HF
       size_t unpack (const ByteArray &array, size_t offset = 0)
       {
          return data.unpack (array, offset);
+      }
+   };
+
+   template<typename T>
+   struct SerializableHelper <T, typename enable_if <is_pointer <T>::value &&
+                                                     is_base_of <Serializable, typename remove_pointer <T>::type>::value>::type> :
+      public Serializable
+   {
+      T data;
+
+      SerializableHelper()
+      {
+         memset (&data, 0, sizeof(T));
+      }
+
+      SerializableHelper(T data):data (data)
+      {}
+
+      size_t size () const
+      {
+         return data->size ();
+      }
+
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         return data->pack (array, offset);
+      }
+
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         return data->unpack (array, offset);
       }
    };
 
@@ -490,7 +516,7 @@ namespace HF
          //! \see HF::Serializable::pack.
          size_t pack (ByteArray &array, size_t offset = 0) const
          {
-            return attributes.pack(array, offset);
+            return attributes.pack (array, offset);
          }
 
          //! \see HF::Serializable::unpack.
