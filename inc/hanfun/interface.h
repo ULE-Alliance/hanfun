@@ -244,6 +244,16 @@ namespace HF
          UNUSED (pack_id);
          return attribute_uids_t ();
       }
+
+      /*!
+       * Check if the given UID matches the interface UID.
+       *
+       * @param [in] uid   the UID value to check against the interface UID.
+       *
+       * @retval  true     the UIDs match,
+       * @retval  false    otherwise.
+       */
+      virtual bool check_uid (uint16_t uid) const = 0;
    };
 
    /*!
@@ -261,6 +271,13 @@ namespace HF
          uint16_t uid () const
          {
             return _uid;
+         }
+
+         protected:
+
+         bool check_uid (uint16_t uid) const
+         {
+            return Base::uid () == uid;
          }
       };
 

@@ -265,6 +265,11 @@ namespace HF
 
             return result;
          }
+
+         bool check_uid (uint16_t uid) const
+         {
+            return this->_uid == uid;
+         }
       };
 
       struct Profile:public IProfile, public TestInterface

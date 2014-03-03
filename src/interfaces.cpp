@@ -233,7 +233,7 @@ Result AbstractInterface::check_message (Message &message, ByteArray &payload, s
    UNUSED (payload);
    UNUSED (offset);
 
-   if (uid () != message.itf.uid)
+   if (!check_uid (message.itf.uid))
    {
       return Result::FAIL_ID;
    }

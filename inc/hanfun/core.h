@@ -103,6 +103,11 @@ namespace HF
          {
             AbstractUnit::sendMessage (addr, message);
          }
+
+         bool check_uid (uint16_t uid) const
+         {
+            return Service::uid () == uid;
+         }
       };
 
       /*!

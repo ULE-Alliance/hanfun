@@ -33,7 +33,7 @@ void LevelControlClient::level (Protocol::Address &addr, uint8_t new_level)
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = uid ();
+   message.itf.uid    = LevelControlClient::uid ();
    message.itf.member = SET_LEVEL_CMD;
 
    message.payload    = new Message (new_level);
