@@ -64,6 +64,8 @@ void check_index (_type expected, _type actual, uint32_t index, const char *head
    }
 }
 
+std::ostream & operator<<(std::ostream & os, std::uint8_t val);
+
 // =============================================================================
 // Helper Test Classes
 // =============================================================================
