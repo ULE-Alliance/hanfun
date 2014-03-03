@@ -314,10 +314,31 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
 TEST (DeviceManagement_RegisterMessage, No_UID)
 {
+   uint8_t data[] = {0x00, 0x00, 0x00,
+                     0x80,                         // Discriminator Type.
+                     0x00,                         // Size of UID.
+                     0x42, 0x43,                   // EMC.
+                     0x03,                         // Number of units.
+                     0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                     0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                     0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                     0x00, 0x00, 0x00};
+
+   expected     = ByteArray (data, sizeof(data));
+
+   message->emc = 0x4243;
+
    message->uid (nullptr);
 
    size_t size = message->size ();
-   LONGS_EQUAL (1 + 1 + 1 + 3 * unit.size (), size);
+   LONGS_EQUAL (1 + 1 + 2 + 1 + 3 * unit.size (), size);
+
+   ByteArray array (size + 6);
+
+   size_t    wsize = message->pack (array, 3);
+   LONGS_EQUAL (size, wsize);
+
+   CHECK_EQUAL (expected, array);
 }
 
 TEST (DeviceManagement_RegisterMessage, EMC)

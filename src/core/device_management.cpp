@@ -292,7 +292,7 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
 {
    size_t  start = offset;
 
-   uint8_t temp  = _uid->type ();
+   uint8_t temp  = (_uid != nullptr ? _uid->type () : 0);
 
    if (emc != 0x0000)
    {
@@ -301,7 +301,15 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
 
    offset += array.write (offset, temp);
 
-   offset += _uid->pack (array, offset);
+   if (_uid != nullptr)
+   {
+      offset += _uid->pack (array, offset);
+   }
+   else
+   {
+      HF::UID none_uid;
+      offset += none_uid.pack (array, offset);
+   }
 
    if (emc != 0x0000)
    {
