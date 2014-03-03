@@ -485,7 +485,7 @@ TEST (AttributesProtocol, GetAttributePack_Request_Unpack)
 
    request.unpack (expected, 3);
 
-   LONGS_EQUAL (20, request.attributes.size ());
+   LONGS_EQUAL (20, request.attributes.length() );
 
    for (uint8_t i = 1; i <= 20; i++)
    {

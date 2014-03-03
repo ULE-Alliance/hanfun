@@ -88,7 +88,73 @@ namespace HF
       typedef IAttribute * (*Factory)(uint8_t);
    };
 
-   typedef vector <uint8_t> attribute_uids_t;
+   struct attribute_uids_t:public vector <uint8_t>, public Serializable
+   {
+      attribute_uids_t():vector <uint8_t>()
+      {}
+
+      attribute_uids_t(initializer_list <uint8_t> uids):vector <uint8_t>(uids)
+      {}
+
+      vector <uint8_t>::size_type length () const
+      {
+         return vector <uint8_t>::size ();
+      }
+
+      //! \see Serializable::size
+      size_t size () const
+      {
+         return sizeof(uint8_t) + sizeof(uint8_t) * vector <uint8_t>::size ();
+      }
+
+      //! \see Serializable::pack
+      size_t pack (ByteArray &array, size_t offset = 0) const
+      {
+         size_t  start = offset;
+
+         uint8_t count = length ();
+         offset += array.write (offset, count);
+
+         /* *INDENT-OFF* */
+         for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(), [&offset,&array](uint8_t uid)
+         {
+            offset += array.write (offset, uid);
+         });
+         /* *INDENT-ON* */
+
+         return offset - start;
+      }
+
+      //! \see Serializable::unpack
+      size_t unpack (const ByteArray &array, size_t offset = 0)
+      {
+         uint8_t count = 0;
+         return unpack (array, offset, count);
+      }
+
+      /*!
+       * \see Serializable::unpack
+       *
+       * @param [out] count   reference to a variable that will hold the count value read from the
+       *                      array.
+       */
+      size_t unpack (const ByteArray &array, size_t offset, uint8_t &count)
+      {
+         size_t start = offset;
+
+         offset += array.read (offset, count);
+
+         for (uint8_t i = 0; i < count; i++)
+         {
+            uint8_t uid;
+            offset += array.read (offset, uid);
+            vector <uint8_t>::push_back (uid);
+         }
+
+         return offset - start;
+      }
+
+   };
 
    class AbstractAttribute:public IAttribute
    {
@@ -418,44 +484,19 @@ namespace HF
          //! \see HF::Serializable::size.
          size_t size () const
          {
-            return sizeof(uint8_t) + sizeof(uint8_t) * attributes.size ();
+            return attributes.size ();
          }
 
          //! \see HF::Serializable::pack.
          size_t pack (ByteArray &array, size_t offset = 0) const
          {
-            size_t start = offset;
-
-            offset += array.write (offset, (uint8_t) attributes.size ());
-
-            /* *INDENT-OFF* */
-            for_each (attributes.begin(), attributes.end(), [&array, &offset] (uint8_t uid)
-            {
-               offset += array.write( offset, uid );
-            });
-            /* *INDENT-ON* */
-
-            return offset - start;
+            return attributes.pack(array, offset);
          }
 
          //! \see HF::Serializable::unpack.
          size_t unpack (const ByteArray &array, size_t offset = 0)
          {
-            size_t start = offset;
-
-            offset += array.read (offset, count);
-
-            if (array.available (offset, count * sizeof(uint8_t)))
-            {
-               for (uint8_t i = 0; i < count; i++)
-               {
-                  uint8_t uid;
-                  offset += array.read (offset, uid);
-                  attributes.push_back (uid);
-               }
-            }
-
-            return offset - start;
+            return attributes.unpack (array, offset, count);
          }
       };
 
