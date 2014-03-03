@@ -424,21 +424,21 @@ namespace HF
       /*!
        * Dimmer Switch profile implementation.
        */
-      template<typename OnOffServer        = Interfaces::OnOffServer,
-               typename LevelControlServer = Interfaces::LevelControlServer>
-      class DimmerSwitch:public Profile2 <IProfile::DIMMER_SWITCH, OnOffServer, LevelControlServer>
+      template<typename OnOffClient        = Interfaces::OnOffClient,
+               typename LevelControlClient = Interfaces::LevelControlClient>
+      class DimmerSwitch:public Profile2 <IProfile::DIMMER_SWITCH, OnOffClient, LevelControlClient>
       {
-         static_assert (is_base_of <Interfaces::OnOffServer, OnOffServer>::value,
-                        "OnOffServer MUST be of type Interfaces::OnOffServer !");
-         static_assert (is_base_of <Interfaces::LevelControlServer, LevelControlServer>::value,
-                        "LevelControlServer MUST be of type Interfaces::LevelControlServer !");
+         static_assert (is_base_of <Interfaces::OnOffClient, OnOffClient>::value,
+                        "OnOffServer MUST be of type Interfaces::OnOffClient !");
+         static_assert (is_base_of <Interfaces::LevelControlClient, LevelControlClient>::value,
+                        "LevelControlServer MUST be of type Interfaces::LevelControlClient !");
 
-         Interfaces::OnOffServer *on_off ()
+         Interfaces::OnOffClient *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControlServer *level_control ()
+         Interfaces::LevelControlClient *level_control ()
          {
             return this->second ();
          }
