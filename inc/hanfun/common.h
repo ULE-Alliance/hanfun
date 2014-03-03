@@ -87,7 +87,7 @@ namespace HF
     * The method in this class are used to serialize the messages to be sent over the
     * network, converting between the host's endianness and the big-endian network format.
     */
-   struct ByteArray:private vector <uint8_t>
+   struct ByteArray:public vector <uint8_t>
    {
       /*!
        * Create a byte array with the given initial size.
@@ -224,26 +224,6 @@ namespace HF
       {
          return (size () >= offset ? size () - offset : 0);
       }
-
-      // =============================================================================
-      // Vector API.
-      // =============================================================================
-
-      using vector::size;
-      using vector::operator [];
-      using vector::operator =;
-      using vector::capacity;
-      using vector::empty;
-      using vector::clear;
-      using vector::front;
-      using vector::back;
-      using vector::push_back;
-      using vector::pop_back;
-      using vector::begin;
-      using vector::end;
-      using vector::swap;
-      using vector::data;
-      using vector::reserve;
 
       bool operator ==(const ByteArray &other)
       {
