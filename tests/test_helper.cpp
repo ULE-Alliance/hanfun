@@ -51,9 +51,9 @@ SimpleString StringFrom (const HF::Serializable &data)
    return result;
 }
 
-std::ostream & operator<<(std::ostream & os, std::uint8_t val)
+std::ostream &operator <<(std::ostream &os, std::uint8_t val)
 {
-    return os << static_cast<int>(val);
+   return os << static_cast <int>(val);
 }
 
 // =============================================================================

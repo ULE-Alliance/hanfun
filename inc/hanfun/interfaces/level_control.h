@@ -91,9 +91,9 @@ namespace HF
             {}
          };
 
-         static IAttribute * create_attribute(uint8_t uid)
+         static IAttribute *create_attribute (uint8_t uid)
          {
-            return Interfaces::create_attribute( (LevelControlServer *)nullptr, uid);
+            return Interfaces::create_attribute ((LevelControlServer *) nullptr, uid);
          }
 
          protected:

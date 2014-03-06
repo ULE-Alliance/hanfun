@@ -113,9 +113,9 @@ namespace HF
             {}
          };
 
-         static IAttribute * create_attribute(uint8_t uid)
+         static IAttribute *create_attribute (uint8_t uid)
          {
-            return Interfaces::create_attribute (((AlertServer *)nullptr), uid);
+            return Interfaces::create_attribute (((AlertServer *) nullptr), uid);
          }
 
          protected:

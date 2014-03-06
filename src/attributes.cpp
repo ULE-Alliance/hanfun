@@ -224,8 +224,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_POWER_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_power,
                                                                    writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -241,8 +243,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_AVG_POWER_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_avg_power,
                                                                    writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -259,8 +263,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
          {
 #if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
             return new Attribute <uint16_t &>(itf_uid, attr, server->_avg_power_interval, writabble);
+
 #else
             return nullptr;
+
 #endif
 
          }
@@ -277,8 +283,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_VOLTAGE_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_voltage,
                                                                    writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -294,8 +302,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_CURRENT_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_current,
                                                                    writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -311,8 +321,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_FREQUENCY_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_frequency,
                                                                    writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -327,8 +339,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
          {
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
             return new Attribute <uint8_t &>(itf_uid, attr, server->_power_factor, writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -345,8 +359,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
          {
 #if HF_ITF_SPM_REPORT_INTERVAL_ATTR
             return new Attribute <uint16_t &>(itf_uid, attr, server->_report_interval, writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -364,16 +380,16 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 // Core Services & Interfaces
 // =============================================================================
 
-IAttribute * Core::create_attribute (DeviceManagementServer * server, uint8_t uid)
+IAttribute *Core::create_attribute (DeviceManagementServer *server, uint8_t uid)
 {
-   DeviceManagement::Attributes attr = static_cast<DeviceManagement::Attributes>(uid);
+   DeviceManagement::Attributes attr = static_cast <DeviceManagement::Attributes>(uid);
 
    switch (attr)
    {
       case DeviceManagement::NUMBER_OF_ENTRIES_ATTR:
       {
-         uint16_t value = (server != nullptr ? server->entries_count() : 0);
-         return new Attribute<uint16_t>( Interface::DEVICE_MANAGEMENT, attr, value);
+         uint16_t value = (server != nullptr ? server->entries_count () : 0);
+         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, value);
       }
       default:
          return nullptr;

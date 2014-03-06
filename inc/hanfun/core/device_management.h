@@ -30,7 +30,7 @@ namespace HF
    {
       struct DeviceManagementServer;
 
-      IAttribute *create_attribute (DeviceManagementServer * server, uint8_t uid);
+      IAttribute *create_attribute (DeviceManagementServer *server, uint8_t uid);
 
       /*!
        * Parent class for the Device Management interface implementation.
@@ -321,9 +321,9 @@ namespace HF
          // API
          // =============================================================================
 
-         IAttribute * create_attribute(uint8_t uid)
+         IAttribute *create_attribute (uint8_t uid)
          {
-            return Core::create_attribute( (DeviceManagementServer *)nullptr, uid);
+            return Core::create_attribute ((DeviceManagementServer *) nullptr, uid);
          }
 
          // =============================================================================
@@ -498,8 +498,8 @@ namespace HF
          //! \see Interface::attribute
          IAttribute *attribute (uint8_t uid)
          {
-            UNUSED(uid);
-            return Core::create_attribute(this, uid);
+            UNUSED (uid);
+            return Core::create_attribute (this, uid);
          }
 
          protected:
@@ -512,7 +512,7 @@ namespace HF
          attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
          {
             UNUSED (pack_id);
-            return attribute_uids_t ({NUMBER_OF_ENTRIES_ATTR});
+            return attribute_uids_t {NUMBER_OF_ENTRIES_ATTR};
          }
 
          /*!

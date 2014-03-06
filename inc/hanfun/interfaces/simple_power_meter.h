@@ -181,7 +181,7 @@ namespace HF
 
          static IAttribute *create_attribute (uint8_t uid)
          {
-            return Interfaces::create_attribute ((SimplePowerMeterServer *)nullptr, uid);
+            return Interfaces::create_attribute ((SimplePowerMeterServer *) nullptr, uid);
          }
 
          protected:

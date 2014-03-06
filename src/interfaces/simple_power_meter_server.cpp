@@ -318,7 +318,7 @@ attribute_uids_t SimplePowerMeterServer::attributes (uint8_t pack_id) const
    #if !HF_ITF_SPM_RESET_CMD
 
    if (pack_id == AttributePack::ALL)
-#endif
+   #endif
    {
       result.push_back (SimplePowerMeter::ENERGY_AT_RESET_ATTR);
    }
@@ -329,7 +329,7 @@ attribute_uids_t SimplePowerMeterServer::attributes (uint8_t pack_id) const
    #if !HF_ITF_SPM_RESET_CMD
 
    if (pack_id == AttributePack::ALL)
-#endif
+   #endif
    {
       result.push_back (SimplePowerMeter::TIME_AT_RESET_ATTR);
    }

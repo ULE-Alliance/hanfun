@@ -62,9 +62,9 @@ namespace HF
             {}
          };
 
-         static IAttribute * create_attribute(uint8_t uid)
+         static IAttribute *create_attribute (uint8_t uid)
          {
-            return Interfaces::create_attribute( (OnOffServer *)nullptr, uid);
+            return Interfaces::create_attribute ((OnOffServer *) nullptr, uid);
          }
       };
 
