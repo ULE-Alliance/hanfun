@@ -102,10 +102,9 @@ TEST (ByteArray, Write_Byte)
 
 TEST (ByteArray, Write_Word)
 {
-   uint16_t  value  = 0x5AA5;
+   uint16_t  value = 0x5AA5;
 
-   uint8_t   data[] = {0x5A, 0xA5, 0x00, 0x00, 0x00, 0x5A, 0xA5, 0x00, 0x00, 0x00};
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected {0x5A, 0xA5, 0x00, 0x00, 0x00, 0x5A, 0xA5, 0x00, 0x00, 0x00};
 
    LONGS_EQUAL (sizeof(uint16_t), array->write (0, value));
 
@@ -116,10 +115,9 @@ TEST (ByteArray, Write_Word)
 
 TEST (ByteArray, Write_DWord)
 {
-   uint32_t  value  = 0xFF5AA5CC;
+   uint32_t  value = 0xFF5AA5CC;
 
-   uint8_t   data[] = {0xFF, 0x5A, 0xA5, 0xCC, 0x00, 0xFF, 0x5A, 0xA5, 0xCC, 0x00};
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected {0xFF, 0x5A, 0xA5, 0xCC, 0x00, 0xFF, 0x5A, 0xA5, 0xCC, 0x00};
 
    LONGS_EQUAL (sizeof(uint32_t), array->write (0, value));
 
@@ -134,8 +132,7 @@ TEST_GROUP (ByteArray_Read)
 
    TEST_SETUP ()
    {
-      uint8_t data[] = {0x00, 0x00, 0x00, 0x00, 0xFF, 0x5A, 0xA5, 0xCC, 0x00, 0x00};
-      array = ByteArray (data, sizeof(data));
+      array = ByteArray {0x00, 0x00, 0x00, 0x00, 0xFF, 0x5A, 0xA5, 0xCC, 0x00, 0x00};
    }
 };
 
@@ -223,11 +220,10 @@ TEST (UID, NONE)
 
    LONGS_EQUAL (1, size);
 
-   uint8_t data[] = {0xAA, 0xAA, 0xAA,
-                     0x00, // UID size.
-                     0xAA, 0xAA, 0xAA};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0xAA, 0xAA, 0xAA,
+                        0x00, // UID size.
+                        0xAA, 0xAA, 0xAA}
+                      );
    ByteArray array (size + 6);
 
    for (int i = 0; i < 3; i++)
@@ -300,12 +296,11 @@ TEST (UID, MAC)
 
    LONGS_EQUAL (1 + 6, size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x06,                               // UID size.
-                     0x12, 0x34, 0x56,0x78,  0x9A, 0xBC, // MAC value.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x06,                               // UID size.
+                        0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, // MAC value.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    uid.value[0] = 0x12;
@@ -345,24 +340,23 @@ TEST (UID, URI)
 
    LONGS_EQUAL (1 + 13, size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x0D, // UID size.
-                     0x48, // H
-                     0x65, // e
-                     0x6c, // l
-                     0x6c, // l
-                     0x6f, // o
-                     0x20, //
-                     0x57, // W
-                     0x6f, // o
-                     0x72, // r
-                     0x6c, // l
-                     0x64, // d
-                     0x20, //
-                     0x21, // !
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x0D, // UID size.
+                        0x48, // H
+                        0x65, // e
+                        0x6c, // l
+                        0x6c, // l
+                        0x6f, // o
+                        0x20, //
+                        0x57, // W
+                        0x6f, // o
+                        0x72, // r
+                        0x6c, // l
+                        0x64, // d
+                        0x20, //
+                        0x21, // !
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = uid.pack (array, 3);
@@ -713,17 +707,16 @@ TEST (Attributes, API2)
 
 TEST (Attributes, Serialize_Pack)
 {
-   uint8_t  data[] = {0x00, 0x00, 0x00,
-                      0x12,  0x34,
-                      0x00,  0x00, 0x00};
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x12, 0x34,
+                       0x00, 0x00, 0x00};
 
    uint16_t attr = 0x1234;
 
    TestInterface itf;
    Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
 
-   ByteArray expected (data, sizeof(data));
-   ByteArray result (sizeof(data));
+   ByteArray result (expected.size ());
 
    fill (result.begin (), result.end (), 0);
 
@@ -735,18 +728,17 @@ TEST (Attributes, Serialize_Pack)
 
 TEST (Attributes, Serialize_Unpack)
 {
-   uint8_t  data[] = {0x00, 0x00, 0x00,
-                      0x12,  0x34,
-                      0x00,  0x00, 0x00};
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x12, 0x34,
+                       0x00, 0x00, 0x00};
 
    uint16_t attr = 0x6666;
 
    TestInterface itf;
    Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
 
-   ByteArray expected (data, sizeof(data));
 
-   size_t    r_size = attr_wrapper.unpack (expected, 3);
+   size_t r_size = attr_wrapper.unpack (expected, 3);
    LONGS_EQUAL (sizeof(attr), r_size);
 
    CHECK_EQUAL (0x1234, attr);

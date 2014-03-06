@@ -34,11 +34,9 @@ TEST_GROUP (Message_Address)
 
    TEST_SETUP ()
    {
-      uint8_t exp_data_1[] = {0x00, 0x00, 0x00, 0xFA, 0xAA, 0x55, 0x00, 0x00, 0x00};
-      expected_1 = ByteArray (exp_data_1, sizeof(exp_data_1));
+      expected_1 = ByteArray {0x00, 0x00, 0x00, 0xFA, 0xAA, 0x55, 0x00, 0x00, 0x00};
 
-      uint8_t exp_data_2[] = {0x00, 0x00, 0x00, 0x7A, 0xAA, 0x55, 0x00, 0x00, 0x00};
-      expected_2 = ByteArray (exp_data_2, sizeof(exp_data_2));
+      expected_2 = ByteArray {0x00, 0x00, 0x00, 0x7A, 0xAA, 0x55, 0x00, 0x00, 0x00};
    }
 };
 
@@ -107,19 +105,17 @@ TEST_GROUP (Message_Interface)
 
    TEST_SETUP ()
    {
-      uint8_t exp_data_1[] = {0x00, 0x00, 0x00,
+      expected_1 = ByteArray {0x00, 0x00, 0x00,
                               0xFA,
-                              0xAA, // Server Role / Interface UID.
-                              0x55, // Interface Member.
+                              0xAA,  // Server Role / Interface UID.
+                              0x55,  // Interface Member.
                               0x00, 0x00, 0x00};
-      expected_1 = ByteArray (exp_data_1, sizeof(exp_data_1));
 
-      uint8_t exp_data_2[] = {0x00, 0x00, 0x00,
+      expected_2 = ByteArray {0x00, 0x00, 0x00,
                               0x7A,
-                              0xAA, // Client Role / Interface UID.
-                              0x55, // Interface Member.
+                              0xAA,  // Client Role / Interface UID.
+                              0x55,  // Interface Member.
                               0x00, 0x00, 0x00};
-      expected_2 = ByteArray (exp_data_2, sizeof(exp_data_2));
    }
 };
 
@@ -185,13 +181,12 @@ TEST_GROUP (Message)
 
    TEST_SETUP ()
    {
-      uint8_t exp_data[] = {0x00, 0x00, 0x00,
-                            0xAA,                      // Application Reference.
-                            Message::COMMAND_RESP_REQ, // Message Type.
-                            0xFA, 0xAA, 0x55,          // Interface Address.
-                            0x01, 0xAA,                // Payload length.
+      expected = ByteArray {0x00, 0x00, 0x00,
+                            0xAA,                       // Application Reference.
+                            Message::COMMAND_RESP_REQ,  // Message Type.
+                            0xFA, 0xAA, 0x55,           // Interface Address.
+                            0x01, 0xAA,                 // Payload length.
                             0x00, 0x00, 0x00};
-      expected = ByteArray (exp_data, sizeof(exp_data));
    }
 
    TEST_TEARDOWN ()
@@ -289,23 +284,21 @@ TEST_GROUP (Packet)
 
    TEST_SETUP ()
    {
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        0x7A, 0xAA,           // Source device Address.
-                        0x55,                 // Source unit.
-                        0xF5, 0x55,           // Destination device Address.
-                        0xAA,                 // Destination unit.
-                        0x00, 0x00,           // Transport header.
-                        0xCC,                 // Application Reference.
-                        Message::COMMAND_REQ, // Message Type.
-                        0xFA, 0xAA, 0x55,     // Interface Address.
-                        0x00, 0x01,           // Payload length.
-                        0xAB,                 // Payload data.
-                        0x00, 0x00, 0x00};
+      expected = ByteArray {0x00, 0x00, 0x00,
+                            0x7A, 0xAA,            // Source device Address.
+                            0x55,                  // Source unit.
+                            0xF5, 0x55,            // Destination device Address.
+                            0xAA,                  // Destination unit.
+                            0x00, 0x00,            // Transport header.
+                            0xCC,                  // Application Reference.
+                            Message::COMMAND_REQ,  // Message Type.
+                            0xFA, 0xAA, 0x55,      // Interface Address.
+                            0x00, 0x01,            // Payload length.
+                            0xAB,                  // Payload data.
+                            0x00, 0x00, 0x00};
 
-      expected = ByteArray (data, sizeof(data));
-
-      payload  = new TestPayload ();
-      packet   = new Packet ();
+      payload = new TestPayload ();
+      packet  = new Packet ();
    }
 
    TEST_TEARDOWN ()
@@ -391,12 +384,11 @@ TEST_GROUP (Response)
    TEST_SETUP ()
    {
       /* *INDENT-OFF* */
-      uint8_t data[] = { 0x00, 0x00, 0x00,
-                         Result::FAIL_ID,
-                         0x00, 0x00, 0x00 };
+      expected = ByteArray { 0x00, 0x00, 0x00,
+                              Result::FAIL_ID,
+                              0x00, 0x00, 0x00 };
       /* *INDENT-ON* */
 
-      expected = ByteArray (data, sizeof(data));
       response = new Response ();
    }
 
@@ -453,15 +445,15 @@ TEST (AttributesProtocol, GetAttributePack_Request_Pack)
       request.attributes.push_back (i);
    }
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x14, // Number of attribute uid's.
-                           // Attribute uid's.
-                     0x01, 0x02, 0x03,0x04,  0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
-                     0x0B, 0x0C, 0x0D,0x0E,  0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
-                     0x00, 0x00, 0x00};
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x14, // Number of attribute uid's.
+                              // Attribute uid's.
+                        0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
+                        0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
+                        0x00, 0x00, 0x00}
+                      );
 
-   ByteArray expected (data, sizeof(data));
-   ByteArray result (sizeof(data));
+   ByteArray result (expected.size ());
 
    fill (result.begin (), result.end (), 0);
 
@@ -472,20 +464,19 @@ TEST (AttributesProtocol, GetAttributePack_Request_Pack)
 
 TEST (AttributesProtocol, GetAttributePack_Request_Unpack)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x14, // Number of attribute uid's.
-                           // Attribute uid's.
-                     0x01, 0x02, 0x03,0x04,  0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
-                     0x0B, 0x0C, 0x0D,0x0E,  0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x14, // Number of attribute uid's.
+                              // Attribute uid's.
+                        0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
+                        0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
+                        0x00, 0x00, 0x00}
+                      );
 
    GetAttributePack::Request request;
 
    request.unpack (expected, 3);
 
-   LONGS_EQUAL (20, request.attributes.length() );
+   LONGS_EQUAL (20, request.attributes.length ());
 
    for (uint8_t i = 1; i <= 20; i++)
    {
@@ -510,14 +501,14 @@ TEST (AttributesProtocol, GetAttributePack_Response_Pack)
    response.attributes.push_back (itf.attribute (itf.ATTR2));
    response.attributes.push_back (itf.attribute (itf.ATTR3));
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::OK,                                           // Response code.
-                     0x03,                                                 // Number of attribute uid's.
-                     0x01, 0xAA, 0xAA,0x02,  0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
-                     0x00, 0x00, 0x00};
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        Result::OK,                                           // Response code.
+                        0x03,                                                 // Number of attribute uid's.
+                        0x01, 0xAA, 0xAA, 0x02, 0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
+                        0x00, 0x00, 0x00}
+                      );
 
-   ByteArray expected (data, sizeof(data));
-   ByteArray result (sizeof(data));
+   ByteArray result (expected.size ());
 
    fill (result.begin (), result.end (), 0);
 
@@ -528,13 +519,12 @@ TEST (AttributesProtocol, GetAttributePack_Response_Pack)
 
 TEST (AttributesProtocol, GetAttributePack_Response_Unpack)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::OK,                                           // Response code.
-                     0x03,                                                 // Number of attribute uid's.
-                     0x01, 0xAA, 0xAA,0x02,  0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        Result::OK,                                           // Response code.
+                        0x03,                                                 // Number of attribute uid's.
+                        0x01, 0xAA, 0xAA, 0x02, 0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
+                        0x00, 0x00, 0x00}
+                      );
 
    GetAttributePack::Response response (Testing::TestInterface::create_attribute);
 
@@ -575,13 +565,13 @@ TEST (AttributesProtocol, SetAttributePack_Request_Pack)
    request.attributes.push_back (itf.attribute (itf.ATTR2));
    request.attributes.push_back (itf.attribute (itf.ATTR3));
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x03,                                                 // Number of attribute uid's.
-                     0x01, 0xAA, 0xAA,0x02,  0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
-                     0x00, 0x00, 0x00};
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x03,                                                 // Number of attribute uid's.
+                        0x01, 0xAA, 0xAA, 0x02, 0xBB, 0xBB, 0x03, 0xCC, 0xCC, // Attribute's.
+                        0x00, 0x00, 0x00}
+                      );
 
-   ByteArray expected (data, sizeof(data));
-   ByteArray result (sizeof(data));
+   ByteArray result (expected.size ());
 
    fill (result.begin (), result.end (), 0);
 
@@ -592,14 +582,13 @@ TEST (AttributesProtocol, SetAttributePack_Request_Pack)
 
 TEST (AttributesProtocol, SetAttributePack_Request_Unpack)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x03,             // Number of attribute uid's.
-                     0x01, 0xAA, 0xAA, // Attribute 1
-                     0x02, 0xBB, 0xBB, // Attribute 2
-                     0x03, 0xCC, 0xCC, // Attribute 3
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x03,             // Number of attribute uid's.
+                        0x01, 0xAA, 0xAA, // Attribute 1
+                        0x02, 0xBB, 0xBB, // Attribute 2
+                        0x03, 0xCC, 0xCC, // Attribute 3
+                        0x00, 0x00, 0x00}
+                      );
 
    Testing::TestInterface itf;
    SetAttributePack::Request request;
@@ -642,15 +631,14 @@ TEST (AttributesProtocol, SetAttributePack_Response_Pack)
 
    response.results.push_back (temp);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x03,                       // Number of attribute uid's.
-                     0x01, Result::OK,           // Attribute 1
-                     0x02, Result::FAIL_RO_ATTR, // Attribute 2
-                     0x06, Result::FAIL_SUPPORT, // Attribute 3
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
-   ByteArray result (sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x03,                       // Number of attribute uid's.
+                        0x01, Result::OK,           // Attribute 1
+                        0x02, Result::FAIL_RO_ATTR, // Attribute 2
+                        0x06, Result::FAIL_SUPPORT, // Attribute 3
+                        0x00, 0x00, 0x00}
+                      );
+   ByteArray result (expected.size ());
 
    fill (result.begin (), result.end (), 0);
 
@@ -661,14 +649,13 @@ TEST (AttributesProtocol, SetAttributePack_Response_Pack)
 
 TEST (AttributesProtocol, SetAttributePack_Response_Unpack)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x03,                       // Number of attribute uid's.
-                     0x01, Result::OK,           // Attribute 1
-                     0x02, Result::FAIL_RO_ATTR, // Attribute 2
-                     0x06, Result::FAIL_SUPPORT, // Attribute 3
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x03,                       // Number of attribute uid's.
+                        0x01, Result::OK,           // Attribute 1
+                        0x02, Result::FAIL_RO_ATTR, // Attribute 2
+                        0x06, Result::FAIL_SUPPORT, // Attribute 3
+                        0x00, 0x00, 0x00}
+                      );
 
    SetAttributePack::Response response;
 

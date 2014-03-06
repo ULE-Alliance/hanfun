@@ -52,13 +52,12 @@ TEST_GROUP (AlertMessage)
 
    TEST_SETUP ()
    {
-      message = new Alert::Message ();
+      message  = new Alert::Message ();
 
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        0x5A, 0xA5,            // Unit Type.
-                        0xFF, 0xA5, 0x5A,0xBB, // State.
-                        0x00, 0x00, 0x00};
-      expected = ByteArray (data, sizeof(data));
+      expected = ByteArray {0x00, 0x00, 0x00,
+                            0x5A, 0xA5,              // Unit Type.
+                            0xFF, 0xA5, 0x5A, 0xBB,  // State.
+                            0x00, 0x00, 0x00};
    }
 
    TEST_TEARDOWN ()
@@ -347,13 +346,12 @@ TEST_GROUP (AlertClient)
    {
       mock ("AlertClient").ignoreOtherCalls ();
 
-      client = new TestAlertClient ();
+      client   = new TestAlertClient ();
 
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        0x5A, 0xA5,            // Unit Type.
-                        0xFF, 0xA5, 0x5A,0xBB, // State.
-                        0x00, 0x00, 0x00};
-      expected                  = ByteArray (data, sizeof(data));
+      expected = ByteArray {0x00, 0x00, 0x00,
+                            0x5A, 0xA5,              // Unit Type.
+                            0xFF, 0xA5, 0x5A, 0xBB,  // State.
+                            0x00, 0x00, 0x00};
 
       packet.message.itf.role   = Interface::CLIENT_ROLE;
       packet.message.itf.uid    = client->uid ();

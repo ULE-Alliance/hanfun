@@ -51,12 +51,11 @@ TEST_GROUP (LevelControl_Message)
 
    TEST_SETUP ()
    {
-      message = new LevelControl::Message ();
+      message  = new LevelControl::Message ();
 
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        0xAA, // Level value.
-                        0x00, 0x00, 0x00};
-      expected = ByteArray (data, sizeof(data));
+      expected = ByteArray {0x00, 0x00, 0x00,
+                            0xAA,  // Level value.
+                            0x00, 0x00, 0x00};
    }
 
    TEST_TEARDOWN ()
@@ -175,11 +174,9 @@ TEST_GROUP (LevelControlServer)
    {
       mock ("LevelControlServer").ignoreOtherCalls ();
 
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        0xAA, // Level value.
-                        0x00, 0x00, 0x00};
-
-      expected                  = ByteArray (data, sizeof(data));
+      expected = ByteArray {0x00, 0x00, 0x00,
+                            0xAA,  // Level value.
+                            0x00, 0x00, 0x00};
 
       packet.message.itf.role   = Interface::SERVER_ROLE;
       packet.message.itf.uid    = server.uid ();

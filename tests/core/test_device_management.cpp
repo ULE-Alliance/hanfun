@@ -36,11 +36,10 @@ TEST (DeviceManagement, InterfaceServer)
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0xFA, 0xAA, // Optional Interface : Server Role.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0xFA, 0xAA, // Optional Interface : Server Role.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    itf.role = Interface::SERVER_ROLE;
@@ -67,11 +66,10 @@ TEST (DeviceManagement, InterfaceClient)
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x75, 0x55, // Optional Interface : Client Role.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x75, 0x55, // Optional Interface : Client Role.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    itf.role = Interface::CLIENT_ROLE;
@@ -103,13 +101,12 @@ TEST (DeviceManagement, Unit_No_Optional_Itf)
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2, size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x03,       // Unit entry size.
-                     0x42,       // Unit ID.
-                     0x5A, 0xA5, // Unit UID.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x03,       // Unit entry size.
+                        0x42,       // Unit ID.
+                        0x5A, 0xA5, // Unit UID.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = wunit.pack (array, 3);
@@ -140,17 +137,16 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x0A,       // Unit entry size.
-                     0x42,       // Unit ID.
-                     0x5A, 0xA5, // Unit UID.
-                     0x03,       // Number of optional interfaces.
-                     0xD4, 0x32, // Optional interface 1
-                     0x12, 0x34, // Optional interface 2
-                     0xD6, 0x78, // Optional interface 3
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x0A,       // Unit entry size.
+                        0x42,       // Unit ID.
+                        0x5A, 0xA5, // Unit UID.
+                        0x03,       // Number of optional interfaces.
+                        0xD4, 0x32, // Optional interface 1
+                        0x12, 0x34, // Optional interface 2
+                        0xD6, 0x78, // Optional interface 3
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = wunit.pack (array, 3);
@@ -193,15 +189,14 @@ TEST (DeviceManagement, Device)
    size_t size = device.size ();
    LONGS_EQUAL (sizeof(uint16_t) + sizeof(uint8_t) + 3 * unit.size (), size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x33, 0x33,            // Device Address.
-                     0x03,                  // Number of units.
-                     0x03, 0x42, 0x5A,0xA5, // Unit 1.
-                     0x03, 0x42, 0x5A,0xA5, // Unit 2.
-                     0x03, 0x42, 0x5A,0xA5, // Unit 3.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x33, 0x33,             // Device Address.
+                        0x03,                   // Number of units.
+                        0x03, 0x42, 0x5A, 0xA5, // Unit 1.
+                        0x03, 0x42, 0x5A, 0xA5, // Unit 2.
+                        0x03, 0x42, 0x5A, 0xA5, // Unit 3.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = device.pack (array, 3);
@@ -270,17 +265,15 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
 
 TEST (DeviceManagement_RegisterMessage, No_EMC)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x02,                         // Discriminator Type.
-                     0x05,                         // Size of UID.
-                     0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
-                     0x03,                         // Number of units.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 1.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 2.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 3.
-                     0x00, 0x00, 0x00};
-
-   expected = ByteArray (data, sizeof(data));
+   expected = ByteArray {0x00, 0x00, 0x00,
+                         0x02,                          // Discriminator Type.
+                         0x05,                          // Size of UID.
+                         0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
+                         0x03,                          // Number of units.
+                         0x03, 0x42, 0x5A, 0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A, 0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
+                         0x00, 0x00, 0x00};
 
    size_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 5 + 1 + 3 * unit.size (), size);
@@ -314,17 +307,15 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
 TEST (DeviceManagement_RegisterMessage, No_UID)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x80,                         // Discriminator Type.
-                     0x00,                         // Size of UID.
-                     0x42, 0x43,                   // EMC.
-                     0x03,                         // Number of units.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 1.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 2.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 3.
-                     0x00, 0x00, 0x00};
-
-   expected     = ByteArray (data, sizeof(data));
+   expected = ByteArray {0x00, 0x00, 0x00,
+                         0x80,                     // Discriminator Type.
+                         0x00,                     // Size of UID.
+                         0x42, 0x43,               // EMC.
+                         0x03,                     // Number of units.
+                         0x03, 0x42, 0x5A, 0xA5,   // Unit 1.
+                         0x03, 0x42, 0x5A, 0xA5,   // Unit 2.
+                         0x03, 0x42, 0x5A, 0xA5,   // Unit 3.
+                         0x00, 0x00, 0x00};
 
    message->emc = 0x4243;
 
@@ -343,18 +334,16 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 
 TEST (DeviceManagement_RegisterMessage, EMC)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x82,                         // Discriminator Type.
-                     0x05,                         // Size of UID.
-                     0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
-                     0x42, 0x43,                   // EMC.
-                     0x03,                         // Number of units.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 1.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 2.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 3.
-                     0x00, 0x00, 0x00};
-
-   expected     = ByteArray (data, sizeof(data));
+   expected = ByteArray {0x00, 0x00, 0x00,
+                         0x82,                          // Discriminator Type.
+                         0x05,                          // Size of UID.
+                         0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
+                         0x42, 0x43,                    // EMC.
+                         0x03,                          // Number of units.
+                         0x03, 0x42, 0x5A, 0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A, 0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
+                         0x00, 0x00, 0x00};
 
    message->emc = 0x4243;
 
@@ -397,12 +386,10 @@ TEST_GROUP (DeviceManagement_RegisterResponce)
 
 TEST (DeviceManagement_RegisterResponce, No_EMC)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_AUTH, // Response Code.
-                     0x42, 0x43,        // Device Address.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected = ByteArray (data, sizeof(data));
+   ByteArray expected = ByteArray {0x00, 0x00, 0x00,
+                                   Result::FAIL_AUTH,  // Response Code.
+                                   0x42, 0x43,         // Device Address.
+                                   0x00, 0x00, 0x00};
 
    DeviceManagement::RegisterResponse response;
 
@@ -430,13 +417,11 @@ TEST (DeviceManagement_RegisterResponce, No_EMC)
 
 TEST (DeviceManagement_RegisterResponce, EMC)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_AUTH, // Responce Code.
-                     0xC2, 0x43,        // Device Address.
-                     0xAA, 0xBB,        // EMC
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected = ByteArray (data, sizeof(data));
+   ByteArray expected = ByteArray {0x00, 0x00, 0x00,
+                                   Result::FAIL_AUTH,  // Responce Code.
+                                   0xC2, 0x43,         // Device Address.
+                                   0xAA, 0xBB,         // EMC
+                                   0x00, 0x00, 0x00};
 
    DeviceManagement::RegisterResponse response;
 
@@ -481,11 +466,10 @@ TEST (DeviceManagement, DeregisterMessage)
 
    message.address = 0x4243;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x42, 0x43, // Device Address.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x42, 0x43, // Device Address.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = message.pack (array, 3);
@@ -515,12 +499,11 @@ TEST (DeviceManagement, StartSessionResponse)
    response.code  = Result::FAIL_READ_SESSION;
    response.count = 0x4243;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_READ_SESSION, // Response code.
-                     0x42, 0x43,                // Device Address.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        Result::FAIL_READ_SESSION, // Response code.
+                        0x42, 0x43,                // Device Address.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = response.pack (array, 3);
@@ -552,12 +535,11 @@ TEST (DeviceManagement, GetEntriesMessage)
    size_t size = message.size ();
    LONGS_EQUAL (2 + 1, size);
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x42, 0x43, // Offset.
-                     0xAA,       // Count.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        0x42, 0x43, // Offset.
+                        0xAA,       // Count.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = message.pack (array, 3);
@@ -604,24 +586,23 @@ TEST (DeviceManagement, GetEntriesResponse)
 
    response.code = Result::FAIL_READ_SESSION;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_READ_SESSION, // Response code.
-                     0x03,                      // Number of entries.
-                                                // Device 1
-                     0x43, 0x21,                //  + Device Address.
-                     0x01,                      //  + Number of units.
-                     0x03, 0x42, 0x5A,0xA5,     //  + Unit 1.
-                                                // Device 2
-                     0x43, 0x22,                //  + Device Address.
-                     0x01,                      //  + Number of units.
-                     0x03, 0x42, 0x5A,0xA5,     //  + Unit 1.
-                                                // Device 3
-                     0x43, 0x23,                //  + Device Address.
-                     0x01,                      //  + Number of units.
-                     0x03, 0x42, 0x5A,0xA5,     //  + Unit 1.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected ({0x00, 0x00, 0x00,
+                        Result::FAIL_READ_SESSION, // Response code.
+                        0x03,                      // Number of entries.
+                                                   // Device 1
+                        0x43, 0x21,                //  + Device Address.
+                        0x01,                      //  + Number of units.
+                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
+                                                   // Device 2
+                        0x43, 0x22,                //  + Device Address.
+                        0x01,                      //  + Number of units.
+                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
+                                                   // Device 3
+                        0x43, 0x23,                //  + Device Address.
+                        0x01,                      //  + Number of units.
+                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
+                        0x00, 0x00, 0x00}
+                      );
    ByteArray array (size + 6);
 
    size_t    wsize = response.pack (array, 3);
@@ -777,14 +758,13 @@ TEST (DeviceManagementClient, RegisterMessage_EMC)
 
 TEST (DeviceManagementClient, RegisterResponse_OK)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::OK, // Response Code.
-                     0x42, 0x43, // Device Address.
-                     0x00, 0x00, 0x00};
+   ByteArray payload ({0x00, 0x00, 0x00,
+                       Result::OK, // Response Code.
+                       0x42, 0x43, // Device Address.
+                       0x00, 0x00, 0x00}
+                     );
 
-   ByteArray payload (data, sizeof(data));
-
-   packet.message.length     = sizeof(data);
+   packet.message.length     = payload.size ();
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
@@ -799,13 +779,12 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 
 TEST (DeviceManagementClient, RegisterResponse_FAIL)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_RESOURCES, // Response Code.
-                     0x00, 0x00, 0x00};
+   ByteArray payload ({0x00, 0x00, 0x00,
+                       Result::FAIL_RESOURCES, // Response Code.
+                       0x00, 0x00, 0x00}
+                     );
 
-   ByteArray payload (data, sizeof(data));
-
-   packet.message.length     = sizeof(data);
+   packet.message.length     = payload.size ();
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("registered");
@@ -849,13 +828,12 @@ TEST (DeviceManagementClient, DeregisterMessage)
 
 TEST (DeviceManagementClient, DeregisterResponse_OK)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::OK, // Response Code.
-                     0x00, 0x00, 0x00};
+   ByteArray payload ({0x00, 0x00, 0x00,
+                       Result::OK, // Response Code.
+                       0x00, 0x00, 0x00}
+                     );
 
-   ByteArray payload (data, sizeof(data));
-
-   packet.message.length     = sizeof(data);
+   packet.message.length     = payload.size ();
    packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
 
    mock ("DeviceManagementClient").expectOneCall ("deregistered");
@@ -870,13 +848,12 @@ TEST (DeviceManagementClient, DeregisterResponse_OK)
 
 TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     Result::FAIL_AUTH, // Response Code.
-                     0x00, 0x00, 0x00};
+   ByteArray payload ({0x00, 0x00, 0x00,
+                       Result::FAIL_AUTH, // Response Code.
+                       0x00, 0x00, 0x00}
+                     );
 
-   ByteArray payload (data, sizeof(data));
-
-   packet.message.length     = sizeof(data);
+   packet.message.length     = payload.size ();
    packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
 
    dev_mgt->_address         = 0x5A5A;
@@ -968,17 +945,15 @@ TEST_GROUP (DeviceManagementServer)
 
 TEST (DeviceManagementServer, Handle_Register)
 {
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x02,                         // Discriminator Type.
-                     0x05,                         // Size of UID.
-                     0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
-                     0x03,                         // Number of units.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 1.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 2.
-                     0x03, 0x42, 0x5A,0xA5,        // Unit 3.
-                     0x00, 0x00, 0x00};
-
-   ByteArray expected = ByteArray (data, sizeof(data));
+   ByteArray expected = ByteArray {0x00, 0x00, 0x00,
+                                   0x02,                          // Discriminator Type.
+                                   0x05,                          // Size of UID.
+                                   0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
+                                   0x03,                          // Number of units.
+                                   0x03, 0x42, 0x5A, 0xA5,        // Unit 1.
+                                   0x03, 0x42, 0x5A, 0xA5,        // Unit 2.
+                                   0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
+                                   0x00, 0x00, 0x00};
 
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
 

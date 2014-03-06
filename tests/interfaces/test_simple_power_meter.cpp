@@ -55,12 +55,10 @@ TEST_GROUP (SimplePowerMeter_Measurement)
    {
       measurement = SimplePowerMeter::Measurement ();
 
-      uint8_t data[] = {0x00, 0x00, 0x00,
-                        Precision::MICRO,      // Measurement precision.
-                        0xFF, 0x5A, 0xA5,0xCC, // Measurement value.
-                        0x00, 0x00, 0x00};
-
-      expected = ByteArray (data, sizeof(data));
+      expected    = ByteArray {0x00, 0x00, 0x00,
+                               Precision::MICRO,        // Measurement precision.
+                               0xFF, 0x5A, 0xA5, 0xCC,  // Measurement value.
+                               0x00, 0x00, 0x00};
    }
 };
 

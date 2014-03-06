@@ -104,6 +104,14 @@ namespace HF
        */
       ByteArray(const uint8_t data[], const size_t size);
 
+      /*!
+       * Create byte array from the values in the given list.
+       *
+       * @param raw  values to add to the byte array.
+       */
+      ByteArray(initializer_list <uint8_t> raw):vector (raw)
+      {}
+
       //! Destructor
       virtual ~ByteArray() {}
 

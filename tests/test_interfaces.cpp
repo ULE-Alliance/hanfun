@@ -161,11 +161,9 @@ TEST (AbstractInterface, Handle_SetAttribute_Valid)
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR3;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x5A, 0xAA, // Attribute value.
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x5A, 0xAA,  // Attribute value.
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A53, itf->attr3);
 
@@ -185,11 +183,9 @@ TEST (AbstractInterface, Handle_SetAttribute_Invalid)
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR3 + 4;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x5A, 0xAA, // Attribute value.
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x5A, 0xAA,  // Attribute value.
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
@@ -209,11 +205,9 @@ TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR1;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x5A, 0xAA, // Attribute value.
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x5A, 0xAA,  // Attribute value.
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
@@ -233,11 +227,9 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
    packet.message.itf.member = TestInterface::ATTR3;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x5A, 0xAA, // Attribute value.
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x5A, 0xAA,  // Attribute value.
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A53, itf->attr3);
 
@@ -257,11 +249,9 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
    packet.message.itf.member = TestInterface::ATTR3 + 4;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x5A, 0xAA, // Attribute value.
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x5A, 0xAA,  // Attribute value.
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
@@ -289,11 +279,9 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
    packet.message.itf.member = TestInterface::ATTR1;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x5A, 0xAA, // Attribute value.
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x5A, 0xAA,  // Attribute value.
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
@@ -325,9 +313,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = AttributePack::MANDATORY;
 
-   uint8_t data[] = {0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00};
 
    mock ("Interface").expectOneCall ("sendMessage");
 
@@ -364,9 +350,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_All)
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = AttributePack::ALL;
 
-   uint8_t data[] = {0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00};
 
    mock ("Interface").expectOneCall ("sendMessage");
 
@@ -403,13 +387,11 @@ TEST (AbstractInterface, Handle_GetAttributePack_Valid)
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = AttributePack::DYNAMIC;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x02, // Number of attribute uid's.
-                           // Attribute uid's.
-                     0x01, 0x03,
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x02,  // Number of attribute uid's.
+                                                 // Attribute uid's.
+                                          0x01, 0x03,
+                                          0x00, 0x00, 0x00};
 
    mock ("Interface").expectOneCall ("sendMessage");
 
@@ -446,13 +428,11 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = AttributePack::DYNAMIC;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x03, // Number of attribute uid's.
-                           // Attribute uid's.
-                     0x01, 0x03, 0x04,
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x03,  // Number of attribute uid's.
+                                                 // Attribute uid's.
+                                          0x01, 0x03, 0x04,
+                                          0x00, 0x00, 0x00};
 
    mock ("Interface").expectOneCall ("sendMessage");
 
@@ -495,15 +475,13 @@ TEST (AbstractInterface, Handle_SetAttributePack)
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x04,             // Number of attributes
-                     0x01, 0xAA, 0xAA, // Attribute 1 - Valid/RO
-                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
-                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
-                     0x04, 0xDD, 0xDD, // Attribute 4 - Invalid
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x04,              // Number of attributes
+                                          0x01, 0xAA, 0xAA,  // Attribute 1 - Valid/RO
+                                          0x02, 0xBB, 0xBB,  // Attribute 2 - Valid/RO
+                                          0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
+                                          0x04, 0xDD, 0xDD,  // Attribute 4 - Invalid
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
    LONGS_EQUAL (0x5A52, itf->attr2);
@@ -527,15 +505,13 @@ TEST (AbstractInterface, Handle_SetAttributePackResponse)
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
    packet.message.itf.member = 0;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x04,             // Number of attributes
-                     0x01, 0xAA, 0xAA, // Attribute 1 - Valid/RO
-                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
-                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
-                     0x04, 0xDD, 0xDD, // Attribute 4 - Invalid
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x04,              // Number of attributes
+                                          0x01, 0xAA, 0xAA,  // Attribute 1 - Valid/RO
+                                          0x02, 0xBB, 0xBB,  // Attribute 2 - Valid/RO
+                                          0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
+                                          0x04, 0xDD, 0xDD,  // Attribute 4 - Invalid
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
    LONGS_EQUAL (0x5A52, itf->attr2);
@@ -577,15 +553,13 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
    packet.message.itf.member = 0;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x04,             // Number of attributes
-                     0x01, 0xAA, 0xAA, // Attribute 1 - Valid/RO
-                     0x04, 0xDD, 0xDD, // Attribute 4 - Invalid
-                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
-                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x04,              // Number of attributes
+                                          0x01, 0xAA, 0xAA,  // Attribute 1 - Valid/RO
+                                          0x04, 0xDD, 0xDD,  // Attribute 4 - Invalid
+                                          0x02, 0xBB, 0xBB,  // Attribute 2 - Valid/RO
+                                          0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A51, itf->attr1);
    LONGS_EQUAL (0x5A52, itf->attr2);
@@ -625,12 +599,10 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack)
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x01,             // Number of attributes
-                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x01,              // Number of attributes
+                                          0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A53, itf->attr3);
 
@@ -652,13 +624,11 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x02,             // Number of attributes
-                     0x02, 0xBB, 0xBB, // Attribute 2 - Valid/RO
-                     0x03, 0xCC, 0xCC, // Attribute 3 - Valid/RW
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x02,              // Number of attributes
+                                          0x02, 0xBB, 0xBB,  // Attribute 2 - Valid/RO
+                                          0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
@@ -680,13 +650,11 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x02,             // Number of attributes
-                     0x03, 0xBB, 0xBB, // Attribute 2 - Valid/RW
-                     0x04, 0xCC, 0xCC, // Attribute 4 - Invalid
-                     0x00, 0x00, 0x00};
-
-   payload = ByteArray (data, sizeof(data));
+   payload                   = ByteArray {0x00, 0x00, 0x00,
+                                          0x02,              // Number of attributes
+                                          0x03, 0xBB, 0xBB,  // Attribute 2 - Valid/RW
+                                          0x04, 0xCC, 0xCC,  // Attribute 4 - Invalid
+                                          0x00, 0x00, 0x00};
 
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
