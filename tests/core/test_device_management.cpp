@@ -975,6 +975,17 @@ TEST (DeviceManagementServer, Handle_Register)
 
    LONGS_EQUAL (1, dev_mgt->entries_count ());
 
+   // Check response packet destination address.
+   LONGS_EQUAL (1, device->packets.size ());
+
+   Protocol::Packet *response = device->packets.back ();
+
+   CHECK_TRUE (response != nullptr);
+
+   LONGS_EQUAL (1, response->destination.device);
+   LONGS_EQUAL (0, response->destination.unit);
+   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, response->destination.mod);
+
    // Should not add entry for same device.
    mock ("AbstractDevice").expectOneCall ("send");
    mock ("DeviceManagementServer").expectOneCall ("register_device");
