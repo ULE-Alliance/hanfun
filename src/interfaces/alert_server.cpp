@@ -218,7 +218,7 @@ bool AlertServer::disabled (uint8_t index)
  *
  */
 // =============================================================================
-Alert::Message *AlertServer::status (uint16_t profile_uid)
+Alert::Message *AlertServer::create_status (uint16_t profile_uid)
 {
    return new (nothrow) Alert::Message (profile_uid, this->_state);
 }
@@ -234,7 +234,7 @@ void AlertServer::status (Protocol::Address &addr, uint16_t profile_uid)
 {
    Protocol::Message::Interface itf (CLIENT_ROLE, HF::Interface::ALERT, STATUS_CMD);
 
-   Alert::Message *alert_msg = status (profile_uid);
+   Alert::Message *alert_msg = create_status (profile_uid);
 
    Protocol::Message message (Protocol::Message::COMMAND_REQ, itf, alert_msg);
 

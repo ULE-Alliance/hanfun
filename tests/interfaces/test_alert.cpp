@@ -111,7 +111,7 @@ TEST_GROUP (AlertServer)
 {
    struct TestAlertServer:public Testing::InterfaceHelper <AlertServer>
    {
-      using AlertServer::status;
+      using AlertServer::create_status;
    };
 
    TestAlertServer *server;
@@ -251,7 +251,7 @@ TEST (AlertServer, Status)
 
    server->state (3, true);
 
-   Alert::Message *msg = server->status (5);
+   Alert::Message *msg = server->create_status (5);
 
    CHECK_FALSE (msg == nullptr);
 

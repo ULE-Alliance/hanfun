@@ -268,6 +268,18 @@ namespace HF
           */
          void status (Protocol::Address &addr, uint16_t unit_type);
 
+         /*!
+          * Send a HAN-FUN message containing a \c Alert::STATUS_CMD, to the broadcast
+          * network address.
+          *
+          * @param [in] unit_type  the unit type ( \see HF::Profile::UID ) sending the message.
+          */
+         void status (uint16_t unit_type)
+         {
+            Protocol::Address addr;
+            status (addr, unit_type);
+         }
+
          //! @}
          // ======================================================================
 
@@ -282,7 +294,7 @@ namespace HF
           * @return              a pointer to a \c Alert::Message, or \c nullptr if the message can't
           *                      be allocated.
           */
-         Alert::Message *status (uint16_t unit_type);
+         Alert::Message *create_status (uint16_t unit_type);
 
          //! \see AbstractInterface::attributes
          attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const

@@ -207,6 +207,18 @@ namespace HF
           */
          void level (Protocol::Address &addr, uint8_t new_level);
 
+         /*!
+          * Send \c SET_LEVEL_CMD message to the broadcast network address and
+          * the given level.
+          *
+          * @param [in] new_level    level value to send in the message.
+          */
+         void level (uint8_t new_level)
+         {
+            Protocol::Address addr;
+            level (addr, new_level);
+         }
+
          //@}
          // =============================================================================
       };

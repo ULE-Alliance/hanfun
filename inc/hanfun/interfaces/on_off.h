@@ -186,6 +186,15 @@ namespace HF
          void on (Protocol::Address &addr);
 
          /*!
+          * Send a \c OnOff::ON_CMD message to the broadcast address.
+          */
+         void on ()
+         {
+            Protocol::Address addr;
+            on (addr);
+         }
+
+         /*!
           * Send a \c OnOff::OFF_CMD message to the device at the given address.
           *
           * @param addr    the address of the device to send the message to.
@@ -193,11 +202,29 @@ namespace HF
          void off (Protocol::Address &addr);
 
          /*!
+          * Send a \c OnOff::OFF_CMD message to the broadcast address.
+          */
+         void off ()
+         {
+            Protocol::Address addr;
+            off (addr);
+         }
+
+         /*!
           * Send a \c OnOff::TOGGLE_CMD message to the device at the given address.
           *
           * @param addr    the address of the device to send the message to.
           */
          void toggle (Protocol::Address &addr);
+
+         /*!
+          * Send a \c OnOff::TOGGLE_CMD message to the broadcast address.
+          */
+         void toggle ()
+         {
+            Protocol::Address addr;
+            toggle (addr);
+         }
 
          //@}
          // =============================================================================
