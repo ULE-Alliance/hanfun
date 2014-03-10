@@ -715,6 +715,10 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    CHECK_TRUE (packet != nullptr);
 
+   LONGS_EQUAL (0, packet->destination.device);
+   LONGS_EQUAL (0, packet->destination.unit);
+   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
+
    LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
    LONGS_EQUAL (DeviceManagement::REGISTER_CMD, packet->message.itf.member);
@@ -813,6 +817,7 @@ TEST (DeviceManagementClient, DeregisterMessage)
 
    LONGS_EQUAL (0, packet->destination.device);
    LONGS_EQUAL (0, packet->destination.unit);
+   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
 
    LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);

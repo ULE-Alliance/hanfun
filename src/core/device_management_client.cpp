@@ -35,7 +35,7 @@ using namespace HF::Core;
 // =============================================================================
 void DeviceManagementClient::register_device ()
 {
-   Protocol::Address addr;
+   Protocol::Address addr (0, 0);
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
