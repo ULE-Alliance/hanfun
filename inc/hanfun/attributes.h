@@ -64,6 +64,8 @@ namespace HF
       /*!
        * \see Serializable::pack
        *
+       * @param [in] array       reference to a ByteArray to pack the attribute to.
+       * @param [in] offset      offset to start the packing.
        * @param [in] with_uid    include uid() size in the calculation.
        */
       virtual size_t pack (ByteArray &array, size_t offset, bool with_uid) const = 0;
@@ -77,6 +79,8 @@ namespace HF
        * \warning If \c with_uid == \c true, then if the value read from the
        *          array does not match the attribute's UID, no more data will be read.
        *
+       * @param [in] array       reference to a ByteArray to pack the attribute to.
+       * @param [in] offset      offset to start the packing.
        * @param [in] with_uid    include uid() size in the calculation.
        */
       virtual size_t unpack (const ByteArray &array, size_t offset, bool with_uid) = 0;

@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/core/device_mangement.h
+ * \file       inc/hanfun/core/device_management.h
  *
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
@@ -438,7 +438,7 @@ namespace HF
          /*!
           * Return the Device entry for the given UID.
           *
-          * @param [in] UID   the device UID.
+          * @param [in] uid   the device UID.
           *
           * @retval  a pointer the Device entry associated with the given UID,
           * @retval  nullptr if the entry does not exist.
