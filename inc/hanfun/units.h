@@ -31,7 +31,9 @@ namespace HF
       virtual uint16_t uid () const = 0;
 
       //! The device this unit is associated with.
-      virtual IDevice *device () const = 0;
+      virtual IDevice *device () const                                                    = 0;
+
+      virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
    };
 
    /*!
@@ -97,6 +99,11 @@ namespace HF
       uint8_t id () const
       {
          return _id;
+      }
+
+      Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      {
+         return Profile::handle (packet, payload, offset);
       }
 
       protected:
