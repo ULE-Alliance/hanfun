@@ -121,9 +121,11 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 
    reg_res->code    = save (device);
 
-   address = (reg_res->code == Result::OK ? device->address : Protocol::BROADCAST_ADDR);
+   address          = (reg_res->code == Result::OK ? device->address : Protocol::BROADCAST_ADDR);
 
    reg_res->address = address;
+
+   packet.link->address (reg_res->address);
 
    Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, REGISTER_CMD);
 

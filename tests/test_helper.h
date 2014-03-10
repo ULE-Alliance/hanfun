@@ -331,21 +331,21 @@ namespace HF
             mock ("AbstractDevice").actualCall ("disconnected");
          }
 
-         void send (Protocol::Packet *packet)
+         void send (Protocol::Packet &packet)
          {
             mock ("AbstractDevice").actualCall ("send");
-            packets.push_back (packet);
+
+            Protocol::Packet *temp = new Protocol::Packet (packet);
+
+            packets.push_back (temp);
          }
 
-         void receive (Protocol::Packet *packet)
+         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
          {
-            mock ("AbstractDevice").actualCall ("receive");
-            packets.push_back (packet);
-         }
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
 
-         void receive (Transport::Link *link)
-         {
-            UNUSED(link);
             mock ("AbstractDevice").actualCall ("receive");
          }
       };
@@ -360,11 +360,15 @@ namespace HF
 
       struct Link:public HF::Transport::Link
       {
-         HF::UID       *_uid;
-         HF::Transport *tsp;
+         HF::UID              *_uid;
+         HF::Transport::Layer *tsp;
 
-         Link(HF::UID *uid, HF::Transport *tsp):
-            _uid (uid), tsp (tsp)
+         Protocol::Packet     *packet;
+
+         uint16_t             _address;
+
+         Link(HF::UID *uid, HF::Transport::Layer *tsp):
+            _uid (uid), tsp (tsp), packet (nullptr), _address (Protocol::BROADCAST_ADDR)
          {}
 
          virtual ~Link()
@@ -372,37 +376,30 @@ namespace HF
             delete _uid;
          }
 
-         virtual size_t write (ByteArray *array, size_t offset, size_t size)
+         void send (Protocol::Packet &packet)
          {
-            UNUSED (array);
-            UNUSED (offset);
-            UNUSED (size);
-
-            return mock ("Link").actualCall ("write").returnValue ().getIntValue ();
+            this->packet = &packet;
+            mock ("Link").actualCall ("send");
          }
 
-         virtual size_t read (ByteArray *array, size_t offset, size_t size)
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            UNUSED (size);
-
-            return mock ("Link").actualCall ("read").returnValue ().getIntValue ();
-         }
-
-         virtual size_t available ()
-         {
-            return mock ("Link").actualCall ("available").returnValue ().getIntValue ();
-         }
-
-         virtual HF::UID *uid ()
+         HF::UID *uid ()
          {
             return _uid;
          }
 
-         virtual HF::Transport *transport ()
+         HF::Transport::Layer *transport ()
          {
             return tsp;
+         }
+
+         uint16_t address () const
+         {
+            return _address;
+         }
+
+         void address (uint16_t addr)
+         {
+            _address = addr;
          }
       };
 

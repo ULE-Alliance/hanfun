@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <forward_list>
+#include <deque>
 #include <type_traits>
 
 #include "version.h"
@@ -628,16 +630,19 @@ namespace HF
       /*!
        * Send given \c packet into the HAN-FUN network.
        *
-       * @param packet  pointer to the packet to send to the network.
+       * @param packet  reference to the packet to send to the network.
        */
-      virtual void send (Protocol::Packet *packet) = 0;
+      virtual void send (Protocol::Packet &packet) = 0;
 
       /*!
        * Receive a packet from the HAN-FUN network.
        *
-       * @param packet  pointer to the received packet.
+       * @param packet        reference to the received packet.
+       * @param [in] payload  reference a ByteArray containing the received data.
+       * @param [in] offset   offset from where the received data starts on the \c payload
+       *                      byte array buffer.
        */
-      virtual void receive (Protocol::Packet *packet) = 0;
+      virtual void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
    };
 
    // =============================================================================

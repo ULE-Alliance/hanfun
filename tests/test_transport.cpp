@@ -45,58 +45,58 @@ namespace HF
             links.remove (link);
          }
 
-         virtual void receive (HF::Transport::Link *link)
+         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
          {
-            ByteArray array (link->available ());
-            link->read (&array, 0, array.size ());
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
          }
       };
 
       struct Endpoint2:public Endpoint
       {
-         virtual void receive (HF::Transport::Link *link)
+         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
          {
-            ByteArray array (link->available ());
-            link->read (&array, 4);
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
          }
       };
 
-      struct Transport:public HF::Transport
+      struct Transport:public HF::Transport::Layer
       {
          typedef list <HF::Transport::Endpoint *> endpoints_t;
 
          typedef list <Link *> links_t;
 
-         endpoints_t endpoints;
-         links_t     links;
+         endpoints_t   endpoints;
+         links_t       links;
 
-         HF::UID     _uid;
+         const HF::UID *_uid;
 
-         Transport(const HF::UID &uid):
+         Transport(const HF::UID *uid):
             _uid (uid)
          {}
 
-         ~Transport()
-         {
-            /* *INDENT-OFF* */
-            for_each(links.begin(), links.end(), [endpoints](Link *link)
-            {
-               for_each (endpoints.begin (), endpoints.end (), [link](Endpoint *ep)
-               {
-                  ep->disconnected (link);
-               }
-               );
-               delete link;
-            });
-            /* *INDENT-ON* */
-         }
+         // =============================================================================
+         // API
+         // =============================================================================
 
-         virtual void initialize (HF::Transport::Endpoint *ep)
+         virtual void initialize ()
+         {}
+
+         void add (HF::Transport::Endpoint *ep)
          {
             endpoints.push_back (ep);
          }
 
-         virtual void destroy (HF::Transport::Endpoint *ep = nullptr)
+         void initialize (Endpoint *ep)
+         {
+            initialize ();
+            add (ep);
+         }
+
+         void remove (HF::Transport::Endpoint *ep = nullptr)
          {
             if (ep != nullptr)
             {
@@ -108,30 +108,49 @@ namespace HF
             }
          }
 
-         virtual HF::UID uid () const
+         void destroy ()
+         {
+            /* *INDENT-OFF* */
+            for_each(links.begin(), links.end(), [this](Link *link)
+            {
+               this->destroy_link(link);
+
+            });
+            /* *INDENT-ON* */
+
+            remove (nullptr);
+         }
+
+         const HF::UID *uid () const
          {
             return _uid;
          }
 
-         virtual void create_link (HF::UID *uid)
+         void create_link (HF::UID *uid)
          {
             Testing::Link *link = new Testing::Link (uid, this);
             links.push_back (link);
 
-            for (Endpoint *ep : endpoints)
+            /* *INDENT-OFF* */
+            for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
             {
                ep->connected (link);
-            }
+            });
+            /* *INDENT-ON* */
          }
 
-         virtual void destroy_link (Link *link)
+         void destroy_link (Link * &link)
          {
             /* *INDENT-OFF* */
-            for_each(endpoints.begin(), endpoints.end(), [link](Endpoint *ep)
+            for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
             {
                ep->disconnected (link);
             });
-            /* *INDENT-ON* */}
+            /* *INDENT-ON* */
+
+            delete link;
+            link = nullptr;
+         }
       };
 
    }  // namespace Testing
@@ -154,7 +173,7 @@ TEST_GROUP (Transport)
    TEST_SETUP ()
    {
       tsp_uid = URI ("tsp://foobar@example.com");
-      tsp     = new Testing::Transport (tsp_uid);
+      tsp     = new Testing::Transport (&tsp_uid);
 
       mock ().ignoreOtherCalls ();
    }
@@ -162,6 +181,7 @@ TEST_GROUP (Transport)
    TEST_TEARDOWN ()
    {
       mock ("Link").checkExpectations ();
+      tsp->destroy ();
       delete tsp;
       mock ().clear ();
    }
@@ -175,7 +195,7 @@ TEST (Transport, Initialize)
    tsp->initialize (&ep2);
    LONGS_EQUAL (2, tsp->endpoints.size ());
 
-   tsp->destroy (&ep1);
+   tsp->remove (&ep1);
    LONGS_EQUAL (1, tsp->endpoints.size ());
    tsp->initialize (&ep1);
    LONGS_EQUAL (2, tsp->endpoints.size ());
@@ -211,32 +231,4 @@ TEST (Transport, LinkSetup)
 
    LONGS_EQUAL (0, ep1.links.size ());
    LONGS_EQUAL (0, ep2.links.size ());
-}
-
-TEST (Transport, Receive)
-{
-   tsp->initialize (&ep1);
-
-   URI *uri = new URI ("dev://user1@example.com");
-
-   tsp->create_link (uri);
-
-   mock ("Link").strictOrder ();
-   mock ("Link").expectOneCall ("available").andReturnValue (10);
-   mock ("Link").expectOneCall ("read").andReturnValue (10);
-   ep1.receive (tsp->links.front ());
-}
-
-TEST (Transport, Receive2)
-{
-   tsp->initialize (&ep2);
-
-   URI *uri = new URI ("dev://user1@example.com");
-
-   tsp->create_link (uri);
-
-   mock ("Link").strictOrder ();
-   mock ("Link").expectNCalls (2, "available");
-   mock ("Link").expectOneCall ("read").andReturnValue (10);
-   ep2.receive (tsp->links.front ());
 }
