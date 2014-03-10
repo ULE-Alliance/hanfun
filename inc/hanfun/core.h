@@ -99,9 +99,12 @@ namespace HF
             AbstractService (_device)
          {}
 
+         using AbstractUnit::sendMessage;
+
+         //! \see AbstractInterface::sendMessage
          void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
-            AbstractUnit::sendMessage (addr, message);
+            AbstractUnit::sendMessage (addr, message, nullptr);
          }
 
          bool check_uid (uint16_t uid) const

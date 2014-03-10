@@ -59,12 +59,21 @@ namespace HF
          _device (device)
       {}
 
-      virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+      /*!
+       * Create and send a new packet with the given message to the given address.
+       *
+       * @param [in] addr     address to send the message to.
+       * @param [in] message  message to send.
+       * @param [in] link     preferred link to send the message on.
+       */
+      void sendMessage (Protocol::Address &addr, Protocol::Message &message,
+                          Transport::Link * link)
       {
          Protocol::Packet *packet = new Protocol::Packet (message);
          packet->destination   = addr;
          packet->source.device = device ()->address ();
          packet->source.unit   = id ();
+         packet->link = link;
          device ()->send (packet);
       }
    };
@@ -110,7 +119,7 @@ namespace HF
 
       void sendMessage (Protocol::Address &addr, Protocol::Message &message)
       {
-         AbstractUnit::sendMessage (addr, message);
+         AbstractUnit::sendMessage (addr, message, nullptr);
       }
    };
 

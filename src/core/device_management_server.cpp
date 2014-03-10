@@ -131,7 +131,7 @@ Result DeviceManagementServer::register_device (Protocol::Packet &packet, ByteAr
 
    Protocol::Address res_addr (address, 0);
 
-   sendMessage (res_addr, response);
+   sendMessage (res_addr, response, packet.link);
 
    return Result::OK;
 }
