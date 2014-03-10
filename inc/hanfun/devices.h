@@ -78,8 +78,9 @@ namespace HF
    /*!
     * Template for HAN-FUN devices.
     */
-   template<typename DeviceInfo, typename DeviceMgt>
-   struct Device:public AbstractDevice <DeviceInfo>
+   template<typename DeviceInfo = HF::Core::DefaultDeviceInformation,
+            typename DeviceMgt  = HF::Core::DeviceManagementClient>
+   struct Device:public AbstractDevice <DeviceInfo>, public Transport::Endpoint
    {
       DeviceMgt management;
 
@@ -99,8 +100,9 @@ namespace HF
    /*!
     * HAN-FUN Concentrator implementation.
     */
-   template<typename DeviceInfo, typename DeviceMgt>
-   struct Concentrator:public AbstractDevice <DeviceInfo>
+   template<typename DeviceInfo = HF::Core::DefaultDeviceInformation,
+            typename DeviceMgt = HF::Core::DefaultDeviceManagementServer>
+   struct Concentrator:public AbstractDevice <DeviceInfo>, public Transport::Endpoint
    {
       DeviceMgt management;
 
@@ -111,6 +113,10 @@ namespace HF
       {
          return 0;
       }
+
+      protected:
+
+      Concentrator():management (DeviceMgt (this)) {}
    };
 
 }  // namespace HF

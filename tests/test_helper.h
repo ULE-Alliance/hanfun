@@ -319,6 +319,18 @@ namespace HF
             packets.clear ();
          }
 
+         void connected (HF::Transport::Link *link)
+         {
+            UNUSED (link);
+            mock ("AbstractDevice").actualCall ("connected");
+         }
+
+         void disconnected (HF::Transport::Link *link)
+         {
+            UNUSED (link);
+            mock ("AbstractDevice").actualCall ("disconnected");
+         }
+
          void send (Protocol::Packet *packet)
          {
             mock ("AbstractDevice").actualCall ("send");
@@ -329,6 +341,12 @@ namespace HF
          {
             mock ("AbstractDevice").actualCall ("receive");
             packets.push_back (packet);
+         }
+
+         void receive (Transport::Link *link)
+         {
+            UNUSED(link);
+            mock ("AbstractDevice").actualCall ("receive");
          }
       };
 
