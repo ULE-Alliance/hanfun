@@ -44,7 +44,7 @@ void DeviceManagementClient::register_device ()
 
    RegisterMessage *payload = new RegisterMessage (DeviceInformation::EMC);
 
-   for (std::vector <IUnit *>::const_iterator dev_unit = _device->units ().begin ();
+   for (IDevice::units_t::const_iterator dev_unit = _device->units ().begin ();
         dev_unit != _device->units ().end (); ++dev_unit)
    {
       Unit unit;

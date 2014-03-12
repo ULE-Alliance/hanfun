@@ -13,6 +13,7 @@
  */
 // =============================================================================
 #include <string>
+#include <algorithm>
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -732,14 +733,39 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (device->units ().size (), payload->units.size ());
 
-   LONGS_EQUAL (unit1->id (), payload->units[0].id);
-   LONGS_EQUAL (unit1->uid (), payload->units[0].profile);
+   size_t size = device->units ().size ();
 
-   LONGS_EQUAL (unit2->id (), payload->units[1].id);
-   LONGS_EQUAL (unit2->uid (), payload->units[1].profile);
+   vector <uint8_t> expected (size);
+   vector <uint8_t> actual (size);
 
-   LONGS_EQUAL (unit3->id (), payload->units[2].id);
-   LONGS_EQUAL (unit3->uid (), payload->units[2].profile);
+   /* *INDENT-OFF* */
+   for_each (payload->units.begin (), payload->units.end (), [&actual](DeviceManagement::Unit &unit)
+   {
+      actual.push_back (unit.id);
+   });
+   /* *INDENT-ON* */
+
+   expected.push_back (unit1->id ());
+   expected.push_back (unit2->id ());
+   expected.push_back (unit3->id ());
+
+   CHECK_TRUE (is_permutation (expected.begin (), expected.end (), actual.begin ()));
+
+   expected.clear ();
+   actual.clear ();
+
+   /* *INDENT-OFF* */
+   for_each (payload->units.begin (), payload->units.end (), [&actual](DeviceManagement::Unit &unit)
+   {
+      actual.push_back (unit.profile);
+   });
+   /* *INDENT-ON* */
+
+   expected.push_back (unit1->uid ());
+   expected.push_back (unit2->uid ());
+   expected.push_back (unit3->uid ());
+
+   CHECK_TRUE (is_permutation (expected.begin (), expected.end (), actual.begin ()));
 }
 
 TEST (DeviceManagementClient, RegisterMessage_EMC)

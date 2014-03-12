@@ -598,6 +598,17 @@ namespace HF
    struct IDevice
    {
       /*!
+       * Unit list type.
+       */
+      struct units_t:public forward_list <IUnit *>
+      {
+         units_t::size_type size () const
+         {
+            return distance (begin (), end ());
+         }
+      };
+
+      /*!
        * Return the device address on the HAN-FUN network, when the device is registered,
        * or \c HF_BROADCAST_ADDR otherwise.
        *
@@ -609,9 +620,9 @@ namespace HF
       /*!
        * Return the list of units registered in this device.
        *
-       * @return     vector containing the device's registered units.
+       * @return     list containing the device's registered units.
        */
-      virtual const vector <IUnit *> &units () const = 0;
+      virtual const units_t &units () const = 0;
 
       /*!
        * Add unit to devices unit lists.

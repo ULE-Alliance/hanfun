@@ -42,7 +42,7 @@ namespace HF
       // IDevice API
       // =============================================================================
 
-      const std::vector <IUnit *> &units () const
+      const units_t &units () const
       {
          return _units;
       }
@@ -54,7 +54,7 @@ namespace HF
        */
       void add (IUnit *unit)
       {
-         _units.push_back (unit);
+         _units.push_front (unit);
       }
 
       /*!
@@ -64,13 +64,13 @@ namespace HF
        */
       void remove (IUnit *unit)
       {
-         UNUSED (unit);
+         _units.remove (unit);
       }
 
       protected:
 
-      //! Vector containing pointer to the units present in the device.
-      std::vector <IUnit *> _units;
+      //! List containing pointers to the units present in the device.
+      units_t _units;
 
       AbstractDevice():info (DeviceInfo (this)) {}
    };
