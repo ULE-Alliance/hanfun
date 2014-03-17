@@ -27,12 +27,10 @@ namespace HF
       //! Id number of this unit on the device.
       virtual uint8_t id () const = 0;
 
-      //! UID for the profile/interface contained in the unit.
-      virtual uint16_t uid () const = 0;
-
       //! The device this unit is associated with.
-      virtual IDevice *device () const                                                    = 0;
+      virtual IDevice *device () const = 0;
 
+      //! \see Interface::handle
       virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
    };
 
@@ -41,8 +39,6 @@ namespace HF
     */
    class AbstractUnit:public IUnit
    {
-      protected:
-
       IDevice *_device;
 
       public:
@@ -85,8 +81,6 @@ namespace HF
    template<class Profile>
    class Unit:public AbstractUnit, public Profile
    {
-      protected:
-
       uint8_t _id;
 
       public:

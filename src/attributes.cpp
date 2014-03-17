@@ -172,9 +172,11 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
          {
 #if HF_ITF_SPM_ENERGY_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr,
-                                                                    server->_energy, writabble);
+                                                                   server->_energy, writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -190,8 +192,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr,
                                                                    server->_last_energy, writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
@@ -207,8 +211,10 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
             return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_last_time,
                                                                    writabble);
+
 #else
             return nullptr;
+
 #endif
          }
          else
