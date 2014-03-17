@@ -656,11 +656,7 @@ TEST_GROUP (DeviceManagementClient)
       }
    };
 
-   struct Device:public Testing::AbstractDevice <
-      HF::Device < HF::Core::DefaultDeviceInformation, TestDeviceManagementClient >>
-   {};
-
-   Device *device;
+   Testing::Device *device;
 
    TestDeviceManagementClient *dev_mgt;
 
@@ -668,7 +664,7 @@ TEST_GROUP (DeviceManagementClient)
 
    TEST_SETUP ()
    {
-      device      = new Device ();
+      device      = new Testing::Device ();
 
       unit1       = new Testing::Unit (1, device);
       unit2       = new Testing::Unit (2, device);
@@ -678,7 +674,7 @@ TEST_GROUP (DeviceManagementClient)
       unit2->_uid = 0xFF02;
       unit3->_uid = 0xFF03;
 
-      dev_mgt     = &(device->management);
+      dev_mgt     = new TestDeviceManagementClient (device);
 
       mock ().ignoreOtherCalls ();
 
@@ -694,6 +690,8 @@ TEST_GROUP (DeviceManagementClient)
       delete unit1;
       delete unit2;
       delete unit3;
+
+      delete dev_mgt;
 
       delete device;
 
@@ -804,7 +802,7 @@ TEST (DeviceManagementClient, RegisterResponse_OK)
 
    mock ("DeviceManagementClient").checkExpectations ();
 
-   LONGS_EQUAL (0x4243, device->address ());
+   LONGS_EQUAL (0x4243, dev_mgt->address ());
 }
 
 TEST (DeviceManagementClient, RegisterResponse_FAIL)
@@ -898,7 +896,7 @@ TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 
    mock ("DeviceManagementClient").checkExpectations ();
 
-   LONGS_EQUAL (0x5A5A, device->address ());
+   LONGS_EQUAL (0x5A5A, dev_mgt->address ());
 }
 
 // =============================================================================
