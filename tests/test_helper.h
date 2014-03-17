@@ -350,12 +350,10 @@ namespace HF
          }
       };
 
-      struct Device:public AbstractDevice <
-         HF::Device < HF::Core::DefaultDeviceInformation, HF::Core::DeviceManagementClient >>
+      struct Device:public AbstractDevice < HF::Device::Base < HF::Device::DefaultUnit0 >>
       {};
 
-      struct Concentrator:public AbstractDevice <
-         HF::Concentrator < HF::Core::DefaultDeviceInformation, HF::Core::DefaultDeviceManagementServer >>
+      struct Concentrator:public AbstractDevice < HF::Concentrator::Base < HF::Concentrator::DefaultUnit0 >>
       {};
 
       struct Link:public HF::Transport::Link

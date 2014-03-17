@@ -185,6 +185,16 @@ namespace HF
 
          //! \see HF::Serializable::unpack.
          size_t unpack (const ByteArray &array, size_t offset = 0);
+
+         bool is_broadcast ()
+         {
+            return device == BROADCAST_ADDR && unit == BROADCAST_UNIT;
+         }
+
+         bool is_local (uint16_t address)
+         {
+            return this->device == address;
+         }
       };
 
       /*!

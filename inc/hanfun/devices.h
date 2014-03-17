@@ -22,6 +22,7 @@
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
+#include "hanfun/core.h"
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 
@@ -30,14 +31,8 @@ namespace HF
    /*!
     * This class provides the basic implementation for the Device API.
     */
-   template<typename DeviceInfo>
    struct AbstractDevice:public IDevice
    {
-      DeviceInfo info;
-
-      static_assert (is_base_of <HF::Core::DeviceInformation, DeviceInfo>::value,
-                     "DeviceInfo must be of type HF::Core::DeviceInformation");
-
       // =============================================================================
       // IDevice API
       // =============================================================================
@@ -67,57 +62,317 @@ namespace HF
          _units.remove (unit);
       }
 
+      IUnit *unit (uint8_t id)
+      {
+         /* *INDENT-OFF* */
+         units_t::iterator it = find_if(_units.begin(), _units.end(), [id](IUnit *unit)
+                                {
+                                   return unit->id () == id;
+                                });
+         /* *INDENT-ON* */
+
+         if (it == _units.end ())
+         {
+            return nullptr;
+         }
+         else
+         {
+            return *it;
+         }
+      }
+
+      void send (Protocol::Packet &packet)
+      {
+         Transport::Link *tsp_link = packet.link;
+
+         if (tsp_link == nullptr)
+         {
+            tsp_link = link (packet.destination.device);
+         }
+
+         if (tsp_link != nullptr)
+         {
+            tsp_link->send (packet);
+         }
+      }
+
+      void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
       protected:
 
       //! List containing pointers to the units present in the device.
       units_t _units;
 
-      AbstractDevice():info (DeviceInfo (this)) {}
-   };
+      AbstractDevice() {}
 
-   /*!
-    * Template for HAN-FUN devices.
-    */
-   template<typename DeviceInfo = HF::Core::DefaultDeviceInformation,
-            typename DeviceMgt  = HF::Core::DeviceManagementClient>
-   struct Device:public AbstractDevice <DeviceInfo>, public Transport::Endpoint
-   {
-      DeviceMgt management;
+      // =============================================================================
 
-      static_assert (is_base_of <HF::Core::DeviceManagementClient, DeviceMgt>::value,
-                     "DeviceMgt must be of type HF::Core::DeviceInformationClient");
-
-      uint16_t address () const
+      /*!
+       * Return the link that can be used to send a packet to the device with the given
+       * address.
+       *
+       * @param [in] addr    the address of the device to send the packet to.
+       *
+       * @return             a pointer to the link that can be used to send the packet,
+       *                     \c nullptr otherwise;
+       */
+      virtual Transport::Link *link (uint16_t addr) const
       {
-         return management.address ();
+         UNUSED (addr);
+         return nullptr;
       }
 
-      protected:
-
-      Device():management (DeviceMgt (this)) {}
-   };
-
-   /*!
-    * HAN-FUN Concentrator implementation.
-    */
-   template<typename DeviceInfo = HF::Core::DefaultDeviceInformation,
-            typename DeviceMgt = HF::Core::DefaultDeviceManagementServer>
-   struct Concentrator:public AbstractDevice <DeviceInfo>, public Transport::Endpoint
-   {
-      DeviceMgt management;
-
-      static_assert (std::is_base_of <HF::Core::DeviceManagementServer, DeviceMgt>::value,
-                     "DeviceMgt must be of type HF::Core::DeviceInformationServer");
-
-      uint16_t address () const
+      /*!
+       * Check if the incoming packet is a retransmission.
+       *
+       * This method uses the source address of the packet and the Protocol::Message::reference
+       * field to check if the packet is a retransmission or a new packet.
+       *
+       * @param [in] packet  reference to the incoming packet.
+       *
+       * @retval  true if the packet is a retransmission,
+       * @retval  false otherwise.
+       */
+      bool repeated (Protocol::Packet const &packet)
       {
-         return 0;
+         // FIXME Check if packet is a retransmission.
+         UNUSED (packet);
+         return false;
       }
 
-      protected:
+      /*!
+       * Ensure that the incoming packet sends a response if it is required and
+       * no response has been sent.
+       *
+       * @param [in] result   the result of the IUnit::handle method call for
+       *                      the incoming packet.
+       *
+       * @param [in] packet   reference to the incoming packet.
+       */
+      virtual void respond (Result result, Protocol::Packet &packet)
+      {
+         // FIXME Handle packets that require a response and no response has been sent.
+         UNUSED (result);
+         UNUSED (packet);
+      }
 
-      Concentrator():management (DeviceMgt (this)) {}
+      /*!
+       * Check if the given packet is for this device.
+       *
+       * @param [in] packet   reference to the incoming packet.
+       *
+       * @return
+       */
+      virtual bool is_local (Protocol::Packet &packet)
+      {
+         return packet.destination.device == address ();
+      }
    };
+
+
+   namespace Device
+   {
+      /*!
+       * Template to create Unit0 for HAN-FUN devices.
+       */
+      template<typename... ITF>
+      struct Unit0:public HF::Unit0 <ITF...>
+      {
+         static_assert (is_base_of <HF::Core::DeviceManagementClient, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
+                        "DeviceMgt must be of type HF::Core::DeviceInformationClient");
+
+         Unit0(IDevice *device):HF::Unit0 <ITF...>(device)
+         {}
+      };
+
+      struct DefaultUnit0:public Unit0 <HF::Core::DefaultDeviceInformation, HF::Core::DeviceManagementClient>
+      {
+         DefaultUnit0(IDevice *device):
+            Unit0 <Core::DefaultDeviceInformation, Core::DeviceManagementClient>(device)
+         {}
+      };
+
+      /*!
+       * Template for HAN-FUN devices.
+       */
+      template<typename CoreServices>
+      class Base:public AbstractDevice, public Transport::Endpoint
+      {
+         protected:
+
+         Transport::Link *_link;
+
+         public:
+
+         CoreServices unit0;
+
+         // =============================================================================
+         // IDevice API.
+         // =============================================================================
+
+         uint16_t address () const
+         {
+            return unit0.management ()->address ();
+         }
+
+         // =============================================================================
+         // Transport::Endpoint API
+         // =============================================================================
+
+         void connected (Transport::Link *link)
+         {
+            _link = link;
+         }
+
+         void disconnected (Transport::Link *link)
+         {
+            if (_link == link)
+            {
+               _link = nullptr;
+            }
+         }
+
+         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         {
+            AbstractDevice::receive (packet, payload, offset);
+         }
+
+         protected:
+
+         Base():unit0 (this)
+         {}
+
+         // =============================================================================
+
+         //! \see AbstractDevice::link.
+         Transport::Link *link (uint16_t addr) const
+         {
+            UNUSED (addr);
+            return _link;
+         }
+
+         bool is_local (Protocol::Packet &packet)
+         {
+            return AbstractDevice::is_local (packet) ||
+                   // If we are unregistered only allow packets to unit 0.
+                   (address () == Protocol::BROADCAST_ADDR && packet.destination.unit == 0);
+         }
+      };
+
+   }  // namespace Device
+
+   namespace Concentrator
+   {
+      /*!
+       * Template to create Unit0 for HAN-FUN devices.
+       */
+      template<typename... ITF>
+      struct Unit0:public HF::Unit0 <ITF...>
+      {
+         static_assert (is_base_of <HF::Core::DeviceManagementServer, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
+                        "DeviceMgt must be of type HF::Core::DeviceInformationServer");
+
+         Unit0(IDevice *device):
+            HF::Unit0 <ITF...>(device)
+         {}
+      };
+
+      struct DefaultUnit0:public Unit0 <HF::Core::DefaultDeviceInformation,
+                                        HF::Core::DefaultDeviceManagementServer>
+      {
+         DefaultUnit0(IDevice *device):
+            Unit0 <Core::DefaultDeviceInformation, Core::DefaultDeviceManagementServer>(device)
+         {}
+      };
+
+      template<typename CoreServices>
+      class Base:public AbstractDevice, public Transport::Endpoint
+      {
+         public:
+
+         typedef forward_list <Transport::Link *> links_t;
+
+         CoreServices unit0;
+
+         // =============================================================================
+         // IDevice API.
+         // =============================================================================
+
+         uint16_t address () const
+         {
+            return 0;
+         }
+
+         // =============================================================================
+         // Transport::Endpoint API
+         // =============================================================================
+
+         void connected (Transport::Link *link)
+         {
+            _links.push_front (link);
+         }
+
+         void disconnected (Transport::Link *link)
+         {
+            _links.remove (link);
+         }
+
+         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         {
+            if (packet.destination.device == Protocol::BROADCAST_ADDR)
+            {
+               route_packet (packet, payload, offset);
+            }
+            else
+            {
+               AbstractDevice::receive (packet, payload, offset);
+            }
+         }
+
+         protected:
+
+         links_t _links;   //!< List of link present in this Concentrator.
+
+         Base():unit0 (this)
+         {}
+
+         // =============================================================================
+
+         //! \see AbstractDevice::link
+         Transport::Link *link (uint16_t addr) const
+         {
+            /* *INDENT-OFF* */
+            links_t::const_iterator it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
+                                         {
+                                            return link->address () == addr;
+                                         });
+            /* *INDENT-ON* */
+
+            if (it == _links.end ())
+            {
+               return nullptr;
+            }
+
+            return *it;
+         }
+
+         /*!
+          * Route the given packet to the corresponding device.
+          *
+          * @param packet  reference for the packet to route.
+          * @param payload reference to the ByteArray containing the packet payload.
+          * @param offset  offset from where the packet data starts.
+          */
+         virtual void route_packet (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         {
+            // FIXME Route the incoming packet.
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
+         }
+      };
+
+   }  // namespace Concentrator
 
 }  // namespace HF
 
