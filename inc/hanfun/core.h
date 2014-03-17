@@ -133,7 +133,104 @@ namespace HF
          }
       };
 
+      // Forward declaration.
+      struct DeviceInformation;
+
    }  // namespace Core
+
+   template<typename... ITF>
+   class Unit0:public AbstractUnit
+   {
+      typedef tuple <ITF...> interfaces_t;
+
+      interfaces_t interfaces;
+
+      public:
+
+      typedef typename tuple_element <0, decltype (interfaces)>::type DeviceInfo;
+
+      static_assert (is_base_of <HF::Core::DeviceInformation, DeviceInfo>::value,
+                     "DeviceInfo must be of type HF::Core::DeviceInformation");
+
+      typedef typename tuple_element <1, decltype (interfaces)>::type DeviceMgt;
+
+      Unit0(HF::IDevice *device):
+         AbstractUnit (device), interfaces (ITF (device) ...)
+      {
+         device->add (this);
+      }
+
+      // =============================================================================
+
+      DeviceInfo *info () const
+      {
+         return const_cast <DeviceInfo *>(&get <0>(interfaces));
+      }
+
+      DeviceInfo *info ()
+      {
+         return &get <0>(interfaces);
+      }
+
+      DeviceMgt *management () const
+      {
+         return const_cast <DeviceMgt *>(&get <1>(interfaces));
+      }
+
+      DeviceMgt *management ()
+      {
+         return &get <1>(interfaces);
+      }
+
+      // =============================================================================
+      // IUnit API
+      // =============================================================================
+
+      HF::Result handle (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+      {
+         return handle_proxy <0, ITF...>(packet, payload, offset);
+      }
+
+      uint16_t uid () const
+      {
+         return 0;
+      }
+
+      //! \see IUnit::id
+      uint8_t id () const
+      {
+         return 0;
+      }
+
+      // =============================================================================
+
+      private:
+
+      template<uint8_t N, typename Head, typename... Tail>
+      HF::Result handle_proxy (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+      {
+         // FIXME Check Head is IService.
+         Head *head = &get <N>(interfaces);
+
+         if (head->uid () == packet.message.itf.uid)
+         {
+            return head->handle (packet, payload, offset);
+         }
+         else
+         {
+            return handle_proxy <N + 1, Tail...>(packet, payload, offset);
+         }
+      }
+
+      template<uint8_t N>
+      HF::Result handle_proxy (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+      {
+         UNUSED (packet);
+         UNUSED (payload);
+         UNUSED (offset);
+         return Result::FAIL_SUPPORT;
+      }
+   };
 
 } // namespace HF
 
