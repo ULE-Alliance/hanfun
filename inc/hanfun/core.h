@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file			inc/hanfun/core.h
+ * \file       inc/hanfun/core.h
  *
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * \author		Filipe Alves <filipe.alves@bithium.com>
+ * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version		x.x.x
+ * \version    0.1.0
  *
  * \copyright	Copyright &copy; &nbsp; 2013 Bithium S.A.
  */

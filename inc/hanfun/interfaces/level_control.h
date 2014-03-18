@@ -1,14 +1,14 @@
 // =============================================================================
 /*!
- * \file          inc/hanfun/interfaces/level_control.h
+ * \file       inc/hanfun/interfaces/level_control.h
  *
  * This file contains the definitions for the Level Control interface.
  *
- * \author        Filipe Alves <filipe.alves@bithium.com>
+ * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version	      x.x.x
+ * \version    0.1.0
  *
- * \copyright     Copyright &copy; &nbsp; 2013 Bithium S.A.
+ * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
 // =============================================================================
 

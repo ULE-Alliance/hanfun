@@ -26,13 +26,13 @@ DOXYFILE_ENCODING = UTF-8
 # identify the project. Note that if you do not use Doxywizard you need
 # to put quotes around the project name if it contains spaces.
 
-PROJECT_NAME = "HAN-FUN API"
+PROJECT_NAME = "Bithium's HAN-FUN API"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER = 0.00
+PROJECT_NUMBER = 0.1.0
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -340,7 +340,7 @@ EXTRACT_PRIVATE = NO
 # If the EXTRACT_STATIC tag is set to YES all static members of a file
 # will be included in the documentation.
 
-EXTRACT_STATIC = YES
+EXTRACT_STATIC = NO
 
 # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs)
 # defined locally in source files will be included in the documentation.
@@ -1277,7 +1277,7 @@ LATEX_BIB_STYLE = plain
 # The RTF output is optimized for Word 97 and may not look very pretty with
 # other RTF readers or editors.
 
-GENERATE_RTF = YES
+GENERATE_RTF = NO
 
 # The RTF_OUTPUT tag is used to specify where the RTF docs will be put.
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be
