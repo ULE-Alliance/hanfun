@@ -115,7 +115,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Valid)
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (TestInterface::ATTR1, itf->sendMsg.itf.member);
 
-   AttributeResponse *attr_res = static_cast <AttributeResponse *>(itf->sendMsg.payload);
+   HF::Attributes::Response *attr_res = static_cast <HF::Attributes::Response *>(itf->sendMsg.payload);
 
    CHECK_EQUAL (Result::OK, attr_res->code);
 
@@ -145,7 +145,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
-   AttributeResponse *attr_res = static_cast <AttributeResponse *>(itf->sendMsg.payload);
+   HF::Attributes::Response *attr_res = static_cast <HF::Attributes::Response *>(itf->sendMsg.payload);
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, attr_res->code);
 
@@ -304,14 +304,14 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 }
 
 // =============================================================================
-// AbstractInterface::GetAttributePack
+// AbstractInterface::GetHF::Attributes::Pack
 // =============================================================================
 
 //! \test Should handle valid get attribute pack requests for mandatory attributes.
-TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
+TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = AttributePack::MANDATORY;
+   packet.message.itf.member = HF::Attributes::Pack::MANDATORY;
 
    payload                   = ByteArray {0x00, 0x00, 0x00};
 
@@ -331,7 +331,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
 
    LONGS_EQUAL (1, attr_resp->attributes.size ());
 
-   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr == nullptr);
 
@@ -345,10 +345,10 @@ TEST (AbstractInterface, Handle_GetAttributePack_Mandatory)
 }
 
 //! \test Should handle valid get attribute pack requests for all attributes.
-TEST (AbstractInterface, Handle_GetAttributePack_All)
+TEST (AbstractInterface, Handle_GeAttributesPack_All)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = AttributePack::ALL;
+   packet.message.itf.member = HF::Attributes::Pack::ALL;
 
    payload                   = ByteArray {0x00, 0x00, 0x00};
 
@@ -368,7 +368,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_All)
 
    LONGS_EQUAL (3, attr_resp->attributes.size ());
 
-   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr != nullptr);
 
@@ -382,10 +382,10 @@ TEST (AbstractInterface, Handle_GetAttributePack_All)
 }
 
 //! \test Should handle valid get attribute pack requests.
-TEST (AbstractInterface, Handle_GetAttributePack_Valid)
+TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = AttributePack::DYNAMIC;
+   packet.message.itf.member = HF::Attributes::Pack::DYNAMIC;
 
    payload                   = ByteArray {0x00, 0x00, 0x00,
                                           0x02,  // Number of attribute uid's.
@@ -409,7 +409,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Valid)
 
    LONGS_EQUAL (2, attr_resp->attributes.size ());
 
-   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr != nullptr);
 
@@ -426,7 +426,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Valid)
 TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
-   packet.message.itf.member = AttributePack::DYNAMIC;
+   packet.message.itf.member = HF::Attributes::Pack::DYNAMIC;
 
    payload                   = ByteArray {0x00, 0x00, 0x00,
                                           0x03,  // Number of attribute uid's.
@@ -452,7 +452,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 
    LONGS_EQUAL (2, attr_resp->attributes.size ());
 
-   IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr != nullptr);
 

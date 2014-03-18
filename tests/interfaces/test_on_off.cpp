@@ -28,7 +28,7 @@ using namespace HF::Testing;
 //! Test Group for OnOff interface parent class.
 TEST_GROUP (OnOff)
 {
-   class TestOnOff:public InterfaceParentHelper <OnOff>
+   class TestOnOff:public InterfaceParentHelper <OnOff::Base>
    {};
 
    TestOnOff interface;
@@ -47,7 +47,7 @@ TEST (OnOff, UID)
 //! Test Group for OnOffClient interface class.
 TEST_GROUP (OnOffClient)
 {
-   class TestOnOffClient:public InterfaceHelper <OnOffClient>
+   class TestOnOffClient:public InterfaceHelper <OnOff::Client>
    {};
 
    TestOnOffClient client;
@@ -116,10 +116,10 @@ TEST (OnOffClient, Toggle)
 //! Test Group for OnOffServer interface class.
 TEST_GROUP (OnOffServer)
 {
-   class DefaultTestOnOffServer:public InterfaceHelper <OnOffServer>
+   class DefaultTestOnOffServer:public InterfaceHelper <OnOff::Server>
    {};
 
-   class TestOnOffServer:public InterfaceHelper <OnOffServer>
+   class TestOnOffServer:public InterfaceHelper <OnOff::Server>
    {
       /*!
        * Callback that is called when a \c ON_CMD message is received.
@@ -252,7 +252,7 @@ TEST (OnOffServer, Handle_Invalid_UID)
 //! \test Should return attribute.
 TEST (OnOffServer, Attribute)
 {
-   IAttribute *attr = server.attribute (OnOff::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr = server.attribute (OnOff::__LAST_ATTR__ + 1);
 
    CHECK_TRUE (attr == nullptr);
 

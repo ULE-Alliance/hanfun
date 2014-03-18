@@ -23,53 +23,53 @@
 
 class Link:public HF::Transport::Link
 {
-   HF::Transport::Layer    * tsp_layer;
-   HF::Transport::Endpoint * dst;
+   HF::Transport::Layer *tsp_layer;
+   HF::Transport::Endpoint *dst;
 
-   HF::UID * _uid;
+   HF::UID::UID *_uid;
 
    uint16_t _address;
 
-   public :
+   public:
 
-   Link * remote;
+   Link *remote;
 
-   Link(HF::Transport::Layer *tsp_layer, HF::Transport::Endpoint * dst, HF::UID * uid) :
-      tsp_layer (tsp_layer), dst (dst), _uid(uid)
+   Link(HF::Transport::Layer *tsp_layer, HF::Transport::Endpoint *dst, HF::UID::UID *uid):
+      tsp_layer (tsp_layer), dst (dst), _uid (uid)
    {}
 
-   Link(HF::Transport::Layer *tsp_layer, Base * dst) :
-      tsp_layer (tsp_layer), dst (dst), _uid(dst->uid())
+   Link(HF::Transport::Layer *tsp_layer, Base *dst):
+      tsp_layer (tsp_layer), dst (dst), _uid (dst->uid ())
    {}
 
-   void send(HF::Protocol::Packet &packet)
+   void send (HF::Protocol::Packet &packet)
    {
       cout << __PRETTY_FUNCTION__ << endl;
 
-      HF::Serializable * data = packet.message.payload;
+      HF::Serializable *data = packet.message.payload;
 
-      size_t size = ( data != nullptr ? data->size() : 0);
-      HF::ByteArray payload(size);
+      size_t size            = (data != nullptr ? data->size () : 0);
+      HF::ByteArray payload (size);
 
-      if( data != nullptr)
+      if (data != nullptr)
       {
-         data->pack(payload, 0);
+         data->pack (payload, 0);
          packet.message.length = size;
       }
 
-      if( dst != nullptr )
+      if (dst != nullptr)
       {
          packet.link = remote;
-         dst->receive(packet, payload, 0);
+         dst->receive (packet, payload, 0);
       }
    }
 
-   HF::Transport::Layer * transport()
+   HF::Transport::Layer *transport ()
    {
       return tsp_layer;
    }
 
-   HF::UID * uid()
+   HF::UID::UID *uid ()
    {
       return _uid;
    }
@@ -92,17 +92,17 @@ class Link:public HF::Transport::Link
 
 class Transport:public HF::Transport::Layer
 {
-   forward_list<HF::Transport::Endpoint *> endpoints;
+   forward_list <HF::Transport::Endpoint *> endpoints;
 
-   forward_list<Link *> links;
+   forward_list <Link *> links;
 
-   Base * base;
+   Base *base;
 
-   const HF::UID * _uid;
+   const HF::UID::UID *_uid;
 
-   public :
+   public:
 
-   Transport() : base(nullptr), _uid(new HF::UID())
+   Transport():base (nullptr), _uid (new HF::UID::NONE ())
    {}
 
    virtual ~Transport()
@@ -113,54 +113,54 @@ class Transport:public HF::Transport::Layer
    void initialize ()
    {}
 
-   void initialize (Base * base)
+   void initialize (Base *base)
    {
       this->base = base;
    }
 
-   void add (HF::Transport::Endpoint *ep, HF::UID * uid)
+   void add (HF::Transport::Endpoint *ep, HF::UID::UID *uid)
    {
-      add(ep);
+      add (ep);
 
-      Link * link_base = new Link(this, base);
-      links.push_front(link_base);
-      ep->connected(link_base);
+      Link *link_base = new Link (this, base);
+      links.push_front (link_base);
+      ep->connected (link_base);
 
-      Link * link_device = new Link(this, ep, uid);
-      links.push_front(link_device);
-      base->connected(link_device);
+      Link *link_device = new Link (this, ep, uid);
+      links.push_front (link_device);
+      base->connected (link_device);
 
-      link_base->remote = link_device;
+      link_base->remote   = link_device;
       link_device->remote = link_base;
    }
 
    void remove (HF::Transport::Endpoint *ep = nullptr)
    {
-      if( ep != nullptr)
+      if (ep != nullptr)
       {
-         endpoints.remove(ep);
+         endpoints.remove (ep);
       }
       else
       {
-         endpoints.clear();
+         endpoints.clear ();
       }
    }
 
    void destroy ()
    {
-      remove(nullptr);
+      remove (nullptr);
    }
 
-   const HF::UID * uid () const
+   const HF::UID::UID *uid () const
    {
       return _uid;
    }
 
-   private :
+   private:
 
    void add (HF::Transport::Endpoint *ep)
    {
-      endpoints.push_front(ep);
+      endpoints.push_front (ep);
    }
 };
 

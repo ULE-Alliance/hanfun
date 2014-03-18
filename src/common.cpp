@@ -18,6 +18,7 @@
 #include "hanfun/common.h"
 
 using namespace HF;
+using namespace HF::Common;
 
 // =============================================================================
 // Defines

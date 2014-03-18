@@ -20,12 +20,13 @@
 
 using namespace HF;
 using namespace HF::Interfaces;
+using namespace HF::Interfaces::SimplePowerMeter;
 
 // =============================================================================
-// SimplePowerMeterServer
+// SimplePowerMeter::Server
 // =============================================================================
 
-SimplePowerMeterServer::SimplePowerMeterServer()
+SimplePowerMeter::Server::Server()
 {
 #if HF_IFT_SPM_ENERGY_ATTR
    memset (&_energy, 0, sizeof(Measurement));          // Energy measurement.
@@ -74,13 +75,13 @@ SimplePowerMeterServer::SimplePowerMeterServer()
 }
 
 // =============================================================================
-// SimplePowerMeterServer::report
+// SimplePowerMeter::Server::report
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-SimplePowerMeter::Report *SimplePowerMeterServer::report ()
+SimplePowerMeter::Report *SimplePowerMeter::Server::report ()
 {
    SimplePowerMeter::Report *report = new (nothrow) SimplePowerMeter::Report ();
 
@@ -142,13 +143,13 @@ SimplePowerMeter::Report *SimplePowerMeterServer::report ()
 }
 
 // =============================================================================
-// SimplePowerMeterServer::periodic
+// SimplePowerMeter::Server::periodic
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void SimplePowerMeterServer::periodic (uint32_t time)
+void SimplePowerMeter::Server::periodic (uint32_t time)
 {
    UNUSED (time);
 
@@ -160,7 +161,7 @@ void SimplePowerMeterServer::periodic (uint32_t time)
       Protocol::Message message;
 
       message.itf.role   = CLIENT_ROLE;
-      message.itf.uid    = SimplePowerMeterServer::uid ();
+      message.itf.uid    = SimplePowerMeter::Server::uid ();
       message.itf.member = REPORT_CMD;
 
       message.payload    = report ();
@@ -174,13 +175,13 @@ void SimplePowerMeterServer::periodic (uint32_t time)
 }
 
 // =============================================================================
-// SimplePowerMeterServer::attribute
+// SimplePowerMeter::Server::attribute
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-IAttribute *SimplePowerMeterServer::attribute (uint8_t uid)
+HF::Attributes::IAttribute *SimplePowerMeter::Server::attribute (uint8_t uid)
 {
    Attributes attr = static_cast <Attributes>(uid);
 
@@ -268,17 +269,17 @@ IAttribute *SimplePowerMeterServer::attribute (uint8_t uid)
 }
 
 // =============================================================================
-// SimplePowerMeterServer::attribute_uids
+// SimplePowerMeter::Server::attribute_uids
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-attribute_uids_t SimplePowerMeterServer::attributes (uint8_t pack_id) const
+HF::Attributes::uids_t SimplePowerMeter::Server::attributes (uint8_t pack_id) const
 {
-   attribute_uids_t result;
+   HF::Attributes::uids_t result;
 
-   if (pack_id == AttributePack::ALL)
+   if (pack_id == HF::Attributes::Pack::ALL)
    {
 #if HF_ITF_SPM_POWER_ATTR
       result.push_back (SimplePowerMeter::POWER_ATTR);

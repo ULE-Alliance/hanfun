@@ -14,6 +14,7 @@
 // =============================================================================
 
 #include "hanfun/common.h"
+#include "hanfun/uids.h"
 
 #include "test_helper.h"
 
@@ -166,14 +167,16 @@ TEST (ByteArray_Read, Available)
 // HF::UID
 // =============================================================================
 
+using namespace HF::UID;
+
 TEST_GROUP (UID)
 {};
 
 TEST (UID, NONE)
 {
-   UID uid;
+   NONE uid;
 
-   LONGS_EQUAL (UID::NONE, uid.type ());
+   LONGS_EQUAL (NONE_UID, uid.type ());
 
    size_t size = uid.size ();
 
@@ -208,7 +211,7 @@ TEST (UID, IPUI)
 {
    IPUI uid;
 
-   LONGS_EQUAL (UID::IPUI, uid.type ());
+   LONGS_EQUAL (IPUI_UID, uid.type ());
 
    size_t size = uid.size ();
 
@@ -249,7 +252,7 @@ TEST (UID, MAC)
 {
    MAC uid;
 
-   LONGS_EQUAL (UID::MAC, uid.type ());
+   LONGS_EQUAL (MAC_UID, uid.type ());
 
    size_t size = uid.size ();
 
@@ -291,7 +294,7 @@ TEST (UID, URI)
 {
    URI uid;
 
-   LONGS_EQUAL (UID::URI, uid.type ());
+   LONGS_EQUAL (URI_UID, uid.type ());
 
    uid.value = "Hello World !";
 
@@ -333,7 +336,7 @@ TEST (UID, URI)
 
 TEST (UID, Equals)
 {
-   UID  *temp;
+   UID::UID *temp;
 
    IPUI ipui;
    IPUI ipui2;
@@ -380,8 +383,8 @@ TEST (UID, Equals)
 
 TEST (UID, Order)
 {
-   UID  none;
-   UID  none2;
+   NONE none;
+   NONE none2;
 
    RFPI rfpi;
    RFPI rfpi2;
@@ -428,7 +431,7 @@ TEST (UID, Order)
 
    // Check if operation works.
 
-   less <UID *> comp;
+   less <UID::UID *> comp;
 
    CHECK_FALSE (comp (&none, &none));
    CHECK_FALSE (comp (&rfpi, &rfpi));
@@ -463,7 +466,7 @@ TEST (UID, Order)
 
    // Using it on an ordered collection.
 
-   map <UID *, string> test_db;
+   map <UID::UID *, string> test_db;
 
    // Only one NONE UID is possible.
 
@@ -575,9 +578,9 @@ TEST (UID, Order)
 
 TEST (UID, Order_NULL)
 {
-   UID uid;
+   NONE uid;
 
-   less <UID *> comp;
+   less <UID::UID *> comp;
 
    CHECK_TRUE (comp (nullptr, &uid));
 
@@ -634,9 +637,9 @@ TEST (Attributes, API)
    uint32_t data3 = 0x5A50;
 
    TestInterface itf;
-   Attribute <uint8_t &>  attr (itf.uid (), 0x5B, data);
-   Attribute <uint16_t &> attr2 (itf.uid (), 0x5A, data2);
-   Attribute <uint32_t &> attr3 (itf.uid (), 0x5C, data3);
+   HF::Attributes::Attribute <uint8_t &>  attr (itf.uid (), 0x5B, data);
+   HF::Attributes::Attribute <uint16_t &> attr2 (itf.uid (), 0x5A, data2);
+   HF::Attributes::Attribute <uint32_t &> attr3 (itf.uid (), 0x5C, data3);
 
    LONGS_EQUAL (data2, attr2.value ());
 
@@ -655,7 +658,7 @@ TEST (Attributes, API2)
    TestMeasure data;
 
    TestInterface itf;
-   Attribute <TestMeasure &> attr (itf.uid (), 0x5A, data, true);
+   HF::Attributes::Attribute <TestMeasure &> attr (itf.uid (), 0x5A, data, true);
 
    data.type  = 0x55;
    data.value = 0x5A5A;
@@ -673,7 +676,7 @@ TEST (Attributes, Serialize_Pack)
    uint16_t attr = 0x1234;
 
    TestInterface itf;
-   Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
+   HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
 
    ByteArray result (expected.size ());
 
@@ -694,7 +697,7 @@ TEST (Attributes, Serialize_Unpack)
    uint16_t attr = 0x6666;
 
    TestInterface itf;
-   Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
+   HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
 
 
    size_t r_size = attr_wrapper.unpack (expected, 3);

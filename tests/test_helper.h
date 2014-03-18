@@ -144,7 +144,7 @@ namespace HF
          }
       };
 
-      struct TestInterface:public InterfaceHelper <AbstractInterface>
+      struct TestInterface:public InterfaceHelper <Interfaces::AbstractInterface>
       {
          static const uint16_t UID = 0x5A5A;
 
@@ -177,17 +177,17 @@ namespace HF
             return _role;
          }
 
-         IAttribute *attribute (uint8_t uid)
+         HF::Attributes::IAttribute *attribute (uint8_t uid)
          {
             return create_attribute (this, uid);
          }
 
-         static IAttribute *create_attribute (uint8_t uid)
+         static HF::Attributes::IAttribute *create_attribute (uint8_t uid)
          {
             return create_attribute (nullptr, uid);
          }
 
-         static IAttribute *create_attribute (TestInterface *itf, uint8_t uid)
+         static HF::Attributes::IAttribute *create_attribute (TestInterface *itf, uint8_t uid)
          {
             uint16_t itf_uid = (itf != nullptr ? itf->uid () : TestInterface::UID);
 
@@ -197,11 +197,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
                   }
                   else
                   {
-                     return new Attribute <uint16_t &>(itf_uid, uid, itf->attr1);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr1);
                   }
 
                   break;
@@ -211,11 +211,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
                   }
                   else
                   {
-                     return new Attribute <uint16_t &>(itf_uid, uid, itf->attr2);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr2);
                   }
 
                   break;
@@ -224,11 +224,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new Attribute <uint16_t>(itf_uid, uid, true);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, true);
                   }
                   else
                   {
-                     return new Attribute <uint16_t &>(itf_uid, uid, itf->attr3, true);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr3, true);
                   }
 
                   break;
@@ -253,11 +253,11 @@ namespace HF
          }
 
          //! \see AbstractInterface::attributes
-         attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
+         HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
-            attribute_uids_t result;
+            HF::Attributes::uids_t result;
 
-            if (pack_id == AttributePack::ALL)
+            if (pack_id == HF::Attributes::Pack::ALL)
             {
                result.push_back (ATTR1);
                result.push_back (ATTR2);
@@ -274,7 +274,7 @@ namespace HF
          }
       };
 
-      struct Profile:public IProfile, public TestInterface
+      struct Profile:public Profiles::IProfile, public TestInterface
       {
          uint16_t _uid;
 
@@ -284,10 +284,10 @@ namespace HF
          }
       };
 
-      struct Unit:public HF::Unit <Profile>
+      struct Unit:public HF::Units::Unit <Profile>
       {
          Unit(uint16_t id, IDevice *device):
-            HF::Unit <Profile>(id, device)
+            HF::Units::Unit <Profile>(id, device)
          {}
       };
 
@@ -350,22 +350,22 @@ namespace HF
          }
       };
 
-      struct Device:public AbstractDevice < HF::Device::Base < HF::Device::DefaultUnit0 >>
+      struct Device:public AbstractDevice < HF::Devices::Node::Base < HF::Devices::Node::DefaultUnit0 >>
       {};
 
-      struct Concentrator:public AbstractDevice < HF::Concentrator::Base < HF::Concentrator::DefaultUnit0 >>
+      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Base < HF::Devices::Concentrator::DefaultUnit0 >>
       {};
 
       struct Link:public HF::Transport::Link
       {
-         HF::UID              *_uid;
+         HF::UID::UID         *_uid;
          HF::Transport::Layer *tsp;
 
          Protocol::Packet     *packet;
 
          uint16_t             _address;
 
-         Link(HF::UID *uid, HF::Transport::Layer *tsp):
+         Link(HF::UID::UID *uid, HF::Transport::Layer *tsp):
             _uid (uid), tsp (tsp), packet (nullptr), _address (Protocol::BROADCAST_ADDR)
          {}
 
@@ -380,7 +380,7 @@ namespace HF
             mock ("Link").actualCall ("send");
          }
 
-         HF::UID *uid ()
+         HF::UID::UID *uid ()
          {
             return _uid;
          }

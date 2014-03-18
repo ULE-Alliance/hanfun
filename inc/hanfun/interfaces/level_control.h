@@ -22,27 +22,28 @@ namespace HF
 {
    namespace Interfaces
    {
-      struct LevelControlServer;
+      namespace LevelControl
+      {
+         struct Server;
+      }
 
-      IAttribute *create_attribute (LevelControlServer *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute (LevelControl::Server *server, uint8_t uid);
 
       /*!
-       * Level Control Interface : Parent.
-       *
-       * This is the parent class for the Level Control interface implementation.
+       * This namespace contains the implementation of the Level Control interface
        */
-      struct LevelControl:public Base <Interface::LEVEL_CONTROL>
+      namespace LevelControl
       {
          //! Command IDs.
          typedef enum
          {
-            SET_LEVEL_CMD = 0x01       //!< Set Level Command ID.
+            SET_LEVEL_CMD = 0x01            //!< Set Level Command ID.
          } CMD;
 
          //! Attributes
          typedef enum
          {
-            LEVEL_ATTR    = 0x01, //!< State attribute UID.
+            LEVEL_ATTR    = 0x01,      //!< State attribute UID.
             __LAST_ATTR__ = LEVEL_ATTR,
          } Attributes;
 
@@ -79,7 +80,7 @@ namespace HF
             }
          };
 
-         struct Level:public Attribute <uint8_t>
+         struct Level:public HF::Attributes::Attribute <uint8_t>
          {
             static constexpr uint8_t ID        = LEVEL_ATTR;
             static constexpr bool    WRITABBLE = false;
@@ -91,139 +92,145 @@ namespace HF
             {}
          };
 
-         static IAttribute *create_attribute (uint8_t uid)
-         {
-            return Interfaces::create_attribute ((LevelControlServer *) nullptr, uid);
-         }
-
-         protected:
-
-         size_t payload_size (Protocol::Message::Interface &itf) const
-         {
-            UNUSED (itf);
-            return payload_size_helper <Message>();
-         }
-      };
-
-      /*!
-       * Level Control Interface : Server side implementation.
-       *
-       * This class provides the server side of the Level Control interface.
-       */
-      class LevelControlServer:public InterfaceRole <LevelControl, Interface::SERVER_ROLE>
-      {
-         protected:
-
-         //! Current level value.
-         uint8_t _level;
-
-         public:
-
-         //! Constructor
-         LevelControlServer():_level (0) {}
-
-         // ======================================================================
-         // API
-         // ======================================================================
+         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
-          * Getter for the current level.
+          * Level Control Interface : Parent.
           *
-          * @return  the current level.
+          * This is the parent class for the Level Control interface implementation.
           */
-         uint8_t level ();
-
-         /*!
-          * Setter for the server level.
-          *
-          * @param new_level  the new level value to use.
-          */
-         void level (uint8_t new_level);
-
-         // =============================================================================
-         // Events
-         // =============================================================================
-         //! \name Events
-         //! @{
-
-         /*!
-          * Callback for a \c SET_LEVEL_CMD message.
-          *
-          * @param [in] new_level    the new level value to use.
-          */
-         virtual void level_change (uint8_t new_level);
-
-         //! @}
-         // =============================================================================
-
-         // =============================================================================
-         // Attributes API
-         // =============================================================================
-
-         //! \see Interface::attribute
-         IAttribute *attribute (uint8_t uid)
+         struct Base:public Interfaces::Base <Interface::LEVEL_CONTROL>
          {
-            return Interfaces::create_attribute (this, uid);
-         }
+            protected:
 
-         friend IAttribute *Interfaces::create_attribute (LevelControlServer *server, uint8_t uid);
+            Base() {}
 
-         protected:
-
-         //! \see AbstractInterface::handle_command
-         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
-
-         //! \see AbstractInterface::attributes
-         attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
-         {
-            UNUSED (pack_id);
-            /* *INDENT-OFF* */
-            return attribute_uids_t ({ LevelControl::LEVEL_ATTR });
-            /* *INDENT-ON* */
-         }
-      };
-
-      /*!
-       * Level Control Interface : Client side implementation.
-       *
-       * This class provides the client side of the Level Control interface.
-       */
-      class LevelControlClient:public InterfaceRole <LevelControl, Interface::CLIENT_ROLE>
-      {
-         public:
-
-         // ======================================================================
-         // Commands
-         // ======================================================================
-         // \name Commands
-         //@{
+            size_t payload_size (Protocol::Message::Interface &itf) const
+            {
+               UNUSED (itf);
+               return payload_size_helper <Message>();
+            }
+         };
 
          /*!
-          * Send \c SET_LEVEL_CMD message to the given network address and
-          * the given level.
+          * Level Control Interface : Server side implementation.
           *
-          * @param [in] addr       network address to send the message to.
-          * @param [in] new_level    level value to send in the message.
+          * This class provides the server side of the Level Control interface.
           */
-         void level (Protocol::Address &addr, uint8_t new_level);
+         class Server:public InterfaceRole <LevelControl::Base, Interface::SERVER_ROLE>
+         {
+            protected:
+
+            //! Current level value.
+            uint8_t _level;
+
+            public:
+
+            //! Constructor
+            Server():_level (0) {}
+
+            // ======================================================================
+            // API
+            // ======================================================================
+
+            /*!
+             * Getter for the current level.
+             *
+             * @return  the current level.
+             */
+            uint8_t level ();
+
+            /*!
+             * Setter for the server level.
+             *
+             * @param new_level  the new level value to use.
+             */
+            void level (uint8_t new_level);
+
+            // =============================================================================
+            // Events
+            // =============================================================================
+            //! \name Events
+            //! @{
+
+            /*!
+             * Callback for a \c SET_LEVEL_CMD message.
+             *
+             * @param [in] new_level    the new level value to use.
+             */
+            virtual void level_change (uint8_t new_level);
+
+            //! @}
+            // =============================================================================
+
+            // =============================================================================
+            // Attributes API
+            // =============================================================================
+
+            //! \see Interface::attribute
+            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            {
+               return Interfaces::create_attribute (this, uid);
+            }
+
+            friend HF::Attributes::IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t uid);
+
+            protected:
+
+            //! \see AbstractInterface::handle_command
+            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+            //! \see AbstractInterface::attributes
+            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED (pack_id);
+               /* *INDENT-OFF* */
+               return HF::Attributes::uids_t ({ LevelControl::LEVEL_ATTR });
+               /* *INDENT-ON* */
+            }
+         };
 
          /*!
-          * Send \c SET_LEVEL_CMD message to the broadcast network address and
-          * the given level.
+          * Level Control Interface : Client side implementation.
           *
-          * @param [in] new_level    level value to send in the message.
+          * This class provides the client side of the Level Control interface.
           */
-         void level (uint8_t new_level)
+         class Client:public InterfaceRole <LevelControl::Base, Interface::CLIENT_ROLE>
          {
-            Protocol::Address addr;
-            level (addr, new_level);
-         }
+            public:
 
-         //@}
-         // =============================================================================
-      };
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            // \name Commands
+            //@{
 
-      IAttribute *create_attribute (LevelControlServer *server, uint8_t uid);
+            /*!
+             * Send \c SET_LEVEL_CMD message to the given network address and
+             * the given level.
+             *
+             * @param [in] addr       network address to send the message to.
+             * @param [in] new_level    level value to send in the message.
+             */
+            void level (Protocol::Address &addr, uint8_t new_level);
+
+            /*!
+             * Send \c SET_LEVEL_CMD message to the broadcast network address and
+             * the given level.
+             *
+             * @param [in] new_level    level value to send in the message.
+             */
+            void level (uint8_t new_level)
+            {
+               Protocol::Address addr;
+               level (addr, new_level);
+            }
+
+            //@}
+            // =============================================================================
+         };
+
+      }  // namespace LevelControl
 
    }  // namespace Interfaces
 

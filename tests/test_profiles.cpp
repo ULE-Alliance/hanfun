@@ -85,7 +85,7 @@ namespace HF
 
 TEST_GROUP (Profiles)
 {
-   struct TestProfile:public InterfaceHelper < Profile2 < 0x5A5A, TestInterface, TestInterface >>
+   struct TestProfile:public InterfaceHelper < Profiles::Profile2 < 0x5A5A, TestInterface, TestInterface >>
    {};
 
    TEST_SETUP ()
@@ -101,66 +101,66 @@ TEST_GROUP (Profiles)
 
 TEST (Profiles, UIDs)
 {
-   IProfile *profile = NULL;
+   Profiles::IProfile *profile = NULL;
 
    // =============================================================================
    // Home Control Unit Types
    // =============================================================================
 
    profile = new SimpleOnOffSwitchable ();
-   CHECK_EQUAL (IProfile::SIMPLE_ONOFF_SWITCHABLE, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_ONOFF_SWITCHABLE, profile->uid ());
    delete profile;
 
    profile = new SimpleOnOffSwitch ();
-   CHECK_EQUAL (IProfile::SIMPLE_ONOFF_SWITCH, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_ONOFF_SWITCH, profile->uid ());
    delete profile;
 
    profile = new SimpleLevelControllable ();
-   CHECK_EQUAL (IProfile::SIMPLE_LEVEL_CONTROLLABLE, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_LEVEL_CONTROLLABLE, profile->uid ());
    delete profile;
 
    profile = new SimpleLevelControl ();
-   CHECK_EQUAL (IProfile::SIMPLE_LEVEL_CONTROL, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_LEVEL_CONTROL, profile->uid ());
    delete profile;
 
    profile = new SimpleLevelControllableSwitchable ();
-   CHECK_EQUAL (IProfile::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, profile->uid ());
    delete profile;
 
    profile = new SimpleLevelControlSwitch ();
-   CHECK_EQUAL (IProfile::SIMPLE_LEVEL_CONTROL_SWITCH, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_LEVEL_CONTROL_SWITCH, profile->uid ());
    delete profile;
 
    profile = new AC_Outlet ();
-   CHECK_EQUAL (IProfile::AC_OUTLET, profile->uid ());
+   CHECK_EQUAL (Profiles::AC_OUTLET, profile->uid ());
    delete profile;
 
    profile = new AC_OutletWithPowerMetering ();
-   CHECK_EQUAL (IProfile::AC_OUTLET_WITH_POWER_METERING, profile->uid ());
+   CHECK_EQUAL (Profiles::AC_OUTLET_WITH_POWER_METERING, profile->uid ());
    delete profile;
 
    profile = new SimpleLight ();
-   CHECK_EQUAL (IProfile::SIMPLE_LIGHT, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_LIGHT, profile->uid ());
    delete profile;
 
    profile = new DimmableLight ();
-   CHECK_EQUAL (IProfile::DIMMABLE_LIGHT, profile->uid ());
+   CHECK_EQUAL (Profiles::DIMMABLE_LIGHT, profile->uid ());
    delete profile;
 
    profile = new DimmerSwitch ();
-   CHECK_EQUAL (IProfile::DIMMER_SWITCH, profile->uid ());
+   CHECK_EQUAL (Profiles::DIMMER_SWITCH, profile->uid ());
    delete profile;
 
    profile = new SimpleDoorLock ();
-   CHECK_EQUAL (IProfile::SIMPLE_DOOR_LOCK, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_DOOR_LOCK, profile->uid ());
    delete profile;
 
    profile = new DoorBell ();
-   CHECK_EQUAL (IProfile::DOOR_BELL, profile->uid ());
+   CHECK_EQUAL (Profiles::DOOR_BELL, profile->uid ());
    delete profile;
 
    profile = new Testing::SimplePowerMeter ();
-   CHECK_EQUAL (IProfile::SIMPLE_POWER_METER, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_POWER_METER, profile->uid ());
    delete profile;
 
    // =============================================================================
@@ -168,43 +168,43 @@ TEST (Profiles, UIDs)
    // =============================================================================
 
    profile = new SimpleDetector ();
-   CHECK_EQUAL (IProfile::SIMPLE_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new DoorOpenCloseDetector ();
-   CHECK_EQUAL (IProfile::DOOR_OPEN_CLOSE_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::DOOR_OPEN_CLOSE_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new WindowOpenCloseDetector ();
-   CHECK_EQUAL (IProfile::WINDOW_OPEN_CLOSE_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::WINDOW_OPEN_CLOSE_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new MotionDetector ();
-   CHECK_EQUAL (IProfile::MOTION_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::MOTION_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new SmokeDetector ();
-   CHECK_EQUAL (IProfile::SMOKE_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::SMOKE_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new GasDetector ();
-   CHECK_EQUAL (IProfile::GAS_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::GAS_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new FloodDetector ();
-   CHECK_EQUAL (IProfile::FLOOD_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::FLOOD_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new GlassBreakDetector ();
-   CHECK_EQUAL (IProfile::GLASS_BREAK_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::GLASS_BREAK_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new VibrationDetector ();
-   CHECK_EQUAL (IProfile::VIBRATION_DETECTOR, profile->uid ());
+   CHECK_EQUAL (Profiles::VIBRATION_DETECTOR, profile->uid ());
    delete profile;
 
    profile = new Siren ();
-   CHECK_EQUAL (IProfile::SIREN, profile->uid ());
+   CHECK_EQUAL (Profiles::SIREN, profile->uid ());
    delete profile;
 
    // =============================================================================
@@ -212,7 +212,7 @@ TEST (Profiles, UIDs)
    // =============================================================================
 
    profile = new SimplePendant ();
-   CHECK_EQUAL (IProfile::SIMPLE_PENDANT, profile->uid ());
+   CHECK_EQUAL (Profiles::SIMPLE_PENDANT, profile->uid ());
    delete profile;
 
    // =============================================================================
@@ -220,11 +220,11 @@ TEST (Profiles, UIDs)
    // =============================================================================
 
    profile = new UserInterface ();
-   CHECK_EQUAL (IProfile::USER_INTERFACE, profile->uid ());
+   CHECK_EQUAL (Profiles::USER_INTERFACE, profile->uid ());
    delete profile;
 
    profile = new GenericApplicationLogic ();
-   CHECK_EQUAL (IProfile::GENERIC_APPLICATION, profile->uid ());
+   CHECK_EQUAL (Profiles::GENERIC_APPLICATION, profile->uid ());
    delete profile;
 }
 

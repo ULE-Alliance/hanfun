@@ -406,7 +406,7 @@ size_t GetAttributePack::Response::unpack (const ByteArray &array, size_t offset
 
       offset += array.read (offset, uid);
 
-      IAttribute *attr = attribute_factory (uid);
+      HF::Attributes::IAttribute *attr = attribute_factory (uid);
 
       if (attr == nullptr)
       {

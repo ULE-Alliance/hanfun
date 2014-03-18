@@ -27,6 +27,10 @@
 
 namespace HF
 {
+   /*!
+    * This is the top level namespace for the HAN-FUN Core Services and Interfaces
+    * implementation.
+    */
    namespace Core
    {
       /*!
@@ -38,7 +42,8 @@ namespace HF
          virtual IDevice *device () = 0;
       };
 
-      struct AbstractService:virtual public IService, virtual public HF::AbstractInterface, public HF::AbstractUnit
+      struct AbstractService:virtual public IService, virtual public HF::Interfaces::AbstractInterface,
+         public HF::Units::AbstractUnit
       {
          //! Id number of this unit on the device.
          uint8_t id () const
@@ -49,12 +54,12 @@ namespace HF
          //! \see HF::Interface::handle
          virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
          {
-            return AbstractInterface::handle (packet, payload, offset);
+            return Interfaces::AbstractInterface::handle (packet, payload, offset);
          }
 
          IDevice *device ()
          {
-            return HF::AbstractUnit::device ();
+            return HF::Units::AbstractUnit::device ();
          }
 
          virtual void periodic (uint32_t time)
@@ -63,7 +68,7 @@ namespace HF
          }
 
          //! \see Interface::attribute
-         IAttribute *attribute (uint8_t uid)
+         HF::Attributes::IAttribute *attribute (uint8_t uid)
          {
             return AbstractInterface::attribute (uid);
          }
@@ -72,11 +77,11 @@ namespace HF
          protected:
 
          AbstractService(IDevice *_device):
-            HF::AbstractUnit (_device)
+            HF::Units::AbstractUnit (_device)
          {}
 
          //! \see AbstractInterface::attributes
-         virtual attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
+         virtual HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
             return AbstractInterface::attributes (pack_id);
          }
@@ -134,12 +139,15 @@ namespace HF
       };
 
       // Forward declaration.
-      struct DeviceInformation;
+      namespace DeviceInformation
+      {
+         struct Interface;
+      }
 
    }  // namespace Core
 
    template<typename... ITF>
-   class Unit0:public AbstractUnit
+   class Unit0:public Units::AbstractUnit
    {
       typedef tuple <ITF...> interfaces_t;
 
@@ -149,13 +157,13 @@ namespace HF
 
       typedef typename tuple_element <0, decltype (interfaces)>::type DeviceInfo;
 
-      static_assert (is_base_of <HF::Core::DeviceInformation, DeviceInfo>::value,
-                     "DeviceInfo must be of type HF::Core::DeviceInformation");
+      static_assert (is_base_of <HF::Core::DeviceInformation::Interface, DeviceInfo>::value,
+                     "DeviceInfo must be of type HF::Core::DeviceInformation::Interface");
 
       typedef typename tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
       Unit0(HF::IDevice *device):
-         AbstractUnit (device), interfaces (ITF (device) ...)
+         Units::AbstractUnit (device), interfaces (ITF (device) ...)
       {
          device->add (this);
       }

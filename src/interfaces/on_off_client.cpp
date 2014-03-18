@@ -22,54 +22,54 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 // =============================================================================
-// OnOffClient::on
+// OnOff::Client::on
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOffClient::on (Protocol::Address &addr)
+void OnOff::Client::on (Protocol::Address &addr)
 {
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = OnOffClient::uid ();
+   message.itf.uid    = OnOff::Client::uid ();
    message.itf.member = ON_CMD;
 
    sendMessage (addr, message);
 }
 
 // =============================================================================
-// OnOffClient::off
+// OnOff::Client::off
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOffClient::off (Protocol::Address &addr)
+void OnOff::Client::off (Protocol::Address &addr)
 {
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = OnOffClient::uid ();
+   message.itf.uid    = OnOff::Client::uid ();
    message.itf.member = OFF_CMD;
 
    sendMessage (addr, message);
 }
 
 // =============================================================================
-// OnOffClient::toggle
+// OnOff::Client::toggle
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOffClient::toggle (Protocol::Address &addr)
+void OnOff::Client::toggle (Protocol::Address &addr)
 {
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = OnOffClient::uid ();
+   message.itf.uid    = OnOff::Client::uid ();
    message.itf.member = TOGGLE_CMD;
 
    sendMessage (addr, message);

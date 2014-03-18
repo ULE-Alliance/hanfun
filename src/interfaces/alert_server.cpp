@@ -23,36 +23,36 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 //! Constructor
-AlertServer::AlertServer()
+Alert::Server::Server()
 {
    _state   = 0x0;
    _enabled = UINT32_MAX;
 }
 
 //! Destructor
-AlertServer::~AlertServer()
+Alert::Server::~Server()
 {}
 
 // =============================================================================
-// AlertServer::state
+// Alert::Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint32_t AlertServer::state ()
+uint32_t Alert::Server::state ()
 {
    return this->_state;
 }
 
 // =============================================================================
-// AlertServer::state
+// Alert::Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool AlertServer::state (uint8_t index, bool state)
+bool Alert::Server::state (uint8_t index, bool state)
 {
    if (index >= STATE_SIZE_BITS)
    {
@@ -79,13 +79,13 @@ bool AlertServer::state (uint8_t index, bool state)
 }
 
 // =============================================================================
-// AlertServer::state
+// Alert::Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool AlertServer::state (uint8_t index)
+bool Alert::Server::state (uint8_t index)
 {
    if (index >= STATE_SIZE_BITS)
    {
@@ -96,25 +96,25 @@ bool AlertServer::state (uint8_t index)
 }
 
 // =============================================================================
-// AlertServer::clear
+// Alert::Server::clear
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void AlertServer::clear ()
+void Alert::Server::clear ()
 {
    this->_state = 0;
 }
 
 // =============================================================================
-// AlertServer::enable
+// Alert::Server::enable
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void AlertServer::enable (uint8_t index)
+void Alert::Server::enable (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -125,37 +125,37 @@ void AlertServer::enable (uint8_t index)
 }
 
 // =============================================================================
-// AlertServer::enableAll
+// Alert::Server::enableAll
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void AlertServer::enableAll ()
+void Alert::Server::enableAll ()
 {
    this->_enabled = UINT32_MAX;
 }
 
 // =============================================================================
-// AlertServer::enabled
+// Alert::Server::enabled
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint32_t AlertServer::enabled ()
+uint32_t Alert::Server::enabled ()
 {
    return this->_enabled;
 }
 
 // =============================================================================
-// AlertServer::enabled
+// Alert::Server::enabled
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool AlertServer::enabled (uint8_t index)
+bool Alert::Server::enabled (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -166,13 +166,13 @@ bool AlertServer::enabled (uint8_t index)
 }
 
 // =============================================================================
-// AlertServer::disable
+// Alert::Server::disable
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void AlertServer::disable (uint8_t index)
+void Alert::Server::disable (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -183,25 +183,25 @@ void AlertServer::disable (uint8_t index)
 }
 
 // =============================================================================
-// AlertServer::disableAll
+// Alert::Server::disableAll
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void AlertServer::disableAll ()
+void Alert::Server::disableAll ()
 {
    this->_enabled = 0;
 }
 
 // =============================================================================
-// AlertServer::disabled
+// Alert::Server::disabled
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool AlertServer::disabled (uint8_t index)
+bool Alert::Server::disabled (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -212,25 +212,25 @@ bool AlertServer::disabled (uint8_t index)
 }
 
 // =============================================================================
-// AlertServer::status_cmd
+// Alert::Server::status_cmd
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Alert::Message *AlertServer::create_status (uint16_t profile_uid)
+Alert::Message *Alert::Server::create_status (uint16_t profile_uid)
 {
    return new (nothrow) Alert::Message (profile_uid, this->_state);
 }
 
 // =============================================================================
-// AlertServer::status
+// Alert::Server::status
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void AlertServer::status (Protocol::Address &addr, uint16_t profile_uid)
+void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
 {
    Protocol::Message::Interface itf (CLIENT_ROLE, HF::Interface::ALERT, STATUS_CMD);
 

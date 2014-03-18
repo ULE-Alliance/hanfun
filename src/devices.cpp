@@ -20,6 +20,8 @@
 #include "hanfun/devices.h"
 
 using namespace HF;
+using namespace HF::Units;
+using namespace HF::Devices;
 
 // =============================================================================
 // HF::AbstractDevice

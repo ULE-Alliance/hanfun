@@ -23,6 +23,7 @@
 #include "hanfun/core/device_management.h"
 
 using namespace HF;
+using namespace HF::Attributes;
 using namespace HF::Interfaces;
 using namespace HF::Core;
 
@@ -41,17 +42,17 @@ using namespace HF::Core;
  *
  */
 // =============================================================================
-IAttribute *Interfaces::create_attribute (AlertServer *server, uint8_t uid)
+IAttribute *Interfaces::create_attribute (Alert::Server *server, uint8_t uid)
 {
-   AlertServer::Attributes attr = static_cast <AlertServer::Attributes>(uid);
+   Alert::Attributes attr = static_cast <Alert::Attributes>(uid);
 
-   uint16_t itf_uid             = Interface::ALERT;
+   uint16_t itf_uid       = Interface::ALERT;
 
    switch (attr)
    {
-      case AlertServer::STATE_ATTR:
+      case Alert::STATE_ATTR:
       {
-         bool writabble = AlertServer::State::WRITABBLE;
+         bool writabble = Alert::State::WRITABBLE;
 
          if (server != nullptr)
          {
@@ -63,9 +64,9 @@ IAttribute *Interfaces::create_attribute (AlertServer *server, uint8_t uid)
          }
       }
 
-      case AlertServer::ENABLE_ATTR:
+      case Alert::ENABLE_ATTR:
       {
-         bool writabble = AlertServer::Enable::WRITABBLE;
+         bool writabble = Alert::Enable::WRITABBLE;
 
          if (server != nullptr)
          {
@@ -89,7 +90,7 @@ IAttribute *Interfaces::create_attribute (AlertServer *server, uint8_t uid)
  *
  */
 // =============================================================================
-IAttribute *Interfaces::create_attribute (LevelControlServer *server, uint8_t uid)
+IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t uid)
 {
    LevelControl::Attributes attr = static_cast <LevelControl::Attributes>(uid);
 
@@ -123,7 +124,7 @@ IAttribute *Interfaces::create_attribute (LevelControlServer *server, uint8_t ui
  *
  */
 // =============================================================================
-IAttribute *Interfaces::create_attribute (OnOffServer *server, uint8_t uid)
+IAttribute *Interfaces::create_attribute (OnOff::Server *server, uint8_t uid)
 {
    OnOff::Attributes attr = static_cast <OnOff::Attributes>(uid);
 
@@ -157,7 +158,7 @@ IAttribute *Interfaces::create_attribute (OnOffServer *server, uint8_t uid)
  *
  */
 // =============================================================================
-IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_t uid)
+IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint8_t uid)
 {
    SimplePowerMeter::Attributes attr = static_cast <SimplePowerMeter::Attributes>(uid);
 
@@ -386,7 +387,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeterServer *server, uint8_
 // Core Services & Interfaces
 // =============================================================================
 
-IAttribute *Core::create_attribute (DeviceManagementServer *server, uint8_t uid)
+IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t uid)
 {
    DeviceManagement::Attributes attr = static_cast <DeviceManagement::Attributes>(uid);
 

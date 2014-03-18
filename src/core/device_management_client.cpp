@@ -33,7 +33,7 @@ using namespace HF::Core;
  * TODO Add support for optional interfaces.
  */
 // =============================================================================
-void DeviceManagementClient::register_device ()
+void DeviceManagement::Client::register_device ()
 {
    Protocol::Address addr (0, 0);
    Protocol::Message message;
@@ -60,13 +60,13 @@ void DeviceManagementClient::register_device ()
 }
 
 // =============================================================================
-// DeviceManagementClient::deregister
+// DeviceManagement::Client::deregister
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void DeviceManagementClient::deregister (uint16_t address)
+void DeviceManagement::Client::deregister (uint16_t address)
 {
    Protocol::Address addr (0, 0);
    Protocol::Message message;
@@ -83,13 +83,13 @@ void DeviceManagementClient::deregister (uint16_t address)
 }
 
 // =============================================================================
-// DeviceManagementClient::payload_size
+// DeviceManagement::Client::payload_size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagementClient::payload_size (Protocol::Message::Interface &itf) const
+size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -105,14 +105,14 @@ size_t DeviceManagementClient::payload_size (Protocol::Message::Interface &itf) 
 }
 
 // =============================================================================
-// DeviceManagementClient::handle_command
+// DeviceManagement::Client::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Result DeviceManagementClient::handle_command (Protocol::Packet &packet, ByteArray &payload,
-                                               size_t offset)
+Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteArray &payload,
+                                                 size_t offset)
 {
    switch (packet.message.itf.member)
    {
@@ -140,13 +140,13 @@ Result DeviceManagementClient::handle_command (Protocol::Packet &packet, ByteArr
 }
 
 // =============================================================================
-// DeviceManagementClient::registered
+// DeviceManagement::Client::registered
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void DeviceManagementClient::registered (RegisterResponse &response)
+void DeviceManagement::Client::registered (RegisterResponse &response)
 {
    if (response.code == Result::OK)
    {
@@ -154,7 +154,7 @@ void DeviceManagementClient::registered (RegisterResponse &response)
    }
 }
 
-void DeviceManagementClient::deregistered (Protocol::Response &response)
+void DeviceManagement::Client::deregistered (Protocol::Response &response)
 {
    if (response.code == Result::OK)
    {

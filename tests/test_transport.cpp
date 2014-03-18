@@ -69,12 +69,12 @@ namespace HF
 
          typedef list <Link *> links_t;
 
-         endpoints_t   endpoints;
-         links_t       links;
+         endpoints_t        endpoints;
+         links_t            links;
 
-         const HF::UID *_uid;
+         const HF::UID::UID *_uid;
 
-         Transport(const HF::UID *uid):
+         Transport(const HF::UID::UID *uid):
             _uid (uid)
          {}
 
@@ -121,12 +121,12 @@ namespace HF
             remove (nullptr);
          }
 
-         const HF::UID *uid () const
+         const HF::UID::UID *uid () const
          {
             return _uid;
          }
 
-         void create_link (HF::UID *uid)
+         void create_link (HF::UID::UID *uid)
          {
             Testing::Link *link = new Testing::Link (uid, this);
             links.push_back (link);
@@ -166,13 +166,13 @@ TEST_GROUP (Transport)
    Testing::Endpoint  ep1;
    Testing::Endpoint2 ep2;
 
-   HF::URI tsp_uid;
+   HF::UID::URI tsp_uid;
 
    Testing::Transport *tsp;
 
    TEST_SETUP ()
    {
-      tsp_uid = URI ("tsp://foobar@example.com");
+      tsp_uid = UID::URI ("tsp://foobar@example.com");
       tsp     = new Testing::Transport (&tsp_uid);
 
       mock ().ignoreOtherCalls ();
@@ -208,7 +208,7 @@ TEST (Transport, LinkSetup)
 {
    tsp->initialize (&ep1);
 
-   URI *uri = new URI ("dev://user1@example.com");
+   UID::URI *uri = new UID::URI ("dev://user1@example.com");
 
    tsp->create_link (uri);
 
@@ -216,7 +216,7 @@ TEST (Transport, LinkSetup)
 
    tsp->initialize (&ep2);
 
-   uri = new URI ("dev://user2@example.com");
+   uri = new UID::URI ("dev://user2@example.com");
    tsp->create_link (uri);
 
    LONGS_EQUAL (2, ep1.links.size ());

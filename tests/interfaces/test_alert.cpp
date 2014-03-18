@@ -27,7 +27,7 @@ using namespace HF::Interfaces;
 //! Test Group for Alert interface parent class.
 TEST_GROUP (Alert)
 {
-   class TestAlert:public Testing::InterfaceParentHelper <Alert>
+   class TestAlert:public Testing::InterfaceParentHelper <Alert::Base>
    {};
 
    TestAlert interface;
@@ -109,9 +109,9 @@ TEST (AlertMessage, Unpack)
 //! Test Group for AlertServer interface class.
 TEST_GROUP (AlertServer)
 {
-   struct TestAlertServer:public Testing::InterfaceHelper <AlertServer>
+   struct TestAlertServer:public Testing::InterfaceHelper <Alert::Server>
    {
-      using AlertServer::create_status;
+      using Alert::Server::create_status;
    };
 
    TestAlertServer *server;
@@ -288,7 +288,7 @@ TEST (AlertServer, Status2)
 //! \test Should return attribute.
 TEST (AlertServer, Attribute)
 {
-   IAttribute *attr = server->attribute (Alert::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr = server->attribute (Alert::__LAST_ATTR__ + 1);
 
    CHECK_TRUE (attr == nullptr);
 
@@ -322,14 +322,14 @@ TEST (AlertServer, Attribute)
 //! Test Group for AlertClient interface class.
 TEST_GROUP (AlertClient)
 {
-   struct TestAlertClient:public Testing::InterfaceHelper <AlertClient>
+   struct TestAlertClient:public Testing::InterfaceHelper <Alert::Client>
    {
       uint16_t profile_uid;
       uint32_t state;
 
       TestAlertClient():profile_uid (0), state (0) {}
 
-      void status (Message &message)
+      void status (Alert::Message &message)
       {
          mock ("AlertClient").actualCall ("status");
          profile_uid = message.type;

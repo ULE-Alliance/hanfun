@@ -17,6 +17,7 @@
 
 using namespace HF;
 using namespace HF::Protocol;
+using namespace HF::Interfaces;
 
 // =============================================================================
 // Helper Functions
@@ -44,9 +45,9 @@ using namespace HF::Protocol;
 static Result update_attribute (Interface *itf, uint8_t uid, ByteArray &payload, size_t &offset,
                                 bool nop = false)
 {
-   Result result    = Result::FAIL_UNKNOWN;
+   Result result                    = Result::FAIL_UNKNOWN;
 
-   IAttribute *attr = itf->attribute (uid);
+   HF::Attributes::IAttribute *attr = itf->attribute (uid);
 
    if (attr == nullptr)
    {
@@ -344,7 +345,7 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
    {
       case Message::GET_ATTR_REQ:
       {
-         AttributeResponse *attr_res = new AttributeResponse (attribute (packet.message.itf.member));
+         HF::Attributes::Response *attr_res = new HF::Attributes::Response (attribute (packet.message.itf.member));
          attr_res->code = (attr_res->attribute != nullptr ? Result::OK : Result::FAIL_SUPPORT);
 
          Message response (attr_res, packet.message);
@@ -378,9 +379,9 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
          Result result = Result::OK;
          GetAttributePack::Request request;
 
-         attribute_uids_t attributes;
+         HF::Attributes::uids_t    attributes;
 
-         if (packet.message.itf.member == AttributePack::DYNAMIC)
+         if (packet.message.itf.member == HF::Attributes::Pack::DYNAMIC)
          {
             offset    += request.unpack (payload, offset);
             attributes = request.attributes;
@@ -398,7 +399,7 @@ Result AbstractInterface::handle_attribute (Packet &packet, ByteArray &payload, 
             for_each (attributes.begin (), attributes.end (),
                        [attr_response, &result, this](uint8_t uid)
             {
-               IAttribute *attr = attribute (uid);
+               HF::Attributes::IAttribute *attr = attribute (uid);
                if (attr != nullptr)
                {
                   attr_response->attributes.push_back (attr);

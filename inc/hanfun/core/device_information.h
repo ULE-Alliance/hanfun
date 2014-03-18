@@ -69,10 +69,7 @@ namespace HF
 {
    namespace Core
    {
-      /*!
-       * This class implements the Device Information code interface.
-       */
-      struct DeviceInformation:public Service <Interface::DEVICE_INFORMATION>
+      namespace DeviceInformation
       {
          constexpr static uint8_t  CORE_VERSION      = HF::CORE_VERSION;       //!< HAN-FUN Core version.
          constexpr static uint8_t  PROFILE_VERSION   = HF::PROFILES_VERSION;   //!< HAN-FUN Profile version.
@@ -80,141 +77,148 @@ namespace HF
 
          constexpr static uint16_t EMC               = HF_DEVICE_MANUFACTURER_CODE; //!< Electronic Manufacture Code.
 
-         static const string       SW_VERSION;    //!< Application Version.
-         static const string       HW_VERSION;    //!< Hardware Version.
-         static const string       MANUFACTURER;  //!< Manufacturer Name.
-
-         DeviceInformation(IDevice *_device):
-            Service (_device)
-         {}
+         static const string SW_VERSION;          //!< Application Version.
+         static const string HW_VERSION;          //!< Hardware Version.
+         static const string MANUFACTURER;        //!< Manufacturer Name.
 
          /*!
-          * Get the device serial number.
-          *
-          * @return  the device serial number.
+          * This class defines the interface Device Information API.
           */
-         virtual string serial_number () = 0;
+         struct Interface:public Service <HF::Interface::DEVICE_INFORMATION>
+         {
+            Interface(IDevice *_device):
+               Service (_device)
+            {}
+
+            /*!
+             * Get the device serial number.
+             *
+             * @return  the device serial number.
+             */
+            virtual string serial_number () = 0;
+
+            /*!
+             * Set the device serial number.
+             *
+             * @param [in] serial the serial number to set for the device.
+             */
+            virtual void serial_number (string serial) = 0;
+
+            /*!
+             * Get the device location.
+             *
+             * @return  the devices location.
+             */
+            virtual string location () = 0;
+
+            /*!
+             * Set the device location.
+             *
+             * @param [in] value the location to set for the device.
+             */
+            virtual void location (string value) = 0;
+
+            /*!
+             * Get the device friendly name.
+             *
+             * @return  the device friendly name.
+             */
+            virtual string friendly_name () = 0;
+
+            /*!
+             * Set the device friendly name.
+             *
+             * @param [in] value the friendly name value to set for the device.
+             */
+            virtual void friendly_name (string value) = 0;
+
+            /*!
+             * Indicate if the device units are enabled or disabled.
+             *
+             * @retval  true the device's units are enabled.
+             * @retval  false the device's units are disabled.
+             */
+            virtual bool enabled () = 0;
+
+            /*!
+             * Enable or disable all units in the device.
+             *
+             * @param value   true all units in the device are enabled,
+             *                false all units in the device are disabled.
+             */
+            virtual void enable (bool value) = 0;
+
+            //! \see Interface::role
+            Interface::Role role () const
+            {
+               return Interface::SERVER_ROLE;
+            }
+         };
 
          /*!
-          * Set the device serial number.
-          *
-          * @param [in] serial the serial number to set for the device.
+          * This class provides a simple implementation of the DeviceInformation
+          * interface.
           */
-         virtual void serial_number (string serial) = 0;
-
-         /*!
-          * Get the device location.
-          *
-          * @return  the devices location.
-          */
-         virtual string location () = 0;
-
-         /*!
-          * Set the device location.
-          *
-          * @param [in] value the location to set for the device.
-          */
-         virtual void location (string value) = 0;
-
-         /*!
-          * Get the device friendly name.
-          *
-          * @return  the device friendly name.
-          */
-         virtual string friendly_name () = 0;
-
-         /*!
-          * Set the device friendly name.
-          *
-          * @param [in] value the friendly name value to set for the device.
-          */
-         virtual void friendly_name (string value) = 0;
-
-         /*!
-          * Indicate if the device units are enabled or disabled.
-          *
-          * @retval  true the device's units are enabled.
-          * @retval  false the device's units are disabled.
-          */
-         virtual bool enabled () = 0;
-
-         /*!
-          * Enable or disable all units in the device.
-          *
-          * @param value   true all units in the device are enabled,
-          *                false all units in the device are disabled.
-          */
-         virtual void enable (bool value) = 0;
-
-         //! \see Interface::role
-         Interface::Role role () const
+         class Default:public DeviceInformation::Interface
          {
-            return Interface::SERVER_ROLE;
-         }
-      };
+            protected:
 
-      /*!
-       * This class provides a simple implementation of the DeviceInformation
-       * interface.
-       */
-      class DefaultDeviceInformation:public DeviceInformation
-      {
-         protected:
+            bool _enabled;
 
-         bool _enabled;
+            string _friendly_name;
 
-         string _friendly_name;
+            string _location;
 
-         string _location;
+            string _serial;
 
-         string _serial;
+            public:
 
-         public:
+            Default(IDevice *device):
+               DeviceInformation::Interface (device)
+            {}
 
-         DefaultDeviceInformation(IDevice *device):
-            DeviceInformation (device)
-         {}
+            string serial_number ()
+            {
+               return _serial;
+            }
 
-         string serial_number ()
-         {
-            return _serial;
-         }
+            void serial_number (string serial)
+            {
+               _serial = serial;
+            }
 
-         void serial_number (string serial)
-         {
-            _serial = serial;
-         }
+            string location ()
+            {
+               return _location;
+            }
 
-         string location ()
-         {
-            return _location;
-         }
+            void location (string value)
+            {
+               _location = value;
+            }
 
-         void location (string value)
-         {
-            _location = value;
-         }
+            string friendly_name ()
+            {
+               return _friendly_name;
+            }
 
-         string friendly_name ()
-         {
-            return _friendly_name;
-         }
+            void friendly_name (string value)
+            {
+               _friendly_name = value;
+            }
 
-         void friendly_name (string value)
-         {
-            _friendly_name = value;
-         }
+            bool enabled ()
+            {
+               return _enabled;
+            }
 
-         bool enabled ()
-         {
-            return _enabled;
-         }
+            void enable (bool value)
+            {
+               _enabled = value;
+            }
+         };
 
-         void enable (bool value)
-         {
-            _enabled = value;
-         }
-      };
+      }  // namespace DeviceInformation
 
    }  // namespace Core
 

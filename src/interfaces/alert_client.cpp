@@ -28,7 +28,7 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-Result AlertClient::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Result Alert::Client::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
 {
    if (packet.message.itf.member != Alert::STATUS_CMD)
    {

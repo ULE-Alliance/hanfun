@@ -24,37 +24,37 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 // =============================================================================
-// LevelControlServer::level
+// LevelControl::Server::level
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint8_t LevelControlServer::level ()
+uint8_t LevelControl::Server::level ()
 {
    return _level;
 }
 
 // =============================================================================
-// LevelControlServer::level
+// LevelControl::Server::level
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void LevelControlServer::level (uint8_t new_level)
+void LevelControl::Server::level (uint8_t new_level)
 {
    _level = new_level;
 }
 
 // =============================================================================
-// LevelControlServer::handle_command
+// LevelControl::Server::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Result LevelControlServer::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Result LevelControl::Server::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
 {
    Message level_msg;
 
@@ -71,13 +71,13 @@ Result LevelControlServer::handle_command (Protocol::Packet &packet, ByteArray &
 }
 
 // =============================================================================
-// LevelControlServer::level_change
+// LevelControl::Server::level_change
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void LevelControlServer::level_change (uint8_t new_level)
+void LevelControl::Server::level_change (uint8_t new_level)
 {
    level (new_level);
 }

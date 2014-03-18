@@ -53,636 +53,281 @@ namespace HF
    constexpr uint8_t PROFILES_VERSION   = 0;
    constexpr uint8_t INTERFACES_VERSION = 0;
 
-   // =============================================================================
-   // Helper Classes.
-   // =============================================================================
-
    /*!
-    * These constants represent precisions that a measurement can be in.
+    * This namespace contains helper classes to be used though out the HAN-FUN
+    * implementation.
     */
-   typedef enum
+   namespace Common
    {
-      BASE  = 0x00,
-      MILI  = 0x10,
-      MICRO = 0x11,
-      NANO  = 0x12,
-      PICO  = 0x13,
-      KILO  = 0x20,
-      MEGA  = 0x21,
-      GIGA  = 0x22,
-      TERA  = 0x23,
-   } Precision;
-
-   /*!
-    * This represents the type of time that is associated with a
-    * time measurement.
-    */
-   typedef enum
-   {
-      UPTIME = 0x00, //!< Uptime.
-      UTC    = 0x01, //!< UTC time.
-   } Time;
-
-   /*!
-    * This class represents a byte array.
-    *
-    * The method in this class are used to serialize the messages to be sent over the
-    * network, converting between the host's endianness and the big-endian network format.
-    */
-   struct ByteArray:public vector <uint8_t>
-   {
-      /*!
-       * Create a byte array with the given initial size.
-       *
-       * @param size the initial size of the byte array.
-       */
-      ByteArray(size_t size = 0);
+      // =============================================================================
+      // Helper Classes.
+      // =============================================================================
 
       /*!
-       * Create a byte array with the given initial data.
-       *
-       * @param data    data to initialize the byte array with.
-       * @param size    size in bytes of the data.
+       * These constants represent precisions that a measurement can be in.
        */
-      ByteArray(const uint8_t data[], const size_t size);
+      typedef enum
+      {
+         BASE  = 0x00, //!< BASE
+         MILI  = 0x10, //!< MILI
+         MICRO = 0x11, //!< MICRO
+         NANO  = 0x12, //!< NANO
+         PICO  = 0x13, //!< PICO
+         KILO  = 0x20, //!< KILO
+         MEGA  = 0x21, //!< MEGA
+         GIGA  = 0x22, //!< GIGA
+         TERA  = 0x23, //!< TERA
+      } Precision;
 
       /*!
-       * Create byte array from the values in the given list.
-       *
-       * @param raw  values to add to the byte array.
+       * This represents the type of time that is associated with a
+       * time measurement.
        */
-      ByteArray(initializer_list <uint8_t> raw):vector (raw)
-      {}
-
-      //! Destructor
-      virtual ~ByteArray() {}
+      typedef enum
+      {
+         UPTIME = 0x00, //!< Uptime.
+         UTC    = 0x01, //!< UTC time.
+      } Time;
 
       /*!
-       * Write a byte into the array at the given \c offset.
+       * This class represents a byte array.
        *
-       * @param [in] offset  offset to write the byte to.
-       * @param [in] data    byte value to write to the array.
-       *
-       * @return  number of bytes written (1).
+       * The method in this class are used to serialize the messages to be sent over the
+       * network, converting between the host's endianness and the big-endian network format.
        */
-      size_t write (size_t offset, uint8_t data);
-
-      /*!
-       * Write a word in the big endian format into the
-       * array at the given \c offset.
-       *
-       * \warning If the host is NOT big-endian the value will
-       *          be converted before being written.
-       *
-       * @param [in] offset  offset to write the word to.
-       * @param [in] data    word value to write to the array.
-       *
-       * @return  number of bytes written (2).
-       */
-      size_t write (size_t offset, uint16_t data);
-
-      /*!
-       * Write a double-word in big endian format into the
-       * array at the given \c offset.
-       *
-       * \warning If the host is NOT big-endian the value will
-       *          be converted before being written.
-       *
-       * @param [in] offset  offset to write the double-word to.
-       * @param [in] data    double-word value to write to the array.
-       *
-       * @return  number of bytes written (4).
-       */
-      size_t write (size_t offset, uint32_t data);
-
-      //! \see  ByteArray::write (size_t, uint8_t)
-      size_t write (size_t offset, bool data)
+      struct ByteArray:public vector <uint8_t>
       {
-         return write (offset, static_cast <uint8_t>(data));
-      }
+         /*!
+          * Create a byte array with the given initial size.
+          *
+          * @param size the initial size of the byte array.
+          */
+         ByteArray(size_t size = 0);
 
-      /*!
-       * Read the byte at \c offset into \c data.
-       *
-       * @param [in]  offset  offset to read the byte from.
-       * @param [out] data    reference to save the read value to.
-       *
-       * @return  number of bytes read (1).
-       */
-      size_t read (size_t offset, uint8_t &data) const;
+         /*!
+          * Create a byte array with the given initial data.
+          *
+          * @param data    data to initialize the byte array with.
+          * @param size    size in bytes of the data.
+          */
+         ByteArray(const uint8_t data[], const size_t size);
 
-      /*!
-       * Read the word in big-endian format at \c offset into \c data.
-       *
-       * \warning If the host is NOT big-endian the value will
-       *          be converted to the host's Endianness.
-       *
-       * @param [in]  offset  offset to read the word from.
-       * @param [out] data    reference to save the read value to.
-       *
-       * @return  number of bytes read (2).
-       */
-      size_t read (size_t offset, uint16_t &data) const;
+         /*!
+          * Create byte array from the values in the given list.
+          *
+          * @param raw  values to add to the byte array.
+          */
+         ByteArray(initializer_list <uint8_t> raw):vector (raw)
+         {}
 
-      /*!
-       * Read the double-word in big-endian format at \c offset into \c data.
-       *
-       * \warning If the host is NOT big-endian the value will
-       *          be converted to the host's Endianness.
-       *
-       * @param [in]  offset  offset to read the double-word from.
-       * @param [out] data    reference to save the read value to.
-       *
-       * @return  number of bytes read (4).
-       */
-      size_t read (size_t offset, uint32_t &data) const;
+         //! Destructor
+         virtual ~ByteArray() {}
 
-      //! \see  ByteArray::read (size_t, uint8_t)
-      size_t read (size_t offset, bool &data) const
-      {
-         uint8_t temp;
-         size_t  result = read (offset, temp);
+         /*!
+          * Write a byte into the array at the given \c offset.
+          *
+          * @param [in] offset  offset to write the byte to.
+          * @param [in] data    byte value to write to the array.
+          *
+          * @return  number of bytes written (1).
+          */
+         size_t write (size_t offset, uint8_t data);
 
-         data = (temp & 0x01) != 0;
+         /*!
+          * Write a word in the big endian format into the
+          * array at the given \c offset.
+          *
+          * \warning If the host is NOT big-endian the value will
+          *          be converted before being written.
+          *
+          * @param [in] offset  offset to write the word to.
+          * @param [in] data    word value to write to the array.
+          *
+          * @return  number of bytes written (2).
+          */
+         size_t write (size_t offset, uint16_t data);
 
-         return result;
-      }
+         /*!
+          * Write a double-word in big endian format into the
+          * array at the given \c offset.
+          *
+          * \warning If the host is NOT big-endian the value will
+          *          be converted before being written.
+          *
+          * @param [in] offset  offset to write the double-word to.
+          * @param [in] data    double-word value to write to the array.
+          *
+          * @return  number of bytes written (4).
+          */
+         size_t write (size_t offset, uint32_t data);
 
-      /*!
-       * Check if the array as at least \c expected bytes
-       * available from the given \c offset.
-       *
-       * @param offset     the offset from where to start counting.
-       * @param expected   the number of byte required.
-       *
-       * @retval  true if enough data is available,
-       * @retval  false otherwise.
-       */
-      bool available (size_t offset, size_t expected) const
-      {
-         return expected <= available (offset);
-      }
-
-      /*!
-       * Return the number of data bytes available from the given \c offset.
-       *
-       * @param offset     the offset from where to start counting.
-       *
-       * @return  number of data bytes available from the given \c offset.
-       */
-      size_t available (size_t offset) const
-      {
-         return (size () >= offset ? size () - offset : 0);
-      }
-
-      bool operator ==(const ByteArray &other)
-      {
-         return (this->size () == other.size () &&
-                 std::equal (this->begin (), this->end (), other.begin ()));
-      }
-
-      bool operator !=(const ByteArray &other)
-      {
-         return !(*this == other);
-      }
-   };
-
-   // =============================================================================
-   // Common Interfaces
-   // =============================================================================
-
-   /*!
-    * This represents the common interface for message serialization.
-    */
-   class Serializable
-   {
-      public:
-
-      //! Destructor
-      virtual ~Serializable() {}
-
-      /*!
-       * Number bytes needed to serialize the message.
-       *
-       * @return  number of bytes the message requires to be serialized.
-       */
-      virtual size_t size () const = 0;
-
-      /*!
-       * Write the object on to a ByteArray so it can be sent over the network.
-       *
-       * @param [inout] array   ByteArray reference to write the object to.
-       * @param [in]    offset  offset to start writing to.
-       *
-       * @return  the number of bytes written.
-       */
-      virtual size_t pack (ByteArray &array, size_t offset = 0) const = 0;
-
-      /*!
-       * Read a message from a ByteArray.
-       *
-       * @param [inout] array   ByteArray reference to read the message from.
-       * @param [in]    offset  offset to start reading from.
-       *
-       * @return  the number of bytes read.
-       */
-      virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
-   };
-
-   /*!
-    * This class represents the interface that cloneable objects need
-    * to implement.
-    */
-   struct Cloneable
-   {
-      /*!
-       * Create a clone object of the object where this method is being called.
-       *
-       * @return  a new object that is a clone of this object.
-       */
-      virtual Cloneable *clone () const = 0;
-   };
-
-   /*!
-    * Commands result codes.
-    */
-   typedef enum
-   {
-      OK                = 0x00, //!< Request OK
-      FAIL_AUTH         = 0x01, //!< Fail - Not Authorized
-      FAIL_ARG          = 0x02, //!< Fail - Invalid Argument
-      FAIL_SUPPORT      = 0x03, //!< Fail - Not Supported
-      FAIL_RO_ATTR      = 0x04, //!< Fail - Read only attribute.
-      FAIL_READ_SESSION = 0x20, //!< Fail - Read Session not established
-      FAIL_MODIFIED     = 0x21, //!< Fail - Entries table modified
-      FAIL_ID           = 0x23, //!< Fail - ID Not Found
-      FAIL_RESOURCES    = 0xFE, //!< Fail - Not enough resources
-      FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
-   } Result;
-
-   // =============================================================================
-   // UID implementation
-   // =============================================================================
-
-   /*!
-    * Parent UID class.
-    */
-   struct UID:public Serializable, public Cloneable
-   {
-      //! Types of UID available.
-      enum Type
-      {
-         NONE = 0x00,         //!< Empty UID.
-         RFPI = 0x01,         //!< Radio Fixed Part Identifier.
-         IPUI = 0x02,         //!< International Portable User Identifier.
-         MAC  = 0x03,         //!< Media Access Control (IEEE-MAC-48)
-         URI  = 0x04,         //!< Uniform Resource Identifier.
-      };
-
-      //! Type of the UID.
-      virtual uint8_t type () const
-      {
-         return NONE;
-      }
-
-      //! \see HF::Serializable::size.
-      virtual size_t size () const
-      {
-         return 1;
-      }
-
-      //! \see HF::Serializable::pack.
-      virtual size_t pack (ByteArray &array, size_t offset = 0) const
-      {
-         size_t start = offset;
-         offset += array.write (offset, (uint8_t) 0);
-         return offset - start;
-      }
-
-      //! \see HF::Serializable::unpack.
-      virtual size_t unpack (const ByteArray &array, size_t offset = 0)
-      {
-         uint8_t size;
-         size_t  start = offset;
-         offset += array.read (offset, size);
-         return offset - start;
-      }
-
-      UID *clone () const
-      {
-         return new UID (*this);
-      }
-
-      bool operator ==(const HF::UID &other)
-      {
-         return (this->compare (&other) == 0);
-      }
-
-      bool operator !=(const HF::UID &other)
-      {
-         return !(*this == other);
-      }
-
-      /*!
-       * Compare the current UID with the given UID.
-       *
-       * This function returns a value less that 0 if the current UID object
-       * order is lower that the given UID, 0 if the UIDs represent the same
-       * entity and a value greater that 0 if current UID object is above the given
-       * UID.
-       *
-       * @param [in] other  a pointer to a UID object to compare to.
-       *
-       * @retval     < 0, the current UID is lower that the given UID.
-       * @retval     0  , the current UID is the same as given UID.
-       * @retval     > 0, the current UID is greater that the given UID.
-       */
-      virtual int compare (const UID *other) const
-      {
-         return (other != nullptr ? type () - other->type () : type ());
-      }
-   };
-
-   template<UID::Type _type>
-   struct AbstractUID:public UID
-   {
-      uint8_t type () const
-      {
-         return _type;
-      }
-   };
-
-   template<typename _Class, uint8_t _size, UID::Type _type>
-   struct ByteArrayUID:public AbstractUID <_type>
-   {
-      uint8_t value[_size];
-
-      //! \see HF::Serializable::size.
-      size_t size () const
-      {
-         return UID::size () + sizeof(value);
-      }
-
-      //! \see HF::Serializable::pack.
-      size_t pack (ByteArray &array, size_t offset = 0) const
-      {
-         size_t start = offset;
-
-         offset += array.write (offset, (uint8_t) sizeof(value));
-
-         for (uint8_t i = 0; i < sizeof(value); i++)
+         //! \see  ByteArray::write (size_t, uint8_t)
+         size_t write (size_t offset, bool data)
          {
-            offset += array.write (offset, value[i]);
+            return write (offset, static_cast <uint8_t>(data));
          }
 
-         return offset - start;
-      }
+         /*!
+          * Read the byte at \c offset into \c data.
+          *
+          * @param [in]  offset  offset to read the byte from.
+          * @param [out] data    reference to save the read value to.
+          *
+          * @return  number of bytes read (1).
+          */
+         size_t read (size_t offset, uint8_t &data) const;
 
-      //! \see HF::Serializable::unpack.
-      size_t unpack (const ByteArray &array, size_t offset = 0)
-      {
-         uint8_t size;
-         size_t  start = offset;
+         /*!
+          * Read the word in big-endian format at \c offset into \c data.
+          *
+          * \warning If the host is NOT big-endian the value will
+          *          be converted to the host's Endianness.
+          *
+          * @param [in]  offset  offset to read the word from.
+          * @param [out] data    reference to save the read value to.
+          *
+          * @return  number of bytes read (2).
+          */
+         size_t read (size_t offset, uint16_t &data) const;
 
-         offset += array.read (offset, size);
+         /*!
+          * Read the double-word in big-endian format at \c offset into \c data.
+          *
+          * \warning If the host is NOT big-endian the value will
+          *          be converted to the host's Endianness.
+          *
+          * @param [in]  offset  offset to read the double-word from.
+          * @param [out] data    reference to save the read value to.
+          *
+          * @return  number of bytes read (4).
+          */
+         size_t read (size_t offset, uint32_t &data) const;
 
-         for (uint8_t i = 0; size == sizeof(value) && i < size; i++)
+         //! \see  ByteArray::read (size_t, uint8_t)
+         size_t read (size_t offset, bool &data) const
          {
-            offset += array.read (offset, value[i]);
+            uint8_t temp;
+            size_t  result = read (offset, temp);
+
+            data = (temp & 0x01) != 0;
+
+            return result;
          }
 
-         return offset - start;
-      }
-
-      // ===================================================================
-      // API
-      // ===================================================================
-
-      int compare (const UID *other) const
-      {
-         int res = UID::compare (other);
-         return (res == 0 ? memcmp (value, ((_Class *) other)->value, sizeof(value)) : res);
-      }
-   };
-
-   /*!
-    * RFPI UID class.
-    */
-   struct RFPI:public ByteArrayUID <RFPI, 5, UID::RFPI>
-   {
-      // ===================================================================
-      // Cloneable
-      // ===================================================================
-
-      RFPI *clone () const
-      {
-         return new RFPI (*this);
-      }
-   };
-
-   /*!
-    * IPUI UID class.
-    */
-   struct IPUI:public ByteArrayUID <IPUI, 5, UID::IPUI>
-   {
-      // ===================================================================
-      // Cloneable
-      // ===================================================================
-
-      IPUI *clone () const
-      {
-         return new IPUI (*this);
-      }
-   };
-
-   /*!
-    * IEEE MAC-48b UID class.
-    */
-   struct MAC:public ByteArrayUID <MAC, 6, UID::MAC>
-   {
-      // ===================================================================
-      // Cloneable
-      // ===================================================================
-
-      MAC *clone () const
-      {
-         return new MAC (*this);
-      }
-   };
-
-   /*!
-    * URI UID class.
-    */
-   struct URI:public AbstractUID <UID::URI>
-   {
-      string value;
-
-      URI(string value = ""):value (value) {}
-
-      //! \see HF::Serializable::size.
-      size_t size () const
-      {
-         return UID::size () + value.size ();
-      }
-
-      //! \see HF::Serializable::pack.
-      size_t pack (ByteArray &array, size_t offset = 0) const
-      {
-         size_t start = offset;
-         size_t size  = value.size ();
-
-         offset += array.write (offset, (uint8_t) size);
-
-         for (uint8_t i = 0; i < (size & 0xFF); i++)
+         /*!
+          * Check if the array as at least \c expected bytes
+          * available from the given \c offset.
+          *
+          * @param offset     the offset from where to start counting.
+          * @param expected   the number of byte required.
+          *
+          * @retval  true if enough data is available,
+          * @retval  false otherwise.
+          */
+         bool available (size_t offset, size_t expected) const
          {
-            offset += array.write (offset, (uint8_t) value[i]);
+            return expected <= available (offset);
          }
 
-         return offset - start;
-      }
-
-      //! \see HF::Serializable::unpack.
-      size_t unpack (const ByteArray &array, size_t offset = 0)
-      {
-         uint8_t size;
-         size_t  start = offset;
-
-         offset += array.read (offset, size);
-
-         value   = string (size, 0);
-
-         for (uint8_t i = 0; i < size; i++)
+         /*!
+          * Return the number of data bytes available from the given \c offset.
+          *
+          * @param offset     the offset from where to start counting.
+          *
+          * @return  number of data bytes available from the given \c offset.
+          */
+         size_t available (size_t offset) const
          {
-            uint8_t c;
-            offset  += array.read (offset, c);
-            value[i] = c;
+            return (size () >= offset ? size () - offset : 0);
          }
 
-         return offset - start;
-      }
-
-      // ===================================================================
-      // Cloneable
-      // ===================================================================
-
-      URI *clone () const
-      {
-         return new URI (*this);
-      }
-
-      // ===================================================================
-      // API
-      // ===================================================================
-
-      int compare (const UID *other) const
-      {
-         int res = UID::compare (other);
-         return (res == 0 ? value.compare (((URI *) other)->value) : res);
-      }
-   };
-
-   // Forward declaration of the Unit's interface.
-   struct IUnit;
-
-   // Forward declaration of the protocol namespace.
-   namespace Protocol
-   {
-      // Forward declaration of the protocol packet structure.
-      struct Packet;
-
-   }  // namespace Protocol
-
-   /*!
-    * This class represents the interface that all devices MUST implement.
-    */
-   struct IDevice
-   {
-      /*!
-       * Unit list type.
-       */
-      struct units_t:public forward_list <IUnit *>
-      {
-         units_t::size_type size () const
+         bool operator ==(const ByteArray &other)
          {
-            return distance (begin (), end ());
+            return (this->size () == other.size () &&
+                    std::equal (this->begin (), this->end (), other.begin ()));
+         }
+
+         bool operator !=(const ByteArray &other)
+         {
+            return !(*this == other);
          }
       };
 
-      /*!
-       * Return the device address on the HAN-FUN network, when the device is registered,
-       * or \c HF_BROADCAST_ADDR otherwise.
-       *
-       * @return  the device address on the HAN-FUN network,
-       *          \c HF_BROADCAST_ADDR otherwise.
-       */
-      virtual uint16_t address () const = 0;
+      // =============================================================================
+      // Common Interfaces
+      // =============================================================================
 
       /*!
-       * Return the list of units registered in this device.
-       *
-       * @return     list containing the device's registered units.
+       * This represents the common interface for message serialization.
        */
-      virtual const units_t &units () const = 0;
+      class Serializable
+      {
+         public:
+
+         //! Destructor
+         virtual ~Serializable() {}
+
+         /*!
+          * Number bytes needed to serialize the message.
+          *
+          * @return  number of bytes the message requires to be serialized.
+          */
+         virtual size_t size () const = 0;
+
+         /*!
+          * Write the object on to a ByteArray so it can be sent over the network.
+          *
+          * @param [inout] array   ByteArray reference to write the object to.
+          * @param [in]    offset  offset to start writing to.
+          *
+          * @return  the number of bytes written.
+          */
+         virtual size_t pack (ByteArray &array, size_t offset = 0) const = 0;
+
+         /*!
+          * Read a message from a ByteArray.
+          *
+          * @param [inout] array   ByteArray reference to read the message from.
+          * @param [in]    offset  offset to start reading from.
+          *
+          * @return  the number of bytes read.
+          */
+         virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
+      };
 
       /*!
-       * Add unit to devices unit lists.
-       *
-       * @param unit    pointer to the unit to add to the list.
+       * This class represents the interface that cloneable objects need
+       * to implement.
        */
-      virtual void add (IUnit *unit) = 0;
+      struct Cloneable
+      {
+         /*!
+          * Create a clone object of the object where this method is being called.
+          *
+          * @return  a new object that is a clone of this object.
+          */
+         virtual Cloneable *clone () const = 0;
+      };
 
       /*!
-       * Remove unit from device's unit list.
-       *
-       * @param unit    pointer to the unit to remove from the list.
+       * Commands result codes.
        */
-      virtual void remove (IUnit *unit) = 0;
+      typedef enum
+      {
+         OK                = 0x00, //!< Request OK
+         FAIL_AUTH         = 0x01, //!< Fail - Not Authorized
+         FAIL_ARG          = 0x02, //!< Fail - Invalid Argument
+         FAIL_SUPPORT      = 0x03, //!< Fail - Not Supported
+         FAIL_RO_ATTR      = 0x04, //!< Fail - Read only attribute.
+         FAIL_READ_SESSION = 0x20, //!< Fail - Read Session not established
+         FAIL_MODIFIED     = 0x21, //!< Fail - Entries table modified
+         FAIL_ID           = 0x23, //!< Fail - ID Not Found
+         FAIL_RESOURCES    = 0xFE, //!< Fail - Not enough resources
+         FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
+      } Result;
 
-      /*!
-       * Send given \c packet into the HAN-FUN network.
-       *
-       * @param packet  reference to the packet to send to the network.
-       */
-      virtual void send (Protocol::Packet &packet) = 0;
-
-      /*!
-       * Receive a packet from the HAN-FUN network.
-       *
-       * @param packet        reference to the received packet.
-       * @param [in] payload  reference a ByteArray containing the received data.
-       * @param [in] offset   offset from where the received data starts on the \c payload
-       *                      byte array buffer.
-       */
-      virtual void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
-   };
+   }  // namespace Common
 
 }  // namespace HF
-
-/*
- * This provides a template specialization to use in ordered collections
- * containing pointer to UID classes.
- */
-namespace std
-{
-   template<>
-   struct less <HF::UID *> :public binary_function <HF::UID *, HF::UID *, bool>
-   {
-      bool operator ()(HF::UID *lhs, HF::UID *rhs) const
-      {
-         if (lhs == nullptr)
-         {
-            return true;
-         }
-         else if (rhs == nullptr)
-         {
-            return false;
-         }
-         else
-         {
-            return lhs->compare (rhs) < 0;
-         }
-      }
-   };
-}
 
 #endif /* HF_COMMON_H */

@@ -532,18 +532,18 @@ TEST (AttributesProtocol, GetAttributePack_Response_Unpack)
 
    LONGS_EQUAL (3, response.attributes.size ());
 
-   IAttribute *attr                  = response.attributes[Testing::TestInterface::ATTR1];
-   Attribute <uint16_t> *attr_proper = static_cast <Attribute <uint16_t> *>(attr);
+   HF::Attributes::IAttribute *attr                  = response.attributes[Testing::TestInterface::ATTR1];
+   HF::Attributes::Attribute <uint16_t> *attr_proper = static_cast <HF::Attributes::Attribute <uint16_t> *>(attr);
 
    LONGS_EQUAL (0xAAAA, attr_proper->get ());
 
    attr        = response.attributes[Testing::TestInterface::ATTR2];
-   attr_proper = static_cast <Attribute <uint16_t> *>(attr);
+   attr_proper = static_cast <HF::Attributes::Attribute <uint16_t> *>(attr);
 
    LONGS_EQUAL (0xBBBB, attr_proper->get ());
 
    attr        = response.attributes[Testing::TestInterface::ATTR3];
-   attr_proper = static_cast <Attribute <uint16_t> *>(attr);
+   attr_proper = static_cast <HF::Attributes::Attribute <uint16_t> *>(attr);
 
    LONGS_EQUAL (0xCCCC, attr_proper->get ());
 }

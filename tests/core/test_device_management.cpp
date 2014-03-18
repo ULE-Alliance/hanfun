@@ -233,7 +233,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
    DeviceManagement::Unit unit;
 
    ByteArray expected;
-   IPUI *ipui;
+   UID::IPUI *ipui;
 
    TEST_SETUP ()
    {
@@ -246,7 +246,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
       message->units.push_back (unit);
       message->units.push_back (unit);
 
-      ipui           = new IPUI ();
+      ipui           = new UID::IPUI ();
 
       ipui->value[0] = 0x00;
       ipui->value[1] = 0x73;
@@ -635,24 +635,24 @@ TEST_GROUP (DeviceManagementClient)
    Testing::Unit *unit2;
    Testing::Unit *unit3;
 
-   struct TestDeviceManagementClient:public DeviceManagementClient
+   struct TestDeviceManagementClient:public DeviceManagement::Client
    {
       TestDeviceManagementClient(IDevice *device):
-         DeviceManagementClient (device)
+         DeviceManagement::Client (device)
       {}
 
-      using DeviceManagementClient::_address;
+      using DeviceManagement::Client::_address;
 
-      void registered (RegisterResponse &response)
+      void registered (DeviceManagement::RegisterResponse &response)
       {
          mock ("DeviceManagementClient").actualCall ("registered");
-         DeviceManagementClient::registered (response);
+         DeviceManagement::Client::registered (response);
       }
 
       void deregistered (Protocol::Response &response)
       {
          mock ("DeviceManagementClient").actualCall ("deregistered");
-         DeviceManagementClient::deregistered (response);
+         DeviceManagement::Client::deregistered (response);
       }
    };
 
@@ -910,25 +910,25 @@ TEST_GROUP (DeviceManagementServer)
 {
    Testing::Device *device;
 
-   struct TestDeviceManagementServer:public DefaultDeviceManagementServer
+   struct TestDeviceManagementServer:public DeviceManagement::DefaultServer
    {
       TestDeviceManagementServer(IDevice *device):
-         DefaultDeviceManagementServer (device)
+         DeviceManagement::DefaultServer (device)
       {}
 
       Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
       {
          mock ("DeviceManagementServer").actualCall ("register_device");
-         return DefaultDeviceManagementServer::register_device (packet, payload, offset);
+         return DeviceManagement::DefaultServer::register_device (packet, payload, offset);
       }
 
       Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
       {
          mock ("DeviceManagementServer").actualCall ("deregister_device");
-         return DefaultDeviceManagementServer::deregister_device (packet, payload, offset);
+         return DeviceManagement::DefaultServer::deregister_device (packet, payload, offset);
       }
 
-      using DefaultDeviceManagementServer::save;
+      using DeviceManagement::DefaultServer::save;
    };
 
    TestDeviceManagementServer *dev_mgt;
@@ -952,7 +952,7 @@ TEST_GROUP (DeviceManagementServer)
       packet.message.itf.role   = Interface::SERVER_ROLE;
       packet.message.itf.uid    = dev_mgt->uid ();
 
-      UID *uid = new URI ("hf://device@example.com");
+      UID::UID *uid = new UID::URI ("hf://device@example.com");
 
       link        = new Testing::Link (uid, nullptr);
       packet.link = link;
@@ -1026,7 +1026,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    delete link;
 
-   UID *uid = new URI ("hf://device2@example.com");
+   UID::UID *uid = new UID::URI ("hf://device2@example.com");
 
    link        = new Testing::Link (uid, nullptr);
    packet.link = link;
@@ -1051,7 +1051,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
       dev->address = 0x5A50 + i;
       ostringstream uri;
       uri << "hf://device" << i << "@example.com";
-      dev->uid = new URI (uri.str ());
+      dev->uid = new UID::URI (uri.str ());
       dev_mgt->save (dev);
    }
 
@@ -1094,7 +1094,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
 TEST (DeviceManagementServer, Entries)
 {
-   IPUI ipui;
+   UID::IPUI ipui;
 
    ipui.value[0] = 0x12;
    ipui.value[1] = 0x34;
@@ -1105,7 +1105,7 @@ TEST (DeviceManagementServer, Entries)
    for (int i = 0; i < 20; i++)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
-      IPUI *temp                    = ipui.clone ();
+      UID::IPUI *temp               = ipui.clone ();
       dev->address    = i + 1;
       temp->value[4] += i;
       dev->uid        = temp;

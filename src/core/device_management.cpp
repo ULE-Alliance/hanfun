@@ -307,7 +307,7 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
    }
    else
    {
-      HF::UID none_uid;
+      HF::UID::NONE none_uid;
       offset += none_uid.pack (array, offset);
    }
 
@@ -347,20 +347,20 @@ size_t DeviceManagement::RegisterMessage::unpack (const ByteArray &array, size_t
 
    switch (type)
    {
-      case HF::UID::NONE:
-         _uid = new HF::UID ();
+      case HF::UID::NONE_UID:
+         _uid = new HF::UID::NONE ();
          break;
-      case HF::UID::RFPI:
-         _uid = new HF::RFPI ();
+      case HF::UID::RFPI_UID:
+         _uid = new HF::UID::RFPI ();
          break;
-      case HF::UID::IPUI:
-         _uid = new HF::IPUI ();
+      case HF::UID::IPUI_UID:
+         _uid = new HF::UID::IPUI ();
          break;
-      case HF::UID::MAC:
-         _uid = new HF::MAC ();
+      case HF::UID::MAC_UID:
+         _uid = new HF::UID::MAC ();
          break;
-      case HF::UID::URI:
-         _uid = new HF::URI ();
+      case HF::UID::URI_UID:
+         _uid = new HF::UID::URI ();
          break;
       default:
          break;

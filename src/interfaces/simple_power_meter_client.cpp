@@ -29,7 +29,7 @@ using namespace HF::Interfaces;
  * TODO This needs more validation when reading a report received.
  */
 // =============================================================================
-Result SimplePowerMeterClient::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Result SimplePowerMeter::Client::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
 {
    if (packet.message.itf.member != SimplePowerMeter::REPORT_CMD)
    {

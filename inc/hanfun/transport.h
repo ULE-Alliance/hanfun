@@ -16,6 +16,9 @@
 #define HF_TRANSPORT_H
 
 #include "hanfun/common.h"
+#include "hanfun/uids.h"
+
+#include "hanfun/device.h"
 
 namespace HF
 {
@@ -69,7 +72,7 @@ namespace HF
           *
           * @return  the UID of the remote device of this link.
           */
-         virtual UID *uid () = 0;
+         virtual HF::UID::UID *uid () = 0;
 
          /*!
           * Return the transport layer implementation this link belongs to.
@@ -181,7 +184,7 @@ namespace HF
           *
           * @return  the UID of the local device on this transport layer.
           */
-         virtual const HF::UID *uid () const = 0;
+         virtual const HF::UID::UID *uid () const = 0;
 
          //! @}
          // ======================================================================

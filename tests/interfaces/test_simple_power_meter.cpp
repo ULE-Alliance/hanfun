@@ -28,7 +28,7 @@ using namespace HF::Testing;
 //! Test Group for SimplePowerMeter interface parent class.
 TEST_GROUP (SimplePowerMeter)
 {
-   class TestSimplePowerMeter:public InterfaceParentHelper <SimplePowerMeter>
+   class TestSimplePowerMeter:public InterfaceParentHelper <SimplePowerMeter::Base>
    {};
 
    TestSimplePowerMeter interface;
@@ -417,11 +417,11 @@ TEST (SimplePowerMeter_Report, Unpack)
 //! Test Group for SimplePowerMeterServer interface class.
 TEST_GROUP (SimplePowerMeterServer)
 {
-   class TestSimplePowerMeterServer:public InterfaceHelper <SimplePowerMeterServer>
+   class TestSimplePowerMeterServer:public InterfaceHelper <SimplePowerMeter::Server>
    {
       public:
 
-      using SimplePowerMeterServer::report;
+      using SimplePowerMeter::Server::report;
    };
 
    TestSimplePowerMeterServer *server;
@@ -761,11 +761,11 @@ TEST (SimplePowerMeterServer, periodic_disabled)
 //! \test Should return attribute.
 TEST (SimplePowerMeterServer, Attribute)
 {
-   IAttribute *attr = server->attribute (SimplePowerMeterServer::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr = server->attribute (SimplePowerMeter::__LAST_ATTR__ + 1);
 
    CHECK_TRUE (attr == nullptr);
 
-   for (uint8_t uid = SimplePowerMeterServer::ENERGY_ATTR; uid <= SimplePowerMeterServer::__LAST_ATTR__; uid++)
+   for (uint8_t uid = SimplePowerMeter::ENERGY_ATTR; uid <= SimplePowerMeter::__LAST_ATTR__; uid++)
    {
       attr = server->attribute (uid);
 
@@ -773,8 +773,8 @@ TEST (SimplePowerMeterServer, Attribute)
 
       LONGS_EQUAL (uid, attr->uid ());
 
-      if (uid == SimplePowerMeterServer::AVG_POWER_INTERVAL_ATTR ||
-          uid == SimplePowerMeterServer::REPORT_INTERVAL_ATTR)
+      if (uid == SimplePowerMeter::AVG_POWER_INTERVAL_ATTR ||
+          uid == SimplePowerMeter::REPORT_INTERVAL_ATTR)
       {
          CHECK_TRUE (attr->isWritable ());
       }
@@ -796,11 +796,11 @@ TEST (SimplePowerMeterServer, Attribute)
 //! Test Group for SimplePowerMeterClient interface class.
 TEST_GROUP (SimplePowerMeterClient)
 {
-   class TestSimplePowerMeterClient:public InterfaceHelper <SimplePowerMeterClient>
+   class TestSimplePowerMeterClient:public InterfaceHelper <SimplePowerMeter::Client>
    {
       public:
 
-      void report (Report &report)
+      void report (SimplePowerMeter::Report &report)
       {
          UNUSED (report);
          mock ("SimplePowerMeterClient").actualCall ("report");

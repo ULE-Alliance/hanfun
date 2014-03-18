@@ -113,147 +113,8 @@ namespace HF
        * @return     a pointer to the attribute if it exists,
        *             \c nullptr otherwise.
        */
-      virtual IAttribute *attribute (uint8_t uid) = 0;
-   };
-
-   /*!
-    * Common implementation of Interface functionality.
-    */
-   struct AbstractInterface:virtual public Interface
-   {
-      //! \see Interface::handle
-      virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
-
-      //! \see Interface::periodic
-      virtual void periodic (uint32_t time)
-      {
-         UNUSED (time);
-      }
-
-      //! \see Interface::attribute
-      virtual IAttribute *attribute (uint8_t uid)
-      {
-         UNUSED (uid);
-         return nullptr;
-      }
-
-      bool operator ==(AbstractInterface &other)
-      {
-         return uid () == other.uid ();
-      }
-
-      bool operator !=(AbstractInterface &other)
-      {
-         return !(*this == other);
-      }
-
-      protected:
-
-      /*!
-       * Send message \c msg to the network address given by \c addr.
-       *
-       * @param [in] addr        HF network address.
-       * @param [in] message     pointer to the message to be sent to the network.
-       */
-      virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
-
-      /*!
-       * Check if message has correct attributes to be processed by the interface.
-       *
-       * The attributes checked are :
-       * - Interface UID;
-       * - Interface Role;
-       *
-       * \see Interface::handle.
-       */
-      Result check_message (Protocol::Message &message, ByteArray &payload, size_t offset);
-
-      /*!
-       * Check if \c payload data size if sufficient for processing the \c message.
-       *
-       * \see Interface::handle.
-       */
-      Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset);
-
-      /*!
-       * Return the minimal payload size that should be present for the given
-       * message.
-       *
-       * @param message message that was received.
-       *
-       * @return  the minimum size in bytes that the packet payload should hold.
-       */
-      virtual size_t payload_size (Protocol::Message &message) const;
-
-      /*!
-       * Return the minimal payload size that a message should hold when
-       * addressed at the given interface.
-       *
-       * @param itf  the interface being address.
-       *
-       * @return  the minimum number of bytes for the message for the interface.
-       */
-      virtual size_t payload_size (Protocol::Message::Interface &itf) const
-      {
-         UNUSED (itf);
-         return 0;
-      }
-
-      template<typename _Message_T>
-      size_t payload_size_helper () const
-      {
-         static_assert (is_base_of <HF::Serializable, _Message_T>::value,
-                        "_Message_T must be of type HF::Serializable");
-
-         _Message_T message;
-         return message.size ();
-      }
-
-      /*!
-       * Handle command request/response messages, i.e. :
-       *  - Protocol::Message:Type::COMMAND_REQ;
-       *  - Protocol::Message:Type::COMMAND_RESP_REQ;
-       *  - Protocol::Message:Type::COMMAND_RES;
-       *
-       * \see Interface::handle
-       */
-      virtual Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
-
-      /*!
-       * Handle attributes request/response messages, i.e. :
-       *  - Protocol::Message:Type::GET_ATTR_REQ;
-       *  - Protocol::Message:Type::SET_ATTR_REQ;
-       *  - Protocol::Message:Type::SET_ATTR_RESP_REQ;
-       *  - Protocol::Message:Type::GET_ATTR_PACK_REQ;
-       *  - Protocol::Message:Type::SET_ATTR_PACK_REQ;
-       *  - Protocol::Message:Type::SET_ATTR_PACK_RESP_REQ;
-       *
-       * \see Interface::handle
-       */
-      virtual Result handle_attribute (Protocol::Packet &packet, ByteArray &payload, size_t offset);
-
-      /*!
-       * Return a vector containing the attribute UIDs, for the given pack ID.
-       *
-       * @param [in] pack_id     the Attribute pack ID to get the attributes UIDs for.
-       *
-       * @return  vector containing the attributes UIDs.
-       */
-      virtual attribute_uids_t attributes (uint8_t pack_id = AttributePack::MANDATORY) const
-      {
-         UNUSED (pack_id);
-         return attribute_uids_t ();
-      }
-
-      /*!
-       * Check if the given UID matches the interface UID.
-       *
-       * @param [in] uid   the UID value to check against the interface UID.
-       *
-       * @retval  true     the UIDs match,
-       * @retval  false    otherwise.
-       */
-      virtual bool check_uid (uint16_t uid) const = 0;
+      //      virtual Attributes::IAttribute *attribute (uint8_t uid) = 0;
+      virtual HF::Attributes::IAttribute *attribute (uint8_t uid) = 0;
    };
 
    /*!
@@ -261,6 +122,148 @@ namespace HF
     */
    namespace Interfaces
    {
+      /*!
+       * Common implementation of Interface functionality.
+       */
+      struct AbstractInterface:virtual public Interface
+      {
+         //! \see Interface::handle
+         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         //! \see Interface::periodic
+         virtual void periodic (uint32_t time)
+         {
+            UNUSED (time);
+         }
+
+         //! \see Interface::attribute
+         virtual HF::Attributes::IAttribute *attribute (uint8_t uid)
+         {
+            UNUSED (uid);
+            return nullptr;
+         }
+
+         bool operator ==(AbstractInterface &other)
+         {
+            return uid () == other.uid ();
+         }
+
+         bool operator !=(AbstractInterface &other)
+         {
+            return !(*this == other);
+         }
+
+         protected:
+
+         /*!
+          * Send message \c msg to the network address given by \c addr.
+          *
+          * @param [in] addr        HF network address.
+          * @param [in] message     pointer to the message to be sent to the network.
+          */
+         virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         /*!
+          * Check if message has correct attributes to be processed by the interface.
+          *
+          * The attributes checked are :
+          * - Interface UID;
+          * - Interface Role;
+          *
+          * \see Interface::handle.
+          */
+         Result check_message (Protocol::Message &message, ByteArray &payload, size_t offset);
+
+         /*!
+          * Check if \c payload data size if sufficient for processing the \c message.
+          *
+          * \see Interface::handle.
+          */
+         Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset);
+
+         /*!
+          * Return the minimal payload size that should be present for the given
+          * message.
+          *
+          * @param message message that was received.
+          *
+          * @return  the minimum size in bytes that the packet payload should hold.
+          */
+         virtual size_t payload_size (Protocol::Message &message) const;
+
+         /*!
+          * Return the minimal payload size that a message should hold when
+          * addressed at the given interface.
+          *
+          * @param itf  the interface being address.
+          *
+          * @return  the minimum number of bytes for the message for the interface.
+          */
+         virtual size_t payload_size (Protocol::Message::Interface &itf) const
+         {
+            UNUSED (itf);
+            return 0;
+         }
+
+         template<typename _Message_T>
+         size_t payload_size_helper () const
+         {
+            static_assert (is_base_of <HF::Serializable, _Message_T>::value,
+                           "_Message_T must be of type HF::Serializable");
+
+            _Message_T message;
+            return message.size ();
+         }
+
+         /*!
+          * Handle command request/response messages, i.e. :
+          *  - Protocol::Message:Type::COMMAND_REQ;
+          *  - Protocol::Message:Type::COMMAND_RESP_REQ;
+          *  - Protocol::Message:Type::COMMAND_RES;
+          *
+          * \see Interface::handle
+          */
+         virtual Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         /*!
+          * Handle attributes request/response messages, i.e. :
+          *  - Protocol::Message:Type::GET_ATTR_REQ;
+          *  - Protocol::Message:Type::SET_ATTR_REQ;
+          *  - Protocol::Message:Type::SET_ATTR_RESP_REQ;
+          *  - Protocol::Message:Type::GET_ATTR_PACK_REQ;
+          *  - Protocol::Message:Type::SET_ATTR_PACK_REQ;
+          *  - Protocol::Message:Type::SET_ATTR_PACK_RESP_REQ;
+          *
+          * \see Interface::handle
+          */
+         virtual Result handle_attribute (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+
+         /*!
+          * Return a vector containing the attribute UIDs, for the given pack ID.
+          *
+          * @param [in] pack_id     the Attribute pack ID to get the attributes UIDs for.
+          *
+          * @return  vector containing the attributes UIDs.
+          */
+         //      virtual Attributes::uids_t attributes (uint8_t pack_id = Attributes::Pack::MANDATORY) const
+         virtual HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            UNUSED (pack_id);
+            return HF::Attributes::uids_t ();
+         }
+
+         /*!
+          * Check if the given UID matches the interface UID.
+          *
+          * @param [in] uid   the UID value to check against the interface UID.
+          *
+          * @retval  true     the UIDs match,
+          * @retval  false    otherwise.
+          */
+         virtual bool check_uid (uint16_t uid) const = 0;
+      };
+
+
       /*!
        * Class template for all interfaces implementations.
        */

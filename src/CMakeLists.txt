@@ -29,8 +29,10 @@ set(HF_INTERFACES_SRCS interfaces.cpp
                        interfaces/alert.cpp
                        interfaces/alert_server.cpp
                        interfaces/alert_client.cpp
+                       interfaces/on_off.cpp
                        interfaces/on_off_server.cpp
                        interfaces/on_off_client.cpp
+                       interfaces/level_control.cpp
                        interfaces/level_control_server.cpp
                        interfaces/level_control_client.cpp
                        interfaces/simple_power_meter.cpp

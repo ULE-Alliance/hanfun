@@ -283,3 +283,15 @@ size_t SimplePowerMeter::Report::unpack (const ByteArray &array, size_t offset)
 
    return offset - start;
 }
+
+// =============================================================================
+// create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *SimplePowerMeter::create_attribute (uint8_t uid)
+{
+   return Interfaces::create_attribute ((SimplePowerMeter::Server *) nullptr, uid);
+}

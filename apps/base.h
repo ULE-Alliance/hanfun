@@ -19,30 +19,30 @@
 
 #include "hanfun.h"
 
-class Base: public HF::Concentrator::Base<HF::Concentrator::DefaultUnit0>
+class Base:public HF::Devices::Concentrator::Base <HF::Devices::Concentrator::DefaultUnit0>
 {
-   HF::URI _uid;
+   HF::UID::URI _uid;
 
    public:
 
-   Base(std::string uid): _uid(HF::URI(uid))
+   Base(std::string uid):_uid (HF::UID::URI (uid))
    {}
 
-   HF::UID * uid() const
+   HF::UID::UID *uid () const
    {
-      return (HF::UID *)(&_uid);
+      return (HF::UID::UID *) (&_uid);
    }
 
-   void send(HF::Protocol::Packet &packet)
+   void send (HF::Protocol::Packet &packet)
    {
       cout << __PRETTY_FUNCTION__ << endl;
-      HF::Concentrator::Base<HF::Concentrator::DefaultUnit0>::send(packet);
+      HF::Devices::Concentrator::Base <HF::Devices::Concentrator::DefaultUnit0>::send (packet);
    }
 
-   void receive(HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+   void receive (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
    {
       cout << __PRETTY_FUNCTION__ << endl;
-      HF::Concentrator::Base<HF::Concentrator::DefaultUnit0>::receive(packet, payload, offset);
+      HF::Devices::Concentrator::Base <HF::Devices::Concentrator::DefaultUnit0>::receive (packet, payload, offset);
    }
 
    protected:
@@ -51,19 +51,19 @@ class Base: public HF::Concentrator::Base<HF::Concentrator::DefaultUnit0>
    {
       cout << __PRETTY_FUNCTION__ << endl;
 
-      UNUSED(packet);
-      UNUSED(payload);
-      UNUSED(offset);
+      UNUSED (packet);
+      UNUSED (payload);
+      UNUSED (offset);
 
       // XXX This will be replaced by the binding core service.
       if (packet.destination.device == HF::Protocol::BROADCAST_ADDR && packet.source.device == 1)
       {
          packet.destination.device = 2;
-         packet.destination.unit = 1;
+         packet.destination.unit   = 1;
 
-         packet.link = nullptr;
+         packet.link               = nullptr;
 
-         send(packet);
+         send (packet);
       }
    }
 };

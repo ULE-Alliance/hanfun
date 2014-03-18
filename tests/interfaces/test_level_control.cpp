@@ -27,7 +27,7 @@ using namespace HF::Testing;
 
 TEST_GROUP (LevelControl)
 {
-   class TestLevelControl:public InterfaceParentHelper <LevelControl>
+   class TestLevelControl:public InterfaceParentHelper <LevelControl::Base>
    {};
 
    TestLevelControl interface;
@@ -104,7 +104,7 @@ TEST (LevelControl_Message, Unpack)
 //! Test Group for LevelControlClient interface class.
 TEST_GROUP (LevelControlClient)
 {
-   class TestLevelControlClient:public InterfaceHelper <LevelControlClient>
+   class TestLevelControlClient:public InterfaceHelper <LevelControl::Client>
    {};
 
    TestLevelControlClient client;
@@ -154,14 +154,14 @@ TEST (LevelControlClient, Level)
 
 TEST_GROUP (LevelControlServer)
 {
-   class TestLevelControlServer:public InterfaceHelper <LevelControlServer>
+   class TestLevelControlServer:public InterfaceHelper <LevelControl::Server>
    {
       public:
 
       void level_change (uint8_t new_level)
       {
          mock ("LevelControlServer").actualCall ("level_change");
-         LevelControlServer::level_change (new_level);
+         LevelControl::Server::level_change (new_level);
       }
    };
 
@@ -245,7 +245,7 @@ TEST (LevelControlServer, Handle_Invalid_Payload)
 //! \test Should return attribute.
 TEST (LevelControlServer, Attribute)
 {
-   IAttribute *attr = server.attribute (LevelControl::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr = server.attribute (LevelControl::__LAST_ATTR__ + 1);
 
    CHECK_TRUE (attr == nullptr);
 
