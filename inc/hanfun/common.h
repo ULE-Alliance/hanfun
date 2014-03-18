@@ -656,42 +656,6 @@ namespace HF
       virtual void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
    };
 
-   // =============================================================================
-   // API
-   // =============================================================================
-
-   /*!
-    * Convert a \c Word from the host's format to the network format.
-    *
-    * @param value   word to convert.
-    */
-   void hf_hton (uint16_t &value);
-
-   /*!
-    * Convert a \c Double-Word from the host's format to the network format.
-    *
-    * @param value   double-word to convert.
-    */
-   void hf_hton (uint32_t &value);
-
-   /*!
-    * Convert a \c Word from the network format  to the host's format.
-    *
-    * @param value   word to convert.
-    *
-    * @return  the word converted.
-    */
-   void hf_ntoh (uint16_t &value);
-
-   /*!
-    * Convert a \c Double-Word from the network format to the host's format.
-    *
-    * @param value   double-word to convert.
-    *
-    * @return  the double-word converted.
-    */
-   void hf_ntoh (uint32_t &value);
-
 }  // namespace HF
 
 /*

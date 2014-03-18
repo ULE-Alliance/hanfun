@@ -21,47 +21,6 @@ using namespace std;
 using namespace HF;
 
 // =============================================================================
-// Functions
-// =============================================================================
-
-#if __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
-
-TEST_GROUP (Endianness)
-{};
-
-   #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-
-TEST (Endianness, Network2Host_Integer)
-{
-   uint16_t value16 = 0x3412;
-
-   hf_ntoh (value16);
-   LONGS_EQUAL (0x1234, value16);
-
-   uint32_t value32 = 0x0A0B0C0D;
-
-   hf_ntoh (value32);
-   LONGS_EQUAL (0x0D0C0B0A, value32);
-}
-
-TEST (Endianness, Host2Network_Integer)
-{
-   uint16_t value16 = 0x3412;
-
-   hf_hton (value16);
-   LONGS_EQUAL (0x1234, value16);
-
-   uint32_t value32 = 0x0D0C0B0A;
-
-   hf_hton (value32);
-   LONGS_EQUAL (0x0A0B0C0D, value32);
-}
-
-   #endif
-
-#endif
-
-// =============================================================================
 // Byte Array
 // =============================================================================
 
