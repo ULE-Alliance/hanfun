@@ -301,9 +301,9 @@ namespace HF
        */
       struct List:public list <IAttribute *>
       {
-         IAttribute *operator [](uint8_t uid)
+         IAttribute *operator [](uint8_t uid) const
          {
-            for (iterator it = begin (); it != end (); ++it)
+            for (const_iterator it = begin (); it != end (); ++it)
             {
                if ((*it)->uid () == uid)
                {
