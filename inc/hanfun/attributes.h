@@ -128,10 +128,10 @@ namespace HF
             offset += array.write (offset, count);
 
             /* *INDENT-OFF* */
-         for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(), [&offset,&array](uint8_t uid)
-         {
-            offset += array.write (offset, uid);
-         });
+            for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(), [&offset,&array](uint8_t uid)
+            {
+               offset += array.write (offset, uid);
+            });
             /* *INDENT-ON* */
 
             return offset - start;
@@ -577,10 +577,10 @@ namespace HF
             virtual ~Response()
             {
                /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
-            {
-               delete attr;
-            });
+               for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
+               {
+                  delete attr;
+               });
                /* *INDENT-ON* */
             }
 
@@ -590,10 +590,10 @@ namespace HF
                size_t result = Protocol::Response::size ();
 
                /* *INDENT-OFF* */
-            for_each (attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute *attr)
-            {
-               result += attr->size(true);
-            });
+               for_each (attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute *attr)
+               {
+                  result += attr->size(true);
+               });
                /* *INDENT-ON* */
 
                return result;
@@ -609,10 +609,10 @@ namespace HF
                offset += array.write (offset, (uint8_t) attributes.size ());
 
                /* *INDENT-OFF* */
-            for_each (attributes.begin(), attributes.end(), [&array, &offset] (HF::Attributes::IAttribute * attr)
-            {
-               offset += attr->pack(array, offset, true);
-            });
+               for_each (attributes.begin(), attributes.end(), [&array, &offset] (HF::Attributes::IAttribute * attr)
+               {
+                  offset += attr->pack(array, offset, true);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
@@ -649,10 +649,10 @@ namespace HF
             virtual ~Request()
             {
                /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
-            {
-               delete attr;
-            });
+               for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
+               {
+                  delete attr;
+               });
                /* *INDENT-ON* */
             }
 
@@ -662,10 +662,10 @@ namespace HF
                size_t result = sizeof(uint8_t);
 
                /* *INDENT-OFF* */
-            for_each ( attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute * attr)
-            {
-               result += attr->size(true);
-            });
+               for_each ( attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute * attr)
+               {
+                  result += attr->size(true);
+               });
                /* *INDENT-ON* */
 
                return result;
@@ -679,10 +679,10 @@ namespace HF
                offset += array.write (offset, (uint8_t) attributes.size ());
 
                /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (), [&array,&offset](HF::Attributes::IAttribute * attr)
-            {
-               offset += attr->pack (array, offset, true);
-            });
+               for_each (attributes.begin (), attributes.end (), [&array,&offset](HF::Attributes::IAttribute * attr)
+               {
+                  offset += attr->pack (array, offset, true);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
@@ -784,10 +784,10 @@ namespace HF
                offset += array.write (offset, (uint8_t) results.size ());
 
                /* *INDENT-OFF* */
-            for_each (results.begin (), results.end (), [&array,&offset](Result result)
-            {
-               offset += result.pack (array, offset);
-            });
+               for_each (results.begin (), results.end (), [&array,&offset](Result result)
+               {
+                  offset += result.pack (array, offset);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
