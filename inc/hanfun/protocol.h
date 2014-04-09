@@ -93,10 +93,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          // =============================================================================
@@ -133,10 +133,10 @@ namespace HF
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
          protected:
 
@@ -181,10 +181,10 @@ namespace HF
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
          bool is_broadcast ()
          {
@@ -231,10 +231,10 @@ namespace HF
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
       /*!
@@ -246,18 +246,18 @@ namespace HF
          // API
          // =============================================================================
 
-         Result code;
+         Common::Result code;
 
-         Response(Result code = OK):code (code) {}
+         Response(Common::Result code = Common::Result::OK):code (code) {}
 
          //! \see HF::Serializable::size.
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
    }  // namespace Protocol

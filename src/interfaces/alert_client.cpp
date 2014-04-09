@@ -28,11 +28,11 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-Result Alert::Client::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Common::Result Alert::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
    if (packet.message.itf.member != Alert::STATUS_CMD)
    {
-      return Result::FAIL_SUPPORT;
+      return Common::Result::FAIL_SUPPORT;
    }
 
    Message alert_msg;
@@ -41,5 +41,5 @@ Result Alert::Client::handle_command (Protocol::Packet &packet, ByteArray &paylo
 
    status (alert_msg);
 
-   return Result::OK;
+   return Common::Result::OK;
 }

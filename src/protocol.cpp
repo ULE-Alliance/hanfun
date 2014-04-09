@@ -45,7 +45,7 @@ size_t Address::size () const
  *
  */
 // =============================================================================
-size_t Address::pack (ByteArray &array, size_t offset) const
+size_t Address::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -64,7 +64,7 @@ size_t Address::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Address::unpack (const ByteArray &array, size_t offset)
+size_t Address::unpack (const Common::ByteArray &array, size_t offset)
 {
    uint16_t dev;
    size_t   start = offset;
@@ -103,7 +103,7 @@ size_t Message::Interface::size () const
  *
  */
 // =============================================================================
-size_t Message::Interface::pack (ByteArray &array, size_t offset) const
+size_t Message::Interface::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -122,7 +122,7 @@ size_t Message::Interface::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Message::Interface::unpack (const ByteArray &array, size_t offset)
+size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -192,7 +192,7 @@ size_t Message::size () const
  *
  */
 // =============================================================================
-size_t Message::pack (ByteArray &array, size_t offset) const
+size_t Message::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -225,7 +225,7 @@ size_t Message::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Message::unpack (const ByteArray &array, size_t offset)
+size_t Message::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -270,7 +270,7 @@ size_t Response::size () const
  *
  */
 // =============================================================================
-size_t Response::pack (ByteArray &array, size_t offset) const
+size_t Response::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -286,14 +286,14 @@ size_t Response::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Response::unpack (const ByteArray &array, size_t offset)
+size_t Response::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t  start = offset;
 
    uint8_t code  = 0;
    offset    += array.read (offset, code);
 
-   this->code = static_cast <Result>(code);
+   this->code = static_cast <Common::Result>(code);
 
    return offset - start;
 }
@@ -324,7 +324,7 @@ size_t Packet::size () const
  *
  */
 // =============================================================================
-size_t Packet::pack (ByteArray &array, size_t offset) const
+size_t Packet::pack (Common::ByteArray &array, size_t offset) const
 {
    uint16_t transport = 0;
    size_t   start     = offset;
@@ -346,7 +346,7 @@ size_t Packet::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Packet::unpack (const ByteArray &array, size_t offset)
+size_t Packet::unpack (const Common::ByteArray &array, size_t offset)
 {
    uint16_t transport = 0;
    size_t   start     = offset;
@@ -376,7 +376,7 @@ size_t Packet::unpack (const ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t GetAttributePack::Response::unpack (const ByteArray &array, size_t offset)
+size_t GetAttributePack::Response::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 

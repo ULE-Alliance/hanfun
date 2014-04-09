@@ -124,7 +124,7 @@ namespace HF
           * @param [in] offset   offset from where the received data starts on the \c payload
           *                      byte array buffer.
           */
-         virtual void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
+         virtual void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
 
          //! @}
          // ======================================================================

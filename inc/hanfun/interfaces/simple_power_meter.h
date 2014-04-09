@@ -112,7 +112,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -123,14 +123,14 @@ namespace HF
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t  start = offset;
 
                uint8_t temp;
                offset += array.read (offset, temp);
 
-               unit    = static_cast <Precision>(temp);
+               unit    = static_cast <Common::Precision>(temp);
 
                offset += array.read (offset, value);
 
@@ -174,10 +174,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
@@ -565,7 +565,7 @@ namespace HF
 
             protected:
 
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
       }  // namespace SimplePowerMeter

@@ -154,7 +154,7 @@ namespace HF
             protected:
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             //! \see AbstractInterface::attributes
             HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const

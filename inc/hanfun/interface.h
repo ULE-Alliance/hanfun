@@ -96,7 +96,7 @@ namespace HF
        *
        * @return        the result of the message processing.
        */
-      virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
+      virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
 
       /*!
        * Handle periodic processing.
@@ -128,7 +128,7 @@ namespace HF
       struct AbstractInterface:virtual public Interface
       {
          //! \see Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          //! \see Interface::periodic
          virtual void periodic (uint32_t time)
@@ -172,14 +172,14 @@ namespace HF
           *
           * \see Interface::handle.
           */
-         Result check_message (Protocol::Message &message, ByteArray &payload, size_t offset);
+         Common::Result check_message (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
 
          /*!
           * Check if \c payload data size if sufficient for processing the \c message.
           *
           * \see Interface::handle.
           */
-         Result check_payload_size (Protocol::Message &message, ByteArray &payload, size_t offset);
+         Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
 
          /*!
           * Return the minimal payload size that should be present for the given
@@ -223,7 +223,7 @@ namespace HF
           *
           * \see Interface::handle
           */
-         virtual Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+         virtual Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          /*!
           * Handle attributes request/response messages, i.e. :
@@ -236,7 +236,7 @@ namespace HF
           *
           * \see Interface::handle
           */
-         virtual Result handle_attribute (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+         virtual Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          /*!
           * Return a vector containing the attribute UIDs, for the given pack ID.

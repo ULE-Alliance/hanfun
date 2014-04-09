@@ -24,7 +24,7 @@
 // Helper Functions
 // =============================================================================
 
-SimpleString StringFrom (const HF::ByteArray &array)
+SimpleString StringFrom (const HF::Common::ByteArray &array)
 {
    SimpleString result = "";
 
@@ -36,7 +36,7 @@ SimpleString StringFrom (const HF::ByteArray &array)
    return result;
 }
 
-SimpleString StringFrom (const HF::Serializable &data)
+SimpleString StringFrom (const HF::Common::Serializable &data)
 {
    SimpleString result = "0x";
 

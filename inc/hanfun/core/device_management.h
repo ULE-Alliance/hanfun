@@ -20,6 +20,8 @@
 #include <vector>
 
 #include "hanfun/common.h"
+#include "hanfun/uids.h"
+
 #include "hanfun/protocol.h"
 
 #include "hanfun/core.h"
@@ -76,10 +78,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
@@ -100,10 +102,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!

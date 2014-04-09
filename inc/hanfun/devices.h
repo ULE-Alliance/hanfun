@@ -28,6 +28,8 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 
+#include "hanfun/transport.h"
+
 namespace HF
 {
    /*!
@@ -103,7 +105,7 @@ namespace HF
             }
          }
 
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          protected:
 

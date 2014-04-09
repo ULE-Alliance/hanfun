@@ -116,7 +116,7 @@ size_t SimplePowerMeter::Report::size () const
  *
  */
 // =============================================================================
-size_t SimplePowerMeter::Report::pack (ByteArray &array, size_t offset) const
+size_t SimplePowerMeter::Report::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t  start = offset;
 
@@ -224,7 +224,7 @@ size_t SimplePowerMeter::Report::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t SimplePowerMeter::Report::unpack (const ByteArray &array, size_t offset)
+size_t SimplePowerMeter::Report::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t  start      = offset;
 

@@ -34,7 +34,7 @@ namespace HF
       /*!
        * Interface/Service Attribute's API.
        */
-      struct IAttribute:public Serializable
+      struct IAttribute:public Common::Serializable
       {
          /*!
           * Attribute's UID.
@@ -57,6 +57,7 @@ namespace HF
           * @return  UID of the interface the attribute belongs to.
           */
          virtual uint16_t interface () const       = 0;
+
          /*!
           * \see Serializable::size
           *
@@ -65,7 +66,7 @@ namespace HF
          virtual size_t size (bool with_uid) const = 0;
 
          //! \see Serializable::size
-         size_t size () const = 0;
+         virtual size_t size () const = 0;
 
          /*!
           * \see Serializable::pack
@@ -74,10 +75,10 @@ namespace HF
           * @param [in] offset      offset to start the packing.
           * @param [in] with_uid    include uid() size in the calculation.
           */
-         virtual size_t pack (ByteArray &array, size_t offset, bool with_uid) const = 0;
+         virtual size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const = 0;
 
          //! \see Serializable::pack
-         virtual size_t pack (ByteArray &array, size_t offset) const = 0;
+         virtual size_t pack (Common::ByteArray &array, size_t offset) const = 0;
 
          /*!
           * \see Serializable::unpack
@@ -89,11 +90,11 @@ namespace HF
           * @param [in] offset      offset to start the packing.
           * @param [in] with_uid    include uid() size in the calculation.
           */
-         virtual size_t unpack (const ByteArray &array, size_t offset, bool with_uid) = 0;
+         virtual size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid) = 0;
 
          //! \see Serializable::unpack
-         virtual size_t unpack (const ByteArray &array, size_t offset) = 0;
 
+         virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
       };
 
       //! Attribute factory function type.
@@ -119,7 +120,7 @@ namespace HF
          }
 
          //! \see Serializable::pack
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t  start = offset;
 
@@ -137,7 +138,7 @@ namespace HF
          }
 
          //! \see Serializable::unpack
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t count = 0;
             return unpack (array, offset, count);
@@ -149,7 +150,7 @@ namespace HF
           * @param [out] count   reference to a variable that will hold the count value read from the
           *                      array.
           */
-         size_t unpack (const ByteArray &array, size_t offset, uint8_t &count)
+         size_t unpack (const Common::ByteArray &array, size_t offset, uint8_t &count)
          {
             size_t start = offset;
 
@@ -243,7 +244,7 @@ namespace HF
             return sizeof(T);
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
 
@@ -252,7 +253,7 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             size_t start = offset;
 
@@ -280,12 +281,12 @@ namespace HF
             return data.size ();
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             return data.pack (array, offset);
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             return data.unpack (array, offset);
          }
@@ -311,12 +312,12 @@ namespace HF
             return data->size ();
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             return data->pack (array, offset);
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             return data->unpack (array, offset);
          }
@@ -363,7 +364,7 @@ namespace HF
          {
             return helper.size ();
          }
-         size_t pack (ByteArray &array, size_t offset, bool with_uid) const
+         size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const
          {
             size_t start = offset;
 
@@ -377,11 +378,11 @@ namespace HF
             return offset - start;
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             return helper.pack (array, offset);
          }
-         size_t unpack (const ByteArray &array, size_t offset, bool with_uid)
+         size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
          {
             size_t start = offset;
 
@@ -402,7 +403,7 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             return helper.unpack (array, offset);
          }
@@ -463,14 +464,14 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             return Protocol::Response::pack (array, offset) +
                    (attribute != nullptr ? attribute->pack (array, offset) : 0);
          }
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             return Protocol::Response::unpack (array, offset) +
                    (attribute != nullptr ? attribute->unpack (array, offset) : 0);
@@ -529,13 +530,13 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                return attributes.pack (array, offset);
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                return attributes.unpack (array, offset, count);
             }
@@ -599,7 +600,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -618,7 +619,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
       } // namespace GetAttributePack
@@ -671,7 +672,7 @@ namespace HF
             }
 
             //! \see Serializable::pack
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -688,7 +689,7 @@ namespace HF
             }
 
             //! \see Serializable::unpack
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
 
@@ -701,19 +702,19 @@ namespace HF
          /*!
           * This class represents the payload of a HF::Message::SET_ATTR_PACK_RES message.
           */
-         struct Response:public Serializable
+         struct Response
          {
             /*!
              * Set attribute operation result.
              */
-            struct Result:public Serializable
+            struct Result
             {
-               uint8_t    uid;  //!< Attribute UID.
-               HF::Result code; //!< Command result.
+               uint8_t        uid;  //!< Attribute UID.
+               Common::Result code; //!< Command result.
 
                Result() {}
 
-               Result(uint8_t uid, HF::Result code):
+               Result(uint8_t uid, Common::Result code):
                   uid (uid), code (code)
                {}
 
@@ -727,7 +728,7 @@ namespace HF
                }
 
                //! \see Serializable::pack
-               size_t pack (ByteArray &array, size_t offset = 0) const
+               size_t pack (Common::ByteArray &array, size_t offset = 0) const
                {
                   size_t start = offset;
 
@@ -738,7 +739,7 @@ namespace HF
                }
 
                //! \see Serializable::unpack
-               size_t unpack (const ByteArray &array, size_t offset = 0)
+               size_t unpack (const Common::ByteArray &array, size_t offset = 0)
                {
                   size_t  start = offset;
 
@@ -747,7 +748,7 @@ namespace HF
                   uid     = temp;
 
                   offset += array.read (offset, temp);
-                  code    = static_cast <HF::Result>(temp);
+                  code    = static_cast <Common::Result>(temp);
 
                   return offset - start;
                }
@@ -776,7 +777,7 @@ namespace HF
             }
 
             //! \see Serializable::pack
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -793,7 +794,7 @@ namespace HF
             }
 
             //! \see Serializable::unpack
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
 

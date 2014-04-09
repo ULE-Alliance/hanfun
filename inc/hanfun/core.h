@@ -52,7 +52,7 @@ namespace HF
          }
 
          //! \see HF::Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             return Interfaces::AbstractInterface::handle (packet, payload, offset);
          }

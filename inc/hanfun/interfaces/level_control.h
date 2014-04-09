@@ -60,7 +60,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -70,7 +70,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
 
@@ -178,7 +178,7 @@ namespace HF
             protected:
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             //! \see AbstractInterface::attributes
             HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const

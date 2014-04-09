@@ -54,20 +54,20 @@ void LevelControl::Server::level (uint8_t new_level)
  *
  */
 // =============================================================================
-Result LevelControl::Server::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Common::Result LevelControl::Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
    Message level_msg;
 
    if (packet.message.itf.member != LevelControl::SET_LEVEL_CMD)
    {
-      return Result::FAIL_SUPPORT;
+      return Common::Result::FAIL_SUPPORT;
    }
 
    level_msg.unpack (payload, offset);
 
    level_change (level_msg.level);
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================

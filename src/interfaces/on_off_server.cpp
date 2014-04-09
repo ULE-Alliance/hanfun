@@ -28,7 +28,7 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-Result OnOff::Server::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Common::Result OnOff::Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
    UNUSED (payload);
    UNUSED (offset);
@@ -47,10 +47,10 @@ Result OnOff::Server::handle_command (Protocol::Packet &packet, ByteArray &paylo
          toggle ();
          break;
       default:
-         return Result::FAIL_SUPPORT;
+         return Common::Result::FAIL_SUPPORT;
    }
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================

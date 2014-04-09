@@ -217,11 +217,11 @@ namespace HF
                         "Interface1 and Interface 2 MUST be of type HF::AbstractInterface !");
 
          //! \see Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
-            Result result = interfaces.first.handle (packet, payload, offset);
+            Common::Result result = interfaces.first.handle (packet, payload, offset);
 
-            if (result == Result::OK || result == Result::FAIL_SUPPORT)
+            if (result == Common::Result::OK || result == Common::Result::FAIL_SUPPORT)
             {
                return result;
             }

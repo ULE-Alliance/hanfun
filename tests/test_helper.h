@@ -42,9 +42,16 @@ using namespace HF::Protocol;
 // Helper Test Functions
 // =============================================================================
 
-SimpleString StringFrom (const HF::ByteArray &array);
+#define STRING_FROM( _T )                                     \
+SimpleString StringFrom (const _T &data)                      \
+{                                                              \
+   SerializableHelper<_T &> wrapper(const_cast<_T &>(data));  \
+   return StringFrom(wrapper);                                \
+}
 
-SimpleString StringFrom (const HF::Serializable &data);
+SimpleString StringFrom (const HF::Common::ByteArray &array);
+
+SimpleString StringFrom (const HF::Common::Serializable &data);
 
 template<typename _type>
 void check_index (_type expected, _type actual, uint32_t index, const char *header,
