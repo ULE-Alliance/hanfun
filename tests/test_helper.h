@@ -81,7 +81,7 @@ namespace HF
 {
    namespace Testing
    {
-      struct Payload:public Serializable
+      struct Payload
       {
          size_t fake_size;
 
@@ -99,8 +99,12 @@ namespace HF
 
          size_t pack (ByteArray &array, size_t offset = 0) const
          {
-            UNUSED (array);
-            UNUSED (offset);
+            array.extend (fake_size);
+
+            auto start = array.begin () + offset;
+
+            array.insert (start, fake_size, 0x00);
+
             return fake_size;
          }
 
@@ -126,12 +130,7 @@ namespace HF
          }
 
          virtual ~InterfaceHelper()
-         {
-            if (sendMsg.payload != nullptr)
-            {
-               delete sendMsg.payload;
-            }
-         }
+         {}
 
          void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
@@ -306,7 +305,7 @@ namespace HF
          vector <Protocol::Packet *> packets;
 
          AbstractDevice():
-            _address (Protocol::BROADCAST_ADDR) // , packet (nullptr)
+            _address (Protocol::BROADCAST_ADDR)
          {}
 
          virtual ~AbstractDevice()
@@ -314,11 +313,6 @@ namespace HF
             /* *INDENT-OFF* */
             for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
             {
-               if (packet->message.payload != nullptr)
-               {
-                  delete packet->message.payload;
-               }
-
                delete packet;
             });
             /* *INDENT-ON* */

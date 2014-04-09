@@ -99,7 +99,7 @@ namespace HF
          /*!
           * This represents a measurement for a given attribute.
           */
-         struct Measurement:public Serializable
+         struct Measurement
          {
             uint8_t  unit;               //!< Measurement precision/type.
             uint32_t value;              //!< Measurement value.
@@ -144,7 +144,7 @@ namespace HF
           * TODO This needs a way to dynamically add only the attributes
           *       that are needed to the report.
           */
-         struct Report:public Serializable
+         struct Report
          {
             Measurement energy;                       //!< Energy measurement.
 

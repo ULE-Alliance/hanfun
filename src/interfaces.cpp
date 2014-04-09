@@ -348,9 +348,14 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
          HF::Attributes::Response *attr_res = new HF::Attributes::Response (attribute (packet.message.itf.member));
          attr_res->code = (attr_res->attribute != nullptr ? Common::Result::OK : Common::Result::FAIL_SUPPORT);
 
-         Message response (attr_res, packet.message);
+         Message response (packet.message, attr_res->size ());
+
+         attr_res->pack (response.payload);
 
          sendMessage (packet.source, response);
+
+         delete attr_res;
+
          break;
       }
       case Message::GET_ATTR_RES:
@@ -365,10 +370,11 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_RESP_REQ:
       {
-         Result result  = update_attribute (this, packet.message.itf.member, payload, offset);
-         Response *resp = new Response (result);
+         Common::Result result = update_attribute (this, packet.message.itf.member, payload, offset);
+         Response resp (result);
 
-         Message  response (resp, packet.message);
+         Message  response (packet.message, resp.size ());
+         resp.pack (response.payload);
 
          sendMessage (packet.source, response);
 
@@ -414,9 +420,13 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_response->code = result;
 
-         Message response (attr_response, packet.message);
+         Message response (packet.message, attr_response->size ());
+
+         attr_response->pack (response.payload);
 
          sendMessage (packet.source, response);
+
+         delete attr_response;
 
          break;
       }
@@ -434,9 +444,14 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       {
          SetAttributePack::Response *attr_response = update_attributes (this, payload, offset, true);
 
-         Message response (attr_response, packet.message);
+         Message response (packet.message, attr_response->size ());
+
+         attr_response->pack (response.payload);
 
          sendMessage (packet.source, response);
+
+         delete attr_response;
+
          break;
       }
       case Message::SET_ATTR_PACK_RES:
@@ -451,11 +466,15 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::ATOMIC_SET_ATTR_PACK_RESP_REQ:
       {
-         Serializable *attr_response = update_attributes_atomic (this, payload, offset, true);
+         Protocol::Response *resp = update_attributes_atomic (this, payload, offset, true);
 
-         Message response (attr_response, packet.message);
+         Message response (packet.message, resp->size ());
+
+         resp->pack (response.payload);
 
          sendMessage (packet.source, response);
+
+         delete resp;
 
          break;
       }

@@ -99,7 +99,7 @@ namespace HF
       //! Attribute factory function type.
       typedef IAttribute * (*Factory)(uint8_t);
 
-      struct uids_t:public vector <uint8_t>, public Serializable
+      struct uids_t:public vector <uint8_t>
       {
          uids_t():vector <uint8_t>()
          {}
@@ -198,131 +198,6 @@ namespace HF
       };
 
       template<typename T, typename = void>
-      struct SerializableHelper:public Serializable
-      {
-         size_t size () const
-         {
-            return 0;
-         }
-
-         size_t pack (ByteArray &array, size_t offset = 0) const
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            return 0;
-         }
-
-         size_t unpack (const ByteArray &array, size_t offset = 0)
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            return 0;
-         }
-
-         private:
-
-         SerializableHelper()
-         {}
-      };
-
-      template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_integral <typename remove_reference <T>::type>::value>::type> :
-         public Serializable
-      {
-         T data;
-
-         SerializableHelper()
-         {
-            memset (&data, 0, sizeof(T));
-         }
-
-         SerializableHelper(T data):data (data) {}
-
-         size_t size () const
-         {
-            return sizeof(T);
-         }
-
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
-         {
-            size_t start = offset;
-
-            offset += array.write (offset, data);
-
-            return offset - start;
-         }
-
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
-         {
-            size_t start = offset;
-
-            offset += array.read (offset, data);
-
-            return offset - start;
-         }
-      };
-
-      template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_base_of <Serializable, typename remove_reference <T>::type>::value>::type> :
-         public Serializable
-      {
-         T data;
-
-         SerializableHelper()
-         {
-            memset (&data, 0, sizeof(T));
-         }
-
-         SerializableHelper(T data):data (data)
-         {}
-         size_t size () const
-         {
-            return data.size ();
-         }
-
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
-         {
-            return data.pack (array, offset);
-         }
-
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
-         {
-            return data.unpack (array, offset);
-         }
-      };
-
-      template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value &&
-                                                        is_base_of <Serializable, typename remove_pointer <T>::type>::value>::type> :
-         public Serializable
-      {
-         T data;
-
-         SerializableHelper()
-         {
-            memset (&data, 0, sizeof(T));
-         }
-
-         SerializableHelper(T data):data (data)
-         {}
-
-         size_t size () const
-         {
-            return data->size ();
-         }
-
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
-         {
-            return data->pack (array, offset);
-         }
-
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
-         {
-            return data->unpack (array, offset);
-         }
-      };
-
-      template<typename T, typename = void>
       struct Attribute:public AbstractAttribute
       {
          Attribute(const uint16_t interface, const uint8_t uid, T data, bool writable = false):
@@ -409,7 +284,7 @@ namespace HF
 
          protected:
 
-         SerializableHelper <T> helper;
+         Common::SerializableHelper <T> helper;
 
          private:
 
@@ -513,7 +388,7 @@ namespace HF
           * This class represents the payload of a HF::Message::GET_ATTR_PACK_REQ request,
           * when the payload is Type::DYNAMIC.
           */
-         struct Request:public Serializable
+         struct Request
          {
             HF::Attributes::uids_t attributes; //!< Vector containing the attributes UID's to get.
 
@@ -644,7 +519,7 @@ namespace HF
           * This class represents the message payload of a HF::Message::SET_ATTR_PACK_REQ
           * or HF::Message::SET_ATTR_PACK_RESP_REQ message.
           */
-         struct Request:public Serializable
+         struct Request
          {
             HF::Attributes::List attributes; //!< List containing the attributes to send.
 

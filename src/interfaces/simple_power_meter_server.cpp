@@ -158,17 +158,22 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
    if (_report_interval > 0 && abs ((int64_t) _last_periodic - time) >= _report_interval)
    {
       Protocol::Address addr;
-      Protocol::Message message;
+
+      Report * report = this->report ();
+
+      Protocol::Message message(report->size());
 
       message.itf.role   = CLIENT_ROLE;
       message.itf.uid    = SimplePowerMeter::Server::uid ();
       message.itf.member = REPORT_CMD;
 
-      message.payload    = report ();
+      report->pack(message.payload);
 
       sendMessage (addr, message);
 
       _last_periodic = time;
+
+      delete report;
    }
 
 #endif

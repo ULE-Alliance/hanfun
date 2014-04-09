@@ -18,3 +18,11 @@
 
 using namespace HF;
 using namespace HF::Testing;
+
+TEST_GROUP (Devices)
+{};
+
+IGNORE_TEST (Devices, Empty)
+{
+   FAIL_TEST ("Not implemented yet !");
+}

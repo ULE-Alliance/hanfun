@@ -47,7 +47,7 @@ namespace HF
             __LAST_ATTR__ = LEVEL_ATTR,
          } Attributes;
 
-         struct Message:public Serializable
+         struct Message
          {
             uint8_t level;
 

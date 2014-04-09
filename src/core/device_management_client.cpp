@@ -36,11 +36,6 @@ using namespace HF::Core;
 void DeviceManagement::Client::register_device ()
 {
    Protocol::Address addr (0, 0);
-   Protocol::Message message;
-
-   message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = uid ();
-   message.itf.member = REGISTER_CMD;
 
    RegisterMessage *payload = new RegisterMessage (DeviceInformation::EMC);
 
@@ -54,9 +49,17 @@ void DeviceManagement::Client::register_device ()
       payload->units.push_back (unit);
    }
 
-   message.payload = payload;
+   Protocol::Message message (payload->size ());
+
+   message.itf.role   = SERVER_ROLE;
+   message.itf.uid    = uid ();
+   message.itf.member = REGISTER_CMD;
+
+   payload->pack (message.payload);
 
    sendMessage (addr, message);
+
+   delete payload;
 }
 
 // =============================================================================
@@ -68,16 +71,16 @@ void DeviceManagement::Client::register_device ()
 // =============================================================================
 void DeviceManagement::Client::deregister (uint16_t address)
 {
+   DeregisterMessage payload (address);
+
    Protocol::Address addr (0, 0);
-   Protocol::Message message;
+   Protocol::Message message (payload.size ());
 
    message.itf.role   = SERVER_ROLE;
    message.itf.uid    = uid ();
    message.itf.member = DEREGISTER_CMD;
 
-   DeregisterMessage *payload = new DeregisterMessage (address);
-
-   message.payload = payload;
+   payload.pack (message.payload);
 
    sendMessage (addr, message);
 }

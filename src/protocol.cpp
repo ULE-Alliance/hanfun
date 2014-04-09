@@ -141,8 +141,8 @@ size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset
 // Message
 // =============================================================================
 
-Message::Message(Serializable *payload, Message &parent):
-   reference (parent.reference), itf (parent.itf), payload (payload), length (0)
+Message::Message(Message &parent, size_t size):
+   reference (parent.reference), itf (parent.itf), payload (Common::ByteArray (size)), length (0)
 {
    switch (parent.type)
    {
@@ -178,11 +178,11 @@ Message::Message(Serializable *payload, Message &parent):
 // =============================================================================
 size_t Message::size () const
 {
-   return sizeof(uint8_t) +   // Application Reference.
-          sizeof(uint8_t) +   // Message Type.
-          itf.size () +       // Interface Addr.
-          sizeof(uint16_t) +  // Payload Length Value.
-          payload_length ();  // Payload Length.
+   return sizeof(uint8_t) +    // Application Reference.
+          sizeof(uint8_t) +    // Message Type.
+          itf.size () +        // Interface Addr.
+          sizeof(uint16_t) +   // Payload Length Value.
+          payload.size ();     // Payload Length.
 }
 
 // =============================================================================
@@ -202,18 +202,19 @@ size_t Message::pack (Common::ByteArray &array, size_t offset) const
    // Message Type.
    offset += array.write (offset, static_cast <uint8_t>(this->type));
 
-   // Interface Address
+   // Interface Address.
    offset += itf.pack (array, offset);
 
    // Payload Length.
-   uint16_t length = payload_length ();
+   uint16_t length = payload.size () % MAX_PAYLOAD;
 
    offset += array.write (offset, length);
 
-   if (payload != nullptr)
-   {
-      offset += payload->pack (array, offset);
-   }
+   array.extend (length);
+
+   copy (payload.begin (), payload.end (), array.begin () + offset);
+
+   offset += payload.size ();
 
    return offset - start;
 }

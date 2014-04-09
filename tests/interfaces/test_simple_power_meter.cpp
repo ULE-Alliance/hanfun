@@ -703,8 +703,6 @@ TEST (SimplePowerMeterServer, report)
 
    CHECK_EQUAL (server->power_factor (), report->power_factor);    // Power Factor.
 
-   // FIXME check_equal( report->, server->() );   // Report Interval.
-
    delete report;
 }
 
@@ -721,24 +719,23 @@ TEST (SimplePowerMeterServer, periodic)
 
    mock ("Interface").checkExpectations ();
 
-   CHECK_FALSE (server->sendMsg.payload == nullptr);
-
    CHECK_EQUAL (Interface::CLIENT_ROLE, server->sendMsg.itf.role);
    CHECK_EQUAL (server->uid (), server->sendMsg.itf.uid);
    CHECK_EQUAL (SimplePowerMeter::REPORT_CMD, server->sendMsg.itf.member);
 
-   delete server->sendMsg.payload;
-   server->sendMsg.payload = nullptr;
+   server->sendMsg.payload.clear ();
 
-   time                   += 10;
+   time += 10;
    server->periodic (time);
-   CHECK_TRUE (server->sendMsg.payload == nullptr);
+
+   LONGS_EQUAL (0, server->sendMsg.payload.size ());
 
    mock ("Interface").expectOneCall ("sendMessage");
 
    time += 10;
    server->periodic (time);
-   CHECK_FALSE (server->sendMsg.payload == nullptr);
+
+   CHECK_TRUE (server->sendMsg.payload.size () != 0);
 
    mock ("Interface").checkExpectations ();
 }
@@ -751,11 +748,11 @@ TEST (SimplePowerMeterServer, periodic_disabled)
    server->report_interval (0);
 
    server->periodic (time);
-   CHECK_TRUE (server->sendMsg.payload == nullptr);
+   LONGS_EQUAL (0, server->sendMsg.payload.size ());
 
    time += 10;
    server->periodic (time);
-   CHECK_TRUE (server->sendMsg.payload == nullptr);
+   LONGS_EQUAL (0, server->sendMsg.payload.size ());
 }
 
 //! \test Should return attribute.

@@ -30,13 +30,16 @@ using namespace HF::Interfaces;
 // =============================================================================
 void LevelControl::Client::level (Protocol::Address &addr, uint8_t new_level)
 {
-   Protocol::Message message;
+   Message level_msg (new_level);
+
+   Protocol::Message message (level_msg.size ());
 
    message.itf.role   = SERVER_ROLE;
    message.itf.uid    = LevelControl::Client::uid ();
    message.itf.member = SET_LEVEL_CMD;
 
-   message.payload    = new Message (new_level);
+
+   level_msg.pack (message.payload);
 
    sendMessage (addr, message);
 }

@@ -113,7 +113,6 @@ namespace HF
        * @return     a pointer to the attribute if it exists,
        *             \c nullptr otherwise.
        */
-      //      virtual Attributes::IAttribute *attribute (uint8_t uid) = 0;
       virtual HF::Attributes::IAttribute *attribute (uint8_t uid) = 0;
    };
 
@@ -208,9 +207,6 @@ namespace HF
          template<typename _Message_T>
          size_t payload_size_helper () const
          {
-            static_assert (is_base_of <HF::Serializable, _Message_T>::value,
-                           "_Message_T must be of type HF::Serializable");
-
             _Message_T message;
             return message.size ();
          }

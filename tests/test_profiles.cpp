@@ -243,12 +243,13 @@ TEST (Profiles, Detector)
 
    mock ("Interface").checkExpectations ();
 
-   CHECK (detector.sendMsg.payload != nullptr);
+   CHECK_TRUE (detector.sendMsg.payload.size () != 0);
 
-   Interfaces::Alert::Message *status_msg = static_cast <Interfaces::Alert::Message *>(detector.sendMsg.payload);
+   Interfaces::Alert::Message status_msg;
+   status_msg.unpack (detector.sendMsg.payload);
 
-   CHECK_EQUAL (1, status_msg->state);
-   CHECK_EQUAL (detector.uid (), status_msg->type);
+   CHECK_EQUAL (1, status_msg.state);
+   CHECK_EQUAL (detector.uid (), status_msg.type);
 
    LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, detector.addr.mod);
    LONGS_EQUAL (42, detector.addr.device);

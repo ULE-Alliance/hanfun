@@ -65,7 +65,7 @@ namespace HF
          /*!
           * Optional interface entry.
           */
-         struct Interface:public Serializable
+         struct Interface
          {
             uint16_t role : 1;  //!< Interface role. \see Interface::Role.
             uint16_t uid  : 15; //!< Interface UID. \see Interface::UID.
@@ -87,7 +87,7 @@ namespace HF
          /*!
           * Unit Entry
           */
-         struct Unit:public Serializable
+         struct Unit
          {
             uint8_t            id;      //!< Unit Id.
             uint16_t           profile; //!< Unit UID. \see IProfile::UID.
@@ -111,7 +111,7 @@ namespace HF
          /*!
           * Device Entry.
           */
-         struct Device:public Serializable
+         struct Device
          {
             uint16_t      address; //!< Device Address.
             vector <Unit> units;   //!< Unit list of the interface.

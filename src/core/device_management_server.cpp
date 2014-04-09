@@ -127,13 +127,19 @@ Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Byte
 
    packet.link->address (reg_res->address);
 
-   Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, REGISTER_CMD);
+   Protocol::Message response (packet.message, reg_res->size ());
 
-   Protocol::Message response (reg_res, packet.message);
+   response.itf.role   = SERVER_ROLE;
+   response.itf.uid    = HF::Interface::DEVICE_MANAGEMENT;
+   response.itf.member = REGISTER_CMD;
+
+   reg_res->pack (response.payload);
 
    Protocol::Address res_addr (address, 0);
 
    sendMessage (res_addr, response, packet.link);
+
+   delete reg_res;
 
    return Result::OK;
 }
@@ -183,11 +189,15 @@ Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, By
    // TODO Remove group information.
    // TODO Remove binding information.
 
-   Protocol::Response *res = new Protocol::Response (result);
+   Protocol::Response res (result);
 
-   Protocol::Message::Interface itf (SERVER_ROLE, HF::Interface::DEVICE_MANAGEMENT, DEREGISTER_CMD);
+   Protocol::Message  response (packet.message, res.size ());
 
-   Protocol::Message response (res, packet.message);
+   response.itf.role   = SERVER_ROLE;
+   response.itf.uid    = HF::Interface::DEVICE_MANAGEMENT;
+   response.itf.member = DEREGISTER_CMD;
+
+   res.pack (response.payload);
 
    Protocol::Address res_addr (packet.source.device, 0);
 

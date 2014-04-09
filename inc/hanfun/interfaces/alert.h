@@ -62,7 +62,7 @@ namespace HF
             __LAST_ATTR__ = ENABLE_ATTR,
          } Attributes;
 
-         struct Message:public Serializable
+         struct Message
          {
             uint16_t type;        //!< Unit Type that generated the message.
             uint32_t state;       //!< Current state of the server.
