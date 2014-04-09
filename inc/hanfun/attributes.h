@@ -93,7 +93,6 @@ namespace HF
          virtual size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid) = 0;
 
          //! \see Serializable::unpack
-
          virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
       };
 
@@ -466,15 +465,24 @@ namespace HF
          //! \see HF::Serializable::pack.
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
-            return Protocol::Response::pack (array, offset) +
-                   (attribute != nullptr ? attribute->pack (array, offset) : 0);
+            size_t start = offset;
+
+            offset += Protocol::Response::pack (array, offset);
+
+            offset += (attribute != nullptr ? attribute->pack (array, offset) : 0);
+
+            return offset - start;
          }
 
          //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
-            return Protocol::Response::unpack (array, offset) +
-                   (attribute != nullptr ? attribute->unpack (array, offset) : 0);
+            size_t start = offset;
+
+            offset += Protocol::Response::unpack (array, offset);
+            offset += (attribute != nullptr ? attribute->unpack (array, offset) : 0);
+
+            return offset - start;
          }
       };
 
