@@ -42,26 +42,23 @@ class Link:public HF::Transport::Link
       tsp_layer (tsp_layer), dst (dst), _uid (dst->uid ())
    {}
 
-   void send (HF::Protocol::Packet &packet)
+   void send (HF::Common::ByteArray &array)
    {
+      UNUSED (array);
+
       cout << __PRETTY_FUNCTION__ << endl;
 
-      HF::Serializable *data = packet.message.payload;
-
-      size_t size            = (data != nullptr ? data->size () : 0);
-      HF::ByteArray payload (size);
-
-      if (data != nullptr)
+      if (dst == nullptr)
       {
-         data->pack (payload, 0);
-         packet.message.length = size;
+         return;
       }
 
-      if (dst != nullptr)
-      {
-         packet.link = remote;
-         dst->receive (packet, payload, 0);
-      }
+      HF::Protocol::Packet packet;
+
+      size_t offset = packet.unpack(array);
+
+      packet.link = remote;
+      dst->receive (packet, array, offset);
    }
 
    HF::Transport::Layer *transport ()

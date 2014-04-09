@@ -16,6 +16,7 @@
 #define HF_TRANSPORT_H
 
 #include "hanfun/common.h"
+
 #include "hanfun/uids.h"
 
 #include "hanfun/device.h"
@@ -49,18 +50,11 @@ namespace HF
          virtual void address (uint16_t addr) = 0;
 
          /*!
-          * Send the given \c packet using the link to the remote end-point.
+          * Send the data in the given \c ByteArray using the link to the remote end-point.
           *
-          * \warning The allocated memory for the \c packet will be deallocated by
-          *          this method with \c delete so the pointer passed <b>MUST BE</b>
-          *          allocated using \c new.
-          *
-          * \warning After calling this method the pointer should not be considered
-          *          valid anymore.
-          *
-          * @param [in] packet   pointer to the packet to be send.
+          * @param [in] array   reference to the ByteArray containing the data to send.
           */
-         virtual void send (Protocol::Packet &packet) = 0;
+         virtual void send (Common::ByteArray &array) = 0;
 
          /*!
           * Return the end-point UID associated with this link.
@@ -188,6 +182,29 @@ namespace HF
 
          //! @}
          // ======================================================================
+      };
+
+      class AbstractLink:public Link
+      {
+         protected:
+
+         uint16_t _address;
+
+         public:
+
+         AbstractLink(uint16_t _address = HF::Protocol::BROADCAST_ADDR):
+            _address (_address)
+         {}
+
+         uint16_t address () const
+         {
+            return _address;
+         }
+
+         void address (uint16_t addr)
+         {
+            _address = addr;
+         }
       };
 
    }  // namespace Transport

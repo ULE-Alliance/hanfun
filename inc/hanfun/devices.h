@@ -101,7 +101,11 @@ namespace HF
 
             if (tsp_link != nullptr)
             {
-               tsp_link->send (packet);
+               Common::ByteArray array (packet.size ());
+
+               packet.pack (array);
+
+               tsp_link->send (array);
             }
          }
 

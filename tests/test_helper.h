@@ -357,27 +357,26 @@ namespace HF
       struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Base < HF::Devices::Concentrator::DefaultUnit0 >>
       {};
 
-      struct Link:public HF::Transport::Link
+      struct Link:public HF::Transport::AbstractLink
       {
          HF::UID::UID         *_uid;
          HF::Transport::Layer *tsp;
 
-         Protocol::Packet     *packet;
-
-         uint16_t             _address;
+         Common::ByteArray    *data;
 
          Link(HF::UID::UID *uid, HF::Transport::Layer *tsp):
-            _uid (uid), tsp (tsp), packet (nullptr), _address (Protocol::BROADCAST_ADDR)
+            _uid (uid), tsp (tsp), data (nullptr)
          {}
 
          virtual ~Link()
          {
             delete _uid;
+            delete data;
          }
 
-         void send (Protocol::Packet &packet)
+         void send (Common::ByteArray &array)
          {
-            this->packet = &packet;
+            this->data = new ByteArray (array);
             mock ("Link").actualCall ("send");
          }
 
@@ -389,16 +388,6 @@ namespace HF
          HF::Transport::Layer *transport ()
          {
             return tsp;
-         }
-
-         uint16_t address () const
-         {
-            return _address;
-         }
-
-         void address (uint16_t addr)
-         {
-            _address = addr;
          }
       };
 
