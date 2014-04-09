@@ -194,10 +194,7 @@ namespace HF
          template<typename Itf>
          struct InterfaceProxy:public Itf
          {
-            profile_t *proxy;
-
-            InterfaceProxy(profile_t *proxy = nullptr):
-               proxy (proxy)
+            InterfaceProxy(profile_t *proxy = nullptr):proxy (proxy)
             {}
 
             void sendMessage (Protocol::Address &addr, Protocol::Message &message)
@@ -207,6 +204,10 @@ namespace HF
                   proxy->sendMessage (addr, message);
                }
             }
+
+            private:
+
+            profile_t *proxy;
          };
 
          typedef InterfaceProxy <Interface1> first_itf_t;

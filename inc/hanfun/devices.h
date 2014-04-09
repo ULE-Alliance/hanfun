@@ -71,43 +71,16 @@ namespace HF
             _units.remove (unit);
          }
 
-         Units::IUnit *unit (uint8_t id)
-         {
-            /* *INDENT-OFF* */
-         units_t::iterator it = find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
-                                {
-                                   return unit->id () == id;
-                                });
-            /* *INDENT-ON* */
+         /*!
+          * Return a pointer to the unit with the given \c id.
+          *
+          * @param [in] id the id of the unit to retrieve.
+          *
+          * @return  a pointer to the unit if it exists, \c nullptr otherwise.
+          */
+         Units::IUnit *unit (uint8_t id);
 
-            if (it == _units.end ())
-            {
-               return nullptr;
-            }
-            else
-            {
-               return *it;
-            }
-         }
-
-         void send (Protocol::Packet &packet)
-         {
-            Transport::Link *tsp_link = packet.link;
-
-            if (tsp_link == nullptr)
-            {
-               tsp_link = link (packet.destination.device);
-            }
-
-            if (tsp_link != nullptr)
-            {
-               Common::ByteArray array (packet.size ());
-
-               packet.pack (array);
-
-               tsp_link->send (array);
-            }
-         }
+         void send (Protocol::Packet &packet);
 
          void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
@@ -214,7 +187,7 @@ namespace HF
           * Template for HAN-FUN devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice, public Transport::Endpoint
+         class Base:public AbstractDevice
          {
             protected:
 
@@ -313,7 +286,7 @@ namespace HF
           * Template for HAN-FUN concentrator devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice, public Transport::Endpoint
+         class Base:public AbstractDevice
          {
             public:
 

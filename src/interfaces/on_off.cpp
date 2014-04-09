@@ -28,5 +28,5 @@ using namespace HF::Interfaces::OnOff;
 // =============================================================================
 HF::Attributes::IAttribute *create_attribute (uint8_t uid)
 {
-   return Interfaces::create_attribute((OnOff::Server *) nullptr, uid);
+   return Interfaces::create_attribute ((OnOff::Server *) nullptr, uid);
 }

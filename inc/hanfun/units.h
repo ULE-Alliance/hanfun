@@ -70,16 +70,7 @@ namespace HF
           * @param [in] link     preferred link to send the message on.
           */
          void sendMessage (Protocol::Address &addr, Protocol::Message &message,
-                           Transport::Link *link)
-         {
-            Protocol::Packet packet (message);
-
-            packet.destination   = addr;
-            packet.source.device = device ()->address ();
-            packet.source.unit   = id ();
-            packet.link          = link;
-            device ()->send (packet);
-         }
+                           Transport::Link *link);
       };
 
       /*!

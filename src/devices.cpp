@@ -28,6 +28,58 @@ using namespace HF::Devices;
 // =============================================================================
 
 // =============================================================================
+// AbstractDevice::unit
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Units::IUnit *AbstractDevice::unit (uint8_t id)
+{
+   /* *INDENT-OFF* */
+   units_t::iterator it = find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
+                          {
+                             return unit->id () == id;
+                          });
+   /* *INDENT-ON* */
+
+   if (it == _units.end ())
+   {
+      return nullptr;
+   }
+   else
+   {
+      return *it;
+   }
+}
+
+// =============================================================================
+// AbstractDevice::send
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractDevice::send (Protocol::Packet &packet)
+{
+   Transport::Link *tsp_link = packet.link;
+
+   if (tsp_link == nullptr)
+   {
+      tsp_link = link (packet.destination.device);
+   }
+
+   if (tsp_link != nullptr)
+   {
+      Common::ByteArray array (packet.size ());
+
+      packet.pack (array);
+
+      tsp_link->send (array);
+   }
+}
+
+// =============================================================================
 // HF::AbstractDevice::receive
 // =============================================================================
 /*!

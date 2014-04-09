@@ -309,7 +309,7 @@ namespace HF
             {
                UNUSED (pack_id);
                /* *INDENT-OFF* */
-            return HF::Attributes::uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
+               return HF::Attributes::uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
          };
