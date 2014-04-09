@@ -589,6 +589,8 @@ namespace HF
             {
                size_t result = Protocol::Response::size ();
 
+               result += sizeof(uint8_t);
+
                /* *INDENT-OFF* */
                for_each (attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute *attr)
                {
