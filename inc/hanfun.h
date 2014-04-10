@@ -19,8 +19,8 @@
 // Configuration
 // =============================================================================
 
-#include "version.h"
-#include "config.h"
+#include "hanfun/version.h"
+#include "hanfun/config.h"
 
 // =============================================================================
 // Common

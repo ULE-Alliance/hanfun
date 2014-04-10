@@ -27,8 +27,8 @@
 #include <deque>
 #include <type_traits>
 
-#include "version.h"
-#include "config.h"
+#include "hanfun/version.h"
+#include "hanfun/config.h"
 
 #include "hanfun/gcc.h"
 
