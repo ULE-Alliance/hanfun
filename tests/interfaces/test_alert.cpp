@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -277,12 +277,17 @@ TEST (AlertServer, Status2)
 
    mock ("Interface").checkExpectations ();
 
-   CHECK_TRUE (server->sendMsg.payload != nullptr);
-
    LONGS_EQUAL (Interface::CLIENT_ROLE, server->sendMsg.itf.role);
    LONGS_EQUAL (server->uid (), server->sendMsg.itf.uid);
    LONGS_EQUAL (Alert::STATUS_CMD, server->sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, server->sendMsg.type);
+
+   Alert::Message alert_msg;
+
+   alert_msg.unpack (server->sendMsg.payload);
+
+   LONGS_EQUAL (5, alert_msg.type);
+   LONGS_EQUAL (0x00000008, alert_msg.state);
 }
 
 //! \test Should return attribute.

@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -16,6 +16,7 @@
 #define HF_DEVICE_H
 
 #include "hanfun/common.h"
+#include "hanfun/transport.h"
 
 namespace HF
 {
@@ -35,12 +36,10 @@ namespace HF
 
    }  // namespace Protocol
 
-   using namespace HF::Common;
-
    /*!
     * This class represents the interface that all devices MUST implement.
     */
-   struct IDevice
+   struct IDevice: public Transport::Endpoint
    {
       /*!
        * Unit list type.
@@ -89,16 +88,6 @@ namespace HF
        * @param packet  reference to the packet to send to the network.
        */
       virtual void send (Protocol::Packet &packet) = 0;
-
-      /*!
-       * Receive a packet from the HAN-FUN network.
-       *
-       * @param packet        reference to the received packet.
-       * @param [in] payload  reference a ByteArray containing the received data.
-       * @param [in] offset   offset from where the received data starts on the \c payload
-       *                      byte array buffer.
-       */
-      virtual void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
    };
 
 }  // namespace HF

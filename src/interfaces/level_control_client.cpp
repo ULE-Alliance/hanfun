@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -30,13 +30,16 @@ using namespace HF::Interfaces;
 // =============================================================================
 void LevelControl::Client::level (Protocol::Address &addr, uint8_t new_level)
 {
-   Protocol::Message message;
+   Message level_msg (new_level);
+
+   Protocol::Message message (level_msg.size ());
 
    message.itf.role   = SERVER_ROLE;
    message.itf.uid    = LevelControl::Client::uid ();
    message.itf.member = SET_LEVEL_CMD;
 
-   message.payload    = new Message (new_level);
+
+   level_msg.pack (message.payload);
 
    sendMessage (addr, message);
 }

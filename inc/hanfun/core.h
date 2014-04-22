@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright	Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -52,7 +52,7 @@ namespace HF
          }
 
          //! \see HF::Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             return Interfaces::AbstractInterface::handle (packet, payload, offset);
          }

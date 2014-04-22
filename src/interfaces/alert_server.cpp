@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -232,11 +232,15 @@ Alert::Message *Alert::Server::create_status (uint16_t profile_uid)
 // =============================================================================
 void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
 {
-   Protocol::Message::Interface itf (CLIENT_ROLE, HF::Interface::ALERT, STATUS_CMD);
+   Alert::Message alert_msg (profile_uid, this->_state);
 
-   Alert::Message *alert_msg = create_status (profile_uid);
+   Protocol::Message message (alert_msg.size ());
 
-   Protocol::Message message (Protocol::Message::COMMAND_REQ, itf, alert_msg);
+   message.itf.role   = CLIENT_ROLE;
+   message.itf.uid    = HF::Interface::ALERT;
+   message.itf.member = STATUS_CMD;
+
+   alert_msg.pack (message.payload);
 
    sendMessage (addr, message);
 }

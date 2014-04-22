@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -135,15 +135,9 @@ TEST (LevelControlClient, Level)
    LONGS_EQUAL (LevelControl::SET_LEVEL_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 
-   CHECK_TRUE (client.sendMsg.payload != NULL);
-
-   ByteArray array (client.sendMsg.payload->size ());
-
-   client.sendMsg.payload->pack (array);
-
    LevelControl::Message msg;
 
-   msg.unpack (array);
+   msg.unpack (client.sendMsg.payload);
 
    BYTES_EQUAL (0x42, msg.level);
 }

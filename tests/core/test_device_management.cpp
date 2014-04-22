@@ -7,7 +7,7 @@
  *
  * \author		Filipe Alves <filipe.alves@bithium.com>
  *
- * \version		0.1.0
+ * \version		0.2.0
  *
  * \copyright	Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -21,7 +21,20 @@
 #include "test_helper.h"
 
 using namespace HF;
+using namespace HF::Common;
 using namespace HF::Core;
+
+// =============================================================================
+// Helper functions.
+// =============================================================================
+
+STRING_FROM(DeviceManagement::Interface)
+
+STRING_FROM(DeviceManagement::Unit)
+
+STRING_FROM(DeviceManagement::Device)
+
+// =============================================================================
 
 TEST_GROUP (DeviceManagement)
 {};
@@ -724,12 +737,12 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
 
-   DeviceManagement::RegisterMessage *payload =
-      static_cast <DeviceManagement::RegisterMessage *>(packet->message.payload);
+   DeviceManagement::RegisterMessage payload;
+   payload.unpack (packet->message.payload);
 
-   LONGS_EQUAL (DeviceInformation::EMC, payload->emc);
+   LONGS_EQUAL (DeviceInformation::EMC, payload.emc);
 
-   LONGS_EQUAL (device->units ().size (), payload->units.size ());
+   LONGS_EQUAL (device->units ().size (), payload.units.size ());
 
    size_t size = device->units ().size ();
 
@@ -737,7 +750,7 @@ TEST (DeviceManagementClient, RegisterMessage)
    vector <uint8_t> actual (size);
 
    /* *INDENT-OFF* */
-   for_each (payload->units.begin (), payload->units.end (), [&actual](DeviceManagement::Unit &unit)
+   for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
    {
       actual.push_back (unit.id);
    });
@@ -753,7 +766,7 @@ TEST (DeviceManagementClient, RegisterMessage)
    actual.clear ();
 
    /* *INDENT-OFF* */
-   for_each (payload->units.begin (), payload->units.end (), [&actual](DeviceManagement::Unit &unit)
+   for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
    {
       actual.push_back (unit.profile);
    });
@@ -776,12 +789,12 @@ TEST (DeviceManagementClient, RegisterMessage_EMC)
 
    LONGS_EQUAL (1, device->packets.size ());
 
-   Protocol::Packet *packet                   = device->packets.back ();
+   Protocol::Packet *packet = device->packets.back ();
 
-   DeviceManagement::RegisterMessage *payload =
-      static_cast <DeviceManagement::RegisterMessage *>(packet->message.payload);
+   DeviceManagement::RegisterMessage payload;
+   payload.unpack (packet->message.payload);
 
-   LONGS_EQUAL (0x1234, payload->emc);
+   LONGS_EQUAL (0x1234, payload.emc);
 }
 
 TEST (DeviceManagementClient, RegisterResponse_OK)
@@ -849,10 +862,10 @@ TEST (DeviceManagementClient, DeregisterMessage)
 
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
 
-   DeviceManagement::DeregisterMessage *payload =
-      static_cast <DeviceManagement::DeregisterMessage *>(packet->message.payload);
+   DeviceManagement::DeregisterMessage payload;
+   payload.unpack (packet->message.payload);
 
-   LONGS_EQUAL (0x5A5A, payload->address);
+   LONGS_EQUAL (0x5A5A, payload.address);
 }
 
 TEST (DeviceManagementClient, DeregisterResponse_OK)
@@ -985,7 +998,6 @@ TEST (DeviceManagementServer, Handle_Register)
                                    0x00, 0x00, 0x00};
 
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
-
    packet.message.length     = expected.size ();
 
    mock ("AbstractDevice").expectOneCall ("send");
@@ -1066,7 +1078,6 @@ TEST (DeviceManagementServer, Handle_Deregister)
    message.pack (expected);
 
    packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
-
    packet.message.length     = expected.size ();
 
    mock ("DeviceManagementServer").expectOneCall ("deregister_device");

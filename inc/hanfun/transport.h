@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -16,6 +16,7 @@
 #define HF_TRANSPORT_H
 
 #include "hanfun/common.h"
+
 #include "hanfun/uids.h"
 
 #include "hanfun/device.h"
@@ -49,18 +50,11 @@ namespace HF
          virtual void address (uint16_t addr) = 0;
 
          /*!
-          * Send the given \c packet using the link to the remote end-point.
+          * Send the data in the given \c ByteArray using the link to the remote end-point.
           *
-          * \warning The allocated memory for the \c packet will be deallocated by
-          *          this method with \c delete so the pointer passed <b>MUST BE</b>
-          *          allocated using \c new.
-          *
-          * \warning After calling this method the pointer should not be considered
-          *          valid anymore.
-          *
-          * @param [in] packet   pointer to the packet to be send.
+          * @param [in] array   reference to the ByteArray containing the data to send.
           */
-         virtual void send (Protocol::Packet &packet) = 0;
+         virtual void send (Common::ByteArray &array) = 0;
 
          /*!
           * Return the end-point UID associated with this link.
@@ -72,14 +66,14 @@ namespace HF
           *
           * @return  the UID of the remote device of this link.
           */
-         virtual HF::UID::UID *uid () = 0;
+         virtual HF::UID::UID const *uid () const = 0;
 
          /*!
           * Return the transport layer implementation this link belongs to.
           *
           * @return  pointer to the transport layer that created this link.
           */
-         virtual Layer *transport () = 0;
+         virtual Layer const *transport () const = 0;
       };
 
       /*!
@@ -124,7 +118,7 @@ namespace HF
           * @param [in] offset   offset from where the received data starts on the \c payload
           *                      byte array buffer.
           */
-         virtual void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
+         virtual void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
 
          //! @}
          // ======================================================================
@@ -188,6 +182,29 @@ namespace HF
 
          //! @}
          // ======================================================================
+      };
+
+      class AbstractLink:public Link
+      {
+         protected:
+
+         uint16_t _address;
+
+         public:
+
+         AbstractLink(uint16_t _address = HF::Protocol::BROADCAST_ADDR):
+            _address (_address)
+         {}
+
+         uint16_t address () const
+         {
+            return _address;
+         }
+
+         void address (uint16_t addr)
+         {
+            _address = addr;
+         }
       };
 
    }  // namespace Transport

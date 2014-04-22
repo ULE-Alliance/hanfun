@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -62,7 +62,7 @@ namespace HF
             __LAST_ATTR__ = ENABLE_ATTR,
          } Attributes;
 
-         struct Message:public Serializable
+         struct Message
          {
             uint16_t type;        //!< Unit Type that generated the message.
             uint32_t state;       //!< Current state of the server.
@@ -73,10 +73,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
@@ -309,7 +309,7 @@ namespace HF
             {
                UNUSED (pack_id);
                /* *INDENT-OFF* */
-            return HF::Attributes::uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
+               return HF::Attributes::uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
          };
@@ -338,7 +338,7 @@ namespace HF
 
             protected:
 
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
       }  // namespace Alert

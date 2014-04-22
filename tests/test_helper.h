@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -42,9 +42,16 @@ using namespace HF::Protocol;
 // Helper Test Functions
 // =============================================================================
 
-SimpleString StringFrom (const HF::ByteArray &array);
+#define STRING_FROM( _T )                                     \
+SimpleString StringFrom (const _T &data)                      \
+{                                                              \
+   SerializableHelper<_T &> wrapper(const_cast<_T &>(data));  \
+   return StringFrom(wrapper);                                \
+}
 
-SimpleString StringFrom (const HF::Serializable &data);
+SimpleString StringFrom (const HF::Common::ByteArray &array);
+
+SimpleString StringFrom (const HF::Common::Serializable &data);
 
 template<typename _type>
 void check_index (_type expected, _type actual, uint32_t index, const char *header,
@@ -74,7 +81,7 @@ namespace HF
 {
    namespace Testing
    {
-      struct Payload:public Serializable
+      struct Payload
       {
          size_t fake_size;
 
@@ -92,8 +99,12 @@ namespace HF
 
          size_t pack (ByteArray &array, size_t offset = 0) const
          {
-            UNUSED (array);
-            UNUSED (offset);
+            array.extend (fake_size);
+
+            auto start = array.begin () + offset;
+
+            array.insert (start, fake_size, 0x00);
+
             return fake_size;
          }
 
@@ -119,12 +130,7 @@ namespace HF
          }
 
          virtual ~InterfaceHelper()
-         {
-            if (sendMsg.payload != nullptr)
-            {
-               delete sendMsg.payload;
-            }
-         }
+         {}
 
          void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
@@ -299,7 +305,7 @@ namespace HF
          vector <Protocol::Packet *> packets;
 
          AbstractDevice():
-            _address (Protocol::BROADCAST_ADDR) // , packet (nullptr)
+            _address (Protocol::BROADCAST_ADDR)
          {}
 
          virtual ~AbstractDevice()
@@ -307,11 +313,6 @@ namespace HF
             /* *INDENT-OFF* */
             for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
             {
-               if (packet->message.payload != nullptr)
-               {
-                  delete packet->message.payload;
-               }
-
                delete packet;
             });
             /* *INDENT-ON* */
@@ -356,48 +357,37 @@ namespace HF
       struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Base < HF::Devices::Concentrator::DefaultUnit0 >>
       {};
 
-      struct Link:public HF::Transport::Link
+      struct Link:public HF::Transport::AbstractLink
       {
          HF::UID::UID         *_uid;
          HF::Transport::Layer *tsp;
 
-         Protocol::Packet     *packet;
-
-         uint16_t             _address;
+         Common::ByteArray    *data;
 
          Link(HF::UID::UID *uid, HF::Transport::Layer *tsp):
-            _uid (uid), tsp (tsp), packet (nullptr), _address (Protocol::BROADCAST_ADDR)
+            _uid (uid), tsp (tsp), data (nullptr)
          {}
 
          virtual ~Link()
          {
             delete _uid;
+            delete data;
          }
 
-         void send (Protocol::Packet &packet)
+         void send (Common::ByteArray &array)
          {
-            this->packet = &packet;
+            this->data = new ByteArray (array);
             mock ("Link").actualCall ("send");
          }
 
-         HF::UID::UID *uid ()
+         HF::UID::UID const *uid () const
          {
             return _uid;
          }
 
-         HF::Transport::Layer *transport ()
+         HF::Transport::Layer const *transport () const
          {
             return tsp;
-         }
-
-         uint16_t address () const
-         {
-            return _address;
-         }
-
-         void address (uint16_t addr)
-         {
-            _address = addr;
          }
       };
 

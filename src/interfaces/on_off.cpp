@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -28,5 +28,5 @@ using namespace HF::Interfaces::OnOff;
 // =============================================================================
 HF::Attributes::IAttribute *create_attribute (uint8_t uid)
 {
-   return Interfaces::create_attribute((OnOff::Server *) nullptr, uid);
+   return Interfaces::create_attribute ((OnOff::Server *) nullptr, uid);
 }

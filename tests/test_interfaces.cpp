@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -115,17 +115,19 @@ TEST (AbstractInterface, Handle_GetAttribute_Valid)
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (TestInterface::ATTR1, itf->sendMsg.itf.member);
 
-   HF::Attributes::Response *attr_res = static_cast <HF::Attributes::Response *>(itf->sendMsg.payload);
+   HF::Attributes::Response attr_res (itf->attribute (TestInterface::ATTR1));
 
-   CHECK_EQUAL (Result::OK, attr_res->code);
+   attr_res.unpack (itf->sendMsg.payload);
 
-   CHECK_TRUE (attr_res->attribute != nullptr);
+   CHECK_EQUAL (Result::OK, attr_res.code);
 
-   CHECK_FALSE (attr_res->attribute->isWritable ());
+   CHECK_TRUE (attr_res.attribute != nullptr);
 
-   LONGS_EQUAL (TestInterface::ATTR1, attr_res->attribute->uid ());
+   CHECK_FALSE (attr_res.attribute->isWritable ());
 
-   LONGS_EQUAL (itf->uid (), attr_res->attribute->interface ());
+   LONGS_EQUAL (TestInterface::ATTR1, attr_res.attribute->uid ());
+
+   LONGS_EQUAL (itf->uid (), attr_res.attribute->interface ());
 }
 
 //! \test Should handle invalid get attribute requests.
@@ -145,11 +147,12 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
-   HF::Attributes::Response *attr_res = static_cast <HF::Attributes::Response *>(itf->sendMsg.payload);
+   HF::Attributes::Response attr_res;
+   attr_res.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_res->code);
+   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_res.code);
 
-   CHECK_TRUE (attr_res->attribute == nullptr);
+   CHECK_TRUE (attr_res.attribute == nullptr);
 }
 
 // =============================================================================
@@ -266,9 +269,10 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
-   Response *res = static_cast <Response *>(itf->sendMsg.payload);
+   Response res;
+   res.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, res->code);
+   CHECK_EQUAL (Result::FAIL_SUPPORT, res.code);
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
@@ -296,9 +300,10 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
-   Response *res = static_cast <Response *>(itf->sendMsg.payload);
+   Response res;
+   res.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_RO_ATTR, res->code);
+   CHECK_EQUAL (Result::FAIL_RO_ATTR, res.code);
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
@@ -325,21 +330,23 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
    LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
-   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+   GetAttributePack::Response attr_resp;
+   attr_resp.attribute_factory = &(TestInterface::create_attribute);
+   attr_resp.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_resp->code);
+   CHECK_EQUAL (Result::OK, attr_resp.code);
 
-   LONGS_EQUAL (1, attr_resp->attributes.size ());
+   LONGS_EQUAL (1, attr_resp.attributes.size ());
 
-   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
-
-   CHECK_TRUE (attr == nullptr);
-
-   attr = attr_resp->attributes[TestInterface::ATTR2];
+   HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr == nullptr);
 
-   attr = attr_resp->attributes[TestInterface::ATTR3];
+   attr = attr_resp.attributes[TestInterface::ATTR2];
+
+   CHECK_TRUE (attr == nullptr);
+
+   attr = attr_resp.attributes[TestInterface::ATTR3];
 
    CHECK_TRUE (attr != nullptr);
 }
@@ -362,21 +369,23 @@ TEST (AbstractInterface, Handle_GeAttributesPack_All)
    LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
-   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+   GetAttributePack::Response attr_resp;
+   attr_resp.attribute_factory = &(TestInterface::create_attribute);
+   attr_resp.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_resp->code);
+   CHECK_EQUAL (Result::OK, attr_resp.code);
 
-   LONGS_EQUAL (3, attr_resp->attributes.size ());
+   LONGS_EQUAL (3, attr_resp.attributes.size ());
 
-   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
-
-   CHECK_TRUE (attr != nullptr);
-
-   attr = attr_resp->attributes[TestInterface::ATTR2];
+   HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr != nullptr);
 
-   attr = attr_resp->attributes[TestInterface::ATTR3];
+   attr = attr_resp.attributes[TestInterface::ATTR2];
+
+   CHECK_TRUE (attr != nullptr);
+
+   attr = attr_resp.attributes[TestInterface::ATTR3];
 
    CHECK_TRUE (attr != nullptr);
 }
@@ -403,21 +412,23 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
    LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
-   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+   GetAttributePack::Response attr_resp;
+   attr_resp.attribute_factory = &(TestInterface::create_attribute);
+   attr_resp.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_resp->code);
+   CHECK_EQUAL (Result::OK, attr_resp.code);
 
-   LONGS_EQUAL (2, attr_resp->attributes.size ());
+   LONGS_EQUAL (2, attr_resp.attributes.size ());
 
-   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+   HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr != nullptr);
 
-   attr = attr_resp->attributes[TestInterface::ATTR2];
+   attr = attr_resp.attributes[TestInterface::ATTR2];
 
    CHECK_TRUE (attr == nullptr);
 
-   attr = attr_resp->attributes[TestInterface::ATTR3];
+   attr = attr_resp.attributes[TestInterface::ATTR3];
 
    CHECK_TRUE (attr != nullptr);
 }
@@ -446,21 +457,23 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 
    LONGS_EQUAL (Message::GET_ATTR_PACK_RES, itf->sendMsg.type);
 
-   GetAttributePack::Response *attr_resp = static_cast <GetAttributePack::Response *>(itf->sendMsg.payload);
+   GetAttributePack::Response attr_resp;
+   attr_resp.attribute_factory = &(TestInterface::create_attribute);
+   attr_resp.unpack (itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_resp->code);
+   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_resp.code);
 
-   LONGS_EQUAL (2, attr_resp->attributes.size ());
+   LONGS_EQUAL (2, attr_resp.attributes.size ());
 
-   HF::Attributes::IAttribute *attr = attr_resp->attributes[TestInterface::ATTR1];
+   HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
    CHECK_TRUE (attr != nullptr);
 
-   attr = attr_resp->attributes[TestInterface::ATTR2];
+   attr = attr_resp.attributes[TestInterface::ATTR2];
 
    CHECK_TRUE (attr == nullptr);
 
-   attr = attr_resp->attributes[TestInterface::ATTR3];
+   attr = attr_resp.attributes[TestInterface::ATTR3];
 
    CHECK_TRUE (attr != nullptr);
 }
@@ -528,23 +541,22 @@ TEST (AbstractInterface, Handle_SetAttributePackResponse)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0xCCCC, itf->attr3);
 
-   SetAttributePack::Response *response = static_cast <SetAttributePack::Response *>(itf->sendMsg.payload);
+   SetAttributePack::Response response;
+   response.unpack (itf->sendMsg.payload);
 
-   CHECK_TRUE (response != nullptr)
+   LONGS_EQUAL (4, response.results.size ());
 
-   LONGS_EQUAL (4, response->results.size ());
+   LONGS_EQUAL (TestInterface::ATTR1, response.results[0].uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, response.results[0].code);
 
-   LONGS_EQUAL (TestInterface::ATTR1, response->results[0].uid);
-   LONGS_EQUAL (Result::FAIL_RO_ATTR, response->results[0].code);
+   LONGS_EQUAL (TestInterface::ATTR2, response.results[1].uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, response.results[1].code);
 
-   LONGS_EQUAL (TestInterface::ATTR2, response->results[1].uid);
-   LONGS_EQUAL (Result::FAIL_RO_ATTR, response->results[1].code);
+   LONGS_EQUAL (TestInterface::ATTR3, response.results[2].uid);
+   LONGS_EQUAL (Result::OK, response.results[2].code);
 
-   LONGS_EQUAL (TestInterface::ATTR3, response->results[2].uid);
-   LONGS_EQUAL (Result::OK, response->results[2].code);
-
-   LONGS_EQUAL (0x04, response->results[3].uid);
-   LONGS_EQUAL (Result::FAIL_SUPPORT, response->results[3].code);
+   LONGS_EQUAL (0x04, response.results[3].uid);
+   LONGS_EQUAL (Result::FAIL_SUPPORT, response.results[3].code);
 }
 
 //! \test Should fast fail on set response pack requests.
@@ -576,17 +588,16 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   SetAttributePack::Response *response = static_cast <SetAttributePack::Response *>(itf->sendMsg.payload);
+   SetAttributePack::Response response;
+   response.unpack (itf->sendMsg.payload);
 
-   CHECK_TRUE (response != nullptr)
+   LONGS_EQUAL (2, response.results.size ());
 
-   LONGS_EQUAL (2, response->results.size ());
+   LONGS_EQUAL (TestInterface::ATTR1, response.results[0].uid);
+   LONGS_EQUAL (Result::FAIL_RO_ATTR, response.results[0].code);
 
-   LONGS_EQUAL (TestInterface::ATTR1, response->results[0].uid);
-   LONGS_EQUAL (Result::FAIL_RO_ATTR, response->results[0].code);
-
-   LONGS_EQUAL (0x04, response->results[1].uid);
-   LONGS_EQUAL (Result::FAIL_SUPPORT, response->results[1].code);
+   LONGS_EQUAL (0x04, response.results[1].uid);
+   LONGS_EQUAL (Result::FAIL_SUPPORT, response.results[1].code);
 }
 
 // =============================================================================

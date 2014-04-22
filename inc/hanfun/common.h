@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -27,8 +27,8 @@
 #include <deque>
 #include <type_traits>
 
-#include "version.h"
-#include "config.h"
+#include "hanfun/version.h"
+#include "hanfun/config.h"
 
 #include "hanfun/gcc.h"
 
@@ -251,6 +251,18 @@ namespace HF
          {
             return !(*this == other);
          }
+
+         /*!
+          * Extend the byte array by the given size.
+          *
+          * This is the same as calling : array.reserve(array.size() + _size)
+          *
+          * @param [in] _size number of bytes to extent the array by.
+          */
+         void extend (size_t _size)
+         {
+            vector <uint8_t>::reserve (size () + _size);
+         }
       };
 
       // =============================================================================
@@ -293,6 +305,110 @@ namespace HF
           * @return  the number of bytes read.
           */
          virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
+      };
+
+      /*!
+       * Wrapper for classes that implement the Serializable concept.
+       */
+      template<typename T, typename = void>
+      struct SerializableHelper:public Serializable
+      {
+         T data;
+
+         SerializableHelper()
+         {
+            memset (&data, 0, sizeof(T));
+         }
+
+         SerializableHelper(T data):data (data)
+         {}
+         size_t size () const
+         {
+            return data.size ();
+         }
+
+         size_t pack (ByteArray &array, size_t offset = 0) const
+         {
+            return data.pack (array, offset);
+         }
+
+         size_t unpack (const ByteArray &array, size_t offset = 0)
+         {
+            return data.unpack (array, offset);
+         }
+      };
+
+      /*!
+       * Wrapper to pointers for classes that implement the Serializable concept.
+       */
+      template<typename T>
+      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value>::type>:
+         public Serializable
+      {
+         T data;
+
+         SerializableHelper()
+         {
+            memset (&data, 0, sizeof(T));
+         }
+
+         SerializableHelper(T data):data (data)
+         {}
+
+         size_t size () const
+         {
+            return data->size ();
+         }
+
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         {
+            return data->pack (array, offset);
+         }
+
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         {
+            return data->unpack (array, offset);
+         }
+      };
+
+      /*!
+       * Wrapper for base integer types implementing the  Serializable API.
+       */
+      template<typename T>
+      struct SerializableHelper <T, typename enable_if <is_integral <typename remove_reference <T>::type>::value>::type> :
+         public Common::Serializable
+      {
+         T data;
+
+         SerializableHelper()
+         {
+            memset (&data, 0, sizeof(T));
+         }
+
+         SerializableHelper(T data):data (data) {}
+
+         size_t size () const
+         {
+            return sizeof(T);
+         }
+
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += array.write (offset, data);
+
+            return offset - start;
+         }
+
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         {
+            size_t start = offset;
+
+            offset += array.read (offset, data);
+
+            return offset - start;
+         }
       };
 
       /*!

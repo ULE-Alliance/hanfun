@@ -1,9 +1,9 @@
 // =============================================================================
 /*!
- * \file       /HAN-FUN/src/interfaces/level_control.cpp
+ * \file       src/units.cpp
  *
- * This file contains the implementation of the common functionality for the
- * Level Control interface.
+ * This file contains the implementation of the common functionality for
+ * the HAN-FUN Units.
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
@@ -13,20 +13,25 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/level_control.h"
+#include "hanfun/units.h"
 
-using namespace HF;
-using namespace HF::Interfaces;
-using namespace HF::Interfaces::LevelControl;
 
 // =============================================================================
-// create_attribute
+// HF::Units::AbstractUnit::sendMessage
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Message &message,
+                                                Transport::Link *link)
 {
-   return Interfaces::create_attribute ((LevelControl::Server *) nullptr, uid);
+   Protocol::Packet packet(message);
+
+   packet.destination = addr;
+   packet.source.device = device()->address();
+   packet.source.unit = id();
+   packet.link = link;
+
+   device()->send(packet);
 }

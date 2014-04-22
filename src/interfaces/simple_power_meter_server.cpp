@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -158,17 +158,22 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
    if (_report_interval > 0 && abs ((int64_t) _last_periodic - time) >= _report_interval)
    {
       Protocol::Address addr;
-      Protocol::Message message;
+
+      Report * report = this->report ();
+
+      Protocol::Message message(report->size());
 
       message.itf.role   = CLIENT_ROLE;
       message.itf.uid    = SimplePowerMeter::Server::uid ();
       message.itf.member = REPORT_CMD;
 
-      message.payload    = report ();
+      report->pack(message.payload);
 
       sendMessage (addr, message);
 
       _last_periodic = time;
+
+      delete report;
    }
 
 #endif

@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -29,11 +29,11 @@ using namespace HF::Interfaces;
  * TODO This needs more validation when reading a report received.
  */
 // =============================================================================
-Result SimplePowerMeter::Client::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Common::Result SimplePowerMeter::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
    if (packet.message.itf.member != SimplePowerMeter::REPORT_CMD)
    {
-      return Result::FAIL_SUPPORT;
+      return Common::Result::FAIL_SUPPORT;
    }
 
    SimplePowerMeter::Report report;
@@ -42,5 +42,5 @@ Result SimplePowerMeter::Client::handle_command (Protocol::Packet &packet, ByteA
 
    this->report (report);
 
-   return Result::OK;
+   return Common::Result::OK;
 }

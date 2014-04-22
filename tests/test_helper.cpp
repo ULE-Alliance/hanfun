@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -24,7 +24,7 @@
 // Helper Functions
 // =============================================================================
 
-SimpleString StringFrom (const HF::ByteArray &array)
+SimpleString StringFrom (const HF::Common::ByteArray &array)
 {
    SimpleString result = "";
 
@@ -36,7 +36,7 @@ SimpleString StringFrom (const HF::ByteArray &array)
    return result;
 }
 
-SimpleString StringFrom (const HF::Serializable &data)
+SimpleString StringFrom (const HF::Common::Serializable &data)
 {
    SimpleString result = "0x";
 

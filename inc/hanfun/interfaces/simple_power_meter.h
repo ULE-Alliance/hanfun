@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -99,7 +99,7 @@ namespace HF
          /*!
           * This represents a measurement for a given attribute.
           */
-         struct Measurement:public Serializable
+         struct Measurement
          {
             uint8_t  unit;               //!< Measurement precision/type.
             uint32_t value;              //!< Measurement value.
@@ -112,7 +112,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -123,14 +123,14 @@ namespace HF
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t  start = offset;
 
                uint8_t temp;
                offset += array.read (offset, temp);
 
-               unit    = static_cast <Precision>(temp);
+               unit    = static_cast <Common::Precision>(temp);
 
                offset += array.read (offset, value);
 
@@ -144,7 +144,7 @@ namespace HF
           * TODO This needs a way to dynamically add only the attributes
           *       that are needed to the report.
           */
-         struct Report:public Serializable
+         struct Report
          {
             Measurement energy;                       //!< Energy measurement.
 
@@ -174,10 +174,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
@@ -565,7 +565,7 @@ namespace HF
 
             protected:
 
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
       }  // namespace SimplePowerMeter

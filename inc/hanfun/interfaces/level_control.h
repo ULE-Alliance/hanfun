@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -47,7 +47,7 @@ namespace HF
             __LAST_ATTR__ = LEVEL_ATTR,
          } Attributes;
 
-         struct Message:public Serializable
+         struct Message
          {
             uint8_t level;
 
@@ -60,7 +60,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -70,7 +70,7 @@ namespace HF
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
 
@@ -178,7 +178,7 @@ namespace HF
             protected:
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             //! \see AbstractInterface::attributes
             HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const

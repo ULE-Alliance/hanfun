@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -34,7 +34,7 @@ namespace HF
       /*!
        * Interface/Service Attribute's API.
        */
-      struct IAttribute:public Serializable
+      struct IAttribute:public Common::Serializable
       {
          /*!
           * Attribute's UID.
@@ -57,6 +57,7 @@ namespace HF
           * @return  UID of the interface the attribute belongs to.
           */
          virtual uint16_t interface () const       = 0;
+
          /*!
           * \see Serializable::size
           *
@@ -65,7 +66,7 @@ namespace HF
          virtual size_t size (bool with_uid) const = 0;
 
          //! \see Serializable::size
-         size_t size () const = 0;
+         virtual size_t size () const = 0;
 
          /*!
           * \see Serializable::pack
@@ -74,10 +75,10 @@ namespace HF
           * @param [in] offset      offset to start the packing.
           * @param [in] with_uid    include uid() size in the calculation.
           */
-         virtual size_t pack (ByteArray &array, size_t offset, bool with_uid) const = 0;
+         virtual size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const = 0;
 
          //! \see Serializable::pack
-         virtual size_t pack (ByteArray &array, size_t offset) const = 0;
+         virtual size_t pack (Common::ByteArray &array, size_t offset) const = 0;
 
          /*!
           * \see Serializable::unpack
@@ -89,17 +90,16 @@ namespace HF
           * @param [in] offset      offset to start the packing.
           * @param [in] with_uid    include uid() size in the calculation.
           */
-         virtual size_t unpack (const ByteArray &array, size_t offset, bool with_uid) = 0;
+         virtual size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid) = 0;
 
          //! \see Serializable::unpack
-         virtual size_t unpack (const ByteArray &array, size_t offset) = 0;
-
+         virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
       };
 
       //! Attribute factory function type.
       typedef IAttribute * (*Factory)(uint8_t);
 
-      struct uids_t:public vector <uint8_t>, public Serializable
+      struct uids_t:public vector <uint8_t>
       {
          uids_t():vector <uint8_t>()
          {}
@@ -119,7 +119,7 @@ namespace HF
          }
 
          //! \see Serializable::pack
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t  start = offset;
 
@@ -127,17 +127,17 @@ namespace HF
             offset += array.write (offset, count);
 
             /* *INDENT-OFF* */
-         for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(), [&offset,&array](uint8_t uid)
-         {
-            offset += array.write (offset, uid);
-         });
+            for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(), [&offset,&array](uint8_t uid)
+            {
+               offset += array.write (offset, uid);
+            });
             /* *INDENT-ON* */
 
             return offset - start;
          }
 
          //! \see Serializable::unpack
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t count = 0;
             return unpack (array, offset, count);
@@ -149,7 +149,7 @@ namespace HF
           * @param [out] count   reference to a variable that will hold the count value read from the
           *                      array.
           */
-         size_t unpack (const ByteArray &array, size_t offset, uint8_t &count)
+         size_t unpack (const Common::ByteArray &array, size_t offset, uint8_t &count)
          {
             size_t start = offset;
 
@@ -198,131 +198,6 @@ namespace HF
       };
 
       template<typename T, typename = void>
-      struct SerializableHelper:public Serializable
-      {
-         size_t size () const
-         {
-            return 0;
-         }
-
-         size_t pack (ByteArray &array, size_t offset = 0) const
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            return 0;
-         }
-
-         size_t unpack (const ByteArray &array, size_t offset = 0)
-         {
-            UNUSED (array);
-            UNUSED (offset);
-            return 0;
-         }
-
-         private:
-
-         SerializableHelper()
-         {}
-      };
-
-      template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_integral <typename remove_reference <T>::type>::value>::type> :
-         public Serializable
-      {
-         T data;
-
-         SerializableHelper()
-         {
-            memset (&data, 0, sizeof(T));
-         }
-
-         SerializableHelper(T data):data (data) {}
-
-         size_t size () const
-         {
-            return sizeof(T);
-         }
-
-         size_t pack (ByteArray &array, size_t offset = 0) const
-         {
-            size_t start = offset;
-
-            offset += array.write (offset, data);
-
-            return offset - start;
-         }
-
-         size_t unpack (const ByteArray &array, size_t offset = 0)
-         {
-            size_t start = offset;
-
-            offset += array.read (offset, data);
-
-            return offset - start;
-         }
-      };
-
-      template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_base_of <Serializable, typename remove_reference <T>::type>::value>::type> :
-         public Serializable
-      {
-         T data;
-
-         SerializableHelper()
-         {
-            memset (&data, 0, sizeof(T));
-         }
-
-         SerializableHelper(T data):data (data)
-         {}
-         size_t size () const
-         {
-            return data.size ();
-         }
-
-         size_t pack (ByteArray &array, size_t offset = 0) const
-         {
-            return data.pack (array, offset);
-         }
-
-         size_t unpack (const ByteArray &array, size_t offset = 0)
-         {
-            return data.unpack (array, offset);
-         }
-      };
-
-      template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value &&
-                                                        is_base_of <Serializable, typename remove_pointer <T>::type>::value>::type> :
-         public Serializable
-      {
-         T data;
-
-         SerializableHelper()
-         {
-            memset (&data, 0, sizeof(T));
-         }
-
-         SerializableHelper(T data):data (data)
-         {}
-
-         size_t size () const
-         {
-            return data->size ();
-         }
-
-         size_t pack (ByteArray &array, size_t offset = 0) const
-         {
-            return data->pack (array, offset);
-         }
-
-         size_t unpack (const ByteArray &array, size_t offset = 0)
-         {
-            return data->unpack (array, offset);
-         }
-      };
-
-      template<typename T, typename = void>
       struct Attribute:public AbstractAttribute
       {
          Attribute(const uint16_t interface, const uint8_t uid, T data, bool writable = false):
@@ -363,7 +238,7 @@ namespace HF
          {
             return helper.size ();
          }
-         size_t pack (ByteArray &array, size_t offset, bool with_uid) const
+         size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const
          {
             size_t start = offset;
 
@@ -377,11 +252,11 @@ namespace HF
             return offset - start;
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             return helper.pack (array, offset);
          }
-         size_t unpack (const ByteArray &array, size_t offset, bool with_uid)
+         size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
          {
             size_t start = offset;
 
@@ -402,14 +277,14 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             return helper.unpack (array, offset);
          }
 
          protected:
 
-         SerializableHelper <T> helper;
+         Common::SerializableHelper <T> helper;
 
          private:
 
@@ -426,9 +301,9 @@ namespace HF
        */
       struct List:public list <IAttribute *>
       {
-         IAttribute *operator [](uint8_t uid)
+         IAttribute *operator [](uint8_t uid) const
          {
-            for (iterator it = begin (); it != end (); ++it)
+            for (const_iterator it = begin (); it != end (); ++it)
             {
                if ((*it)->uid () == uid)
                {
@@ -463,17 +338,26 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
-            return Protocol::Response::pack (array, offset) +
-                   (attribute != nullptr ? attribute->pack (array, offset) : 0);
+            size_t start = offset;
+
+            offset += Protocol::Response::pack (array, offset);
+
+            offset += (attribute != nullptr ? attribute->pack (array, offset) : 0);
+
+            return offset - start;
          }
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
-            return Protocol::Response::unpack (array, offset) +
-                   (attribute != nullptr ? attribute->unpack (array, offset) : 0);
+            size_t start = offset;
+
+            offset += Protocol::Response::unpack (array, offset);
+            offset += (attribute != nullptr ? attribute->unpack (array, offset) : 0);
+
+            return offset - start;
          }
       };
 
@@ -504,7 +388,7 @@ namespace HF
           * This class represents the payload of a HF::Message::GET_ATTR_PACK_REQ request,
           * when the payload is Type::DYNAMIC.
           */
-         struct Request:public Serializable
+         struct Request
          {
             HF::Attributes::uids_t attributes; //!< Vector containing the attributes UID's to get.
 
@@ -529,13 +413,13 @@ namespace HF
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                return attributes.pack (array, offset);
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                return attributes.unpack (array, offset, count);
             }
@@ -576,10 +460,10 @@ namespace HF
             virtual ~Response()
             {
                /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
-            {
-               delete attr;
-            });
+               for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
+               {
+                  delete attr;
+               });
                /* *INDENT-ON* */
             }
 
@@ -588,18 +472,20 @@ namespace HF
             {
                size_t result = Protocol::Response::size ();
 
+               result += sizeof(uint8_t);
+
                /* *INDENT-OFF* */
-            for_each (attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute *attr)
-            {
-               result += attr->size(true);
-            });
+               for_each (attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute *attr)
+               {
+                  result += attr->size(true);
+               });
                /* *INDENT-ON* */
 
                return result;
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
@@ -608,17 +494,17 @@ namespace HF
                offset += array.write (offset, (uint8_t) attributes.size ());
 
                /* *INDENT-OFF* */
-            for_each (attributes.begin(), attributes.end(), [&array, &offset] (HF::Attributes::IAttribute * attr)
-            {
-               offset += attr->pack(array, offset, true);
-            });
+               for_each (attributes.begin(), attributes.end(), [&array, &offset] (HF::Attributes::IAttribute * attr)
+               {
+                  offset += attr->pack(array, offset, true);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
       } // namespace GetAttributePack
@@ -633,7 +519,7 @@ namespace HF
           * This class represents the message payload of a HF::Message::SET_ATTR_PACK_REQ
           * or HF::Message::SET_ATTR_PACK_RESP_REQ message.
           */
-         struct Request:public Serializable
+         struct Request
          {
             HF::Attributes::List attributes; //!< List containing the attributes to send.
 
@@ -648,10 +534,10 @@ namespace HF
             virtual ~Request()
             {
                /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
-            {
-               delete attr;
-            });
+               for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
+               {
+                  delete attr;
+               });
                /* *INDENT-ON* */
             }
 
@@ -661,34 +547,34 @@ namespace HF
                size_t result = sizeof(uint8_t);
 
                /* *INDENT-OFF* */
-            for_each ( attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute * attr)
-            {
-               result += attr->size(true);
-            });
+               for_each ( attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute * attr)
+               {
+                  result += attr->size(true);
+               });
                /* *INDENT-ON* */
 
                return result;
             }
 
             //! \see Serializable::pack
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
                offset += array.write (offset, (uint8_t) attributes.size ());
 
                /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (), [&array,&offset](HF::Attributes::IAttribute * attr)
-            {
-               offset += attr->pack (array, offset, true);
-            });
+               for_each (attributes.begin (), attributes.end (), [&array,&offset](HF::Attributes::IAttribute * attr)
+               {
+                  offset += attr->pack (array, offset, true);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
             }
 
             //! \see Serializable::unpack
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
 
@@ -701,19 +587,19 @@ namespace HF
          /*!
           * This class represents the payload of a HF::Message::SET_ATTR_PACK_RES message.
           */
-         struct Response:public Serializable
+         struct Response
          {
             /*!
              * Set attribute operation result.
              */
-            struct Result:public Serializable
+            struct Result
             {
-               uint8_t    uid;  //!< Attribute UID.
-               HF::Result code; //!< Command result.
+               uint8_t        uid;  //!< Attribute UID.
+               Common::Result code; //!< Command result.
 
                Result() {}
 
-               Result(uint8_t uid, HF::Result code):
+               Result(uint8_t uid, Common::Result code):
                   uid (uid), code (code)
                {}
 
@@ -727,7 +613,7 @@ namespace HF
                }
 
                //! \see Serializable::pack
-               size_t pack (ByteArray &array, size_t offset = 0) const
+               size_t pack (Common::ByteArray &array, size_t offset = 0) const
                {
                   size_t start = offset;
 
@@ -738,7 +624,7 @@ namespace HF
                }
 
                //! \see Serializable::unpack
-               size_t unpack (const ByteArray &array, size_t offset = 0)
+               size_t unpack (const Common::ByteArray &array, size_t offset = 0)
                {
                   size_t  start = offset;
 
@@ -747,7 +633,7 @@ namespace HF
                   uid     = temp;
 
                   offset += array.read (offset, temp);
-                  code    = static_cast <HF::Result>(temp);
+                  code    = static_cast <Common::Result>(temp);
 
                   return offset - start;
                }
@@ -776,24 +662,24 @@ namespace HF
             }
 
             //! \see Serializable::pack
-            size_t pack (ByteArray &array, size_t offset = 0) const
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
 
                offset += array.write (offset, (uint8_t) results.size ());
 
                /* *INDENT-OFF* */
-            for_each (results.begin (), results.end (), [&array,&offset](Result result)
-            {
-               offset += result.pack (array, offset);
-            });
+               for_each (results.begin (), results.end (), [&array,&offset](Result result)
+               {
+                  offset += result.pack (array, offset);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
             }
 
             //! \see Serializable::unpack
-            size_t unpack (const ByteArray &array, size_t offset = 0)
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
 

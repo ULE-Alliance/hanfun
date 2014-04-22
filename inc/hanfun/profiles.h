@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -194,10 +194,7 @@ namespace HF
          template<typename Itf>
          struct InterfaceProxy:public Itf
          {
-            profile_t *proxy;
-
-            InterfaceProxy(profile_t *proxy = nullptr):
-               proxy (proxy)
+            InterfaceProxy(profile_t *proxy = nullptr):proxy (proxy)
             {}
 
             void sendMessage (Protocol::Address &addr, Protocol::Message &message)
@@ -207,6 +204,10 @@ namespace HF
                   proxy->sendMessage (addr, message);
                }
             }
+
+            private:
+
+            profile_t *proxy;
          };
 
          typedef InterfaceProxy <Interface1> first_itf_t;
@@ -217,11 +218,11 @@ namespace HF
                         "Interface1 and Interface 2 MUST be of type HF::AbstractInterface !");
 
          //! \see Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
-            Result result = interfaces.first.handle (packet, payload, offset);
+            Common::Result result = interfaces.first.handle (packet, payload, offset);
 
-            if (result == Result::OK || result == Result::FAIL_SUPPORT)
+            if (result == Common::Result::OK || result == Common::Result::FAIL_SUPPORT)
             {
                return result;
             }

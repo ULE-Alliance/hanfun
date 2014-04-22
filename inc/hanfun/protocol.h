@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -14,10 +14,7 @@
 #ifndef HF_PROTOCOL_H
 #define HF_PROTOCOL_H
 
-#include <vector>
-
 #include "hanfun/common.h"
-#include "hanfun/transport.h"
 
 // =============================================================================
 // API
@@ -25,6 +22,12 @@
 
 namespace HF
 {
+   // Forward declaration.
+   namespace Transport
+   {
+      struct Link;
+   }
+
    /*!
     * HAN-FUN Protocol implementation.
     */
@@ -46,7 +49,7 @@ namespace HF
       /*!
        * Network Message.
        */
-      struct Message:public Serializable
+      struct Message
       {
          /*!
           * Message types.
@@ -79,7 +82,7 @@ namespace HF
          /*!
           * Interface Address.
           */
-         struct Interface:public Serializable
+         struct Interface
          {
             uint16_t role : 1;         //!< Interface role : Server or Client.
             uint16_t uid  : 15;        //!< Identifier of the interface. \see Interface::UID.
@@ -93,10 +96,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          // =============================================================================
@@ -110,46 +113,31 @@ namespace HF
 
          /*!
           * Message payload.
-          *
-          * This attribute contains a pointer to the message payload.
-          *
-          * \warning    No deallocation is performed on this pointer when the
-          *             message destructor is called.
           */
-         Serializable *payload;
+         Common::ByteArray payload;
 
          //! The payload length value read when unpacking the message.
          uint16_t length;
 
-         Message(Type _type, Interface itf, Serializable *payload = nullptr, uint8_t reference = 0):
-            reference (reference), type (_type), itf (itf), payload (payload), length (0) {}
+         Message(size_t size = 0, Type _type = COMMAND_REQ):
+            reference (0), type (_type), payload (Common::ByteArray (size)), length (0) {}
 
-         Message(Type _type = COMMAND_REQ):
-            reference (0), type (_type), payload (nullptr), length (0) {}
-
-         Message(Serializable *payload, Message &parent);
+         Message(Message &parent, size_t size);
 
          //! \see HF::Serializable::size.
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
-
-         protected:
-
-         uint16_t payload_length () const
-         {
-            return ((payload != nullptr) ? payload->size () : 0) % MAX_PAYLOAD;
-         }
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
       /*!
        * Network Address.
        */
-      struct Address:public Serializable
+      struct Address
       {
          uint16_t mod    : 1;    //!< Address modifier.
          uint16_t device : 15;   //!< Device Address.
@@ -181,10 +169,10 @@ namespace HF
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
          bool is_broadcast ()
          {
@@ -200,7 +188,7 @@ namespace HF
       /*!
        * HAN-FUN Protocol Packet.
        */
-      struct Packet:public Serializable
+      struct Packet
       {
          Address source;           //!< Source Address.
          Address destination;      //!< Destination Address.
@@ -231,33 +219,33 @@ namespace HF
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
       /*!
        * HAN-FUN Response message.
        */
-      struct Response:public Serializable
+      struct Response
       {
          // =============================================================================
          // API
          // =============================================================================
 
-         Result code;
+         Common::Result code;
 
-         Response(Result code = OK):code (code) {}
+         Response(Common::Result code = Common::Result::OK):code (code) {}
 
          //! \see HF::Serializable::size.
          size_t size () const;
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const;
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0);
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
    }  // namespace Protocol

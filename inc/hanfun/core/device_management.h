@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -20,6 +20,8 @@
 #include <vector>
 
 #include "hanfun/common.h"
+#include "hanfun/uids.h"
+
 #include "hanfun/protocol.h"
 
 #include "hanfun/core.h"
@@ -63,7 +65,7 @@ namespace HF
          /*!
           * Optional interface entry.
           */
-         struct Interface:public Serializable
+         struct Interface
          {
             uint16_t role : 1;  //!< Interface role. \see Interface::Role.
             uint16_t uid  : 15; //!< Interface UID. \see Interface::UID.
@@ -76,16 +78,16 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
           * Unit Entry
           */
-         struct Unit:public Serializable
+         struct Unit
          {
             uint8_t            id;      //!< Unit Id.
             uint16_t           profile; //!< Unit UID. \see IProfile::UID.
@@ -100,16 +102,16 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
           * Device Entry.
           */
-         struct Device:public Serializable
+         struct Device
          {
             uint16_t      address; //!< Device Address.
             vector <Unit> units;   //!< Unit list of the interface.
@@ -453,7 +455,7 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given UID,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual Device *entry (HF::UID::UID *uid) = 0;
+            virtual Device *entry (HF::UID::UID const *uid) = 0;
 
             /*!
              * Store the given \c device entry to persistent storage.
@@ -606,7 +608,7 @@ namespace HF
 
             virtual Device *entry (uint16_t address);
 
-            virtual Device *entry (HF::UID::UID *uid);
+            virtual Device *entry (HF::UID::UID const *uid);
 
             virtual Result save (Device *device);
 
@@ -626,7 +628,7 @@ namespace HF
             vector <Device *>              _entries;
 
             map <uint16_t, Device *>       _addr2device;
-            map <HF::UID::UID *, Device *> _uid2device;
+            map <HF::UID::UID const *, Device *> _uid2device;
 
 
             uint16_t next_address ()

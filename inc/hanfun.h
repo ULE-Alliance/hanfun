@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2012 Bithium S.A.
  */
@@ -19,8 +19,8 @@
 // Configuration
 // =============================================================================
 
-#include "version.h"
-#include "config.h"
+#include "hanfun/version.h"
+#include "hanfun/config.h"
 
 // =============================================================================
 // Common
@@ -70,5 +70,13 @@
 // =============================================================================
 
 #include "hanfun/devices.h"
+
+// =============================================================================
+// ULE Support
+// =============================================================================
+
+#ifdef HF_ULE_SUPPORT
+#include "hanfun/ule.h"
+#endif
 
 #endif /* HANFUN_H */

@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -18,3 +18,11 @@
 
 using namespace HF;
 using namespace HF::Testing;
+
+TEST_GROUP (Devices)
+{};
+
+IGNORE_TEST (Devices, Empty)
+{
+   FAIL_TEST ("Not implemented yet !");
+}

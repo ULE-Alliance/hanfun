@@ -6,7 +6,7 @@
 #
 #   \author  Filipe Alves <filipe.alves@bithium.com>
 #
-#   \version 0.1.0
+#   \version 0.2.0
 #
 #   Copyright (c) 2012 Bithium S.A.
 #
@@ -44,5 +44,17 @@ set(HF_CORE_SRCS       core.cpp
                        core/device_management_client.cpp
                        core/device_management_server.cpp )
 
+set(HF_UNITS_SRCS units.cpp)
+
 add_library( hanfun  ${HF_COMMON_SRCS} ${HF_PROTOCOL_SRCS}
-                     ${HF_INTERFACES_SRCS} ${HF_CORE_SRCS} )
+                     ${HF_INTERFACES_SRCS} ${HF_CORE_SRCS}
+                     ${HF_UNITS_SRCS} )
+
+install(TARGETS hanfun ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../inc/" DESTINATION include
+        PATTERN ".git*" EXCLUDE)
+
+file( GLOB_RECURSE CONFIG_HEADER "${CMAKE_BINARY_DIR}/hanfun/*.h")
+
+install(FILES ${CONFIG_HEADER} DESTINATION include/hanfun)

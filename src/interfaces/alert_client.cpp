@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -28,11 +28,11 @@ using namespace HF::Interfaces;
  *
  */
 // =============================================================================
-Result Alert::Client::handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+Common::Result Alert::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
    if (packet.message.itf.member != Alert::STATUS_CMD)
    {
-      return Result::FAIL_SUPPORT;
+      return Common::Result::FAIL_SUPPORT;
    }
 
    Message alert_msg;
@@ -41,5 +41,5 @@ Result Alert::Client::handle_command (Protocol::Packet &packet, ByteArray &paylo
 
    status (alert_msg);
 
-   return Result::OK;
+   return Common::Result::OK;
 }

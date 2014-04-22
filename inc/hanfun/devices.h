@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -27,6 +27,8 @@
 #include "hanfun/core.h"
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+
+#include "hanfun/transport.h"
 
 namespace HF
 {
@@ -69,41 +71,18 @@ namespace HF
             _units.remove (unit);
          }
 
-         Units::IUnit *unit (uint8_t id)
-         {
-            /* *INDENT-OFF* */
-         units_t::iterator it = find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
-                                {
-                                   return unit->id () == id;
-                                });
-            /* *INDENT-ON* */
+         /*!
+          * Return a pointer to the unit with the given \c id.
+          *
+          * @param [in] id the id of the unit to retrieve.
+          *
+          * @return  a pointer to the unit if it exists, \c nullptr otherwise.
+          */
+         Units::IUnit *unit (uint8_t id);
 
-            if (it == _units.end ())
-            {
-               return nullptr;
-            }
-            else
-            {
-               return *it;
-            }
-         }
+         void send (Protocol::Packet &packet);
 
-         void send (Protocol::Packet &packet)
-         {
-            Transport::Link *tsp_link = packet.link;
-
-            if (tsp_link == nullptr)
-            {
-               tsp_link = link (packet.destination.device);
-            }
-
-            if (tsp_link != nullptr)
-            {
-               tsp_link->send (packet);
-            }
-         }
-
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          protected:
 
@@ -208,7 +187,7 @@ namespace HF
           * Template for HAN-FUN devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice, public Transport::Endpoint
+         class Base:public AbstractDevice
          {
             protected:
 
@@ -307,7 +286,7 @@ namespace HF
           * Template for HAN-FUN concentrator devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice, public Transport::Endpoint
+         class Base:public AbstractDevice
          {
             public:
 
@@ -362,17 +341,17 @@ namespace HF
             //! \see AbstractDevice::link
             Transport::Link *link (uint16_t addr) const
             {
-               /* *INDENT-OFF* */
-            links_t::const_iterator it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
-                                         {
-                                            return link->address () == addr;
-                                         });
-               /* *INDENT-ON* */
-
-               if (it == _links.end ())
+               if (_links.empty() )
                {
                   return nullptr;
                }
+
+               /* *INDENT-OFF* */
+               auto it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
+               {
+                  return link->address () == addr;
+               });
+               /* *INDENT-ON* */
 
                return *it;
             }

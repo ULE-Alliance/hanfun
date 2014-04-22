@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -195,12 +195,13 @@ TEST_GROUP (Message)
 
 TEST (Message, Size)
 {
-   LONGS_EQUAL (0, message.length);
+   LONGS_EQUAL (0, message.payload.size ());
    LONGS_EQUAL (7, message.size ());
 
    Testing::Payload payload (42);
 
-   message.payload = &payload;
+   payload.pack (message.payload);
+
    LONGS_EQUAL (7 + 42, message.size ());
 }
 
@@ -216,7 +217,7 @@ TEST (Message, Pack)
    size_t size = message.size ();
 
    Testing::Payload payload (0xFFAA);
-   message.payload = &payload;
+   payload.pack (message.payload);
 
    ByteArray array (size + 6);
 
@@ -247,7 +248,7 @@ TEST (Message, Unpack)
 
 TEST_GROUP (Packet)
 {
-   class TestPayload:public Serializable
+   class TestPayload
    {
       public:
 
@@ -255,12 +256,15 @@ TEST_GROUP (Packet)
 
       size_t size () const
       {
-         return sizeof(data);
+         return sizeof(uint8_t);
       }
 
       size_t pack (ByteArray &array, size_t offset = 0) const
       {
          size_t start = offset;
+
+         array.extend (size ());
+         array.insert (array.begin () + offset, size (), 0);
 
          offset += array.write (offset, this->data);
 
@@ -335,9 +339,9 @@ TEST (Packet, Pack)
    packet->message.itf.uid    = 0x7AAA;
    packet->message.itf.member = 0x55;
 
-   packet->message.payload    = payload;
-
    payload->data              = 0xAB;
+
+   payload->pack (packet->message.payload);
 
    ByteArray array (packet->size () + 6);
 

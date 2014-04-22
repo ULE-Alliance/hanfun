@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.1.0
+ * \version    0.2.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -45,7 +45,7 @@ size_t Alert::Message::size () const
  *
  */
 // =============================================================================
-size_t Alert::Message::pack (ByteArray &array, size_t offset) const
+size_t Alert::Message::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -62,7 +62,7 @@ size_t Alert::Message::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Alert::Message::unpack (const ByteArray &array, size_t offset)
+size_t Alert::Message::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
