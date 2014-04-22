@@ -12,5 +12,9 @@
 #
 # =============================================================================
 
-add_executable( app_hanfun "hanfun.cpp")
-target_link_libraries(app_hanfun hanfun)
+set(BASE_APP_SRCS   "base.h" "base.cpp" "base_app.cpp")
+
+configure_file(application.h ${CMAKE_BINARY_DIR}/hanfun/application.h COPYONLY)
+
+add_library( hf_base_app ${BASE_APP_SRCS})
+target_link_libraries(hf_base_app hanfun)
