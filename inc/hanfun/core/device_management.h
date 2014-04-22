@@ -455,7 +455,7 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given UID,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual Device *entry (HF::UID::UID *uid) = 0;
+            virtual Device *entry (HF::UID::UID const *uid) = 0;
 
             /*!
              * Store the given \c device entry to persistent storage.
@@ -608,7 +608,7 @@ namespace HF
 
             virtual Device *entry (uint16_t address);
 
-            virtual Device *entry (HF::UID::UID *uid);
+            virtual Device *entry (HF::UID::UID const *uid);
 
             virtual Result save (Device *device);
 
@@ -628,7 +628,7 @@ namespace HF
             vector <Device *>              _entries;
 
             map <uint16_t, Device *>       _addr2device;
-            map <HF::UID::UID *, Device *> _uid2device;
+            map <HF::UID::UID const *, Device *> _uid2device;
 
 
             uint16_t next_address ()

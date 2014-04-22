@@ -69,12 +69,12 @@ namespace HF
             return (other != nullptr ? this->type () - other->type () : this->type ());
          }
 
-         bool operator ==(const UID &other)
+         bool operator ==(const UID &other) const
          {
             return (this->compare (&other) == 0);
          }
 
-         bool operator !=(const UID &other)
+         bool operator !=(const UID &other) const
          {
             return !(*this == other);
          }
@@ -313,9 +313,29 @@ namespace HF
 namespace std
 {
    template<>
-   struct less <HF::UID::UID *> :public binary_function <HF::UID::NONE *, HF::UID::UID *, bool>
+   struct less <HF::UID::UID *> :public binary_function <HF::UID::UID *, HF::UID::UID *, bool>
    {
       bool operator ()(HF::UID::UID *lhs, HF::UID::UID *rhs) const
+      {
+         if (lhs == nullptr)
+         {
+            return true;
+         }
+         else if (rhs == nullptr)
+         {
+            return false;
+         }
+         else
+         {
+            return lhs->compare (rhs) < 0;
+         }
+      }
+   };
+
+   template<>
+   struct less <HF::UID::UID const *> :public binary_function <HF::UID::UID const *, HF::UID::UID const *, bool>
+   {
+      bool operator ()(HF::UID::UID const * lhs, HF::UID::UID const *rhs) const
       {
          if (lhs == nullptr)
          {

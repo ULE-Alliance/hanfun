@@ -380,12 +380,12 @@ namespace HF
             mock ("Link").actualCall ("send");
          }
 
-         HF::UID::UID *uid ()
+         HF::UID::UID const *uid () const
          {
             return _uid;
          }
 
-         HF::Transport::Layer *transport ()
+         HF::Transport::Layer const *transport () const
          {
             return tsp;
          }

@@ -66,14 +66,14 @@ namespace HF
           *
           * @return  the UID of the remote device of this link.
           */
-         virtual HF::UID::UID *uid () = 0;
+         virtual HF::UID::UID const *uid () const = 0;
 
          /*!
           * Return the transport layer implementation this link belongs to.
           *
           * @return  pointer to the transport layer that created this link.
           */
-         virtual Layer *transport () = 0;
+         virtual Layer const *transport () const = 0;
       };
 
       /*!

@@ -103,7 +103,7 @@ Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Byte
 
    uint16_t address  = Protocol::BROADCAST_ADDR;
 
-   HF::UID::UID *uid = packet.link->uid ();
+   HF::UID::UID const *uid = packet.link->uid ();
    Device *device    = entry (uid);
 
    if (device == nullptr)
@@ -259,7 +259,7 @@ DeviceManagement::Device *DeviceManagement::DefaultServer::entry (uint16_t addre
  *
  */
 // =============================================================================
-DeviceManagement::Device *DeviceManagement::DefaultServer::entry (HF::UID::UID *uid)
+DeviceManagement::Device *DeviceManagement::DefaultServer::entry (HF::UID::UID const *uid)
 {
    return (_uid2device.count (uid) != 0 ? _uid2device.at (uid) : nullptr);
 }
