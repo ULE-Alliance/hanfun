@@ -341,17 +341,17 @@ namespace HF
             //! \see AbstractDevice::link
             Transport::Link *link (uint16_t addr) const
             {
-               /* *INDENT-OFF* */
-            links_t::const_iterator it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
-                                         {
-                                            return link->address () == addr;
-                                         });
-               /* *INDENT-ON* */
-
-               if (it == _links.end ())
+               if (_links.empty() )
                {
                   return nullptr;
                }
+
+               /* *INDENT-OFF* */
+               auto it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
+               {
+                  return link->address () == addr;
+               });
+               /* *INDENT-ON* */
 
                return *it;
             }

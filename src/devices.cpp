@@ -36,21 +36,19 @@ using namespace HF::Devices;
 // =============================================================================
 Units::IUnit *AbstractDevice::unit (uint8_t id)
 {
-   /* *INDENT-OFF* */
-   units_t::iterator it = find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
-                          {
-                             return unit->id () == id;
-                          });
-   /* *INDENT-ON* */
-
-   if (it == _units.end ())
+   if (_units.empty())
    {
       return nullptr;
    }
-   else
+
+   /* *INDENT-OFF* */
+   auto it = find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
    {
-      return *it;
-   }
+      return unit->id () == id;
+   });
+   /* *INDENT-ON* */
+
+   return *it;
 }
 
 // =============================================================================
