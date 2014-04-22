@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * \file       /Lana/apps/hanfun_agent.cpp
+ * \file       apps/base_app.cpp
  *
  * This file contains an example for a Lantiq's HAN-FUN Agent.
  *

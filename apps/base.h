@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * \file       /Lana/apps/base.h
+ * \file       apps/base.h
  *
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.

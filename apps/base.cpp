@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * \file       /Lana/apps/base.cpp
+ * \file       apps/base.cpp
  *
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the application.
