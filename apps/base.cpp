@@ -68,6 +68,8 @@ static void print (HF::Protocol::Packet &packet)
 // DeviceManagement
 // =============================================================================
 
+const std::string DeviceManagement::FILENAME = "devices.hf";
+
 bool DeviceManagement::available (uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)

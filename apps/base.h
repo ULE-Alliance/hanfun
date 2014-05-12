@@ -33,7 +33,7 @@
  */
 struct DeviceManagement: public HF::Core::DeviceManagement::DefaultServer
 {
-   const std::string FILENAME = "devices.hf";
+   static const std::string FILENAME;
 
    DeviceManagement (HF::IDevice* device) :
          HF::Core::DeviceManagement::DefaultServer(device),
