@@ -100,7 +100,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         virtual size_t pack (ByteArray &array, size_t offset = 0) const
+         virtual size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
             offset += array.write (offset, (uint8_t) 0);
@@ -108,7 +108,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         virtual size_t unpack (const ByteArray &array, size_t offset = 0)
+         virtual size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
@@ -143,7 +143,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
 
@@ -158,7 +158,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
@@ -247,7 +247,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
             size_t size  = value.size ();
@@ -263,7 +263,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;

@@ -135,10 +135,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
             // =============================================================================
             // Operators
@@ -184,10 +184,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
             HF::UID::UID *uid () const
             {
@@ -230,10 +230,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Protocol::Response::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          // =============================================================================
@@ -255,10 +255,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          // =============================================================================
@@ -280,10 +280,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Protocol::Response::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
@@ -302,10 +302,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          struct GetEntriesResponse:public Protocol::Response
@@ -316,10 +316,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Protocol::Response::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
@@ -429,7 +429,7 @@ namespace HF
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          /*!
@@ -545,14 +545,14 @@ namespace HF
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            virtual Result register_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             /*!
              * This method is called when a deregistration message is received.
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            virtual Result deregister_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             //! @}
             // ======================================================================
@@ -584,7 +584,7 @@ namespace HF
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          // =========================================================================
