@@ -158,9 +158,12 @@ namespace HF
 
    }  // namespace Core
 
-   template<typename... ITF>
-   class Unit0:public Core::Unit0
+   template<typename Base, typename... ITF>
+   class Unit0:public Base
    {
+      static_assert (is_base_of <HF::Core::Unit0, Base>::value,
+                     "Base must be of type HF::Core::Unit0");
+
       typedef tuple <ITF...> interfaces_t;
 
       interfaces_t interfaces;
@@ -175,7 +178,7 @@ namespace HF
       typedef typename tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
       Unit0(HF::IDevice &device):
-         Core::Unit0 (device), interfaces (ITF (*this) ...)
+         Base (device), interfaces (ITF (*this) ...)
       {
          device.add (this);
       }

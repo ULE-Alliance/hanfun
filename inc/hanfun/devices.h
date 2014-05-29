@@ -160,16 +160,25 @@ namespace HF
        */
       namespace Node
       {
+         struct IUnit0:public HF::Core::Unit0
+         {
+            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            {}
+
+            virtual HF::Core::DeviceManagement::Client *management ()       = 0;
+
+            virtual HF::Core::DeviceManagement::Client *management () const = 0;
+         };
          /*!
           * Template to create Unit0 for HAN-FUN devices.
           */
          template<typename... ITF>
-         struct Unit0:public HF::Unit0 <ITF...>
+         struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
+            static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformationClient");
 
-            Unit0(IDevice &device):HF::Unit0 <ITF...>(device)
+            Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
          };
 
@@ -257,17 +266,25 @@ namespace HF
        */
       namespace Concentrator
       {
+         struct IUnit0:public HF::Core::Unit0
+         {
+            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            {}
+
+            virtual HF::Core::DeviceManagement::Server *management ()       = 0;
+
+            virtual HF::Core::DeviceManagement::Server *management () const = 0;
+         };
          /*!
-          * Template to create Unit0 for HAN-FUN devices.
+          * Template to create Unit0 for HAN-FUN concentrator devices.
           */
          template<typename... ITF>
-         struct Unit0:public HF::Unit0 <ITF...>
+         struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
+            static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
 
-            Unit0(IDevice &device):
-               HF::Unit0 <ITF...>(device)
+            Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
          };
 
