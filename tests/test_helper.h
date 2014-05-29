@@ -351,10 +351,10 @@ namespace HF
          }
       };
 
-      struct Device:public AbstractDevice < HF::Devices::Node::Base < HF::Devices::Node::DefaultUnit0 >>
+      struct Device:public AbstractDevice < HF::Devices::Node::Abstract < HF::Devices::Node::DefaultUnit0 >>
       {};
 
-      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Base < HF::Devices::Concentrator::DefaultUnit0 >>
+      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Abstract < HF::Devices::Concentrator::DefaultUnit0 >>
       {};
 
       struct Link:public HF::Transport::AbstractLink

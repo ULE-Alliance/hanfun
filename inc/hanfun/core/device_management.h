@@ -325,7 +325,7 @@ namespace HF
          /*!
           * Parent class for the Device Management interface implementation.
           */
-         struct Base:public Service <HF::Interface::DEVICE_MANAGEMENT>
+         struct Abstract:public Service <HF::Interface::DEVICE_MANAGEMENT>
          {
             static constexpr uint16_t START_ADDR = 0x0001;
 
@@ -342,7 +342,7 @@ namespace HF
 
             protected:
 
-            Base(IDevice &_device):
+            Abstract(IDevice &_device):
                Service (_device)
             {}
          };
@@ -350,7 +350,7 @@ namespace HF
          /*!
           * Device Management interface : Client side.
           */
-         class Client:public ServiceRole <Base, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
          {
             protected:
 
@@ -435,7 +435,7 @@ namespace HF
          /*!
           * Device Management interface : Server side.
           */
-         struct Server:public ServiceRole <Base, HF::Interface::SERVER_ROLE>
+         struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
          {
             /*!
              * Return the Device entry for the given address.

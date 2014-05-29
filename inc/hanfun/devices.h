@@ -187,7 +187,7 @@ namespace HF
           * Template for HAN-FUN devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice
+         class Abstract:public AbstractDevice
          {
             protected:
 
@@ -230,7 +230,7 @@ namespace HF
 
             protected:
 
-            Base():unit0 (*this)
+            Abstract():unit0 (*this)
             {}
 
             // =============================================================================
@@ -286,7 +286,7 @@ namespace HF
           * Template for HAN-FUN concentrator devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice
+         class Abstract:public AbstractDevice
          {
             public:
 
@@ -333,7 +333,7 @@ namespace HF
 
             links_t _links; //!< List of link present in this Concentrator.
 
-            Base():unit0 (*this)
+            Abstract():unit0 (*this)
             {}
 
             // =============================================================================
