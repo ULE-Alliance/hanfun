@@ -86,8 +86,8 @@ namespace HF
           */
          struct Interface:public Service <HF::Interface::DEVICE_INFORMATION>
          {
-            Interface(IDevice &_device):
-               Service (_device)
+            Interface(Unit0 &unit):
+               Service (unit)
             {}
 
             /*!
@@ -173,8 +173,8 @@ namespace HF
 
             public:
 
-            Default(IDevice &device):
-               DeviceInformation::Interface (device)
+            Default(Unit0 &unit):
+               DeviceInformation::Interface (unit)
             {}
 
             string serial_number ()

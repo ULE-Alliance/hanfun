@@ -42,12 +42,12 @@ using namespace HF::Protocol;
 // Helper Test Functions
 // =============================================================================
 
-#define STRING_FROM( _T )                                     \
-SimpleString StringFrom (const _T &data)                      \
-{                                                              \
-   SerializableHelper<_T &> wrapper(const_cast<_T &>(data));  \
-   return StringFrom(wrapper);                                \
-}
+#define STRING_FROM(_T)                                            \
+   SimpleString StringFrom (const _T &data)                        \
+   {                                                               \
+      SerializableHelper <_T &> wrapper (const_cast <_T &>(data)); \
+      return StringFrom (wrapper);                                 \
+   }
 
 SimpleString StringFrom (const HF::Common::ByteArray &array);
 

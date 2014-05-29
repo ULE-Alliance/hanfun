@@ -34,32 +34,40 @@ namespace HF
    namespace Core
    {
       /*!
-       * This is the interface common to all Services.
+       * This represent the special unit with ID/UID = 0.
        */
-      struct IService:virtual public HF::Interface
+      struct Unit0:public Units::AbstractUnit
       {
-         //! The device this unit is associated with.
-         virtual IDevice &device () = 0;
-      };
+         Unit0(IDevice &device):Units::AbstractUnit (device)
+         {}
 
-      struct AbstractService:virtual public IService, virtual public HF::Interfaces::AbstractInterface,
-         public HF::Units::AbstractUnit
-      {
-         //! Id number of this unit on the device.
          uint8_t id () const
          {
             return 0;
          }
 
-         //! \see HF::Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         uint16_t uid () const
          {
-            return Interfaces::AbstractInterface::handle (packet, payload, offset);
+            return 0;
          }
 
-         IDevice &device ()
+         using Units::AbstractUnit::sendMessage;
+      };
+
+      /*!
+       * This is the interface common to all Services.
+       */
+      struct IService:virtual public HF::Interface
+      {
+         //! The device this unit is associated with.
+         virtual Unit0 &unit () = 0;
+      };
+
+      struct AbstractService:virtual public IService, virtual public HF::Interfaces::AbstractInterface
+      {
+         Unit0 &unit ()
          {
-            return HF::Units::AbstractUnit::device ();
+            return _unit;
          }
 
          virtual void periodic (uint32_t time)
@@ -76,14 +84,24 @@ namespace HF
 
          protected:
 
-         AbstractService(IDevice &_device):
-            HF::Units::AbstractUnit (_device)
+         Unit0 &_unit;
+
+         AbstractService(Unit0 &unit):_unit (unit)
          {}
 
          //! \see AbstractInterface::attributes
-         virtual HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
             return AbstractInterface::attributes (pack_id);
+         }
+         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+         {
+            unit ().sendMessage (addr, message, nullptr);
+         }
+
+         void sendMessage (Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
+         {
+            unit ().sendMessage (addr, message, link);
          }
       };
 
@@ -100,17 +118,11 @@ namespace HF
 
          protected:
 
-         Service(IDevice &_device):
-            AbstractService (_device)
+         Service(Unit0 &unit):
+            AbstractService (unit)
          {}
 
-         using AbstractUnit::sendMessage;
-
-         //! \see AbstractInterface::sendMessage
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
-         {
-            AbstractUnit::sendMessage (addr, message, nullptr);
-         }
+         protected:
 
          bool check_uid (uint16_t uid) const
          {
@@ -127,8 +139,8 @@ namespace HF
          static_assert (is_base_of <HF::Core::AbstractService, Parent>::value,
                         "Parent must be of type HF::Core::AbstractService");
 
-         ServiceRole(IDevice &device):
-            Parent (device)
+         ServiceRole(Unit0 &unit):
+            Parent (unit)
          {}
 
          //! \see Interface::role
@@ -147,7 +159,7 @@ namespace HF
    }  // namespace Core
 
    template<typename... ITF>
-   class Unit0:public Units::AbstractUnit
+   class Unit0:public Core::Unit0
    {
       typedef tuple <ITF...> interfaces_t;
 
@@ -163,7 +175,7 @@ namespace HF
       typedef typename tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
       Unit0(HF::IDevice &device):
-         Units::AbstractUnit (device), interfaces (ITF (device) ...)
+         Core::Unit0 (device), interfaces (ITF (*this) ...)
       {
          device.add (this);
       }
@@ -199,16 +211,6 @@ namespace HF
          return handle_proxy <0, ITF...>(packet, payload, offset);
       }
 
-      uint16_t uid () const
-      {
-         return 0;
-      }
-
-      //! \see IUnit::id
-      uint8_t id () const
-      {
-         return 0;
-      }
 
       // =============================================================================
 
@@ -217,12 +219,14 @@ namespace HF
       template<uint8_t N, typename Head, typename... Tail>
       HF::Result handle_proxy (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
       {
-         // FIXME Check Head is IService.
-         Head *head = &get <N>(interfaces);
+         static_assert (is_base_of <HF::Core::IService, Head>::value,
+                        "Head must be of type HF::Core::IService");
 
-         if (head->uid () == packet.message.itf.uid)
+         Head &head = get <N>(interfaces);
+
+         if (head.uid () == packet.message.itf.uid)
          {
-            return head->handle (packet, payload, offset);
+            return head.handle (packet, payload, offset);
          }
          else
          {

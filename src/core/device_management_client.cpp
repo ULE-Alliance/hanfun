@@ -37,10 +37,12 @@ void DeviceManagement::Client::register_device ()
 {
    Protocol::Address addr (0, 0);
 
-   RegisterMessage *payload = new RegisterMessage (DeviceInformation::EMC);
+   RegisterMessage   *payload = new RegisterMessage (DeviceInformation::EMC);
 
-   for (IDevice::units_t::const_iterator dev_unit = device ().units ().begin ();
-        dev_unit != device ().units ().end (); ++dev_unit)
+   HF::IDevice &device        = unit ().device ();
+
+   for (IDevice::units_t::const_iterator dev_unit = device.units ().begin ();
+        dev_unit != device.units ().end (); ++dev_unit)
    {
       Unit unit;
       unit.id      = (*dev_unit)->id ();

@@ -28,11 +28,11 @@ using namespace HF::Core;
 // Helper functions.
 // =============================================================================
 
-STRING_FROM(DeviceManagement::Interface)
+STRING_FROM (DeviceManagement::Interface)
 
-STRING_FROM(DeviceManagement::Unit)
+STRING_FROM (DeviceManagement::Unit)
 
-STRING_FROM(DeviceManagement::Device)
+STRING_FROM (DeviceManagement::Device)
 
 // =============================================================================
 
@@ -644,14 +644,11 @@ TEST (DeviceManagement, GetEntriesResponse)
 
 TEST_GROUP (DeviceManagementClient)
 {
-   Testing::Unit *unit1;
-   Testing::Unit *unit2;
-   Testing::Unit *unit3;
 
    struct TestDeviceManagementClient:public DeviceManagement::Client
    {
-      TestDeviceManagementClient(IDevice &device):
-         DeviceManagement::Client (device)
+      TestDeviceManagementClient(HF::Core::Unit0 &unit):
+         DeviceManagement::Client (unit)
       {}
 
       using DeviceManagement::Client::_address;
@@ -670,6 +667,9 @@ TEST_GROUP (DeviceManagementClient)
    };
 
    Testing::Device *device;
+   Testing::Unit   *unit1;
+   Testing::Unit   *unit2;
+   Testing::Unit   *unit3;
 
    TestDeviceManagementClient *dev_mgt;
 
@@ -687,7 +687,7 @@ TEST_GROUP (DeviceManagementClient)
       unit2->_uid = 0xFF02;
       unit3->_uid = 0xFF03;
 
-      dev_mgt     = new TestDeviceManagementClient (*device);
+      dev_mgt     = new TestDeviceManagementClient (device->unit0);
 
       mock ().ignoreOtherCalls ();
 
@@ -921,12 +921,12 @@ TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 
 TEST_GROUP (DeviceManagementServer)
 {
-   Testing::Device *device;
+   Testing::Concentrator *device;
 
    struct TestDeviceManagementServer:public DeviceManagement::DefaultServer
    {
-      TestDeviceManagementServer(IDevice &device):
-         DeviceManagement::DefaultServer (device)
+      TestDeviceManagementServer(HF::Core::Unit0 &unit):
+         DeviceManagement::DefaultServer (unit)
       {}
 
       Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
@@ -952,9 +952,9 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_SETUP ()
    {
-      device                    = new Testing::Device ();
+      device                    = new Testing::Concentrator ();
 
-      dev_mgt                   = new TestDeviceManagementServer (*device);
+      dev_mgt                   = new TestDeviceManagementServer (device->unit0);
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;

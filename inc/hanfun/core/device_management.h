@@ -31,7 +31,7 @@ namespace HF
 {
    namespace Core
    {
-      // Foward declaration,
+      // Forward declaration.
       namespace DeviceManagement
       {
          struct Server;
@@ -342,8 +342,8 @@ namespace HF
 
             protected:
 
-            Abstract(IDevice &_device):
-               Service (_device)
+            Abstract(Unit0 &unit):
+               Service (unit)
             {}
          };
 
@@ -358,8 +358,8 @@ namespace HF
 
             public:
 
-            Client(IDevice &_device):
-               ServiceRole (_device), _address (Protocol::BROADCAST_ADDR)
+            Client(Unit0 &unit):
+               ServiceRole (unit), _address (Protocol::BROADCAST_ADDR)
             {}
 
             /*!
@@ -510,14 +510,12 @@ namespace HF
             //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid)
             {
-               UNUSED (uid);
                return Core::create_attribute (this, uid);
             }
 
             protected:
 
-            Server(IDevice &_device):
-               ServiceRole (_device)
+            Server(Unit0 &unit) : ServiceRole (unit)
             {}
 
             //! \see AbstractInterface::attributes
@@ -597,7 +595,7 @@ namespace HF
           */
          struct DefaultServer:public Server
          {
-            DefaultServer(IDevice &_device):Server (_device)
+            DefaultServer(Unit0 &unit):Server (unit)
             {}
 
             virtual ~DefaultServer();
