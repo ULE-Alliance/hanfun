@@ -405,20 +405,20 @@ namespace HF
        * Dimmable Light profile implementation.
        */
       template<typename OnOffServer        = Interfaces::OnOff::Server,
-               typename LevelControlClient = Interfaces::LevelControl::Client>
-      class DimmableLight:public Profile2 <DIMMABLE_LIGHT, OnOffServer, LevelControlClient>
+               typename LevelControlServer = Interfaces::LevelControl::Server>
+      class DimmableLight:public Profile2 <DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
       {
          static_assert (is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
-         static_assert (is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
-                        "LevelControl::Client MUST be of type Interfaces::LevelControl::Client !");
+         static_assert (is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
+                        "LevelControl::Client MUST be of type Interfaces::LevelControl::Server !");
 
          Interfaces::OnOff::Server *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Client *level_control ()
+         Interfaces::LevelControl::Server *level_control ()
          {
             return this->second ();
          }
