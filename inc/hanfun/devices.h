@@ -169,7 +169,7 @@ namespace HF
             static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformationClient");
 
-            Unit0(IDevice *device):HF::Unit0 <ITF...>(device)
+            Unit0(IDevice &device):HF::Unit0 <ITF...>(device)
             {}
          };
 
@@ -178,7 +178,7 @@ namespace HF
           */
          struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default, HF::Core::DeviceManagement::Client>
          {
-            DefaultUnit0(IDevice *device):
+            DefaultUnit0(IDevice &device):
                Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::Client>(device)
             {}
          };
@@ -230,7 +230,7 @@ namespace HF
 
             protected:
 
-            Base():unit0 (this)
+            Base():unit0 (*this)
             {}
 
             // =============================================================================
@@ -266,7 +266,7 @@ namespace HF
             static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
 
-            Unit0(IDevice *device):
+            Unit0(IDevice &device):
                HF::Unit0 <ITF...>(device)
             {}
          };
@@ -277,7 +277,7 @@ namespace HF
          struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default,
                                            HF::Core::DeviceManagement::DefaultServer>
          {
-            DefaultUnit0(IDevice *device):
+            DefaultUnit0(IDevice &device):
                Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::DefaultServer>(device)
             {}
          };
@@ -333,7 +333,7 @@ namespace HF
 
             links_t _links; //!< List of link present in this Concentrator.
 
-            Base():unit0 (this)
+            Base():unit0 (*this)
             {}
 
             // =============================================================================

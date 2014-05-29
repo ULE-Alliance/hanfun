@@ -39,7 +39,7 @@ namespace HF
       struct IService:virtual public HF::Interface
       {
          //! The device this unit is associated with.
-         virtual IDevice *device () = 0;
+         virtual IDevice &device () = 0;
       };
 
       struct AbstractService:virtual public IService, virtual public HF::Interfaces::AbstractInterface,
@@ -57,7 +57,7 @@ namespace HF
             return Interfaces::AbstractInterface::handle (packet, payload, offset);
          }
 
-         IDevice *device ()
+         IDevice &device ()
          {
             return HF::Units::AbstractUnit::device ();
          }
@@ -76,7 +76,7 @@ namespace HF
 
          protected:
 
-         AbstractService(IDevice *_device):
+         AbstractService(IDevice &_device):
             HF::Units::AbstractUnit (_device)
          {}
 
@@ -100,7 +100,7 @@ namespace HF
 
          protected:
 
-         Service(IDevice *_device):
+         Service(IDevice &_device):
             AbstractService (_device)
          {}
 
@@ -127,7 +127,7 @@ namespace HF
          static_assert (is_base_of <HF::Core::AbstractService, Parent>::value,
                         "Parent must be of type HF::Core::AbstractService");
 
-         ServiceRole(IDevice *device):
+         ServiceRole(IDevice &device):
             Parent (device)
          {}
 
@@ -162,10 +162,10 @@ namespace HF
 
       typedef typename tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
-      Unit0(HF::IDevice *device):
+      Unit0(HF::IDevice &device):
          Units::AbstractUnit (device), interfaces (ITF (device) ...)
       {
-         device->add (this);
+         device.add (this);
       }
 
       // =============================================================================

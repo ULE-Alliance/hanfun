@@ -29,9 +29,9 @@ void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Me
    Protocol::Packet packet(message);
 
    packet.destination = addr;
-   packet.source.device = device()->address();
+   packet.source.device = device().address();
    packet.source.unit = id();
    packet.link = link;
 
-   device()->send(packet);
+   device().send(packet);
 }

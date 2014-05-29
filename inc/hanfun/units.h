@@ -35,7 +35,7 @@ namespace HF
          virtual uint8_t id () const = 0;
 
          //! The device this unit is associated with.
-         virtual IDevice *device () const = 0;
+         virtual IDevice &device () const = 0;
 
          //! \see Interface::handle
          virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
@@ -46,19 +46,19 @@ namespace HF
        */
       class AbstractUnit:public IUnit
       {
-         IDevice *_device;
+         IDevice &_device;
 
          public:
 
          //! Get the device associated with this unit.
-         IDevice *device () const
+         IDevice &device () const
          {
             return _device;
          }
 
          protected:
 
-         AbstractUnit(IDevice *device):
+         AbstractUnit(IDevice &device):
             _device (device)
          {}
 
@@ -83,13 +83,10 @@ namespace HF
 
          public:
 
-         Unit(uint8_t index, IDevice *device):
+         Unit(uint8_t index, IDevice &device):
             AbstractUnit (device), _id (index)
          {
-            if (device != nullptr)
-            {
-               device->add (this);
-            }
+            device.add (this);
          }
 
          uint16_t uid () const

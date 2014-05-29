@@ -86,7 +86,7 @@ namespace HF
           */
          struct Interface:public Service <HF::Interface::DEVICE_INFORMATION>
          {
-            Interface(IDevice *_device):
+            Interface(IDevice &_device):
                Service (_device)
             {}
 
@@ -173,7 +173,7 @@ namespace HF
 
             public:
 
-            Default(IDevice *device):
+            Default(IDevice &device):
                DeviceInformation::Interface (device)
             {}
 

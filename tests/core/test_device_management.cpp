@@ -650,7 +650,7 @@ TEST_GROUP (DeviceManagementClient)
 
    struct TestDeviceManagementClient:public DeviceManagement::Client
    {
-      TestDeviceManagementClient(IDevice *device):
+      TestDeviceManagementClient(IDevice &device):
          DeviceManagement::Client (device)
       {}
 
@@ -679,15 +679,15 @@ TEST_GROUP (DeviceManagementClient)
    {
       device      = new Testing::Device ();
 
-      unit1       = new Testing::Unit (1, device);
-      unit2       = new Testing::Unit (2, device);
-      unit3       = new Testing::Unit (3, device);
+      unit1       = new Testing::Unit (1, *device);
+      unit2       = new Testing::Unit (2, *device);
+      unit3       = new Testing::Unit (3, *device);
 
       unit1->_uid = 0xFF01;
       unit2->_uid = 0xFF02;
       unit3->_uid = 0xFF03;
 
-      dev_mgt     = new TestDeviceManagementClient (device);
+      dev_mgt     = new TestDeviceManagementClient (*device);
 
       mock ().ignoreOtherCalls ();
 
@@ -925,7 +925,7 @@ TEST_GROUP (DeviceManagementServer)
 
    struct TestDeviceManagementServer:public DeviceManagement::DefaultServer
    {
-      TestDeviceManagementServer(IDevice *device):
+      TestDeviceManagementServer(IDevice &device):
          DeviceManagement::DefaultServer (device)
       {}
 
@@ -954,7 +954,7 @@ TEST_GROUP (DeviceManagementServer)
    {
       device                    = new Testing::Device ();
 
-      dev_mgt                   = new TestDeviceManagementServer (device);
+      dev_mgt                   = new TestDeviceManagementServer (*device);
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;

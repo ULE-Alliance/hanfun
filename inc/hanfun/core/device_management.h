@@ -342,7 +342,7 @@ namespace HF
 
             protected:
 
-            Base(IDevice *_device):
+            Base(IDevice &_device):
                Service (_device)
             {}
          };
@@ -358,7 +358,7 @@ namespace HF
 
             public:
 
-            Client(IDevice *_device):
+            Client(IDevice &_device):
                ServiceRole (_device), _address (Protocol::BROADCAST_ADDR)
             {}
 
@@ -516,7 +516,7 @@ namespace HF
 
             protected:
 
-            Server(IDevice *_device):
+            Server(IDevice &_device):
                ServiceRole (_device)
             {}
 
@@ -597,7 +597,7 @@ namespace HF
           */
          struct DefaultServer:public Server
          {
-            DefaultServer(IDevice *_device):Server (_device)
+            DefaultServer(IDevice &_device):Server (_device)
             {}
 
             virtual ~DefaultServer();

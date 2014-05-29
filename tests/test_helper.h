@@ -292,7 +292,7 @@ namespace HF
 
       struct Unit:public HF::Units::Unit <Profile>
       {
-         Unit(uint16_t id, IDevice *device):
+         Unit(uint16_t id, IDevice &device):
             HF::Units::Unit <Profile>(id, device)
          {}
       };
