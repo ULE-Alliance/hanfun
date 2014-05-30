@@ -31,8 +31,8 @@
 struct Profile
 {
    uint16_t uid;     //!< Profile UID.
-   uint16_t index;   //!<
-   uint8_t  count;
+   uint16_t index;   //!< Start index on \c profiles_interfaces table, for the profile.
+   uint8_t  count;   //!< Number of interface entries in \c profiles_interfaces table.
 };
 
 // =============================================================================

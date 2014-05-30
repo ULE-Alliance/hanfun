@@ -387,6 +387,13 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
 // Core Services & Interfaces
 // =============================================================================
 
+// =============================================================================
+// Core::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t uid)
 {
    DeviceManagement::Attributes attr = static_cast <DeviceManagement::Attributes>(uid);

@@ -167,11 +167,23 @@ namespace HF
             //! \see HF::Serializable::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
+            /*!
+             * Returns the UID associated with this Register Message.
+             *
+             * @return  a pointer to the UID associated with this message.
+             */
             HF::UID::UID *uid () const
             {
                return _uid;
             }
 
+            /*!
+             * Set the UID associated with this Register message.
+             *
+             * \note This method creates a copy of the passed object.
+             *
+             * @param [in] uid pointer to the object to use as this message UID.
+             */
             void uid (HF::UID::UID *uid)
             {
                if (_uid != nullptr)

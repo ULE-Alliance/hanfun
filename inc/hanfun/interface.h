@@ -57,7 +57,7 @@ namespace HF
 
       enum Commands
       {
-         MAX_CMD_ID = 0xFF,           //! Maximum value for command ids.
+         MAX_CMD_ID = 0xFF,           //! Maximum value for command IDs.
       };
 
       // =============================================================================

@@ -170,11 +170,27 @@ namespace HF
          //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
-         bool   is_broadcast ()
+         /*!
+          * Checks if this address if for the Protocol::BROADCAST_ADDR and
+          * Protocol::BROADCAST_UNIT.
+          *
+          * @retval true   if it is the network's broadcast address,
+          * @retval false  otherwise.
+          */
+         bool is_broadcast ()
          {
             return device == BROADCAST_ADDR && unit == BROADCAST_UNIT;
          }
 
+         /*!
+          * Checks if the given device \c address is equal to the device address
+          * present in this Protocol::Address object.
+          *
+          * @param [in] address  network address to match.
+          *
+          * @retval true   if it is the network's address are equal,
+          * @retval false  otherwise.
+          */
          bool is_local (uint16_t address)
          {
             return this->device == address;
