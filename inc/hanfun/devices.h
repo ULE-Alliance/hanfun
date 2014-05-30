@@ -358,7 +358,7 @@ namespace HF
             //! \see AbstractDevice::link
             Transport::Link *link (uint16_t addr) const
             {
-               if (_links.empty() )
+               if (_links.empty ())
                {
                   return nullptr;
                }

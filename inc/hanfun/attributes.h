@@ -56,7 +56,7 @@ namespace HF
           *
           * @return  UID of the interface the attribute belongs to.
           */
-         virtual uint16_t interface () const       = 0;
+         virtual uint16_t interface () const = 0;
 
          /*!
           * \see Serializable::size

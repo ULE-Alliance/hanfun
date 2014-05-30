@@ -86,8 +86,7 @@ namespace HF
          {
             uint8_t member;            //!< Interface destination member.
 
-            Interface(uint16_t uid = 0, uint16_t role = 0, uint8_t member = 0):
-               Common::Interface(uid, role), member (member) {}
+            Interface(uint16_t uid = 0, uint16_t role = 0, uint8_t member = 0):Common::Interface(uid, role), member (member) {}
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -171,7 +170,7 @@ namespace HF
          //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
-         bool is_broadcast ()
+         bool   is_broadcast ()
          {
             return device == BROADCAST_ADDR && unit == BROADCAST_UNIT;
          }

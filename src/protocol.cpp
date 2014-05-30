@@ -92,7 +92,7 @@ size_t Address::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 size_t Message::Interface::size () const
 {
-   return Common::Interface::size() +  // Interface UID.
+   return Common::Interface::size () + // Interface UID.
           sizeof(uint8_t);             // Interface Member.
 }
 

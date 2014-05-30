@@ -101,10 +101,10 @@ Common::Result DeviceManagement::Server::register_device (Protocol::Packet &pack
 
    offset += reg_msg.unpack (payload, offset);
 
-   uint16_t address  = Protocol::BROADCAST_ADDR;
+   uint16_t address        = Protocol::BROADCAST_ADDR;
 
    HF::UID::UID const *uid = packet.link->uid ();
-   Device *device    = entry (uid);
+   Device *device          = entry (uid);
 
    if (device == nullptr)
    {

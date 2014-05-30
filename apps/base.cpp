@@ -27,10 +27,12 @@
 static void print (HF::Common::ByteArray &array)
 {
    std::cout << "Payload : ";
-   for (size_t i = 0; i < array.size(); ++i)
+
+   for (size_t i = 0; i < array.size (); ++i)
    {
-      cout << hex << setw(2) << setfill('0') << (int) array[i] << " ";
+      cout << hex << setw (2) << setfill ('0') << (int) array[i] << " ";
    }
+
    std::cout << std::endl;
 }
 
@@ -38,28 +40,28 @@ static void print (HF::Protocol::Packet &packet)
 {
    std::cout << "Packet : " << std::endl;
 
-   std::cout << "\tSource  : " << hex << setw(2) << setfill('0')
-                               << (int) packet.source.mod << " "
-                               << (int) packet.source.device << " "
-                               << (int) packet.source.unit << std::endl;
+   std::cout << "\tSource  : " << hex << setw (2) << setfill ('0')
+             << (int) packet.source.mod << " "
+             << (int) packet.source.device << " "
+             << (int) packet.source.unit << std::endl;
 
-   std::cout << "\tDest    : " << hex << setw(2) << setfill('0')
-                               << (int) packet.destination.mod << " "
-                               << (int) packet.destination.device << " "
-                               << (int) packet.destination.unit << std::endl;
+   std::cout << "\tDest    : " << hex << setw (2) << setfill ('0')
+             << (int) packet.destination.mod << " "
+             << (int) packet.destination.device << " "
+             << (int) packet.destination.unit << std::endl;
 
    std::cout << "\tMessage :" << std::endl;
 
-   std::cout << "\t\tReference : " << hex << setw(2) << setfill('0')
-                                   << (int) packet.message.reference << std::endl;
+   std::cout << "\t\tReference : " << hex << setw (2) << setfill ('0')
+             << (int) packet.message.reference << std::endl;
 
-   std::cout << "\t\tType:" << hex << setw(2) << setfill('0')
-                            << (int) packet.message.type << std::endl;
+   std::cout << "\t\tType:" << hex << setw (2) << setfill ('0')
+             << (int) packet.message.type << std::endl;
 
-   std::cout << "\t\tInterface: " << hex << setw(2) << setfill('0')
-                                  << (int) packet.message.itf.role << " "
-                                  << (int) packet.message.itf.uid << " "
-                                  << (int) packet.message.itf.member << std::endl;
+   std::cout << "\t\tInterface: " << hex << setw (2) << setfill ('0')
+             << (int) packet.message.itf.role << " "
+             << (int) packet.message.itf.uid << " "
+             << (int) packet.message.itf.member << std::endl;
 
    std::cout << "\t\tLength: " << (int) packet.message.length << std::endl;
 }
@@ -77,13 +79,14 @@ bool DeviceManagement::available (uint16_t address)
       return false;
    }
 
-   auto it = std::find_if(entries().begin(), entries().end(),
-                          [address](HF::Core::DeviceManagement::Device* dev)
-                          {
-                             return address == dev->address;
-                          });
+   auto it = std::find_if (entries ().begin (), entries ().end (),
+                           [address](HF::Core::DeviceManagement::Device *dev)
+                           {
+                              return address == dev->address;
+                           }
+                          );
 
-   return it == entries().end();
+   return it == entries ().end ();
 }
 
 bool DeviceManagement::deregister (uint16_t address)
@@ -93,26 +96,28 @@ bool DeviceManagement::deregister (uint16_t address)
       return false;
    }
 
-   auto it = std::find_if(entries().begin(), entries().end(),
-                          [address](HF::Core::DeviceManagement::Device* dev)
-                          {
-                             return address == dev->address;
-                          });
+   auto it = std::find_if (entries ().begin (), entries ().end (),
+                           [address](HF::Core::DeviceManagement::Device *dev)
+                           {
+                              return address == dev->address;
+                           }
+                          );
 
-   if (it != entries().end())
+   if (it != entries ().end ())
    {
-      destroy(*it);
+      destroy (*it);
       return true;
    }
 
    return false;
 }
 
-std::ostream& operator<<(std::ostream& stm, const HF::Common::ByteArray& array)
+std::ostream &operator <<(std::ostream &stm, const HF::Common::ByteArray &array)
 {
-   for_each(array.begin(), array.end(), [&stm](uint8_t byte){
-      stm << byte;
-   });
+   for_each (array.begin (), array.end (), [&stm](uint8_t byte) {
+                stm << byte;
+             }
+            );
 
    return stm;
 }
@@ -124,46 +129,47 @@ std::ostream& operator<<(std::ostream& stm, const HF::Common::ByteArray& array)
  *
  */
 // =============================================================================
-void DeviceManagement::save(std::string prefix)
+void DeviceManagement::save (std::string prefix)
 {
    cout << "[HANFUN] Saving Entries." << endl;
 
    std::ofstream ofs;
 
-   std::string filename = prefix + "/" + std::string(FILENAME);
+   std::string   filename = prefix + "/" + std::string (FILENAME);
 
-   ofs.open ( filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+   ofs.open (filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
 
    std::for_each (entries ().begin (), entries ().end (),
-                  [&ofs](HF::Core::DeviceManagement::Device* device)
-   {
-       /* Save Devices */
+                  [&ofs](HF::Core::DeviceManagement::Device *device)
+                  {
+                     /* Save Devices */
 
-       uint16_t size_d = device->size();
+                     uint16_t size_d = device->size ();
 
-       HF::Common::ByteArray array(size_d);
-       device->pack(array);
+                     HF::Common::ByteArray array (size_d);
+                     device->pack (array);
 
-       ofs.write((char*)&size_d, sizeof(uint16_t));
+                     ofs.write ((char *) &size_d, sizeof(uint16_t));
 
-       ofs << array;
+                     ofs << array;
 
-       /* Save UID */
-       uint16_t size_d_uid = device->uid->size();
+                     /* Save UID */
+                     uint16_t size_d_uid = device->uid->size ();
 
-       HF::Common::ByteArray array_uid(size_d_uid);
+                     HF::Common::ByteArray array_uid (size_d_uid);
 
-       device->uid->pack(array_uid);
+                     device->uid->pack (array_uid);
 
-       ofs.write((char*)&size_d_uid, sizeof(uint16_t));
+                     ofs.write ((char *) &size_d_uid, sizeof(uint16_t));
 
-       uint8_t type = device->uid->type();
-       ofs.write((char*)&type, sizeof(uint8_t));
+                     uint8_t type = device->uid->type ();
+                     ofs.write ((char *) &type, sizeof(uint8_t));
 
-       ofs << array_uid;
-   });
+                     ofs << array_uid;
+                  }
+                 );
 
-   ofs.flush();
+   ofs.flush ();
    ofs.close ();
 }
 
@@ -174,36 +180,38 @@ void DeviceManagement::save(std::string prefix)
  *
  */
 // =============================================================================
-void DeviceManagement::restore(std::string prefix)
+void DeviceManagement::restore (std::string prefix)
 {
    std::cout << "[HANFUN] Restoring Entries." << std::endl;
 
    std::ifstream ifs;
 
-   std::string filename = prefix + "/" + FILENAME;
+   std::string   filename = prefix + "/" + FILENAME;
 
    ifs.open (filename, ios::in | ios::binary);
 
    while (ifs.good ())
    {
-      HF::Core::DeviceManagement::Device * device_tmp;
+      HF::Core::DeviceManagement::Device *device_tmp;
 
       uint16_t size;
 
       /* Get Device Size */
-      ifs.read ((char*) &size, sizeof(uint16_t));
+      ifs.read ((char *) &size, sizeof(uint16_t));
 
       if (!ifs.good ())
+      {
          break;
+      }
 
       /* Restore Device */
-      HF::Common::ByteArray buffer(size);
+      HF::Common::ByteArray buffer (size);
 
       for (size_t j = 0; j < size; ++j)
       {
          uint8_t data;
 
-         ifs.read ((char*) &data, sizeof(uint8_t));
+         ifs.read ((char *) &data, sizeof(uint8_t));
          buffer.push_back (data);
       }
 
@@ -211,29 +219,34 @@ void DeviceManagement::restore(std::string prefix)
       device_tmp->unpack (buffer);
 
       /* Get UID Size */
-      ifs.read ((char*) &size, sizeof(uint16_t));
+      ifs.read ((char *) &size, sizeof(uint16_t));
 
       if (!ifs.good ())
+      {
          break;
+      }
 
       /* Get UID Size */
       uint8_t type;
-      ifs.read ((char*) &type, sizeof(uint8_t));
+      ifs.read ((char *) &type, sizeof(uint8_t));
 
       if (!ifs.good ())
+      {
          break;
+      }
 
       /* Restore UID */
-      HF::Common::ByteArray buffer_uid(size);
+      HF::Common::ByteArray buffer_uid (size);
+
       for (size_t j = 0; j < size; ++j)
       {
          uint8_t data;
 
-         ifs.read ((char*) &data, sizeof(uint8_t));
+         ifs.read ((char *) &data, sizeof(uint8_t));
          buffer_uid.push_back (data);
       }
 
-      switch(type)
+      switch (type)
       {
          case HF::UID::NONE_UID:
             device_tmp->uid = new HF::UID::NONE ();
@@ -273,22 +286,23 @@ const std::string BindEntry::FILENAME = "binds.hf";
  *
  */
 // =============================================================================
-void BindEntry::save(std::forward_list<BindEntry> &entries, std::string prefix)
+void BindEntry::save (std::forward_list <BindEntry> &entries, std::string prefix)
 {
    cout << "[HANFUN] Saving Binds." << endl;
 
    std::ofstream ofs;
 
-   std::string filename = prefix + "/" + FILENAME;
+   std::string   filename = prefix + "/" + FILENAME;
 
-   ofs.open ( filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+   ofs.open (filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
 
-   std::for_each( entries.begin(), entries.end(), [&ofs](BindEntry &entry){
-      ofs.write ((char*) &entry.source, sizeof(uint16_t));
-      ofs.write ((char*) &entry.destination, sizeof(uint16_t));
-   });
+   std::for_each (entries.begin (), entries.end (), [&ofs](BindEntry &entry) {
+                     ofs.write ((char *) &entry.source, sizeof(uint16_t));
+                     ofs.write ((char *) &entry.destination, sizeof(uint16_t));
+                  }
+                 );
 
-   ofs.flush();
+   ofs.flush ();
    ofs.close ();
 }
 
@@ -299,13 +313,13 @@ void BindEntry::save(std::forward_list<BindEntry> &entries, std::string prefix)
  *
  */
 // =============================================================================
-void BindEntry::restore(std::forward_list<BindEntry> &entries, std::string prefix)
+void BindEntry::restore (std::forward_list <BindEntry> &entries, std::string prefix)
 {
    cout << "[HANFUN] Restoring Binds." << endl;
 
    std::ifstream ifs;
 
-   std::string filename = prefix + "/" + FILENAME;
+   std::string   filename = prefix + "/" + FILENAME;
 
    ifs.open (filename, ios::in | ios::binary);
 
@@ -314,13 +328,15 @@ void BindEntry::restore(std::forward_list<BindEntry> &entries, std::string prefi
       uint16_t source;
       uint16_t destination;
 
-      ifs.read ((char*) &source, sizeof(uint16_t));
-      ifs.read ((char*) &destination, sizeof(uint16_t));
+      ifs.read ((char *) &source, sizeof(uint16_t));
+      ifs.read ((char *) &destination, sizeof(uint16_t));
 
-      entries.emplace_front(source, destination);
+      entries.emplace_front (source, destination);
 
       if (!ifs.good ())
+      {
          break;
+      }
    }
 
    ifs.close ();
@@ -341,11 +357,11 @@ void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 {
    cout << "[HANFUN] >>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << endl;
 
-   print(payload);
+   print (payload);
 
-   print(packet);
+   print (packet);
 
-   HF::Devices::Concentrator::Base<Unit0>::receive(packet, payload, offset);
+   HF::Devices::Concentrator::Base <Unit0>::receive (packet, payload, offset);
 }
 
 // =============================================================================
@@ -358,12 +374,12 @@ void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 void Base::route_packet (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload,
                          size_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
+   UNUSED (payload);
+   UNUSED (offset);
 
    cout << "[HANFUN] >>>>>>>>>>>>> Route Packet <<<<<<<<<<<<<" << endl;
 
-   for (forward_list<BindEntry>::iterator it = bind_entries.begin(); it != bind_entries.end(); ++it)
+   for (forward_list <BindEntry>::iterator it = bind_entries.begin (); it != bind_entries.end (); ++it)
    {
       if (packet.source.device == it->source)
       {
@@ -374,9 +390,9 @@ void Base::route_packet (HF::Protocol::Packet &packet, HF::Common::ByteArray &pa
 
    packet.destination.unit = 1;
 
-   packet.link = nullptr;
+   packet.link             = nullptr;
 
-   send(packet);
+   send (packet);
 
    cout << "[HANFUN] >>>>>>>>>>>>> Route Packet <<<<<<<<<<<<<" << endl;
 }
@@ -388,14 +404,15 @@ void Base::route_packet (HF::Protocol::Packet &packet, HF::Common::ByteArray &pa
  *
  */
 // =============================================================================
-bool Base::has_bind(uint16_t dev_addr_1, uint16_t dev_addr_2)
+bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   auto it = std::find_if(bind_entries.begin(), bind_entries.end(),
-                          [dev_addr_1, dev_addr_2](BindEntry &entry){
-      return ((entry.source == dev_addr_1) && (entry.destination == dev_addr_2));
-   });
+   auto it = std::find_if (bind_entries.begin (), bind_entries.end (),
+                           [dev_addr_1, dev_addr_2](BindEntry &entry) {
+                              return ((entry.source == dev_addr_1) && (entry.destination == dev_addr_2));
+                           }
+                          );
 
-   return it != bind_entries.end();
+   return it != bind_entries.end ();
 }
 
 // =============================================================================
@@ -408,30 +425,32 @@ bool Base::has_bind(uint16_t dev_addr_1, uint16_t dev_addr_2)
 uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
    // Check if source and destination address exist
-   auto devices = unit0.management()->entries();
+   auto devices = unit0.management ()->entries ();
 
-   bool dev1 = false;
-   bool dev2 = false;
+   bool dev1    = false;
+   bool dev2    = false;
 
-   for_each(devices.begin(), devices.end(),
-            [dev_addr_1, dev_addr_2, &dev1, &dev2](HF::Core::DeviceManagement::Device* dev)
-   {
-      if(dev_addr_1 == dev->address)
-      {
-         dev1 = true;
-      }
-      if(dev_addr_2 == dev->address)
-      {
-         dev2 = true;
-      }
-   });
+   for_each (devices.begin (), devices.end (),
+             [dev_addr_1, dev_addr_2, &dev1, &dev2](HF::Core::DeviceManagement::Device *dev)
+             {
+                if (dev_addr_1 == dev->address)
+                {
+                   dev1 = true;
+                }
+
+                if (dev_addr_2 == dev->address)
+                {
+                   dev2 = true;
+                }
+             }
+            );
 
    // Check if the bind combination isn't already created
-   bool has_bind = this->has_bind(dev_addr_1, dev_addr_2);
+   bool has_bind = this->has_bind (dev_addr_1, dev_addr_2);
 
-   if (has_bind && dev1 && dev2 )
+   if (has_bind && dev1 && dev2)
    {
-      bind_entries.emplace_front(dev_addr_1, dev_addr_2);
+      bind_entries.emplace_front (dev_addr_1, dev_addr_2);
       return 0;
    }
    else
@@ -462,9 +481,10 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 // =============================================================================
 void Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   bind_entries.remove_if([dev_addr_1, dev_addr_2](BindEntry &entry){
-      return ((entry.source == dev_addr_1) && (entry.destination == dev_addr_2));
-   });
+   bind_entries.remove_if ([dev_addr_1, dev_addr_2](BindEntry &entry) {
+                              return ((entry.source == dev_addr_1) && (entry.destination == dev_addr_2));
+                           }
+                          );
 }
 
 
@@ -475,17 +495,18 @@ void Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
  *
  */
 // =============================================================================
-void Base::unbind(uint16_t address)
+void Base::unbind (uint16_t address)
 {
-   bind_entries.remove_if([address](BindEntry &entry)
-   {
-      bool res = ((entry.source == address) || (entry.destination == address));
+   bind_entries.remove_if ([address](BindEntry &entry)
+                           {
+                              bool res = ((entry.source == address) || (entry.destination == address));
 
-      if(res)
-      {
-         cout << "Bind: " << entry.source << " - " << entry.destination << " removed!" << endl;
-      }
+                              if (res)
+                              {
+                                 cout << "Bind: " << entry.source << " - " << entry.destination << " removed!" << endl;
+                              }
 
-      return res;
-   });
+                              return res;
+                           }
+                          );
 }

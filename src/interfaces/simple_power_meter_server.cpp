@@ -159,15 +159,15 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
    {
       Protocol::Address addr;
 
-      Report * report = this->report ();
+      Report *report = this->report ();
 
-      Protocol::Message message(report->size());
+      Protocol::Message message (report->size ());
 
       message.itf.role   = CLIENT_ROLE;
       message.itf.id     = SimplePowerMeter::Server::uid ();
       message.itf.member = REPORT_CMD;
 
-      report->pack(message.payload);
+      report->pack (message.payload);
 
       sendMessage (addr, message);
 

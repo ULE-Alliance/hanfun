@@ -342,7 +342,7 @@ namespace HF
        * Wrapper to pointers for classes that implement the Serializable concept.
        */
       template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value>::type>:
+      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value>::type> :
          public Serializable
       {
          T data;

@@ -39,7 +39,7 @@ namespace HF
    /*!
     * This class represents the interface that all devices MUST implement.
     */
-   struct IDevice: public Transport::Endpoint
+   struct IDevice:public Transport::Endpoint
    {
       /*!
        * Unit list type.

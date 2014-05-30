@@ -31,11 +31,11 @@
 // Defines
 // =============================================================================
 
-#define HF_MAX_REG      5
-#define HF_IPUI_SIZE    5
+#define HF_MAX_REG              5
+#define HF_IPUI_SIZE            5
 
 #ifndef HF_BASE_APP_PREFIX
-#define HF_BASE_APP_PREFIX    "."
+   #define HF_BASE_APP_PREFIX   "."
 #endif
 
 // =============================================================================
@@ -59,22 +59,24 @@ static Base base;
  * @param devices    a reference to the vector containing the registration entries.
  */
 // =============================================================================
-static void print (const vector<HF::Core::DeviceManagement::Device*> &devices)
+static void print (const vector <HF::Core::DeviceManagement::Device *> &devices)
 {
    std::cout << "HAN-FUN" << std::endl <<
-         "\tRegistered Devices (" << (int) devices.size() << "):" << std::endl;
+      "\tRegistered Devices (" << (int) devices.size () << "):" << std::endl;
 
-   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device* device)
-   {
-      std::cout << setw(9) << (base.link(device->address) != nullptr ? "+ " : "- ");
-      std::cout << setw(5) << device->address <<" | " << std::endl;
+   std::for_each (devices.begin (), devices.end (), [](const HF::Core::DeviceManagement::Device *device)
+                  {
+                     std::cout << setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
+                     std::cout << setw (5) << device->address << " | " << std::endl;
 
-      for(uint16_t i = 0; i < HF_IPUI_SIZE; i++)
-      {
-         std::cout << hex << setw(2) << setfill('0') << (int) ((HF::UID::IPUI *)device->uid)->value[i];
-      }
-      std::cout << endl;
-   });
+                     for (uint16_t i = 0; i < HF_IPUI_SIZE; i++)
+                     {
+                        std::cout << hex << setw (2) << setfill ('0') << (int) ((HF::UID::IPUI *) device->uid)->value[i];
+                     }
+
+                     std::cout << endl;
+                  }
+                 );
 }
 
 // =============================================================================
@@ -86,12 +88,13 @@ static void print (const vector<HF::Core::DeviceManagement::Device*> &devices)
  * @param entries    reference to the list containing the binding entries.
  */
 // =============================================================================
-static void print (const std::forward_list<BindEntry> &entries)
+static void print (const std::forward_list <BindEntry> &entries)
 {
-   std::cout << "HAN-FUN   Binds (" << std::distance(entries.begin(),entries.end()) << "):" << endl;
-   std::for_each(entries.begin(), entries.end(), [](const BindEntry &entry) {
-      std::cout << "       - " << entry.source << " -> " << entry.destination << std::endl;
-   });
+   std::cout << "HAN-FUN   Binds (" << std::distance (entries.begin (), entries.end ()) << "):" << endl;
+   std::for_each (entries.begin (), entries.end (), [](const BindEntry &entry) {
+                     std::cout << "       - " << entry.source << " -> " << entry.destination << std::endl;
+                  }
+                 );
 }
 
 // =============================================================================
@@ -135,11 +138,11 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
 
          if (arg1 == (uint16_t) HF_MAX_REG && arg2 == (uint16_t) HF_MAX_REG)
          {
-            print(base.unit0.management()->entries());
+            print (base.unit0.management ()->entries ());
          }
          else if (arg1 == 0) //!< list binds
          {
-            print(base.binds());
+            print (base.binds ());
          }
 
          std::cout << "=============================================" << std::endl;
@@ -150,16 +153,16 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
       case 'r': //!< Registration mode
       {
          if (arg1 == 0) //!< Disable Registration
-         {
-         }
+         {}
          else if (arg1 == 1) //!< Enable Registration
          {
-            if (base.unit0.management()->available(arg2) && arg2 != 0 && arg2 != (uint16_t) HF_MAX_REG)
+            if (base.unit0.management ()->available (arg2) && arg2 != 0 && arg2 != (uint16_t) HF_MAX_REG)
             {
 #ifdef HF_ULE_SUPPORT
-               if (HF::ULE::Registration(true))
+
+               if (HF::ULE::Registration (true))
                {
-                  base.unit0.management()->next_address(arg2);
+                  base.unit0.management ()->next_address (arg2);
                   std::cout << "[HANFUN] Enable Registration mode: SUCCESS" << std::endl;
                   break;
                }
@@ -167,13 +170,14 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
                {
                   std::cout << "[HANFUN] Enable Registration mode: FAIL" << std::endl;
                }
+
 #endif
                std::cout << "[HANFUN] Next Registration will have address : " << (int) arg2 << std::endl;
             }
             else
             {
                std::cout << "[HANFUN] Registration impossible: address " << (int) arg2
-                     << "  not available."<< std::endl;
+                         << "  not available." << std::endl;
                break;
             }
          }
@@ -186,7 +190,7 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
 
       case 'b': //!< Associate device x with device y. (bind)
       {
-         uint8_t err = base.bind(arg1, arg2);
+         uint8_t err = base.bind (arg1, arg2);
 
          switch (err)
          {
@@ -199,7 +203,8 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
             case 2:
             case 3:
                std::cout << "[HANFUN] Bind impossible: " << std::endl;
-               if ( (err & 0x01) != 0)
+
+               if ((err & 0x01) != 0)
                {
                   std::cout << "\t- Second device does not exist !" << std::endl;
                }
@@ -207,9 +212,10 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
                {
                   std::cout << "\t- Fist device does not exist !" << std::endl;
                }
+
                break;
             default:
-            break;
+               break;
          }
 
          break;
@@ -217,9 +223,9 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
 
       case 'u': //!< Unbind device x with y.
       {
-         if (base.has_bind(arg1, arg2))
+         if (base.has_bind (arg1, arg2))
          {
-            base.unbind(arg1, arg2);
+            base.unbind (arg1, arg2);
             cout << "Bind: " << arg1 << " - " << arg2 << " removed." << endl;
          }
          else
@@ -240,20 +246,22 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
 
 #ifdef HF_ULE_SUPPORT
          // DECT de-registration
-         HF::ULE::Deregister(arg1);
+         HF::ULE::Deregister (arg1);
 #endif
 
          /* HAN-FUN de-registration */
          std::cout << "[HANFUN] Device " << (int) arg1 << " de-registration: ";
-         if (base.unit0.management()->deregister(arg1))
+
+         if (base.unit0.management ()->deregister (arg1))
          {
-            cout << "SUCCESS !" ;
-            base.unbind(arg1);
+            cout << "SUCCESS !";
+            base.unbind (arg1);
          }
          else
          {
-            cout << "FAIL !" ;
+            cout << "FAIL !";
          }
+
          std::cout << std::endl;
 
          break;
@@ -262,7 +270,7 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
       case 'h': // help
       {
          std::cout << "h        : help " << std::endl;
-         HandleCommand('?', 0, 0);
+         HandleCommand ('?', 0, 0);
 
          break;
       }
@@ -270,37 +278,38 @@ static void HandleCommand (uint8_t Key, uint16_t arg1, uint16_t arg2)
       default:
       {
          std::cout << std::endl << "|| Unknown command: " << hex << (int) Key << "||";
-         HandleCommand('?', 0, 0);
+         HandleCommand ('?', 0, 0);
          break;
       }
-   };
+   }
 }
 
 // =============================================================================
 // MAIN
 // =============================================================================
 
-int HF::Application::Base (int argc, char * argv[], HF::Transport::Layer &transport)
+int HF::Application::Base (int argc, char *argv[], HF::Transport::Layer &transport)
 {
-   UNUSED(argc);
-   UNUSED(argv);
+   UNUSED (argc);
+   UNUSED (argv);
 
-   transport.initialize();
-   transport.add(&base);
+   transport.initialize ();
+   transport.add (&base);
 
    // User menu to invoke commands from 452 console
-   uint8_t Key = '?'; // Start with print of help text
+   uint8_t  Key  = '?'; // Start with print of help text
    uint16_t arg1 = (uint16_t) HF_MAX_REG;
    uint16_t arg2 = (uint16_t) HF_MAX_REG;
 
-   HandleCommand('?', 0, 0);
+   HandleCommand ('?', 0, 0);
+
    while (Key != 'Q' /* Use Q key to quit*/)
    {
       std::string inputLine;
-      std::getline(std::cin, inputLine);
-      std::istringstream stream(inputLine);
+      std::getline (std::cin, inputLine);
+      std::istringstream stream (inputLine);
 
-      Key = '!';
+      Key  = '!';
       arg1 = (uint16_t) HF_MAX_REG;
       arg2 = (uint16_t) HF_MAX_REG;
 
@@ -308,8 +317,9 @@ int HF::Application::Base (int argc, char * argv[], HF::Transport::Layer &transp
 
       if (Key != '!' && Key != 'Q')
       {
-         HandleCommand(Key, arg1, arg2);
+         HandleCommand (Key, arg1, arg2);
       }
+
       cout << "> ";
    }
 

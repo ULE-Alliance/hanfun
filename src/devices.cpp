@@ -36,7 +36,7 @@ using namespace HF::Devices;
 // =============================================================================
 Units::IUnit *AbstractDevice::unit (uint8_t id)
 {
-   if (_units.empty())
+   if (_units.empty ())
    {
       return nullptr;
    }

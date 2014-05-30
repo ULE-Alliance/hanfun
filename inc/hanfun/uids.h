@@ -333,7 +333,7 @@ namespace std
    template<>
    struct less <HF::UID::UID const *> :public binary_function <HF::UID::UID const *, HF::UID::UID const *, bool>
    {
-      bool operator ()(HF::UID::UID const * lhs, HF::UID::UID const *rhs) const
+      bool operator ()(HF::UID::UID const *lhs, HF::UID::UID const *rhs) const
       {
          if (lhs == nullptr)
          {

@@ -493,7 +493,7 @@ namespace HF
 
             protected:
 
-            Server(Unit0 &unit) : ServiceRole (unit)
+            Server(Unit0 &unit):ServiceRole (unit)
             {}
 
             //! \see AbstractInterface::attributes
@@ -601,9 +601,9 @@ namespace HF
 
             protected:
 
-            vector <Device *>              _entries;
+            vector <Device *>                    _entries;
 
-            map <uint16_t, Device *>       _addr2device;
+            map <uint16_t, Device *>             _addr2device;
             map <HF::UID::UID const *, Device *> _uid2device;
 
 

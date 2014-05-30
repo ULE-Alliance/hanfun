@@ -19,7 +19,6 @@
 
 namespace HF
 {
-
    /*!
     * This namespace contains the declaration of the functions that implement the
     * HAN-FUN example applications.
@@ -38,7 +37,7 @@ namespace HF
        *
        * @return  return value of the application.
        */
-      int Base (int argc, char * argv[], HF::Transport::Layer &transport);
+      int Base (int argc, char *argv[], HF::Transport::Layer &transport);
 
       /*!
        * This function implements the HAN-FUN example application for Node devices.
@@ -53,7 +52,7 @@ namespace HF
        *
        * @return  return value of the application.
        */
-      int Node(int argc, char * argv[], HF::Transport::Layer *layer);
+      int Node (int argc, char *argv[], HF::Transport::Layer *layer);
 
    }  // namespace Application
 

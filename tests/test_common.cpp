@@ -332,7 +332,7 @@ TEST (UID, URI)
    size_t rsize = uid.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
-   STRCMP_EQUAL("Hello World !", uid.value.c_str())
+   STRCMP_EQUAL ("Hello World !", uid.value.c_str ())
 }
 
 TEST (UID, Equals)

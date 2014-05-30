@@ -147,8 +147,8 @@ TEST_GROUP (OnOffServer)
 
    };
 
-   TestOnOffServer  server;
-   Protocol::Packet packet;
+   TestOnOffServer   server;
+   Protocol::Packet  packet;
    Common::ByteArray expected;
 
    TEST_SETUP ()
