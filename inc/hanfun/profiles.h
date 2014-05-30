@@ -147,6 +147,33 @@ namespace HF
       };
 
       /*!
+       * This structure represents a interface information.
+       */
+      struct Interface
+      {
+         uint16_t role :1;        //!< Interface role : Server or Client.
+         uint16_t uid :15;        //!< Identifier of the interface. \see Interface::UID.
+      };
+
+      /*!
+       * This function returns a pointer to a entry on a static const array,
+       * containing the interfaces the profile with the \c profile UID.
+       *
+       * The number of interfaces is given by \c count. You can get the addicional
+       * interfaces by incrementing the returned pointer.
+       *
+       * \warning The returned pointer MUST NOT be used with free/delete.
+       *
+       * @param [in]  profile  the profile UID to retrieve the interfaces for.
+       * @param [out] count    the number of interfaces this profile has.
+       *
+       * @return  a pointer to structure containing the interface information for the
+       *          profile or \c nullptr if the profile is not known or does not use any
+       *          of the official interfaces.
+       */
+      Interface const * interfaces(uint16_t profile, uint16_t &count);
+
+      /*!
        * Top level class representing a HAN-FUN Profile.
        *
        * This class is used provide a common interface to all profiles.

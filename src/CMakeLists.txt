@@ -22,7 +22,7 @@ include_directories( "${PROJECT_INCLUDE_DIR}/hanfun" )
 # Build
 # ==============================================================================
 
-set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp)
+set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp)
 
 set(HF_PROTOCOL_SRCS protocol.cpp)
 set(HF_INTERFACES_SRCS interfaces.cpp
