@@ -116,8 +116,8 @@ size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf
  *
  */
 // =============================================================================
-Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteArray &payload,
-                                                 size_t offset)
+Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                         size_t offset)
 {
    switch (packet.message.itf.member)
    {
@@ -141,7 +141,7 @@ Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteA
          break;
    }
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -153,7 +153,7 @@ Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteA
 // =============================================================================
 void DeviceManagement::Client::registered (RegisterResponse &response)
 {
-   if (response.code == Result::OK)
+   if (response.code == Common::Result::OK)
    {
       this->_address = response.address;
    }
@@ -161,7 +161,7 @@ void DeviceManagement::Client::registered (RegisterResponse &response)
 
 void DeviceManagement::Client::deregistered (Protocol::Response &response)
 {
-   if (response.code == Result::OK)
+   if (response.code == Common::Result::OK)
    {
       this->_address = Protocol::BROADCAST_ADDR;
    }

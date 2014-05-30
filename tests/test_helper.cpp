@@ -40,7 +40,7 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
 {
    SimpleString result = "0x";
 
-   ByteArray    array (data.size ());
+   Common::ByteArray    array (data.size ());
 
    size_t size = data.pack (array);
 

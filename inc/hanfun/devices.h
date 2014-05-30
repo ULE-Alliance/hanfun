@@ -135,7 +135,7 @@ namespace HF
           *
           * @param [in] packet   reference to the incoming packet.
           */
-         virtual void respond (Result result, Protocol::Packet &packet)
+         virtual void respond (Common::Result result, Protocol::Packet &packet)
          {
             // FIXME Handle packets that require a response and no response has been sent.
             UNUSED (result);
@@ -232,7 +232,7 @@ namespace HF
                }
             }
 
-            void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
                AbstractDevice::receive (packet, payload, offset);
             }
@@ -334,7 +334,7 @@ namespace HF
                _links.remove (link);
             }
 
-            void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
                if (packet.destination.device == Protocol::BROADCAST_ADDR)
                {
@@ -380,7 +380,7 @@ namespace HF
              * @param payload reference to the ByteArray containing the packet payload.
              * @param offset  offset from where the packet data starts.
              */
-            virtual void route_packet (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
                // FIXME Route the incoming packet.
                UNUSED (packet);

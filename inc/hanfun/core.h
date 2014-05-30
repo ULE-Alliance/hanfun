@@ -209,7 +209,7 @@ namespace HF
       // IUnit API
       // =============================================================================
 
-      HF::Result handle (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+      Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
       {
          return handle_proxy <0, ITF...>(packet, payload, offset);
       }
@@ -220,7 +220,7 @@ namespace HF
       private:
 
       template<uint8_t N, typename Head, typename... Tail>
-      HF::Result handle_proxy (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+      Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
       {
          static_assert (is_base_of <HF::Core::IService, Head>::value,
                         "Head must be of type HF::Core::IService");
@@ -238,12 +238,12 @@ namespace HF
       }
 
       template<uint8_t N>
-      HF::Result handle_proxy (HF::Protocol::Packet &packet, HF::ByteArray &payload, size_t offset)
+      HF::Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
       {
          UNUSED (packet);
          UNUSED (payload);
          UNUSED (offset);
-         return Result::FAIL_SUPPORT;
+         return Common::Result::FAIL_SUPPORT;
       }
    };
 

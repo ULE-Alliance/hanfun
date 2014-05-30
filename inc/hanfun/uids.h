@@ -23,8 +23,6 @@ namespace HF
    // UID implementation
    // =============================================================================
 
-   using namespace HF::Common;
-
    /*!
     * This is the top-level namespace for HAN-FUN UIDs.
     */

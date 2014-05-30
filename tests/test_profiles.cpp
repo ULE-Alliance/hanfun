@@ -258,7 +258,7 @@ TEST (Profiles, Detector)
 
 TEST (Profiles, Profile2_Handle)
 {
-   ByteArray data;
+   Common::ByteArray data;
    Protocol::Packet packet;
 
    TestProfile profile;
@@ -278,8 +278,8 @@ TEST (Profiles, Profile2_Handle)
 
    mock ("Interface").expectOneCall ("handle_command").onObject (profile.first ());
 
-   Result result = profile.handle (packet, data, 0);
-   CHECK_EQUAL (Result::OK, result);
+   Common::Result result = profile.handle (packet, data, 0);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("Interface").checkExpectations ();
 
@@ -291,7 +291,7 @@ TEST (Profiles, Profile2_Handle)
    mock ("Interface").expectOneCall ("handle_command").onObject (profile.second ());
 
    result = profile.handle (packet, data, 0);
-   CHECK_EQUAL (Result::OK, result);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("Interface").checkExpectations ();
 }

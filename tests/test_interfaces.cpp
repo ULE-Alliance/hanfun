@@ -20,6 +20,7 @@
 
 using namespace HF;
 using namespace HF::Testing;
+using namespace HF::Common;
 
 // =============================================================================
 // AbstractInterface

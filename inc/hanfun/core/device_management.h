@@ -169,7 +169,7 @@ namespace HF
          /*!
           * Register command message.
           */
-         struct RegisterMessage:public Serializable
+         struct RegisterMessage:public Common::Serializable
          {
             uint16_t      emc;   //! Device EMC if applicable, 0 otherwise.
             vector <Unit> units; //! Device units listing.
@@ -243,7 +243,7 @@ namespace HF
          /*!
           * De-register command message.
           */
-         struct DeregisterMessage:public Serializable
+         struct DeregisterMessage:public Common::Serializable
          {
             uint16_t address; //!< Address of the device to de-register.
 
@@ -289,7 +289,7 @@ namespace HF
          /*!
           * Get Entries Command Message.
           */
-         struct GetEntriesMessage:public Serializable
+         struct GetEntriesMessage:public Common::Serializable
          {
             uint16_t offset; //! Start index for the first entry to be provided.
             uint8_t  count;  //! Number of entries to be sent in the response.
@@ -429,7 +429,7 @@ namespace HF
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          /*!
@@ -464,7 +464,7 @@ namespace HF
              *
              * @return     if the device entry was saved.
              */
-            virtual Result save (Device *device) = 0;
+            virtual Common::Result save (Device *device) = 0;
 
             /*!
              * Remove the given \c device entry from persistent storage.
@@ -473,7 +473,7 @@ namespace HF
              *
              * @return     if the device entry was removed.
              */
-            virtual Result destroy (Device *device) = 0;
+            virtual Common::Result destroy (Device *device) = 0;
 
             /*!
              * Return the number of Device entries available.
@@ -543,14 +543,14 @@ namespace HF
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Result register_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            virtual Common::Result register_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             /*!
              * This method is called when a deregistration message is received.
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Result deregister_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            virtual Common::Result deregister_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             //! @}
             // ======================================================================
@@ -582,7 +582,7 @@ namespace HF
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          // =========================================================================
@@ -608,9 +608,9 @@ namespace HF
 
             virtual Device *entry (HF::UID::UID const *uid);
 
-            virtual Result save (Device *device);
+            virtual Common::Result save (Device *device);
 
-            virtual Result destroy (Device *device);
+            virtual Common::Result destroy (Device *device);
 
             uint16_t entries_count () const
             {

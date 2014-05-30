@@ -45,7 +45,7 @@ namespace HF
             links.remove (link);
          }
 
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -55,7 +55,7 @@ namespace HF
 
       struct Endpoint2:public Endpoint
       {
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);

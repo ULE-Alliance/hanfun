@@ -18,6 +18,7 @@
 #include "test_helper.h"
 
 using namespace HF;
+using namespace HF::Common;
 using namespace HF::Interfaces;
 
 // =============================================================================

@@ -38,7 +38,7 @@ namespace HF
          virtual IDevice &device () const = 0;
 
          //! \see Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
       };
 
       /*!
@@ -100,7 +100,7 @@ namespace HF
             return _id;
          }
 
-         Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             return Profile::handle (packet, payload, offset);
          }

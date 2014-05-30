@@ -84,9 +84,9 @@ void AbstractDevice::send (Protocol::Packet &packet)
  *
  */
 // =============================================================================
-void AbstractDevice::receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Result result = Result::FAIL_UNKNOWN;
+   Common::Result result = Common::Result::FAIL_UNKNOWN;
 
    if (!repeated (packet) && is_local (packet))
    {

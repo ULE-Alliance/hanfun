@@ -20,6 +20,7 @@
 
 using namespace std;
 using namespace HF;
+using namespace HF::Common;
 
 // =============================================================================
 // Byte Array

@@ -41,7 +41,7 @@ size_t DeviceManagement::Interface::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::Interface::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::Interface::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -59,7 +59,7 @@ size_t DeviceManagement::Interface::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t DeviceManagement::Interface::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::Interface::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
    uint16_t itf;
@@ -107,7 +107,7 @@ size_t DeviceManagement::Unit::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::Unit::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -138,7 +138,7 @@ size_t DeviceManagement::Unit::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t DeviceManagement::Unit::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t  start = offset;
 
@@ -197,7 +197,7 @@ size_t DeviceManagement::Device::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::Device::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::Device::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -220,7 +220,7 @@ size_t DeviceManagement::Device::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t DeviceManagement::Device::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::Device::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -288,7 +288,7 @@ size_t DeviceManagement::RegisterMessage::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t  start = offset;
 
@@ -334,7 +334,7 @@ size_t DeviceManagement::RegisterMessage::pack (ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterMessage::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::RegisterMessage::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t  start = offset;
 
@@ -410,7 +410,7 @@ size_t DeviceManagement::RegisterResponse::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterResponse::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::RegisterResponse::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -440,7 +440,7 @@ size_t DeviceManagement::RegisterResponse::pack (ByteArray &array, size_t offset
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterResponse::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::RegisterResponse::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -482,7 +482,7 @@ size_t DeviceManagement::DeregisterMessage::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterMessage::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::DeregisterMessage::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -498,7 +498,7 @@ size_t DeviceManagement::DeregisterMessage::pack (ByteArray &array, size_t offse
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterMessage::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::DeregisterMessage::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -531,7 +531,7 @@ size_t DeviceManagement::StartSessionResponse::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::StartSessionResponse::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::StartSessionResponse::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -548,7 +548,7 @@ size_t DeviceManagement::StartSessionResponse::pack (ByteArray &array, size_t of
  *
  */
 // =============================================================================
-size_t DeviceManagement::StartSessionResponse::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::StartSessionResponse::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -578,7 +578,7 @@ size_t DeviceManagement::GetEntriesMessage::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::GetEntriesMessage::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::GetEntriesMessage::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -595,7 +595,7 @@ size_t DeviceManagement::GetEntriesMessage::pack (ByteArray &array, size_t offse
  *
  */
 // =============================================================================
-size_t DeviceManagement::GetEntriesMessage::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::GetEntriesMessage::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -632,7 +632,7 @@ size_t DeviceManagement::GetEntriesResponse::size () const
  *
  */
 // =============================================================================
-size_t DeviceManagement::GetEntriesResponse::pack (ByteArray &array, size_t offset) const
+size_t DeviceManagement::GetEntriesResponse::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -654,7 +654,7 @@ size_t DeviceManagement::GetEntriesResponse::pack (ByteArray &array, size_t offs
  *
  */
 // =============================================================================
-size_t DeviceManagement::GetEntriesResponse::unpack (const ByteArray &array, size_t offset)
+size_t DeviceManagement::GetEntriesResponse::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 

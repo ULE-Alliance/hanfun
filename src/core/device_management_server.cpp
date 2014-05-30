@@ -52,19 +52,19 @@ size_t DeviceManagement::Server::payload_size (Protocol::Message::Interface &itf
  *
  */
 // =============================================================================
-Result DeviceManagement::Server::handle_command (Protocol::Packet &packet, ByteArray &payload,
-                                                 size_t offset)
+Common::Result DeviceManagement::Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                         size_t offset)
 {
-   Result result = AbstractInterface::check_message (packet.message, payload, offset);
+   Common::Result result = AbstractInterface::check_message (packet.message, payload, offset);
 
-   if (result != Result::OK)
+   if (result != Common::Result::OK)
    {
       return result;
    }
 
    if (packet.link == nullptr)
    {
-      return Result::FAIL_ARG;
+      return Common::Result::FAIL_ARG;
    }
 
    switch (packet.message.itf.member)
@@ -76,7 +76,7 @@ Result DeviceManagement::Server::handle_command (Protocol::Packet &packet, ByteA
          return deregister_device (packet, payload, offset);
 
       default:
-         return Result::FAIL_SUPPORT;
+         return Common::Result::FAIL_SUPPORT;
    }
 }
 
@@ -87,12 +87,12 @@ Result DeviceManagement::Server::handle_command (Protocol::Packet &packet, ByteA
  *
  */
 // =============================================================================
-Result DeviceManagement::Server::register_device (Protocol::Packet &packet, ByteArray &payload,
-                                                  size_t offset)
+Common::Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                          size_t offset)
 {
-   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
+   Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
-   if (result != Result::OK)
+   if (result != Common::Result::OK)
    {
       return result;
    }
@@ -121,7 +121,7 @@ Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Byte
 
    reg_res->code    = save (device);
 
-   address          = (reg_res->code == Result::OK ? device->address : Protocol::BROADCAST_ADDR);
+   address          = (reg_res->code == Common::Result::OK ? device->address : Protocol::BROADCAST_ADDR);
 
    reg_res->address = address;
 
@@ -141,7 +141,7 @@ Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Byte
 
    delete reg_res;
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -151,12 +151,12 @@ Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Byte
  *
  */
 // =============================================================================
-Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, ByteArray &payload,
-                                                    size_t offset)
+Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                            size_t offset)
 {
-   Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
+   Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
-   if (result != Result::OK)
+   if (result != Common::Result::OK)
    {
       return result;
    }
@@ -165,7 +165,7 @@ Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, By
 
    if (source == nullptr)
    {
-      return Result::FAIL_AUTH;
+      return Common::Result::FAIL_AUTH;
    }
 
    DeregisterMessage incomming;
@@ -176,12 +176,12 @@ Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, By
 
    if (destination == nullptr)
    {
-      return Result::FAIL_ARG;
+      return Common::Result::FAIL_ARG;
    }
 
    if (!authorized (DEREGISTER_CMD, source, destination))
    {
-      return Result::FAIL_AUTH;
+      return Common::Result::FAIL_AUTH;
    }
 
    result = destroy (destination);
@@ -203,7 +203,7 @@ Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, By
 
    sendMessage (res_addr, response);
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -271,11 +271,11 @@ DeviceManagement::Device *DeviceManagement::DefaultServer::entry (HF::UID::UID c
  *
  */
 // =============================================================================
-Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *device)
+Common::Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *device)
 {
    if (device == nullptr)
    {
-      return Result::FAIL_UNKNOWN;
+      return Common::Result::FAIL_UNKNOWN;
    }
 
    // Add new entry into the database.
@@ -286,7 +286,7 @@ Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *device)
       _uid2device[device->uid]      = device;
    }
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -296,24 +296,24 @@ Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *device)
  *
  */
 // =============================================================================
-Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Device *device)
+Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Device *device)
 {
    if (device == nullptr)
    {
-      return Result::FAIL_UNKNOWN;
+      return Common::Result::FAIL_UNKNOWN;
    }
 
    if (_addr2device.count (device->address) == 0 ||
        _uid2device.count (device->uid) == 0)
    {
-      return Result::FAIL_ARG;
+      return Common::Result::FAIL_ARG;
    }
 
    vector <DeviceManagement::Device *>::iterator it = find (_entries.begin (), _entries.end (), device);
 
    if (it == _entries.end ())
    {
-      return Result::FAIL_ARG;
+      return Common::Result::FAIL_ARG;
    }
 
    DeviceManagement::Device *entry = *it;
@@ -324,7 +324,7 @@ Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Device *devic
 
    delete entry;
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================

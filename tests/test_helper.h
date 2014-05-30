@@ -42,11 +42,11 @@ using namespace HF::Protocol;
 // Helper Test Functions
 // =============================================================================
 
-#define STRING_FROM(_T)                                            \
-   SimpleString StringFrom (const _T &data)                        \
-   {                                                               \
-      SerializableHelper <_T &> wrapper (const_cast <_T &>(data)); \
-      return StringFrom (wrapper);                                 \
+#define STRING_FROM(_T)                                                     \
+   SimpleString StringFrom (const _T &data)                                 \
+   {                                                                         \
+      Common::SerializableHelper <_T &> wrapper (const_cast <_T &>(data)); \
+      return StringFrom (wrapper);                                          \
    }
 
 SimpleString StringFrom (const HF::Common::ByteArray &array);
@@ -97,7 +97,7 @@ namespace HF
             return fake_size;
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             array.extend (fake_size);
 
@@ -108,7 +108,7 @@ namespace HF
             return fake_size;
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             UNUSED (array);
             UNUSED (offset);
@@ -247,7 +247,7 @@ namespace HF
 
          protected:
 
-         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -255,7 +255,7 @@ namespace HF
 
             mock ("Interface").actualCall ("handle_command").onObject (this);
 
-            return Result::OK;
+            return Common::Result::OK;
          }
 
          //! \see AbstractInterface::attributes
@@ -341,7 +341,7 @@ namespace HF
             packets.push_back (temp);
          }
 
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -376,7 +376,7 @@ namespace HF
 
          void send (Common::ByteArray &array)
          {
-            this->data = new ByteArray (array);
+            this->data = new Common::ByteArray (array);
             mock ("Link").actualCall ("send");
          }
 
