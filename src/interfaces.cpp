@@ -234,7 +234,7 @@ Common::Result AbstractInterface::check_message (Message &message, Common::ByteA
    UNUSED (payload);
    UNUSED (offset);
 
-   if (!check_uid (message.itf.uid))
+   if (!check_uid (message.itf.id))
    {
       return Common::Result::FAIL_ID;
    }

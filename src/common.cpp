@@ -16,6 +16,7 @@
 #include <string.h>
 
 #include "hanfun/common.h"
+#include "hanfun/interface.h"
 
 using namespace HF;
 using namespace HF::Common;
@@ -149,4 +150,58 @@ size_t ByteArray::read (size_t offset, uint32_t &data) const
    data |= ((uint32_t) at (offset + 3));
 
    return sizeof(uint32_t);
+}
+
+// =============================================================================
+// Interface
+// =============================================================================
+
+// =============================================================================
+// Interface::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Common::Interface::size () const
+{
+   return sizeof(uint16_t);  // Interface UID.
+}
+
+// =============================================================================
+// Interface::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Common::Interface::pack (ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::MAX_UID);
+
+   offset += array.write (offset, uid);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Interface::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Common::Interface::unpack (const ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   uint16_t uid = 0;
+   offset    += array.read (offset, uid);
+
+   this->role = (uid & ~HF::Interface::MAX_UID) >> 15;
+   this->id   = uid & HF::Interface::MAX_UID;
+
+   return offset - start;
 }

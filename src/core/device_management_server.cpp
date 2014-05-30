@@ -130,7 +130,7 @@ Common::Result DeviceManagement::Server::register_device (Protocol::Packet &pack
    Protocol::Message response (packet.message, reg_res->size ());
 
    response.itf.role   = SERVER_ROLE;
-   response.itf.uid    = HF::Interface::DEVICE_MANAGEMENT;
+   response.itf.id     = DeviceManagement::Server::uid ();
    response.itf.member = REGISTER_CMD;
 
    reg_res->pack (response.payload);
@@ -194,7 +194,7 @@ Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &pa
    Protocol::Message  response (packet.message, res.size ());
 
    response.itf.role   = SERVER_ROLE;
-   response.itf.uid    = HF::Interface::DEVICE_MANAGEMENT;
+   response.itf.id     = DeviceManagement::Server::uid ();
    response.itf.member = DEREGISTER_CMD;
 
    res.pack (response.payload);

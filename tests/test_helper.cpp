@@ -24,6 +24,8 @@
 // Helper Functions
 // =============================================================================
 
+STRING_FROM (Common::Interface)
+
 SimpleString StringFrom (const HF::Common::ByteArray &array)
 {
    SimpleString result = "";

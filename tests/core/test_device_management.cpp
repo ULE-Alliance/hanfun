@@ -28,7 +28,6 @@ using namespace HF::Core;
 // Helper functions.
 // =============================================================================
 
-STRING_FROM (DeviceManagement::Interface)
 
 STRING_FROM (DeviceManagement::Unit)
 
@@ -45,7 +44,7 @@ TEST_GROUP (DeviceManagement)
 
 TEST (DeviceManagement, InterfaceServer)
 {
-   DeviceManagement::Interface itf;
+   Common::Interface itf;
 
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
@@ -56,8 +55,8 @@ TEST (DeviceManagement, InterfaceServer)
                       );
    ByteArray array (size + 6);
 
-   itf.role = Interface::SERVER_ROLE;
-   itf.uid  = 0x7AAA;
+   itf.role = HF::Interface::SERVER_ROLE;
+   itf.id   = 0x7AAA;
 
    size_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
@@ -69,13 +68,13 @@ TEST (DeviceManagement, InterfaceServer)
    size_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, itf.role);
-   LONGS_EQUAL (0x7AAA, itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf.role);
+   LONGS_EQUAL (0x7AAA, itf.id);
 }
 
 TEST (DeviceManagement, InterfaceClient)
 {
-   DeviceManagement::Interface itf;
+   Common::Interface itf;
 
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
@@ -86,8 +85,8 @@ TEST (DeviceManagement, InterfaceClient)
                       );
    ByteArray array (size + 6);
 
-   itf.role = Interface::CLIENT_ROLE;
-   itf.uid  = 0x7555;
+   itf.role = HF::Interface::CLIENT_ROLE;
+   itf.id   = 0x7555;
 
    size_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
@@ -99,8 +98,8 @@ TEST (DeviceManagement, InterfaceClient)
    size_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, itf.role);
-   LONGS_EQUAL (0x7555, itf.uid);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf.role);
+   LONGS_EQUAL (0x7555, itf.id);
 }
 
 // =============================================================================
@@ -140,9 +139,9 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    DeviceManagement::Unit wunit (0x42, 0x5AA5);
    DeviceManagement::Unit runit;
 
-   DeviceManagement::Interface itf1 (HF::Interface::SERVER_ROLE, 0x5432);
-   DeviceManagement::Interface itf2 (HF::Interface::CLIENT_ROLE, 0x1234);
-   DeviceManagement::Interface itf3 (HF::Interface::SERVER_ROLE, 0x5678);
+   Common::Interface itf1 (0x5432, HF::Interface::SERVER_ROLE);
+   Common::Interface itf2 (0x1234, HF::Interface::CLIENT_ROLE);
+   Common::Interface itf3 (0x5678, HF::Interface::SERVER_ROLE);
 
    wunit.opt_ift.push_back (itf1);
    wunit.opt_ift.push_back (itf2);
@@ -644,7 +643,6 @@ TEST (DeviceManagement, GetEntriesResponse)
 
 TEST_GROUP (DeviceManagementClient)
 {
-
    struct TestDeviceManagementClient:public DeviceManagement::Client
    {
       TestDeviceManagementClient(HF::Core::Unit0 &unit):
@@ -694,8 +692,8 @@ TEST_GROUP (DeviceManagementClient)
       packet                  = Protocol::Packet ();
 
       packet.message.type     = Protocol::Message::COMMAND_RES;
-      packet.message.itf.role = Interface::SERVER_ROLE;
-      packet.message.itf.uid  = Interface::DEVICE_MANAGEMENT;
+      packet.message.itf.role = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id   = HF::Interface::DEVICE_MANAGEMENT;
    }
 
    TEST_TEARDOWN ()
@@ -731,8 +729,8 @@ TEST (DeviceManagementClient, RegisterMessage)
    LONGS_EQUAL (0, packet->destination.unit);
    LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
-   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.id);
    LONGS_EQUAL (DeviceManagement::REGISTER_CMD, packet->message.itf.member);
 
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
@@ -856,8 +854,8 @@ TEST (DeviceManagementClient, DeregisterMessage)
    LONGS_EQUAL (0, packet->destination.unit);
    LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
-   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.id);
    LONGS_EQUAL (DeviceManagement::DEREGISTER_CMD, packet->message.itf.member);
 
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
@@ -962,8 +960,8 @@ TEST_GROUP (DeviceManagementServer)
       packet.source.device      = Protocol::BROADCAST_ADDR;
       packet.source.unit        = Protocol::BROADCAST_UNIT;
 
-      packet.message.itf.role   = Interface::SERVER_ROLE;
-      packet.message.itf.uid    = dev_mgt->uid ();
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id     = dev_mgt->uid ();
 
       UID::UID *uid = new UID::URI ("hf://device@example.com");
 

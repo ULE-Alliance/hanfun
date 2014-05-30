@@ -34,10 +34,10 @@ TEST_GROUP (Alert)
    TestAlert interface;
 };
 
-//! \test Alert::uid should return \c Interface::ALERT.
+//! \test Alert::uid should return \c HF::Interface::ALERT.
 TEST (Alert, UID)
 {
-   CHECK_EQUAL (Interface::ALERT, interface.uid ());
+   CHECK_EQUAL (HF::Interface::ALERT, interface.uid ());
 }
 
 // =============================================================================
@@ -278,8 +278,8 @@ TEST (AlertServer, Status2)
 
    mock ("Interface").checkExpectations ();
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, server->sendMsg.itf.role);
-   LONGS_EQUAL (server->uid (), server->sendMsg.itf.uid);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
+   LONGS_EQUAL (server->uid (), server->sendMsg.itf.id);
    LONGS_EQUAL (Alert::STATUS_CMD, server->sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, server->sendMsg.type);
 
@@ -359,8 +359,8 @@ TEST_GROUP (AlertClient)
                             0xFF, 0xA5, 0x5A, 0xBB,  // State.
                             0x00, 0x00, 0x00};
 
-      packet.message.itf.role   = Interface::CLIENT_ROLE;
-      packet.message.itf.uid    = client->uid ();
+      packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
+      packet.message.itf.id     = client->uid ();
       packet.message.itf.member = Alert::STATUS_CMD;
 
       packet.message.length     = expected.size ();
@@ -390,7 +390,7 @@ TEST (AlertClient, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (AlertClient, Handle_Invalid_Role)
 {
-   packet.message.itf.role = Interface::SERVER_ROLE;
+   packet.message.itf.role = HF::Interface::SERVER_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (packet, expected, 3));
 }
@@ -398,7 +398,7 @@ TEST (AlertClient, Handle_Invalid_Role)
 //! \test Should not handle message from invalid interface UID.
 TEST (AlertClient, Handle_Invalid_UID)
 {
-   packet.message.itf.uid = client->uid () + 1;
+   packet.message.itf.id = client->uid () + 1;
 
    CHECK_EQUAL (Result::FAIL_ID, client->handle (packet, expected, 3));
 }

@@ -54,7 +54,7 @@ void DeviceManagement::Client::register_device ()
    Protocol::Message message (payload->size ());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = uid ();
+   message.itf.id     = DeviceManagement::Client::uid ();
    message.itf.member = REGISTER_CMD;
 
    payload->pack (message.payload);
@@ -79,7 +79,7 @@ void DeviceManagement::Client::deregister (uint16_t address)
    Protocol::Message message (payload.size ());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = uid ();
+   message.itf.id     = DeviceManagement::Client::uid ();
    message.itf.member = DEREGISTER_CMD;
 
    payload.pack (message.payload);

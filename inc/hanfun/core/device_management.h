@@ -63,36 +63,14 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Optional interface entry.
-          */
-         struct Interface
-         {
-            uint16_t role : 1;  //!< Interface role. \see Interface::Role.
-            uint16_t uid  : 15; //!< Interface UID. \see Interface::UID.
-
-            Interface(uint16_t role = 0, uint16_t uid = 0):
-               role (role), uid (uid)
-            {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const;
-
-            //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         /*!
           * Unit Entry
           */
          struct Unit
          {
-            uint8_t            id;      //!< Unit Id.
-            uint16_t           profile; //!< Unit UID. \see IProfile::UID.
+            uint8_t                    id;      //!< Unit Id.
+            uint16_t                   profile; //!< Unit UID. \see IProfile::UID.
 
-            vector <Interface> opt_ift; //!< Optional interfaces.
+            vector <Common::Interface> opt_ift; //!< Optional interfaces.
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
@@ -646,18 +624,6 @@ namespace HF
 // =============================================================================
 // Helper Functions
 // =============================================================================
-
-inline bool operator ==(const HF::Core::DeviceManagement::Interface &lhs,
-                        const HF::Core::DeviceManagement::Interface &rhs)
-{
-   return (lhs.role == rhs.role) && (lhs.uid == lhs.uid);
-}
-
-inline bool operator !=(const HF::Core::DeviceManagement::Interface &lhs,
-                        const HF::Core::DeviceManagement::Interface &rhs)
-{
-   return !(lhs == rhs);
-}
 
 inline bool operator ==(const HF::Core::DeviceManagement::Unit &lhs,
                         const HF::Core::DeviceManagement::Unit &rhs)

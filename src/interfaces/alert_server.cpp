@@ -237,7 +237,7 @@ void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
    Protocol::Message message (alert_msg.size ());
 
    message.itf.role   = CLIENT_ROLE;
-   message.itf.uid    = HF::Interface::ALERT;
+   message.itf.id     = Alert::Server::uid ();
    message.itf.member = STATUS_CMD;
 
    alert_msg.pack (message.payload);

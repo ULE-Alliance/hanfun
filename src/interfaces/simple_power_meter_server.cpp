@@ -164,7 +164,7 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
       Protocol::Message message(report->size());
 
       message.itf.role   = CLIENT_ROLE;
-      message.itf.uid    = SimplePowerMeter::Server::uid ();
+      message.itf.id     = SimplePowerMeter::Server::uid ();
       message.itf.member = REPORT_CMD;
 
       report->pack(message.payload);

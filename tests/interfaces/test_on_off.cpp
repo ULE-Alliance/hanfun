@@ -74,7 +74,7 @@ TEST (OnOffClient, On)
    mock ("Interface").checkExpectations ();
 
    LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (OnOff::ON_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
@@ -89,7 +89,7 @@ TEST (OnOffClient, Off)
    mock ("Interface").checkExpectations ();
 
    LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (OnOff::OFF_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
@@ -104,7 +104,7 @@ TEST (OnOffClient, Toggle)
    mock ("Interface").checkExpectations ();
 
    LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (OnOff::TOGGLE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
@@ -154,7 +154,7 @@ TEST_GROUP (OnOffServer)
    TEST_SETUP ()
    {
       packet.message.itf.role   = Interface::SERVER_ROLE;
-      packet.message.itf.uid    = server.uid ();
+      packet.message.itf.id     = server.uid ();
       packet.message.itf.member = 0xFF;
    }
 
@@ -244,7 +244,7 @@ TEST (OnOffServer, Handle_Invalid_Role)
 //! \test Should not handle message from invalid interface UID.
 TEST (OnOffServer, Handle_Invalid_UID)
 {
-   packet.message.itf.uid = server.uid () + 1;
+   packet.message.itf.id = server.uid () + 1;
 
    CHECK_EQUAL (Common::Result::FAIL_ID, server.handle (packet, expected, 3));
 }

@@ -13,65 +13,11 @@
  */
 // =============================================================================
 
+
 #include "hanfun/core/device_management.h"
 
 using namespace HF;
 using namespace HF::Core;
-
-// =============================================================================
-// Optional Interface.
-// =============================================================================
-
-// =============================================================================
-// DeviceManagement::Interface::size
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::Interface::size () const
-{
-   return sizeof(uint16_t);
-}
-
-// =============================================================================
-// DeviceManagement::Interface::pack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::Interface::pack (Common::ByteArray &array, size_t offset) const
-{
-   size_t start = offset;
-
-   uint16_t itf = ((this->role & 0x01) << 15) | (this->uid & HF::Interface::MAX_UID);
-
-   offset += array.write (offset, itf);
-
-   return offset - start;
-}
-
-// =============================================================================
-// DeviceManagement::Interface::unpack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::Interface::unpack (const Common::ByteArray &array, size_t offset)
-{
-   size_t start = offset;
-   uint16_t itf;
-
-   offset    += array.read (offset, itf);
-
-   this->role = (itf & ~HF::Interface::MAX_UID) >> 15;
-   this->uid  = itf & HF::Interface::MAX_UID;
-
-   return offset - start;
-
-}
 
 // =============================================================================
 // Unit Entry
@@ -92,7 +38,7 @@ size_t DeviceManagement::Unit::size () const
 
    if (!opt_ift.empty ())
    {
-      Interface temp;
+      Common::Interface temp;
       result += sizeof(uint8_t); // Number of optional units.
       result += (temp.size () * opt_ift.size ());
    }
@@ -122,7 +68,7 @@ size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) co
    {
       offset += array.write (offset, (uint8_t) opt_ift.size ());
 
-      for (vector <Interface>::const_iterator itf = opt_ift.begin (); itf != opt_ift.end (); ++itf)
+      for (vector <Common::Interface>::const_iterator itf = opt_ift.begin (); itf != opt_ift.end (); ++itf)
       {
          offset += itf->pack (array, offset);
       }
@@ -157,7 +103,7 @@ size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t of
 
       for (uint8_t i = 0; i < count; i++)
       {
-         Interface itf;
+         Common::Interface itf;
          offset += itf.unpack (array, offset);
          this->opt_ift.push_back (itf);
       }

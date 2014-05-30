@@ -442,8 +442,45 @@ namespace HF
          FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
       } Result;
 
+      /*!
+       * Interface UID.
+       */
+      struct Interface
+      {
+         uint16_t role : 1;         //!< Interface role : Server or Client.
+         uint16_t id   : 15;        //!< Identifier of the interface. \see Interface::UID.
+
+         Interface(uint16_t id = 0, uint16_t role = 0):
+            role (role), id (id) {}
+
+         //! \see HF::Serializable::size.
+         size_t size () const;
+
+         //! \see HF::Serializable::pack.
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+
+         //! \see HF::Serializable::unpack.
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+      };
+
    }  // namespace Common
 
 }  // namespace HF
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+inline bool operator ==(const HF::Common::Interface &lhs,
+                        const HF::Common::Interface &rhs)
+{
+   return (lhs.role == rhs.role) && (lhs.id == lhs.id);
+}
+
+inline bool operator !=(const HF::Common::Interface &lhs,
+                        const HF::Common::Interface &rhs)
+{
+   return !(lhs == rhs);
+}
 
 #endif /* HF_COMMON_H */

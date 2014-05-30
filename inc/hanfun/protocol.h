@@ -82,15 +82,12 @@ namespace HF
          /*!
           * Interface Address.
           */
-         struct Interface
+         struct Interface:public Common::Interface
          {
-            uint16_t role : 1;         //!< Interface role : Server or Client.
-            uint16_t uid  : 15;        //!< Identifier of the interface. \see Interface::UID.
+            uint8_t member;            //!< Interface destination member.
 
-            uint8_t  member;           //!< Interface destination member.
-
-            Interface(uint16_t role = 0, uint16_t uid = 0, uint8_t member = 0):
-               role (role), uid (uid), member (member) {}
+            Interface(uint16_t uid = 0, uint16_t role = 0, uint8_t member = 0):
+               Common::Interface(uid, role), member (member) {}
 
             //! \see HF::Serializable::size.
             size_t size () const;

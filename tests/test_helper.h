@@ -53,6 +53,8 @@ SimpleString StringFrom (const HF::Common::ByteArray &array);
 
 SimpleString StringFrom (const HF::Common::Serializable &data);
 
+SimpleString StringFrom (const HF::Common::Interface &itf);
+
 template<typename _type>
 void check_index (_type expected, _type actual, uint32_t index, const char *header,
                   const char *fileName,

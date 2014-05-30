@@ -38,7 +38,7 @@ TEST_GROUP (SimplePowerMeter)
 //! \test SimplePowerMeter::uid should return \c Interface::SIMPLE_POWER_METER.
 TEST (SimplePowerMeter, UID)
 {
-   CHECK_EQUAL (Interface::SIMPLE_POWER_METER, interface.uid ());
+   CHECK_EQUAL (HF::Interface::SIMPLE_POWER_METER, interface.uid ());
 }
 
 // =============================================================================
@@ -720,8 +720,8 @@ TEST (SimplePowerMeterServer, periodic)
 
    mock ("Interface").checkExpectations ();
 
-   CHECK_EQUAL (Interface::CLIENT_ROLE, server->sendMsg.itf.role);
-   CHECK_EQUAL (server->uid (), server->sendMsg.itf.uid);
+   CHECK_EQUAL (HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
+   CHECK_EQUAL (server->uid (), server->sendMsg.itf.id);
    CHECK_EQUAL (SimplePowerMeter::REPORT_CMD, server->sendMsg.itf.member);
 
    server->sendMsg.payload.clear ();
@@ -816,8 +816,8 @@ TEST_GROUP (SimplePowerMeterClient)
 
       expected                  = ByteArray (unpack_data, sizeof(unpack_data));
 
-      packet.message.itf.role   = Interface::CLIENT_ROLE;
-      packet.message.itf.uid    = client.uid ();
+      packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
+      packet.message.itf.id     = client.uid ();
       packet.message.itf.member = SimplePowerMeter::REPORT_CMD;
 
       packet.message.length     = expected.size ();
@@ -843,7 +843,7 @@ TEST (SimplePowerMeterClient, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (SimplePowerMeterClient, Handle_Invalid_Role)
 {
-   packet.message.itf.role = Interface::SERVER_ROLE;
+   packet.message.itf.role = HF::Interface::SERVER_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, client.handle (packet, expected, 3));
 }
@@ -851,7 +851,7 @@ TEST (SimplePowerMeterClient, Handle_Invalid_Role)
 //! \test Should not handle message from invalid interface UID.
 TEST (SimplePowerMeterClient, Handle_Invalid_UID)
 {
-   packet.message.itf.uid = client.uid () + 1;
+   packet.message.itf.id = client.uid () + 1;
 
    CHECK_EQUAL (Result::FAIL_ID, client.handle (packet, expected, 3));
 }

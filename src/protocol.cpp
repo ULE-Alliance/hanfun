@@ -92,8 +92,8 @@ size_t Address::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 size_t Message::Interface::size () const
 {
-   return sizeof(uint16_t) +  // Interface UID.
-          sizeof(uint8_t);    // Interface Member.
+   return Common::Interface::size() +  // Interface UID.
+          sizeof(uint8_t);             // Interface Member.
 }
 
 // =============================================================================
@@ -107,9 +107,7 @@ size_t Message::Interface::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
-   uint16_t uid = ((this->role & 0x01) << 15) | (this->uid & HF::Interface::MAX_UID);
-
-   offset += array.write (offset, uid);
+   offset += Common::Interface::pack (array, offset);
    offset += array.write (offset, this->member);
 
    return offset - start;
@@ -126,13 +124,8 @@ size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset
 {
    size_t start = offset;
 
-   uint16_t uid = 0;
-   offset    += array.read (offset, uid);
-
-   this->role = (uid & ~HF::Interface::MAX_UID) >> 15;
-   this->uid  = uid & HF::Interface::MAX_UID;
-
-   offset    += array.read (offset, this->member);
+   offset += Common::Interface::unpack (array, offset);
+   offset += array.read (offset, this->member);
 
    return offset - start;
 }

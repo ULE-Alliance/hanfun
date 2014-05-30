@@ -36,7 +36,7 @@ TEST_GROUP (LevelControl)
 
 TEST (LevelControl, UID)
 {
-   CHECK_EQUAL (Interface::LEVEL_CONTROL, interface.uid ());
+   CHECK_EQUAL (HF::Interface::LEVEL_CONTROL, interface.uid ());
 }
 
 // =============================================================================
@@ -131,8 +131,8 @@ TEST (LevelControlClient, Level)
 
    mock ("Interface").checkExpectations ();
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (LevelControl::SET_LEVEL_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 
@@ -173,8 +173,8 @@ TEST_GROUP (LevelControlServer)
                             0xAA,  // Level value.
                             0x00, 0x00, 0x00};
 
-      packet.message.itf.role   = Interface::SERVER_ROLE;
-      packet.message.itf.uid    = server.uid ();
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id     = server.uid ();
       packet.message.itf.member = LevelControl::SET_LEVEL_CMD;
 
       packet.message.length     = expected.size ();
@@ -209,7 +209,7 @@ TEST (LevelControlServer, Handle_Valid_Message)
 //! \test Should not handle message from invalid role.
 TEST (LevelControlServer, Handle_Invalid_Role)
 {
-   packet.message.itf.role = Interface::CLIENT_ROLE;
+   packet.message.itf.role = HF::Interface::CLIENT_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
 }
@@ -217,7 +217,7 @@ TEST (LevelControlServer, Handle_Invalid_Role)
 //! \test Should not handle message from invalid interface UID.
 TEST (LevelControlServer, Handle_Invalid_UID)
 {
-   packet.message.itf.uid = server.uid () + 1;
+   packet.message.itf.id = server.uid () + 1;
 
    CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
 }

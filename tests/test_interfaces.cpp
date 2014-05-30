@@ -35,9 +35,9 @@ TEST_GROUP (AbstractInterface)
 
    TEST_SETUP ()
    {
-      itf                     = new TestInterface (Interface::SERVER_ROLE, 0x5AA5);
+      itf                     = new TestInterface (HF::Interface::SERVER_ROLE, 0x5AA5);
 
-      packet.message.itf.uid  = itf->uid ();
+      packet.message.itf.id   = itf->uid ();
       packet.message.itf.role = itf->role ();
 
       mock ().ignoreOtherCalls ();
@@ -61,12 +61,12 @@ TEST (AbstractInterface, Handle_Request)
 
    CHECK_EQUAL (Result::OK, itf->handle (packet, payload, 0));
 
-   itf->_role = Interface::CLIENT_ROLE;
+   itf->_role = HF::Interface::CLIENT_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, itf->handle (packet, payload, 0));
 
-   packet.message.itf.role = Interface::SERVER_ROLE;
-   packet.message.itf.uid  = 0x7AAA;
+   packet.message.itf.role = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id   = 0x7AAA;
 
    CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
 }
@@ -81,12 +81,12 @@ TEST (AbstractInterface, Handle_RequestResp)
 
    CHECK_EQUAL (Result::OK, itf->handle (packet, payload, 0));
 
-   itf->_role = Interface::CLIENT_ROLE;
+   itf->_role = HF::Interface::CLIENT_ROLE;
 
    CHECK_EQUAL (Result::FAIL_SUPPORT, itf->handle (packet, payload, 0));
 
-   packet.message.itf.role = Interface::SERVER_ROLE;
-   packet.message.itf.uid  = 0x7AAA;
+   packet.message.itf.role = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id   = 0x7AAA;
 
    CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
 }
@@ -112,7 +112,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Valid)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (TestInterface::ATTR1, itf->sendMsg.itf.member);
 
@@ -144,7 +144,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
@@ -266,7 +266,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
@@ -297,7 +297,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
    LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
 
@@ -328,7 +328,7 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
    GetAttributePack::Response attr_resp;
@@ -367,7 +367,7 @@ TEST (AbstractInterface, Handle_GeAttributesPack_All)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
    GetAttributePack::Response attr_resp;
@@ -410,7 +410,7 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
    GetAttributePack::Response attr_resp;
@@ -453,7 +453,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.uid);
+   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
    LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
 
    LONGS_EQUAL (Message::GET_ATTR_PACK_RES, itf->sendMsg.type);

@@ -227,7 +227,7 @@ namespace HF
 
          Head &head = get <N>(interfaces);
 
-         if (head.uid () == packet.message.itf.uid)
+         if (head.uid () == packet.message.itf.id)
          {
             return head.handle (packet, payload, offset);
          }
