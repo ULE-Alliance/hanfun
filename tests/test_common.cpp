@@ -706,3 +706,28 @@ TEST (Attributes, Serialize_Unpack)
 
    CHECK_EQUAL (0x1234, attr);
 }
+
+// =============================================================================
+// Common::Interface
+// =============================================================================
+
+TEST_GROUP (Common_Interface)
+{};
+
+TEST (Common_Interface, Equals)
+{
+   Common::Interface itf1 (0x7F5A, HF::Interface::SERVER_ROLE);
+   Common::Interface itf2 (0x7F5A, HF::Interface::SERVER_ROLE);
+
+   CHECK_TRUE (itf1 == itf2);
+
+   itf2.role = HF::Interface::CLIENT_ROLE;
+
+   CHECK_FALSE (itf1 == itf2);
+
+   itf2    = itf1;
+
+   itf2.id = itf1.id - 1;
+
+   CHECK_FALSE (itf1 == itf2);
+}

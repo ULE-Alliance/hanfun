@@ -474,7 +474,7 @@ namespace HF
 inline bool operator ==(const HF::Common::Interface &lhs,
                         const HF::Common::Interface &rhs)
 {
-   return (lhs.role == rhs.role) && (lhs.id == lhs.id);
+   return (lhs.role == rhs.role) && (lhs.id == rhs.id);
 }
 
 inline bool operator !=(const HF::Common::Interface &lhs,
