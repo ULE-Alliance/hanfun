@@ -169,7 +169,7 @@ namespace HF
          /*!
           * Register command message.
           */
-         struct RegisterMessage:public Common::Serializable
+         struct RegisterMessage
          {
             uint16_t      emc;   //! Device EMC if applicable, 0 otherwise.
             vector <Unit> units; //! Device units listing.
@@ -243,7 +243,7 @@ namespace HF
          /*!
           * De-register command message.
           */
-         struct DeregisterMessage:public Common::Serializable
+         struct DeregisterMessage
          {
             uint16_t address; //!< Address of the device to de-register.
 
@@ -289,7 +289,7 @@ namespace HF
          /*!
           * Get Entries Command Message.
           */
-         struct GetEntriesMessage:public Common::Serializable
+         struct GetEntriesMessage
          {
             uint16_t offset; //! Start index for the first entry to be provided.
             uint8_t  count;  //! Number of entries to be sent in the response.
