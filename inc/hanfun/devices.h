@@ -16,9 +16,6 @@
 
 #include <cstring>
 
-#include <string>
-#include <vector>
-
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
@@ -169,6 +166,7 @@ namespace HF
 
             virtual HF::Core::DeviceManagement::Client *management () const = 0;
          };
+
          /*!
           * Template to create Unit0 for HAN-FUN devices.
           */
@@ -275,6 +273,7 @@ namespace HF
 
             virtual HF::Core::DeviceManagement::Server *management () const = 0;
          };
+
          /*!
           * Template to create Unit0 for HAN-FUN concentrator devices.
           */

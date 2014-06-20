@@ -15,6 +15,8 @@
 #ifndef HF_DEVICE_H
 #define HF_DEVICE_H
 
+#include <forward_list>
+
 #include "hanfun/common.h"
 #include "hanfun/transport.h"
 

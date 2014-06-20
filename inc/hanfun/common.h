@@ -22,10 +22,6 @@
 
 #include <string>
 #include <vector>
-#include <array>
-#include <forward_list>
-#include <deque>
-#include <type_traits>
 
 #include "hanfun/version.h"
 #include "hanfun/config.h"
