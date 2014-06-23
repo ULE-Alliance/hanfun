@@ -128,6 +128,8 @@ namespace HF
          {
             protected:
 
+            using Interfaces::Base <Interface::ALERT>::payload_size;
+
             size_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);

@@ -105,6 +105,8 @@ namespace HF
 
             Base() {}
 
+            using Interfaces::Base <Interface::LEVEL_CONTROL>::payload_size;
+
             size_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);

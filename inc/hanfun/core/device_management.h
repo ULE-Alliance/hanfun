@@ -415,6 +415,8 @@ namespace HF
 
             protected:
 
+            using ServiceRole::payload_size;
+
             //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
@@ -567,6 +569,8 @@ namespace HF
 
             //! @}
             // ======================================================================
+
+            using ServiceRole <Abstract, HF::Interface::SERVER_ROLE>::payload_size;
 
             //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;

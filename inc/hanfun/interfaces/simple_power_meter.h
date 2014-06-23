@@ -193,6 +193,8 @@ namespace HF
 
             Base() {}
 
+            using Interfaces::Base <Interface::SIMPLE_POWER_METER>::payload_size;
+
             size_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
