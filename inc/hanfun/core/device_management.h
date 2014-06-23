@@ -627,79 +627,75 @@ namespace HF
             virtual bool authorized (uint8_t member, Device *source, Device *destination);
          };
 
+         // =============================================================================
+         // Operators
+         // =============================================================================
+
+         inline bool operator ==(const Unit &lhs, const Unit &rhs)
+         {
+            if (lhs.id != rhs.id)
+            {
+               return false;
+            }
+
+            if (lhs.profile != rhs.profile)
+            {
+               return false;
+            }
+
+            if (lhs.opt_ift.size () != rhs.opt_ift.size ())
+            {
+               return false;
+            }
+
+            for (uint8_t i = 0; i < lhs.opt_ift.size (); i++)
+            {
+               if (lhs.opt_ift[i] != rhs.opt_ift[i])
+               {
+                  return false;
+               }
+            }
+
+            return true;
+         }
+
+         inline bool operator !=(const Unit &lhs, const Unit &rhs)
+         {
+            return !(lhs == rhs);
+         }
+
+         inline bool operator ==(const Device &lhs, const Device &rhs)
+         {
+            if (lhs.address != rhs.address)
+            {
+               return false;
+            }
+
+            if (lhs.units.size () != rhs.units.size ())
+            {
+               return false;
+            }
+
+            for (uint8_t i = 0; i < lhs.units.size (); i++)
+            {
+               if (lhs.units[i] != rhs.units[i])
+               {
+                  return false;
+               }
+            }
+
+            return true;
+         }
+
+         inline bool operator !=(const Device &lhs, const Device &rhs)
+         {
+            return !(lhs == rhs);
+         }
+
       } // namespace DeviceManagement
 
    } // namespace Core
 
 } // namespace HF
-
-// =============================================================================
-// Helper Functions
-// =============================================================================
-
-inline bool operator ==(const HF::Core::DeviceManagement::Unit &lhs,
-                        const HF::Core::DeviceManagement::Unit &rhs)
-{
-   if (lhs.id != rhs.id)
-   {
-      return false;
-   }
-
-   if (lhs.profile != rhs.profile)
-   {
-      return false;
-   }
-
-   if (lhs.opt_ift.size () != rhs.opt_ift.size ())
-   {
-      return false;
-   }
-
-   for (uint8_t i = 0; i < lhs.opt_ift.size (); i++)
-   {
-      if (lhs.opt_ift[i] != rhs.opt_ift[i])
-      {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-inline bool operator !=(const HF::Core::DeviceManagement::Unit &lhs,
-                        const HF::Core::DeviceManagement::Unit &rhs)
-{
-   return !(lhs == rhs);
-}
-
-inline bool operator ==(const HF::Core::DeviceManagement::Device &lhs,
-                        const HF::Core::DeviceManagement::Device &rhs)
-{
-   if (lhs.address != rhs.address)
-   {
-      return false;
-   }
-
-   if (lhs.units.size () != rhs.units.size ())
-   {
-      return false;
-   }
-
-   for (uint8_t i = 0; i < lhs.units.size (); i++)
-   {
-      if (lhs.units[i] != rhs.units[i])
-      {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-inline bool operator !=(const HF::Core::DeviceManagement::Device &lhs,
-                        const HF::Core::DeviceManagement::Device &rhs)
-{
-   return !(lhs == rhs);
-}
 
 #endif /* HF_DEVICE_MANGEMENT_H */

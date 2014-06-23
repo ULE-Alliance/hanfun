@@ -459,6 +459,25 @@ namespace HF
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
+      // =============================================================================
+      // Operators
+      // =============================================================================
+
+      inline bool operator ==(const Interface &lhs, const Interface &rhs)
+      {
+         return (lhs.role == rhs.role) && (lhs.id == rhs.id);
+      }
+
+      inline bool operator !=(const Interface &lhs, const Interface &rhs)
+      {
+         return !(lhs == rhs);
+      }
+
+      inline bool operator <(Interface const &lhs, Interface const &rhs)
+      {
+         return (lhs.role < rhs.role) || (lhs.role == rhs.role && lhs.id < rhs.id);
+      }
+
    }  // namespace Common
 
 }  // namespace HF
@@ -466,17 +485,5 @@ namespace HF
 // =============================================================================
 // Helper Functions
 // =============================================================================
-
-inline bool operator ==(const HF::Common::Interface &lhs,
-                        const HF::Common::Interface &rhs)
-{
-   return (lhs.role == rhs.role) && (lhs.id == rhs.id);
-}
-
-inline bool operator !=(const HF::Common::Interface &lhs,
-                        const HF::Common::Interface &rhs)
-{
-   return !(lhs == rhs);
-}
 
 #endif /* HF_COMMON_H */
