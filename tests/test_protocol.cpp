@@ -326,11 +326,11 @@ TEST (Packet, Size)
 
 TEST (Packet, Pack)
 {
-   packet->source.mod         = Protocol::Address::DEVICE_ADDR;
+   packet->source.mod         = Protocol::Address::DEVICE;
    packet->source.device      = 0x7AAA;
    packet->source.unit        = 0x55;
 
-   packet->destination.mod    = Protocol::Address::GROUP_ADDR;
+   packet->destination.mod    = Protocol::Address::GROUP;
    packet->destination.device = 0x7555;
    packet->destination.unit   = 0xAA;
 
@@ -357,11 +357,11 @@ TEST (Packet, Unpack)
    size_t rsize = packet->unpack (expected, 3);
    LONGS_EQUAL (6 + 2 + 7, rsize);
 
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->source.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, packet->source.mod);
    LONGS_EQUAL (0x7AAA, packet->source.device);
    LONGS_EQUAL (0x55, packet->source.unit);
 
-   LONGS_EQUAL (Protocol::Address::GROUP_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::GROUP, packet->destination.mod);
    LONGS_EQUAL (0x7555, packet->destination.device);
    LONGS_EQUAL (0xAA, packet->destination.unit);
 

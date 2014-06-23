@@ -730,7 +730,7 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (0, packet->destination.device);
    LONGS_EQUAL (0, packet->destination.unit);
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, packet->destination.mod);
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.id);
@@ -855,7 +855,7 @@ TEST (DeviceManagementClient, DeregisterMessage)
 
    LONGS_EQUAL (0, packet->destination.device);
    LONGS_EQUAL (0, packet->destination.unit);
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, packet->destination.mod);
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.id);
@@ -1021,7 +1021,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    LONGS_EQUAL (1, response->destination.device);
    LONGS_EQUAL (0, response->destination.unit);
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, response->destination.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, response->destination.mod);
 
    // Should not add entry for same device.
    mock ("AbstractDevice").expectOneCall ("send");

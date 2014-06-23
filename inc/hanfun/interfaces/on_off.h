@@ -161,7 +161,7 @@ namespace HF
             {
                UNUSED (pack_id);
                /* *INDENT-OFF* */
-            return HF::Attributes::uids_t ({ OnOff::STATE_ATTR });
+               return HF::Attributes::uids_t ({ OnOff::STATE_ATTR });
                /* *INDENT-ON* */
             }
          };

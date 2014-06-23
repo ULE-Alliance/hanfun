@@ -143,11 +143,11 @@ namespace HF
          /*!
           * HAN-FUN Network Destination Address Types.
           */
-         enum DestinationType
+         typedef enum
          {
-            DEVICE_ADDR = 0,   //!< Destination address is for single device.
-            GROUP_ADDR  = 1,   //!< Destination address is for a group of devices.
-         };
+            DEVICE = 0,   //!< Destination address is for single device.
+            GROUP  = 1,   //!< Destination address is for a group of devices.
+         } Type;
 
          /*!
           * Create a new message address.
@@ -157,7 +157,7 @@ namespace HF
           * @param _mod    address modifier. Default \c DEVICE_ADDR.
           */
          Address(uint16_t _dev = BROADCAST_ADDR, uint8_t _unit = BROADCAST_UNIT,
-                 DestinationType _mod = DEVICE_ADDR)
+                 Type _mod = DEVICE)
             :mod (_mod), device (_dev), unit (_unit)
          {}
 
@@ -219,7 +219,7 @@ namespace HF
          Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
             destination (dst_addr), message (message)
          {
-            source.mod    = Address::DEVICE_ADDR;
+            source.mod    = Address::DEVICE;
             source.device = BROADCAST_ADDR;
             source.unit   = unit;
          }
