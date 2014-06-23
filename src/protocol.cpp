@@ -157,7 +157,18 @@ Message::Message(Message &parent, size_t size):
       case SET_ATTR_PACK_RESP_REQ:
          type = SET_ATTR_PACK_RES;
          break;
+      case ATOMIC_SET_ATTR_PACK_REQ:
+      case ATOMIC_SET_ATTR_PACK_RESP_REQ:
+         type = ATOMIC_SET_ATTR_PACK_RES;
+         break;
+      case COMMAND_RES:
+      case SET_ATTR_RES:
+      case GET_ATTR_RES:
+      case GET_ATTR_PACK_RES:
+      case SET_ATTR_PACK_RES:
+      case ATOMIC_SET_ATTR_PACK_RES:
       default:
+         type = parent.type;
          break;
    }
 }
