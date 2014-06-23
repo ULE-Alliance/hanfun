@@ -34,19 +34,6 @@ using namespace HF::Common;
 // Helper Functions
 // =============================================================================
 
-static inline void swap_bytes (uint16_t &value)
-{
-   value = ((value & BYTE_2_MASK) >> 8) | ((value & BYTE_1_MASK) << 8);
-}
-
-static inline void swap_bytes (uint32_t &value)
-{
-   value = ((value & BYTE_4_MASK) >> 24) |
-           ((value & BYTE_3_MASK) >> 8) |
-           ((value & BYTE_2_MASK) << 8) |
-           ((value & BYTE_1_MASK) << 24);
-}
-
 // =============================================================================
 // API Classes
 // =============================================================================
