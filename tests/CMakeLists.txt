@@ -66,4 +66,6 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 
-add_custom_command(TARGET test_hanfun POST_BUILD COMMAND test_hanfun)
+add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
+
+# add_test(hanfun_all test_hanfun)
