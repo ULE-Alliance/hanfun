@@ -391,13 +391,13 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 }
 
 // =============================================================================
-// DeviceManagement::RegisterResponce
+// DeviceManagement::RegisterResponse
 // =============================================================================
 
-TEST_GROUP (DeviceManagement_RegisterResponce)
+TEST_GROUP (DeviceManagement_RegisterResponse)
 {};
 
-TEST (DeviceManagement_RegisterResponce, No_EMC)
+TEST (DeviceManagement_RegisterResponse, No_EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
                                    Result::FAIL_AUTH,  // Response Code.
@@ -428,7 +428,7 @@ TEST (DeviceManagement_RegisterResponce, No_EMC)
    LONGS_EQUAL (0x4243, response.address);
 }
 
-TEST (DeviceManagement_RegisterResponce, EMC)
+TEST (DeviceManagement_RegisterResponse, EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
                                    Result::FAIL_AUTH,  // Responce Code.
@@ -743,12 +743,10 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (DeviceInformation::EMC, payload.emc);
 
-   LONGS_EQUAL (device->units ().size (), payload.units.size ());
+   LONGS_EQUAL (device->units ().size () - 1, payload.units.size ());
 
-   size_t size = device->units ().size ();
-
-   vector <uint8_t> expected (size);
-   vector <uint8_t> actual (size);
+   vector <uint8_t> expected;
+   vector <uint8_t> actual;
 
    /* *INDENT-OFF* */
    for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
@@ -756,6 +754,12 @@ TEST (DeviceManagementClient, RegisterMessage)
       actual.push_back (unit.id);
    });
    /* *INDENT-ON* */
+
+   // Unit 0 - Should not be present.
+   CHECK_TRUE (none_of (actual.begin (), actual.end (), [](uint8_t id) {
+                           return id == 0U;
+                        }
+                       ));
 
    expected.push_back (unit1->id ());
    expected.push_back (unit2->id ());

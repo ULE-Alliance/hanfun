@@ -41,15 +41,18 @@ void DeviceManagement::Client::register_device ()
 
    HF::IDevice &device        = unit ().device ();
 
-   for (IDevice::units_t::const_iterator dev_unit = device.units ().begin ();
-        dev_unit != device.units ().end (); ++dev_unit)
+   // TODO Add support for optional interfaces.
+   for_each (device.units ().begin (), device.units ().end (), [&payload](const Units::IUnit * dev_unit)
    {
-      Unit unit;
-      unit.id      = (*dev_unit)->id ();
-      unit.profile = (*dev_unit)->uid ();
+      if (dev_unit != nullptr && dev_unit->id () != 0)
+      {
+         Unit unit;
+         unit.id      = dev_unit->id ();
+         unit.profile = dev_unit->uid ();
 
-      payload->units.push_back (unit);
-   }
+         payload->units.push_back (unit);
+      }
+   });
 
    Protocol::Message message (payload->size ());
 
