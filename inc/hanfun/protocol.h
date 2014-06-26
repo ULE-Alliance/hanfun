@@ -260,6 +260,27 @@ namespace HF
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
+      // =============================================================================
+      // Operators
+      // =============================================================================
+
+      inline bool operator ==(Address const &lhs, Address const &rhs)
+      {
+         return (lhs.device == rhs.device) && (lhs.unit == rhs.unit) && (lhs.mod == rhs.mod);
+      }
+
+      inline bool operator !=(Address const &lhs, Address const &rhs)
+      {
+         return !(lhs == rhs);
+      }
+
+      inline bool operator <(Address const &lhs, Address const &rhs)
+      {
+         return (lhs.device < rhs.device) ||
+                (lhs.device == rhs.device &&
+                 (lhs.mod < rhs.mod || (lhs.mod == rhs.mod && lhs.unit < rhs.unit)));
+      }
+
    }  // namespace Protocol
 
 }  // namespace HF
