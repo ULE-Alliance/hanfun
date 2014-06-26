@@ -18,13 +18,11 @@
 
 #include "test_helper.h"
 
-#include "hanfun/common.h"
-
 // =============================================================================
 // Helper Functions
 // =============================================================================
 
-STRING_FROM (Common::Interface)
+STRING_FROM (HF::Common::Interface)
 
 SimpleString StringFrom (const HF::Common::ByteArray &array)
 {

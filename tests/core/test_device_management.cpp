@@ -649,6 +649,9 @@ TEST_GROUP (DeviceManagementClient)
          DeviceManagement::Client (unit)
       {}
 
+      virtual ~TestDeviceManagementClient()
+      {}
+
       using DeviceManagement::Client::_address;
 
       void registered (DeviceManagement::RegisterResponse &response)

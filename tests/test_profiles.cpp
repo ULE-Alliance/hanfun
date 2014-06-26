@@ -24,13 +24,19 @@ using namespace HF::Testing;
 // =============================================================================
 
 /* *INDENT-OFF* */
-#define HELPER_CLASS(_name) \
-   class _name:public InterfaceHelper<Profiles::_name>
+#define HELPER_CLASS(_name)                           \
+struct _name:public InterfaceHelper<Profiles::_name>  \
+{                                                      \
+   virtual ~_name() {}                                \
+}
 /* *INDENT-ON* */
 
 /* *INDENT-OFF* */
-#define HELPER_CLASS2(_name) \
-   class _name:public InterfaceHelper<Profiles::_name<>>
+#define HELPER_CLASS2(_name)                            \
+struct _name:public InterfaceHelper<Profiles::_name<>>   \
+{                                                        \
+   virtual ~_name() {}                                  \
+}
 /* *INDENT-ON* */
 
 // =============================================================================
@@ -41,39 +47,39 @@ namespace HF
 {
    namespace Testing
    {
-      HELPER_CLASS (SimpleOnOffSwitchable) {};
-      HELPER_CLASS (SimpleOnOffSwitch) {};
-      HELPER_CLASS (SimpleLevelControllable) {};
-      HELPER_CLASS (SimpleLevelControl) {};
-      HELPER_CLASS (AC_Outlet) {};
-      HELPER_CLASS (SimpleLight) {};
-      HELPER_CLASS (SimpleDoorLock) {};
+      HELPER_CLASS (SimpleOnOffSwitchable);
+      HELPER_CLASS (SimpleOnOffSwitch);
+      HELPER_CLASS (SimpleLevelControllable);
+      HELPER_CLASS (SimpleLevelControl);
+      HELPER_CLASS (AC_Outlet);
+      HELPER_CLASS (SimpleLight);
+      HELPER_CLASS (SimpleDoorLock);
 
-      HELPER_CLASS (DoorBell) {};
-      HELPER_CLASS (SimplePowerMeter) {};
+      HELPER_CLASS (DoorBell);
+      HELPER_CLASS (SimplePowerMeter);
 
-      HELPER_CLASS (SimpleDetector) {};
-      HELPER_CLASS (DoorOpenCloseDetector) {};
-      HELPER_CLASS (WindowOpenCloseDetector) {};
-      HELPER_CLASS (MotionDetector) {};
-      HELPER_CLASS (SmokeDetector) {};
-      HELPER_CLASS (GasDetector) {};
-      HELPER_CLASS (FloodDetector) {};
-      HELPER_CLASS (GlassBreakDetector) {};
-      HELPER_CLASS (VibrationDetector) {};
-      HELPER_CLASS (Siren) {};
+      HELPER_CLASS (SimpleDetector);
+      HELPER_CLASS (DoorOpenCloseDetector);
+      HELPER_CLASS (WindowOpenCloseDetector);
+      HELPER_CLASS (MotionDetector);
+      HELPER_CLASS (SmokeDetector);
+      HELPER_CLASS (GasDetector);
+      HELPER_CLASS (FloodDetector);
+      HELPER_CLASS (GlassBreakDetector);
+      HELPER_CLASS (VibrationDetector);
+      HELPER_CLASS (Siren);
 
-      HELPER_CLASS (SimplePendant) {};
+      HELPER_CLASS (SimplePendant);
 
-      HELPER_CLASS (UserInterface) {};
+      HELPER_CLASS (UserInterface);
 
-      HELPER_CLASS (GenericApplicationLogic) {};
+      HELPER_CLASS (GenericApplicationLogic);
 
-      HELPER_CLASS2 (SimpleLevelControllableSwitchable) {};
-      HELPER_CLASS2 (SimpleLevelControlSwitch) {};
-      HELPER_CLASS2 (AC_OutletWithPowerMetering) {};
-      HELPER_CLASS2 (DimmableLight) {};
-      HELPER_CLASS2 (DimmerSwitch) {};
+      HELPER_CLASS2 (SimpleLevelControllableSwitchable);
+      HELPER_CLASS2 (SimpleLevelControlSwitch);
+      HELPER_CLASS2 (AC_OutletWithPowerMetering);
+      HELPER_CLASS2 (DimmableLight);
+      HELPER_CLASS2 (DimmerSwitch);
 
    }  // namespace Testing
 
