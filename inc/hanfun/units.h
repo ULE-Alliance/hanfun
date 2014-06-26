@@ -60,7 +60,9 @@ namespace HF
 
          AbstractUnit(IDevice &device):
             _device (device)
-         {}
+         {
+            device.add (this);
+         }
 
          /*!
           * Create and send a new packet with the given message to the given address.
@@ -85,9 +87,7 @@ namespace HF
 
          Unit(uint8_t index, IDevice &device):
             AbstractUnit (device), _id (index)
-         {
-            device.add (this);
-         }
+         {}
 
          uint16_t uid () const
          {
