@@ -52,7 +52,8 @@ set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
-set(TESTS_CORE_SRCS      "core/test_device_management.cpp")
+set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
+                         "core/test_bind_management.cpp")
 
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
 

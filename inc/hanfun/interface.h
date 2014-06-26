@@ -42,6 +42,7 @@ namespace HF
       {
          /* Core Services */
          DEVICE_MANAGEMENT  = 0x0001,   //!< Device Management Interface UID.
+         BIND_MANAGEMENT    = 0x0002,   //!< Bind Management Interface UID.
          DEVICE_INFORMATION = 0x0005,   //!< Device Information Interface UID.
 
          /* Functional Interfaces. */

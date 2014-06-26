@@ -195,12 +195,12 @@ namespace HF
          return &get <0>(interfaces);
       }
 
-      DeviceMgt *management () const
+      DeviceMgt *device_management () const
       {
          return const_cast <DeviceMgt *>(&get <1>(interfaces));
       }
 
-      DeviceMgt *management ()
+      DeviceMgt *device_management ()
       {
          return &get <1>(interfaces);
       }

@@ -112,6 +112,38 @@ size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t of
    return offset - start;
 }
 
+bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role)
+{
+   // Search the official interfaces.
+   uint16_t count;
+   const Common::Interface *itf = Profiles::interfaces (this->profile, count);
+
+   Common::Interface temp (itf_uid, role);
+
+   if (itf != nullptr)
+   {
+      for (uint16_t i = 0; i < count; ++i, ++itf)
+      {
+         if (*itf == temp)
+         {
+            return true;
+         }
+      }
+   }
+   else  // Search the optional interfaces.
+   {
+      for (auto it = opt_ift.begin (); it != opt_ift.end (); ++it)
+      {
+         if (*it == temp)
+         {
+            return true;
+         }
+      }
+   }
+
+   return false;
+}
+
 // =============================================================================
 // Device Entry.
 // =============================================================================

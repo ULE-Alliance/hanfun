@@ -42,7 +42,10 @@ set(HF_INTERFACES_SRCS interfaces.cpp
 set(HF_CORE_SRCS       core.cpp
                        core/device_management.cpp
                        core/device_management_client.cpp
-                       core/device_management_server.cpp )
+                       core/device_management_server.cpp
+                       core/bind_management.cpp
+                       core/bind_management_client.cpp
+                       core/bind_management_server.cpp)
 
 set(HF_UNITS_SRCS units.cpp)
 

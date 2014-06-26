@@ -162,9 +162,9 @@ namespace HF
             IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
             {}
 
-            virtual HF::Core::DeviceManagement::Client *management ()       = 0;
+            virtual HF::Core::DeviceManagement::Client *device_management ()       = 0;
 
-            virtual HF::Core::DeviceManagement::Client *management () const = 0;
+            virtual HF::Core::DeviceManagement::Client *device_management () const = 0;
          };
 
          /*!
@@ -210,7 +210,7 @@ namespace HF
 
             uint16_t address () const
             {
-               return unit0.management ()->address ();
+               return unit0.device_management ()->address ();
             }
 
             // =============================================================================
@@ -269,9 +269,9 @@ namespace HF
             IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
             {}
 
-            virtual HF::Core::DeviceManagement::Server *management ()       = 0;
+            virtual HF::Core::DeviceManagement::Server *device_management ()       = 0;
 
-            virtual HF::Core::DeviceManagement::Server *management () const = 0;
+            virtual HF::Core::DeviceManagement::Server *device_management () const = 0;
          };
 
          /*!

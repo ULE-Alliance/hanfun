@@ -84,6 +84,21 @@ namespace HF
 
             //! \see HF::Serializable::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+
+            /*!
+             * This method checks if the remote device unit implements the given interface.
+             *
+             * The known interfaces for the profile associated with this unit and the
+             * declared optional interfaces are searched, to check if the requested interface
+             * is available.
+             *
+             * @param [in] itf_uid    the interface UID to check if the profile implements.
+             * @param [in] role       the interface role to match.
+             *
+             * @retval  true     if this unit implements the requested interface,
+             * @retval  false    otherwise.
+             */
+            bool has_interface (uint16_t itf_uid, HF::Interface::Role role);
          };
 
          /*!
