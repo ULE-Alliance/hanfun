@@ -23,6 +23,22 @@ using namespace HF::Core;
 // DeviceManagement::Server API
 // =============================================================================
 
+DeviceManagement::Server::Server(HF::Devices::Concentrator::IUnit0 &unit):
+   ServiceRole (unit)
+{}
+
+// =============================================================================
+// BindManagement::Server::unit
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Devices::Concentrator::IUnit0 &DeviceManagement::Server::unit0 ()
+{
+   return static_cast <HF::Devices::Concentrator::IUnit0 &>(ServiceRole::unit ());
+}
+
 // =============================================================================
 // DeviceManagemen::tServer::payload_size
 // =============================================================================
@@ -184,10 +200,7 @@ Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &pa
       return Common::Result::FAIL_AUTH;
    }
 
-   result = destroy (destination);
-
-   // TODO Remove group information.
-   // TODO Remove binding information.
+   result = deregister(*destination);
 
    Protocol::Response res (result);
 
@@ -204,6 +217,22 @@ Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &pa
    sendMessage (res_addr, response);
 
    return Common::Result::OK;
+}
+
+// =============================================================================
+// DeviceManagement::Server::deregister
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result DeviceManagement::Server::deregister (Device &device)
+{
+   // TODO Remove group information.
+
+   unit0().bind_management()->entries.destroy(device.address);
+
+   return destroy(&device);
 }
 
 // =============================================================================

@@ -29,6 +29,23 @@
 
 namespace HF
 {
+   // =============================================================================
+   // Forward declarations
+   // =============================================================================
+
+   namespace Devices
+   {
+      namespace Concentrator
+      {
+         struct IUnit0;
+
+      }  // namespace Concentrator
+
+   }  // namespace Devices
+
+   // =============================================================================
+   // API
+   // =============================================================================
    namespace Core
    {
       // Forward declaration.
@@ -49,9 +66,9 @@ namespace HF
          {
             REGISTER_CMD      = 0x01, //!< Register device command.
             DEREGISTER_CMD    = 0x02, //!< De-register device command.
-            START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
-            END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
-            GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
+            START_SESSION_CMD = 0x03, //!< TODO Start Session Read Registration Info.
+            END_SESSION_CMD   = 0x04, //!< TODO End Session Read Registration Info.
+            GET_ENTRIES_CMD   = 0x05, //!< TODO Get Entries Command.
          } CMD;
 
          //! Attributes.
@@ -367,6 +384,8 @@ namespace HF
                ServiceRole (unit), _address (Protocol::BROADCAST_ADDR)
             {}
 
+            virtual ~Client() {}
+
             /*!
              * Return the address given by the HF Concentrator to the Device.
              *
@@ -444,6 +463,24 @@ namespace HF
           */
          struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
          {
+            Server(HF::Devices::Concentrator::IUnit0 &unit);
+
+            virtual ~Server() {};
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * Return a reference to the unit that this service belongs to.
+             *
+             * This is the same reference as AbstractService::unit, but static casted
+             * to allow access to the the other interfaces.
+             *
+             * @return  a reference to the unit that holds this interface.
+             */
+            HF::Devices::Concentrator::IUnit0 &unit0 ();
+
             /*!
              * Return the Device entry for the given address.
              *
@@ -507,7 +544,14 @@ namespace HF
              */
             vector <Device *> entries (uint16_t offset = 0)
             {
-               return entries (offset, entries_count () - offset);
+               if (offset < entries_count ())
+               {
+                  return entries (offset, static_cast <uint16_t>(entries_count () - offset));
+               }
+               else
+               {
+                  return vector <Device *>(0);
+               }
             }
 
             // =============================================================================
@@ -581,6 +625,17 @@ namespace HF
              * @retval  false    otherwise.
              */
             virtual bool authorized (uint8_t member, Device *source, Device *destination) = 0;
+
+            /*!
+             * De-register the device that corresponds to the given Device entry.
+             *
+             * \warning this method by-passes the authorization scheme.
+             *
+             * @param [in] device   reference to the device entry to de-register.
+             *
+             * @return the result of the destroy method.
+             */
+            virtual Common::Result deregister (Device &device);
 
             //! @}
             // ======================================================================

@@ -965,6 +965,8 @@ TEST_GROUP (DeviceManagementServer)
 
       device->unit0.dev_mgt     = dev_mgt;
 
+      device->unit0.bind_mgt    = new HF::Core::BindManagement::Server(device->unit0);
+
       packet.destination.device = 0;
       packet.destination.unit   = 0;
 
@@ -1112,6 +1114,97 @@ TEST (DeviceManagementServer, Handle_Deregister)
    mock ("AbstractDevice").checkExpectations ();
 
    LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+}
+
+TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
+{
+   // Set-up device entries.
+   for (uint8_t i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = 0x5A50 + i;
+      ostringstream uri;
+      uri << "hf://device" << i << "@example.com";
+      dev->uid = new UID::URI (uri.str ());
+      uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
+      dev->units.push_back (DeviceManagement::Unit (i + 1, profile));
+      dev_mgt->save (dev);
+   }
+
+   // == Set-up some bindings. ==
+   /*
+    * This setups 4 binding entries, where 3 are for the device we are unregistering.
+    */
+
+   Protocol::Address src (0x5A52, 3);
+   Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   Protocol::Address dst (0x5A53, 4);
+
+   auto bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   dst = Protocol::Address(0x5A55, 6);
+
+   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   dst = Protocol::Address(0x5A57, 8);
+
+   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   src = Protocol::Address(0x5A54, 5);
+   dst = Protocol::Address(0x5A53, 4);
+
+   bind_res = device->unit0.bind_management()->add(src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   LONGS_EQUAL (4, device->unit0.bind_management()->entries.size());
+
+   // == De-register the device.
+
+   size_t size = dev_mgt->entries_count ();
+
+   packet.source.device = 0x5A51;
+
+   DeviceManagement::DeregisterMessage message (0x5A52);
+
+   ByteArray expected (message.size ());
+
+   message.pack (expected);
+
+   packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
+   packet.message.length     = expected.size ();
+
+   mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+
+   Result result = dev_mgt->handle (packet, expected, 0);
+   CHECK_EQUAL (Result::FAIL_AUTH, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+
+   LONGS_EQUAL (4, device->unit0.bind_management()->entries.size());
+
+   LONGS_EQUAL (size, dev_mgt->entries_count ());
+
+   packet.source.device = 0x5A52;
+
+   mock ("AbstractDevice").expectOneCall ("send");
+   mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+
+   result = dev_mgt->handle (packet, expected, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+
+   LONGS_EQUAL (1, device->unit0.bind_management()->entries.size());
 }
 
 TEST (DeviceManagementServer, Entries)

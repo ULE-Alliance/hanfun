@@ -166,6 +166,8 @@ namespace HF
 
       typedef tuple <ITF...> interfaces_t;
 
+      protected:
+
       interfaces_t interfaces;
 
       public:

@@ -24,6 +24,7 @@
 #include "hanfun/core.h"
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+#include "hanfun/core/bind_management.h"
 
 #include "hanfun/transport.h"
 
@@ -272,6 +273,10 @@ namespace HF
             virtual HF::Core::DeviceManagement::Server *device_management ()       = 0;
 
             virtual HF::Core::DeviceManagement::Server *device_management () const = 0;
+
+            virtual HF::Core::BindManagement::Server *bind_management ()           = 0;
+
+            virtual HF::Core::BindManagement::Server *bind_management () const     = 0;
          };
 
          /*!
@@ -291,11 +296,24 @@ namespace HF
           * Unit0 using default classes to provide the core services.
           */
          struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default,
-                                           HF::Core::DeviceManagement::DefaultServer>
+                                           HF::Core::DeviceManagement::DefaultServer,
+                                           HF::Core::BindManagement::Server>
          {
+            typedef typename tuple_element <2, decltype (interfaces)>::type BindMgt;
+
             DefaultUnit0(IDevice &device):
-               Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::DefaultServer>(device)
+               Unit0 (device)
             {}
+
+            BindMgt *bind_management () const
+            {
+               return const_cast <BindMgt *>(&get <2>(interfaces));
+            }
+
+            BindMgt *bind_management ()
+            {
+               return &get <2>(interfaces);
+            }
          };
 
          /*!
