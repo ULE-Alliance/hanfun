@@ -690,6 +690,8 @@ TEST_GROUP (DeviceManagementClient)
 
       dev_mgt     = new TestDeviceManagementClient (device->unit0);
 
+      device->unit0.dev_mgt = dev_mgt;
+
       mock ().ignoreOtherCalls ();
 
       packet                  = Protocol::Packet ();
@@ -961,6 +963,8 @@ TEST_GROUP (DeviceManagementServer)
 
       dev_mgt                   = new TestDeviceManagementServer (device->unit0);
 
+      device->unit0.dev_mgt     = dev_mgt;
+
       packet.destination.device = 0;
       packet.destination.unit   = 0;
 
@@ -980,6 +984,8 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_TEARDOWN ()
    {
+      delete device->unit0.bind_mgt;
+
       delete dev_mgt;
 
       delete device;

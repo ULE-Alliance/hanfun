@@ -353,10 +353,68 @@ namespace HF
          }
       };
 
-      struct Device:public AbstractDevice < HF::Devices::Node::Abstract < HF::Devices::Node::DefaultUnit0 >>
+      struct DeviceUnit0 : public HF::Devices::Node::IUnit0
+      {
+         HF::Core::DeviceManagement::Client * dev_mgt;
+
+         DeviceUnit0 (HF::IDevice &device) :
+               HF::Devices::Node::IUnit0(device), dev_mgt(nullptr)
+         {}
+
+         virtual ~DeviceUnit0() {}
+
+         HF::Core::DeviceManagement::Client *device_management ()
+         {
+            return dev_mgt;
+         }
+
+         HF::Core::DeviceManagement::Client *device_management () const
+         {
+            return dev_mgt;
+         }
+
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         {
+            UNUSED(packet);
+            UNUSED(payload);
+            UNUSED(offset);
+            return Common::Result::FAIL_UNKNOWN;
+         }
+      };
+
+      struct ConcentratorUnit0 : public HF::Devices::Concentrator::IUnit0
+      {
+         HF::Core::DeviceManagement::Server * dev_mgt;
+
+         ConcentratorUnit0 (HF::IDevice &device) :
+               HF::Devices::Concentrator::IUnit0(device), dev_mgt(nullptr), bind_mgt(nullptr)
+         {}
+
+         virtual ~ConcentratorUnit0() {}
+
+         HF::Core::DeviceManagement::Server *device_management ()
+         {
+            return dev_mgt;
+         }
+
+         HF::Core::DeviceManagement::Server *device_management () const
+         {
+            return dev_mgt;
+         }
+
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         {
+            UNUSED(packet);
+            UNUSED(payload);
+            UNUSED(offset);
+            return Common::Result::FAIL_UNKNOWN;
+         }
+      };
+
+      struct Device:public AbstractDevice < HF::Devices::Node::Abstract < DeviceUnit0 >>
       {};
 
-      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Abstract < HF::Devices::Concentrator::DefaultUnit0 >>
+      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Abstract < ConcentratorUnit0 >>
       {};
 
       struct Link:public HF::Transport::AbstractLink
