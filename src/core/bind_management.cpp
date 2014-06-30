@@ -94,15 +94,13 @@ pair <Common::Result, const Entry *> Entries::create (Protocol::Address const &s
                                                       Common::Interface const &itf,
                                                       Protocol::Address const &destination)
 {
-   auto res              = this->db.emplace (source, itf, destination);
+   auto res              = this->db.insert (Entry(source, itf, destination));
 
    Common::Result result = Common::Result::FAIL_ARG;
-   //   const Entry *entry   = nullptr;
 
    if (res.second)
    {
       result = Common::Result::OK;
-      //      entry  = res.first;
    }
 
    return make_pair (result, res.second ? &(*(res.first)) : nullptr);
