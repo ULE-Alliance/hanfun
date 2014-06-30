@@ -80,7 +80,7 @@ namespace HF
          virtual UID *clone () const = 0;
 
          //! \see HF::Serializable::size.
-         virtual size_t size () const
+         size_t size () const
          {
             return 1;
          }
@@ -92,13 +92,13 @@ namespace HF
       struct NONE:public UID
       {
          //! Type of the UID.
-         virtual uint8_t type () const
+         uint8_t type () const
          {
             return NONE_UID;
          }
 
          //! \see HF::Serializable::pack.
-         virtual size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
             offset += array.write (offset, (uint8_t) 0);
@@ -106,7 +106,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         virtual size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
