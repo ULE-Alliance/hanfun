@@ -48,8 +48,8 @@ for the node side.
 The applications communicate over TCP/IP.
 
 The support for this transport layer is based on the [libuv](https://github.com/joyent/libuv).
-This is download and build automatically when building the example applications is requested, and
-requires that you have the **git** executable on your path.
+
+This is downloaded and build automatically when building the example applications is requested.
 
 To build the example applications, issue the following commands (on the root of the project):
 
