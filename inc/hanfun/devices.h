@@ -414,10 +414,28 @@ namespace HF
              */
             virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
-               // FIXME Route the incoming packet.
-               UNUSED (packet);
-               UNUSED (payload);
-               UNUSED (offset);
+               HF::Core::BindManagement::Entries &entries = unit0.bind_management ()->entries;
+
+               auto range = entries.find(packet.source, packet.message.itf);
+
+               // No bindings found !
+               if (range.first == entries.end() && range.second == entries.end())
+               {
+                  return;
+               }
+
+               Protocol::Packet other = packet;
+
+               other.message.payload.reserve(payload.size() - offset);
+
+               copy (payload.begin() + offset, payload.end(), other.message.payload.begin());
+
+               for_each(range.first, range.second, [this, &other](const Core::BindManagement::Entry &entry)
+               {
+                  other.link = nullptr;
+                  other.destination = entry.destination;
+                  this->send(other);
+               });
             }
          };
 
