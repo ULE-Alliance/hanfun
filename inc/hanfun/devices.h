@@ -288,8 +288,23 @@ namespace HF
             static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
 
+            typedef typename tuple_element <2, decltype(HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+
+            static_assert (is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
+                           "BindMgt must be of type HF::Core::BindManagement::Server");
+
             Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
+
+            BindMgt *bind_management () const
+            {
+               return const_cast <BindMgt *>(&get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+            }
+
+            BindMgt *bind_management ()
+            {
+               return &get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+            }
          };
 
          /*!
@@ -299,21 +314,9 @@ namespace HF
                                            HF::Core::DeviceManagement::DefaultServer,
                                            HF::Core::BindManagement::Server>
          {
-            typedef typename tuple_element <2, decltype (interfaces)>::type BindMgt;
-
             DefaultUnit0(IDevice &device):
                Unit0 (device)
             {}
-
-            BindMgt *bind_management () const
-            {
-               return const_cast <BindMgt *>(&get <2>(interfaces));
-            }
-
-            BindMgt *bind_management ()
-            {
-               return &get <2>(interfaces);
-            }
          };
 
          /*!

@@ -164,13 +164,11 @@ namespace HF
       static_assert (is_base_of <HF::Core::Unit0, Base>::value,
                      "Base must be of type HF::Core::Unit0");
 
+      public:
+
       typedef tuple <ITF...> interfaces_t;
 
-      protected:
-
       interfaces_t interfaces;
-
-      public:
 
       typedef typename tuple_element <0, decltype (interfaces)>::type DeviceInfo;
 
