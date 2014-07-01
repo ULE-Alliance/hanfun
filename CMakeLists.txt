@@ -73,7 +73,7 @@ endif()
 
 add_subdirectory(src)
 
-if(HANFUN_BUILD_APPS)
+if(HF_BUILD_APPS)
     add_subdirectory(apps)
 endif()
 

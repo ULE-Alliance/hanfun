@@ -18,7 +18,7 @@
 # Project Configuration
 # =============================================================================
 
-option(HANFUN_BUILD_APPS "Build example applications" OFF)
+option(HF_BUILD_APPS "Build example applications" OFF)
 
 # =============================================================================
 # SimplePowerMeter Configuration
