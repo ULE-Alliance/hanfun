@@ -353,12 +353,12 @@ namespace HF
          }
       };
 
-      struct DeviceUnit0 : public HF::Devices::Node::IUnit0
+      struct DeviceUnit0:public HF::Devices::Node::IUnit0
       {
-         HF::Core::DeviceManagement::Client * dev_mgt;
+         HF::Core::DeviceManagement::Client *dev_mgt;
 
-         DeviceUnit0 (HF::IDevice &device) :
-               HF::Devices::Node::IUnit0(device), dev_mgt(nullptr)
+         DeviceUnit0(HF::IDevice &device):
+            HF::Devices::Node::IUnit0 (device), dev_mgt (nullptr)
          {}
 
          virtual ~DeviceUnit0() {}
@@ -375,20 +375,20 @@ namespace HF
 
          Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
-            UNUSED(packet);
-            UNUSED(payload);
-            UNUSED(offset);
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
             return Common::Result::FAIL_UNKNOWN;
          }
       };
 
-      struct ConcentratorUnit0 : public HF::Devices::Concentrator::IUnit0
+      struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
-         HF::Core::DeviceManagement::Server * dev_mgt;
-         HF::Core::BindManagement::Server * bind_mgt;
+         HF::Core::DeviceManagement::Server *dev_mgt;
+         HF::Core::BindManagement::Server   *bind_mgt;
 
-         ConcentratorUnit0 (HF::IDevice &device) :
-               HF::Devices::Concentrator::IUnit0(device), dev_mgt(nullptr), bind_mgt(nullptr)
+         ConcentratorUnit0(HF::IDevice &device):
+            HF::Devices::Concentrator::IUnit0 (device), dev_mgt (nullptr), bind_mgt (nullptr)
          {}
 
          virtual ~ConcentratorUnit0() {}
@@ -415,9 +415,9 @@ namespace HF
 
          Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
-            UNUSED(packet);
-            UNUSED(payload);
-            UNUSED(offset);
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
             return Common::Result::FAIL_UNKNOWN;
          }
       };

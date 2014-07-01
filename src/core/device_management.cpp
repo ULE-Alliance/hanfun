@@ -251,9 +251,10 @@ size_t DeviceManagement::RegisterMessage::size () const
 
    result += sizeof(uint8_t); // Number of units.
 
-   for_each(units.begin (), units.end (), [&result](const Unit &unit){
-      result += unit.size ();
-   });
+   for_each (units.begin (), units.end (), [&result](const Unit &unit) {
+                result += unit.size ();
+             }
+            );
 
    return result;
 }

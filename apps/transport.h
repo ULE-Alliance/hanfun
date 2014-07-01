@@ -26,11 +26,11 @@
 // =============================================================================
 
 #define CHECK_STATUS()                                  \
-      if (status != 0)                                   \
-      {                                                  \
-         print_error(uv_last_error(uv_default_loop()));  \
-         exit (-1);                                      \
-      }
+   if (status != 0)                                     \
+   {                                                    \
+      print_error (uv_last_error (uv_default_loop ())); \
+      exit (-1);                                        \
+   }
 
 // =============================================================================
 // API
@@ -40,12 +40,12 @@ namespace HF
 {
    namespace Application
    {
-      class Transport: public HF::Transport::Layer
+      class Transport:public HF::Transport::Layer
       {
          protected:
 
-         std::forward_list<HF::Transport::Endpoint *> endpoints;
-         std::forward_list<HF::Transport::Link *> links;
+         std::forward_list <HF::Transport::Endpoint *> endpoints;
+         std::forward_list <HF::Transport::Link *> links;
 
          HF::UID::UID *_uid;
 
@@ -61,23 +61,24 @@ namespace HF
          {
             LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-            endpoints.push_front(ep);
-            std::for_each( links.begin(), links.end(), [ep](HF::Transport::Link * link){
-               ep->connected(link);
-            });
+            endpoints.push_front (ep);
+            std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link) {
+                              ep->connected (link);
+                           }
+                          );
          }
 
          void remove (HF::Transport::Endpoint *ep = nullptr)
          {
             LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-            if ( ep != nullptr)
+            if (ep != nullptr)
             {
-               endpoints.remove(ep);
+               endpoints.remove (ep);
             }
             else
             {
-               endpoints.clear();
+               endpoints.clear ();
             }
          }
 
@@ -85,50 +86,55 @@ namespace HF
          {
             LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-            links.push_front(link);
-            std::for_each( endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint * ep){
-               ep->connected(link);
-            });
+            links.push_front (link);
+            std::for_each (endpoints.begin (), endpoints.end (), [link](HF::Transport::Endpoint *ep) {
+                              ep->connected (link);
+                           }
+                          );
          }
 
          void remove (HF::Transport::Link *link = nullptr)
          {
             LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-            if ( link != nullptr)
+            if (link != nullptr)
             {
-               std::for_each( endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint * ep){
-                  ep->disconnected(link);
-               });
+               std::for_each (endpoints.begin (), endpoints.end (), [link](HF::Transport::Endpoint *ep) {
+                                 ep->disconnected (link);
+                              }
+                             );
 
-               links.remove(link);
+               links.remove (link);
             }
             else
             {
-               std::for_each( endpoints.begin(), endpoints.end(), [this](HF::Transport::Endpoint * ep){
-                  std::for_each( links.begin(), links.end(), [ep](HF::Transport::Link * link){
-                     ep->disconnected(link);
-                  });
-               });
+               std::for_each (endpoints.begin (), endpoints.end (), [this](HF::Transport::Endpoint *ep) {
+                                 std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link) {
+                                                   ep->disconnected (link);
+                                                }
+                                               );
+                              }
+                             );
 
-               links.clear();
+               links.clear ();
             }
          }
 
-         void receive(HF::Transport::Link * link, HF::Common::ByteArray &payload)
+         void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
          {
             LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
             Protocol::Packet packet;
             packet.link = link;
 
-            size_t offset = packet.unpack(payload);
+            size_t offset = packet.unpack (payload);
 
-            std::for_each(endpoints.begin(), endpoints.end(),
-                          [&packet, &payload, &offset](HF::Transport::Endpoint * ep)
-            {
-               ep->receive(packet, payload, offset);
-            });
+            std::for_each (endpoints.begin (), endpoints.end (),
+                           [&packet, &payload, &offset](HF::Transport::Endpoint *ep)
+                           {
+                              ep->receive (packet, payload, offset);
+                           }
+                          );
          }
 
          const HF::UID::UID *uid () const
@@ -142,20 +148,20 @@ namespace HF
          }
       };
 
-      class Link: public HF::Transport::AbstractLink
+      class Link:public HF::Transport::AbstractLink
       {
          protected:
 
-         Transport * tsp;
+         Transport *tsp;
 
-         uv_stream_s * stream;
+         uv_stream_s *stream;
 
-         HF::UID::UID * _uid;
+         HF::UID::UID *_uid;
 
          public:
 
-         Link(Transport * tsp, uv_stream_s * stream) :
-            HF::Transport::AbstractLink(), tsp(tsp), stream(stream), _uid(nullptr)
+         Link(Transport *tsp, uv_stream_s *stream):
+            HF::Transport::AbstractLink (), tsp (tsp), stream (stream), _uid (nullptr)
          {
             stream->data = this;
          }

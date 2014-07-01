@@ -24,11 +24,11 @@
 // =============================================================================
 
 #ifndef HF_APP_PREFIX
-#define HF_APP_PREFIX    "."
+   #define HF_APP_PREFIX           "."
 #endif
 
-#define HF_APP_DEV_MGT_FILENAME  "devices.hf"
-#define HF_APP_BIND_MGT_FILENAME "binds.hf"
+#define HF_APP_DEV_MGT_FILENAME    "devices.hf"
+#define HF_APP_BIND_MGT_FILENAME   "binds.hf"
 
 // =============================================================================
 // Base
@@ -43,7 +43,7 @@
 struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
 {
    DeviceManagement(HF::Core::Unit0 &unit):
-      HF::Core::DeviceManagement::DefaultServer (unit), loaded(false),
+      HF::Core::DeviceManagement::DefaultServer (unit), loaded (false),
       _next_address (HF::Protocol::BROADCAST_ADDR)
    {}
 
@@ -67,7 +67,7 @@ struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
 
    protected:
 
-   bool loaded;
+   bool     loaded;
 
    uint16_t _next_address;
 
@@ -79,10 +79,10 @@ struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
  *
  * This class allows for the application to save and restore bindings from a file.
  */
-struct BindManagement : public HF::Core::BindManagement::Server
+struct BindManagement:public HF::Core::BindManagement::Server
 {
-   BindManagement (HF::Devices::Concentrator::IUnit0 &unit):
-      HF::Core::BindManagement::Server (unit), loaded(false)
+   BindManagement(HF::Devices::Concentrator::IUnit0 &unit):
+      HF::Core::BindManagement::Server (unit), loaded (false)
    {}
 
    void save (std::string prefix);
@@ -98,16 +98,16 @@ struct BindManagement : public HF::Core::BindManagement::Server
  * Custom Unit0 class to make use of the previous DeviceManagment class.
  */
 struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Default,
-   DeviceManagement, BindManagement>
+                                                      DeviceManagement, BindManagement>
 {
-   Unit0(HF::IDevice &device): HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Default,
-         DeviceManagement, BindManagement> (device)
+   Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Default,
+                                                                DeviceManagement, BindManagement>(device)
    {}
 };
 
-struct Base : public HF::Devices::Concentrator::Abstract<Unit0>
+struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {
-   Base(): HF::Devices::Concentrator::Abstract <Unit0>()
+   Base():HF::Devices::Concentrator::Abstract <Unit0>()
    {
       unit0.device_management ()->restore (HF_APP_PREFIX);
       // Bind entries add depends on static data initialization.

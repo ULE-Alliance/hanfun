@@ -465,7 +465,7 @@ namespace HF
          {
             Server(HF::Devices::Concentrator::IUnit0 &unit);
 
-            virtual ~Server() {};
+            virtual ~Server() {}
 
             // =============================================================================
             // API

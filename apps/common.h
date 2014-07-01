@@ -32,26 +32,26 @@ struct ICommand
 {
    protected:
 
-   static std::map<std::string,ICommand *> registry;
+   static std::map <std::string, ICommand *> registry;
 
    public:
 
-   virtual const std::string &key() const = 0;
+   virtual const std::string &key () const = 0;
 
-   virtual const std::string &usage() const = 0;
+   virtual const std::string &usage () const                       = 0;
 
-   virtual void run(std::vector<std::string> &args) = 0;
+   virtual void              run (std::vector <std::string> &args) = 0;
 
-   static void add(ICommand * command);
+   static void               add (ICommand *command);
 
-   static void remove(ICommand * command);
+   static void               remove (ICommand *command);
 
-   static void run(std::string &cmd, std::vector<std::string> &args);
+   static void               run (std::string &cmd, std::vector <std::string> &args);
 
-   static std::ostream &help(std::ostream &stream);
+   static std::ostream       &help (std::ostream &stream);
 };
 
-class Command : public ICommand
+class Command:public ICommand
 {
    protected:
 
@@ -60,41 +60,41 @@ class Command : public ICommand
 
    public:
 
-   Command(const char *__key, const char *__usage) :
-      _key(__key), _usage(__usage)
+   Command(const char *__key, const char *__usage):
+      _key (__key), _usage (__usage)
    {
-      ICommand::add(this);
+      ICommand::add (this);
    }
 
-   const std::string &key() const
+   const std::string &key () const
    {
       return _key;
    }
 
-   const std::string &usage() const
+   const std::string &usage () const
    {
       return _usage;
    }
 };
 
-#define COMMAND(_name, _key, _help)                   \
-struct Command_##_name : public Command              \
-{                                                      \
-   Command_##_name () : Command(_key,_help) {}         \
-                                                       \
-   void run(std::vector<std::string> &args);           \
-};                                                     \
-Command_##_name command##_name;                        \
-void Command_##_name::run(std::vector<std::string> &args)
+#define COMMAND(_name, _key, _help)               \
+   struct Command_## _name:public Command         \
+   {                                              \
+      Command_##_name ():Command (_key, _help) {} \
+                                                  \
+      void run (std::vector <std::string> &args); \
+   };                                             \
+   Command_##_name command##_name;                \
+   void Command_##_name::run (std::vector <std::string> &args)
 
 // =============================================================================
 // Stream Helpers
 // =============================================================================
 
-ostream &operator<< (ostream &stream, HF::Common::ByteArray const &array);
+ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
 
-ostream &operator<< (ostream &stream, const HF::UID::UID * uid);
+ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
 
-ostream &operator<< (ostream &stream, const HF::Protocol::Packet &packet);
+ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
 
 #endif /* HF_APP_COMMON_H */

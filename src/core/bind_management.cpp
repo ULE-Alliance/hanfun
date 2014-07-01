@@ -94,7 +94,7 @@ pair <Common::Result, const Entry *> Entries::create (Protocol::Address const &s
                                                       Common::Interface const &itf,
                                                       Protocol::Address const &destination)
 {
-   auto res              = this->db.insert (Entry(source, itf, destination));
+   auto res              = this->db.insert (Entry (source, itf, destination));
 
    Common::Result result = Common::Result::FAIL_ARG;
 

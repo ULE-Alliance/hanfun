@@ -156,7 +156,7 @@ TEST_GROUP (BindManagementClient)
       device                  = new Testing::Device ();
       client                  = new TestBindManagementClient (device->unit0);
 
-      device->unit0.dev_mgt   = new HF::Core::DeviceManagement::Client(device->unit0);
+      device->unit0.dev_mgt   = new HF::Core::DeviceManagement::Client (device->unit0);
 
       packet                  = Protocol::Packet ();
 
@@ -729,7 +729,7 @@ TEST_GROUP (BindManagementServer)
       device                  = new Testing::Concentrator ();
       server                  = new TestBindManagementServer (device->unit0);
 
-      device->unit0.dev_mgt   = new HF::Core::DeviceManagement::DefaultServer(device->unit0);
+      device->unit0.dev_mgt   = new HF::Core::DeviceManagement::DefaultServer (device->unit0);
 
       packet                  = Protocol::Packet ();
 

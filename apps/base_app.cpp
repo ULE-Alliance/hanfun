@@ -43,14 +43,14 @@ static Base base;
 // Commands
 // =============================================================================
 
-COMMAND(ListRegs, "lr", "lr:list registrations.")
+COMMAND (ListRegs, "lr", "lr:list registrations.")
 {
-   UNUSED(args);
+   UNUSED (args);
 
-   auto devices = base.unit0.device_management()->entries();
+   auto devices = base.unit0.device_management ()->entries ();
 
-   LOG (APP) << std::setfill(' ');
-   LOG (APP) << "HAN-FUN" << "  Registered Devices ("<< (int) devices.size() << "):" << NL;
+   LOG (APP) << std::setfill (' ');
+   LOG (APP) << "HAN-FUN" << "  Registered Devices (" << (int) devices.size () << "):" << NL;
 
    /* *INDENT-OFF* */
    std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device *device)
@@ -62,44 +62,49 @@ COMMAND(ListRegs, "lr", "lr:list registrations.")
    /* *INDENT-ON* */
 }
 
-COMMAND(ListBinds, "lb", "lb:list binds.")
+COMMAND (ListBinds, "lb", "lb:list binds.")
 {
-   UNUSED(args);
+   UNUSED (args);
 
-   HF::Core::BindManagement::Entries &entries = base.unit0.bind_management()->entries;
+   HF::Core::BindManagement::Entries &entries = base.unit0.bind_management ()->entries;
 
-   LOG (APP) << "HAN-FUN Binds (" << entries.size() << "):" << NL;
-   std::for_each(entries.begin(), entries.end(), [](const HF::Core::BindManagement::Entry &entry)
-   {
-      LOG (APP) << "       - "
-                << entry.source.device << ":" << (int) entry.source.unit << " -> "
-                << entry.destination.device << ":" << (int) entry.destination.unit << NL;
-   });
+   LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
+   std::for_each (entries.begin (), entries.end (), [](const HF::Core::BindManagement::Entry &entry)
+                  {
+                     LOG (APP) << "       - "
+                               << entry.source.device << ":" << (int) entry.source.unit << " -> "
+                               << entry.destination.device << ":" << (int) entry.destination.unit << NL;
+                  }
+                 );
 }
 
-COMMAND(Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
+COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
 {
-   if (args.size() > 0 && args[0] == "0") //!< Disable Registration
+   if (args.size () > 0 && args[0] == "0") //!< Disable Registration
    {
 #ifdef HF_ULE_SUPPORT
-         if (HF::ULE::Registration (false))
-         {
-            LOG (INFO) << "Disable Registration mode: SUCCESS" << NL;
-         }
-         else
-         {
-            LOG (WARN) << "Disable Registration mode: FAIL" << NL;
-         }
+
+      if (HF::ULE::Registration (false))
+      {
+         LOG (INFO) << "Disable Registration mode: SUCCESS" << NL;
+      }
+      else
+      {
+         LOG (WARN) << "Disable Registration mode: FAIL" << NL;
+      }
+
 #endif
    }
-   else if (args.size() > 1 && args[0] == "1") //!< Enable Registration
+   else if (args.size () > 1 && args[0] == "1") //!< Enable Registration
    {
-      uint16_t address = std::stoi(args[1]);
+      uint16_t address = std::stoi (args[1]);
+
       if (base.unit0.device_management ()->available (address) && address != 0 &&
-            address < HF::Protocol::BROADCAST_ADDR)
+          address < HF::Protocol::BROADCAST_ADDR)
       {
          base.unit0.device_management ()->next_address (address);
 #ifdef HF_ULE_SUPPORT
+
          if (HF::ULE::Registration (true))
          {
             LOG (INFO) << "Enable Registration mode: SUCCESS" << NL;
@@ -108,6 +113,7 @@ COMMAND(Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
          {
             LOG (WARN) << "[HANFUN] Enable Registration mode: FAIL" << NL;
          }
+
 #endif
          LOG (INFO) << "Next Registration will have address : " << (int) address << NL;
       }
@@ -120,19 +126,19 @@ COMMAND(Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
       return;
    }
 
-   LOG(APP) << "r 0      : Disable Registration Mode." << NL;
-   LOG(APP) << "r 1 x    : Enable Registration Mode (Register Device x)." << NL;
+   LOG (APP) << "r 0      : Disable Registration Mode." << NL;
+   LOG (APP) << "r 1 x    : Enable Registration Mode (Register Device x)." << NL;
 }
 
-COMMAND(Deregister, "d", "d x:de-register device x.")
+COMMAND (Deregister, "d", "d x:de-register device x.")
 {
-   if (args.size() < 1)
+   if (args.size () < 1)
    {
-      LOG(APP) << "d x      : deregister device x. " << NL;
+      LOG (APP) << "d x      : deregister device x. " << NL;
       return;
    }
 
-   uint16_t address = std::stoi(args[0]);
+   uint16_t address = std::stoi (args[0]);
 
 #ifdef HF_ULE_SUPPORT
    // DECT de-registration
@@ -145,17 +151,17 @@ COMMAND(Deregister, "d", "d x:de-register device x.")
               << (res ? "SUCCESS" : "FAIL") << " !" << NL;
 }
 
-COMMAND(Bind, "b", "b x y:associate device x with device y. (bind)")
+COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
 {
-   if (args.size() < 2)
+   if (args.size () < 2)
    {
       LOG (APP) << "b x y    :associate device x with device y. (bind)";
    }
 
-   uint16_t arg1 = std::stoi(args[0]);
-   uint16_t arg2 = std::stoi(args[1]);
+   uint16_t arg1 = std::stoi (args[0]);
+   uint16_t arg2 = std::stoi (args[1]);
 
-   uint8_t err = base.bind (arg1, arg2);
+   uint8_t  err  = base.bind (arg1, arg2);
 
    switch (err)
    {
@@ -191,19 +197,19 @@ COMMAND(Bind, "b", "b x y:associate device x with device y. (bind)")
    }
 }
 
-COMMAND(Unbind, "u", "u x y:unbind device x with y.")
+COMMAND (Unbind, "u", "u x y:unbind device x with y.")
 {
-   UNUSED(args);
+   UNUSED (args);
 
-   if (args.size() < 2)
+   if (args.size () < 2)
    {
-      LOG(APP) << "u x y   : unbind device x with y." << NL;
+      LOG (APP) << "u x y   : unbind device x with y." << NL;
    }
 
-   uint16_t arg1 = std::stoi(args[0]);
-   uint16_t arg2 = std::stoi(args[1]);
+   uint16_t arg1 = std::stoi (args[0]);
+   uint16_t arg2 = std::stoi (args[1]);
 
-   if (base.unbind(arg1, arg2))
+   if (base.unbind (arg1, arg2))
    {
       LOG (INFO) << "Bind: " << arg1 << " - " << arg2 << " removed !" << NL;
    }
@@ -224,9 +230,9 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 {
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   transport.initialize();
+   transport.initialize ();
 
-   transport.add(&base);
+   transport.add (&base);
 
    base.unit0.bind_management ()->restore (HF_APP_PREFIX);
 }
