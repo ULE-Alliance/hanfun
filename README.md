@@ -26,9 +26,13 @@ The build system used is [CMake](http://www.cmake.org/).
 
 ## Testing
 
+Currently the build of the unit tests is only supported when compiling using the code repository.
+
 To build the unit tests present in the source code, issue the following commands
 (on the root of the project):
 
+    $ git submodule init
+    $ git submodule update
     $ mkdir build
     $ cd build
     $ cmake -DHAN-FUN_BUILD_TESTS=ON ..
