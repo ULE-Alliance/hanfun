@@ -300,6 +300,10 @@ namespace HF
          }
       };
 
+      size_t pack(UID &uid, Common::ByteArray &array, size_t offset);
+
+      size_t unpack(UID *&uid, Common::ByteArray &array, size_t offset);
+
    }  // namespace UID
 
 }  // namespace HF
