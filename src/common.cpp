@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -16,6 +16,7 @@
 #include <string.h>
 
 #include "hanfun/common.h"
+#include "hanfun/interface.h"
 
 using namespace HF;
 using namespace HF::Common;
@@ -32,19 +33,6 @@ using namespace HF::Common;
 // =============================================================================
 // Helper Functions
 // =============================================================================
-
-static inline void swap_bytes (uint16_t &value)
-{
-   value = ((value & BYTE_2_MASK) >> 8) | ((value & BYTE_1_MASK) << 8);
-}
-
-static inline void swap_bytes (uint32_t &value)
-{
-   value = ((value & BYTE_4_MASK) >> 24) |
-           ((value & BYTE_3_MASK) >> 8) |
-           ((value & BYTE_2_MASK) << 8) |
-           ((value & BYTE_1_MASK) << 24);
-}
 
 // =============================================================================
 // API Classes
@@ -149,4 +137,58 @@ size_t ByteArray::read (size_t offset, uint32_t &data) const
    data |= ((uint32_t) at (offset + 3));
 
    return sizeof(uint32_t);
+}
+
+// =============================================================================
+// Interface
+// =============================================================================
+
+// =============================================================================
+// Interface::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Common::Interface::size () const
+{
+   return sizeof(uint16_t);  // Interface UID.
+}
+
+// =============================================================================
+// Interface::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Common::Interface::pack (ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::MAX_UID);
+
+   offset += array.write (offset, uid);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Interface::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Common::Interface::unpack (const ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   uint16_t uid = 0;
+   offset    += array.read (offset, uid);
+
+   this->role = (uid & ~HF::Interface::MAX_UID) >> 15;
+   this->id   = uid & HF::Interface::MAX_UID;
+
+   return offset - start;
 }

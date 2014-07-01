@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  *
@@ -86,8 +86,8 @@ namespace HF
           */
          struct Interface:public Service <HF::Interface::DEVICE_INFORMATION>
          {
-            Interface(IDevice *_device):
-               Service (_device)
+            Interface(Unit0 &unit):
+               Service (unit)
             {}
 
             /*!
@@ -173,8 +173,8 @@ namespace HF
 
             public:
 
-            Default(IDevice *device):
-               DeviceInformation::Interface (device)
+            Default(Unit0 &unit):
+               DeviceInformation::Interface (unit)
             {}
 
             string serial_number ()

@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -159,15 +159,15 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
    {
       Protocol::Address addr;
 
-      Report * report = this->report ();
+      Report *report = this->report ();
 
-      Protocol::Message message(report->size());
+      Protocol::Message message (report->size ());
 
       message.itf.role   = CLIENT_ROLE;
-      message.itf.uid    = SimplePowerMeter::Server::uid ();
+      message.itf.id     = SimplePowerMeter::Server::uid ();
       message.itf.member = REPORT_CMD;
 
-      report->pack(message.payload);
+      report->pack (message.payload);
 
       sendMessage (addr, message);
 

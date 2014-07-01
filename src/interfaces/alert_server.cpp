@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -63,7 +63,7 @@ bool Alert::Server::state (uint8_t index, bool state)
 
    if (res)
    {
-      uint32_t mask = 1L << index;
+      uint32_t mask = 1U << index;
 
       if (state)
       {
@@ -121,7 +121,7 @@ void Alert::Server::enable (uint8_t index)
       return;
    }
 
-   this->_enabled |= (1L << index);
+   this->_enabled |= (1U << index);
 }
 
 // =============================================================================
@@ -162,7 +162,7 @@ bool Alert::Server::enabled (uint8_t index)
       return false;
    }
 
-   return (this->_enabled & (1L << index)) != 0;
+   return (this->_enabled & (1U << index)) != 0;
 }
 
 // =============================================================================
@@ -179,7 +179,7 @@ void Alert::Server::disable (uint8_t index)
       return;
    }
 
-   this->_enabled &= (~(1L << index));
+   this->_enabled &= (~(1U << index));
 }
 
 // =============================================================================
@@ -220,7 +220,7 @@ bool Alert::Server::disabled (uint8_t index)
 // =============================================================================
 Alert::Message *Alert::Server::create_status (uint16_t profile_uid)
 {
-   return new (nothrow) Alert::Message (profile_uid, this->_state);
+   return new Alert::Message (profile_uid, this->_state);
 }
 
 // =============================================================================
@@ -237,7 +237,7 @@ void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
    Protocol::Message message (alert_msg.size ());
 
    message.itf.role   = CLIENT_ROLE;
-   message.itf.uid    = HF::Interface::ALERT;
+   message.itf.id     = Alert::Server::uid ();
    message.itf.member = STATUS_CMD;
 
    alert_msg.pack (message.payload);

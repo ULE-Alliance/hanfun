@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -16,9 +16,6 @@
 
 #include <cstring>
 
-#include <string>
-#include <vector>
-
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
@@ -27,6 +24,7 @@
 #include "hanfun/core.h"
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+#include "hanfun/core/bind_management.h"
 
 #include "hanfun/transport.h"
 
@@ -135,7 +133,7 @@ namespace HF
           *
           * @param [in] packet   reference to the incoming packet.
           */
-         virtual void respond (Result result, Protocol::Packet &packet)
+         virtual void respond (Common::Result result, Protocol::Packet &packet)
          {
             // FIXME Handle packets that require a response and no response has been sent.
             UNUSED (result);
@@ -160,16 +158,26 @@ namespace HF
        */
       namespace Node
       {
+         struct IUnit0:public HF::Core::Unit0
+         {
+            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            {}
+
+            virtual HF::Core::DeviceManagement::Client *device_management ()       = 0;
+
+            virtual HF::Core::DeviceManagement::Client *device_management () const = 0;
+         };
+
          /*!
           * Template to create Unit0 for HAN-FUN devices.
           */
          template<typename... ITF>
-         struct Unit0:public HF::Unit0 <ITF...>
+         struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
+            static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformationClient");
 
-            Unit0(IDevice *device):HF::Unit0 <ITF...>(device)
+            Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
          };
 
@@ -178,7 +186,7 @@ namespace HF
           */
          struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default, HF::Core::DeviceManagement::Client>
          {
-            DefaultUnit0(IDevice *device):
+            DefaultUnit0(IDevice &device):
                Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::Client>(device)
             {}
          };
@@ -187,7 +195,7 @@ namespace HF
           * Template for HAN-FUN devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice
+         class Abstract:public AbstractDevice
          {
             protected:
 
@@ -203,7 +211,7 @@ namespace HF
 
             uint16_t address () const
             {
-               return unit0.management ()->address ();
+               return unit0.device_management ()->address ();
             }
 
             // =============================================================================
@@ -223,14 +231,14 @@ namespace HF
                }
             }
 
-            void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
                AbstractDevice::receive (packet, payload, offset);
             }
 
             protected:
 
-            Base():unit0 (this)
+            Abstract():unit0 (*this)
             {}
 
             // =============================================================================
@@ -257,28 +265,57 @@ namespace HF
        */
       namespace Concentrator
       {
+         struct IUnit0:public HF::Core::Unit0
+         {
+            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            {}
+
+            virtual HF::Core::DeviceManagement::Server *device_management ()       = 0;
+
+            virtual HF::Core::DeviceManagement::Server *device_management () const = 0;
+
+            virtual HF::Core::BindManagement::Server *bind_management ()           = 0;
+
+            virtual HF::Core::BindManagement::Server *bind_management () const     = 0;
+         };
+
          /*!
-          * Template to create Unit0 for HAN-FUN devices.
+          * Template to create Unit0 for HAN-FUN concentrator devices.
           */
          template<typename... ITF>
-         struct Unit0:public HF::Unit0 <ITF...>
+         struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <ITF...>::DeviceMgt>::value,
+            static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
 
-            Unit0(IDevice *device):
-               HF::Unit0 <ITF...>(device)
+            typedef typename tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+
+            static_assert (is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
+                           "BindMgt must be of type HF::Core::BindManagement::Server");
+
+            Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
+
+            BindMgt *bind_management () const
+            {
+               return const_cast <BindMgt *>(&get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+            }
+
+            BindMgt *bind_management ()
+            {
+               return &get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+            }
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
          struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default,
-                                           HF::Core::DeviceManagement::DefaultServer>
+                                           HF::Core::DeviceManagement::DefaultServer,
+                                           HF::Core::BindManagement::Server>
          {
-            DefaultUnit0(IDevice *device):
-               Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::DefaultServer>(device)
+            DefaultUnit0(IDevice &device):
+               Unit0 (device)
             {}
          };
 
@@ -286,7 +323,7 @@ namespace HF
           * Template for HAN-FUN concentrator devices.
           */
          template<typename CoreServices>
-         class Base:public AbstractDevice
+         class Abstract:public AbstractDevice
          {
             public:
 
@@ -310,6 +347,14 @@ namespace HF
             void connected (Transport::Link *link)
             {
                _links.push_front (link);
+
+               // Check if a registration exists for this link.
+               Core::DeviceManagement::Device *entry = unit0.device_management ()->entry (link->uid ());
+
+               if (entry != nullptr)
+               {
+                  link->address (entry->address);
+               }
             }
 
             void disconnected (Transport::Link *link)
@@ -317,7 +362,7 @@ namespace HF
                _links.remove (link);
             }
 
-            void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
                if (packet.destination.device == Protocol::BROADCAST_ADDR)
                {
@@ -333,7 +378,7 @@ namespace HF
 
             links_t _links; //!< List of link present in this Concentrator.
 
-            Base():unit0 (this)
+            Abstract():unit0 (*this)
             {}
 
             // =============================================================================
@@ -341,7 +386,7 @@ namespace HF
             //! \see AbstractDevice::link
             Transport::Link *link (uint16_t addr) const
             {
-               if (_links.empty() )
+               if (_links.empty ())
                {
                   return nullptr;
                }
@@ -353,6 +398,11 @@ namespace HF
                });
                /* *INDENT-ON* */
 
+               if (it == _links.end ())
+               {
+                  return nullptr;
+               }
+
                return *it;
             }
 
@@ -363,12 +413,31 @@ namespace HF
              * @param payload reference to the ByteArray containing the packet payload.
              * @param offset  offset from where the packet data starts.
              */
-            virtual void route_packet (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
-               // FIXME Route the incoming packet.
-               UNUSED (packet);
-               UNUSED (payload);
-               UNUSED (offset);
+               HF::Core::BindManagement::Entries &entries = unit0.bind_management ()->entries;
+
+               auto range                                 = entries.find (packet.source, packet.message.itf);
+
+               // No bindings found !
+               if (range.first == entries.end () && range.second == entries.end ())
+               {
+                  return;
+               }
+
+               Protocol::Packet other = packet;
+
+               other.message.payload.reserve (payload.size () - offset);
+
+               copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+
+               for_each (range.first, range.second, [this, &other](const Core::BindManagement::Entry &entry)
+                         {
+                            other.link = nullptr;
+                            other.destination = entry.destination;
+                            this->send (other);
+                         }
+                        );
             }
          };
 

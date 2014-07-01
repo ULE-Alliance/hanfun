@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -36,7 +36,7 @@ using namespace HF::Devices;
 // =============================================================================
 Units::IUnit *AbstractDevice::unit (uint8_t id)
 {
-   if (_units.empty())
+   if (_units.empty ())
    {
       return nullptr;
    }
@@ -84,9 +84,9 @@ void AbstractDevice::send (Protocol::Packet &packet)
  *
  */
 // =============================================================================
-void AbstractDevice::receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Result result = Result::FAIL_UNKNOWN;
+   Common::Result result = Common::Result::FAIL_UNKNOWN;
 
    if (!repeated (packet) && is_local (packet))
    {

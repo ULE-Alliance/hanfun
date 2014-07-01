@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       /Lana/apps/base.cpp
+ * \file       apps/base.cpp
  *
  * This file contains the implementation of the Base class that represents the
- * HAN-FUN Concentrator on the application.
+ * HAN-FUN Concentrator on the base example application.
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -20,54 +20,22 @@
 
 #include "base.h"
 
-// =============================================================================
-// Helper Functions
-// =============================================================================
+#include "common.h"
 
-static void print (HF::Common::ByteArray &array)
-{
-   std::cout << "Payload : ";
-   for (size_t i = 0; i < array.size(); ++i)
-   {
-      cout << hex << setw(2) << setfill('0') << (int) array[i] << " ";
-   }
-   std::cout << std::endl;
-}
-
-static void print (HF::Protocol::Packet &packet)
-{
-   std::cout << "Packet : " << std::endl;
-
-   std::cout << "\tSource  : " << hex << setw(2) << setfill('0')
-                               << (int) packet.source.mod << " "
-                               << (int) packet.source.device << " "
-                               << (int) packet.source.unit << std::endl;
-
-   std::cout << "\tDest    : " << hex << setw(2) << setfill('0')
-                               << (int) packet.destination.mod << " "
-                               << (int) packet.destination.device << " "
-                               << (int) packet.destination.unit << std::endl;
-
-   std::cout << "\tMessage :" << std::endl;
-
-   std::cout << "\t\tReference : " << hex << setw(2) << setfill('0')
-                                   << (int) packet.message.reference << std::endl;
-
-   std::cout << "\t\tType:" << hex << setw(2) << setfill('0')
-                            << (int) packet.message.type << std::endl;
-
-   std::cout << "\t\tInterface: " << hex << setw(2) << setfill('0')
-                                  << (int) packet.message.itf.role << " "
-                                  << (int) packet.message.itf.uid << " "
-                                  << (int) packet.message.itf.member << std::endl;
-
-   std::cout << "\t\tLength: " << (int) packet.message.length << std::endl;
-}
+#define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
+#include "application.h"
 
 // =============================================================================
 // DeviceManagement
 // =============================================================================
 
+// =============================================================================
+// DeviceManagement::available
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 bool DeviceManagement::available (uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)
@@ -75,15 +43,45 @@ bool DeviceManagement::available (uint16_t address)
       return false;
    }
 
-   auto it = std::find_if(entries().begin(), entries().end(),
-                          [address](HF::Core::DeviceManagement::Device* dev)
-                          {
-                             return address == dev->address;
-                          });
+   auto it = std::find_if (entries ().begin (), entries ().end (),
+                           [address](HF::Core::DeviceManagement::Device *dev)
+                           {
+                              return address == dev->address;
+                           }
+                          );
 
-   return it == entries().end();
+   return it == entries ().end ();
 }
 
+// =============================================================================
+// DeviceManagement::next_address
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t DeviceManagement::next_address ()
+{
+   uint16_t result = _next_address;
+
+   _next_address = HF::Protocol::BROADCAST_ADDR;
+
+   if (result == HF::Protocol::BROADCAST_ADDR)
+   {
+      for (result = 1; result < HF::Protocol::BROADCAST_ADDR && !available (result); result++)
+      {}
+   }
+
+   return result;
+}
+
+// =============================================================================
+// DeviceManagement::deregister
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 bool DeviceManagement::deregister (uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)
@@ -91,28 +89,15 @@ bool DeviceManagement::deregister (uint16_t address)
       return false;
    }
 
-   auto it = std::find_if(entries().begin(), entries().end(),
-                          [address](HF::Core::DeviceManagement::Device* dev)
-                          {
-                             return address == dev->address;
-                          });
+   auto _entry = entry (address);
 
-   if (it != entries().end())
+   if (_entry != nullptr)
    {
-      destroy(*it);
+      HF::Core::DeviceManagement::Server::deregister (*_entry);
       return true;
    }
 
    return false;
-}
-
-std::ostream& operator<<(std::ostream& stm, const HF::Common::ByteArray& array)
-{
-   for_each(array.begin(), array.end(), [&stm](uint8_t byte){
-      stm << byte;
-   });
-
-   return stm;
 }
 
 // =============================================================================
@@ -122,46 +107,48 @@ std::ostream& operator<<(std::ostream& stm, const HF::Common::ByteArray& array)
  *
  */
 // =============================================================================
-void DeviceManagement::save(std::string prefix)
+void DeviceManagement::save (std::string prefix)
 {
-   cout << "[HANFUN] Saving Entries." << endl;
+   LOG (INFO) << "Saving registration entries ..." << NL;
+
+   if (!loaded)
+   {
+      return;
+   }
 
    std::ofstream ofs;
 
-   std::string filename = prefix + "/" + std::string(FILENAME);
+   std::string   filename = prefix + "/" + HF_APP_DEV_MGT_FILENAME;
 
-   ofs.open ( filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+   ofs.open (filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
 
-   std::for_each (entries ().begin (), entries ().end (),
-                  [&ofs](HF::Core::DeviceManagement::Device* device)
-   {
-       /* Save Devices */
+   std::for_each (_entries.begin (), _entries.end (),
+                  [&ofs](HF::Core::DeviceManagement::Device *device)
+                  {
+                     /* Save Devices */
 
-       uint16_t size_d = device->size();
+                     uint16_t size_d = device->size ();
 
-       HF::Common::ByteArray array(size_d);
-       device->pack(array);
+                     HF::Common::ByteArray array (size_d);
+                     device->pack (array);
 
-       ofs.write((char*)&size_d, sizeof(uint16_t));
+                     ofs.write ((char *) &size_d, sizeof(uint16_t));
 
-       ofs << array;
+                     ofs << array;
 
-       /* Save UID */
-       uint16_t size_d_uid = device->uid->size();
+                     /* Save UID */
+                     HF::Common::ByteArray array_uid (device->uid->size ());
 
-       HF::Common::ByteArray array_uid(size_d_uid);
+                     HF::UID::pack (*device->uid, array_uid, 0);
 
-       device->uid->pack(array_uid);
+                     uint16_t size_uid = array_uid.size ();
+                     ofs.write ((char *) &size_uid, sizeof(uint16_t));
 
-       ofs.write((char*)&size_d_uid, sizeof(uint16_t));
+                     ofs << array_uid;
+                  }
+                 );
 
-       uint8_t type = device->uid->type();
-       ofs.write((char*)&type, sizeof(uint8_t));
-
-       ofs << array_uid;
-   });
-
-   ofs.flush();
+   ofs.flush ();
    ofs.close ();
 }
 
@@ -172,153 +159,158 @@ void DeviceManagement::save(std::string prefix)
  *
  */
 // =============================================================================
-void DeviceManagement::restore(std::string prefix)
+void DeviceManagement::restore (std::string prefix)
 {
-   std::cout << "[HANFUN] Restoring Entries." << std::endl;
+   LOG (INFO) << "Restoring registration entries ..." << NL;
 
    std::ifstream ifs;
 
-   std::string filename = prefix + "/" + FILENAME;
+   std::string   filename = prefix + "/" + HF_APP_DEV_MGT_FILENAME;
 
    ifs.open (filename, ios::in | ios::binary);
 
    while (ifs.good ())
    {
-      HF::Core::DeviceManagement::Device * device_tmp;
+      HF::Core::DeviceManagement::Device *device_tmp;
 
       uint16_t size;
 
       /* Get Device Size */
-      ifs.read ((char*) &size, sizeof(uint16_t));
+      ifs.read ((char *) &size, sizeof(uint16_t));
 
       if (!ifs.good ())
+      {
          break;
+      }
 
       /* Restore Device */
-      HF::Common::ByteArray buffer(size);
+      HF::Common::ByteArray buffer;
+      buffer.reserve (size);
 
       for (size_t j = 0; j < size; ++j)
       {
          uint8_t data;
 
-         ifs.read ((char*) &data, sizeof(uint8_t));
+         ifs.read ((char *) &data, sizeof(uint8_t));
          buffer.push_back (data);
       }
 
       device_tmp = new HF::Core::DeviceManagement::Device ();
       device_tmp->unpack (buffer);
 
-      /* Get UID Size */
-      ifs.read ((char*) &size, sizeof(uint16_t));
-
-      if (!ifs.good ())
-         break;
+      LOG (TRACE) << "Device : " << device_tmp->address << NL;
 
       /* Get UID Size */
-      uint8_t type;
-      ifs.read ((char*) &type, sizeof(uint8_t));
+      ifs.read ((char *) &size, sizeof(uint16_t));
 
       if (!ifs.good ())
+      {
          break;
+      }
 
       /* Restore UID */
-      HF::Common::ByteArray buffer_uid(size);
+      HF::Common::ByteArray buffer_uid;
+      buffer.reserve (size);
+
       for (size_t j = 0; j < size; ++j)
       {
          uint8_t data;
 
-         ifs.read ((char*) &data, sizeof(uint8_t));
+         ifs.read ((char *) &data, sizeof(uint8_t));
          buffer_uid.push_back (data);
       }
 
-      switch(type)
-      {
-         case HF::UID::NONE_UID:
-            device_tmp->uid = new HF::UID::NONE ();
-            break;
-
-         case HF::UID::IPUI_UID:
-            device_tmp->uid = new HF::UID::IPUI ();
-            break;
-
-         case HF::UID::RFPI_UID:
-            device_tmp->uid = new HF::UID::RFPI ();
-            break;
-
-         case HF::UID::URI_UID:
-            device_tmp->uid = new HF::UID::URI ();
-            break;
-      }
-
-      device_tmp->uid->unpack (buffer_uid);
+      HF::UID::unpack (device_tmp->uid, buffer_uid, 0);
 
       HF::Core::DeviceManagement::DefaultServer::save (device_tmp);
+
+      LOG (TRACE) << "   UID : " << device_tmp->uid << NL;
    }
 
    ifs.close ();
+
+   loaded = true;
 }
 
 // =============================================================================
-// BindEntry
+// BindManagement
 // =============================================================================
 
-const std::string BindEntry::FILENAME = "binds.hf";
 
 // =============================================================================
-// BindEntry::save
+// BindManagement::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindEntry::save(std::forward_list<BindEntry> &entries, std::string prefix)
+void BindManagement::save (std::string prefix)
 {
-   cout << "[HANFUN] Saving Binds." << endl;
+   LOG (INFO) << "Saving binding entries ..." << NL;
 
    std::ofstream ofs;
 
-   std::string filename = prefix + "/" + FILENAME;
+   std::string   filename = prefix + "/" + HF_APP_BIND_MGT_FILENAME;
 
-   ofs.open ( filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+   ofs.open (filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
 
-   std::for_each( entries.begin(), entries.end(), [&ofs](BindEntry &entry){
-      ofs.write ((char*) &entry.source, sizeof(uint16_t));
-      ofs.write ((char*) &entry.destination, sizeof(uint16_t));
-   });
+   std::for_each (entries.begin (), entries.end (), [&ofs](const HF::Core::BindManagement::Entry &entry)
+                  {
+                     HF::Common::ByteArray temp (entry.size ());
+                     entry.pack (temp);
+                     ofs << temp;
+                  }
+                 );
 
-   ofs.flush();
+   ofs.flush ();
    ofs.close ();
 }
 
 // =============================================================================
-// BindEntry::restore
+// BindManagement::restore
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindEntry::restore(std::forward_list<BindEntry> &entries, std::string prefix)
+void BindManagement::restore (std::string prefix)
 {
-   cout << "[HANFUN] Restoring Binds." << endl;
+   LOG (INFO) << "Restoring binding entries ..." << NL;
 
    std::ifstream ifs;
 
-   std::string filename = prefix + "/" + FILENAME;
+   std::string   filename = prefix + "/" + HF_APP_BIND_MGT_FILENAME;
 
    ifs.open (filename, ios::in | ios::binary);
 
+   HF::Core::BindManagement::Entry entry;
+
+   size_t size = entry.size ();
+
+   HF::Common::ByteArray buffer;
+   buffer.reserve (size);
+
    while (ifs.good ())
    {
-      uint16_t source;
-      uint16_t destination;
+      buffer.clear ();
 
-      ifs.read ((char*) &source, sizeof(uint16_t));
-      ifs.read ((char*) &destination, sizeof(uint16_t));
+      size_t j;
 
-      entries.emplace_front(source, destination);
+      for (j = 0; j < size && ifs.good (); ++j)
+      {
+         uint8_t data;
 
-      if (!ifs.good ())
-         break;
+         ifs.read ((char *) &data, sizeof(uint8_t));
+         buffer.push_back (data);
+      }
+
+      // Read an entire entry.
+      if (j == size)
+      {
+         entry.unpack (buffer);
+         auto res = this->add (entry.source, entry.destination, entry.itf);
+         LOG (TRACE) << "Bind Add : " << res.first << NL;
+      }
    }
 
    ifs.close ();
@@ -337,46 +329,13 @@ void BindEntry::restore(std::forward_list<BindEntry> &entries, std::string prefi
 // =============================================================================
 void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
 {
-   cout << "[HANFUN] >>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << endl;
+   LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
 
-   print(payload);
+   LOG (TRACE) << "Payload : " << payload << NL;
 
-   print(packet);
+   LOG (DEBUG) << packet << std::endl;
 
-   HF::Devices::Concentrator::Base<Unit0>::receive(packet, payload, offset);
-}
-
-// =============================================================================
-// Base::route_packet
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Base::route_packet (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload,
-                         size_t offset)
-{
-   UNUSED(payload);
-   UNUSED(offset);
-
-   cout << "[HANFUN] >>>>>>>>>>>>> Route Packet <<<<<<<<<<<<<" << endl;
-
-   for (forward_list<BindEntry>::iterator it = bind_entries.begin(); it != bind_entries.end(); ++it)
-   {
-      if (packet.source.device == it->source)
-      {
-         packet.destination.device = it->destination;
-         break;
-      }
-   }
-
-   packet.destination.unit = 1;
-
-   packet.link = nullptr;
-
-   send(packet);
-
-   cout << "[HANFUN] >>>>>>>>>>>>> Route Packet <<<<<<<<<<<<<" << endl;
+   HF::Devices::Concentrator::Abstract <Unit0>::receive (packet, payload, offset);
 }
 
 // =============================================================================
@@ -386,14 +345,13 @@ void Base::route_packet (HF::Protocol::Packet &packet, HF::Common::ByteArray &pa
  *
  */
 // =============================================================================
-bool Base::has_bind(uint16_t dev_addr_1, uint16_t dev_addr_2)
+bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   auto it = std::find_if(bind_entries.begin(), bind_entries.end(),
-                          [dev_addr_1, dev_addr_2](BindEntry &entry){
-      return ((entry.source == dev_addr_1) && (entry.destination == dev_addr_2));
-   });
+   HF::Protocol::Address source (dev_addr_1, 1);
+   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination (dev_addr_2, 1);
 
-   return it != bind_entries.end();
+   return unit0.bind_management ()->entries.find (source, itf, destination) != nullptr;
 }
 
 // =============================================================================
@@ -405,47 +363,30 @@ bool Base::has_bind(uint16_t dev_addr_1, uint16_t dev_addr_2)
 // =============================================================================
 uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   // Check if source and destination address exist
-   auto devices = unit0.management()->entries();
-
-   bool dev1 = false;
-   bool dev2 = false;
-
-   for_each(devices.begin(), devices.end(),
-            [dev_addr_1, dev_addr_2, &dev1, &dev2](HF::Core::DeviceManagement::Device* dev)
+   if (this->has_bind (dev_addr_1, dev_addr_2))
    {
-      if(dev_addr_1 == dev->address)
-      {
-         dev1 = true;
-      }
-      if(dev_addr_2 == dev->address)
-      {
-         dev2 = true;
-      }
-   });
+      return 1;
+   }
 
-   // Check if the bind combination isn't already created
-   bool has_bind = this->has_bind(dev_addr_1, dev_addr_2);
+   HF::Protocol::Address source (dev_addr_1, 1);
+   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination (dev_addr_2, 1);
 
-   if (has_bind && dev1 && dev2 )
+   auto res = unit0.bind_management ()->add (source, destination, itf);
+
+   if (res.first == HF::Common::OK)
    {
-      bind_entries.emplace_front(dev_addr_1, dev_addr_2);
       return 0;
    }
-   else
+
+   if (unit0.device_management ()->entry (dev_addr_1) == nullptr)
    {
-      if (!has_bind)
-      {
-         return 1;
-      }
-      else if (!dev1)
-      {
-         return 2;
-      }
-      else if (!dev1)
-      {
-         return 3;
-      }
+      return 2;
+   }
+
+   if (unit0.device_management ()->entry (dev_addr_2) == nullptr)
+   {
+      return 3;
    }
 
    return 4;
@@ -458,32 +399,11 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
  *
  */
 // =============================================================================
-void Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
+bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   bind_entries.remove_if([dev_addr_1, dev_addr_2](BindEntry &entry){
-      return ((entry.source == dev_addr_1) && (entry.destination == dev_addr_2));
-   });
-}
+   HF::Protocol::Address source (dev_addr_1, 1);
+   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination (dev_addr_2, 1);
 
-
-// =============================================================================
-// Base::unbind
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Base::unbind(uint16_t address)
-{
-   bind_entries.remove_if([address](BindEntry &entry)
-   {
-      bool res = ((entry.source == address) || (entry.destination == address));
-
-      if(res)
-      {
-         cout << "Bind: " << entry.source << " - " << entry.destination << " removed!" << endl;
-      }
-
-      return res;
-   });
+   return unit0.bind_management ()->remove (source, destination, itf) == HF::Common::Result::OK;
 }

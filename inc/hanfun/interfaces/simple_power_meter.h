@@ -6,13 +6,15 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
 // =============================================================================
 #ifndef HF_ITF_SIMPLE_POWER_METER_H
 #define HF_ITF_SIMPLE_POWER_METER_H
+
+#include <array>
 
 #include "hanfun/common.h"
 
@@ -192,6 +194,8 @@ namespace HF
             protected:
 
             Base() {}
+
+            using Interfaces::Base <Interface::SIMPLE_POWER_METER>::payload_size;
 
             size_t payload_size (Protocol::Message::Interface &itf) const
             {

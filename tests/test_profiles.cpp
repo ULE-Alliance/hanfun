@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -24,13 +24,19 @@ using namespace HF::Testing;
 // =============================================================================
 
 /* *INDENT-OFF* */
-#define HELPER_CLASS(_name) \
-   class _name:public InterfaceHelper<Profiles::_name>
+#define HELPER_CLASS(_name)                           \
+struct _name:public InterfaceHelper<Profiles::_name>  \
+{                                                      \
+   virtual ~_name() {}                                \
+}
 /* *INDENT-ON* */
 
 /* *INDENT-OFF* */
-#define HELPER_CLASS2(_name) \
-   class _name:public InterfaceHelper<Profiles::_name<>>
+#define HELPER_CLASS2(_name)                            \
+struct _name:public InterfaceHelper<Profiles::_name<>>   \
+{                                                        \
+   virtual ~_name() {}                                  \
+}
 /* *INDENT-ON* */
 
 // =============================================================================
@@ -41,39 +47,39 @@ namespace HF
 {
    namespace Testing
    {
-      HELPER_CLASS (SimpleOnOffSwitchable) {};
-      HELPER_CLASS (SimpleOnOffSwitch) {};
-      HELPER_CLASS (SimpleLevelControllable) {};
-      HELPER_CLASS (SimpleLevelControl) {};
-      HELPER_CLASS (AC_Outlet) {};
-      HELPER_CLASS (SimpleLight) {};
-      HELPER_CLASS (SimpleDoorLock) {};
+      HELPER_CLASS (SimpleOnOffSwitchable);
+      HELPER_CLASS (SimpleOnOffSwitch);
+      HELPER_CLASS (SimpleLevelControllable);
+      HELPER_CLASS (SimpleLevelControl);
+      HELPER_CLASS (AC_Outlet);
+      HELPER_CLASS (SimpleLight);
+      HELPER_CLASS (SimpleDoorLock);
 
-      HELPER_CLASS (DoorBell) {};
-      HELPER_CLASS (SimplePowerMeter) {};
+      HELPER_CLASS (DoorBell);
+      HELPER_CLASS (SimplePowerMeter);
 
-      HELPER_CLASS (SimpleDetector) {};
-      HELPER_CLASS (DoorOpenCloseDetector) {};
-      HELPER_CLASS (WindowOpenCloseDetector) {};
-      HELPER_CLASS (MotionDetector) {};
-      HELPER_CLASS (SmokeDetector) {};
-      HELPER_CLASS (GasDetector) {};
-      HELPER_CLASS (FloodDetector) {};
-      HELPER_CLASS (GlassBreakDetector) {};
-      HELPER_CLASS (VibrationDetector) {};
-      HELPER_CLASS (Siren) {};
+      HELPER_CLASS (SimpleDetector);
+      HELPER_CLASS (DoorOpenCloseDetector);
+      HELPER_CLASS (WindowOpenCloseDetector);
+      HELPER_CLASS (MotionDetector);
+      HELPER_CLASS (SmokeDetector);
+      HELPER_CLASS (GasDetector);
+      HELPER_CLASS (FloodDetector);
+      HELPER_CLASS (GlassBreakDetector);
+      HELPER_CLASS (VibrationDetector);
+      HELPER_CLASS (Siren);
 
-      HELPER_CLASS (SimplePendant) {};
+      HELPER_CLASS (SimplePendant);
 
-      HELPER_CLASS (UserInterface) {};
+      HELPER_CLASS (UserInterface);
 
-      HELPER_CLASS (GenericApplicationLogic) {};
+      HELPER_CLASS (GenericApplicationLogic);
 
-      HELPER_CLASS2 (SimpleLevelControllableSwitchable) {};
-      HELPER_CLASS2 (SimpleLevelControlSwitch) {};
-      HELPER_CLASS2 (AC_OutletWithPowerMetering) {};
-      HELPER_CLASS2 (DimmableLight) {};
-      HELPER_CLASS2 (DimmerSwitch) {};
+      HELPER_CLASS2 (SimpleLevelControllableSwitchable);
+      HELPER_CLASS2 (SimpleLevelControlSwitch);
+      HELPER_CLASS2 (AC_OutletWithPowerMetering);
+      HELPER_CLASS2 (DimmableLight);
+      HELPER_CLASS2 (DimmerSwitch);
 
    }  // namespace Testing
 
@@ -233,7 +239,7 @@ TEST (Profiles, Detector)
    Protocol::Address addr;
    SimpleDetector    detector;
 
-   addr.mod    = Protocol::Address::DEVICE_ADDR;
+   addr.mod    = Protocol::Address::DEVICE;
    addr.device = 42;
    addr.unit   = 33;
 
@@ -251,15 +257,15 @@ TEST (Profiles, Detector)
    CHECK_EQUAL (1, status_msg.state);
    CHECK_EQUAL (detector.uid (), status_msg.type);
 
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, detector.addr.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, detector.addr.mod);
    LONGS_EQUAL (42, detector.addr.device);
    LONGS_EQUAL (33, detector.addr.unit);
 }
 
 TEST (Profiles, Profile2_Handle)
 {
-   ByteArray data;
-   Protocol::Packet packet;
+   Common::ByteArray data;
+   Protocol::Packet  packet;
 
    TestProfile profile;
 
@@ -274,24 +280,265 @@ TEST (Profiles, Profile2_Handle)
    // Call first interface.
 
    packet.message.itf.role = profile.first ()->_role;
-   packet.message.itf.uid  = profile.first ()->_uid;
+   packet.message.itf.id   = profile.first ()->_uid;
 
    mock ("Interface").expectOneCall ("handle_command").onObject (profile.first ());
 
-   Result result = profile.handle (packet, data, 0);
-   CHECK_EQUAL (Result::OK, result);
+   Common::Result result = profile.handle (packet, data, 0);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("Interface").checkExpectations ();
 
    // Call second interface.
 
    packet.message.itf.role = profile.second ()->_role;
-   packet.message.itf.uid  = profile.second ()->_uid;
+   packet.message.itf.id   = profile.second ()->_uid;
 
    mock ("Interface").expectOneCall ("handle_command").onObject (profile.second ());
 
    result = profile.handle (packet, data, 0);
-   CHECK_EQUAL (Result::OK, result);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("Interface").checkExpectations ();
+}
+
+TEST (Profiles, InterfaceMapping)
+{
+   uint16_t count;
+   const HF::Common::Interface *itf;
+
+   // HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_ONOFF_SWITCHABLE, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_ONOFF_SWITCH
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_ONOFF_SWITCH, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LEVEL_CONTROL
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_LEVEL_CONTROL, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (2, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL (HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LEVEL_CONTROL_SWITCH
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_LEVEL_CONTROL_SWITCH, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (2, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL (HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
+
+   // HF::Profiles::AC_OUTLET
+   itf = Profiles::interfaces (HF::Profiles::AC_OUTLET, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::AC_OUTLET_WITH_POWER_METERING
+   itf = Profiles::interfaces (HF::Profiles::AC_OUTLET_WITH_POWER_METERING, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (2, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL (HF::Interface::SIMPLE_POWER_METER, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LIGHT
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_LIGHT, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::DIMMABLE_LIGHT
+   itf = Profiles::interfaces (HF::Profiles::DIMMABLE_LIGHT, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (2, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL (HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::DIMMER_SWITCH
+   itf = Profiles::interfaces (HF::Profiles::DIMMER_SWITCH, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (2, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL (HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_DOOR_LOCK
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_DOOR_LOCK, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::DOOR_BELL
+   itf = Profiles::interfaces (HF::Profiles::DOOR_BELL, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_POWER_METER
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_POWER_METER, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::SIMPLE_POWER_METER, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::DOOR_OPEN_CLOSE_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::DOOR_OPEN_CLOSE_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::WINDOW_OPEN_CLOSE_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::WINDOW_OPEN_CLOSE_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::MOTION_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::MOTION_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SMOKE_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::SMOKE_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::GAS_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::GAS_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::FLOOD_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::FLOOD_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::GLASS_BREAK_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::GLASS_BREAK_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::VIBRATION_DETECTOR
+   itf = Profiles::interfaces (HF::Profiles::VIBRATION_DETECTOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIREN
+   itf = Profiles::interfaces (HF::Profiles::SIREN, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_PENDANT
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_PENDANT, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::USER_INTERFACE
+   itf = Profiles::interfaces (HF::Profiles::USER_INTERFACE, count);
+   CHECK_TRUE (itf == nullptr);
+   LONGS_EQUAL (0, count);
+
+   // HF::Profiles::GENERIC_APPLICATION
+   itf = Profiles::interfaces (HF::Profiles::GENERIC_APPLICATION, count);
+   CHECK_TRUE (itf == nullptr);
+   LONGS_EQUAL (0, count);
 }

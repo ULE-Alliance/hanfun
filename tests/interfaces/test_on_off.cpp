@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -74,7 +74,7 @@ TEST (OnOffClient, On)
    mock ("Interface").checkExpectations ();
 
    LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (OnOff::ON_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
@@ -89,7 +89,7 @@ TEST (OnOffClient, Off)
    mock ("Interface").checkExpectations ();
 
    LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (OnOff::OFF_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
@@ -104,7 +104,7 @@ TEST (OnOffClient, Toggle)
    mock ("Interface").checkExpectations ();
 
    LONGS_EQUAL (Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.uid);
+   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
    LONGS_EQUAL (OnOff::TOGGLE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
@@ -147,14 +147,14 @@ TEST_GROUP (OnOffServer)
 
    };
 
-   TestOnOffServer  server;
-   Protocol::Packet packet;
-   ByteArray expected;
+   TestOnOffServer   server;
+   Protocol::Packet  packet;
+   Common::ByteArray expected;
 
    TEST_SETUP ()
    {
       packet.message.itf.role   = Interface::SERVER_ROLE;
-      packet.message.itf.uid    = server.uid ();
+      packet.message.itf.id     = server.uid ();
       packet.message.itf.member = 0xFF;
    }
 
@@ -201,8 +201,8 @@ TEST (OnOffServer, Handle_Valid_On_Message)
 
    packet.message.itf.member = OnOff::ON_CMD;
 
-   Result result = server.handle (packet, expected, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Common::Result result = server.handle (packet, expected, 3);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
 }
@@ -214,8 +214,8 @@ TEST (OnOffServer, Handle_Valid_Off_Message)
 
    packet.message.itf.member = OnOff::OFF_CMD;
 
-   Result result = server.handle (packet, expected, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Common::Result result = server.handle (packet, expected, 3);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
 }
@@ -227,8 +227,8 @@ TEST (OnOffServer, Handle_Valid_Toggle_Message)
 
    packet.message.itf.member = OnOff::TOGGLE_CMD;
 
-   Result result = server.handle (packet, expected, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Common::Result result = server.handle (packet, expected, 3);
+   CHECK_EQUAL (Common::Result::OK, result);
 
    mock ("OnOffServer").checkExpectations ();
 }
@@ -238,15 +238,15 @@ TEST (OnOffServer, Handle_Invalid_Role)
 {
    packet.message.itf.role = Interface::SERVER_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
+   CHECK_EQUAL (Common::Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
 }
 
 //! \test Should not handle message from invalid interface UID.
 TEST (OnOffServer, Handle_Invalid_UID)
 {
-   packet.message.itf.uid = server.uid () + 1;
+   packet.message.itf.id = server.uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
+   CHECK_EQUAL (Common::Result::FAIL_ID, server.handle (packet, expected, 3));
 }
 
 //! \test Should return attribute.

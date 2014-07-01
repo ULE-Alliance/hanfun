@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -33,7 +33,7 @@ void OnOff::Client::on (Protocol::Address &addr)
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = OnOff::Client::uid ();
+   message.itf.id     = OnOff::Client::uid ();
    message.itf.member = ON_CMD;
 
    sendMessage (addr, message);
@@ -51,7 +51,7 @@ void OnOff::Client::off (Protocol::Address &addr)
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = OnOff::Client::uid ();
+   message.itf.id     = OnOff::Client::uid ();
    message.itf.member = OFF_CMD;
 
    sendMessage (addr, message);
@@ -69,7 +69,7 @@ void OnOff::Client::toggle (Protocol::Address &addr)
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = OnOff::Client::uid ();
+   message.itf.id     = OnOff::Client::uid ();
    message.itf.member = TOGGLE_CMD;
 
    sendMessage (addr, message);

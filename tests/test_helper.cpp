@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -18,11 +18,11 @@
 
 #include "test_helper.h"
 
-#include "hanfun/common.h"
-
 // =============================================================================
 // Helper Functions
 // =============================================================================
+
+STRING_FROM (HF::Common::Interface)
 
 SimpleString StringFrom (const HF::Common::ByteArray &array)
 {
@@ -40,7 +40,7 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
 {
    SimpleString result = "0x";
 
-   ByteArray    array (data.size ());
+   Common::ByteArray array (data.size ());
 
    size_t size = data.pack (array);
 

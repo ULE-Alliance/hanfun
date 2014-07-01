@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -82,15 +82,11 @@ namespace HF
          /*!
           * Interface Address.
           */
-         struct Interface
+         struct Interface:public Common::Interface
          {
-            uint16_t role : 1;         //!< Interface role : Server or Client.
-            uint16_t uid  : 15;        //!< Identifier of the interface. \see Interface::UID.
+            uint8_t member;            //!< Interface destination member.
 
-            uint8_t  member;           //!< Interface destination member.
-
-            Interface(uint16_t role = 0, uint16_t uid = 0, uint8_t member = 0):
-               role (role), uid (uid), member (member) {}
+            Interface(uint16_t uid = 0, uint16_t role = 0, uint8_t member = 0):Common::Interface(uid, role), member (member) {}
 
             //! \see HF::Serializable::size.
             size_t size () const;
@@ -147,11 +143,11 @@ namespace HF
          /*!
           * HAN-FUN Network Destination Address Types.
           */
-         enum DestinationType
+         typedef enum
          {
-            DEVICE_ADDR = 0,   //!< Destination address is for single device.
-            GROUP_ADDR  = 1,   //!< Destination address is for a group of devices.
-         };
+            DEVICE = 0,   //!< Destination address is for single device.
+            GROUP  = 1,   //!< Destination address is for a group of devices.
+         } Type;
 
          /*!
           * Create a new message address.
@@ -161,7 +157,7 @@ namespace HF
           * @param _mod    address modifier. Default \c DEVICE_ADDR.
           */
          Address(uint16_t _dev = BROADCAST_ADDR, uint8_t _unit = BROADCAST_UNIT,
-                 DestinationType _mod = DEVICE_ADDR)
+                 Type _mod = DEVICE)
             :mod (_mod), device (_dev), unit (_unit)
          {}
 
@@ -174,11 +170,27 @@ namespace HF
          //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
+         /*!
+          * Checks if this address if for the Protocol::BROADCAST_ADDR and
+          * Protocol::BROADCAST_UNIT.
+          *
+          * @retval true   if it is the network's broadcast address,
+          * @retval false  otherwise.
+          */
          bool is_broadcast ()
          {
             return device == BROADCAST_ADDR && unit == BROADCAST_UNIT;
          }
 
+         /*!
+          * Checks if the given device \c address is equal to the device address
+          * present in this Protocol::Address object.
+          *
+          * @param [in] address  network address to match.
+          *
+          * @retval true   if it is the network's address are equal,
+          * @retval false  otherwise.
+          */
          bool is_local (uint16_t address)
          {
             return this->device == address;
@@ -207,7 +219,7 @@ namespace HF
          Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
             destination (dst_addr), message (message)
          {
-            source.mod    = Address::DEVICE_ADDR;
+            source.mod    = Address::DEVICE;
             source.device = BROADCAST_ADDR;
             source.unit   = unit;
          }
@@ -247,6 +259,27 @@ namespace HF
          //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
+
+      // =============================================================================
+      // Operators
+      // =============================================================================
+
+      inline bool operator ==(Address const &lhs, Address const &rhs)
+      {
+         return (lhs.device == rhs.device) && (lhs.unit == rhs.unit) && (lhs.mod == rhs.mod);
+      }
+
+      inline bool operator !=(Address const &lhs, Address const &rhs)
+      {
+         return !(lhs == rhs);
+      }
+
+      inline bool operator <(Address const &lhs, Address const &rhs)
+      {
+         return (lhs.device < rhs.device) ||
+                (lhs.device == rhs.device &&
+                 (lhs.mod < rhs.mod || (lhs.mod == rhs.mod && lhs.unit < rhs.unit)));
+      }
 
    }  // namespace Protocol
 

@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -42,16 +42,18 @@ using namespace HF::Protocol;
 // Helper Test Functions
 // =============================================================================
 
-#define STRING_FROM( _T )                                     \
-SimpleString StringFrom (const _T &data)                      \
-{                                                              \
-   SerializableHelper<_T &> wrapper(const_cast<_T &>(data));  \
-   return StringFrom(wrapper);                                \
-}
+#define STRING_FROM(_T)                                                    \
+   SimpleString StringFrom (const _T &data)                                \
+   {                                                                       \
+      Common::SerializableHelper <_T &> wrapper (const_cast <_T &>(data)); \
+      return StringFrom (wrapper);                                         \
+   }
 
 SimpleString StringFrom (const HF::Common::ByteArray &array);
 
 SimpleString StringFrom (const HF::Common::Serializable &data);
+
+SimpleString StringFrom (const HF::Common::Interface &itf);
 
 template<typename _type>
 void check_index (_type expected, _type actual, uint32_t index, const char *header,
@@ -97,7 +99,7 @@ namespace HF
             return fake_size;
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             array.extend (fake_size);
 
@@ -108,7 +110,7 @@ namespace HF
             return fake_size;
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             UNUSED (array);
             UNUSED (offset);
@@ -247,7 +249,7 @@ namespace HF
 
          protected:
 
-         Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -255,7 +257,7 @@ namespace HF
 
             mock ("Interface").actualCall ("handle_command").onObject (this);
 
-            return Result::OK;
+            return Common::Result::OK;
          }
 
          //! \see AbstractInterface::attributes
@@ -292,7 +294,7 @@ namespace HF
 
       struct Unit:public HF::Units::Unit <Profile>
       {
-         Unit(uint16_t id, IDevice *device):
+         Unit(uint16_t id, IDevice &device):
             HF::Units::Unit <Profile>(id, device)
          {}
       };
@@ -341,7 +343,7 @@ namespace HF
             packets.push_back (temp);
          }
 
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -351,10 +353,79 @@ namespace HF
          }
       };
 
-      struct Device:public AbstractDevice < HF::Devices::Node::Base < HF::Devices::Node::DefaultUnit0 >>
+      struct DeviceUnit0:public HF::Devices::Node::IUnit0
+      {
+         HF::Core::DeviceManagement::Client *dev_mgt;
+
+         DeviceUnit0(HF::IDevice &device):
+            HF::Devices::Node::IUnit0 (device), dev_mgt (nullptr)
+         {}
+
+         virtual ~DeviceUnit0() {}
+
+         HF::Core::DeviceManagement::Client *device_management ()
+         {
+            return dev_mgt;
+         }
+
+         HF::Core::DeviceManagement::Client *device_management () const
+         {
+            return dev_mgt;
+         }
+
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         {
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
+            return Common::Result::FAIL_UNKNOWN;
+         }
+      };
+
+      struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
+      {
+         HF::Core::DeviceManagement::Server *dev_mgt;
+         HF::Core::BindManagement::Server   *bind_mgt;
+
+         ConcentratorUnit0(HF::IDevice &device):
+            HF::Devices::Concentrator::IUnit0 (device), dev_mgt (nullptr), bind_mgt (nullptr)
+         {}
+
+         virtual ~ConcentratorUnit0() {}
+
+         HF::Core::DeviceManagement::Server *device_management ()
+         {
+            return dev_mgt;
+         }
+
+         HF::Core::DeviceManagement::Server *device_management () const
+         {
+            return dev_mgt;
+         }
+
+         HF::Core::BindManagement::Server *bind_management ()
+         {
+            return bind_mgt;
+         }
+
+         HF::Core::BindManagement::Server *bind_management () const
+         {
+            return bind_mgt;
+         }
+
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         {
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
+            return Common::Result::FAIL_UNKNOWN;
+         }
+      };
+
+      struct Device:public AbstractDevice < HF::Devices::Node::Abstract < DeviceUnit0 >>
       {};
 
-      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Base < HF::Devices::Concentrator::DefaultUnit0 >>
+      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Abstract < ConcentratorUnit0 >>
       {};
 
       struct Link:public HF::Transport::AbstractLink
@@ -376,7 +447,7 @@ namespace HF
 
          void send (Common::ByteArray &array)
          {
-            this->data = new ByteArray (array);
+            this->data = new Common::ByteArray (array);
             mock ("Link").actualCall ("send");
          }
 

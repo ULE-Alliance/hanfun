@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -37,22 +37,28 @@ void DeviceManagement::Client::register_device ()
 {
    Protocol::Address addr (0, 0);
 
-   RegisterMessage *payload = new RegisterMessage (DeviceInformation::EMC);
+   RegisterMessage   *payload = new RegisterMessage (DeviceInformation::EMC);
 
-   for (IDevice::units_t::const_iterator dev_unit = device ()->units ().begin ();
-        dev_unit != device ()->units ().end (); ++dev_unit)
-   {
-      Unit unit;
-      unit.id      = (*dev_unit)->id ();
-      unit.profile = (*dev_unit)->uid ();
+   HF::IDevice &device        = unit ().device ();
 
-      payload->units.push_back (unit);
-   }
+   // TODO Add support for optional interfaces.
+   for_each (device.units ().begin (), device.units ().end (), [&payload](const Units::IUnit *dev_unit)
+             {
+                if (dev_unit != nullptr && dev_unit->id () != 0)
+                {
+                   Unit unit;
+                   unit.id = dev_unit->id ();
+                   unit.profile = dev_unit->uid ();
+
+                   payload->units.push_back (unit);
+                }
+             }
+            );
 
    Protocol::Message message (payload->size ());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = uid ();
+   message.itf.id     = DeviceManagement::Client::uid ();
    message.itf.member = REGISTER_CMD;
 
    payload->pack (message.payload);
@@ -77,7 +83,7 @@ void DeviceManagement::Client::deregister (uint16_t address)
    Protocol::Message message (payload.size ());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.uid    = uid ();
+   message.itf.id     = DeviceManagement::Client::uid ();
    message.itf.member = DEREGISTER_CMD;
 
    payload.pack (message.payload);
@@ -114,8 +120,8 @@ size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf
  *
  */
 // =============================================================================
-Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteArray &payload,
-                                                 size_t offset)
+Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                         size_t offset)
 {
    switch (packet.message.itf.member)
    {
@@ -139,7 +145,7 @@ Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteA
          break;
    }
 
-   return Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -151,7 +157,7 @@ Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, ByteA
 // =============================================================================
 void DeviceManagement::Client::registered (RegisterResponse &response)
 {
-   if (response.code == Result::OK)
+   if (response.code == Common::Result::OK)
    {
       this->_address = response.address;
    }
@@ -159,7 +165,7 @@ void DeviceManagement::Client::registered (RegisterResponse &response)
 
 void DeviceManagement::Client::deregistered (Protocol::Response &response)
 {
-   if (response.code == Result::OK)
+   if (response.code == Common::Result::OK)
    {
       this->_address = Protocol::BROADCAST_ADDR;
    }

@@ -6,7 +6,7 @@
 #
 #   \author  Filipe Alves <filipe.alves@bithium.com>
 #
-#   \version 0.2.0
+#   \version 0.3.0
 #
 #   Copyright (c) 2012 Bithium S.A.
 #
@@ -27,6 +27,9 @@ include_directories(
     ${CPPUTEST_INCLUDE_DIRS}
     "."
 )
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 
 enable_testing()
 
@@ -49,7 +52,8 @@ set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
-set(TESTS_CORE_SRCS      "core/test_device_management.cpp")
+set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
+                         "core/test_bind_management.cpp")
 
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
 
@@ -63,4 +67,6 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 
-add_custom_command(TARGET test_hanfun POST_BUILD COMMAND test_hanfun)
+add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
+
+# add_test(hanfun_all test_hanfun)

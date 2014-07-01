@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -56,7 +56,7 @@ namespace HF
           *
           * @return  UID of the interface the attribute belongs to.
           */
-         virtual uint16_t interface () const       = 0;
+         virtual uint16_t interface () const = 0;
 
          /*!
           * \see Serializable::size

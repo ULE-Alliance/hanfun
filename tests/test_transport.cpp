@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -45,7 +45,7 @@ namespace HF
             links.remove (link);
          }
 
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -55,7 +55,7 @@ namespace HF
 
       struct Endpoint2:public Endpoint
       {
-         void receive (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -76,6 +76,9 @@ namespace HF
 
          Transport(const HF::UID::UID *uid):
             _uid (uid)
+         {}
+
+         virtual ~Transport()
          {}
 
          // =============================================================================

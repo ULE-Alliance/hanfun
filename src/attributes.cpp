@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -387,6 +387,13 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
 // Core Services & Interfaces
 // =============================================================================
 
+// =============================================================================
+// Core::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t uid)
 {
    DeviceManagement::Attributes attr = static_cast <DeviceManagement::Attributes>(uid);

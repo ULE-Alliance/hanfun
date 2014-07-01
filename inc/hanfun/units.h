@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -35,10 +35,10 @@ namespace HF
          virtual uint8_t id () const = 0;
 
          //! The device this unit is associated with.
-         virtual IDevice *device () const = 0;
+         virtual IDevice &device () const = 0;
 
          //! \see Interface::handle
-         virtual Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset) = 0;
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
       };
 
       /*!
@@ -46,21 +46,23 @@ namespace HF
        */
       class AbstractUnit:public IUnit
       {
-         IDevice *_device;
+         IDevice &_device;
 
          public:
 
          //! Get the device associated with this unit.
-         IDevice *device () const
+         IDevice &device () const
          {
             return _device;
          }
 
          protected:
 
-         AbstractUnit(IDevice *device):
+         AbstractUnit(IDevice &device):
             _device (device)
-         {}
+         {
+            device.add (this);
+         }
 
          /*!
           * Create and send a new packet with the given message to the given address.
@@ -83,14 +85,9 @@ namespace HF
 
          public:
 
-         Unit(uint8_t index, IDevice *device):
+         Unit(uint8_t index, IDevice &device):
             AbstractUnit (device), _id (index)
-         {
-            if (device != nullptr)
-            {
-               device->add (this);
-            }
-         }
+         {}
 
          uint16_t uid () const
          {
@@ -103,7 +100,7 @@ namespace HF
             return _id;
          }
 
-         Result handle (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             return Profile::handle (packet, payload, offset);
          }

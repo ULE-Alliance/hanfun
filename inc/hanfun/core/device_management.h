@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -29,9 +29,26 @@
 
 namespace HF
 {
+   // =============================================================================
+   // Forward declarations
+   // =============================================================================
+
+   namespace Devices
+   {
+      namespace Concentrator
+      {
+         struct IUnit0;
+
+      }  // namespace Concentrator
+
+   }  // namespace Devices
+
+   // =============================================================================
+   // API
+   // =============================================================================
    namespace Core
    {
-      // Foward declaration,
+      // Forward declaration.
       namespace DeviceManagement
       {
          struct Server;
@@ -49,9 +66,9 @@ namespace HF
          {
             REGISTER_CMD      = 0x01, //!< Register device command.
             DEREGISTER_CMD    = 0x02, //!< De-register device command.
-            START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
-            END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
-            GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
+            START_SESSION_CMD = 0x03, //!< TODO Start Session Read Registration Info.
+            END_SESSION_CMD   = 0x04, //!< TODO End Session Read Registration Info.
+            GET_ENTRIES_CMD   = 0x05, //!< TODO Get Entries Command.
          } CMD;
 
          //! Attributes.
@@ -63,36 +80,14 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Optional interface entry.
-          */
-         struct Interface
-         {
-            uint16_t role : 1;  //!< Interface role. \see Interface::Role.
-            uint16_t uid  : 15; //!< Interface UID. \see Interface::UID.
-
-            Interface(uint16_t role = 0, uint16_t uid = 0):
-               role (role), uid (uid)
-            {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const;
-
-            //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         /*!
           * Unit Entry
           */
          struct Unit
          {
-            uint8_t            id;      //!< Unit Id.
-            uint16_t           profile; //!< Unit UID. \see IProfile::UID.
+            uint8_t                    id;      //!< Unit Id.
+            uint16_t                   profile; //!< Unit UID. \see IProfile::UID.
 
-            vector <Interface> opt_ift; //!< Optional interfaces.
+            vector <Common::Interface> opt_ift; //!< Optional interfaces.
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
@@ -106,6 +101,21 @@ namespace HF
 
             //! \see HF::Serializable::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+
+            /*!
+             * This method checks if the remote device unit implements the given interface.
+             *
+             * The known interfaces for the profile associated with this unit and the
+             * declared optional interfaces are searched, to check if the requested interface
+             * is available.
+             *
+             * @param [in] itf_uid    the interface UID to check if the profile implements.
+             * @param [in] role       the interface role to match.
+             *
+             * @retval  true     if this unit implements the requested interface,
+             * @retval  false    otherwise.
+             */
+            bool has_interface (uint16_t itf_uid, HF::Interface::Role role);
          };
 
          /*!
@@ -135,10 +145,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
             // =============================================================================
             // Operators
@@ -169,7 +179,7 @@ namespace HF
          /*!
           * Register command message.
           */
-         struct RegisterMessage:public Serializable
+         struct RegisterMessage
          {
             uint16_t      emc;   //! Device EMC if applicable, 0 otherwise.
             vector <Unit> units; //! Device units listing.
@@ -184,16 +194,28 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
+            /*!
+             * Returns the UID associated with this Register Message.
+             *
+             * @return  a pointer to the UID associated with this message.
+             */
             HF::UID::UID *uid () const
             {
                return _uid;
             }
 
+            /*!
+             * Set the UID associated with this Register message.
+             *
+             * \note This method creates a copy of the passed object.
+             *
+             * @param [in] uid pointer to the object to use as this message UID.
+             */
             void uid (HF::UID::UID *uid)
             {
                if (_uid != nullptr)
@@ -230,10 +252,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Protocol::Response::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          // =============================================================================
@@ -243,7 +265,7 @@ namespace HF
          /*!
           * De-register command message.
           */
-         struct DeregisterMessage:public Serializable
+         struct DeregisterMessage
          {
             uint16_t address; //!< Address of the device to de-register.
 
@@ -255,10 +277,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          // =============================================================================
@@ -280,16 +302,16 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Protocol::Response::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
           * Get Entries Command Message.
           */
-         struct GetEntriesMessage:public Serializable
+         struct GetEntriesMessage
          {
             uint16_t offset; //! Start index for the first entry to be provided.
             uint8_t  count;  //! Number of entries to be sent in the response.
@@ -302,10 +324,10 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Serializable::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          struct GetEntriesResponse:public Protocol::Response
@@ -316,16 +338,16 @@ namespace HF
             size_t size () const;
 
             //! \see HF::Protocol::Response::pack.
-            size_t pack (ByteArray &array, size_t offset = 0) const;
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const ByteArray &array, size_t offset = 0);
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
           * Parent class for the Device Management interface implementation.
           */
-         struct Base:public Service <HF::Interface::DEVICE_MANAGEMENT>
+         struct Abstract:public Service <HF::Interface::DEVICE_MANAGEMENT>
          {
             static constexpr uint16_t START_ADDR = 0x0001;
 
@@ -342,15 +364,15 @@ namespace HF
 
             protected:
 
-            Base(IDevice *_device):
-               Service (_device)
+            Abstract(Unit0 &unit):
+               Service (unit)
             {}
          };
 
          /*!
           * Device Management interface : Client side.
           */
-         class Client:public ServiceRole <Base, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
          {
             protected:
 
@@ -358,9 +380,11 @@ namespace HF
 
             public:
 
-            Client(IDevice *_device):
-               ServiceRole (_device), _address (Protocol::BROADCAST_ADDR)
+            Client(Unit0 &unit):
+               ServiceRole (unit), _address (Protocol::BROADCAST_ADDR)
             {}
+
+            virtual ~Client() {}
 
             /*!
              * Return the address given by the HF Concentrator to the Device.
@@ -425,18 +449,38 @@ namespace HF
 
             protected:
 
+            using ServiceRole::payload_size;
+
             //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          /*!
           * Device Management interface : Server side.
           */
-         struct Server:public ServiceRole <Base, HF::Interface::SERVER_ROLE>
+         struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
          {
+            Server(HF::Devices::Concentrator::IUnit0 &unit);
+
+            virtual ~Server() {}
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * Return a reference to the unit that this service belongs to.
+             *
+             * This is the same reference as AbstractService::unit, but static casted
+             * to allow access to the the other interfaces.
+             *
+             * @return  a reference to the unit that holds this interface.
+             */
+            HF::Devices::Concentrator::IUnit0 &unit0 ();
+
             /*!
              * Return the Device entry for the given address.
              *
@@ -464,7 +508,7 @@ namespace HF
              *
              * @return     if the device entry was saved.
              */
-            virtual Result save (Device *device) = 0;
+            virtual Common::Result save (Device *device) = 0;
 
             /*!
              * Remove the given \c device entry from persistent storage.
@@ -473,7 +517,7 @@ namespace HF
              *
              * @return     if the device entry was removed.
              */
-            virtual Result destroy (Device *device) = 0;
+            virtual Common::Result destroy (Device *device) = 0;
 
             /*!
              * Return the number of Device entries available.
@@ -500,7 +544,14 @@ namespace HF
              */
             vector <Device *> entries (uint16_t offset = 0)
             {
-               return entries (offset, entries_count () - offset);
+               if (offset < entries_count ())
+               {
+                  return entries (offset, static_cast <uint16_t>(entries_count () - offset));
+               }
+               else
+               {
+                  return vector <Device *>(0);
+               }
             }
 
             // =============================================================================
@@ -510,14 +561,12 @@ namespace HF
             //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid)
             {
-               UNUSED (uid);
                return Core::create_attribute (this, uid);
             }
 
             protected:
 
-            Server(IDevice *_device):
-               ServiceRole (_device)
+            Server(Unit0 &unit):ServiceRole (unit)
             {}
 
             //! \see AbstractInterface::attributes
@@ -545,14 +594,14 @@ namespace HF
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            virtual Common::Result register_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             /*!
              * This method is called when a deregistration message is received.
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            virtual Common::Result deregister_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
             //! @}
             // ======================================================================
@@ -577,14 +626,27 @@ namespace HF
              */
             virtual bool authorized (uint8_t member, Device *source, Device *destination) = 0;
 
+            /*!
+             * De-register the device that corresponds to the given Device entry.
+             *
+             * \warning this method by-passes the authorization scheme.
+             *
+             * @param [in] device   reference to the device entry to de-register.
+             *
+             * @return the result of the destroy method.
+             */
+            virtual Common::Result deregister (Device &device);
+
             //! @}
             // ======================================================================
+
+            using ServiceRole <Abstract, HF::Interface::SERVER_ROLE>::payload_size;
 
             //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Result handle_command (Protocol::Packet &packet, ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          // =========================================================================
@@ -597,7 +659,7 @@ namespace HF
           */
          struct DefaultServer:public Server
          {
-            DefaultServer(IDevice *_device):Server (_device)
+            DefaultServer(Unit0 &unit):Server (unit)
             {}
 
             virtual ~DefaultServer();
@@ -610,9 +672,9 @@ namespace HF
 
             virtual Device *entry (HF::UID::UID const *uid);
 
-            virtual Result save (Device *device);
+            virtual Common::Result save (Device *device);
 
-            virtual Result destroy (Device *device);
+            virtual Common::Result destroy (Device *device);
 
             uint16_t entries_count () const
             {
@@ -625,9 +687,9 @@ namespace HF
 
             protected:
 
-            vector <Device *>              _entries;
+            vector <Device *>                    _entries;
 
-            map <uint16_t, Device *>       _addr2device;
+            map <uint16_t, Device *>             _addr2device;
             map <HF::UID::UID const *, Device *> _uid2device;
 
 
@@ -639,91 +701,75 @@ namespace HF
             virtual bool authorized (uint8_t member, Device *source, Device *destination);
          };
 
+         // =============================================================================
+         // Operators
+         // =============================================================================
+
+         inline bool operator ==(const Unit &lhs, const Unit &rhs)
+         {
+            if (lhs.id != rhs.id)
+            {
+               return false;
+            }
+
+            if (lhs.profile != rhs.profile)
+            {
+               return false;
+            }
+
+            if (lhs.opt_ift.size () != rhs.opt_ift.size ())
+            {
+               return false;
+            }
+
+            for (uint8_t i = 0; i < lhs.opt_ift.size (); i++)
+            {
+               if (lhs.opt_ift[i] != rhs.opt_ift[i])
+               {
+                  return false;
+               }
+            }
+
+            return true;
+         }
+
+         inline bool operator !=(const Unit &lhs, const Unit &rhs)
+         {
+            return !(lhs == rhs);
+         }
+
+         inline bool operator ==(const Device &lhs, const Device &rhs)
+         {
+            if (lhs.address != rhs.address)
+            {
+               return false;
+            }
+
+            if (lhs.units.size () != rhs.units.size ())
+            {
+               return false;
+            }
+
+            for (uint8_t i = 0; i < lhs.units.size (); i++)
+            {
+               if (lhs.units[i] != rhs.units[i])
+               {
+                  return false;
+               }
+            }
+
+            return true;
+         }
+
+         inline bool operator !=(const Device &lhs, const Device &rhs)
+         {
+            return !(lhs == rhs);
+         }
+
       } // namespace DeviceManagement
 
    } // namespace Core
 
 } // namespace HF
-
-// =============================================================================
-// Helper Functions
-// =============================================================================
-
-inline bool operator ==(const HF::Core::DeviceManagement::Interface &lhs,
-                        const HF::Core::DeviceManagement::Interface &rhs)
-{
-   return (lhs.role == rhs.role) && (lhs.uid == lhs.uid);
-}
-
-inline bool operator !=(const HF::Core::DeviceManagement::Interface &lhs,
-                        const HF::Core::DeviceManagement::Interface &rhs)
-{
-   return !(lhs == rhs);
-}
-
-inline bool operator ==(const HF::Core::DeviceManagement::Unit &lhs,
-                        const HF::Core::DeviceManagement::Unit &rhs)
-{
-   if (lhs.id != rhs.id)
-   {
-      return false;
-   }
-
-   if (lhs.profile != rhs.profile)
-   {
-      return false;
-   }
-
-   if (lhs.opt_ift.size () != rhs.opt_ift.size ())
-   {
-      return false;
-   }
-
-   for (uint8_t i = 0; i < lhs.opt_ift.size (); i++)
-   {
-      if (lhs.opt_ift[i] != rhs.opt_ift[i])
-      {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-inline bool operator !=(const HF::Core::DeviceManagement::Unit &lhs,
-                        const HF::Core::DeviceManagement::Unit &rhs)
-{
-   return !(lhs == rhs);
-}
-
-inline bool operator ==(const HF::Core::DeviceManagement::Device &lhs,
-                        const HF::Core::DeviceManagement::Device &rhs)
-{
-   if (lhs.address != rhs.address)
-   {
-      return false;
-   }
-
-   if (lhs.units.size () != rhs.units.size ())
-   {
-      return false;
-   }
-
-   for (uint8_t i = 0; i < lhs.units.size (); i++)
-   {
-      if (lhs.units[i] != rhs.units[i])
-      {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-inline bool operator !=(const HF::Core::DeviceManagement::Device &lhs,
-                        const HF::Core::DeviceManagement::Device &rhs)
-{
-   return !(lhs == rhs);
-}
 
 #endif /* HF_DEVICE_MANGEMENT_H */

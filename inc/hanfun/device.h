@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -14,6 +14,8 @@
 
 #ifndef HF_DEVICE_H
 #define HF_DEVICE_H
+
+#include <forward_list>
 
 #include "hanfun/common.h"
 #include "hanfun/transport.h"
@@ -39,7 +41,7 @@ namespace HF
    /*!
     * This class represents the interface that all devices MUST implement.
     */
-   struct IDevice: public Transport::Endpoint
+   struct IDevice:public Transport::Endpoint
    {
       /*!
        * Unit list type.

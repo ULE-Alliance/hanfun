@@ -7,7 +7,7 @@
  *
  * \author		Filipe Alves <filipe.alves@bithium.com>
  *
- * \version		0.2.0
+ * \version		0.3.0
  *
  * \copyright	Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -28,11 +28,10 @@ using namespace HF::Core;
 // Helper functions.
 // =============================================================================
 
-STRING_FROM(DeviceManagement::Interface)
 
-STRING_FROM(DeviceManagement::Unit)
+STRING_FROM (DeviceManagement::Unit)
 
-STRING_FROM(DeviceManagement::Device)
+STRING_FROM (DeviceManagement::Device)
 
 // =============================================================================
 
@@ -45,7 +44,7 @@ TEST_GROUP (DeviceManagement)
 
 TEST (DeviceManagement, InterfaceServer)
 {
-   DeviceManagement::Interface itf;
+   Common::Interface itf;
 
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
@@ -56,8 +55,8 @@ TEST (DeviceManagement, InterfaceServer)
                       );
    ByteArray array (size + 6);
 
-   itf.role = Interface::SERVER_ROLE;
-   itf.uid  = 0x7AAA;
+   itf.role = HF::Interface::SERVER_ROLE;
+   itf.id   = 0x7AAA;
 
    size_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
@@ -69,13 +68,13 @@ TEST (DeviceManagement, InterfaceServer)
    size_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, itf.role);
-   LONGS_EQUAL (0x7AAA, itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf.role);
+   LONGS_EQUAL (0x7AAA, itf.id);
 }
 
 TEST (DeviceManagement, InterfaceClient)
 {
-   DeviceManagement::Interface itf;
+   Common::Interface itf;
 
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
@@ -86,8 +85,8 @@ TEST (DeviceManagement, InterfaceClient)
                       );
    ByteArray array (size + 6);
 
-   itf.role = Interface::CLIENT_ROLE;
-   itf.uid  = 0x7555;
+   itf.role = HF::Interface::CLIENT_ROLE;
+   itf.id   = 0x7555;
 
    size_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
@@ -99,8 +98,8 @@ TEST (DeviceManagement, InterfaceClient)
    size_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Interface::CLIENT_ROLE, itf.role);
-   LONGS_EQUAL (0x7555, itf.uid);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf.role);
+   LONGS_EQUAL (0x7555, itf.id);
 }
 
 // =============================================================================
@@ -140,9 +139,9 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    DeviceManagement::Unit wunit (0x42, 0x5AA5);
    DeviceManagement::Unit runit;
 
-   DeviceManagement::Interface itf1 (HF::Interface::SERVER_ROLE, 0x5432);
-   DeviceManagement::Interface itf2 (HF::Interface::CLIENT_ROLE, 0x1234);
-   DeviceManagement::Interface itf3 (HF::Interface::SERVER_ROLE, 0x5678);
+   Common::Interface itf1 (0x5432, HF::Interface::SERVER_ROLE);
+   Common::Interface itf2 (0x1234, HF::Interface::CLIENT_ROLE);
+   Common::Interface itf3 (0x5678, HF::Interface::SERVER_ROLE);
 
    wunit.opt_ift.push_back (itf1);
    wunit.opt_ift.push_back (itf2);
@@ -392,13 +391,13 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 }
 
 // =============================================================================
-// DeviceManagement::RegisterResponce
+// DeviceManagement::RegisterResponse
 // =============================================================================
 
-TEST_GROUP (DeviceManagement_RegisterResponce)
+TEST_GROUP (DeviceManagement_RegisterResponse)
 {};
 
-TEST (DeviceManagement_RegisterResponce, No_EMC)
+TEST (DeviceManagement_RegisterResponse, No_EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
                                    Result::FAIL_AUTH,  // Response Code.
@@ -429,7 +428,7 @@ TEST (DeviceManagement_RegisterResponce, No_EMC)
    LONGS_EQUAL (0x4243, response.address);
 }
 
-TEST (DeviceManagement_RegisterResponce, EMC)
+TEST (DeviceManagement_RegisterResponse, EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
                                    Result::FAIL_AUTH,  // Responce Code.
@@ -644,14 +643,13 @@ TEST (DeviceManagement, GetEntriesResponse)
 
 TEST_GROUP (DeviceManagementClient)
 {
-   Testing::Unit *unit1;
-   Testing::Unit *unit2;
-   Testing::Unit *unit3;
-
    struct TestDeviceManagementClient:public DeviceManagement::Client
    {
-      TestDeviceManagementClient(IDevice *device):
-         DeviceManagement::Client (device)
+      TestDeviceManagementClient(HF::Core::Unit0 &unit):
+         DeviceManagement::Client (unit)
+      {}
+
+      virtual ~TestDeviceManagementClient()
       {}
 
       using DeviceManagement::Client::_address;
@@ -670,6 +668,9 @@ TEST_GROUP (DeviceManagementClient)
    };
 
    Testing::Device *device;
+   Testing::Unit   *unit1;
+   Testing::Unit   *unit2;
+   Testing::Unit   *unit3;
 
    TestDeviceManagementClient *dev_mgt;
 
@@ -677,25 +678,27 @@ TEST_GROUP (DeviceManagementClient)
 
    TEST_SETUP ()
    {
-      device      = new Testing::Device ();
+      device                = new Testing::Device ();
 
-      unit1       = new Testing::Unit (1, device);
-      unit2       = new Testing::Unit (2, device);
-      unit3       = new Testing::Unit (3, device);
+      unit1                 = new Testing::Unit (1, *device);
+      unit2                 = new Testing::Unit (2, *device);
+      unit3                 = new Testing::Unit (3, *device);
 
-      unit1->_uid = 0xFF01;
-      unit2->_uid = 0xFF02;
-      unit3->_uid = 0xFF03;
+      unit1->_uid           = 0xFF01;
+      unit2->_uid           = 0xFF02;
+      unit3->_uid           = 0xFF03;
 
-      dev_mgt     = new TestDeviceManagementClient (device);
+      dev_mgt               = new TestDeviceManagementClient (device->unit0);
+
+      device->unit0.dev_mgt = dev_mgt;
 
       mock ().ignoreOtherCalls ();
 
       packet                  = Protocol::Packet ();
 
       packet.message.type     = Protocol::Message::COMMAND_RES;
-      packet.message.itf.role = Interface::SERVER_ROLE;
-      packet.message.itf.uid  = Interface::DEVICE_MANAGEMENT;
+      packet.message.itf.role = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id   = HF::Interface::DEVICE_MANAGEMENT;
    }
 
    TEST_TEARDOWN ()
@@ -729,10 +732,10 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (0, packet->destination.device);
    LONGS_EQUAL (0, packet->destination.unit);
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, packet->destination.mod);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
-   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.id);
    LONGS_EQUAL (DeviceManagement::REGISTER_CMD, packet->message.itf.member);
 
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
@@ -742,12 +745,10 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (DeviceInformation::EMC, payload.emc);
 
-   LONGS_EQUAL (device->units ().size (), payload.units.size ());
+   LONGS_EQUAL (device->units ().size () - 1, payload.units.size ());
 
-   size_t size = device->units ().size ();
-
-   vector <uint8_t> expected (size);
-   vector <uint8_t> actual (size);
+   vector <uint8_t> expected;
+   vector <uint8_t> actual;
 
    /* *INDENT-OFF* */
    for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
@@ -755,6 +756,12 @@ TEST (DeviceManagementClient, RegisterMessage)
       actual.push_back (unit.id);
    });
    /* *INDENT-ON* */
+
+   // Unit 0 - Should not be present.
+   CHECK_TRUE (none_of (actual.begin (), actual.end (), [](uint8_t id) {
+                           return id == 0U;
+                        }
+                       ));
 
    expected.push_back (unit1->id ());
    expected.push_back (unit2->id ());
@@ -854,10 +861,10 @@ TEST (DeviceManagementClient, DeregisterMessage)
 
    LONGS_EQUAL (0, packet->destination.device);
    LONGS_EQUAL (0, packet->destination.unit);
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, packet->destination.mod);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, packet->message.itf.role);
-   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL (dev_mgt->uid (), packet->message.itf.id);
    LONGS_EQUAL (DeviceManagement::DEREGISTER_CMD, packet->message.itf.member);
 
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, packet->message.type);
@@ -921,12 +928,12 @@ TEST (DeviceManagementClient, DeregisterResponse_FAIL)
 
 TEST_GROUP (DeviceManagementServer)
 {
-   Testing::Device *device;
+   Testing::Concentrator *device;
 
    struct TestDeviceManagementServer:public DeviceManagement::DefaultServer
    {
-      TestDeviceManagementServer(IDevice *device):
-         DeviceManagement::DefaultServer (device)
+      TestDeviceManagementServer(HF::Core::Unit0 &unit):
+         DeviceManagement::DefaultServer (unit)
       {}
 
       Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
@@ -952,9 +959,13 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_SETUP ()
    {
-      device                    = new Testing::Device ();
+      device                    = new Testing::Concentrator ();
 
-      dev_mgt                   = new TestDeviceManagementServer (device);
+      dev_mgt                   = new TestDeviceManagementServer (device->unit0);
+
+      device->unit0.dev_mgt     = dev_mgt;
+
+      device->unit0.bind_mgt    = new HF::Core::BindManagement::Server (device->unit0);
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;
@@ -962,8 +973,8 @@ TEST_GROUP (DeviceManagementServer)
       packet.source.device      = Protocol::BROADCAST_ADDR;
       packet.source.unit        = Protocol::BROADCAST_UNIT;
 
-      packet.message.itf.role   = Interface::SERVER_ROLE;
-      packet.message.itf.uid    = dev_mgt->uid ();
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id     = dev_mgt->uid ();
 
       UID::UID *uid = new UID::URI ("hf://device@example.com");
 
@@ -975,6 +986,8 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_TEARDOWN ()
    {
+      delete device->unit0.bind_mgt;
+
       delete dev_mgt;
 
       delete device;
@@ -1020,7 +1033,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    LONGS_EQUAL (1, response->destination.device);
    LONGS_EQUAL (0, response->destination.unit);
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, response->destination.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, response->destination.mod);
 
    // Should not add entry for same device.
    mock ("AbstractDevice").expectOneCall ("send");
@@ -1101,6 +1114,97 @@ TEST (DeviceManagementServer, Handle_Deregister)
    mock ("AbstractDevice").checkExpectations ();
 
    LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+}
+
+TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
+{
+   // Set-up device entries.
+   for (uint8_t i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = 0x5A50 + i;
+      ostringstream uri;
+      uri << "hf://device" << i << "@example.com";
+      dev->uid = new UID::URI (uri.str ());
+      uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
+      dev->units.push_back (DeviceManagement::Unit (i + 1, profile));
+      dev_mgt->save (dev);
+   }
+
+   // == Set-up some bindings. ==
+   /*
+    * This setups 4 binding entries, where 3 are for the device we are unregistering.
+    */
+
+   Protocol::Address src (0x5A52, 3);
+   Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   Protocol::Address dst (0x5A53, 4);
+
+   auto bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   dst      = Protocol::Address (0x5A55, 6);
+
+   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   dst      = Protocol::Address (0x5A57, 8);
+
+   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   src      = Protocol::Address (0x5A54, 5);
+   dst      = Protocol::Address (0x5A53, 4);
+
+   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+
+   CHECK_EQUAL (Result::OK, bind_res.first);
+
+   LONGS_EQUAL (4, device->unit0.bind_management ()->entries.size ());
+
+   // == De-register the device.
+
+   size_t size = dev_mgt->entries_count ();
+
+   packet.source.device = 0x5A51;
+
+   DeviceManagement::DeregisterMessage message (0x5A52);
+
+   ByteArray expected (message.size ());
+
+   message.pack (expected);
+
+   packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
+   packet.message.length     = expected.size ();
+
+   mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+
+   Result result = dev_mgt->handle (packet, expected, 0);
+   CHECK_EQUAL (Result::FAIL_AUTH, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+
+   LONGS_EQUAL (4, device->unit0.bind_management ()->entries.size ());
+
+   LONGS_EQUAL (size, dev_mgt->entries_count ());
+
+   packet.source.device = 0x5A52;
+
+   mock ("AbstractDevice").expectOneCall ("send");
+   mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+
+   result = dev_mgt->handle (packet, expected, 0);
+   CHECK_EQUAL (Result::OK, result);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+
+   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+
+   LONGS_EQUAL (1, device->unit0.bind_management ()->entries.size ());
 }
 
 TEST (DeviceManagementServer, Entries)

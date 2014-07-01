@@ -6,7 +6,7 @@
 #
 #   \author  Filipe Alves <filipe.alves@bithium.com>
 #
-#   \version 0.2.0
+#   \version 0.3.0
 #
 #   Copyright (c) 2012 Bithium S.A.
 #
@@ -49,7 +49,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions")
 
 # The version number.
 set(PROJECT_MAJOR_VERSION 0)
-set(PROJECT_MINOR_VERSION 2)
+set(PROJECT_MINOR_VERSION 3)
 set(PROJECT_PATCH_VERSION 0)
 
 set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
@@ -73,7 +73,7 @@ endif()
 
 add_subdirectory(src)
 
-if(HANFUN_BUILD_APPS)
+if(HF_BUILD_APPS)
     add_subdirectory(apps)
 endif()
 

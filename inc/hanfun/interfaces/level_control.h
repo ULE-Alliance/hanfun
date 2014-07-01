@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -104,6 +104,8 @@ namespace HF
             protected:
 
             Base() {}
+
+            using Interfaces::Base <Interface::LEVEL_CONTROL>::payload_size;
 
             size_t payload_size (Protocol::Message::Interface &itf) const
             {

@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -24,14 +24,14 @@
  */
 // =============================================================================
 void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Message &message,
-                                                Transport::Link *link)
+                                           Transport::Link *link)
 {
-   Protocol::Packet packet(message);
+   Protocol::Packet packet (message);
 
-   packet.destination = addr;
-   packet.source.device = device()->address();
-   packet.source.unit = id();
-   packet.link = link;
+   packet.destination   = addr;
+   packet.source.device = device ().address ();
+   packet.source.unit   = id ();
+   packet.link          = link;
 
-   device()->send(packet);
+   device ().send (packet);
 }

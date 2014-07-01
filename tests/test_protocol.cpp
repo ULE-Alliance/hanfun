@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -20,6 +20,7 @@
 using namespace std;
 using namespace HF;
 using namespace HF::Protocol;
+using namespace HF::Common;
 
 // =============================================================================
 // Message / Address
@@ -127,7 +128,7 @@ TEST (Message_Interface, Size)
 TEST (Message_Interface, Pack)
 {
    addr.role   = 1;
-   addr.uid    = 0x7AAA;
+   addr.id     = 0x7AAA;
    addr.member = 0x55;
 
    ByteArray array (addr.size () + 6);
@@ -138,7 +139,7 @@ TEST (Message_Interface, Pack)
    CHECK_EQUAL (expected_1, array);
 
    addr.role   = 0;
-   addr.uid    = 0x7AAA;
+   addr.id     = 0x7AAA;
    addr.member = 0x55;
 
    wsize       = addr.pack (array, 3);
@@ -153,14 +154,14 @@ TEST (Message_Interface, Unpack)
    LONGS_EQUAL (addr.size (), rsize);
 
    LONGS_EQUAL (1, addr.role);
-   LONGS_EQUAL (0x7AAA, addr.uid);
+   LONGS_EQUAL (0x7AAA, addr.id);
    LONGS_EQUAL (0x55, addr.member);
 
    rsize = addr.unpack (expected_2, 3);
    LONGS_EQUAL (addr.size (), rsize);
 
    LONGS_EQUAL (0, addr.role);
-   LONGS_EQUAL (0x7AAA, addr.uid);
+   LONGS_EQUAL (0x7AAA, addr.id);
    LONGS_EQUAL (0x55, addr.member);
 }
 
@@ -210,8 +211,8 @@ TEST (Message, Pack)
    message.reference  = 0xAA;
    message.type       = Message::COMMAND_RESP_REQ;
 
-   message.itf.role   = Interface::SERVER_ROLE;
-   message.itf.uid    = 0x7AAA;
+   message.itf.role   = HF::Interface::SERVER_ROLE;
+   message.itf.id     = 0x7AAA;
    message.itf.member = 0x55;
 
    size_t size = message.size ();
@@ -235,8 +236,8 @@ TEST (Message, Unpack)
    LONGS_EQUAL (0xAA, message.reference);
    LONGS_EQUAL (Message::COMMAND_RESP_REQ, message.type);
 
-   LONGS_EQUAL (Interface::SERVER_ROLE, message.itf.role);
-   LONGS_EQUAL (0x7AAA, message.itf.uid);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message.itf.role);
+   LONGS_EQUAL (0x7AAA, message.itf.id);
    LONGS_EQUAL (0x55, message.itf.member);
 
    LONGS_EQUAL (0x01AA, message.length);
@@ -325,18 +326,18 @@ TEST (Packet, Size)
 
 TEST (Packet, Pack)
 {
-   packet->source.mod         = Protocol::Address::DEVICE_ADDR;
+   packet->source.mod         = Protocol::Address::DEVICE;
    packet->source.device      = 0x7AAA;
    packet->source.unit        = 0x55;
 
-   packet->destination.mod    = Protocol::Address::GROUP_ADDR;
+   packet->destination.mod    = Protocol::Address::GROUP;
    packet->destination.device = 0x7555;
    packet->destination.unit   = 0xAA;
 
    packet->message.reference  = 0xCC;
    packet->message.type       = Message::COMMAND_REQ;
    packet->message.itf.role   = 1;
-   packet->message.itf.uid    = 0x7AAA;
+   packet->message.itf.id     = 0x7AAA;
    packet->message.itf.member = 0x55;
 
    payload->data              = 0xAB;
@@ -356,18 +357,18 @@ TEST (Packet, Unpack)
    size_t rsize = packet->unpack (expected, 3);
    LONGS_EQUAL (6 + 2 + 7, rsize);
 
-   LONGS_EQUAL (Protocol::Address::DEVICE_ADDR, packet->source.mod);
+   LONGS_EQUAL (Protocol::Address::DEVICE, packet->source.mod);
    LONGS_EQUAL (0x7AAA, packet->source.device);
    LONGS_EQUAL (0x55, packet->source.unit);
 
-   LONGS_EQUAL (Protocol::Address::GROUP_ADDR, packet->destination.mod);
+   LONGS_EQUAL (Protocol::Address::GROUP, packet->destination.mod);
    LONGS_EQUAL (0x7555, packet->destination.device);
    LONGS_EQUAL (0xAA, packet->destination.unit);
 
    LONGS_EQUAL (0xCC, packet->message.reference);
    LONGS_EQUAL (Message::COMMAND_REQ, packet->message.type);
    LONGS_EQUAL (1, packet->message.itf.role);
-   LONGS_EQUAL (0x7AAA, packet->message.itf.uid);
+   LONGS_EQUAL (0x7AAA, packet->message.itf.id);
    LONGS_EQUAL (0x55, packet->message.itf.member);
 
    payload->unpack (expected, 3 + rsize);

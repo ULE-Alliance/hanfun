@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -22,10 +22,6 @@
 
 #include <string>
 #include <vector>
-#include <array>
-#include <forward_list>
-#include <deque>
-#include <type_traits>
 
 #include "hanfun/version.h"
 #include "hanfun/config.h"
@@ -342,7 +338,7 @@ namespace HF
        * Wrapper to pointers for classes that implement the Serializable concept.
        */
       template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value>::type>:
+      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value>::type> :
          public Serializable
       {
          T data;
@@ -442,8 +438,52 @@ namespace HF
          FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
       } Result;
 
+      /*!
+       * Interface UID.
+       */
+      struct Interface
+      {
+         uint16_t role : 1;         //!< Interface role : Server or Client.
+         uint16_t id   : 15;        //!< Identifier of the interface. \see Interface::UID.
+
+         Interface(uint16_t id = 0, uint16_t role = 0):
+            role (role), id (id) {}
+
+         //! \see HF::Serializable::size.
+         size_t size () const;
+
+         //! \see HF::Serializable::pack.
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+
+         //! \see HF::Serializable::unpack.
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+      };
+
+      // =============================================================================
+      // Operators
+      // =============================================================================
+
+      inline bool operator ==(const Interface &lhs, const Interface &rhs)
+      {
+         return (lhs.role == rhs.role) && (lhs.id == rhs.id);
+      }
+
+      inline bool operator !=(const Interface &lhs, const Interface &rhs)
+      {
+         return !(lhs == rhs);
+      }
+
+      inline bool operator <(Interface const &lhs, Interface const &rhs)
+      {
+         return (lhs.role < rhs.role) || (lhs.role == rhs.role && lhs.id < rhs.id);
+      }
+
    }  // namespace Common
 
 }  // namespace HF
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
 
 #endif /* HF_COMMON_H */

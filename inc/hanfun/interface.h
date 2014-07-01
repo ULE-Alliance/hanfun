@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -42,6 +42,7 @@ namespace HF
       {
          /* Core Services */
          DEVICE_MANAGEMENT  = 0x0001,   //!< Device Management Interface UID.
+         BIND_MANAGEMENT    = 0x0002,   //!< Bind Management Interface UID.
          DEVICE_INFORMATION = 0x0005,   //!< Device Information Interface UID.
 
          /* Functional Interfaces. */
@@ -57,7 +58,7 @@ namespace HF
 
       enum Commands
       {
-         MAX_CMD_ID = 0xFF,           //! Maximum value for command ids.
+         MAX_CMD_ID = 0xFF,           //! Maximum value for command IDs.
       };
 
       // =============================================================================

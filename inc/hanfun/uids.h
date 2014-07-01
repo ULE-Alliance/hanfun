@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -22,8 +22,6 @@ namespace HF
    // =============================================================================
    // UID implementation
    // =============================================================================
-
-   using namespace HF::Common;
 
    /*!
     * This is the top-level namespace for HAN-FUN UIDs.
@@ -82,7 +80,7 @@ namespace HF
          virtual UID *clone () const = 0;
 
          //! \see HF::Serializable::size.
-         virtual size_t size () const
+         size_t size () const
          {
             return 1;
          }
@@ -94,13 +92,13 @@ namespace HF
       struct NONE:public UID
       {
          //! Type of the UID.
-         virtual uint8_t type () const
+         uint8_t type () const
          {
             return NONE_UID;
          }
 
          //! \see HF::Serializable::pack.
-         virtual size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
             offset += array.write (offset, (uint8_t) 0);
@@ -108,7 +106,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         virtual size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
@@ -143,7 +141,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
 
@@ -158,7 +156,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
@@ -247,7 +245,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::pack.
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
             size_t size  = value.size ();
@@ -263,7 +261,7 @@ namespace HF
          }
 
          //! \see HF::Serializable::unpack.
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
@@ -302,6 +300,10 @@ namespace HF
          }
       };
 
+      size_t pack (UID &uid, Common::ByteArray &array, size_t offset);
+
+      size_t unpack (UID * &uid, Common::ByteArray &array, size_t offset);
+
    }  // namespace UID
 
 }  // namespace HF
@@ -335,7 +337,7 @@ namespace std
    template<>
    struct less <HF::UID::UID const *> :public binary_function <HF::UID::UID const *, HF::UID::UID const *, bool>
    {
-      bool operator ()(HF::UID::UID const * lhs, HF::UID::UID const *rhs) const
+      bool operator ()(HF::UID::UID const *lhs, HF::UID::UID const *rhs) const
       {
          if (lhs == nullptr)
          {

@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -17,9 +17,65 @@
 
 #include "hanfun.h"
 
+// =============================================================================
+// Defines
+// =============================================================================
+
+// Debug Macros.
+
+#define NL                   std::endl
+
+#define HF_LOG_LEVEL_NONE    0
+#define HF_LOG_LEVEL_ERROR   1
+#define HF_LOG_LEVEL_WARN    2
+#define HF_LOG_LEVEL_INFO    3
+#define HF_LOG_LEVEL_DEBUG   4
+#define HF_LOG_LEVEL_TRACE   5
+
+#ifndef HF_LOG_LEVEL
+   #define HF_LOG_LEVEL      HF_LOG_LEVEL_INFO
+#endif
+
+#if HF_LOG_LEVEL >= HF_LOG_LEVEL_ERROR
+   #define ERROR             std::cout.clear(); std::cerr << "[ERROR] "
+#else
+   #define ERROR             std::cerr.setstate (std::ios_base::badbit);std::cerr
+#endif
+
+#if HF_LOG_LEVEL >= HF_LOG_LEVEL_WARN
+   #define WARN              std::cout.clear(); std::cerr << "[WARN ] "
+#else
+   #define WARN              std::cerr.setstate (std::ios_base::badbit);std::cerr
+#endif
+
+#if HF_LOG_LEVEL >= HF_LOG_LEVEL_INFO
+   #define INFO              std::cout.clear(); std::cout << "[INFO ] "
+#else
+   #define INFO              std::cout.setstate (std::ios_base::badbit);std::cout
+#endif
+
+#if HF_LOG_LEVEL >= HF_LOG_LEVEL_DEBUG
+   #define DEBUG             std::cout.clear(); std::cout << "[DEBUG] "
+#else
+   #define DEBUG             std::cout.setstate (std::ios_base::badbit);std::cout
+#endif
+
+#if HF_LOG_LEVEL >= HF_LOG_LEVEL_TRACE
+   #define TRACE             std::cout.clear(); std::cout << "[TRACE] "
+#else
+   #define TRACE             std::cout.setstate (std::ios_base::badbit);std::cout
+#endif
+
+#define APP                  std::cout.clear(); std::cout
+
+#define LOG(X)   X
+
+// =============================================================================
+// API
+// =============================================================================
+
 namespace HF
 {
-
    /*!
     * This namespace contains the declaration of the functions that implement the
     * HAN-FUN example applications.
@@ -27,33 +83,21 @@ namespace HF
    namespace Application
    {
       /*!
-       * This function implements the HAN-FUN example application for Base devices.
+       * Initialize the application.
        *
-       * This application provides commands to register, de-register, bind and un-bind
-       * devices.
-       *
-       * @param [in] argc     number of elements in \c argv.
-       * @param [in] argv     arguments received from the command line.
-       * @param [in] layer    the HAN-FUN transport layer to use.
-       *
-       * @return  return value of the application.
+       * @param [in] transport   reference to the transport layer to use.
        */
-      int Base (int argc, char * argv[], HF::Transport::Layer &transport);
+      void Initialize (HF::Transport::Layer &transport);
 
       /*!
-       * This function implements the HAN-FUN example application for Node devices.
+       * Handle the command.
        *
-       * This application provides commands to register, de-register the device.
+       * @param [in] command  string containing the command issued by the user.
        *
-       * TODO This function is not implemented yet !
-       *
-       * @param [in] argc     number of elements in \c argv.
-       * @param [in] argv     arguments received from the command line.
-       * @param [in] layer    the HAN-FUN transport layer to use.
-       *
-       * @return  return value of the application.
+       * @retval  true  quit command requested,
+       * @retval  false otherwise.
        */
-      int Node(int argc, char * argv[], HF::Transport::Layer *layer);
+      bool Handle (std::string command);
 
    }  // namespace Application
 

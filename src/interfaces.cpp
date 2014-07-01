@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -234,7 +234,7 @@ Common::Result AbstractInterface::check_message (Message &message, Common::ByteA
    UNUSED (payload);
    UNUSED (offset);
 
-   if (!check_uid (message.itf.uid))
+   if (!check_uid (message.itf.id))
    {
       return Common::Result::FAIL_ID;
    }
