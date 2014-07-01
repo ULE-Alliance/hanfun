@@ -306,6 +306,10 @@ Common::Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *
    {
       return Common::Result::FAIL_UNKNOWN;
    }
+   else if (device->address == HF::Protocol::BROADCAST_ADDR)
+   {
+      return Common::Result::FAIL_UNKNOWN;
+   }
 
    // Add new entry into the database.
    if (_uid2device.count (device->uid) == 0)
