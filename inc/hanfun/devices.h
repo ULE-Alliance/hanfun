@@ -390,6 +390,11 @@ namespace HF
                });
                /* *INDENT-ON* */
 
+               if (it == _links.end())
+               {
+                  return nullptr;
+               }
+
                return *it;
             }
 
