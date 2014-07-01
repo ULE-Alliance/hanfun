@@ -347,6 +347,13 @@ namespace HF
             void connected (Transport::Link *link)
             {
                _links.push_front (link);
+
+               // Check if a registration exists for this link.
+               Core::DeviceManagement::Device * entry = unit0.device_management()->entry(link->uid());
+               if (entry != nullptr)
+               {
+                  link->address(entry->address);
+               }
             }
 
             void disconnected (Transport::Link *link)
