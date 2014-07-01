@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    x.x.x
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -19,21 +19,48 @@
 
 #include "node.h"
 
+#include "common.h"
+
+#define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
+#include "application.h"
+
+// =============================================================================
+// Node
+// =============================================================================
+
+// =============================================================================
+// Node::receive
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
+{
+   LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
+
+   LOG (TRACE) << "Payload : " << payload << NL;
+
+   LOG (DEBUG) << packet << NL;
+
+   HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>::receive (packet, payload, offset);
+}
+
 // =============================================================================
 // Simple Light
 // =============================================================================
 
 void SimpleLight::on ()
 {
-   std::cout << "[HANFUN] >>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << std::endl;
+   LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << NL;
 }
 
 void SimpleLight::off ()
 {
-   std::cout << "[HANFUN] >>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << std::endl;
+   LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << NL;
 }
 
 void SimpleLight::toggle ()
 {
-   std::cout << "[HANFUN] >>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << std::endl;
+   LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
 }

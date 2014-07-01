@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -300,9 +300,9 @@ namespace HF
          }
       };
 
-      size_t pack(UID &uid, Common::ByteArray &array, size_t offset);
+      size_t pack (UID &uid, Common::ByteArray &array, size_t offset);
 
-      size_t unpack(UID *&uid, Common::ByteArray &array, size_t offset);
+      size_t unpack (UID * &uid, Common::ByteArray &array, size_t offset);
 
    }  // namespace UID
 

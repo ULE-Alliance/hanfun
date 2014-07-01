@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -21,6 +21,8 @@
 #include "base.h"
 
 #include "common.h"
+
+#define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
 #include "application.h"
 
 // =============================================================================
@@ -45,7 +47,8 @@ bool DeviceManagement::available (uint16_t address)
                            [address](HF::Core::DeviceManagement::Device *dev)
                            {
                               return address == dev->address;
-                           });
+                           }
+                          );
 
    return it == entries ().end ();
 }
@@ -65,7 +68,8 @@ uint16_t DeviceManagement::next_address ()
 
    if (result == HF::Protocol::BROADCAST_ADDR)
    {
-      for (result = 1; result < HF::Protocol::BROADCAST_ADDR && !available(result); result++);
+      for (result = 1; result < HF::Protocol::BROADCAST_ADDR && !available (result); result++)
+      {}
    }
 
    return result;
@@ -85,19 +89,8 @@ bool DeviceManagement::deregister (uint16_t address)
       return false;
    }
 
-   auto _entry = entry(address);
+   auto _entry = entry (address);
 
-//   auto it = std::find_if (_entries.begin (), _entries.end (),
-//                           [address](HF::Core::DeviceManagement::Device *dev)
-//                           {
-//                              return address == dev->address;
-//                           }
-//                          );
-//   if (it != _entries.end ())
-//   {
-//      HF::Core::DeviceManagement::Server::deregister (*(*it));
-//      return true;
-//   }
    if (_entry != nullptr)
    {
       HF::Core::DeviceManagement::Server::deregister (*_entry);
@@ -146,9 +139,9 @@ void DeviceManagement::save (std::string prefix)
                      /* Save UID */
                      HF::Common::ByteArray array_uid (device->uid->size ());
 
-                     HF::UID::pack(*device->uid, array_uid, 0);
+                     HF::UID::pack (*device->uid, array_uid, 0);
 
-                     uint16_t size_uid = array_uid.size();
+                     uint16_t size_uid = array_uid.size ();
                      ofs.write ((char *) &size_uid, sizeof(uint16_t));
 
                      ofs << array_uid;
@@ -192,7 +185,7 @@ void DeviceManagement::restore (std::string prefix)
 
       /* Restore Device */
       HF::Common::ByteArray buffer;
-      buffer.reserve(size);
+      buffer.reserve (size);
 
       for (size_t j = 0; j < size; ++j)
       {
@@ -217,7 +210,7 @@ void DeviceManagement::restore (std::string prefix)
 
       /* Restore UID */
       HF::Common::ByteArray buffer_uid;
-      buffer.reserve(size);
+      buffer.reserve (size);
 
       for (size_t j = 0; j < size; ++j)
       {
@@ -263,10 +256,11 @@ void BindManagement::save (std::string prefix)
 
    std::for_each (entries.begin (), entries.end (), [&ofs](const HF::Core::BindManagement::Entry &entry)
                   {
-                     HF::Common::ByteArray temp(entry.size());
-                     entry.pack(temp);
+                     HF::Common::ByteArray temp (entry.size ());
+                     entry.pack (temp);
                      ofs << temp;
-                  });
+                  }
+                 );
 
    ofs.flush ();
    ofs.close ();
@@ -291,14 +285,14 @@ void BindManagement::restore (std::string prefix)
 
    HF::Core::BindManagement::Entry entry;
 
-   size_t size = entry.size();
+   size_t size = entry.size ();
 
    HF::Common::ByteArray buffer;
-   buffer.reserve(size);
+   buffer.reserve (size);
 
    while (ifs.good ())
    {
-      buffer.clear();
+      buffer.clear ();
 
       size_t j;
 
@@ -311,10 +305,10 @@ void BindManagement::restore (std::string prefix)
       }
 
       // Read an entire entry.
-      if (j  == size)
+      if (j == size)
       {
-         entry.unpack(buffer);
-         auto res = this->add(entry.source, entry.destination, entry.itf);
+         entry.unpack (buffer);
+         auto res = this->add (entry.source, entry.destination, entry.itf);
          LOG (TRACE) << "Bind Add : " << res.first << NL;
       }
    }
@@ -353,11 +347,11 @@ void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 // =============================================================================
 bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   HF::Protocol::Address source(dev_addr_1, 1);
-   HF::Common::Interface itf(HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
-   HF::Protocol::Address destination(dev_addr_2, 1);
+   HF::Protocol::Address source (dev_addr_1, 1);
+   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination (dev_addr_2, 1);
 
-   return unit0.bind_management()->entries.find(source, itf, destination) != nullptr;
+   return unit0.bind_management ()->entries.find (source, itf, destination) != nullptr;
 }
 
 // =============================================================================
@@ -369,31 +363,28 @@ bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 // =============================================================================
 uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   UNUSED(dev_addr_1);
-   UNUSED(dev_addr_2);
-
    if (this->has_bind (dev_addr_1, dev_addr_2))
    {
       return 1;
    }
 
-   HF::Protocol::Address source(dev_addr_1, 1);
-   HF::Common::Interface itf(HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
-   HF::Protocol::Address destination(dev_addr_2, 1);
+   HF::Protocol::Address source (dev_addr_1, 1);
+   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination (dev_addr_2, 1);
 
-   auto res = unit0.bind_management()->add(source, destination, itf);
+   auto res = unit0.bind_management ()->add (source, destination, itf);
 
    if (res.first == HF::Common::OK)
    {
       return 0;
    }
 
-   if (unit0.device_management()->entry(dev_addr_1) == nullptr)
+   if (unit0.device_management ()->entry (dev_addr_1) == nullptr)
    {
       return 2;
    }
 
-   if (unit0.device_management()->entry(dev_addr_2) == nullptr)
+   if (unit0.device_management ()->entry (dev_addr_2) == nullptr)
    {
       return 3;
    }
@@ -410,12 +401,9 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 // =============================================================================
 bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   UNUSED(dev_addr_1);
-   UNUSED(dev_addr_2);
+   HF::Protocol::Address source (dev_addr_1, 1);
+   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination (dev_addr_2, 1);
 
-   HF::Protocol::Address source(dev_addr_1, 1);
-   HF::Common::Interface itf(HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
-   HF::Protocol::Address destination(dev_addr_2, 1);
-
-   return unit0.bind_management()->remove(source,destination, itf) == HF::Common::Result::OK;
+   return unit0.bind_management ()->remove (source, destination, itf) == HF::Common::Result::OK;
 }

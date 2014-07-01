@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -288,7 +288,7 @@ namespace HF
             static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
 
-            typedef typename tuple_element <2, decltype(HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
             static_assert (is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
                            "BindMgt must be of type HF::Core::BindManagement::Server");
@@ -349,10 +349,11 @@ namespace HF
                _links.push_front (link);
 
                // Check if a registration exists for this link.
-               Core::DeviceManagement::Device * entry = unit0.device_management()->entry(link->uid());
+               Core::DeviceManagement::Device *entry = unit0.device_management ()->entry (link->uid ());
+
                if (entry != nullptr)
                {
-                  link->address(entry->address);
+                  link->address (entry->address);
                }
             }
 
@@ -397,7 +398,7 @@ namespace HF
                });
                /* *INDENT-ON* */
 
-               if (it == _links.end())
+               if (it == _links.end ())
                {
                   return nullptr;
                }
@@ -416,26 +417,27 @@ namespace HF
             {
                HF::Core::BindManagement::Entries &entries = unit0.bind_management ()->entries;
 
-               auto range = entries.find(packet.source, packet.message.itf);
+               auto range                                 = entries.find (packet.source, packet.message.itf);
 
                // No bindings found !
-               if (range.first == entries.end() && range.second == entries.end())
+               if (range.first == entries.end () && range.second == entries.end ())
                {
                   return;
                }
 
                Protocol::Packet other = packet;
 
-               other.message.payload.reserve(payload.size() - offset);
+               other.message.payload.reserve (payload.size () - offset);
 
-               copy (payload.begin() + offset, payload.end(), other.message.payload.begin());
+               copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
-               for_each(range.first, range.second, [this, &other](const Core::BindManagement::Entry &entry)
-               {
-                  other.link = nullptr;
-                  other.destination = entry.destination;
-                  this->send(other);
-               });
+               for_each (range.first, range.second, [this, &other](const Core::BindManagement::Entry &entry)
+                         {
+                            other.link = nullptr;
+                            other.destination = entry.destination;
+                            this->send (other);
+                         }
+                        );
             }
          };
 

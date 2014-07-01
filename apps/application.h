@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -23,52 +23,52 @@
 
 // Debug Macros.
 
-#define NL     std::endl
+#define NL                   std::endl
 
-#define HF_LOG_LEVEL_NONE     0
-#define HF_LOG_LEVEL_ERROR    1
-#define HF_LOG_LEVEL_WARN     2
-#define HF_LOG_LEVEL_INFO     3
-#define HF_LOG_LEVEL_DEBUG    4
-#define HF_LOG_LEVEL_TRACE    5
+#define HF_LOG_LEVEL_NONE    0
+#define HF_LOG_LEVEL_ERROR   1
+#define HF_LOG_LEVEL_WARN    2
+#define HF_LOG_LEVEL_INFO    3
+#define HF_LOG_LEVEL_DEBUG   4
+#define HF_LOG_LEVEL_TRACE   5
 
 #ifndef HF_LOG_LEVEL
-#define HF_LOG_LEVEL    HF_LOG_LEVEL_INFO
+   #define HF_LOG_LEVEL      HF_LOG_LEVEL_INFO
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_ERROR
-#define ERROR  std::cerr.setstate(std::ios_base::goodbit); std::cerr << "[ERROR] "
+   #define ERROR             std::cout.clear(); std::cerr << "[ERROR] "
 #else
-#define ERROR  std::cerr.setstate(std::ios_base::badbit); std::cerr
+   #define ERROR             std::cerr.setstate (std::ios_base::badbit);std::cerr
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_WARN
-#define WARN   std::cerr.setstate(std::ios_base::goodbit); std::cerr << "[WARN ] "
+   #define WARN              std::cout.clear(); std::cerr << "[WARN ] "
 #else
-#define WARN   std::cerr.setstate(std::ios_base::badbit); std::cerr
+   #define WARN              std::cerr.setstate (std::ios_base::badbit);std::cerr
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_INFO
-#define INFO   std::cout.setstate(std::ios_base::goodbit); std::cout << "[INFO ] "
+   #define INFO              std::cout.clear(); std::cout << "[INFO ] "
 #else
-#define INFO   std::cout.setstate(std::ios_base::badbit); std::cout
+   #define INFO              std::cout.setstate (std::ios_base::badbit);std::cout
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_DEBUG
-#define DEBUG  std::cout.setstate(std::ios_base::goodbit); std::cout << "[DEBUG] "
+   #define DEBUG             std::cout.clear(); std::cout << "[DEBUG] "
 #else
-#define DEBUG  std::cout.setstate(std::ios_base::badbit); std::cout
+   #define DEBUG             std::cout.setstate (std::ios_base::badbit);std::cout
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_TRACE
-#define TRACE  std::cout.setstate(std::ios_base::goodbit); std::cout << "[TRACE] "
+   #define TRACE             std::cout.clear(); std::cout << "[TRACE] "
 #else
-#define TRACE  std::cout.setstate(std::ios_base::badbit); std::cout
+   #define TRACE             std::cout.setstate (std::ios_base::badbit);std::cout
 #endif
 
-#define APP    std::cout
+#define APP                  std::cout.clear(); std::cout
 
-#define LOG(X) X
+#define LOG(X)   X
 
 // =============================================================================
 // API

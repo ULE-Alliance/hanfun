@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    x.x.x
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -48,28 +48,29 @@ uv_buf_t alloc_buffer (uv_handle_t *handle, size_t suggested_size);
 // =============================================================================
 static void read_stdin (uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
-   UNUSED(stream);
+   UNUSED (stream);
 
    if (nread == -1)
    {
-      if (uv_last_error(uv_default_loop()).code == UV_EOF)
+      if (uv_last_error (uv_default_loop ()).code == UV_EOF)
       {
-         uv_close((uv_handle_t*) &stdin_pipe, NULL);
+         uv_close ((uv_handle_t *) &stdin_pipe, NULL);
       }
    }
    else if (nread > 0)
    {
-      std::string cmd(buf.base, nread);
-      if (HF::Application::Handle(cmd))
+      std::string cmd (buf.base, nread);
+
+      if (HF::Application::Handle (cmd))
       {
-         transport.destroy();
-         uv_stop(uv_default_loop());
+         transport.destroy ();
+         uv_stop (uv_default_loop ());
       }
    }
 
    if (buf.base)
    {
-      free(buf.base);
+      free (buf.base);
    }
 }
 
@@ -79,16 +80,17 @@ static void read_stdin (uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 
 int main (int argc, char *argv[])
 {
-   UNUSED(argc);
-   UNUSED(argv);
+   UNUSED (argc);
+   UNUSED (argv);
 
-   uv_loop_t * loop = uv_default_loop();
+   uv_loop_t *loop = uv_default_loop ();
 
 #ifdef HF_BASE_APP
-   HF::UID::URI uid("hf://base.example.com");
+   HF::UID::URI uid ("hf://base.example.com");
 #endif
 
 #ifdef HF_NODE_APP
+
    if (argc < 2)
    {
       std::cout << "usage : " << argv[0] << " [number]" << std::endl;
@@ -98,18 +100,18 @@ int main (int argc, char *argv[])
    std::stringstream ss;
    ss << "hf://node.example.com/" << argv[1];
 
-   HF::UID::URI uid(ss.str());
+   HF::UID::URI uid (ss.str ());
 #endif
 
-   HF::Application::Initialize(transport);
-   transport.uid(&uid);
+   HF::Application::Initialize (transport);
+   transport.uid (&uid);
 
-   HF::Application::Handle("?");
+   HF::Application::Handle ("?");
 
-   uv_pipe_init(loop, &stdin_pipe, 0);
-   uv_pipe_open(&stdin_pipe, 0);
+   uv_pipe_init (loop, &stdin_pipe, 0);
+   uv_pipe_open (&stdin_pipe, 0);
 
-   uv_read_start((uv_stream_t*) &stdin_pipe, alloc_buffer, read_stdin);
+   uv_read_start ((uv_stream_t *) &stdin_pipe, alloc_buffer, read_stdin);
 
-   return uv_run(loop, UV_RUN_DEFAULT);
+   return uv_run (loop, UV_RUN_DEFAULT);
 }

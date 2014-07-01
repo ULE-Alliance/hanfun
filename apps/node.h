@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    x.x.x
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -20,11 +20,12 @@
 /*!
  * This class represents a node in the HAN-FUN network.
  */
-struct Node: public HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>
+struct Node:public HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>
 {
+   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
 };
 
-struct SimpleLight : public HF::Units::Unit<HF::Profiles::SimpleLight>
+struct SimpleLight:public HF::Units::Unit <HF::Profiles::SimpleLight>
 {
    SimpleLight(uint8_t index, HF::IDevice &device):
       HF::Units::Unit <HF::Profiles::SimpleLight>(index, device)
@@ -37,7 +38,7 @@ struct SimpleLight : public HF::Units::Unit<HF::Profiles::SimpleLight>
    void toggle ();
 };
 
-struct SimpleSwitch : public HF::Units::Unit<HF::Profiles::SimpleOnOffSwitch>
+struct SimpleSwitch:public HF::Units::Unit <HF::Profiles::SimpleOnOffSwitch>
 {
    SimpleSwitch(uint8_t index, HF::IDevice &device):
       HF::Units::Unit <HF::Profiles::SimpleOnOffSwitch>(index, device)

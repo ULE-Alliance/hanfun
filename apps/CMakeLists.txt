@@ -6,7 +6,7 @@
 #
 #   \author  Filipe Alves <filipe.alves@bithium.com>
 #
-#   \version 0.2.0
+#   \version 0.3.0
 #
 #   Copyright (c) 2014 Bithium S.A.
 #
@@ -27,8 +27,8 @@ find_program(MAKE_BIN "make")
 
 ExternalProject_Add(libuv
     PREFIX ${LIBUV_PREFIX}
-    GIT_REPOSITORY "https://github.com/joyent/libuv.git"
-    GIT_TAG "v0.10.26"
+    URL "http://libuv.org/dist/v0.10.27/libuv-v0.10.27.tar.gz"
+    URL_HASH MD5=8bc14dc254363092bd36919ea05cc9ab
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ${MAKE_BIN}
     BUILD_IN_SOURCE 1

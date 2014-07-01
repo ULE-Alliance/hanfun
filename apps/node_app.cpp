@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    x.x.x
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
@@ -34,33 +34,33 @@
 
 static Node node;
 
-static SimpleLight * simple_light = nullptr;
+static SimpleLight *simple_light   = nullptr;
 
-static SimpleSwitch * simple_switch = nullptr;
+static SimpleSwitch *simple_switch = nullptr;
 
 // =============================================================================
 // Commands
 // =============================================================================
 
-COMMAND(Register, "r", "r:register device")
+COMMAND (Register, "r", "r:register device")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   node.unit0.device_management()->register_device();
+   node.unit0.device_management ()->register_device ();
 }
 
-COMMAND(Address, "a", "a:device address")
+COMMAND (Address, "a", "a:device address")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   std::cout << "Device Address : " << node.address() << std::endl;
+   LOG (APP) << "Device Address : " << node.address () << NL;
 }
 
-COMMAND(SimpleLight, "sl", "sl:set device as a simple light")
+COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
    if (simple_switch != nullptr)
@@ -70,13 +70,15 @@ COMMAND(SimpleLight, "sl", "sl:set device as a simple light")
 
    if (simple_light == nullptr)
    {
-      simple_light = new SimpleLight(1, node);
+      simple_light = new SimpleLight (1, node);
    }
+
+   LOG (APP) << "Device is now a Simple Light !" << NL;
 }
 
-COMMAND(SimpleSwitch, "ss", "sl:set device as a simple switch")
+COMMAND (SimpleSwitch, "ss", "sl:set device as a simple switch")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
    if (simple_light != nullptr)
@@ -86,18 +88,20 @@ COMMAND(SimpleSwitch, "ss", "sl:set device as a simple switch")
 
    if (simple_switch == nullptr)
    {
-      simple_switch = new SimpleSwitch(1, node);
+      simple_switch = new SimpleSwitch (1, node);
    }
+
+   LOG (APP) << "Device is now a Simple Switch !" << NL;
 }
 
-COMMAND(On, "on", "on:On Command")
+COMMAND (On, "on", "on:On Command")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
    if (simple_switch != nullptr)
    {
-      simple_switch->on();
+      simple_switch->on ();
    }
    else
    {
@@ -105,14 +109,14 @@ COMMAND(On, "on", "on:On Command")
    }
 }
 
-COMMAND(Off, "off", "off:Off Command")
+COMMAND (Off, "off", "off:Off Command")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
    if (simple_switch != nullptr)
    {
-      simple_switch->off();
+      simple_switch->off ();
    }
    else
    {
@@ -120,14 +124,14 @@ COMMAND(Off, "off", "off:Off Command")
    }
 }
 
-COMMAND(Toggle, "toggle", "toggle:Toggle Command")
+COMMAND (Toggle, "toggle", "toggle:Toggle Command")
 {
-   UNUSED(args);
+   UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
    if (simple_switch != nullptr)
    {
-      simple_switch->toggle();
+      simple_switch->toggle ();
    }
    else
    {
@@ -150,7 +154,7 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 {
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   transport.initialize();
+   transport.initialize ();
 
-   transport.add(&node);
+   transport.add (&node);
 }

@@ -7,7 +7,7 @@
  *
  * \author		Filipe Alves <filipe.alves@bithium.com>
  *
- * \version		0.2.0
+ * \version		0.3.0
  *
  * \copyright	Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -678,17 +678,17 @@ TEST_GROUP (DeviceManagementClient)
 
    TEST_SETUP ()
    {
-      device      = new Testing::Device ();
+      device                = new Testing::Device ();
 
-      unit1       = new Testing::Unit (1, *device);
-      unit2       = new Testing::Unit (2, *device);
-      unit3       = new Testing::Unit (3, *device);
+      unit1                 = new Testing::Unit (1, *device);
+      unit2                 = new Testing::Unit (2, *device);
+      unit3                 = new Testing::Unit (3, *device);
 
-      unit1->_uid = 0xFF01;
-      unit2->_uid = 0xFF02;
-      unit3->_uid = 0xFF03;
+      unit1->_uid           = 0xFF01;
+      unit2->_uid           = 0xFF02;
+      unit3->_uid           = 0xFF03;
 
-      dev_mgt     = new TestDeviceManagementClient (device->unit0);
+      dev_mgt               = new TestDeviceManagementClient (device->unit0);
 
       device->unit0.dev_mgt = dev_mgt;
 
@@ -965,7 +965,7 @@ TEST_GROUP (DeviceManagementServer)
 
       device->unit0.dev_mgt     = dev_mgt;
 
-      device->unit0.bind_mgt    = new HF::Core::BindManagement::Server(device->unit0);
+      device->unit0.bind_mgt    = new HF::Core::BindManagement::Server (device->unit0);
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;
@@ -1144,26 +1144,26 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
-   dst = Protocol::Address(0x5A55, 6);
+   dst      = Protocol::Address (0x5A55, 6);
 
    bind_res = device->unit0.bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
-   dst = Protocol::Address(0x5A57, 8);
+   dst      = Protocol::Address (0x5A57, 8);
 
    bind_res = device->unit0.bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
-   src = Protocol::Address(0x5A54, 5);
-   dst = Protocol::Address(0x5A53, 4);
+   src      = Protocol::Address (0x5A54, 5);
+   dst      = Protocol::Address (0x5A53, 4);
 
-   bind_res = device->unit0.bind_management()->add(src, dst, itf);
+   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
-   LONGS_EQUAL (4, device->unit0.bind_management()->entries.size());
+   LONGS_EQUAL (4, device->unit0.bind_management ()->entries.size ());
 
    // == De-register the device.
 
@@ -1187,7 +1187,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    mock ("DeviceManagementServer").checkExpectations ();
 
-   LONGS_EQUAL (4, device->unit0.bind_management()->entries.size());
+   LONGS_EQUAL (4, device->unit0.bind_management ()->entries.size ());
 
    LONGS_EQUAL (size, dev_mgt->entries_count ());
 
@@ -1204,7 +1204,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
 
-   LONGS_EQUAL (1, device->unit0.bind_management()->entries.size());
+   LONGS_EQUAL (1, device->unit0.bind_management ()->entries.size ());
 }
 
 TEST (DeviceManagementServer, Entries)

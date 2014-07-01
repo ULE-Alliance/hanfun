@@ -7,7 +7,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -465,7 +465,7 @@ namespace HF
          {
             Server(HF::Devices::Concentrator::IUnit0 &unit);
 
-            virtual ~Server() {};
+            virtual ~Server() {}
 
             // =============================================================================
             // API

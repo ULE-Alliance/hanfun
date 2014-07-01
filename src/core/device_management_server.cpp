@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -200,7 +200,7 @@ Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &pa
       return Common::Result::FAIL_AUTH;
    }
 
-   result = deregister(*destination);
+   result = deregister (*destination);
 
    Protocol::Response res (result);
 
@@ -230,9 +230,9 @@ Common::Result DeviceManagement::Server::deregister (Device &device)
 {
    // TODO Remove group information.
 
-   unit0().bind_management()->entries.destroy(device.address);
+   unit0 ().bind_management ()->entries.destroy (device.address);
 
-   return destroy(&device);
+   return destroy (&device);
 }
 
 // =============================================================================

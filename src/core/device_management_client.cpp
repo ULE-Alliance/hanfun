@@ -6,7 +6,7 @@
  *
  * \author     Filipe Alves <filipe.alves@bithium.com>
  *
- * \version    0.2.0
+ * \version    0.3.0
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  */
@@ -42,17 +42,18 @@ void DeviceManagement::Client::register_device ()
    HF::IDevice &device        = unit ().device ();
 
    // TODO Add support for optional interfaces.
-   for_each (device.units ().begin (), device.units ().end (), [&payload](const Units::IUnit * dev_unit)
-   {
-      if (dev_unit != nullptr && dev_unit->id () != 0)
-      {
-         Unit unit;
-         unit.id      = dev_unit->id ();
-         unit.profile = dev_unit->uid ();
+   for_each (device.units ().begin (), device.units ().end (), [&payload](const Units::IUnit *dev_unit)
+             {
+                if (dev_unit != nullptr && dev_unit->id () != 0)
+                {
+                   Unit unit;
+                   unit.id = dev_unit->id ();
+                   unit.profile = dev_unit->uid ();
 
-         payload->units.push_back (unit);
-      }
-   });
+                   payload->units.push_back (unit);
+                }
+             }
+            );
 
    Protocol::Message message (payload->size ());
 
