@@ -21,6 +21,8 @@
 #include "base.h"
 
 #include "common.h"
+
+#define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
 #include "application.h"
 
 // =============================================================================

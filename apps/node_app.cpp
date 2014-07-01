@@ -55,7 +55,7 @@ COMMAND (Address, "a", "a:device address")
    UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   std::cout << "Device Address : " << node.address () << std::endl;
+   LOG (APP) << "Device Address : " << node.address () << NL;
 }
 
 COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
@@ -72,6 +72,8 @@ COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
    {
       simple_light = new SimpleLight (1, node);
    }
+
+   LOG (APP) << "Device is now a Simple Light !" << NL;
 }
 
 COMMAND (SimpleSwitch, "ss", "sl:set device as a simple switch")
@@ -88,6 +90,8 @@ COMMAND (SimpleSwitch, "ss", "sl:set device as a simple switch")
    {
       simple_switch = new SimpleSwitch (1, node);
    }
+
+   LOG (APP) << "Device is now a Simple Switch !" << NL;
 }
 
 COMMAND (On, "on", "on:On Command")

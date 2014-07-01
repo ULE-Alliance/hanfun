@@ -21,7 +21,9 @@
  * This class represents a node in the HAN-FUN network.
  */
 struct Node:public HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>
-{};
+{
+   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
+};
 
 struct SimpleLight:public HF::Units::Unit <HF::Profiles::SimpleLight>
 {

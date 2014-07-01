@@ -198,7 +198,7 @@ static void handle_message (HF::Transport::Link *link, msg_t &msg);
 // =============================================================================
 static void on_close (uv_handle_t *handle)
 {
-   LOG (INFO) << "Connection Closed!" << NL;
+   LOG (DEBUG) << "Connection Closed!" << NL;
 
    UNUSED (handle);
 
@@ -234,8 +234,8 @@ static void on_read (uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 
    if (nread < 0)
    {
-      LOG (ERROR) << "Could not read from stream !" << NL;
-      LOG (ERROR) << "Stream closed !" << NL;
+      LOG (DEBUG) << "Could not read from stream !" << NL;
+      LOG (DEBUG) << "Stream closed !" << NL;
 
       tsp->remove (link);
 
@@ -357,7 +357,7 @@ static void on_connect (uv_stream_t *server, int status)
 
    if (uv_accept (server, (uv_stream_t *) client))
    {
-      LOG (ERROR) << "Could not accept connection !" << NL;
+      LOG (ERROR) << "Could not accept the connection !" << NL;
       uv_close ((uv_handle_t *) client, on_close);
    }
    else

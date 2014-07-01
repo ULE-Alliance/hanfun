@@ -38,7 +38,7 @@ ostream & operator <<(ostream &stream, HF::Common::ByteArray const &array)
    if (stream == std::cout || stream == std::cerr)
    {
       std::ios_base::fmtflags ff;
-      ff = std::cout.flags ();
+      ff = stream.flags ();
       char f = stream.fill ('0');
 
       stream << std::hex << std::setw (2) << std::setfill ('0');
@@ -66,7 +66,7 @@ ostream & operator <<(ostream &stream, HF::Common::ByteArray const &array)
 ostream &operator <<(ostream &stream, const HF::UID::UID *uid)
 {
    std::ios_base::fmtflags ff;
-   ff = std::cout.flags ();
+   ff = stream.flags ();
    char f = stream.fill ('0');
 
    if (uid == nullptr)
@@ -145,7 +145,7 @@ ostream &operator <<(ostream &stream, const HF::UID::UID *uid)
 ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet)
 {
    std::ios_base::fmtflags ff;
-   ff = std::cout.flags ();
+   ff = stream.flags ();
    char f = stream.fill (0);
 
    stream << std::hex << std::setw (2);
@@ -373,6 +373,7 @@ bool HF::Application::Handle (std::string command)
    }
    else if (cmd == "h" || cmd == "?")
    {
+      LOG(APP) << "";
       ICommand::help (std::cout);
    }
    else
@@ -380,7 +381,7 @@ bool HF::Application::Handle (std::string command)
       ICommand::run (cmd, args);
    }
 
-   std::cout << "> " << std::flush;
+   LOG(APP) << "> " << std::flush;
 
    return false;
 }
