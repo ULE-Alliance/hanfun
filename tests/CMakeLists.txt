@@ -67,6 +67,7 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 
-add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
-
+if(NOT CMAKE_CROSSCOMPILING)
+  add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
+endif()
 # add_test(hanfun_all test_hanfun)
