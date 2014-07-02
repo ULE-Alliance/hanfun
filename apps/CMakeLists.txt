@@ -30,7 +30,7 @@ ExternalProject_Add(libuv
     URL "http://libuv.org/dist/v0.10.27/libuv-v0.10.27.tar.gz"
     URL_HASH MD5=8bc14dc254363092bd36919ea05cc9ab
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${MAKE_BIN}
+    BUILD_COMMAND CC=${CMAKE_C_COMPILER} ${MAKE_BIN}
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND ""
 )
