@@ -15,6 +15,7 @@
 #include <iomanip>
 #include <sstream>
 #include <fstream>
+#include <string>
 
 #include <unistd.h>
 
@@ -97,7 +98,7 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
    }
    else if (args.size () > 1 && args[0] == "1") //!< Enable Registration
    {
-      uint16_t address = std::stoi (args[1]);
+      uint16_t address = STRTOL(args[1]);
 
       if (base.unit0.device_management ()->available (address) && address != 0 &&
           address < HF::Protocol::BROADCAST_ADDR)
@@ -138,7 +139,7 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
       return;
    }
 
-   uint16_t address = std::stoi (args[0]);
+   uint16_t address = STRTOL(args[0]);
 
 #ifdef HF_APP_EXT_REG
    // External de-registration.
@@ -158,8 +159,8 @@ COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
       LOG (APP) << "b x y    :associate device x with device y. (bind)";
    }
 
-   uint16_t arg1 = std::stoi (args[0]);
-   uint16_t arg2 = std::stoi (args[1]);
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
 
    uint8_t  err  = base.bind (arg1, arg2);
 
@@ -206,8 +207,8 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
       LOG (APP) << "u x y   : unbind device x with y." << NL;
    }
 
-   uint16_t arg1 = std::stoi (args[0]);
-   uint16_t arg2 = std::stoi (args[1]);
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
 
    if (base.unbind (arg1, arg2))
    {
