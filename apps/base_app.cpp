@@ -82,9 +82,9 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
 {
    if (args.size () > 0 && args[0] == "0") //!< Disable Registration
    {
-#ifdef HF_ULE_SUPPORT
+#ifdef HF_APP_EXT_REG
 
-      if (HF::ULE::Registration (false))
+      if (HF::Application::Registration (false))
       {
          LOG (INFO) << "Disable Registration mode: SUCCESS" << NL;
       }
@@ -103,9 +103,9 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
           address < HF::Protocol::BROADCAST_ADDR)
       {
          base.unit0.device_management ()->next_address (address);
-#ifdef HF_ULE_SUPPORT
+#ifdef HF_APP_EXT_REG
 
-         if (HF::ULE::Registration (true))
+         if (HF::Application::Registration (true))
          {
             LOG (INFO) << "Enable Registration mode: SUCCESS" << NL;
          }
@@ -140,9 +140,9 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
 
    uint16_t address = std::stoi (args[0]);
 
-#ifdef HF_ULE_SUPPORT
-   // DECT de-registration
-   HF::ULE::Deregister (address);
+#ifdef HF_APP_EXT_REG
+   // External de-registration.
+   HF::Application::Deregister (address);
 #endif
 
    /* HAN-FUN de-registration */

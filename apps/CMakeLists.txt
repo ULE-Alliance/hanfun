@@ -40,6 +40,10 @@ set (LIBUV_LIBRARIES ${LIBUV_LIBRARY} -lrt -ldl -lm -pthread)
 
 include_directories( ${LIBUV_INSTALL_DIR}/include )
 
+if (HF_APP_EXT_REG)
+    add_definitions( -DHF_APP_EXT_REG )
+endif()
+
 # =============================================================================
 # Base Application Example
 # =============================================================================

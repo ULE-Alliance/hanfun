@@ -99,6 +99,26 @@ namespace HF
        */
       bool Handle (std::string command);
 
+#if HF_APP_EXT_REG
+      /*!
+       * Enable/Disable registration mode.
+       *
+       * @param mode    true - enable registration;
+       *                false - disable registration;
+       *
+       * @retval  true if the operation was successful;
+       * @retval  false otherwise.
+       */
+      bool Registration (bool mode);
+
+      /*!
+       * De-register the device with the given HAN-FUN Address.
+       *
+       * @param address    HAN-FUN address of the device to de-register.
+       */
+      void Deregister (uint16_t address);
+#endif
+
    }  // namespace Application
 
 }  // namespace HF
