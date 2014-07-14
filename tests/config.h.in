@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef HF_CONFIG_H
+#define HF_CONFIG_H
 
 // =============================================================================
 // DeviceInformation Configuration
@@ -44,4 +44,4 @@
 
 // =============================================================================
 
-#endif  /* CONFIG_H */
+#endif  /* HF_CONFIG_H */

@@ -53,11 +53,7 @@ add_library( hanfun  ${HF_COMMON_SRCS} ${HF_PROTOCOL_SRCS}
                      ${HF_INTERFACES_SRCS} ${HF_CORE_SRCS}
                      ${HF_UNITS_SRCS} )
 
-install(TARGETS hanfun ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
+install(TARGETS hanfun EXPORT ${PACKAGE_NAME}-targets
+        ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
 
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../inc/" DESTINATION include
-        PATTERN ".git*" EXCLUDE)
-
-file( GLOB_RECURSE CONFIG_HEADER "${CMAKE_BINARY_DIR}/hanfun/*.h")
-
-install(FILES ${CONFIG_HEADER} DESTINATION include/hanfun)
+set (HF_TARGETS ${HF_TARGETS} hanfun PARENT_SCOPE)

@@ -31,6 +31,8 @@ include_directories(
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/hanfun/config.h )
+
 enable_testing()
 
 # ==============================================================================
@@ -70,4 +72,5 @@ target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 if(NOT CMAKE_CROSSCOMPILING)
   add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
 endif()
+
 # add_test(hanfun_all test_hanfun)
