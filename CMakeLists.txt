@@ -6,7 +6,7 @@
 #
 #   \author  Filipe Alves <filipe.alves@bithium.com>
 #
-#   \version 0.3.0
+#   \version 0.3.1
 #
 #   Copyright (c) 2012 Bithium S.A.
 #
@@ -50,7 +50,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions")
 # The version number.
 set(PROJECT_MAJOR_VERSION 0)
 set(PROJECT_MINOR_VERSION 3)
-set(PROJECT_PATCH_VERSION 0)
+set(PROJECT_PATCH_VERSION 1)
 
 set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
 
