@@ -86,7 +86,7 @@ int main (int argc, char *argv[])
    uv_loop_t *loop = uv_default_loop ();
 
 #ifdef HF_BASE_APP
-   HF::UID::URI uid ("hf://base.example.com");
+   HF::UID::URI * uid = new HF::UID::URI("hf://base.example.com");
 #endif
 
 #ifdef HF_NODE_APP
@@ -100,11 +100,11 @@ int main (int argc, char *argv[])
    std::stringstream ss;
    ss << "hf://node.example.com/" << argv[1];
 
-   HF::UID::URI uid (ss.str ());
+   HF::UID::URI * uid = new HF::UID::URI(ss.str ());
 #endif
 
    HF::Application::Initialize (transport);
-   transport.uid (&uid);
+   transport.uid (uid);
 
    HF::Application::Handle ("?");
 
@@ -113,5 +113,7 @@ int main (int argc, char *argv[])
 
    uv_read_start ((uv_stream_t *) &stdin_pipe, alloc_buffer, read_stdin);
 
-   return uv_run (loop, UV_RUN_DEFAULT);
+   uv_run (loop, UV_RUN_DEFAULT);
+
+   return 0;
 }

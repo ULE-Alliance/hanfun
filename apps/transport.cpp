@@ -33,9 +33,6 @@
 // Defines
 // =============================================================================
 
-// #define HF_BASE_APP
-//#define HF_NODE_APP
-
 #define NONE_MSG    0xFFFF
 #define HELLO_MSG   0x0101
 #define DATA_MSG    0x0201
@@ -201,16 +198,6 @@ static void on_close (uv_handle_t *handle)
    LOG (DEBUG) << "Connection Closed!" << NL;
 
    UNUSED (handle);
-
-#ifdef HF_BASE_APP
-   HF::Application::Link *link = (HF::Application::Link *) (handle->data);
-
-   if (link != nullptr)
-   {
-      delete link;
-   }
-
-#endif
 }
 
 // =============================================================================
