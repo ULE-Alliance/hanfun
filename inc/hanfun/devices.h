@@ -258,7 +258,79 @@ namespace HF
             }
          };
 
-      } // namespace Device
+         /*!
+          * Top-level parent for transport layer implementations on a HAN-FUN Concentrator.
+          */
+         class Transport:public HF::Transport::AbstractLayer
+         {
+            protected:
+
+            HF::Transport::Link *link;
+
+            public:
+
+            Transport():link (nullptr)
+            {}
+
+            //! \see HF::Transport::AbstractLayer::add
+            void add (HF::Transport::Endpoint *ep)
+            {
+               HF::Transport::AbstractLayer::add (ep);
+
+               if (link != nullptr)
+               {
+                  ep->connected (link);
+               }
+            }
+
+            /*!
+             * Add the given link to the list of known links and call the connected method
+             * for all registered end-points.
+             *
+             * @param [IN] link  pointer to the link to add.
+             */
+            void add (HF::Transport::Link *_link)
+            {
+               assert (_link != nullptr);
+
+               this->link = _link;
+               HF::Transport::AbstractLayer::connected (_link);
+            }
+
+            /*!
+             * Call the \c disconnected method for all registered end-points with the
+             * given \c _link and remove it from list of known links.
+             *
+             * If \c _link is \c nullptr, then remove all known links.
+             *
+             * @param [IN] _link  pointer to the link to remove.
+             */
+            void remove (HF::Transport::Link *_link = nullptr)
+            {
+               if ((_link == nullptr && this->link != nullptr) || (_link == this->link))
+               {
+                  HF::Transport::AbstractLayer::disconnected (this->link);
+                  this->link = nullptr;
+               }
+            }
+
+            /*!
+             * Find the link used to send messages to the HAN-FUN device with
+             * the given \c address.
+             *
+             * @param [IN] address  the HAN-FUN address to find the link for.
+             *
+             * @return  a pointer to the link for the given address or
+             *          \c nullptr if no link exists for the given address.
+             */
+            HF::Transport::Link *find (uint16_t address)
+            {
+               UNUSED (address);
+               return link;
+            }
+         };
+
+      } // namespace Node
 
       /*!
        * This is the namespace for the implementation of HAN-FUN concentrators.
@@ -344,7 +416,7 @@ namespace HF
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected (Transport::Link *link)
+            void connected (HF::Transport::Link *link)
             {
                _links.push_front (link);
 
@@ -357,7 +429,7 @@ namespace HF
                }
             }
 
-            void disconnected (Transport::Link *link)
+            void disconnected (HF::Transport::Link *link)
             {
                _links.remove (link);
             }
@@ -384,7 +456,7 @@ namespace HF
             // =============================================================================
 
             //! \see AbstractDevice::link
-            Transport::Link *link (uint16_t addr) const
+            HF::Transport::Link *link (uint16_t addr) const
             {
                if (_links.empty ())
                {
@@ -439,6 +511,67 @@ namespace HF
                          }
                         );
             }
+         };
+
+         /*!
+          * Top-level parent for transport layer implementations on a HAN-FUN Concentrator.
+          */
+         class Transport:public HF::Transport::AbstractLayer
+         {
+            protected:
+
+            std::forward_list <HF::Transport::Link *> links;
+
+            public:
+
+            //! \see HF::Transport:Layer::destroy
+            void destroy();
+
+            //! \see HF::Transport::AbstractLayer::add
+            void add (HF::Transport::Endpoint *ep)
+            {
+               HF::Transport::AbstractLayer::add (ep);
+               std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link)
+                              {
+                                 ep->connected (link);
+                              }
+                             );
+            }
+
+            /*!
+             * Add the given link to the list of known links and call the connected method
+             * for all registered end-points.
+             *
+             * @param [IN] link  pointer to the link to add.
+             */
+            void add (HF::Transport::Link *link)
+            {
+               assert (link != nullptr);
+
+               links.push_front (link);
+               HF::Transport::AbstractLayer::connected (link);
+            }
+
+            /*!
+             * Call the \c disconnected method for all registered end-points with the
+             * given \c link and remove it from list of known links.
+             *
+             * If \c link is \c nullptr, then remove all known links.
+             *
+             * @param [IN] link  pointer to the link to remove.
+             */
+            void remove (HF::Transport::Link *link = nullptr);
+
+            /*!
+             * Find the link used to send messages to the HAN-FUN device with
+             * the given \c address.
+             *
+             * @param [IN] address  the HAN-FUN address to find the link for.
+             *
+             * @return  a pointer to the link for the given address or
+             *          \c nullptr if no link exists for the given address.
+             */
+            HF::Transport::Link *find (uint16_t address);
          };
 
       } // namespace Concentrator

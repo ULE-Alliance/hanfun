@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+#include <assert.h>
+
 #include "hanfun/version.h"
 #include "hanfun/config.h"
 

@@ -12,7 +12,6 @@
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  */
 // =============================================================================
-
 #include "hanfun/common.h"
 
 #include "hanfun/protocol.h"
@@ -99,4 +98,87 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
    }
 
    respond (result, packet);
+}
+
+// =============================================================================
+// HF::Devices::Node
+// =============================================================================
+
+// =============================================================================
+// HF::Devices::Concentrator
+// =============================================================================
+
+// =============================================================================
+// HF::Devices::Concentrator::Transport
+// =============================================================================
+
+void HF::Devices::Concentrator::Transport::destroy()
+{
+   remove(nullptr);
+}
+
+// =============================================================================
+// HF::Devices::Concentrator::Transport::remove
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Devices::Concentrator::Transport::remove (HF::Transport::Link *link)
+{
+   if (link != nullptr)
+   {
+      /* *INDENT-OFF* */
+      std::for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
+      {
+         ep->disconnected (link);
+      });
+      /* *INDENT-ON* */
+
+      links.remove (link);
+
+      delete link;
+   }
+   else
+   {
+      /* *INDENT-OFF* */
+      std::for_each (links.begin (), links.end (), [this](HF::Transport::Link *link)
+      {
+         std::for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
+         {
+            ep->disconnected (link);
+         });
+
+         delete link;
+      });
+      /* *INDENT-ON* */
+
+      links.clear ();
+   }
+}
+
+// =============================================================================
+// HF::Devices::Concentrator::Transport::find
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Transport::Link *HF::Devices::Concentrator::Transport::find (uint16_t address)
+{
+   /* *INDENT-OFF* */
+   auto it = std::find_if(links.begin(), links.end(),
+                          [address](const HF::Transport::Link *link)
+                          {
+                             return link->address () == address;
+                          });
+   /* *INDENT-ON* */
+
+   // Link was found.
+   if (it != links.end ())
+   {
+      return *it;
+   }
+
+   return nullptr;
 }
