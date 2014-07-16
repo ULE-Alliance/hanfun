@@ -34,4 +34,6 @@ void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Me
    packet.link          = link;
 
    device ().send (packet);
+
+   message.reference = packet.message.reference;
 }

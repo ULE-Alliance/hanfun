@@ -84,10 +84,14 @@ namespace HF
 
          protected:
 
+         //! Last reference number used to send a packet.
+         uint8_t next_reference;
          //! List containing pointers to the units present in the device.
          units_t _units;
 
-         AbstractDevice() {}
+         AbstractDevice() :
+            next_reference(0)
+         {}
 
          // =============================================================================
 

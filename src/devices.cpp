@@ -61,6 +61,12 @@ void AbstractDevice::send (Protocol::Packet &packet)
 {
    Transport::Link *tsp_link = packet.link;
 
+   // Update message reference.
+   if (packet.source.device == address())
+   {
+      packet.message.reference = this->next_reference++;
+   }
+
    if (tsp_link == nullptr)
    {
       tsp_link = link (packet.destination.device);
