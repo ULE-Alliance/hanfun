@@ -76,7 +76,7 @@ COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
    LOG (APP) << "Device is now a Simple Light !" << NL;
 }
 
-COMMAND (SimpleSwitch, "ss", "sl:set device as a simple switch")
+COMMAND (SimpleSwitch, "ss", "ss:set device as a simple switch")
 {
    UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
