@@ -62,9 +62,7 @@ class Command:public ICommand
 
    Command(const char *__key, const char *__usage):
       _key (__key), _usage (__usage)
-   {
-      ICommand::add (this);
-   }
+   {}
 
    const std::string &key () const
    {
@@ -86,6 +84,11 @@ class Command:public ICommand
    };                                             \
    Command_##_name command##_name;                \
    void Command_##_name::run (std::vector <std::string> &args)
+
+#define COMMAND_ADD(_name)             \
+   {                                   \
+      ICommand::add (&command##_name); \
+   }
 
 // =============================================================================
 // Stream Helpers

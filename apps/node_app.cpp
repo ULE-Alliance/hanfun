@@ -158,6 +158,14 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 
    transport.add (&node);
 
+   COMMAND_ADD (Register);
+   COMMAND_ADD (Address);
+   COMMAND_ADD (SimpleLight);
+   COMMAND_ADD (SimpleSwitch);
+   COMMAND_ADD (On);
+   COMMAND_ADD (Off);
+   COMMAND_ADD (Toggle);
+
    HF::Application::Restore ();
 }
 

@@ -235,6 +235,12 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 
    transport.add (&base);
 
+   COMMAND_ADD (ListRegs);
+   COMMAND_ADD (ListBinds);
+   COMMAND_ADD (Register);
+   COMMAND_ADD (Deregister);
+   COMMAND_ADD (Bind);
+   COMMAND_ADD (Unbind);
 
    Restore ();
 }
