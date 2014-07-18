@@ -94,10 +94,25 @@ bool DeviceManagement::deregister (uint16_t address)
    if (_entry != nullptr)
    {
       HF::Core::DeviceManagement::Server::deregister (*_entry);
+      HF::Application::Save ();
       return true;
    }
 
    return false;
+}
+
+// =============================================================================
+// DeviceManagement::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Common::Result DeviceManagement::save (HF::Core::DeviceManagement::Device *device)
+{
+   HF::Common::Result result = HF::Core::DeviceManagement::DefaultServer::save (device);
+   HF::Application::Save ();
+   return result;
 }
 
 // =============================================================================
@@ -236,6 +251,38 @@ void DeviceManagement::restore (std::string prefix)
 // BindManagement
 // =============================================================================
 
+// =============================================================================
+// BindManagement::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> BindManagement::add (
+   const HF::Protocol::Address &source,
+   const HF::Protocol::Address &destination,
+   const HF::Common::Interface &itf)
+{
+   auto result = HF::Core::BindManagement::Server::add (source, destination, itf);
+   HF::Application::Save ();
+   return result;
+}
+
+// =============================================================================
+// BindManagement::remove
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Common::Result BindManagement::remove (const HF::Protocol::Address &source,
+                                           const HF::Protocol::Address &destination,
+                                           const HF::Common::Interface &itf)
+{
+   HF::Common::Result result = HF::Core::BindManagement::Server::remove (source, destination, itf);
+   HF::Application::Save ();
+   return result;
+}
 
 // =============================================================================
 // BindManagement::save

@@ -48,6 +48,28 @@ namespace HF
        */
       bool Handle (std::string command);
 
+      /*!
+       * Save application configuration.
+       */
+      void Save ();
+
+      /*!
+       * Callback indicating that the application configuration has been
+       * saved.
+       */
+      void Saved ();
+
+      /*!
+       * Restore application configuration.
+       */
+      void Restore ();
+
+      /*!
+       * Callback indicating that the application configuration has been
+       * restored.
+       */
+      void Restored ();
+
 #if HF_APP_EXT_REG
       /*!
        * Enable/Disable registration mode.

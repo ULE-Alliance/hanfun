@@ -61,6 +61,8 @@ struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
 
    void clear ();
 
+   HF::Common::Result save (HF::Core::DeviceManagement::Device *device);
+
    void save (std::string prefix);
 
    void restore (std::string prefix);
@@ -85,6 +87,16 @@ struct BindManagement:public HF::Core::BindManagement::Server
       HF::Core::BindManagement::Server (unit), loaded (false)
    {}
 
+   std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> add (
+      const HF::Protocol::Address &source,
+      const HF::Protocol::Address &destination,
+      const HF::Common::Interface &itf);
+
+   HF::Common::Result remove (const HF::Protocol::Address &source,
+                              const HF::Protocol::Address &destination,
+                              const HF::Common::Interface &itf);
+
+
    void save (std::string prefix);
 
    void restore (std::string prefix);
@@ -108,17 +120,10 @@ struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformatio
 struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {
    Base():HF::Devices::Concentrator::Abstract <Unit0>()
-   {
-      unit0.device_management ()->restore (HF_APP_PREFIX);
-      // Bind entries add depends on static data initialization.
-      // The bind entries restore is performed in HF::Application::Initialize.
-   }
+   {}
 
    virtual ~Base()
-   {
-      unit0.bind_management ()->save (HF_APP_PREFIX);
-      unit0.device_management ()->save (HF_APP_PREFIX);
-   }
+   {}
 
    void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
 

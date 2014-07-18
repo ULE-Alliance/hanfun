@@ -75,6 +75,34 @@ static void read_stdin (uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 }
 
 // =============================================================================
+// Application Callbacks
+// =============================================================================
+
+// =============================================================================
+// HF::Application::Saved
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Saved ()
+{
+   LOG (INFO) << "Application configuration saved !" << NL;
+}
+
+// =============================================================================
+// HF::Application::Restored
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Restored ()
+{
+   LOG (INFO) << "Application configuration restored !" << NL;
+}
+
+// =============================================================================
 // Main
 // =============================================================================
 
@@ -86,7 +114,7 @@ int main (int argc, char *argv[])
    uv_loop_t *loop = uv_default_loop ();
 
 #ifdef HF_BASE_APP
-   HF::UID::URI * uid = new HF::UID::URI("hf://base.example.com");
+   HF::UID::URI *uid = new HF::UID::URI ("hf://base.example.com");
 #endif
 
 #ifdef HF_NODE_APP
@@ -100,7 +128,7 @@ int main (int argc, char *argv[])
    std::stringstream ss;
    ss << "hf://node.example.com/" << argv[1];
 
-   HF::UID::URI * uid = new HF::UID::URI(ss.str ());
+   HF::UID::URI *uid = new HF::UID::URI (ss.str ());
 #endif
 
    HF::Application::Initialize (transport);
@@ -114,6 +142,8 @@ int main (int argc, char *argv[])
    uv_read_start ((uv_stream_t *) &stdin_pipe, alloc_buffer, read_stdin);
 
    uv_run (loop, UV_RUN_DEFAULT);
+
+   HF::Application::Save ();
 
    return 0;
 }

@@ -235,5 +235,36 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 
    transport.add (&base);
 
+
+   Restore ();
+}
+
+// =============================================================================
+// HF::Application::Save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Save ()
+{
+   base.unit0.bind_management ()->save (HF_APP_PREFIX);
+   base.unit0.device_management ()->save (HF_APP_PREFIX);
+
+   Saved ();
+}
+
+// =============================================================================
+// HF::Application::Restore
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Restore ()
+{
+   base.unit0.device_management ()->restore (HF_APP_PREFIX);
    base.unit0.bind_management ()->restore (HF_APP_PREFIX);
+
+   Restored ();
 }
