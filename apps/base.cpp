@@ -43,14 +43,14 @@ bool DeviceManagement::available (uint16_t address)
       return false;
    }
 
-   auto it = std::find_if (entries ().begin (), entries ().end (),
+   auto it = std::find_if (_entries.begin (), _entries.end (),
                            [address](HF::Core::DeviceManagement::Device *dev)
                            {
                               return address == dev->address;
                            }
                           );
 
-   return it == entries ().end ();
+   return it == _entries.end ();
 }
 
 // =============================================================================
