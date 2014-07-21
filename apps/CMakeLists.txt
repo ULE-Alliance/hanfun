@@ -55,7 +55,9 @@ endif()
 if (HF_BASE_LIB)
     message (STATUS "Build Base example application library.")
 
-    set(BASE_APP_SRCS   "base.h" "common.cpp" "base.cpp" "base_app.cpp")
+    set(BASE_APP_SRCS   "base.h" "common.cpp" "base.cpp" "base_app.cpp" "jsoncpp.cpp")
+
+    add_definitions(-DJSON_USE_EXCEPTION=0)
 
     add_library(hf_base_app ${BASE_APP_SRCS})
     target_link_libraries(hf_base_app hanfun)
