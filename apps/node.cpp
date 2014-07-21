@@ -43,7 +43,7 @@ void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 
    LOG (DEBUG) << packet << NL;
 
-   HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>::receive (packet, payload, offset);
+   HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>::receive (packet, payload, offset);
 }
 
 // =============================================================================

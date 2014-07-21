@@ -89,8 +89,8 @@ namespace HF
          //! List containing pointers to the units present in the device.
          units_t _units;
 
-         AbstractDevice() :
-            next_reference(0)
+         AbstractDevice():
+            next_reference (0)
          {}
 
          // =============================================================================
@@ -529,7 +529,7 @@ namespace HF
             public:
 
             //! \see HF::Transport:Layer::destroy
-            void destroy();
+            void destroy ();
 
             //! \see HF::Transport::AbstractLayer::add
             void add (HF::Transport::Endpoint *ep)

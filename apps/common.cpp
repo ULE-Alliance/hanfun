@@ -373,7 +373,7 @@ bool HF::Application::Handle (std::string command)
    }
    else if (cmd == "h" || cmd == "?")
    {
-      LOG(APP) << "";
+      LOG (APP) << "";
       ICommand::help (std::cout);
    }
    else
@@ -381,7 +381,7 @@ bool HF::Application::Handle (std::string command)
       ICommand::run (cmd, args);
    }
 
-   LOG(APP) << "> " << std::flush;
+   LOG (APP) << "> " << std::flush;
 
    return false;
 }

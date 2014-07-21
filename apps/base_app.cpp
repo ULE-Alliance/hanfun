@@ -98,7 +98,7 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
    }
    else if (args.size () > 1 && args[0] == "1") //!< Enable Registration
    {
-      uint16_t address = STRTOL(args[1]);
+      uint16_t address = STRTOL (args[1]);
 
       if (base.unit0.device_management ()->available (address) && address != 0 &&
           address < HF::Protocol::BROADCAST_ADDR)
@@ -139,7 +139,7 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
       return;
    }
 
-   uint16_t address = STRTOL(args[0]);
+   uint16_t address = STRTOL (args[0]);
 
 #ifdef HF_APP_EXT_REG
    // External de-registration.

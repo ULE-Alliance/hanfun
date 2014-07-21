@@ -104,6 +104,6 @@ ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
 // Parser helpers
 // =============================================================================
 
-#define STRTOL(X)    strtol(X.c_str(), NULL, 10);
+#define STRTOL(X)   strtol (X.c_str (), NULL, 10);
 
 #endif /* HF_APP_COMMON_H */

@@ -62,7 +62,7 @@ void AbstractDevice::send (Protocol::Packet &packet)
    Transport::Link *tsp_link = packet.link;
 
    // Update message reference.
-   if (packet.source.device == address())
+   if (packet.source.device == address ())
    {
       packet.message.reference = this->next_reference++;
    }
@@ -118,9 +118,9 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 // HF::Devices::Concentrator::Transport
 // =============================================================================
 
-void HF::Devices::Concentrator::Transport::destroy()
+void HF::Devices::Concentrator::Transport::destroy ()
 {
-   remove(nullptr);
+   remove (nullptr);
 }
 
 // =============================================================================
