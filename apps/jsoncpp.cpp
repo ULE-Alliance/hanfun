@@ -6,28 +6,28 @@
 // //////////////////////////////////////////////////////////////////////
 
 /*
-The JsonCpp library's source code, including accompanying documentation, 
+The JsonCpp library's source code, including accompanying documentation,
 tests and demonstration applications, are licensed under the following
 conditions...
 
-The author (Baptiste Lepilleur) explicitly disclaims copyright in all 
-jurisdictions which recognize such a disclaimer. In such jurisdictions, 
+The author (Baptiste Lepilleur) explicitly disclaims copyright in all
+jurisdictions which recognize such a disclaimer. In such jurisdictions,
 this software is released into the Public Domain.
 
 In jurisdictions which do not recognize Public Domain property (e.g. Germany as of
 2010), this software is Copyright (c) 2007-2010 by Baptiste Lepilleur, and is
 released under the terms of the MIT License (see below).
 
-In jurisdictions which recognize Public Domain property, the user of this 
-software may choose to accept it either as 1) Public Domain, 2) under the 
-conditions of the MIT License (see below), or 3) under the terms of dual 
+In jurisdictions which recognize Public Domain property, the user of this
+software may choose to accept it either as 1) Public Domain, 2) under the
+conditions of the MIT License (see below), or 3) under the terms of dual
 Public Domain/MIT License conditions described here, as they choose.
 
 The MIT License is about as close to Public Domain as a license can get, and is
 described in clear, concise terms at:
 
    http://en.wikipedia.org/wiki/MIT_License
-   
+
 The full text of the MIT License follows:
 
 ========================================================================
@@ -1243,7 +1243,7 @@ ValueIteratorBase::deref() const
 }
 
 
-void 
+void
 ValueIteratorBase::increment()
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1256,7 +1256,7 @@ ValueIteratorBase::increment()
 }
 
 
-void 
+void
 ValueIteratorBase::decrement()
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1269,7 +1269,7 @@ ValueIteratorBase::decrement()
 }
 
 
-ValueIteratorBase::difference_type 
+ValueIteratorBase::difference_type
 ValueIteratorBase::computeDistance( const SelfType &other ) const
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1278,7 +1278,7 @@ ValueIteratorBase::computeDistance( const SelfType &other ) const
 # else
    // Iterator for null value are initialized using the default
    // constructor, which initialize current_ to the default
-   // std::map::iterator. As begin() and end() are two instance 
+   // std::map::iterator. As begin() and end() are two instance
    // of the default std::map::iterator, they can not be compared.
    // To allow this, we handle this comparison specifically.
    if ( isNull_  &&  other.isNull_ )
@@ -1306,7 +1306,7 @@ ValueIteratorBase::computeDistance( const SelfType &other ) const
 }
 
 
-bool 
+bool
 ValueIteratorBase::isEqual( const SelfType &other ) const
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1323,7 +1323,7 @@ ValueIteratorBase::isEqual( const SelfType &other ) const
 }
 
 
-void 
+void
 ValueIteratorBase::copy( const SelfType &other )
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1337,7 +1337,7 @@ ValueIteratorBase::copy( const SelfType &other )
 }
 
 
-Value 
+Value
 ValueIteratorBase::key() const
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1361,7 +1361,7 @@ ValueIteratorBase::key() const
 }
 
 
-UInt 
+UInt
 ValueIteratorBase::index() const
 {
 #ifndef JSON_VALUE_USE_INTERNAL_MAP
@@ -1671,7 +1671,7 @@ Value::CZString::CZString(const CZString &other)
                 ? duplicateStringValue(other.cstr_)
                 : other.cstr_),
       index_(other.cstr_
-                 ? (other.index_ == noDuplication ? noDuplication : duplicate)
+                 ? (ArrayIndex)(other.index_ == noDuplication ? noDuplication : duplicate)
                  : other.index_) {}
 
 Value::CZString::~CZString() {
