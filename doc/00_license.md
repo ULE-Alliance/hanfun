@@ -1,14 +1,10 @@
 
 ### Intellectual Property Rights
 
-Bithium's client ("Licensee") will observe the Library and Documentation ("Product") Property
-Rights as specified hereafter.
+The HAN-FUN library is released under dual-license : GPLv2 and Apache 2.0
 
-Title, ownership rights, and intellectual property rights in the Product shall remain in Bithium.
-Licensee acknowledges such ownership and intellectual property rights and will not take any action
-to jeopardize, limit or interfere in any manner with Bithium's ownership of or rights with respect
-to the Product. The Product is protected by copyright and other intellectual property laws and by
-international treaties. Licensee agrees, at its expense, to defend and hold Bithium harmless from
-any and all costs, damages and reasonable attorneys' fees resulting from any claim that Licensee's
-use of the Product has injured or otherwise violated any right of any third party or violates any
-law.
+Please see the file 'LICENSE' in the root folder for further information.
+
+  * GPLv2 : http://www.gnu.org/licenses/gpl-2.0.html
+
+  * Apache 2.0 : http://www.apache.org/licenses/LICENSE-2.0.txt

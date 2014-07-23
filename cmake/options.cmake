@@ -6,11 +6,11 @@
 #
 #   This file contains the configuration options for the HAN-FUN library.
 #
-#   \author  Filipe Alves <filipe.alves@bithium.com>
+#   \version 0.3.1
 #
-#   \version x.x.x
+#   Copyright (c) 2014 Bithium S.A.
 #
-#   Copyright (c) 2012 Bithium S.A.
+#   For licensing information, please see the file 'LICENSE' in the root folder.
 #
 # =============================================================================
 

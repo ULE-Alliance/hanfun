@@ -4,11 +4,11 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
  * \version    0.3.1
  *
- * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
+ * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #ifndef HF_TEST_HELPER_H

@@ -118,6 +118,6 @@ Please see the help in the applications for further features.
 
 ## License
 
-Copyright &copy; &nbsp; 2014 Bithium S.A. All rights reserved.
+This library is released under dual-license : GLPv2 and Apache 2.0.
 
- * http://www.bithium.com
+For more licensing information, please see the file 'LICENSE'.

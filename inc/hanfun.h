@@ -4,11 +4,11 @@
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
  * \version    0.3.1
  *
- * \copyright  Copyright &copy; &nbsp; 2012 Bithium S.A.
+ * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 
