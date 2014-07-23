@@ -25,6 +25,8 @@
 #define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
 #include "application.h"
 
+#include "json/json.h"
+
 // =============================================================================
 // DeviceManagement
 // =============================================================================
@@ -122,49 +124,20 @@ HF::Common::Result DeviceManagement::save (HF::Core::DeviceManagement::Device *d
  *
  */
 // =============================================================================
-void DeviceManagement::save (std::string prefix)
+void DeviceManagement::save (Json::Value &root)
 {
    LOG (INFO) << "Saving registration entries ..." << NL;
 
-   if (!loaded)
-   {
-      return;
-   }
+   unsigned i = 0;
 
-   std::ofstream ofs;
-
-   std::string   filename = prefix + "/" + HF_APP_DEV_MGT_FILENAME;
-
-   ofs.open (filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
-
-   std::for_each (_entries.begin (), _entries.end (),
-                  [&ofs](HF::Core::DeviceManagement::Device *device)
-                  {
-                     /* Save Devices */
-
-                     uint16_t size_d = device->size ();
-
-                     HF::Common::ByteArray array (size_d);
-                     device->pack (array);
-
-                     ofs.write ((char *) &size_d, sizeof(uint16_t));
-
-                     ofs << array;
-
-                     /* Save UID */
-                     HF::Common::ByteArray array_uid (device->uid->size ());
-
-                     HF::UID::pack (*device->uid, array_uid, 0);
-
-                     uint16_t size_uid = array_uid.size ();
-                     ofs.write ((char *) &size_uid, sizeof(uint16_t));
-
-                     ofs << array_uid;
-                  }
-                 );
-
-   ofs.flush ();
-   ofs.close ();
+   /* *INDENT-OFF* */
+   for_each(_entries.begin(), _entries.end(),
+         [&root, &i](HF::Core::DeviceManagement::Device *device)
+         {
+            to_json (*device, root[i]);
+            i++;
+         });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -174,77 +147,16 @@ void DeviceManagement::save (std::string prefix)
  *
  */
 // =============================================================================
-void DeviceManagement::restore (std::string prefix)
+void DeviceManagement::restore (Json::Value root)
 {
    LOG (INFO) << "Restoring registration entries ..." << NL;
 
-   std::ifstream ifs;
-
-   std::string   filename = prefix + "/" + HF_APP_DEV_MGT_FILENAME;
-
-   ifs.open (filename, ios::in | ios::binary);
-
-   while (ifs.good ())
+   for (unsigned i = 0; i < root.size (); i++)
    {
-      HF::Core::DeviceManagement::Device *device_tmp;
-
-      uint16_t size;
-
-      /* Get Device Size */
-      ifs.read ((char *) &size, sizeof(uint16_t));
-
-      if (!ifs.good ())
-      {
-         break;
-      }
-
-      /* Restore Device */
-      HF::Common::ByteArray buffer;
-      buffer.reserve (size);
-
-      for (size_t j = 0; j < size; ++j)
-      {
-         uint8_t data;
-
-         ifs.read ((char *) &data, sizeof(uint8_t));
-         buffer.push_back (data);
-      }
-
-      device_tmp = new HF::Core::DeviceManagement::Device ();
-      device_tmp->unpack (buffer);
-
-      LOG (TRACE) << "Device : " << device_tmp->address << NL;
-
-      /* Get UID Size */
-      ifs.read ((char *) &size, sizeof(uint16_t));
-
-      if (!ifs.good ())
-      {
-         break;
-      }
-
-      /* Restore UID */
-      HF::Common::ByteArray buffer_uid;
-      buffer.reserve (size);
-
-      for (size_t j = 0; j < size; ++j)
-      {
-         uint8_t data;
-
-         ifs.read ((char *) &data, sizeof(uint8_t));
-         buffer_uid.push_back (data);
-      }
-
-      HF::UID::unpack (device_tmp->uid, buffer_uid, 0);
-
-      HF::Core::DeviceManagement::DefaultServer::save (device_tmp);
-
-      LOG (TRACE) << "   UID : " << device_tmp->uid << NL;
+      HF::Core::DeviceManagement::Device *device = new HF::Core::DeviceManagement::Device ();
+      from_json (root[i], *device);
+      HF::Core::DeviceManagement::DefaultServer::save (device);
    }
-
-   ifs.close ();
-
-   loaded = true;
 }
 
 // =============================================================================
@@ -291,26 +203,20 @@ HF::Common::Result BindManagement::remove (const HF::Protocol::Address &source,
  *
  */
 // =============================================================================
-void BindManagement::save (std::string prefix)
+void BindManagement::save (Json::Value &root)
 {
    LOG (INFO) << "Saving binding entries ..." << NL;
 
-   std::ofstream ofs;
+   unsigned i = 0;
 
-   std::string   filename = prefix + "/" + HF_APP_BIND_MGT_FILENAME;
-
-   ofs.open (filename, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
-
-   std::for_each (entries.begin (), entries.end (), [&ofs](const HF::Core::BindManagement::Entry &entry)
-                  {
-                     HF::Common::ByteArray temp (entry.size ());
-                     entry.pack (temp);
-                     ofs << temp;
-                  }
-                 );
-
-   ofs.flush ();
-   ofs.close ();
+   /* *INDENT-OFF* */
+   for_each(entries.begin(), entries.end(),
+         [&root, &i](const HF::Core::BindManagement::Entry &entry)
+         {
+            to_json (entry, root[i]);
+            i++;
+         });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -320,47 +226,17 @@ void BindManagement::save (std::string prefix)
  *
  */
 // =============================================================================
-void BindManagement::restore (std::string prefix)
+void BindManagement::restore (Json::Value root)
 {
    LOG (INFO) << "Restoring binding entries ..." << NL;
 
-   std::ifstream ifs;
-
-   std::string   filename = prefix + "/" + HF_APP_BIND_MGT_FILENAME;
-
-   ifs.open (filename, ios::in | ios::binary);
-
-   HF::Core::BindManagement::Entry entry;
-
-   size_t size = entry.size ();
-
-   HF::Common::ByteArray buffer;
-   buffer.reserve (size);
-
-   while (ifs.good ())
+   for (unsigned i = 0; i < root.size (); i++)
    {
-      buffer.clear ();
-
-      size_t j;
-
-      for (j = 0; j < size && ifs.good (); ++j)
-      {
-         uint8_t data;
-
-         ifs.read ((char *) &data, sizeof(uint8_t));
-         buffer.push_back (data);
-      }
-
-      // Read an entire entry.
-      if (j == size)
-      {
-         entry.unpack (buffer);
-         auto res = this->add (entry.source, entry.destination, entry.itf);
-         LOG (TRACE) << "Bind Add : " << res.first << NL;
-      }
+      HF::Core::BindManagement::Entry entry;
+      from_json (root[i], entry);
+      auto res = this->add (entry.source, entry.destination, entry.itf);
+      LOG (TRACE) << "Bind Add : " << res.first << NL;
    }
-
-   ifs.close ();
 }
 
 // =============================================================================
@@ -453,4 +329,324 @@ bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
    HF::Protocol::Address destination (dev_addr_2, 1);
 
    return unit0.bind_management ()->remove (source, destination, itf) == HF::Common::Result::OK;
+}
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+static std::string json_uid(uint16_t uid)
+{
+   ostringstream convert;
+
+   convert << "0x" << std::setfill ('0') << std::setw(sizeof(uint16_t)*2)
+           << std::hex << uid;
+
+   return convert.str ();
+}
+
+static uint16_t json_uid(std::string uid)
+{
+   return std::stoul(uid.substr(2), nullptr, 16);
+}
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void to_json (const HF::Common::Interface &interface, Json::Value &node)
+{
+   if (interface.role == HF::Interface::SERVER_ROLE)
+   {
+      node["role"] = "server";
+   }
+   else
+   {
+      node["role"] = "client";
+   }
+
+   node["id"] = json_uid(interface.id);
+}
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void to_json (HF::UID::UID *uid, Json::Value &node)
+{
+   switch (uid->type ())
+   {
+      case HF::UID::NONE_UID:
+      {
+         node["type"]  = "none";
+         node["value"] = 0;
+      }
+
+      case HF::UID::RFPI_UID: // RFPI
+      {
+         node["type"] = "rfpi";
+
+         for (int i = 0; i < 5; i++)
+         {
+            node["value"][i] = static_cast <HF::UID::RFPI *>(uid)->value[i];
+         }
+
+         break;
+      }
+
+      case HF::UID::IPUI_UID:
+      {
+         node["type"] = "ipui";
+
+         for (int i = 0; i < 5; i++)
+         {
+            node["value"][i] = static_cast <HF::UID::IPUI *>(uid)->value[i];
+         }
+
+         break;
+      }
+
+      case HF::UID::MAC_UID:
+      {
+         node["type"] = "mac";
+
+         for (int i = 0; i < 6; i++)
+         {
+            node["value"][i] = static_cast <HF::UID::MAC *>(uid)->value[i];
+         }
+
+         break;
+      }
+
+      case HF::UID::URI_UID:
+      {
+         node["type"]  = "uri";
+         node["value"] = static_cast <HF::UID::URI *>(uid)->value;
+         break;
+      }
+   }
+}
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
+{
+   node["id"] = unit.id;
+
+   node["profile"] = json_uid(unit.profile);
+
+   for (unsigned i = 0; i < unit.opt_ift.size (); i++)
+   {
+      to_json (unit.opt_ift[i], node["opts"][i]);
+   }
+}
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &node)
+{
+   node["address"] = device.address;
+
+   for (unsigned i = 0; i < device.units.size (); i++)
+   {
+      to_json (device.units[i], node["units"][i]);
+   }
+
+   node["emc"] = json_uid(device.emc);
+
+   to_json (device.uid, node["uid"]);
+}
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void to_json (const HF::Protocol::Address &address, Json::Value &node)
+{
+   node["mod"]    = (int) address.mod;
+   node["device"] = (int) address.device;
+   node["unit"]   = (int) address.unit;
+}
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node)
+{
+   to_json (entry.source, node["src"]);
+   to_json (entry.destination, node["dst"]);
+   to_json (entry.itf, node["itf"]);
+}
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Common::Interface &interface)
+{
+   std::string role = node.get ("role", "client").asString ();
+
+   if (role[0] == 's' || role[0] == 'S')
+   {
+      interface.role = HF::Interface::SERVER_ROLE;
+   }
+   else
+   {
+      interface.role = HF::Interface::CLIENT_ROLE;
+   }
+
+   interface.id = json_uid(node.get ("id", "0x7FFF").asString ());
+}
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::UID::UID * &uid)
+{
+   string uid_type = node.get ("type", "none").asString ();
+
+   if (uid_type == "none")
+   {
+      HF::UID::NONE *none = new HF::UID::NONE;
+      uid = none;
+   }
+   else if (uid_type == "rfpi")
+   {
+      HF::UID::RFPI *rfpi = new HF::UID::RFPI;
+
+      for (unsigned i = 0; i < node["value"].size (); ++i)
+      {
+         rfpi->value[i] = (uint8_t) std::stoi (node["value"][i].asString ());
+      }
+
+      uid = rfpi;
+   }
+   else if (uid_type == "ipui")
+   {
+      HF::UID::IPUI *ipui = new HF::UID::IPUI;
+
+      for (unsigned i = 0; i < node["value"].size (); ++i)
+      {
+         ipui->value[i] = (uint8_t) std::stoi (node["value"][i].asString ());
+      }
+
+      uid = ipui;
+   }
+   else if (uid_type == "mac")
+   {
+      HF::UID::MAC *mac = new HF::UID::MAC;
+
+      for (unsigned i = 0; i < node["value"].size (); ++i)
+      {
+         mac->value[i] = (uint8_t) std::stoi (node["value"][i].asString ());
+      }
+
+      uid = mac;
+   }
+   else if (uid_type == "uri")
+   {
+      HF::UID::URI *uri = new HF::UID::URI;
+      uri->value = node["value"].asString ();
+      uid        = uri;
+   }
+}
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
+{
+   unit.id = (uint8_t) node.get ("id", HF::Protocol::BROADCAST_UNIT).asUInt ();
+
+   unit.profile = json_uid(node.get ("profile", "0x7FFF").asString ());
+
+   for (unsigned i = 0; i < node["opts"].size (); i++)
+   {
+      unit.opt_ift.push_back (0);
+      from_json (node["opts"][i], unit.opt_ift[i]);
+   }
+}
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &dev)
+{
+   dev.address = (uint16_t) node.get ("address", HF::Protocol::BROADCAST_ADDR).asUInt ();
+
+   for (unsigned i = 0; i < node["units"].size (); i++)
+   {
+      dev.units.push_back (0);
+      from_json (node["units"][i], dev.units[i]);
+   }
+
+   dev.emc = json_uid(node.get ("emc", "0x0000").asString());
+
+   from_json (node["uid"], dev.uid);
+}
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Protocol::Address &addr)
+{
+   addr.mod    = (uint16_t) node.get ("mod", 0).asUInt ();
+   addr.device = (uint16_t) node.get ("device", 0).asUInt ();
+   addr.unit   = (uint8_t) node.get ("unit", 0).asUInt ();
+}
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry)
+{
+   from_json (node["src"], entry.source);
+   from_json (node["dst"], entry.destination);
+   from_json (node["itf"], entry.itf);
 }

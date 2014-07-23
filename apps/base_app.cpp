@@ -36,6 +36,10 @@
 // Defines
 // =============================================================================
 
+#ifndef HF_APP_CONFIG_FILE
+   #define HF_APP_CONFIG_FILE   "./hanfun.json"
+#endif
+
 // =============================================================================
 // Global Variables
 // =============================================================================
@@ -256,8 +260,18 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 // =============================================================================
 void HF::Application::Save ()
 {
-   base.unit0.bind_management ()->save (HF_APP_PREFIX);
-   base.unit0.device_management ()->save (HF_APP_PREFIX);
+   Json::Value root;
+   Json::StyledWriter writer;
+   ofstream    ofs (HF_APP_CONFIG_FILE);
+
+   base.unit0.device_management ()->save (root["core"]["device_management"]);
+   base.unit0.bind_management ()->save (root["core"]["bind_management"]);
+
+   if (ofs.is_open ())
+   {
+      ofs << root;
+      ofs.close ();
+   }
 
    Saved ();
 }
@@ -271,8 +285,22 @@ void HF::Application::Save ()
 // =============================================================================
 void HF::Application::Restore ()
 {
-   base.unit0.device_management ()->restore (HF_APP_PREFIX);
-   base.unit0.bind_management ()->restore (HF_APP_PREFIX);
+   Json::Reader  reader;
+   Json::Value   root;
+
+   std::ifstream ifs (HF_APP_CONFIG_FILE);
+
+   if (reader.parse (ifs, root, false) == false)
+   {
+      LOG (WARN) << "Reading configuration file !!" << reader.getFormattedErrorMessages () << NL;
+   }
+   else
+   {
+      base.unit0.device_management ()->restore (root["core"]["device_management"]);
+      base.unit0.bind_management ()->restore (root["core"]["bind_management"]);
+   }
+
+   ifs.close ();
 
    Restored ();
 }
