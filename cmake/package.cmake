@@ -1,6 +1,16 @@
+# =============================================================================
 #
-# Create configuration files.
+#   \file cmake/package.cmake
 #
+#   HAN-FUN Library package export helpers.
+#
+#   \version 0.3.1
+#
+#   Copyright (c) 2014 Bithium S.A.
+#
+#   For licensing information, please see the file 'LICENSE' in the root folder.
+#
+# =============================================================================
 
 # ... for build folder
 

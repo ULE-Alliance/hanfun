@@ -5,11 +5,11 @@
  * This file contains the definitions for the common funtionality in the HAN-FUN
  * example applications.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
  * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 
@@ -104,6 +104,7 @@ ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
 // Parser helpers
 // =============================================================================
 
-#define STRTOL(X)   strtol (X.c_str (), NULL, 10);
+#define STRTOL(X)       strtol (X.c_str (), NULL, 10);
+#define STRTOL_HEX(X)   strtol (X.c_str (), NULL, 16);
 
 #endif /* HF_APP_COMMON_H */

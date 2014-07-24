@@ -4,11 +4,11 @@
 #
 #   HAN-FUN Library Top CMakeList
 #
-#   \author  Filipe Alves <filipe.alves@bithium.com>
-#
 #   \version 0.3.1
 #
-#   Copyright (c) 2012 Bithium S.A.
+#   Copyright (c) 2014 Bithium S.A.
+#
+#   For licensing information, please see the file 'LICENSE' in the root folder.
 #
 # =============================================================================
 

@@ -1,14 +1,14 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/on_off_client.cpp
+ * \file       src/interfaces/level_control_server.cpp
  *
  * This file contains the implementation of the Level Control interface : Server role.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
  * \version    0.3.1
  *
- * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
+ * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 

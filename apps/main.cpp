@@ -5,11 +5,11 @@
  * This file contains the implementation of the main entry point for the
  * HAN-FUN example applications.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
  * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #include <iostream>

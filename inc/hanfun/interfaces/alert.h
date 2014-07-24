@@ -4,11 +4,11 @@
  *
  * This file contains the definitions for the Alert interface.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
  * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #ifndef HF_ITF_ALERT_H

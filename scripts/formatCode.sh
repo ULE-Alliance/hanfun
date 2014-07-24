@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
-
+# =============================================================================
 #
-# Format code present the git repository.
+#   \file scripts/formatCode.sh
 #
+#   This is a helper script to format the code present in HAN-FUN source
+#   repository using the library's configuration for uncrustify.
+#
+#   \version 0.3.1
+#
+#   Copyright (c) 2014 Bithium S.A.
+#
+#   For licensing information, please see the file 'LICENSE' in the root folder.
+#
+# =============================================================================
 
 FILES="/tmp/$(basename $0).$$.tmp"
 
