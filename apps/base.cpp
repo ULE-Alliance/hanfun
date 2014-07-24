@@ -22,7 +22,7 @@
 
 #include "common.h"
 
-#define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
+// #define HF_LOG_LEVEL HF_LOG_LEVEL_TRACE
 #include "application.h"
 
 #include "json/json.h"
