@@ -291,7 +291,7 @@ namespace HF
              * Add the given link to the list of known links and call the connected method
              * for all registered end-points.
              *
-             * @param [IN] link  pointer to the link to add.
+             * @param [in] _link  pointer to the link to add.
              */
             void add (HF::Transport::Link *_link)
             {
@@ -307,7 +307,7 @@ namespace HF
              *
              * If \c _link is \c nullptr, then remove all known links.
              *
-             * @param [IN] _link  pointer to the link to remove.
+             * @param [in] _link  pointer to the link to remove.
              */
             void remove (HF::Transport::Link *_link = nullptr)
             {
@@ -322,7 +322,7 @@ namespace HF
              * Find the link used to send messages to the HAN-FUN device with
              * the given \c address.
              *
-             * @param [IN] address  the HAN-FUN address to find the link for.
+             * @param [in] address  the HAN-FUN address to find the link for.
              *
              * @return  a pointer to the link for the given address or
              *          \c nullptr if no link exists for the given address.
@@ -485,9 +485,9 @@ namespace HF
             /*!
              * Route the given packet to the corresponding device.
              *
-             * @param packet  reference for the packet to route.
-             * @param payload reference to the ByteArray containing the packet payload.
-             * @param offset  offset from where the packet data starts.
+             * @param [in] packet  reference for the packet to route.
+             * @param [in] payload reference to the ByteArray containing the packet payload.
+             * @param [in] offset  offset from where the packet data starts.
              */
             virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
             {
@@ -546,7 +546,7 @@ namespace HF
              * Add the given link to the list of known links and call the connected method
              * for all registered end-points.
              *
-             * @param [IN] link  pointer to the link to add.
+             * @param [in] link  pointer to the link to add.
              */
             void add (HF::Transport::Link *link)
             {
@@ -562,7 +562,7 @@ namespace HF
              *
              * If \c link is \c nullptr, then remove all known links.
              *
-             * @param [IN] link  pointer to the link to remove.
+             * @param [in] link  pointer to the link to remove.
              */
             void remove (HF::Transport::Link *link = nullptr);
 
@@ -570,7 +570,7 @@ namespace HF
              * Find the link used to send messages to the HAN-FUN device with
              * the given \c address.
              *
-             * @param [IN] address  the HAN-FUN address to find the link for.
+             * @param [in] address  the HAN-FUN address to find the link for.
              *
              * @return  a pointer to the link for the given address or
              *          \c nullptr if no link exists for the given address.

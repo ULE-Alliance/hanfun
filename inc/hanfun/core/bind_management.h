@@ -204,6 +204,7 @@ namespace HF
              * the source and in the destination address.
              *
              * @param [in] address   HF address to remove entries for.
+             * @param [in] type      HF address type.
              *
              * @retval  Common::Result::OK if at least one entry was destroyed.
              * @retval  Common::Result::FAIL_ARG, otherwise.

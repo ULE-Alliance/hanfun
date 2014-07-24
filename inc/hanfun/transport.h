@@ -240,7 +240,7 @@ namespace HF
          /*!
           * Add an entry to the list of end-points connected to the transport layer.
           *
-          * @param [IN] ep pointer to the end-point to add.
+          * @param [in] ep pointer to the end-point to add.
           */
          void add (HF::Transport::Endpoint *ep)
          {
@@ -253,7 +253,7 @@ namespace HF
           *
           * If \c ep is equal to \c nullptr then all end-points are removed.
           *
-          * @param [IN] ep pointer to the end-point entry to remove or \c nullptr to
+          * @param [in] ep pointer to the end-point entry to remove or \c nullptr to
           *             remove all entries.
           */
          void remove (HF::Transport::Endpoint *ep = nullptr)
@@ -298,7 +298,7 @@ namespace HF
           * Call the \c connected method for all the registered end-points
           * with the given \c link as argument.
           *
-          * @param [IN] link  pointer to the link to call the \c connected method with.
+          * @param [in] link  pointer to the link to call the \c connected method with.
           */
          void connected (HF::Transport::Link *link)
          {
@@ -317,7 +317,7 @@ namespace HF
           * Call the \c disconnected method for all the registered end-points
           * with the given \c link as argument.
           *
-          * @param [IN] link  pointer to the link to call the \c disconnected method with.
+          * @param [in] link  pointer to the link to call the \c disconnected method with.
           */
          void disconnected (HF::Transport::Link *link)
          {

@@ -38,7 +38,7 @@ To build the unit tests present in the source code, issue the following commands
     $ cmake -DHAN-FUN_BUILD_TESTS=ON ..
     $ make
 
-The unit tests will be run at the end of the complication.
+The unit tests will be run at the end of the compilation.
 
 To re-run the tests, issue:
 
@@ -103,7 +103,7 @@ the _light_ so that when the _switch toggles_ it toggles the _light_.
 
        > b 1 2 (on the base terminal)
 
-  * Send a toggle command from the _switch_ to the _light_ :
+ * Send a toggle command from the _switch_ to the _light_ :
 
        > toggle (on the switch terminal)
 
@@ -111,6 +111,31 @@ The last command should make the node application configured as a _light_ print 
 toggle command was received.
 
 Please see the help in the applications for further features.
+
+## TODO
+
+  * Interfaces :
+
+   - Add Attribute Report support.
+
+  * Protocol :
+
+   - Ensure that messages that require a response always receive it.
+   - Discard duplicated messages.
+
+  * Core :
+
+   - Device Information :
+
+     * Add support for GET/SET attributes.
+
+   - Device Management :
+
+     * Session Management for entry table read.
+
+   - Bind Management :
+
+     * Session Management for entry table read.
 
 ## Author
 
