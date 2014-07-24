@@ -347,7 +347,7 @@ static std::string json_uid(uint16_t uid)
 
 static uint16_t json_uid(std::string uid)
 {
-   return std::stoul(uid.substr(2), nullptr, 16);
+   return STRTOL_HEX(uid.substr(2));
 }
 
 // =============================================================================
@@ -394,7 +394,7 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
 
          for (int i = 0; i < 5; i++)
          {
-            node["value"][i] = static_cast <HF::UID::RFPI *>(uid)->value[i];
+            node["value"][i] = (int) static_cast <HF::UID::RFPI *>(uid)->value[i];
          }
 
          break;
@@ -406,7 +406,7 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
 
          for (int i = 0; i < 5; i++)
          {
-            node["value"][i] = static_cast <HF::UID::IPUI *>(uid)->value[i];
+            node["value"][i] = (int) static_cast <HF::UID::IPUI *>(uid)->value[i];
          }
 
          break;
@@ -418,7 +418,7 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
 
          for (int i = 0; i < 6; i++)
          {
-            node["value"][i] = static_cast <HF::UID::MAC *>(uid)->value[i];
+            node["value"][i] = (int) static_cast <HF::UID::MAC *>(uid)->value[i];
          }
 
          break;
@@ -546,7 +546,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         rfpi->value[i] = (uint8_t) std::stoi (node["value"][i].asString ());
+         rfpi->value[i] = (uint8_t) node["value"][i].asUInt();
       }
 
       uid = rfpi;
@@ -557,7 +557,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         ipui->value[i] = (uint8_t) std::stoi (node["value"][i].asString ());
+         ipui->value[i] = (uint8_t) node["value"][i].asUInt();
       }
 
       uid = ipui;
@@ -568,7 +568,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         mac->value[i] = (uint8_t) std::stoi (node["value"][i].asString ());
+         mac->value[i] = (uint8_t) node["value"][i].asUInt();
       }
 
       uid = mac;
