@@ -5,11 +5,11 @@
  * This file contains the definitions for the core Bind Management Interface
  * of the HAN-FUN protocol.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
+ * \version    0.3.1
  *
- * \version    0.3.0
+ * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #ifndef HF_BIND_MANAGEMENT_H
@@ -204,6 +204,7 @@ namespace HF
              * the source and in the destination address.
              *
              * @param [in] address   HF address to remove entries for.
+             * @param [in] type      HF address type.
              *
              * @retval  Common::Result::OK if at least one entry was destroyed.
              * @retval  Common::Result::FAIL_ARG, otherwise.

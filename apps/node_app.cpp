@@ -5,11 +5,11 @@
  * This file contains the implementation of the example application for a
  * HAN-FUN Node.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #include <iostream>
@@ -76,7 +76,7 @@ COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
    LOG (APP) << "Device is now a Simple Light !" << NL;
 }
 
-COMMAND (SimpleSwitch, "ss", "sl:set device as a simple switch")
+COMMAND (SimpleSwitch, "ss", "ss:set device as a simple switch")
 {
    UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
@@ -157,4 +157,38 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    transport.initialize ();
 
    transport.add (&node);
+
+   COMMAND_ADD (Register);
+   COMMAND_ADD (Address);
+   COMMAND_ADD (SimpleLight);
+   COMMAND_ADD (SimpleSwitch);
+   COMMAND_ADD (On);
+   COMMAND_ADD (Off);
+   COMMAND_ADD (Toggle);
+
+   HF::Application::Restore ();
+}
+
+// =============================================================================
+// HF::Application::Save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Save ()
+{
+   Saved ();
+}
+
+// =============================================================================
+// HF::Application::Restore
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Restore ()
+{
+   Restored ();
 }

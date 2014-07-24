@@ -6,11 +6,11 @@
 #
 #   This file contains the configuration options for the HAN-FUN library.
 #
-#   \author  Filipe Alves <filipe.alves@bithium.com>
+#   \version 0.3.1
 #
-#   \version x.x.x
+#   Copyright (c) 2014 Bithium S.A.
 #
-#   Copyright (c) 2012 Bithium S.A.
+#   For licensing information, please see the file 'LICENSE' in the root folder.
 #
 # =============================================================================
 
@@ -18,7 +18,45 @@
 # Project Configuration
 # =============================================================================
 
-option(HF_BUILD_APPS "Build example applications" OFF)
+set(PACKAGE_NAME "hanfun")
+
+# Offer the user the choice of overriding the installation directories
+set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for runtime binaries")
+
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for headers")
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR CMake)
+  set(DEF_INSTALL_DATA_DIR data)
+else()
+  set(DEF_INSTALL_DATA_DIR  "share/${PACKAGE_NAME}")
+  set(DEF_INSTALL_CMAKE_DIR "share/${PACKAGE_NAME}/cmake")
+endif()
+
+set(INSTALL_DATA_DIR ${DEF_INSTALL_DATA_DIR}
+    CACHE PATH "Installation directory for data files")
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR}
+    CACHE PATH "Installation directory for CMake files")
+
+# =============================================================================
+# Example Application Configuration
+# =============================================================================
+
+option (HF_BASE_APP "Build base example application." OFF)
+option (HF_NODE_APP "Build node example application." OFF)
+
+option (HF_BASE_LIB "Build base example application library." OFF)
+option (HF_NODE_LIB "Build node example application library." OFF)
+
+if (HF_BASE_APP OR BUILD_TESTS)
+    set(HF_BASE_LIB ON CACHE BOOL "Build base example application library." FORCE)
+endif()
+
+if (HF_NODE_APP OR BUILD_TESTS)
+    set(HF_NODE_LIB ON CACHE BOOL "Build node example application library." FORCE)
+endif()
+
+option(HF_APP_EXT_REG "Build example application with external registration support." OFF)
 
 # =============================================================================
 # SimplePowerMeter Configuration

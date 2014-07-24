@@ -5,11 +5,11 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #ifndef HF_APP_BASE_H
@@ -19,16 +19,11 @@
 
 #include "common.h"
 
+#include "json/json.h"
+
 // =============================================================================
 // Defines
 // =============================================================================
-
-#ifndef HF_APP_PREFIX
-   #define HF_APP_PREFIX           "."
-#endif
-
-#define HF_APP_DEV_MGT_FILENAME    "devices.hf"
-#define HF_APP_BIND_MGT_FILENAME   "binds.hf"
 
 // =============================================================================
 // Base
@@ -61,9 +56,11 @@ struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
 
    void clear ();
 
-   void save (std::string prefix);
+   HF::Common::Result save (HF::Core::DeviceManagement::Device *device);
 
-   void restore (std::string prefix);
+   void save (Json::Value &root);
+
+   void restore (Json::Value root);
 
    protected:
 
@@ -85,9 +82,19 @@ struct BindManagement:public HF::Core::BindManagement::Server
       HF::Core::BindManagement::Server (unit), loaded (false)
    {}
 
-   void save (std::string prefix);
+   std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> add (
+      const HF::Protocol::Address &source,
+      const HF::Protocol::Address &destination,
+      const HF::Common::Interface &itf);
 
-   void restore (std::string prefix);
+   HF::Common::Result remove (const HF::Protocol::Address &source,
+                              const HF::Protocol::Address &destination,
+                              const HF::Common::Interface &itf);
+
+
+   void save (Json::Value &root);
+
+   void restore (Json::Value root);
 
    protected:
 
@@ -108,17 +115,10 @@ struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformatio
 struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {
    Base():HF::Devices::Concentrator::Abstract <Unit0>()
-   {
-      unit0.device_management ()->restore (HF_APP_PREFIX);
-      // Bind entries add depends on static data initialization.
-      // The bind entries restore is performed in HF::Application::Initialize.
-   }
+   {}
 
    virtual ~Base()
-   {
-      unit0.bind_management ()->save (HF_APP_PREFIX);
-      unit0.device_management ()->save (HF_APP_PREFIX);
-   }
+   {}
 
    void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
 
@@ -161,5 +161,178 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
     */
    bool unbind (uint16_t dev_addr_1, uint16_t dev_addr_2);
 };
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ * Serialize a HF::Common::Interface to the given Json::Value.
+ *
+ * @param [in]  interface  reference to the HF::Common::Interface to serialize to JSON.
+ *
+ * @param [out] node       reference to the Json::Value to place the serialization result in.
+ */
+// =============================================================================
+void to_json (const HF::Common::Interface &interface, Json::Value &node);
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ * Serialize a HF::UID::UID pointer to the given Json::Value.
+ *
+ * @param [in]  uid     pointer to the HF::UID::UID to serialize to JSON.
+ *
+ * @param [out] node    reference to the Json::Value to place the serialization result in.
+ */
+// =============================================================================
+void to_json (HF::UID::UID *uid, Json::Value &node);
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ * Serialize a HF::Core::DeviceManagement::Unit to the given Json::Value.
+ *
+ * @param [in]  unit    reference to the HF::Core::DeviceManagement::Unit to
+ *                      serialize to JSON.
+ *
+ * @param [out] node    reference to the Json::Value to place the serialization result in.
+ */
+// =============================================================================
+void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node);
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ * Serialize a HF::Core::DeviceManagement::Device to the given Json::Value.
+ *
+ * @param [in]  device  reference to the HF::Core::DeviceManagement::Device to
+ *                      serialize to JSON.
+ *
+ * @param [out] node    reference to the Json::Value to place the serialization result in.
+ */
+// =============================================================================
+void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &node);
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ * Serialize a HF::Protocol::Address to the given Json::Value.
+ *
+ * @param [in]  address reference to the HF::Protocol::Address to serialize to JSON.
+ *
+ * @param [out] node    reference to the Json::Value to place the serialization result in.
+ */
+// =============================================================================
+void to_json (const HF::Protocol::Address &address, Json::Value &node);
+
+// =============================================================================
+// to_json
+// =============================================================================
+/*!
+ * Serialize a HF::Core::BindManagement::Entry to the given Json::Value.
+ *
+ * @param [in]  entry   reference to the HF::Core::BindManagement::Entry to
+ *                      serialize to JSON.
+ *
+ * @param [out] node    reference to the Json::Value to place the serialization result in.
+ */
+// =============================================================================
+void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node);
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ * Fill a HF::Common::Interface from the given \c Json::Value object.
+ *
+ * @param [in] node        reference to the Json::Value containing the fields for the
+ *                         HF::Common::Interface.
+ *
+ * @param [out] interface  reference to the HF::Common::Interface to update.
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Common::Interface &interface);
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ * Create a new HF::UID::UID based on the fields present in the given \c Json::Value
+ * object.
+ *
+ * @param [in] node   reference to the Json::Value containing the fields for the
+ *                      HF::UID::UID.
+ *
+ * @param [out] uid     reference to the pointer that will hold the created HF::UID::UID
+ *                      object of the correct type (NONE/RFPI/IPUI/MAC/URI).
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::UID::UID * &uid);
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ * Fill a HF::Core::DeviceManagement::Unit from the given \c Json::Value object.
+ *
+ * @param [in] node     reference to the Json::Value containing the fields for the
+ *                      HF::Core::DeviceManagement::Unit.
+ *
+ * @param [out] unit    reference to the HF::Core::DeviceManagement::Unit to update.
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit);
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ * Fill a HF::Core::DeviceManagement::Device from the given \c Json::Value object.
+ *
+ * @param [in] node     reference to the Json::Value containing the fields for the
+ *                      HF::Core::DeviceManagement::Device.
+ *
+ * @param [out] device  reference to the HF::Core::DeviceManagement::Device to
+ *                      update.
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &device);
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ * Fill a HF::Protocol::Address from the given \c Json::Value object.
+ *
+ * @param [in] node      reference to the Json::Value containing the fields for the
+ *                         HF::Protocol::Address.
+ *
+ * @param [out] address    reference to the HF::Protocol::Address to update.
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Protocol::Address &address);
+
+// =============================================================================
+// from_json
+// =============================================================================
+/*!
+ * Fill a HF::Core::BindManagement::Entry from the given \c Json::Value object.
+ *
+ * @param [in] node     reference to the Json::Value containing the fields for the
+ *                      HF::Core::BindManagement::Entry.
+ *
+ * @param [out] entry   reference to the HF::Core::BindManagement::Entry to
+ *                      update.
+ */
+// =============================================================================
+void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry);
 
 #endif /* HF_APP_BASE_H */

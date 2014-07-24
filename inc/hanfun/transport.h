@@ -5,15 +5,17 @@
  * This file contains the definition of the common transport layer API for
  * the HAN-FUN protocol.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #ifndef HF_TRANSPORT_H
 #define HF_TRANSPORT_H
+
+#include <algorithm>
 
 #include "hanfun/common.h"
 
@@ -35,6 +37,8 @@ namespace HF
        */
       struct Link
       {
+         virtual ~Link() {}
+
          /*!
           * Get the address of the device this link corresponds to.
           *
@@ -184,6 +188,9 @@ namespace HF
          // ======================================================================
       };
 
+      /*!
+       * Top-level parent for all HF::Transport::Link implementations.
+       */
       class AbstractLink:public Link
       {
          protected:
@@ -196,6 +203,8 @@ namespace HF
             _address (_address)
          {}
 
+         virtual ~AbstractLink() {}
+
          uint16_t address () const
          {
             return _address;
@@ -204,6 +213,123 @@ namespace HF
          void address (uint16_t addr)
          {
             _address = addr;
+         }
+      };
+
+      /*!
+       * Top-level class for all HF::Transport::Layer implementations.
+       */
+      class AbstractLayer:public Layer
+      {
+         protected:
+
+         std::forward_list <HF::Transport::Endpoint *> endpoints;
+
+         HF::UID::UID *_uid;
+
+         public:
+
+         AbstractLayer():_uid (nullptr)
+         {}
+
+         virtual ~AbstractLayer()
+         {
+            delete _uid;
+         }
+
+         /*!
+          * Add an entry to the list of end-points connected to the transport layer.
+          *
+          * @param [in] ep pointer to the end-point to add.
+          */
+         void add (HF::Transport::Endpoint *ep)
+         {
+            endpoints.push_front (ep);
+         }
+
+         /*!
+          * Remove the entry in \c ep, from the list of end-points connected to the
+          * transport layer.
+          *
+          * If \c ep is equal to \c nullptr then all end-points are removed.
+          *
+          * @param [in] ep pointer to the end-point entry to remove or \c nullptr to
+          *             remove all entries.
+          */
+         void remove (HF::Transport::Endpoint *ep = nullptr)
+         {
+            if (ep != nullptr)
+            {
+               endpoints.remove (ep);
+            }
+            else
+            {
+               endpoints.clear ();
+            }
+         }
+
+         void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
+         {
+            Protocol::Packet packet;
+            packet.link = link;
+
+            size_t offset = packet.unpack (payload);
+
+            /* *INDENT-OFF* */
+            std::for_each (endpoints.begin (), endpoints.end (),
+                  [&packet, &payload, &offset](HF::Transport::Endpoint *ep)
+                  {
+                     ep->receive (packet, payload, offset);
+                  });
+            /* *INDENT-ON* */
+         }
+
+         const HF::UID::UID *uid () const
+         {
+            return _uid;
+         }
+
+         void uid (HF::UID::UID *_uid)
+         {
+            this->_uid = _uid;
+         }
+
+         /*!
+          * Call the \c connected method for all the registered end-points
+          * with the given \c link as argument.
+          *
+          * @param [in] link  pointer to the link to call the \c connected method with.
+          */
+         void connected (HF::Transport::Link *link)
+         {
+            assert (link != nullptr);
+
+            /* *INDENT-OFF* */
+            std::for_each (endpoints.begin (), endpoints.end (),
+                  [link](HF::Transport::Endpoint *ep)
+                  {
+                     ep->connected (link);
+                  });
+            /* *INDENT-ON* */
+         }
+
+         /*!
+          * Call the \c disconnected method for all the registered end-points
+          * with the given \c link as argument.
+          *
+          * @param [in] link  pointer to the link to call the \c disconnected method with.
+          */
+         void disconnected (HF::Transport::Link *link)
+         {
+            assert (link != nullptr);
+
+            /* *INDENT-OFF* */
+            std::for_each (endpoints.begin (), endpoints.end (),
+                  [link](HF::Transport::Endpoint *ep)
+                  {
+                     ep->disconnected (link);
+                  });
+            /* *INDENT-ON* */
          }
       };
 

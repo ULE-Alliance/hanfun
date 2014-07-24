@@ -4,11 +4,11 @@
 #
 #   HAN-FUN Library Top CMakeList
 #
-#   \author  Filipe Alves <filipe.alves@bithium.com>
+#   \version 0.3.1
 #
-#   \version 0.3.0
+#   Copyright (c) 2014 Bithium S.A.
 #
-#   Copyright (c) 2012 Bithium S.A.
+#   For licensing information, please see the file 'LICENSE' in the root folder.
 #
 # =============================================================================
 
@@ -50,7 +50,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions")
 # The version number.
 set(PROJECT_MAJOR_VERSION 0)
 set(PROJECT_MINOR_VERSION 3)
-set(PROJECT_PATCH_VERSION 0)
+set(PROJECT_PATCH_VERSION 1)
 
 set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
 
@@ -59,13 +59,7 @@ configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
 
 include("cmake/options.cmake")
 
-if(BUILD_TESTS)
-    configure_file( ${CMAKE_SOURCE_DIR}/tests/config.h.in
-                    ${CMAKE_BINARY_DIR}/hanfun/config.h )
-else()
-    configure_file( ${CMAKE_SOURCE_DIR}/config.h.in
-                    ${CMAKE_BINARY_DIR}/hanfun/config.h )
-endif()
+configure_file( ${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/hanfun/config.h )
 
 # ==============================================================================
 # Library
@@ -73,9 +67,11 @@ endif()
 
 add_subdirectory(src)
 
-if(HF_BUILD_APPS)
-    add_subdirectory(apps)
-endif()
+# ==============================================================================
+# Example Applications
+# ==============================================================================
+
+add_subdirectory(apps)
 
 # ==============================================================================
 # Tests
@@ -90,3 +86,9 @@ endif(BUILD_TESTS)
 # ==============================================================================
 
 add_subdirectory(doc EXCLUDE_FROM_ALL)
+
+# ==============================================================================
+# Package
+# ==============================================================================
+
+include("cmake/package.cmake")

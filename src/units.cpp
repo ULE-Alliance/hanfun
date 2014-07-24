@@ -5,11 +5,11 @@
  * This file contains the implementation of the common functionality for
  * the HAN-FUN Units.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 
@@ -34,4 +34,6 @@ void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Me
    packet.link          = link;
 
    device ().send (packet);
+
+   message.reference = packet.message.reference;
 }

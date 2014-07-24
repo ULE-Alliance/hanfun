@@ -4,17 +4,18 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <fstream>
+#include <string>
 
 #include <unistd.h>
 
@@ -29,9 +30,15 @@
 
 #include "common.h"
 
+#include "json/json.h"
+
 // =============================================================================
 // Defines
 // =============================================================================
+
+#ifndef HF_APP_CONFIG_FILE
+   #define HF_APP_CONFIG_FILE   "./hanfun.json"
+#endif
 
 // =============================================================================
 // Global Variables
@@ -82,9 +89,9 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
 {
    if (args.size () > 0 && args[0] == "0") //!< Disable Registration
    {
-#ifdef HF_ULE_SUPPORT
+#ifdef HF_APP_EXT_REG
 
-      if (HF::ULE::Registration (false))
+      if (HF::Application::Registration (false))
       {
          LOG (INFO) << "Disable Registration mode: SUCCESS" << NL;
       }
@@ -97,15 +104,15 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
    }
    else if (args.size () > 1 && args[0] == "1") //!< Enable Registration
    {
-      uint16_t address = std::stoi (args[1]);
+      uint16_t address = STRTOL (args[1]);
 
       if (base.unit0.device_management ()->available (address) && address != 0 &&
           address < HF::Protocol::BROADCAST_ADDR)
       {
          base.unit0.device_management ()->next_address (address);
-#ifdef HF_ULE_SUPPORT
+#ifdef HF_APP_EXT_REG
 
-         if (HF::ULE::Registration (true))
+         if (HF::Application::Registration (true))
          {
             LOG (INFO) << "Enable Registration mode: SUCCESS" << NL;
          }
@@ -138,11 +145,11 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
       return;
    }
 
-   uint16_t address = std::stoi (args[0]);
+   uint16_t address = STRTOL (args[0]);
 
-#ifdef HF_ULE_SUPPORT
-   // DECT de-registration
-   HF::ULE::Deregister (address);
+#ifdef HF_APP_EXT_REG
+   // External de-registration.
+   HF::Application::Deregister (address);
 #endif
 
    /* HAN-FUN de-registration */
@@ -158,8 +165,8 @@ COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
       LOG (APP) << "b x y    :associate device x with device y. (bind)";
    }
 
-   uint16_t arg1 = std::stoi (args[0]);
-   uint16_t arg2 = std::stoi (args[1]);
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
 
    uint8_t  err  = base.bind (arg1, arg2);
 
@@ -206,8 +213,8 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
       LOG (APP) << "u x y   : unbind device x with y." << NL;
    }
 
-   uint16_t arg1 = std::stoi (args[0]);
-   uint16_t arg2 = std::stoi (args[1]);
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
 
    if (base.unbind (arg1, arg2))
    {
@@ -234,5 +241,66 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
 
    transport.add (&base);
 
-   base.unit0.bind_management ()->restore (HF_APP_PREFIX);
+   COMMAND_ADD (ListRegs);
+   COMMAND_ADD (ListBinds);
+   COMMAND_ADD (Register);
+   COMMAND_ADD (Deregister);
+   COMMAND_ADD (Bind);
+   COMMAND_ADD (Unbind);
+
+   Restore ();
+}
+
+// =============================================================================
+// HF::Application::Save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Save ()
+{
+   Json::Value root;
+   Json::StyledWriter writer;
+   ofstream    ofs (HF_APP_CONFIG_FILE);
+
+   base.unit0.device_management ()->save (root["core"]["device_management"]);
+   base.unit0.bind_management ()->save (root["core"]["bind_management"]);
+
+   if (ofs.is_open ())
+   {
+      ofs << root;
+      ofs.close ();
+   }
+
+   Saved ();
+}
+
+// =============================================================================
+// HF::Application::Restore
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Application::Restore ()
+{
+   Json::Reader  reader;
+   Json::Value   root;
+
+   std::ifstream ifs (HF_APP_CONFIG_FILE);
+
+   if (reader.parse (ifs, root, false) == false)
+   {
+      LOG (WARN) << "Reading configuration file !!" << reader.getFormattedErrorMessages () << NL;
+   }
+   else
+   {
+      base.unit0.device_management ()->restore (root["core"]["device_management"]);
+      base.unit0.bind_management ()->restore (root["core"]["bind_management"]);
+   }
+
+   ifs.close ();
+
+   Restored ();
 }

@@ -4,11 +4,11 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \author  Filipe Alves <filipe.alves@bithium.com>
+#   \version 0.3.1
 #
-#   \version 0.3.0
+#   Copyright (c) 2014 Bithium S.A.
 #
-#   Copyright (c) 2012 Bithium S.A.
+#   For licensing information, please see the file 'LICENSE' in the root folder.
 #
 # =============================================================================
 
@@ -30,6 +30,8 @@ include_directories(
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
+
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/hanfun/config.h )
 
 enable_testing()
 
@@ -67,6 +69,8 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 
-add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
+if(NOT CMAKE_CROSSCOMPILING)
+  add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
+endif()
 
 # add_test(hanfun_all test_hanfun)

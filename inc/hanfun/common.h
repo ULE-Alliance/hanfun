@@ -4,11 +4,11 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
+ * \version    0.3.1
  *
- * \version    0.3.0
+ * \copyright	Copyright &copy; &nbsp; 2013 Bithium S.A.
  *
- * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 
@@ -22,6 +22,8 @@
 
 #include <string>
 #include <vector>
+
+#include <assert.h>
 
 #include "hanfun/version.h"
 #include "hanfun/config.h"

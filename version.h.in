@@ -1,5 +1,5 @@
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef HF_VERSION_H
+#define HF_VERSION_H
 
 #define HF_MAJOR_VERSION @PROJECT_MAJOR_VERSION@
 #define HF_MINOR_VERSION @PROJECT_MINOR_VERSION@
@@ -7,4 +7,4 @@
 
 #define HF_VERSION       "@PROJECT_VERSION@"
 
-#endif /* VERSION_H */
+#endif /* HF_VERSION_H */

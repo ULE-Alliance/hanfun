@@ -5,11 +5,11 @@
  * This file contains the definitions for the common funtionality in the HAN-FUN
  * example applications.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 
@@ -62,9 +62,7 @@ class Command:public ICommand
 
    Command(const char *__key, const char *__usage):
       _key (__key), _usage (__usage)
-   {
-      ICommand::add (this);
-   }
+   {}
 
    const std::string &key () const
    {
@@ -87,6 +85,11 @@ class Command:public ICommand
    Command_##_name command##_name;                \
    void Command_##_name::run (std::vector <std::string> &args)
 
+#define COMMAND_ADD(_name)             \
+   {                                   \
+      ICommand::add (&command##_name); \
+   }
+
 // =============================================================================
 // Stream Helpers
 // =============================================================================
@@ -96,5 +99,12 @@ ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
 ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
 
 ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
+
+// =============================================================================
+// Parser helpers
+// =============================================================================
+
+#define STRTOL(X)       strtol (X.c_str (), NULL, 10);
+#define STRTOL_HEX(X)   strtol (X.c_str (), NULL, 16);
 
 #endif /* HF_APP_COMMON_H */

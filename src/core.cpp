@@ -5,11 +5,11 @@
  * This file contains the implementation of common functionality in the core
  * services and interfaces of the HAN-FUN protocol.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
+ * \version    0.3.1
  *
- * \version    0.3.0
+ * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
- * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 

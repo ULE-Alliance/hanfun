@@ -5,11 +5,11 @@
  * This file contains the implementation of the a HAN-FUN transport layer over the
  * libuv library.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 #include <iostream>
@@ -32,9 +32,6 @@
 // =============================================================================
 // Defines
 // =============================================================================
-
-// #define HF_BASE_APP
-//#define HF_NODE_APP
 
 #define NONE_MSG    0xFFFF
 #define HELLO_MSG   0x0101
@@ -201,16 +198,6 @@ static void on_close (uv_handle_t *handle)
    LOG (DEBUG) << "Connection Closed!" << NL;
 
    UNUSED (handle);
-
-#ifdef HF_BASE_APP
-   HF::Application::Link *link = (HF::Application::Link *) (handle->data);
-
-   if (link != nullptr)
-   {
-      delete link;
-   }
-
-#endif
 }
 
 // =============================================================================

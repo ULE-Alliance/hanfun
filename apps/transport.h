@@ -4,11 +4,11 @@
  *
  * This file contains the declarations of the transport layer over libuv.
  *
- * \author     Filipe Alves <filipe.alves@bithium.com>
- *
- * \version    0.3.0
+ * \version    0.3.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
 
@@ -40,112 +40,19 @@ namespace HF
 {
    namespace Application
    {
-      class Transport:public HF::Transport::Layer
+      class Transport:public HF::Devices::Concentrator::Transport
       {
          protected:
-
-         std::forward_list <HF::Transport::Endpoint *> endpoints;
-         std::forward_list <HF::Transport::Link *> links;
-
-         HF::UID::UID *_uid;
 
          uv_tcp_t socket;
 
          public:
 
+         virtual ~Transport() {}
+
          void initialize ();
 
          void destroy ();
-
-         void add (HF::Transport::Endpoint *ep)
-         {
-            LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
-
-            endpoints.push_front (ep);
-            std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link) {
-                              ep->connected (link);
-                           }
-                          );
-         }
-
-         void remove (HF::Transport::Endpoint *ep = nullptr)
-         {
-            LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
-
-            if (ep != nullptr)
-            {
-               endpoints.remove (ep);
-            }
-            else
-            {
-               endpoints.clear ();
-            }
-         }
-
-         void add (HF::Transport::Link *link)
-         {
-            LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
-
-            links.push_front (link);
-            std::for_each (endpoints.begin (), endpoints.end (), [link](HF::Transport::Endpoint *ep) {
-                              ep->connected (link);
-                           }
-                          );
-         }
-
-         void remove (HF::Transport::Link *link = nullptr)
-         {
-            LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
-
-            if (link != nullptr)
-            {
-               std::for_each (endpoints.begin (), endpoints.end (), [link](HF::Transport::Endpoint *ep) {
-                                 ep->disconnected (link);
-                              }
-                             );
-
-               links.remove (link);
-            }
-            else
-            {
-               std::for_each (endpoints.begin (), endpoints.end (), [this](HF::Transport::Endpoint *ep) {
-                                 std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link) {
-                                                   ep->disconnected (link);
-                                                }
-                                               );
-                              }
-                             );
-
-               links.clear ();
-            }
-         }
-
-         void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
-         {
-            LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
-
-            Protocol::Packet packet;
-            packet.link = link;
-
-            size_t offset = packet.unpack (payload);
-
-            std::for_each (endpoints.begin (), endpoints.end (),
-                           [&packet, &payload, &offset](HF::Transport::Endpoint *ep)
-                           {
-                              ep->receive (packet, payload, offset);
-                           }
-                          );
-         }
-
-         const HF::UID::UID *uid () const
-         {
-            return _uid;
-         }
-
-         void uid (HF::UID::UID *_uid)
-         {
-            this->_uid = _uid;
-         }
       };
 
       class Link:public HF::Transport::AbstractLink
