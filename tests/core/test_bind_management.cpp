@@ -527,29 +527,29 @@ void create_entries (T &entries, std::set <HF::Common::Interface> &db_itf,
    db_itf.insert (HF::Common::Interface(2, 1));
    db_itf.insert (HF::Common::Interface(3, 1));
 
-   db_addr.insert (HF::Protocol::Address(1, 1));
-   db_addr.insert (HF::Protocol::Address(1, 2));
-   db_addr.insert (HF::Protocol::Address(1, 3));
+   db_addr.insert (HF::Protocol::Address (1, 1, HF::Protocol::Address::DEVICE));
+   db_addr.insert (HF::Protocol::Address (1, 2, HF::Protocol::Address::DEVICE));
+   db_addr.insert (HF::Protocol::Address (1, 3, HF::Protocol::Address::DEVICE));
 
-   db_addr.insert (HF::Protocol::Address (1, 1));
-   db_addr.insert (HF::Protocol::Address (1, 2));
-   db_addr.insert (HF::Protocol::Address (1, 3));
+   db_addr.insert (HF::Protocol::Address (1, 1, HF::Protocol::Address::GROUP));
+   db_addr.insert (HF::Protocol::Address (1, 2, HF::Protocol::Address::GROUP));
+   db_addr.insert (HF::Protocol::Address (1, 3, HF::Protocol::Address::GROUP));
 
-   db_addr.insert (HF::Protocol::Address (2, 1));
-   db_addr.insert (HF::Protocol::Address (2, 2));
-   db_addr.insert (HF::Protocol::Address (2, 3));
+   db_addr.insert (HF::Protocol::Address (2, 1, HF::Protocol::Address::DEVICE));
+   db_addr.insert (HF::Protocol::Address (2, 2, HF::Protocol::Address::DEVICE));
+   db_addr.insert (HF::Protocol::Address (2, 3, HF::Protocol::Address::DEVICE));
 
-   db_addr.insert (HF::Protocol::Address (2, 1));
-   db_addr.insert (HF::Protocol::Address (2, 2));
-   db_addr.insert (HF::Protocol::Address (2, 3));
+   db_addr.insert (HF::Protocol::Address (2, 1, HF::Protocol::Address::GROUP));
+   db_addr.insert (HF::Protocol::Address (2, 2, HF::Protocol::Address::GROUP));
+   db_addr.insert (HF::Protocol::Address (2, 3, HF::Protocol::Address::GROUP));
 
-   db_addr.insert (HF::Protocol::Address (3, 1));
-   db_addr.insert (HF::Protocol::Address (3, 2));
-   db_addr.insert (HF::Protocol::Address (3, 3));
+   db_addr.insert (HF::Protocol::Address (3, 1, HF::Protocol::Address::DEVICE));
+   db_addr.insert (HF::Protocol::Address (3, 2, HF::Protocol::Address::DEVICE));
+   db_addr.insert (HF::Protocol::Address (3, 3, HF::Protocol::Address::DEVICE));
 
-   db_addr.insert (HF::Protocol::Address (3, 1));
-   db_addr.insert (HF::Protocol::Address (3, 2));
-   db_addr.insert (HF::Protocol::Address (3, 3));
+   db_addr.insert (HF::Protocol::Address (3, 1, HF::Protocol::Address::GROUP));
+   db_addr.insert (HF::Protocol::Address (3, 2, HF::Protocol::Address::GROUP));
+   db_addr.insert (HF::Protocol::Address (3, 3, HF::Protocol::Address::GROUP));
 
    /* *INDENT-OFF* */
    for_each (db_addr.begin (), db_addr.end (),
