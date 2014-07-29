@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

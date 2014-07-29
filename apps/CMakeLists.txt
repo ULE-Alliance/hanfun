@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Examples CMakeList
 #
-#   \version 0.3.1
+#   \version 0.3.2
 #
 #   Copyright (c) 2014 Bithium S.A.
 #

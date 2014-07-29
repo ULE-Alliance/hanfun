@@ -5,7 +5,7 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

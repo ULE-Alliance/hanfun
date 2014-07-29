@@ -6,7 +6,7 @@
 #   This is a helper script to format the code present in HAN-FUN source
 #   repository using the library's configuration for uncrustify.
 #
-#   \version 0.3.1
+#   \version 0.3.2
 #
 #   Copyright (c) 2014 Bithium S.A.
 #

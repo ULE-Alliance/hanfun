@@ -5,7 +5,7 @@
  * This file contains the definition for the core Device Information interface
  * of the HAN-FUN protocol.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  *

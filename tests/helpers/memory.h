@@ -5,7 +5,7 @@
  * This file is used to make the used STL classes work with CppUTest memory leak
  * functionality.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

@@ -5,7 +5,7 @@
  * This file contains the definition of the Node class that represents the
  * HAN-FUN Node on the application.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

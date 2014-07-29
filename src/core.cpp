@@ -5,7 +5,7 @@
  * This file contains the implementation of common functionality in the core
  * services and interfaces of the HAN-FUN protocol.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

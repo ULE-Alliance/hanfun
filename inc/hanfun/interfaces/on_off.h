@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the OnOff interface.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2013 Bithium S.A.
  *
