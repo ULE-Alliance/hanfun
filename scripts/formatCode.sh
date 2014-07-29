@@ -6,11 +6,13 @@
 #   This is a helper script to format the code present in HAN-FUN source
 #   repository using the library's configuration for uncrustify.
 #
-#   \version 0.3.2
+#   \version    0.3.2
 #
-#   Copyright (c) 2014 Bithium S.A.
+#   \copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
+#
+#   Initial development by Bithium S.A. [http://www.bithium.com]
 #
 # =============================================================================
 
