@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the common functionality
  * of the interfaces.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

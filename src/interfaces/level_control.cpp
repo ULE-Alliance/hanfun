@@ -5,11 +5,13 @@
  * This file contains the implementation of the common functionality for the
  * Level Control interface.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
 

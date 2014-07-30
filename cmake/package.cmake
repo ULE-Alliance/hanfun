@@ -4,11 +4,13 @@
 #
 #   HAN-FUN Library package export helpers.
 #
-#   \version 0.3.1
+#   \version    0.3.2
 #
-#   Copyright (c) 2014 Bithium S.A.
+#   \copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
+#
+#   Initial development by Bithium S.A. [http://www.bithium.com]
 #
 # =============================================================================
 

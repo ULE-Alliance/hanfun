@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

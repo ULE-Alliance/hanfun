@@ -4,7 +4,7 @@
  *
  * This file contains helper functions used the tests.
  *
- * \version    0.3.1
+ * \version    0.3.2
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
