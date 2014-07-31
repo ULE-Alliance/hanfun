@@ -22,7 +22,7 @@
 # Build
 # ==============================================================================
 
-set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp uids.cpp)
+set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp uids.cpp debug.cpp)
 
 set(HF_PROTOCOL_SRCS protocol.cpp)
 set(HF_INTERFACES_SRCS interfaces.cpp

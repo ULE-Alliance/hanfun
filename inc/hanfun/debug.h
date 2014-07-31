@@ -17,6 +17,10 @@
 #ifndef HF_DEBUG_H
 #define HF_DEBUG_H
 
+#include "common.h"
+#include "uids.h"
+#include "protocol.h"
+
 #include <iostream>
 
 // =============================================================================
@@ -69,5 +73,15 @@
 #define APP                  std::cout.clear ();std::cout
 
 #define LOG(X)   X
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
+
+ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
+
+ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
 
 #endif /* HF_DEBUG_H */
