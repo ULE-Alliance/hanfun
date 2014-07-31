@@ -23,7 +23,7 @@
 // Defines
 // =============================================================================
 
-#define NL                   std::endl
+#define NL                   std::endl; std::cout.clear (); std::cerr.clear ()
 
 #define HF_LOG_LEVEL_NONE    0
 #define HF_LOG_LEVEL_ERROR   1
@@ -37,13 +37,13 @@
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_ERROR
-   #define ERROR             std::cout.clear ();std::cerr << "[ERROR] "
+   #define ERROR             std::cerr.clear ();std::cerr << "[ERROR] "
 #else
    #define ERROR             std::cerr.setstate (std::ios_base::badbit);std::cerr
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_WARN
-   #define WARN              std::cout.clear ();std::cerr << "[WARN ] "
+   #define WARN              std::cerr.clear ();std::cerr << "[WARN ] "
 #else
    #define WARN              std::cerr.setstate (std::ios_base::badbit);std::cerr
 #endif
