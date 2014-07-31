@@ -26,8 +26,8 @@ set( PROJECT_INCLUDE_DIR  "${PROJECT_SOURCE_DIR}/inc" )
 
 # setup default include-directories
 include_directories(
-  ${PROJECT_INCLUDE_DIR}
   ${PROJECT_BINARY_DIR}
+  ${PROJECT_INCLUDE_DIR}
 )
 
 if( ${PROJECT_NAME}_BUILD_TESTS )
