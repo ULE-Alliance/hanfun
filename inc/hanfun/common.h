@@ -30,7 +30,7 @@
 #include "hanfun/version.h"
 #include "hanfun/config.h"
 
-#include "hanfun/gcc.h"
+#include "gcc.h"
 
 using namespace std;
 
