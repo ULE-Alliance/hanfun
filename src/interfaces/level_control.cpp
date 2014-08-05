@@ -28,7 +28,7 @@ using namespace HF::Interfaces::LevelControl;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *HF::Interfaces::LevelControl::create_attribute (uint8_t uid)
 {
    return Interfaces::create_attribute ((LevelControl::Server *) nullptr, uid);
 }

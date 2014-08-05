@@ -272,18 +272,20 @@ namespace HF
 
          void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
          {
-            Protocol::Packet packet;
-            packet.link = link;
+            Protocol::Packet * packet = new Protocol::Packet();
+            packet->link = link;
 
-            size_t offset = packet.unpack (payload);
+            size_t offset = packet->unpack (payload);
 
             /* *INDENT-OFF* */
             std::for_each (endpoints.begin (), endpoints.end (),
                   [&packet, &payload, &offset](HF::Transport::Endpoint *ep)
                   {
-                     ep->receive (packet, payload, offset);
+                     ep->receive (*packet, payload, offset);
                   });
             /* *INDENT-ON* */
+
+            delete packet;
          }
 
          const HF::UID::UID *uid () const

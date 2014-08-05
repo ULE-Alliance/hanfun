@@ -78,7 +78,7 @@ size_t Alert::Message::unpack (const Common::ByteArray &array, size_t offset)
 // Alert
 // =============================================================================
 
-HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *HF::Interfaces::Alert::create_attribute (uint8_t uid)
 {
    return Interfaces::create_attribute (((Alert::Server *) nullptr), uid);
 }
