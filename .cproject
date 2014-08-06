@@ -34,7 +34,6 @@
 								<option id="gnu.cpp.compiler.option.include.paths.1113745075" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/config}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.1114549229" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.c++11" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.warnings.extrawarn.1936538628" name="Extra warnings (-Wextra)" superClass="gnu.cpp.compiler.option.warnings.extrawarn" value="true" valueType="boolean"/>
@@ -49,11 +48,11 @@
 								<option id="gnu.c.compiler.option.include.paths.932279047" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/config}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.560505167" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HF_APP_EXT_REG=1"/>
 								</option>
+								<option id="gnu.c.compiler.option.dialect.std.1298618474" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.686398463" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1225653401" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
@@ -62,7 +61,6 @@
 								<option id="gnu.both.asm.option.include.paths.1067204425" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/config}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1363872380" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -82,6 +80,8 @@
 				<externalSettings>
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/hanfun_lib"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/hanfun_lib/apps"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/hanfun_lib/inc"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/hanfun_lib/Release"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="hanfun_lib" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
@@ -107,7 +107,6 @@
 								<option id="gnu.cpp.compiler.option.include.paths.558194663" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/config}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1667379233" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HF_APP_EXT_REG=1"/>
@@ -120,11 +119,11 @@
 								<option id="gnu.c.compiler.option.include.paths.1054992984" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/config}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1980028281" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HF_APP_EXT_REG=1"/>
 								</option>
+								<option id="gnu.c.compiler.option.dialect.std.271228490" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.400995345" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1250472842" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
@@ -133,7 +132,6 @@
 								<option id="gnu.both.asm.option.include.paths.1731499382" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hanfun_lib/config}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.537424125" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
