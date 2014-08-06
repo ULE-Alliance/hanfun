@@ -28,14 +28,16 @@
 void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Message &message,
                                            Transport::Link *link)
 {
-   Protocol::Packet packet (message);
+   Protocol::Packet * packet = new Protocol::Packet (message);
 
-   packet.destination   = addr;
-   packet.source.device = device ().address ();
-   packet.source.unit   = id ();
-   packet.link          = link;
+   packet->destination   = addr;
+   packet->source.device = device ().address ();
+   packet->source.unit   = id ();
+   packet->link          = link;
 
-   device ().send (packet);
+   device ().send (*packet);
 
-   message.reference = packet.message.reference;
+   message.reference = packet->message.reference;
+
+   delete packet;
 }

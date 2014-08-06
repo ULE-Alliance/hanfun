@@ -93,16 +93,6 @@ class Command:public ICommand
    }
 
 // =============================================================================
-// Stream Helpers
-// =============================================================================
-
-ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
-
-ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
-
-ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
-
-// =============================================================================
 // Parser helpers
 // =============================================================================
 

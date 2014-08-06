@@ -85,7 +85,7 @@ SimplePowerMeter::Server::Server()
 // =============================================================================
 SimplePowerMeter::Report *SimplePowerMeter::Server::report ()
 {
-   SimplePowerMeter::Report *report = new (nothrow) SimplePowerMeter::Report ();
+   SimplePowerMeter::Report *report = new SimplePowerMeter::Report ();
 
    if (report != nullptr)
    {
