@@ -20,6 +20,12 @@
 # Project Configuration
 # =============================================================================
 
+option(HF_BUILD_TESTS "Build project's unit tests.")
+
+#
+# Package configuration options.
+#
+
 set(PACKAGE_NAME "hanfun")
 
 # Offer the user the choice of overriding the installation directories

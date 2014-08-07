@@ -30,12 +30,6 @@ include_directories(
   ${PROJECT_INCLUDE_DIR}
 )
 
-if( ${PROJECT_NAME}_BUILD_TESTS )
-    set(BUILD_TESTS true)
-else()
-    set(BUILD_TESTS false)
-endif()
-
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fno-rtti -std=c++0x")
 
@@ -79,9 +73,9 @@ add_subdirectory(apps)
 # Tests
 # ==============================================================================
 
-if(BUILD_TESTS)
+if(HF_BUILD_TESTS)
     add_subdirectory(tests)
-endif(BUILD_TESTS)
+endif(HF_BUILD_TESTS)
 
 # ==============================================================================
 # Documentation
