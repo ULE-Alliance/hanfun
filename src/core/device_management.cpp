@@ -70,10 +70,12 @@ size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) co
    {
       offset += array.write (offset, (uint8_t) opt_ift.size ());
 
-      for (vector <Common::Interface>::const_iterator itf = opt_ift.begin (); itf != opt_ift.end (); ++itf)
+      /* *INDENT-OFF* */
+      std::for_each(opt_ift.begin (), opt_ift.end (), [&offset, &array](const HF::Common::Interface &itf)
       {
-         offset += itf->pack (array, offset);
-      }
+         offset += itf.pack (array, offset);
+      });
+      /* *INDENT-ON* */
    }
 
    return offset - start;
@@ -162,10 +164,10 @@ size_t DeviceManagement::Device::size () const
    size_t result = sizeof(uint16_t) +  // Device Address.
                    sizeof(uint8_t);    // Number of units.
 
-   for (vector <Unit>::const_iterator unit = units.begin (); unit != units.end (); ++unit)
-   {
-      result += unit->size ();
-   }
+   std::for_each (units.begin (), units.end (), [&result](const Unit &unit) {
+                     result += unit.size ();
+                  }
+                 );
 
    return result;
 }
@@ -185,10 +187,10 @@ size_t DeviceManagement::Device::pack (Common::ByteArray &array, size_t offset) 
 
    offset += array.write (offset, (uint8_t) units.size ());
 
-   for (vector <Unit>::const_iterator unit = units.begin (); unit != units.end (); ++unit)
-   {
-      offset += unit->pack (array, offset);
-   }
+   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit) {
+                     offset += unit.pack (array, offset);
+                  }
+                 );
 
    return offset - start;
 }
@@ -299,10 +301,10 @@ size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t
    temp    = units.size ();
    offset += array.write (offset, temp);
 
-   for (vector <Unit>::const_iterator unit = units.begin (); unit != units.end (); ++unit)
-   {
-      offset += unit->pack (array, offset);
-   }
+   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit) {
+                     offset += unit.pack (array, offset);
+                  }
+                 );
 
    return offset - start;
 }
@@ -597,10 +599,10 @@ size_t DeviceManagement::GetEntriesResponse::size () const
    size_t result = Response::size () + // Parent size.
                    sizeof(uint8_t);    // Number of entries.
 
-   for (vector <Device>::const_iterator device = entries.begin (); device != entries.end (); ++device)
-   {
-      result += device->size ();
-   }
+   std::for_each (entries.begin (), entries.end (), [&result](const Device &device) {
+                     result += device.size ();
+                  }
+                 );
 
    return result;
 }
@@ -619,10 +621,10 @@ size_t DeviceManagement::GetEntriesResponse::pack (Common::ByteArray &array, siz
    offset += Response::pack (array, offset);
    offset += array.write (offset, (uint8_t) entries.size ());
 
-   for (vector <Device>::const_iterator device = entries.begin (); device != entries.end (); ++device)
-   {
-      offset += device->pack (array, offset);
-   }
+   std::for_each (entries.begin (), entries.end (), [&array, &offset](const Device &device) {
+                     offset += device.pack (array, offset);
+                  }
+                 );
 
    return offset - start;
 }

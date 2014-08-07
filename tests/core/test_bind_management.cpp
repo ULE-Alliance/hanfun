@@ -689,15 +689,15 @@ TEST_GROUP (BindManagementServer)
 
       // =============================================================================
 
-      pair <Result, const BindManagement::Entry *> add (const Protocol::Address &source,
-                                                        const Protocol::Address &destination,
-                                                        const Common::Interface &itf)
+      std::pair <Result, const BindManagement::Entry *> add (const Protocol::Address &source,
+                                                             const Protocol::Address &destination,
+                                                             const Common::Interface &itf)
       {
          MockActualCall &call = mock ("add");
 
          if (call.hasReturnValue ())
          {
-            return *((pair <Result, BindManagement::Entry *> *)call.returnValue ().getPointerValue ());
+            return *((std::pair <Result, BindManagement::Entry *> *)call.returnValue ().getPointerValue ());
          }
          else
          {
@@ -813,7 +813,7 @@ TEST (BindManagementServer, HandleAdd)
 
    entry.pack (packet.message.payload, 3);
 
-   pair <Common::Result, BindManagement::Entry *> result = make_pair (Common::Result::OK, nullptr);
+   std::pair <Common::Result, BindManagement::Entry *> result = std::make_pair (Common::Result::OK, nullptr);
 
    mock ().expectOneCall ("add").andReturnValue (&result);
 

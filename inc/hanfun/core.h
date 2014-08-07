@@ -138,7 +138,7 @@ namespace HF
       template<class Parent, Interface::Role _role>
       struct ServiceRole:public Parent
       {
-         static_assert (is_base_of <HF::Core::AbstractService, Parent>::value,
+         static_assert (std::is_base_of <HF::Core::AbstractService, Parent>::value,
                         "Parent must be of type HF::Core::AbstractService");
 
          ServiceRole(Unit0 &unit):
@@ -163,21 +163,21 @@ namespace HF
    template<typename Base, typename... ITF>
    class Unit0:public Base
    {
-      static_assert (is_base_of <HF::Core::Unit0, Base>::value,
+      static_assert (std::is_base_of <HF::Core::Unit0, Base>::value,
                      "Base must be of type HF::Core::Unit0");
 
       public:
 
-      typedef tuple <ITF...> interfaces_t;
+      typedef std::tuple <ITF...> interfaces_t;
 
       interfaces_t interfaces;
 
-      typedef typename tuple_element <0, decltype (interfaces)>::type DeviceInfo;
+      typedef typename std::tuple_element <0, decltype (interfaces)>::type DeviceInfo;
 
-      static_assert (is_base_of <HF::Core::DeviceInformation::Interface, DeviceInfo>::value,
+      static_assert (std::is_base_of <HF::Core::DeviceInformation::Interface, DeviceInfo>::value,
                      "DeviceInfo must be of type HF::Core::DeviceInformation::Interface");
 
-      typedef typename tuple_element <1, decltype (interfaces)>::type DeviceMgt;
+      typedef typename std::tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
       Unit0(HF::IDevice &device):
          Base (device), interfaces (ITF (*this) ...)
@@ -189,22 +189,22 @@ namespace HF
 
       DeviceInfo *info () const
       {
-         return const_cast <DeviceInfo *>(&get <0>(interfaces));
+         return const_cast <DeviceInfo *>(&std::get <0>(interfaces));
       }
 
       DeviceInfo *info ()
       {
-         return &get <0>(interfaces);
+         return &std::get <0>(interfaces);
       }
 
       DeviceMgt *device_management () const
       {
-         return const_cast <DeviceMgt *>(&get <1>(interfaces));
+         return const_cast <DeviceMgt *>(&std::get <1>(interfaces));
       }
 
       DeviceMgt *device_management ()
       {
-         return &get <1>(interfaces);
+         return &std::get <1>(interfaces);
       }
 
       // =============================================================================
@@ -224,10 +224,10 @@ namespace HF
       template<uint8_t N, typename Head, typename... Tail>
       Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
       {
-         static_assert (is_base_of <HF::Core::IService, Head>::value,
+         static_assert (std::is_base_of <HF::Core::IService, Head>::value,
                         "Head must be of type HF::Core::IService");
 
-         Head &head = get <N>(interfaces);
+         Head &head = std::get <N>(interfaces);
 
          if (head.uid () == packet.message.itf.id)
          {

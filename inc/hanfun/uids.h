@@ -234,9 +234,9 @@ namespace HF
        */
       struct URI:public AbstractUID <URI_UID>
       {
-         string value;
+         std::string value;
 
-         URI(string value = ""):
+         URI(std::string value = ""):
             value (value)
          {}
 
@@ -270,7 +270,7 @@ namespace HF
 
             offset += array.read (offset, size);
 
-            value   = string (size, 0);
+            value   = std::string (size, 0);
 
             for (uint8_t i = 0; i < size; i++)
             {

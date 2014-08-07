@@ -12,13 +12,14 @@
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
+#include <string>
+#include <map>
 
 #include "hanfun/common.h"
 #include "hanfun/uids.h"
 
 #include "test_helper.h"
 
-using namespace std;
 using namespace HF;
 using namespace HF::Common;
 
@@ -432,7 +433,7 @@ TEST (UID, Order)
 
    // Check if operation works.
 
-   less <UID::UID *> comp;
+   std::less <UID::UID *> comp;
 
    CHECK_FALSE (comp (&none, &none));
    CHECK_FALSE (comp (&rfpi, &rfpi));
@@ -467,11 +468,11 @@ TEST (UID, Order)
 
    // Using it on an ordered collection.
 
-   map <UID::UID *, string> test_db;
+   std::map <UID::UID *, std::string> test_db;
 
    // Only one NONE UID is possible.
 
-   string temp;
+   std::string temp;
    test_db[&none] = temp = "This is the NONE UID.";
 
    LONGS_EQUAL (1, test_db.size ());
@@ -581,7 +582,7 @@ TEST (UID, Order_NULL)
 {
    NONE uid;
 
-   less <UID::UID *> comp;
+   std::less <UID::UID *> comp;
 
    CHECK_TRUE (comp (nullptr, &uid));
 

@@ -86,10 +86,10 @@ namespace HF
           */
          struct Unit
          {
-            uint8_t                    id;      //!< Unit Id.
-            uint16_t                   profile; //!< Unit UID. \see IProfile::UID.
+            uint8_t                         id;      //!< Unit Id.
+            uint16_t                        profile; //!< Unit UID. \see IProfile::UID.
 
-            vector <Common::Interface> opt_ift; //!< Optional interfaces.
+            std::vector <Common::Interface> opt_ift; //!< Optional interfaces.
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
@@ -125,12 +125,12 @@ namespace HF
           */
          struct Device
          {
-            uint16_t      address; //!< Device Address.
-            vector <Unit> units;   //!< Unit list of the interface.
+            uint16_t           address; //!< Device Address.
+            std::vector <Unit> units;   //!< Unit list of the interface.
 
-            uint16_t      emc; //! Device EMC if applicable, 0 otherwise.
+            uint16_t           emc; //! Device EMC if applicable, 0 otherwise.
 
-            HF::UID::UID  *uid; //! Device UID.
+            HF::UID::UID       *uid; //! Device UID.
 
             Device():address (Protocol::BROADCAST_ADDR), emc (0), uid (nullptr) {}
 
@@ -183,8 +183,8 @@ namespace HF
           */
          struct RegisterMessage
          {
-            uint16_t      emc;   //! Device EMC if applicable, 0 otherwise.
-            vector <Unit> units; //! Device units listing.
+            uint16_t           emc;   //! Device EMC if applicable, 0 otherwise.
+            std::vector <Unit> units; //! Device units listing.
 
             RegisterMessage(uint16_t emc = 0x0000):
                emc (emc), _uid (nullptr)
@@ -334,7 +334,7 @@ namespace HF
 
          struct GetEntriesResponse:public Protocol::Response
          {
-            vector <Device> entries;
+            std::vector <Device> entries;
 
             //! \see HF::Protocol::Response::size.
             size_t size () const;
@@ -535,7 +535,7 @@ namespace HF
              * @param [in] count    the
              * @return
              */
-            virtual vector <Device *> entries (uint16_t offset, uint16_t count) = 0;
+            virtual std::vector <Device *> entries (uint16_t offset, uint16_t count) = 0;
 
             /*!
              * Return all device entries starting at \c offset.
@@ -544,7 +544,7 @@ namespace HF
              *
              * @return a vector containing the requested entries.
              */
-            vector <Device *> entries (uint16_t offset = 0)
+            std::vector <Device *> entries (uint16_t offset = 0)
             {
                if (offset < entries_count ())
                {
@@ -552,7 +552,7 @@ namespace HF
                }
                else
                {
-                  return vector <Device *>(0);
+                  return std::vector <Device *>(0);
                }
             }
 
@@ -683,16 +683,16 @@ namespace HF
                return _entries.size ();
             }
 
-            vector <DeviceManagement::Device *> entries (uint16_t offset, uint16_t count);
+            std::vector <DeviceManagement::Device *> entries (uint16_t offset, uint16_t count);
 
             using Server::entries;
 
             protected:
 
-            vector <Device *>                    _entries;
+            std::vector <Device *>                    _entries;
 
-            map <uint16_t, Device *>             _addr2device;
-            map <HF::UID::UID const *, Device *> _uid2device;
+            std::map <uint16_t, Device *>             _addr2device;
+            std::map <HF::UID::UID const *, Device *> _uid2device;
 
 
             uint16_t next_address ()

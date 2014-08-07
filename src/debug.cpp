@@ -23,7 +23,7 @@
 // Stream Helpers
 // =============================================================================
 
-ostream & operator <<(ostream &stream, HF::Common::ByteArray const &array)
+std::ostream & operator <<(std::ostream &stream, HF::Common::ByteArray const &array)
 {
    if (stream == std::cout || stream == std::cerr)
    {
@@ -53,7 +53,7 @@ ostream & operator <<(ostream &stream, HF::Common::ByteArray const &array)
    return stream;
 }
 
-ostream &operator <<(ostream &stream, const HF::UID::UID *uid)
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID *uid)
 {
    std::ios_base::fmtflags ff;
    ff = stream.flags ();
@@ -132,7 +132,7 @@ ostream &operator <<(ostream &stream, const HF::UID::UID *uid)
    return stream;
 }
 
-ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet)
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet)
 {
    std::ios_base::fmtflags ff;
    ff = stream.flags ();

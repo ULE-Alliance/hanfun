@@ -240,8 +240,8 @@ namespace HF
          typedef InterfaceProxy <Interface1> first_itf_t;
          typedef InterfaceProxy <Interface2> second_itf_t;
 
-         static_assert (is_base_of <Interfaces::AbstractInterface, Interface1>::value &&
-                        is_base_of <Interfaces::AbstractInterface, Interface2>::value,
+         static_assert (std::is_base_of <Interfaces::AbstractInterface, Interface1>::value &&
+                        std::is_base_of <Interfaces::AbstractInterface, Interface2>::value,
                         "Interface1 and Interface 2 MUST be of type HF::AbstractInterface !");
 
          //! \see Interface::handle
@@ -287,7 +287,7 @@ namespace HF
          Profile2():interfaces (first_itf_t (*this), second_itf_t (*this))
          {}
 
-         pair <first_itf_t, second_itf_t> interfaces;
+         std::pair <first_itf_t, second_itf_t> interfaces;
       };
 
       /*!
@@ -368,9 +368,9 @@ namespace HF
       class SimpleLevelControllableSwitchable:
          public Profile2 <SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
       {
-         static_assert (is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
+         static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
-         static_assert (is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
+         static_assert (std::is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
                         "LevelControl::Server MUST be of type Interfaces::LevelControl::Server !");
 
          public:
@@ -396,9 +396,9 @@ namespace HF
       class SimpleLevelControlSwitch:
          public Profile2 <SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
       {
-         static_assert (is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
+         static_assert (std::is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
                         "OnOff::Client MUST be of type Interfaces::OnOff::Client !");
-         static_assert (is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
+         static_assert (std::is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
                         "LevelControl::Client MUST be of type Interfaces::LevelControl::Client !");
          public:
 
@@ -433,9 +433,9 @@ namespace HF
       class AC_OutletWithPowerMetering:
          public Profile2 <AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
       {
-         static_assert (is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
+         static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
-         static_assert (is_base_of <Interfaces::SimplePowerMeter::Server, SimplePowerMeterServer>::value,
+         static_assert (std::is_base_of <Interfaces::SimplePowerMeter::Server, SimplePowerMeterServer>::value,
                         "SimplePowerMeterServer MUST be of type Interfaces::SimplePowerMeter::Server !");
 
          public:
@@ -470,9 +470,9 @@ namespace HF
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class DimmableLight:public Profile2 <DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
       {
-         static_assert (is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
+         static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
-         static_assert (is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
+         static_assert (std::is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
                         "LevelControl::Client MUST be of type Interfaces::LevelControl::Server !");
 
          public:
@@ -497,9 +497,9 @@ namespace HF
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class DimmerSwitch:public Profile2 <DIMMER_SWITCH, OnOffClient, LevelControlClient>
       {
-         static_assert (is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
+         static_assert (std::is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Client !");
-         static_assert (is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
+         static_assert (std::is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
                         "LevelControl::Server MUST be of type Interfaces::LevelControl::Client !");
 
          public:

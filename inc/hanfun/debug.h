@@ -78,10 +78,10 @@
 // Stream Helpers
 // =============================================================================
 
-ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
+std::ostream &operator <<(std::ostream &stream, HF::Common::ByteArray const &array);
 
-ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID *uid);
 
-ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
 
 #endif /* HF_DEBUG_H */

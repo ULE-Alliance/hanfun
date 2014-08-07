@@ -48,7 +48,7 @@ namespace HF
       /*!
        * Unit list type.
        */
-      struct units_t:public forward_list <Units::IUnit *>
+      struct units_t:public std::forward_list <Units::IUnit *>
       {
          units_t::size_type size () const
          {

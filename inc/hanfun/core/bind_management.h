@@ -125,7 +125,7 @@ namespace HF
           */
          struct Entries
          {
-            typedef set <Entry> Container;
+            typedef std::set <Entry> Container;
 
             typedef typename Container::iterator Iterator;
 
@@ -172,8 +172,8 @@ namespace HF
              *
              * @return  a pair containing the start and end iterators for entries requested.
              */
-            pair <Iterator, Iterator> find (Protocol::Address const &source,
-                                            Common::Interface const &itf) const;
+            std::pair <Iterator, Iterator> find (Protocol::Address const &source,
+                                                 Common::Interface const &itf) const;
 
             /*!
              * Return the Bind entry for the given parameters.
@@ -257,9 +257,9 @@ namespace HF
              * @return a pair containing the result indicating if the entry was created and
              *         a pointer to the newlly created entry.
              */
-            pair <Common::Result, const Entry *> create (Protocol::Address const &source,
-                                                         Common::Interface const &itf,
-                                                         Protocol::Address const &destination);
+            std::pair <Common::Result, const Entry *> create (Protocol::Address const &source,
+                                                              Common::Interface const &itf,
+                                                              Protocol::Address const &destination);
 
             friend class HF::Core::BindManagement::Server;
 
@@ -383,9 +383,9 @@ namespace HF
              *
              * @return  Common::Result::OK if the bind was created or Result::FAIL_* otherwise.
              */
-            virtual pair <Common::Result, const Entry *> add (const Protocol::Address &source,
-                                                              const Protocol::Address &destination,
-                                                              const Common::Interface &itf);
+            virtual std::pair <Common::Result, const Entry *> add (const Protocol::Address &source,
+                                                                   const Protocol::Address &destination,
+                                                                   const Common::Interface &itf);
 
             /*!
              * Remove a bind entry from the database.

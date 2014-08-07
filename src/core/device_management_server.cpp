@@ -258,17 +258,17 @@ DeviceManagement::DefaultServer::~DefaultServer()
  *
  */
 // =============================================================================
-vector <DeviceManagement::Device *> DeviceManagement::DefaultServer::entries (uint16_t offset, uint16_t count)
+std::vector <DeviceManagement::Device *> DeviceManagement::DefaultServer::entries (uint16_t offset, uint16_t count)
 {
-   vector <Device *>::iterator start = _entries.begin ();
+   std::vector <Device *>::iterator start = _entries.begin ();
 
    start += offset;
 
-   count  = min (static_cast <int>(count), static_cast <int>(_entries.size () - offset));
+   count  = std::min (static_cast <int>(count), static_cast <int>(_entries.size () - offset));
 
-   vector <Device *>::iterator end = start + count;
+   std::vector <Device *>::iterator end = start + count;
 
-   return vector <Device *>(start, end);
+   return std::vector <Device *>(start, end);
 }
 
 // =============================================================================
@@ -344,7 +344,7 @@ Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Devic
       return Common::Result::FAIL_ARG;
    }
 
-   vector <DeviceManagement::Device *>::iterator it = find (_entries.begin (), _entries.end (), device);
+   std::vector <DeviceManagement::Device *>::iterator it = std::find (_entries.begin (), _entries.end (), device);
 
    if (it == _entries.end ())
    {

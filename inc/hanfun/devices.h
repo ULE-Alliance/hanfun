@@ -88,6 +88,7 @@ namespace HF
 
          //! Last reference number used to send a packet.
          uint8_t next_reference;
+
          //! List containing pointers to the units present in the device.
          units_t _units;
 
@@ -180,7 +181,8 @@ namespace HF
          template<typename... ITF>
          struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
+            static_assert (std::is_base_of <HF::Core::DeviceManagement::Client,
+                                            typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformationClient");
 
             Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
@@ -363,12 +365,13 @@ namespace HF
          template<typename... ITF>
          struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
+            static_assert (std::is_base_of <HF::Core::DeviceManagement::Server,
+                                            typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
 
-            typedef typename tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename std::tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
-            static_assert (is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
+            static_assert (std::is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
                            "BindMgt must be of type HF::Core::BindManagement::Server");
 
             Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
@@ -376,12 +379,12 @@ namespace HF
 
             BindMgt *bind_management () const
             {
-               return const_cast <BindMgt *>(&get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+               return const_cast <BindMgt *>(&std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
             }
 
             BindMgt *bind_management ()
             {
-               return &get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+               return &std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
             }
          };
 
@@ -404,8 +407,6 @@ namespace HF
          class Abstract:public AbstractDevice
          {
             public:
-
-            typedef forward_list <Transport::Link *> links_t;
 
             CoreServices unit0;
 
@@ -454,7 +455,7 @@ namespace HF
 
             protected:
 
-            links_t _links; //!< List of link present in this Concentrator.
+            std::forward_list <Transport::Link *> _links; //!< List of link present in this Concentrator.
 
             Abstract():unit0 (*this)
             {}
@@ -470,7 +471,7 @@ namespace HF
                }
 
                /* *INDENT-OFF* */
-               auto it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
+               auto it = std::find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
                {
                   return link->address () == addr;
                });

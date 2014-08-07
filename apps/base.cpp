@@ -339,7 +339,7 @@ bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 
 static std::string json_uid(uint16_t uid)
 {
-   ostringstream convert;
+   std::ostringstream convert;
 
    convert << "0x" << std::setfill ('0') << std::setw(sizeof(uint16_t)*2)
            << std::hex << uid;
@@ -535,7 +535,7 @@ void from_json (Json::Value &node, HF::Common::Interface &interface)
 // =============================================================================
 void from_json (Json::Value &node, HF::UID::UID * &uid)
 {
-   string uid_type = node.get ("type", "none").asString ();
+   std::string uid_type = node.get ("type", "none").asString ();
 
    if (uid_type == "none")
    {

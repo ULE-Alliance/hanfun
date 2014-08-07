@@ -138,7 +138,7 @@ std::ostream &ICommand::help (std::ostream &stream)
    stream << "================================================" << std::endl;
    stream << "HAN-FUN Example Application" << std::endl << std::endl;
 
-   stream << setfill (' ');
+   stream << std::setfill (' ');
    std::for_each (entries.begin (), entries.end (), [&stream, size](entry &e) {
                      stream << std::left << std::setw (size) << e.cmd << "\t: " << e.help << std::endl;
                   }

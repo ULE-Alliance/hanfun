@@ -230,11 +230,13 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (0x3333, device.address);
    LONGS_EQUAL (3, device.units.size ());
 
-   for (vector <DeviceManagement::Unit>::const_iterator _unit = device.units.begin ();
-        _unit != device.units.end (); ++_unit)
+   /* *INDENT-OFF* */
+   std::for_each (device.units.begin (), device.units.end (),
+                  [&unit](const DeviceManagement::Unit &_unit)
    {
-      CHECK_EQUAL (unit, *_unit);
-   }
+      CHECK_EQUAL (unit, _unit);
+   });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -313,11 +315,13 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for (vector <DeviceManagement::Unit>::const_iterator _unit = message->units.begin ();
-        _unit != message->units.end (); ++_unit)
+   /* *INDENT-OFF* */
+   std::for_each (message->units.begin (), message->units.end (),
+                  [this](const DeviceManagement::Unit &_unit)
    {
-      CHECK_EQUAL (unit, *_unit);
-   }
+      CHECK_EQUAL (unit, _unit);
+   });
+   /* *INDENT-ON* */
 }
 
 TEST (DeviceManagement_RegisterMessage, No_UID)
@@ -385,11 +389,13 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for (vector <DeviceManagement::Unit>::const_iterator _unit = message->units.begin ();
-        _unit != message->units.end (); ++_unit)
+   /* *INDENT-OFF* */
+   std::for_each (message->units.begin (), message->units.end (),
+                  [this](const DeviceManagement::Unit &_unit)
    {
-      CHECK_EQUAL (unit, *_unit);
-   }
+      CHECK_EQUAL (unit, _unit);
+   });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -749,8 +755,8 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (device->units ().size () - 1, payload.units.size ());
 
-   vector <uint8_t> expected;
-   vector <uint8_t> actual;
+   std::vector <uint8_t> expected;
+   std::vector <uint8_t> actual;
 
    /* *INDENT-OFF* */
    for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
@@ -760,16 +766,15 @@ TEST (DeviceManagementClient, RegisterMessage)
    /* *INDENT-ON* */
 
    // Unit 0 - Should not be present.
-   CHECK_TRUE (none_of (actual.begin (), actual.end (), [](uint8_t id) {
-                           return id == 0U;
-                        }
-                       ));
+   /* *INDENT-OFF* */
+   CHECK_TRUE (std::none_of (actual.begin (), actual.end (), [](uint8_t id){ return id == 0U; }));
+   /* *INDENT-ON* */
 
    expected.push_back (unit1->id ());
    expected.push_back (unit2->id ());
    expected.push_back (unit3->id ());
 
-   CHECK_TRUE (is_permutation (expected.begin (), expected.end (), actual.begin ()));
+   CHECK_TRUE (std::is_permutation (expected.begin (), expected.end (), actual.begin ()));
 
    expected.clear ();
    actual.clear ();
@@ -1076,7 +1081,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = 0x5A50 + i;
-      ostringstream uri;
+      std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
       dev->uid = new UID::URI (uri.str ());
       dev_mgt->save (dev);
@@ -1125,7 +1130,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = 0x5A50 + i;
-      ostringstream uri;
+      std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
       dev->uid = new UID::URI (uri.str ());
       uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
@@ -1232,7 +1237,7 @@ TEST (DeviceManagementServer, Entries)
 
    LONGS_EQUAL (20, dev_mgt->entries_count ());
 
-   vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
+   std::vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
 
    LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
 

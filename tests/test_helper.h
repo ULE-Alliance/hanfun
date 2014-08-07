@@ -302,9 +302,9 @@ namespace HF
       template<class Parent>
       struct AbstractDevice:public Parent
       {
-         uint16_t                    _address;
+         uint16_t                         _address;
 
-         vector <Protocol::Packet *> packets;
+         std::vector <Protocol::Packet *> packets;
 
          AbstractDevice():
             _address (Protocol::BROADCAST_ADDR)
@@ -313,7 +313,7 @@ namespace HF
          virtual ~AbstractDevice()
          {
             /* *INDENT-OFF* */
-            for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
+            std::for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
             {
                delete packet;
             });

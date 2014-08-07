@@ -92,22 +92,22 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-pair <Common::Result, const Entry *> Server::add (const Protocol::Address &source,
-                                                  const Protocol::Address &destination,
-                                                  const Common::Interface &itf)
+std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &source,
+                                                       const Protocol::Address &destination,
+                                                       const Common::Interface &itf)
 {
    const Entry *entry = this->entries.find (source, itf, destination);
 
    // If the entry already exists, do nothing.
    if (entry != nullptr)
    {
-      return make_pair (Common::Result::OK, entry);
+      return std::make_pair (Common::Result::OK, entry);
    }
 
    // TODO Add support for group binding.
    if (destination.mod == HF::Protocol::Address::GROUP)
    {
-      return make_pair (Common::Result::FAIL_SUPPORT, nullptr);
+      return std::make_pair (Common::Result::FAIL_SUPPORT, nullptr);
    }
 
    // Get device entries from device management.
@@ -115,14 +115,14 @@ pair <Common::Result, const Entry *> Server::add (const Protocol::Address &sourc
 
    if (src_dev == nullptr)
    {
-      return make_pair (Common::Result::FAIL_ARG, nullptr);
+      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
    DeviceManagement::Device *dst_dev = unit0 ().device_management ()->entry (destination.device);
 
    if (dst_dev == nullptr)
    {
-      return make_pair (Common::Result::FAIL_ARG, nullptr);
+      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
    // Check if the source unit exist.
@@ -136,7 +136,7 @@ pair <Common::Result, const Entry *> Server::add (const Protocol::Address &sourc
 
    if (src_unit_it == src_dev->units.end ())
    {
-      return make_pair (Common::Result::FAIL_ARG, nullptr);
+      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
    // Check if the destination unit exist.
@@ -150,7 +150,7 @@ pair <Common::Result, const Entry *> Server::add (const Protocol::Address &sourc
 
    if (dst_unit_it == dst_dev->units.end ())
    {
-      return make_pair (Common::Result::FAIL_ARG, nullptr);
+      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
    HF::Interface::Role role = static_cast <HF::Interface::Role>(itf.role);
@@ -158,7 +158,7 @@ pair <Common::Result, const Entry *> Server::add (const Protocol::Address &sourc
    // Check if destination unit has requested interface.
    if (!dst_unit_it->has_interface (itf.id, role))
    {
-      return make_pair (Common::Result::FAIL_ARG, nullptr);
+      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
    // Check if source has complementary interface.
@@ -167,7 +167,7 @@ pair <Common::Result, const Entry *> Server::add (const Protocol::Address &sourc
 
    if (!src_unit_it->has_interface (itf.id, role))
    {
-      return make_pair (Common::Result::FAIL_ARG, nullptr);
+      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
    return this->entries.create (source, itf, destination);

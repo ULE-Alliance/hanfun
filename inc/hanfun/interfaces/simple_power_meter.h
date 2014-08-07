@@ -170,7 +170,7 @@ namespace HF
              * This array contains an indication of with attributes should packed or
              * with were unpacked.
              */
-            array <bool, __LAST_ATTR__ + 1> enabled;
+            std::array <bool, __LAST_ATTR__ + 1> enabled;
 
             Report();
 

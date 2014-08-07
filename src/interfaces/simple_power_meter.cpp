@@ -44,7 +44,7 @@ SimplePowerMeter::Report::Report()
    memset (&current, 0, sizeof(Measurement));         // Current measurement.
    memset (&frequency, 0, sizeof(Measurement));       // Frequency measurement.
 
-   fill (enabled.begin (), enabled.end (), false);
+   std::fill (enabled.begin (), enabled.end (), false);
 }
 
 // =============================================================================
@@ -126,7 +126,7 @@ size_t SimplePowerMeter::Report::pack (Common::ByteArray &array, size_t offset) 
 
    // Number of attributes.
 
-   id      = count (enabled.begin (), enabled.end (), true);
+   id      = std::count (enabled.begin (), enabled.end (), true);
    offset += array.write (offset, id);
 
    // Energy measurement.

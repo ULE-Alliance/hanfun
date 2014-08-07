@@ -44,7 +44,7 @@ using namespace HF::Common;
 // ByteArray
 // =============================================================================
 
-ByteArray::ByteArray(size_t size):vector (size, 0)
+ByteArray::ByteArray(size_t size):std::vector <uint8_t>(size, 0)
 {}
 
 ByteArray::ByteArray(const uint8_t data[], const size_t size):vector (size, 0)

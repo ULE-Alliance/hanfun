@@ -92,9 +92,9 @@ size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-pair <Common::Result, const Entry *> Entries::create (Protocol::Address const &source,
-                                                      Common::Interface const &itf,
-                                                      Protocol::Address const &destination)
+std::pair <Common::Result, const Entry *> Entries::create (Protocol::Address const &source,
+                                                           Common::Interface const &itf,
+                                                           Protocol::Address const &destination)
 {
    auto res              = this->db.insert (Entry (source, itf, destination));
 
@@ -105,7 +105,7 @@ pair <Common::Result, const Entry *> Entries::create (Protocol::Address const &s
       result = Common::Result::OK;
    }
 
-   return make_pair (result, res.second ? &(*(res.first)) : nullptr);
+   return std::make_pair (result, res.second ? &(*(res.first)) : nullptr);
 }
 
 // =============================================================================
@@ -174,8 +174,8 @@ Entries::Iterator Entries::end () const
    return this->db.end ();
 }
 
-pair <Entries::Iterator, Entries::Iterator> Entries::find (Protocol::Address const &source,
-                                                           Common::Interface const &itf) const
+std::pair <Entries::Iterator, Entries::Iterator> Entries::find (Protocol::Address const &source,
+                                                                Common::Interface const &itf) const
 {
    Entry _begin (source, itf);
    Entry _end (source, itf);
@@ -183,7 +183,7 @@ pair <Entries::Iterator, Entries::Iterator> Entries::find (Protocol::Address con
    memset (&(_begin.destination), 0x00, sizeof(Protocol::Address));
    memset (&(_end.destination), 0xFF, sizeof(Protocol::Address));
 
-   return make_pair (this->db.lower_bound (_begin), this->db.upper_bound (_end));
+   return std::make_pair (this->db.lower_bound (_begin), this->db.upper_bound (_end));
 }
 
 // =============================================================================

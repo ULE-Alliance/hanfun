@@ -79,9 +79,9 @@ namespace HF
 
          constexpr static uint16_t EMC               = HF_DEVICE_MANUFACTURER_CODE; //!< Electronic Manufacture Code.
 
-         static const string SW_VERSION;          //!< Application Version.
-         static const string HW_VERSION;          //!< Hardware Version.
-         static const string MANUFACTURER;        //!< Manufacturer Name.
+         static const std::string  SW_VERSION;         //!< Application Version.
+         static const std::string  HW_VERSION;         //!< Hardware Version.
+         static const std::string  MANUFACTURER;       //!< Manufacturer Name.
 
          /*!
           * This class defines the interface Device Information API.
@@ -97,42 +97,42 @@ namespace HF
              *
              * @return  the device serial number.
              */
-            virtual string serial_number () = 0;
+            virtual std::string serial_number () = 0;
 
             /*!
              * Set the device serial number.
              *
              * @param [in] serial the serial number to set for the device.
              */
-            virtual void serial_number (string serial) = 0;
+            virtual void serial_number (std::string serial) = 0;
 
             /*!
              * Get the device location.
              *
              * @return  the devices location.
              */
-            virtual string location () = 0;
+            virtual std::string location () = 0;
 
             /*!
              * Set the device location.
              *
              * @param [in] value the location to set for the device.
              */
-            virtual void location (string value) = 0;
+            virtual void location (std::string value) = 0;
 
             /*!
              * Get the device friendly name.
              *
              * @return  the device friendly name.
              */
-            virtual string friendly_name () = 0;
+            virtual std::string friendly_name () = 0;
 
             /*!
              * Set the device friendly name.
              *
              * @param [in] value the friendly name value to set for the device.
              */
-            virtual void friendly_name (string value) = 0;
+            virtual void friendly_name (std::string value) = 0;
 
             /*!
              * Indicate if the device units are enabled or disabled.
@@ -167,11 +167,11 @@ namespace HF
 
             bool _enabled;
 
-            string _friendly_name;
+            std::string _friendly_name;
 
-            string _location;
+            std::string _location;
 
-            string _serial;
+            std::string _serial;
 
             public:
 
@@ -179,32 +179,32 @@ namespace HF
                DeviceInformation::Interface (unit)
             {}
 
-            string serial_number ()
+            std::string serial_number ()
             {
                return _serial;
             }
 
-            void serial_number (string serial)
+            void serial_number (std::string serial)
             {
                _serial = serial;
             }
 
-            string location ()
+            std::string location ()
             {
                return _location;
             }
 
-            void location (string value)
+            void location (std::string value)
             {
                _location = value;
             }
 
-            string friendly_name ()
+            std::string friendly_name ()
             {
                return _friendly_name;
             }
 
-            void friendly_name (string value)
+            void friendly_name (std::string value)
             {
                _friendly_name = value;
             }
