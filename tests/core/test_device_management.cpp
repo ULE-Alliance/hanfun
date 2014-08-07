@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * \file			tests/core/test_device_management.cpp
+ * \file       tests/core/test_device_management.cpp
  *
  * This file contains the implementation of the Device Management service
  * interface.

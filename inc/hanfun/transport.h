@@ -272,7 +272,7 @@ namespace HF
 
          void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
          {
-            Protocol::Packet * packet = new Protocol::Packet();
+            Protocol::Packet *packet = new Protocol::Packet ();
             packet->link = link;
 
             size_t offset = packet->unpack (payload);

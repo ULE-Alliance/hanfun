@@ -27,7 +27,7 @@
 // Defines
 // =============================================================================
 
-#define NL                   std::endl; std::cout.clear (); std::cerr.clear ()
+#define NL                   std::endl;std::cout.clear ();std::cerr.clear ()
 
 #define HF_LOG_LEVEL_NONE    0
 #define HF_LOG_LEVEL_ERROR   1

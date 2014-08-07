@@ -337,19 +337,19 @@ bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 // Helper Functions
 // =============================================================================
 
-static std::string json_uid(uint16_t uid)
+static std::string json_uid (uint16_t uid)
 {
    std::ostringstream convert;
 
-   convert << "0x" << std::setfill ('0') << std::setw(sizeof(uint16_t)*2)
+   convert << "0x" << std::setfill ('0') << std::setw (sizeof(uint16_t) * 2)
            << std::hex << uid;
 
    return convert.str ();
 }
 
-static uint16_t json_uid(std::string uid)
+static uint16_t json_uid (std::string uid)
 {
-   return STRTOL_HEX(uid.substr(2));
+   return STRTOL_HEX (uid.substr (2));
 }
 
 // =============================================================================
@@ -370,7 +370,7 @@ void to_json (const HF::Common::Interface &interface, Json::Value &node)
       node["role"] = "client";
    }
 
-   node["id"] = json_uid(interface.id);
+   node["id"] = json_uid (interface.id);
 }
 
 // =============================================================================
@@ -444,9 +444,9 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
 // =============================================================================
 void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
 {
-   node["id"] = unit.id;
+   node["id"]      = unit.id;
 
-   node["profile"] = json_uid(unit.profile);
+   node["profile"] = json_uid (unit.profile);
 
    for (unsigned i = 0; i < unit.opt_ift.size (); i++)
    {
@@ -470,7 +470,7 @@ void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &nod
       to_json (device.units[i], node["units"][i]);
    }
 
-   node["emc"] = json_uid(device.emc);
+   node["emc"] = json_uid (device.emc);
 
    to_json (device.uid, node["uid"]);
 }
@@ -523,7 +523,7 @@ void from_json (Json::Value &node, HF::Common::Interface &interface)
       interface.role = HF::Interface::CLIENT_ROLE;
    }
 
-   interface.id = json_uid(node.get ("id", "0x7FFF").asString ());
+   interface.id = json_uid (node.get ("id", "0x7FFF").asString ());
 }
 
 // =============================================================================
@@ -548,7 +548,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         rfpi->value[i] = (uint8_t) node["value"][i].asUInt();
+         rfpi->value[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
       uid = rfpi;
@@ -559,7 +559,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         ipui->value[i] = (uint8_t) node["value"][i].asUInt();
+         ipui->value[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
       uid = ipui;
@@ -570,7 +570,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         mac->value[i] = (uint8_t) node["value"][i].asUInt();
+         mac->value[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
       uid = mac;
@@ -592,9 +592,9 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 // =============================================================================
 void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
 {
-   unit.id = (uint8_t) node.get ("id", HF::Protocol::BROADCAST_UNIT).asUInt ();
+   unit.id      = (uint8_t) node.get ("id", HF::Protocol::BROADCAST_UNIT).asUInt ();
 
-   unit.profile = json_uid(node.get ("profile", "0x7FFF").asString ());
+   unit.profile = json_uid (node.get ("profile", "0x7FFF").asString ());
 
    for (unsigned i = 0; i < node["opts"].size (); i++)
    {
@@ -620,7 +620,7 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &dev)
       from_json (node["units"][i], dev.units[i]);
    }
 
-   dev.emc = json_uid(node.get ("emc", "0x0000").asString());
+   dev.emc = json_uid (node.get ("emc", "0x0000").asString ());
 
    from_json (node["uid"], dev.uid);
 }

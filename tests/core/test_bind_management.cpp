@@ -521,13 +521,13 @@ template<typename T>
 void create_entries (T &entries, std::set <HF::Common::Interface> &db_itf,
                      std::set <HF::Protocol::Address> &db_addr)
 {
-   db_itf.insert (HF::Common::Interface(1, 0));
-   db_itf.insert (HF::Common::Interface(2, 0));
-   db_itf.insert (HF::Common::Interface(3, 0));
+   db_itf.insert (HF::Common::Interface (1, 0));
+   db_itf.insert (HF::Common::Interface (2, 0));
+   db_itf.insert (HF::Common::Interface (3, 0));
 
-   db_itf.insert (HF::Common::Interface(1, 1));
-   db_itf.insert (HF::Common::Interface(2, 1));
-   db_itf.insert (HF::Common::Interface(3, 1));
+   db_itf.insert (HF::Common::Interface (1, 1));
+   db_itf.insert (HF::Common::Interface (2, 1));
+   db_itf.insert (HF::Common::Interface (3, 1));
 
    db_addr.insert (HF::Protocol::Address (1, 1, HF::Protocol::Address::DEVICE));
    db_addr.insert (HF::Protocol::Address (1, 2, HF::Protocol::Address::DEVICE));
