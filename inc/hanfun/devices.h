@@ -92,7 +92,11 @@ namespace HF
          //! List containing pointers to the units present in the device.
          units_t _units;
 
-         Protocol::Filters::Repeated   repeated_filter;
+         //! Support for filtering duplicated message from the network.
+         Protocol::Filters::Repeated repeated_filter;
+
+         //! Support for generating missing responses.
+         Protocol::Filters::ResponseRequired response_filter;
 
          AbstractDevice():
             next_reference (0)
@@ -109,27 +113,7 @@ namespace HF
           * @return             a pointer to the link that can be used to send the packet,
           *                     \c nullptr otherwise;
           */
-         virtual Transport::Link *link (uint16_t addr) const
-         {
-            UNUSED (addr);
-            return nullptr;
-         }
-
-         /*!
-          * Ensure that the incoming packet sends a response if it is required and
-          * no response has been sent.
-          *
-          * @param [in] result   the result of the IUnit::handle method call for
-          *                      the incoming packet.
-          *
-          * @param [in] packet   reference to the incoming packet.
-          */
-         virtual void respond (Common::Result result, Protocol::Packet &packet)
-         {
-            // FIXME Handle packets that require a response and no response has been sent.
-            UNUSED (result);
-            UNUSED (packet);
-         }
+         virtual Transport::Link *link (uint16_t addr) const = 0;
 
          /*!
           * Check if the given packet is for this device.

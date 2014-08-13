@@ -517,3 +517,202 @@ bool Filters::Repeated::operator () (const HF::Protocol::Packet &packet, const H
 
    return result;
 }
+
+
+// =============================================================================
+// Filters::ResponseRequired::operator ()
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
+{
+   if (response (packet.message.type))
+   {
+      Entry temp (packet);
+      db.push_front (temp);
+      return false;
+   }
+
+   /* *INDENT-OFF* */
+   auto it = std::find_if (db.begin(), db.end(), [&packet](const Entry entry)
+   {
+      return (entry.address == packet.source.device) && (entry.itf == packet.message.itf) &&
+              matches (entry.type, packet.message.type);
+   });
+   /* *INDENT-ON* */
+
+   if (it != db.end ())
+   {
+      db.erase (it);
+      return false;
+   }
+
+   if (request (packet.message.type, true))
+   {
+      return true;
+   }
+
+   // FIXME return HF::Interfaces::response(packet.message.itf);
+   return false;
+}
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+// =============================================================================
+// Protocol::request
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Protocol::request (Message::Type type, bool response)
+{
+   switch (type)
+   {
+      case Message::Type::COMMAND_RESP_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         response = false;
+      }
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::GET_ATTR_REQ:
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::GET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      {
+         return !response;
+      }
+      case Message::Type::COMMAND_RES:
+      case Message::Type::SET_ATTR_RES:
+      case Message::Type::GET_ATTR_RES:
+      case Message::Type::GET_ATTR_PACK_RES:
+      case Message::Type::SET_ATTR_PACK_RES:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      default:
+         return false;
+   }
+}
+
+// =============================================================================
+// Protocol::responce
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Protocol::response (Message::Type type)
+{
+   switch (type)
+   {
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::COMMAND_RESP_REQ:
+      case Message::Type::GET_ATTR_REQ:
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      case Message::Type::GET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         return false;
+      }
+      case Message::Type::COMMAND_RES:
+      case Message::Type::SET_ATTR_RES:
+      case Message::Type::GET_ATTR_RES:
+      case Message::Type::GET_ATTR_PACK_RES:
+      case Message::Type::SET_ATTR_PACK_RES:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      {
+         return true;
+      }
+      default:
+         return false;
+   }
+}
+
+
+// =============================================================================
+// Protocol::response
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Protocol::matches (Message::Type lhs, Message::Type rhs)
+{
+   if (lhs == rhs)
+   {
+      return false;
+   }
+
+   switch (lhs)
+   {
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::COMMAND_RESP_REQ:
+      {
+         return (rhs == Message::Type::COMMAND_RES);
+      }
+      case Message::Type::COMMAND_RES:
+      {
+         return (rhs == Message::Type::COMMAND_REQ || rhs == Message::Type::COMMAND_RESP_REQ);
+      }
+
+      case Message::Type::GET_ATTR_REQ:
+      {
+         return (rhs == Message::Type::GET_ATTR_RES);
+      }
+      case Message::Type::GET_ATTR_RES:
+      {
+         return (rhs == Message::Type::GET_ATTR_REQ);
+      }
+
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      {
+         return (rhs == Message::Type::SET_ATTR_RES);
+      }
+      case Message::Type::SET_ATTR_RES:
+      {
+         return (rhs == Message::Type::SET_ATTR_REQ || rhs == Message::Type::SET_ATTR_RESP_REQ);
+      }
+
+      case Message::Type::GET_ATTR_PACK_REQ:
+      {
+         return (rhs == Message::Type::GET_ATTR_PACK_RES);
+      }
+      case Message::Type::GET_ATTR_PACK_RES:
+      {
+         return (rhs == Message::Type::GET_ATTR_PACK_REQ);
+      }
+
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      {
+         return (rhs == Message::Type::SET_ATTR_PACK_RES);
+      }
+      case Message::Type::SET_ATTR_PACK_RES:
+      {
+         return (rhs == Message::Type::SET_ATTR_PACK_REQ || rhs == Message::Type::SET_ATTR_PACK_RESP_REQ);
+      }
+
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         return (rhs == Message::Type::ATOMIC_SET_ATTR_PACK_RES);
+      }
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      {
+         return (rhs == Message::Type::ATOMIC_SET_ATTR_PACK_REQ || rhs == Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ);
+      }
+      default:
+         return false;
+   }
+}

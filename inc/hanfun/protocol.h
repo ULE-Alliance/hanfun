@@ -353,6 +353,59 @@ namespace HF
             uint32_t checksum (uint16_t const *data, size_t words);
          };
 
+         /*!
+          *
+          */
+         class ResponseRequired
+         {
+            protected:
+
+            //! Filter database entry.
+            struct Entry
+            {
+               uint16_t           address; //!< Source device address.
+               Message::Type      type;    //!< Response type.
+               Message::Interface itf;     //!< Interface the message relates to.
+
+               Entry(uint16_t _address, Message::Type _type, Message::Interface _itf):
+                  address (_address), type (_type), itf (_itf)
+               {}
+
+               Entry(const Packet &packet):address (packet.destination.device),
+                  type (packet.message.type), itf (packet.message.itf)
+               {}
+            };
+
+            //! Filter database.
+            std::list <Entry> db;
+
+            public:
+
+            /*!
+             * Checks if the given \c packet, is a retransmission according to
+             * the filters database data.
+             *
+             * The given \c packet and \c payload are used to update the filters database.
+             *
+             * @param [in] packet     reference to the incoming packet.
+             * @param [in] payload    reference to the packet's payload.
+             *
+             * @retval  true     the packet is a retransmission.
+             * @retval  false    the packet is a not retransmission.
+             */
+            bool operator ()(const HF::Protocol::Packet &packet);
+
+            /*!
+             * Number of entries in the filter's database.
+             *
+             * @return  the number of entries in the filter's database.
+             */
+            size_t size () const
+            {
+               return db.size ();
+            }
+         };
+
       }  // namespace Filters
 
       // =============================================================================
@@ -375,6 +428,48 @@ namespace HF
                 (lhs.device == rhs.device &&
                  (lhs.mod < rhs.mod || (lhs.mod == rhs.mod && lhs.unit < rhs.unit)));
       }
+
+      // =============================================================================
+      // Helper Functions
+      // =============================================================================
+
+      /*!
+       * Check if message type is a request.
+       *
+       * If \c response is \c false then return true for all requests, otherwise
+       * only for those that require a response.
+       *
+       * @param [in] type        message type to check if it is a request.
+       * @param [in] response    false check for all request types, otherwise
+       *                         only those that require a response.
+       *
+       * @retval true   if the message is a request.
+       * @retval false  otherwise.
+       */
+      bool request (Message::Type type, bool response = false);
+
+      /*!
+       * Check if message is a response.
+       *
+       * @param [in] type  message type to check if it is a response.
+       *
+       * @retval true   if the message is a response.
+       * @retval false  otherwise.
+       */
+      bool response (Message::Type type);
+
+      /*!
+       * Check if the given message types are the request and response for
+       * each other, for example, the Message::Type::COMMAND_RES matches both
+       * the Message::Type::COMMAND_REQ and Message::Type::COMMAND_RESP_REQ.
+       *
+       * @param [in] lhs   message type to match.
+       * @param [in] rhs   message type to match.
+       *
+       * @retval true   if the message types match.
+       * @retval false  otherwise.
+       */
+      bool matches (Message::Type lhs, Message::Type rhs);
 
    }  // namespace Protocol
 

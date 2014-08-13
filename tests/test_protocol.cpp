@@ -873,8 +873,131 @@ TEST(FilterRepeated, Oldest)
       }
 
       if (filter.exists(i))
+
+/* === ResponseRequired === */
+
+TEST_GROUP (ResponseRequired)
+{
+   struct FilterTest:public HF::Protocol::Filters::ResponseRequired
+   {
+      void clear ()
       {
-         FAIL_TEST("Oldest entry was not removed !!");
+         db.clear ();
       }
+   };
+
+   FilterTest filter;
+
+   Packet packet;
+
+   TEST_SETUP ()
+   {
+      filter.clear ();
    }
+};
+
+TEST (ResponseRequired, ShouldNotAddCommands)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   std::vector <Protocol::Message::Type> types {
+      Protocol::Message::COMMAND_REQ,
+      Protocol::Message::COMMAND_RESP_REQ,
+      Protocol::Message::GET_ATTR_REQ,
+      Protocol::Message::SET_ATTR_REQ,
+      Protocol::Message::SET_ATTR_RESP_REQ,
+      Protocol::Message::GET_ATTR_PACK_REQ,
+      Protocol::Message::SET_ATTR_PACK_REQ,
+      Protocol::Message::SET_ATTR_PACK_RESP_REQ,
+      Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ,
+      Protocol::Message::ATOMIC_SET_ATTR_PACK_RESP_REQ,
+   };
+
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
+                     packet.message.type = type;
+                     filter (packet);
+                  }
+                 );
+
+   LONGS_EQUAL (0, filter.size ());
+}
+
+TEST (ResponseRequired, ShouldAddResponses)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   std::vector <Protocol::Message::Type> types {
+      Protocol::Message::COMMAND_RES,
+      Protocol::Message::SET_ATTR_RES,
+      Protocol::Message::GET_ATTR_RES,
+      Protocol::Message::GET_ATTR_PACK_RES,
+      Protocol::Message::SET_ATTR_PACK_RES,
+      Protocol::Message::ATOMIC_SET_ATTR_PACK_RES,
+   };
+
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
+                     packet.message.type = type;
+                     filter (packet);
+                  }
+                 );
+
+   LONGS_EQUAL (types.size (), filter.size ());
+}
+
+TEST (ResponseRequired, NoResponse)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   packet.message.type = Protocol::Message::COMMAND_RES;
+
+   std::random_device rd;
+   std::mt19937 gen (rd ());
+   std::uniform_int_distribution <uint16_t> dist1 (0, 0xFFFF);
+   std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
+
+   auto g_id   = std::bind (dist1, gen);
+   auto g_unit = std::bind (dist2, gen);
+
+   packet.message.itf.member = g_unit ();
+   uint16_t address = g_id ();
+
+   packet.message.itf.id     = address & HF::Protocol::BROADCAST_ADDR;
+   packet.message.itf.member = address >> 15;
+
+   filter (packet);
+
+   packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+
+   CHECK_FALSE (filter (packet));
+
+   LONGS_EQUAL (0, filter.size ());
+}
+
+TEST (ResponseRequired, ResponseNeeded)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   packet.message.type = Protocol::Message::SET_ATTR_PACK_RES;
+
+   std::random_device rd;
+   std::mt19937 gen (rd ());
+   std::uniform_int_distribution <uint16_t> dist1 (0, 0xFFFF);
+   std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
+
+   auto g_id   = std::bind (dist1, gen);
+   auto g_unit = std::bind (dist2, gen);
+
+   packet.message.itf.member = g_unit ();
+   uint16_t address = g_id ();
+
+   packet.message.itf.id     = address & HF::Protocol::BROADCAST_ADDR;
+   packet.message.itf.member = address >> 15;
+
+   filter (packet);
+
+   packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+
+   CHECK_TRUE (filter (packet));
+
+   LONGS_EQUAL (1, filter.size ());
 }
