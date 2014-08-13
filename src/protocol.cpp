@@ -451,8 +451,8 @@ uint32_t Filters::Repeated::checksum (uint16_t const *data, size_t words)
    {
       unsigned tlen = words > 359 ? 359 : words;
       words -= tlen;
-      do
-      {
+
+      do {
          sum2 += sum1 += *data++;
       } while (--tlen);
 
@@ -474,25 +474,25 @@ uint32_t Filters::Repeated::checksum (uint16_t const *data, size_t words)
  *
  */
 // =============================================================================
-bool Filters::Repeated::operator () (const HF::Protocol::Packet &packet, const HF::Common::ByteArray &payload)
+bool Filters::Repeated::operator ()(const HF::Protocol::Packet &packet, const HF::Common::ByteArray &payload)
 {
-#define MAX_TTL   std::numeric_limits<uint8_t>::max()
+#define MAX_TTL   std::numeric_limits <uint8_t>::max ()
 
-   bool result = false;
+   bool  result = false;
 
-   Entry temp(packet.source.device, packet.message.reference);
+   Entry temp (packet.source.device, packet.message.reference);
 
-   temp.checksum = checksum((uint16_t *) payload.data(), payload.size() / 2);
+   temp.checksum = checksum ((uint16_t *) payload.data (), payload.size () / 2);
 
-   auto it = std::lower_bound(db.begin(), db.end(), temp);
+   auto it = std::lower_bound (db.begin (), db.end (), temp);
 
    // An entry was found.
-   if (it != db.end() && it->address == temp.address)
+   if (it != db.end () && it->address == temp.address)
    {
       if (it->reference != temp.reference || temp.checksum != it->checksum)
       {
          temp.ttl = (it->ttl + 1 < MAX_TTL ? it->ttl + 1 : MAX_TTL);
-         *it = temp;
+         *it      = temp;
       }
       else
       {
@@ -502,17 +502,18 @@ bool Filters::Repeated::operator () (const HF::Protocol::Packet &packet, const H
    else
    {
       // Database full.
-      if (db.size() == max_size)
+      if (db.size () == max_size)
       {
          // Find the oldest entry, i.e., the one with the lowest ttl value.
-         auto oldest = std::min_element(db.begin(), db.end(), [](const Entry &lhs, const Entry &rhs){
-            return lhs.ttl < rhs.ttl;
-         });
+         auto oldest = std::min_element (db.begin (), db.end (), [](const Entry &lhs, const Entry &rhs) {
+                                            return lhs.ttl < rhs.ttl;
+                                         }
+                                        );
 
-         db.erase(oldest);
+         db.erase (oldest);
       }
 
-      db.insert(it, temp);
+      db.insert (it, temp);
    }
 
    return result;

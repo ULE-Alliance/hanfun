@@ -289,24 +289,23 @@ namespace HF
             //! Filter database entry.
             struct Entry
             {
-               uint16_t address;       //!< Source device address.
-               uint8_t reference;     //!< Last message application reference.
-               uint8_t ttl;           //!< Time to live - counter used to drop older entries.
-               uint32_t checksum;      //!< Last message checksum.
+               uint16_t address;      //!< Source device address.
+               uint8_t  reference;    //!< Last message application reference.
+               uint8_t  ttl;          //!< Time to live - counter used to drop older entries.
+               uint32_t checksum;     //!< Last message checksum.
 
-               Entry (uint16_t _address = HF::Protocol::BROADCAST_ADDR, uint8_t _reference = 0) :
-                     address(_address), reference(_reference), ttl(0), checksum(0)
+               Entry(uint16_t _address = HF::Protocol::BROADCAST_ADDR, uint8_t _reference = 0):
+                  address (_address), reference (_reference), ttl (0), checksum (0)
+               {}
+
+               bool operator <(const Entry &other) const
                {
-               }
-
-               bool operator< (const Entry &other) const
-                               {
                   return this->address < other.address;
                }
             };
 
             //! Filter database.
-            std::list<Entry> db;
+            std::list <Entry> db;
 
             public:
 
@@ -325,7 +324,7 @@ namespace HF
              * @retval  true     the packet is a retransmission.
              * @retval  false    the packet is a not retransmission.
              */
-            bool operator() (const HF::Protocol::Packet &packet,
+            bool operator ()(const HF::Protocol::Packet &packet,
                              const HF::Common::ByteArray &payload);
 
             /*!
@@ -335,7 +334,7 @@ namespace HF
              */
             size_t size () const
             {
-               return db.size();
+               return db.size ();
             }
 
             protected:
