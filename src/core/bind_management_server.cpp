@@ -81,9 +81,20 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
          break;
    }
 
+   Protocol::Response resp (res);
+
+   Protocol::Message  response (packet.message, resp.size ());
+
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = BindManagement::Server::uid ();
+   response.itf.member = cmd;
+
+   resp.pack (response.payload);
+
+   sendMessage (packet.source, response);
+
    return res;
 }
-
 
 // =============================================================================
 // BindManagement::Server::add

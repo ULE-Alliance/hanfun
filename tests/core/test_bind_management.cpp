@@ -682,9 +682,9 @@ TEST_GROUP (BindManagementServer)
          return ::mock ("Core::BindManagement::Server");
       }
 
-      MockActualCall &mock (const SimpleString &functionName)
+      MockActualCall &mock_fn (const SimpleString &functionName)
       {
-         return mock ().actualCall (functionName);
+         return this->mock ().actualCall (functionName);
       }
 
       // =============================================================================
@@ -693,7 +693,7 @@ TEST_GROUP (BindManagementServer)
                                                              const Protocol::Address &destination,
                                                              const Common::Interface &itf)
       {
-         MockActualCall &call = mock ("add");
+         MockActualCall &call = mock_fn ("add");
 
          if (call.hasReturnValue ())
          {
@@ -708,7 +708,7 @@ TEST_GROUP (BindManagementServer)
       Result remove (const Protocol::Address &source, const Protocol::Address &destination,
                      const Common::Interface &itf)
       {
-         MockActualCall &call = mock ("remove");
+         MockActualCall &call = mock_fn ("remove");
 
          if (call.hasReturnValue ())
          {
@@ -748,10 +748,10 @@ TEST_GROUP (BindManagementServer)
       delete server;
       delete device;
 
-      ::mock ().clear ();
+      mock ().clear ();
    }
 
-   MockSupport &mock ()
+   MockSupport &mock_s ()
    {
       return server->mock ();
    }
@@ -815,7 +815,28 @@ TEST (BindManagementServer, HandleAdd)
 
    std::pair <Common::Result, BindManagement::Entry *> result = std::make_pair (Common::Result::OK, nullptr);
 
-   mock ().expectOneCall ("add").andReturnValue (&result);
+   mock_s ().expectOneCall ("add").andReturnValue (&result);
+
+   Common::Result res = server->handle (packet, packet.message.payload, 3);
+   LONGS_EQUAL (Common::Result::OK, res);
+
+   mock ().checkExpectations ();
+}
+
+TEST (BindManagementServer, HandleAdd2)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   packet.message.length     = entry.size () + 6;
+   packet.message.itf.member = BindManagement::ADD_BIND_CMD;
+
+   packet.message.payload    = ByteArray (packet.message.length);
+
+   entry.pack (packet.message.payload, 3);
+
+   mock_s ().expectOneCall ("add");
+   mock ("AbstractDevice").expectOneCall ("send");
 
    Common::Result res = server->handle (packet, packet.message.payload, 3);
    LONGS_EQUAL (Common::Result::OK, res);
@@ -843,13 +864,40 @@ TEST (BindManagementServer, HandleRemove)
 
    entry.pack (packet.message.payload, 3);
 
-   mock ().expectOneCall ("remove").andReturnValue (Common::Result::OK);
+   mock_s ().expectOneCall ("remove").andReturnValue (Common::Result::OK);
 
    Common::Result res = server->handle (packet, packet.message.payload, 3);
    LONGS_EQUAL (Common::Result::OK, res);
 
    mock ().checkExpectations ();
 }
+
+TEST (BindManagementServer, HandleRemove2)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   packet.message.length     = entry.size () + 6;
+   packet.message.itf.member = BindManagement::ADD_BIND_CMD;
+
+   packet.message.payload    = ByteArray (packet.message.length);
+
+   entry.pack (packet.message.payload, 3);
+
+   Common::Result res = server->handle (packet, packet.message.payload, 3);
+   LONGS_EQUAL (Common::Result::OK, res);
+
+   packet.message.itf.member = BindManagement::REMOVE_BIND_CMD;
+
+   mock_s ().expectOneCall ("remove");
+   mock ("AbstractDevice").expectOneCall ("send");
+
+   res = server->handle (packet, packet.message.payload, 3);
+   LONGS_EQUAL (Common::Result::OK, res);
+
+   mock ().checkExpectations ();
+}
+
 
 TEST (BindManagementServer, AddMatch)
 {
@@ -858,7 +906,8 @@ TEST (BindManagementServer, AddMatch)
 
    LONGS_EQUAL (0, server->entries.size ());
 
-   mock ().expectOneCall ("add");
+   mock_s ().expectOneCall ("add");
+
    auto res = server->add (entry.source, entry.destination, entry.itf);
 
    mock ().checkExpectations ();
@@ -873,7 +922,7 @@ TEST (BindManagementServer, AddMatch)
 
    // Should not add if entry already present.
 
-   mock ().expectOneCall ("add");
+   mock_s ().expectOneCall ("add");
 
    res = server->add (entry.source, entry.destination, entry.itf);
 
@@ -893,7 +942,7 @@ TEST (BindManagementServer, AddNoMatch)
    BindManagement::Entry entry;
    CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE);
 
-   mock ().expectOneCall ("add");
+   mock_s ().expectOneCall ("add");
 
    auto res = server->add (entry.source, entry.destination, entry.itf);
    LONGS_EQUAL (Common::Result::FAIL_ARG, res.first);
@@ -914,7 +963,7 @@ TEST (BindManagementServer, RemoveMatch)
    CHECK_TRUE (nullptr != temp.second);
 
    // Try to remove entry.
-   mock ().expectOneCall ("remove");
+   mock_s ().expectOneCall ("remove");
 
    Common::Result res = server->remove (entry.source, entry.destination, entry.itf);
    LONGS_EQUAL (Common::Result::OK, res);
@@ -929,7 +978,7 @@ TEST (BindManagementServer, RemoveNoMatch)
    CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
 
    // Try to remove entry.
-   mock ().expectOneCall ("remove");
+   mock_s ().expectOneCall ("remove");
 
    Common::Result res = server->remove (entry.source, entry.destination, entry.itf);
    LONGS_EQUAL (Common::Result::FAIL_ARG, res);
