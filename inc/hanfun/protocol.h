@@ -216,12 +216,12 @@ namespace HF
 
          Transport::Link *link;     //! Link where this packet originated from.
 
-         Packet() {}
+         Packet():link (nullptr) {}
 
-         Packet(Message &message):message (message) {}
+         Packet(Message &message):message (message), link (nullptr) {}
 
          Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
-            destination (dst_addr), message (message)
+            destination (dst_addr), message (message), link (nullptr)
          {
             source.mod    = Address::DEVICE;
             source.device = BROADCAST_ADDR;
@@ -229,7 +229,8 @@ namespace HF
          }
 
          Packet(Address &src_addr, Address &dst_addr, Message &message):
-            source (src_addr), destination (dst_addr), message (message) {}
+            source (src_addr), destination (dst_addr), message (message), link (nullptr)
+         {}
 
          //! \see HF::Serializable::size.
          size_t size () const;

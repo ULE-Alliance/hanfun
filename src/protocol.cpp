@@ -15,8 +15,6 @@
  */
 // =============================================================================
 
-#include <iostream>
-
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
 

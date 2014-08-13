@@ -433,22 +433,21 @@ namespace HF
          HF::UID::UID         *_uid;
          HF::Transport::Layer *tsp;
 
-         Common::ByteArray    *data;
+         Common::ByteArray    data;
 
-         Link(HF::UID::UID *uid, HF::Transport::Layer *tsp):
-            _uid (uid), tsp (tsp), data (nullptr)
+         Link(HF::UID::UID *uid = nullptr, HF::Transport::Layer *tsp = nullptr):
+            _uid (uid), tsp (tsp)
          {}
 
          virtual ~Link()
          {
             delete _uid;
-            delete data;
          }
 
          void send (Common::ByteArray &array)
          {
-            this->data = new Common::ByteArray (array);
             mock ("Link").actualCall ("send");
+            this->data = Common::ByteArray (array);
          }
 
          HF::UID::UID const *uid () const
