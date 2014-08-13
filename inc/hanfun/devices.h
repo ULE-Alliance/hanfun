@@ -92,6 +92,8 @@ namespace HF
          //! List containing pointers to the units present in the device.
          units_t _units;
 
+         Protocol::Filters::Repeated   repeated_filter;
+
          AbstractDevice():
             next_reference (0)
          {}
@@ -111,24 +113,6 @@ namespace HF
          {
             UNUSED (addr);
             return nullptr;
-         }
-
-         /*!
-          * Check if the incoming packet is a retransmission.
-          *
-          * This method uses the source address of the packet and the Protocol::Message::reference
-          * field to check if the packet is a retransmission or a new packet.
-          *
-          * @param [in] packet  reference to the incoming packet.
-          *
-          * @retval  true if the packet is a retransmission,
-          * @retval  false otherwise.
-          */
-         bool repeated (Protocol::Packet const &packet)
-         {
-            // FIXME Check if packet is a retransmission.
-            UNUSED (packet);
-            return false;
          }
 
          /*!

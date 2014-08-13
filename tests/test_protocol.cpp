@@ -12,6 +12,9 @@
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
+#include <algorithm>
+#include <random>
+
 #include "test_helper.h"
 
 #include "hanfun/protocol.h"
@@ -684,4 +687,194 @@ TEST (AttributesProtocol, SetAttributePack_Response_Unpack)
 
    LONGS_EQUAL (0x06, result.uid);
    LONGS_EQUAL (Result::FAIL_SUPPORT, result.code);
+}
+
+// =============================================================================
+// Filters
+// =============================================================================
+
+TEST_GROUP (FilterRepeated)
+{
+   struct FilterTest : public HF::Protocol::Filters::Repeated
+   {
+      void fill(uint16_t oldest)
+      {
+         Entry entry;
+         for (uint8_t i = 0; i < Filters::Repeated::max_size; i++)
+         {
+            entry.address = i;
+            entry.reference = i;
+            entry.ttl = (i != oldest ? 0x10 + i : 0x05);
+            entry.checksum = 0xDEADBEEF;
+
+            db.push_back(entry);
+         }
+      }
+
+      bool exists(uint16_t address)
+      {
+         Entry temp(address);
+
+         auto it = std::lower_bound(db.begin(), db.end(), temp);
+
+         return (it != db.end() && it->address == address ? true : false);
+      }
+
+      void clear()
+      {
+         db.clear();
+      }
+   };
+
+   FilterTest filter;
+
+   ByteArray payload;
+
+   Packet packet;
+
+   TEST_SETUP()
+   {
+      filter.clear();
+
+      payload = ByteArray(sizeof(HF::Protocol::Packet) + 10);
+
+      fill(payload);
+
+      Packet packet;
+
+      packet.unpack(payload);
+
+   }
+
+   void fill (HF::Common::ByteArray &array)
+   {
+      std::random_device rd;
+      std::mt19937 mt(rd());
+      std::uniform_int_distribution<uint8_t> dist;
+
+      auto gen = std::bind(dist, mt);
+
+      std::generate_n(array.begin(), array.size(), gen);
+   }
+};
+
+TEST(FilterRepeated, Empty)
+{
+   size_t size = filter.size();
+
+   CHECK_FALSE(filter(packet, payload));
+
+   LONGS_EQUAL (size + 1, filter.size());
+}
+
+TEST(FilterRepeated, NoMatch)
+{
+   packet.source.device = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   size_t size = filter.size();
+
+   packet.source.device = 0x5ABC;
+   packet.message.reference = 0x22;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   LONGS_EQUAL (size + 1, filter.size());
+
+   CHECK_TRUE (filter.exists(packet.source.device));
+}
+
+TEST(FilterRepeated, MatchAddess)
+{
+   packet.source.device = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   size_t size = filter.size();
+   packet.message.reference = 0x22;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   LONGS_EQUAL (size, filter.size());
+}
+
+TEST(FilterRepeated, MatchAddessAndReference)
+{
+   packet.source.device = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   size_t size = filter.size();
+   fill(payload);
+
+   CHECK_FALSE(filter(packet, payload));
+   LONGS_EQUAL (size, filter.size());
+}
+
+TEST(FilterRepeated, MatchAll)
+{
+   packet.source.device = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   size_t size = filter.size();
+   CHECK_TRUE(filter(packet, payload));
+   LONGS_EQUAL (size, filter.size());
+}
+
+TEST(FilterRepeated, Update)
+{
+   packet.source.device = 0x5A50;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   packet.source.device = 0x5A52;
+   CHECK_FALSE(filter(packet, payload));
+
+   size_t size = filter.size();
+   packet.source.device = 0x5A51;
+   CHECK_FALSE(filter(packet, payload));
+
+   LONGS_EQUAL (size + 1, filter.size());
+}
+
+TEST(FilterRepeated, MaxSize)
+{
+   filter.fill(4);
+
+   LONGS_EQUAL (Filters::Repeated::max_size, filter.size());
+
+   packet.source.device = 0x5A5A;
+
+   CHECK_FALSE(filter(packet, payload));
+
+   LONGS_EQUAL (Filters::Repeated::max_size, filter.size());
+}
+
+TEST(FilterRepeated, Oldest)
+{
+   for (uint8_t i = 0; i < Filters::Repeated::max_size; i++)
+   {
+      filter.clear();
+
+      filter.fill(i);
+
+      packet.source.device = 0x5A5A;
+
+      if (filter(packet, payload))
+      {
+         FAIL_TEST("Duplicated packet found !!");
+      }
+
+      if (filter.exists(i))
+      {
+         FAIL_TEST("Oldest entry was not removed !!");
+      }
+   }
 }
