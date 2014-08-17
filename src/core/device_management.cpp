@@ -489,6 +489,57 @@ size_t DeviceManagement::DeregisterMessage::unpack (const Common::ByteArray &arr
    return offset - start;
 }
 
+
+// =============================================================================
+// DeviceManagement::DeregisterResponse::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t DeviceManagement::DeregisterResponse::size () const
+{
+   return Protocol::Response::size() + sizeof(address);
+}
+
+// =============================================================================
+// DeviceManagement::DeregisterResponse::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t DeviceManagement::DeregisterResponse::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Protocol::Response::pack(array, offset);
+
+   offset += array.write(offset, address);
+
+   return offset - start;
+}
+
+// =============================================================================
+// DeviceManagement::DeregisterResponse::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t DeviceManagement::DeregisterResponse::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += Protocol::Response::unpack(array, offset);
+
+   offset += array.read(offset, address);
+
+   address &= Protocol::BROADCAST_ADDR;
+
+   return offset - start;
+}
+
 // =============================================================================
 // Read Session Messages
 // =============================================================================

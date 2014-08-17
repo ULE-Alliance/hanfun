@@ -285,6 +285,28 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
+         /*!
+          * Register command response.
+          */
+         struct DeregisterResponse:public Protocol::Response
+         {
+            uint16_t address; //!< Address for the device.
+
+            DeregisterResponse(Common::Result code = Common::FAIL_UNKNOWN,
+                                 uint16_t address = Protocol::BROADCAST_ADDR):
+               Protocol::Response(code), address (address & Protocol::BROADCAST_ADDR)
+            {}
+
+            //! \see HF::Protocol::Response::size.
+            size_t size () const;
+
+            //! \see HF::Protocol::Response::pack.
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+
+            //! \see HF::Protocol::Response::unpack.
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         };
+
          // =============================================================================
          // Read Session Messages
          // =============================================================================
@@ -444,7 +466,7 @@ namespace HF
              *
              * @param [in] response    the response received.
              */
-            virtual void deregistered (Protocol::Response &response);
+            virtual void deregistered (DeregisterResponse &response);
 
             //! @}
             // ======================================================================

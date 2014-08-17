@@ -668,7 +668,7 @@ TEST_GROUP (DeviceManagementClient)
          DeviceManagement::Client::registered (response);
       }
 
-      void deregistered (Protocol::Response &response)
+      void deregistered (DeviceManagement::DeregisterResponse &response)
       {
          mock ("DeviceManagementClient").actualCall ("deregistered");
          DeviceManagement::Client::deregistered (response);

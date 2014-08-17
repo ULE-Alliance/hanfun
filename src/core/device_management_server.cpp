@@ -204,7 +204,7 @@ Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &pa
 
    result = deregister (*destination);
 
-   Protocol::Response res (result);
+   DeregisterResponse res (result, incomming.address);
 
    Protocol::Message  response (packet.message, res.size ());
 
