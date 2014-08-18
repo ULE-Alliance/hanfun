@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -82,6 +82,8 @@ void AbstractDevice::send (Protocol::Packet &packet)
 
       tsp_link->send (array);
    }
+
+   response_filter (packet);
 }
 
 // =============================================================================
@@ -95,7 +97,7 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
-   if (!repeated (packet) && is_local (packet))
+   if (!repeated_filter (packet, payload) && is_local (packet))
    {
       IUnit *unit = this->unit (packet.destination.unit);
 
@@ -105,7 +107,20 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
       }
    }
 
-   respond (result, packet);
+   // Send missing response.
+   if (response_filter (packet))
+   {
+      Protocol::Packet *resp_packet = new Protocol::Packet (packet.message);
+      resp_packet->link = packet.link;
+
+      Protocol::Response resp (result);
+      resp_packet->message.payload = Common::ByteArray (resp.size ());
+      resp.pack (resp_packet->message.payload);
+
+      send (*resp_packet);
+
+      delete resp_packet;
+   }
 }
 
 // =============================================================================

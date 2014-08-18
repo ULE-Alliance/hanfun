@@ -4,7 +4,7 @@
  *
  * This file contains the API definitions for the Attributes.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -101,12 +101,12 @@ namespace HF
       //! Attribute factory function type.
       typedef IAttribute * (*Factory)(uint8_t);
 
-      struct uids_t:public vector <uint8_t>
+      struct uids_t:public std::vector <uint8_t>
       {
          uids_t():vector <uint8_t>()
          {}
 
-         uids_t(initializer_list <uint8_t> uids):vector <uint8_t>(uids)
+         uids_t(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
          {}
 
          vector <uint8_t>::size_type length () const
@@ -210,7 +210,7 @@ namespace HF
             AbstractAttribute (interface, uid, writable)
          {}
 
-         typedef typename remove_reference <T>::type value_type;
+         typedef typename std::remove_reference <T>::type value_type;
 
          // =============================================================================
          // API
@@ -301,7 +301,7 @@ namespace HF
        * The difference between the \c list indexes and the \c Attribute
        * indexes is that the former start at 0 and the latter at 1.
        */
-      struct List:public list <IAttribute *>
+      struct List:public std::list <IAttribute *>
       {
          IAttribute *operator [](uint8_t uid) const
          {
@@ -641,7 +641,7 @@ namespace HF
                }
             };
 
-            typedef vector <Result> results_t;
+            typedef std::vector <Result> results_t;
 
             results_t results;
 

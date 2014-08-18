@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -22,6 +22,7 @@
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/simple_power_meter.h"
 
+#include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 
 using namespace HF;
@@ -388,6 +389,50 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
 // =============================================================================
 // Core Services & Interfaces
 // =============================================================================
+
+// =============================================================================
+// Core::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Core::create_attribute (const DeviceInformation::Server *server, uint8_t uid)
+{
+   DeviceInformation::Attributes attr = static_cast <DeviceInformation::Attributes>(uid);
+
+   switch (attr)
+   {
+      case DeviceInformation::CORE_VERSION_ATTR:
+      {
+         uint8_t value = (server != nullptr ? DeviceInformation::CORE_VERSION : 0xFF);
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, value);
+      }
+      case DeviceInformation::PROFILE_VERSION_ATTR:
+      {
+         uint8_t value = (server != nullptr ? DeviceInformation::PROFILE_VERSION : 0xFF);
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, value);
+      }
+      case DeviceInformation::INTERFACE_VERSION_ATTR:
+      {
+         uint8_t value = (server != nullptr ? DeviceInformation::INTERFACE_VERSION : 0xFF);
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, value);
+      }
+      case DeviceInformation::UID_ATTR:
+      {
+         HF::UID::UID value;
+
+         if (server != nullptr)
+         {
+            value = server->device_uid;
+         }
+
+         return new Attribute <HF::UID::UID>(Interface::DEVICE_INFORMATION, attr, value);
+      }
+      default:
+         return nullptr;
+   }
+}
 
 // =============================================================================
 // Core::create_attribute

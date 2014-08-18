@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -302,9 +302,9 @@ namespace HF
       template<class Parent>
       struct AbstractDevice:public Parent
       {
-         uint16_t                    _address;
+         uint16_t                         _address;
 
-         vector <Protocol::Packet *> packets;
+         std::vector <Protocol::Packet *> packets;
 
          AbstractDevice():
             _address (Protocol::BROADCAST_ADDR)
@@ -313,7 +313,7 @@ namespace HF
          virtual ~AbstractDevice()
          {
             /* *INDENT-OFF* */
-            for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
+            std::for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
             {
                delete packet;
             });
@@ -355,7 +355,8 @@ namespace HF
 
       struct DeviceUnit0:public HF::Devices::Node::IUnit0
       {
-         HF::Core::DeviceManagement::Client *dev_mgt;
+         HF::Core::DeviceManagement::Client  *dev_mgt;
+         HF::Core::DeviceInformation::Server *dev_info;
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0 (device), dev_mgt (nullptr)
@@ -430,30 +431,29 @@ namespace HF
 
       struct Link:public HF::Transport::AbstractLink
       {
-         HF::UID::UID         *_uid;
+         HF::UID::UID_T       *_uid;
          HF::Transport::Layer *tsp;
 
-         Common::ByteArray    *data;
+         Common::ByteArray    data;
 
-         Link(HF::UID::UID *uid, HF::Transport::Layer *tsp):
-            _uid (uid), tsp (tsp), data (nullptr)
+         Link(HF::UID::UID_T *uid = new HF::UID::NONE (), HF::Transport::Layer *tsp = nullptr):
+            _uid (uid), tsp (tsp)
          {}
 
          virtual ~Link()
          {
             delete _uid;
-            delete data;
          }
 
          void send (Common::ByteArray &array)
          {
-            this->data = new Common::ByteArray (array);
             mock ("Link").actualCall ("send");
+            this->data = Common::ByteArray (array);
          }
 
-         HF::UID::UID const *uid () const
+         const HF::UID::UID uid () const
          {
-            return _uid;
+            return HF::UID::UID(_uid);
          }
 
          HF::Transport::Layer const *transport () const

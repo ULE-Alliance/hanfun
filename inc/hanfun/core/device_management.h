@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -86,10 +86,10 @@ namespace HF
           */
          struct Unit
          {
-            uint8_t                    id;      //!< Unit Id.
-            uint16_t                   profile; //!< Unit UID. \see IProfile::UID.
+            uint8_t                         id;      //!< Unit Id.
+            uint16_t                        profile; //!< Unit UID. \see IProfile::UID.
 
-            vector <Common::Interface> opt_ift; //!< Optional interfaces.
+            std::vector <Common::Interface> opt_ift; //!< Optional interfaces.
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
@@ -125,19 +125,18 @@ namespace HF
           */
          struct Device
          {
-            uint16_t      address; //!< Device Address.
-            vector <Unit> units;   //!< Unit list of the interface.
+            uint16_t           address;   //!< Device Address.
+            std::vector <Unit> units;     //!< Unit list of the interface.
 
-            uint16_t      emc; //! Device EMC if applicable, 0 otherwise.
+            uint16_t           emc;       //!< Device EMC if applicable, 0 otherwise.
 
-            HF::UID::UID  *uid; //! Device UID.
+            HF::UID::UID       uid;       //!< Device UID.
 
-            Device():address (Protocol::BROADCAST_ADDR), emc (0), uid (nullptr) {}
+            Device():address (Protocol::BROADCAST_ADDR), emc (0)
+            {}
 
             virtual ~Device()
-            {
-               delete uid;
-            }
+            {}
 
             // =============================================================================
             // Serializable API
@@ -183,11 +182,13 @@ namespace HF
           */
          struct RegisterMessage
          {
-            uint16_t      emc;   //! Device EMC if applicable, 0 otherwise.
-            vector <Unit> units; //! Device units listing.
+            uint16_t           emc;   //! Device EMC if applicable, 0 otherwise.
+            std::vector <Unit> units; //! Device units listing.
 
-            RegisterMessage(uint16_t emc = 0x0000):
-               emc (emc), _uid (nullptr)
+            HF::UID::UID       uid;   //! Device UID.
+
+            RegisterMessage(uint16_t emc = 0x0000, HF::UID::UID _uid = HF::UID::UID ()):
+               emc (emc), uid (_uid)
             {}
 
             virtual ~RegisterMessage();
@@ -200,42 +201,6 @@ namespace HF
 
             //! \see HF::Serializable::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-
-            /*!
-             * Returns the UID associated with this Register Message.
-             *
-             * @return  a pointer to the UID associated with this message.
-             */
-            HF::UID::UID *uid () const
-            {
-               return _uid;
-            }
-
-            /*!
-             * Set the UID associated with this Register message.
-             *
-             * \note This method creates a copy of the passed object.
-             *
-             * @param [in] uid pointer to the object to use as this message UID.
-             */
-            void uid (HF::UID::UID *uid)
-            {
-               if (_uid != nullptr)
-               {
-                  delete _uid;
-               }
-
-               _uid = nullptr;
-
-               if (uid != nullptr)
-               {
-                  _uid = uid->clone ();
-               }
-            }
-
-            protected:
-
-            HF::UID::UID *_uid;  //! Device UID.
          };
 
          /*!
@@ -282,6 +247,28 @@ namespace HF
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             //! \see HF::Serializable::unpack.
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         };
+
+         /*!
+          * Register command response.
+          */
+         struct DeregisterResponse:public Protocol::Response
+         {
+            uint16_t address; //!< Address for the device.
+
+            DeregisterResponse(Common::Result code = Common::FAIL_UNKNOWN,
+                               uint16_t address = Protocol::BROADCAST_ADDR):
+               Protocol::Response (code), address (address & Protocol::BROADCAST_ADDR)
+            {}
+
+            //! \see HF::Protocol::Response::size.
+            size_t size () const;
+
+            //! \see HF::Protocol::Response::pack.
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+
+            //! \see HF::Protocol::Response::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
@@ -334,7 +321,7 @@ namespace HF
 
          struct GetEntriesResponse:public Protocol::Response
          {
-            vector <Device> entries;
+            std::vector <Device> entries;
 
             //! \see HF::Protocol::Response::size.
             size_t size () const;
@@ -444,7 +431,7 @@ namespace HF
              *
              * @param [in] response    the response received.
              */
-            virtual void deregistered (Protocol::Response &response);
+            virtual void deregistered (DeregisterResponse &response);
 
             //! @}
             // ======================================================================
@@ -501,7 +488,7 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given UID,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual Device *entry (HF::UID::UID const *uid) = 0;
+            virtual Device *entry (const HF::UID::UID &uid) = 0;
 
             /*!
              * Store the given \c device entry to persistent storage.
@@ -535,7 +522,7 @@ namespace HF
              * @param [in] count    the
              * @return
              */
-            virtual vector <Device *> entries (uint16_t offset, uint16_t count) = 0;
+            virtual std::vector <Device *> entries (uint16_t offset, uint16_t count) = 0;
 
             /*!
              * Return all device entries starting at \c offset.
@@ -544,7 +531,7 @@ namespace HF
              *
              * @return a vector containing the requested entries.
              */
-            vector <Device *> entries (uint16_t offset = 0)
+            std::vector <Device *> entries (uint16_t offset = 0)
             {
                if (offset < entries_count ())
                {
@@ -552,7 +539,7 @@ namespace HF
                }
                else
                {
-                  return vector <Device *>(0);
+                  return std::vector <Device *>(0);
                }
             }
 
@@ -672,7 +659,7 @@ namespace HF
 
             virtual Device *entry (uint16_t address);
 
-            virtual Device *entry (HF::UID::UID const *uid);
+            virtual Device *entry (const HF::UID::UID &uid);
 
             virtual Common::Result save (Device *device);
 
@@ -683,22 +670,15 @@ namespace HF
                return _entries.size ();
             }
 
-            vector <DeviceManagement::Device *> entries (uint16_t offset, uint16_t count);
+            std::vector <DeviceManagement::Device *> entries (uint16_t offset, uint16_t count);
 
             using Server::entries;
 
+            uint16_t next_address ();
+
             protected:
 
-            vector <Device *>                    _entries;
-
-            map <uint16_t, Device *>             _addr2device;
-            map <HF::UID::UID const *, Device *> _uid2device;
-
-
-            uint16_t next_address ()
-            {
-               return _entries.size () + 1;
-            }
+            std::vector <Device *> _entries;
 
             virtual bool authorized (uint8_t member, Device *source, Device *destination);
          };

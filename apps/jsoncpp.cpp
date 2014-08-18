@@ -1,3 +1,4 @@
+/* *INDENT-OFF* */
 /// Json-cpp amalgated source (http://jsoncpp.sourceforge.net/).
 /// It is intented to be used with #include "dist/jsoncpp.cpp"
 
@@ -3726,3 +3727,4 @@ std::ostream &operator<<(std::ostream &sout, const Value &root) {
 
 
 
+/* *INDENT-ON* */

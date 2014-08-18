@@ -5,7 +5,7 @@
  * This file contains the implementation of the common classes and functions
  * of the HAN-FUN library.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -44,7 +44,7 @@ using namespace HF::Common;
 // ByteArray
 // =============================================================================
 
-ByteArray::ByteArray(size_t size):vector (size, 0)
+ByteArray::ByteArray(size_t size):std::vector <uint8_t>(size, 0)
 {}
 
 ByteArray::ByteArray(const uint8_t data[], const size_t size):vector (size, 0)

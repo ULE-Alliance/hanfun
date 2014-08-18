@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * HAN-FUN example application.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -138,7 +138,7 @@ std::ostream &ICommand::help (std::ostream &stream)
    stream << "================================================" << std::endl;
    stream << "HAN-FUN Example Application" << std::endl << std::endl;
 
-   stream << setfill (' ');
+   stream << std::setfill (' ');
    std::for_each (entries.begin (), entries.end (), [&stream, size](entry &e) {
                      stream << std::left << std::setw (size) << e.cmd << "\t: " << e.help << std::endl;
                   }

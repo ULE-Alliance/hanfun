@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN protocol messages.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -15,6 +15,8 @@
 // =============================================================================
 #ifndef HF_PROTOCOL_H
 #define HF_PROTOCOL_H
+
+#include <list>
 
 #include "hanfun/common.h"
 
@@ -214,12 +216,12 @@ namespace HF
 
          Transport::Link *link;     //! Link where this packet originated from.
 
-         Packet() {}
+         Packet():link (nullptr) {}
 
-         Packet(Message &message):message (message) {}
+         Packet(Message &message):message (message), link (nullptr) {}
 
          Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
-            destination (dst_addr), message (message)
+            destination (dst_addr), message (message), link (nullptr)
          {
             source.mod    = Address::DEVICE;
             source.device = BROADCAST_ADDR;
@@ -227,7 +229,8 @@ namespace HF
          }
 
          Packet(Address &src_addr, Address &dst_addr, Message &message):
-            source (src_addr), destination (dst_addr), message (message) {}
+            source (src_addr), destination (dst_addr), message (message), link (nullptr)
+         {}
 
          //! \see HF::Serializable::size.
          size_t size () const;
@@ -263,6 +266,148 @@ namespace HF
       };
 
       // =============================================================================
+      // Filter classes
+      // =============================================================================
+
+      /*!
+       * This namespace contains the different packet filters.
+       */
+      namespace Filters
+      {
+         /*!
+          * This class provides support for detecting repeated messages received from the
+          * network.
+          *
+          * It uses the source device address, the application reference value for the message
+          * and a checksum over the entire packet received to determine if the received packet
+          * is a retransmission.
+          */
+         class Repeated
+         {
+            protected:
+
+            //! Filter database entry.
+            struct Entry
+            {
+               uint16_t address;      //!< Source device address.
+               uint8_t  reference;    //!< Last message application reference.
+               uint8_t  ttl;          //!< Time to live - counter used to drop older entries.
+               uint32_t checksum;     //!< Last message checksum.
+
+               Entry(uint16_t _address = HF::Protocol::BROADCAST_ADDR, uint8_t _reference = 0):
+                  address (_address), reference (_reference), ttl (0), checksum (0)
+               {}
+
+               bool operator <(const Entry &other) const
+               {
+                  return this->address < other.address;
+               }
+            };
+
+            //! Filter database.
+            std::list <Entry> db;
+
+            public:
+
+            //! Maximum number of entries that will be kept in the database.
+            static constexpr size_t max_size = HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE;
+
+            /*!
+             * Checks if the given \c packet, is a retransmission according to
+             * the filters database data.
+             *
+             * The given \c packet and \c payload are used to update the filters database.
+             *
+             * @param [in] packet     reference to the incoming packet.
+             * @param [in] payload    reference to the packet's payload.
+             *
+             * @retval  true     the packet is a retransmission.
+             * @retval  false    the packet is a not retransmission.
+             */
+            bool operator ()(const HF::Protocol::Packet &packet,
+                             const HF::Common::ByteArray &payload);
+
+            /*!
+             * Number of entries in the filter's database.
+             *
+             * @return  the number of entries in the filter's database.
+             */
+            size_t size () const
+            {
+               return db.size ();
+            }
+
+            protected:
+
+            /*!
+             * Create a checksum of the data that is contained in the buffer \c data.
+             *
+             * This method implements the Fletcher-32 checksum algorithm.
+             *
+             * @param data    pointer to the data to calculate the checksum for.
+             * @param words   number of words in the \c data to calculate the checksum from.
+             *
+             * @return
+             */
+            uint32_t checksum (uint16_t const *data, size_t words);
+         };
+
+         /*!
+          *
+          */
+         class ResponseRequired
+         {
+            protected:
+
+            //! Filter database entry.
+            struct Entry
+            {
+               uint16_t           address; //!< Source device address.
+               Message::Type      type;    //!< Response type.
+               Message::Interface itf;     //!< Interface the message relates to.
+
+               Entry(uint16_t _address, Message::Type _type, Message::Interface _itf):
+                  address (_address), type (_type), itf (_itf)
+               {}
+
+               Entry(const Packet &packet):address (packet.destination.device),
+                  type (packet.message.type), itf (packet.message.itf)
+               {}
+            };
+
+            //! Filter database.
+            std::list <Entry> db;
+
+            public:
+
+            /*!
+             * Checks if the given \c packet, is a retransmission according to
+             * the filters database data.
+             *
+             * The given \c packet and \c payload are used to update the filters database.
+             *
+             * @param [in] packet     reference to the incoming packet.
+             * @param [in] payload    reference to the packet's payload.
+             *
+             * @retval  true     the packet is a retransmission.
+             * @retval  false    the packet is a not retransmission.
+             */
+            bool operator ()(const HF::Protocol::Packet &packet);
+
+            /*!
+             * Number of entries in the filter's database.
+             *
+             * @return  the number of entries in the filter's database.
+             */
+            size_t size () const
+            {
+               return db.size ();
+            }
+         };
+
+      }  // namespace Filters
+
+      // =============================================================================
       // Operators
       // =============================================================================
 
@@ -282,6 +427,48 @@ namespace HF
                 (lhs.device == rhs.device &&
                  (lhs.mod < rhs.mod || (lhs.mod == rhs.mod && lhs.unit < rhs.unit)));
       }
+
+      // =============================================================================
+      // Helper Functions
+      // =============================================================================
+
+      /*!
+       * Check if message type is a request.
+       *
+       * If \c response is \c false then return true for all requests, otherwise
+       * only for those that require a response.
+       *
+       * @param [in] type        message type to check if it is a request.
+       * @param [in] response    false check for all request types, otherwise
+       *                         only those that require a response.
+       *
+       * @retval true   if the message is a request.
+       * @retval false  otherwise.
+       */
+      bool request (Message::Type type, bool response = false);
+
+      /*!
+       * Check if message is a response.
+       *
+       * @param [in] type  message type to check if it is a response.
+       *
+       * @retval true   if the message is a response.
+       * @retval false  otherwise.
+       */
+      bool response (Message::Type type);
+
+      /*!
+       * Check if the given message types are the request and response for
+       * each other, for example, the Message::Type::COMMAND_RES matches both
+       * the Message::Type::COMMAND_REQ and Message::Type::COMMAND_RESP_REQ.
+       *
+       * @param [in] lhs   message type to match.
+       * @param [in] rhs   message type to match.
+       *
+       * @retval true   if the message types match.
+       * @retval false  otherwise.
+       */
+      bool matches (Message::Type lhs, Message::Type rhs);
 
    }  // namespace Protocol
 

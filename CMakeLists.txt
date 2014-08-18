@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Top CMakeList
 #
-#   \version    0.3.2
+#   \version    0.4.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -30,12 +30,6 @@ include_directories(
   ${PROJECT_INCLUDE_DIR}
 )
 
-if( ${PROJECT_NAME}_BUILD_TESTS )
-    set(BUILD_TESTS true)
-else()
-    set(BUILD_TESTS false)
-endif()
-
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fno-rtti -std=c++0x")
 
@@ -51,8 +45,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions")
 
 # The version number.
 set(PROJECT_MAJOR_VERSION 0)
-set(PROJECT_MINOR_VERSION 3)
-set(PROJECT_PATCH_VERSION 2)
+set(PROJECT_MINOR_VERSION 4)
+set(PROJECT_PATCH_VERSION 0)
 
 set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
 
@@ -79,9 +73,9 @@ add_subdirectory(apps)
 # Tests
 # ==============================================================================
 
-if(BUILD_TESTS)
+if(HF_BUILD_TESTS)
     add_subdirectory(tests)
-endif(BUILD_TESTS)
+endif(HF_BUILD_TESTS)
 
 # ==============================================================================
 # Documentation

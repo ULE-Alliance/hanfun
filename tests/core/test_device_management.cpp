@@ -1,11 +1,11 @@
 // =============================================================================
 /*!
- * \file			tests/core/test_device_management.cpp
+ * \file       tests/core/test_device_management.cpp
  *
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -30,7 +30,6 @@ using namespace HF::Core;
 // Helper functions.
 // =============================================================================
 
-
 STRING_FROM (DeviceManagement::Unit)
 
 STRING_FROM (DeviceManagement::Device)
@@ -51,10 +50,10 @@ TEST (DeviceManagement, InterfaceServer)
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0xFA, 0xAA, // Optional Interface : Server Role.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0xFA, 0xAA,        // Optional Interface : Server Role.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    itf.role = HF::Interface::SERVER_ROLE;
@@ -81,10 +80,10 @@ TEST (DeviceManagement, InterfaceClient)
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x75, 0x55, // Optional Interface : Client Role.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x75, 0x55,        // Optional Interface : Client Role.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    itf.role = HF::Interface::CLIENT_ROLE;
@@ -152,16 +151,16 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x0A,       // Unit entry size.
-                        0x42,       // Unit ID.
-                        0x5A, 0xA5, // Unit UID.
-                        0x03,       // Number of optional interfaces.
-                        0xD4, 0x32, // Optional interface 1
-                        0x12, 0x34, // Optional interface 2
-                        0xD6, 0x78, // Optional interface 3
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x0A,       // Unit entry size.
+                       0x42,       // Unit ID.
+                       0x5A, 0xA5, // Unit UID.
+                       0x03,       // Number of optional interfaces.
+                       0xD4, 0x32, // Optional interface 1
+                       0x12, 0x34, // Optional interface 2
+                       0xD6, 0x78, // Optional interface 3
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    size_t    wsize = wunit.pack (array, 3);
@@ -204,14 +203,14 @@ TEST (DeviceManagement, Device)
    size_t size = device.size ();
    LONGS_EQUAL (sizeof(uint16_t) + sizeof(uint8_t) + 3 * unit.size (), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x33, 0x33,             // Device Address.
-                        0x03,                   // Number of units.
-                        0x03, 0x42, 0x5A, 0xA5, // Unit 1.
-                        0x03, 0x42, 0x5A, 0xA5, // Unit 2.
-                        0x03, 0x42, 0x5A, 0xA5, // Unit 3.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x33, 0x33,             // Device Address.
+                       0x03,                   // Number of units.
+                       0x03, 0x42, 0x5A, 0xA5, // Unit 1.
+                       0x03, 0x42, 0x5A, 0xA5, // Unit 2.
+                       0x03, 0x42, 0x5A, 0xA5, // Unit 3.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    size_t    wsize = device.pack (array, 3);
@@ -230,11 +229,13 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (0x3333, device.address);
    LONGS_EQUAL (3, device.units.size ());
 
-   for (vector <DeviceManagement::Unit>::const_iterator _unit = device.units.begin ();
-        _unit != device.units.end (); ++_unit)
+   /* *INDENT-OFF* */
+   std::for_each (device.units.begin (), device.units.end (),
+                  [&unit](const DeviceManagement::Unit &_unit)
    {
-      CHECK_EQUAL (unit, *_unit);
-   }
+      CHECK_EQUAL (unit, _unit);
+   });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -247,7 +248,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
    DeviceManagement::Unit unit;
 
    ByteArray expected;
-   UID::IPUI *ipui;
+   UID::IPUI ipui;
 
    TEST_SETUP ()
    {
@@ -260,21 +261,18 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
       message->units.push_back (unit);
       message->units.push_back (unit);
 
-      ipui           = new UID::IPUI ();
+      ipui[0]      = 0x00;
+      ipui[1]      = 0x73;
+      ipui[2]      = 0x70;
+      ipui[3]      = 0xAA;
+      ipui[4]      = 0xBB;
 
-      ipui->value[0] = 0x00;
-      ipui->value[1] = 0x73;
-      ipui->value[2] = 0x70;
-      ipui->value[3] = 0xAA;
-      ipui->value[4] = 0xBB;
-
-      message->uid (ipui);
+      message->uid = HF::UID::UID( &ipui);
    }
 
    TEST_TEARDOWN ()
    {
       delete message;
-      delete ipui;
    }
 };
 
@@ -309,15 +307,17 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    LONGS_EQUAL (0x0000, message->emc);
 
-   CHECK_EQUAL (*ipui, *message->uid ());
+   CHECK_EQUAL (ipui, message->uid);
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for (vector <DeviceManagement::Unit>::const_iterator _unit = message->units.begin ();
-        _unit != message->units.end (); ++_unit)
+   /* *INDENT-OFF* */
+   std::for_each (message->units.begin (), message->units.end (),
+                  [this](const DeviceManagement::Unit &_unit)
    {
-      CHECK_EQUAL (unit, *_unit);
-   }
+      CHECK_EQUAL (unit, _unit);
+   });
+   /* *INDENT-ON* */
 }
 
 TEST (DeviceManagement_RegisterMessage, No_UID)
@@ -334,7 +334,7 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 
    message->emc = 0x4243;
 
-   message->uid (nullptr);
+   message->uid = HF::UID::UID();
 
    size_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + 3 * unit.size (), size);
@@ -381,15 +381,17 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    LONGS_EQUAL (0x4243, message->emc);
 
-   CHECK_EQUAL (*ipui, *message->uid ());
+   CHECK_EQUAL (ipui, message->uid);
 
    CHECK_EQUAL (3, message->units.size ());
 
-   for (vector <DeviceManagement::Unit>::const_iterator _unit = message->units.begin ();
-        _unit != message->units.end (); ++_unit)
+   /* *INDENT-OFF* */
+   std::for_each (message->units.begin (), message->units.end (),
+                  [this](const DeviceManagement::Unit &_unit)
    {
-      CHECK_EQUAL (unit, *_unit);
-   }
+      CHECK_EQUAL (unit, _unit);
+   });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -662,7 +664,7 @@ TEST_GROUP (DeviceManagementClient)
          DeviceManagement::Client::registered (response);
       }
 
-      void deregistered (Protocol::Response &response)
+      void deregistered (DeviceManagement::DeregisterResponse &response)
       {
          mock ("DeviceManagementClient").actualCall ("deregistered");
          DeviceManagement::Client::deregistered (response);
@@ -749,8 +751,8 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (device->units ().size () - 1, payload.units.size ());
 
-   vector <uint8_t> expected;
-   vector <uint8_t> actual;
+   std::vector <uint8_t> expected;
+   std::vector <uint8_t> actual;
 
    /* *INDENT-OFF* */
    for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
@@ -760,16 +762,15 @@ TEST (DeviceManagementClient, RegisterMessage)
    /* *INDENT-ON* */
 
    // Unit 0 - Should not be present.
-   CHECK_TRUE (none_of (actual.begin (), actual.end (), [](uint8_t id) {
-                           return id == 0U;
-                        }
-                       ));
+   /* *INDENT-OFF* */
+   CHECK_TRUE (std::none_of (actual.begin (), actual.end (), [](uint8_t id){ return id == 0U; }));
+   /* *INDENT-ON* */
 
    expected.push_back (unit1->id ());
    expected.push_back (unit2->id ());
    expected.push_back (unit3->id ());
 
-   CHECK_TRUE (is_permutation (expected.begin (), expected.end (), actual.begin ()));
+   CHECK_TRUE (std::is_permutation (expected.begin (), expected.end (), actual.begin ()));
 
    expected.clear ();
    actual.clear ();
@@ -978,7 +979,7 @@ TEST_GROUP (DeviceManagementServer)
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
       packet.message.itf.id     = dev_mgt->uid ();
 
-      UID::UID *uid = new UID::URI ("hf://device@example.com");
+      UID::UID_T *uid = new UID::URI ("hf://device@example.com");
 
       link        = new Testing::Link (uid, nullptr);
       packet.link = link;
@@ -1053,7 +1054,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    delete link;
 
-   UID::UID *uid = new UID::URI ("hf://device2@example.com");
+   UID::UID_T *uid = new UID::URI ("hf://device2@example.com");
 
    link        = new Testing::Link (uid, nullptr);
    packet.link = link;
@@ -1076,7 +1077,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = 0x5A50 + i;
-      ostringstream uri;
+      std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
       dev->uid = new UID::URI (uri.str ());
       dev_mgt->save (dev);
@@ -1125,7 +1126,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = 0x5A50 + i;
-      ostringstream uri;
+      std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
       dev->uid = new UID::URI (uri.str ());
       uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
@@ -1213,26 +1214,28 @@ TEST (DeviceManagementServer, Entries)
 {
    UID::IPUI ipui;
 
-   ipui.value[0] = 0x12;
-   ipui.value[1] = 0x34;
-   ipui.value[2] = 0x56;
-   ipui.value[3] = 0x78;
-   ipui.value[4] = 0x90;
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
 
    for (int i = 0; i < 20; i++)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
-      UID::IPUI *temp               = ipui.clone ();
-      dev->address    = i + 1;
-      temp->value[4] += i;
-      dev->uid        = temp;
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
 
       dev_mgt->save (dev);
    }
 
    LONGS_EQUAL (20, dev_mgt->entries_count ());
 
-   vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
+   std::vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
 
    LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
 

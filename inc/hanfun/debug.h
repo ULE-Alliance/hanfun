@@ -4,7 +4,7 @@
  *
  * This file contains the prototypes of the debug functionality in HAN-FUN.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -17,17 +17,13 @@
 #ifndef HF_DEBUG_H
 #define HF_DEBUG_H
 
-#include "common.h"
-#include "uids.h"
-#include "protocol.h"
-
 #include <iostream>
 
 // =============================================================================
 // Defines
 // =============================================================================
 
-#define NL                   std::endl; std::cout.clear (); std::cerr.clear ()
+#define NL                   std::endl;std::cout.clear ();std::cerr.clear ()
 
 #define HF_LOG_LEVEL_NONE    0
 #define HF_LOG_LEVEL_ERROR   1
@@ -78,10 +74,33 @@
 // Stream Helpers
 // =============================================================================
 
-ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
+// Forward declarations
+namespace HF
+{
+   namespace Common
+   {
+      class ByteArray;
 
-ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
+   }  // namespace Common
 
-ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
+   namespace UID
+   {
+      class UID;
+
+   }  // namespace UID
+
+   namespace Protocol
+   {
+      struct Packet;
+
+   }  // namespace Protocol
+
+}  // namespace HF
+
+std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
+
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
 
 #endif /* HF_DEBUG_H */

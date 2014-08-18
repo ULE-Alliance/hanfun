@@ -4,7 +4,7 @@
  *
  * This file contains the declaration of the API for a HAN-FUN device.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -48,7 +48,7 @@ namespace HF
       /*!
        * Unit list type.
        */
-      struct units_t:public forward_list <Units::IUnit *>
+      struct units_t:public std::forward_list <Units::IUnit *>
       {
          units_t::size_type size () const
          {

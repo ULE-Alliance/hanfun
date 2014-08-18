@@ -4,7 +4,7 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -64,8 +64,8 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
    /* *INDENT-OFF* */
    std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device *device)
    {
-      LOG (APP) << setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
-      LOG (APP) << setw (5) << device->address << " | ";
+      LOG (APP) << std::setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
+      LOG (APP) << std::setw (5) << device->address << " | ";
       LOG (APP) << device->uid << NL;
    });
    /* *INDENT-ON* */
@@ -264,7 +264,7 @@ void HF::Application::Save ()
 {
    Json::Value root;
    Json::StyledWriter writer;
-   ofstream    ofs (HF_APP_CONFIG_FILE);
+   std::ofstream ofs (HF_APP_CONFIG_FILE);
 
    base.unit0.device_management ()->save (root["core"]["device_management"]);
    base.unit0.bind_management ()->save (root["core"]["bind_management"]);

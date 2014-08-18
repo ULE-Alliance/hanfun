@@ -5,13 +5,16 @@
  * This file contains the implementation of the unit tests for the protocol
  * layer in the HAN-FUN specification.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
 // =============================================================================
+#include <algorithm>
+#include <random>
+
 #include "test_helper.h"
 
 #include "hanfun/protocol.h"
@@ -684,4 +687,325 @@ TEST (AttributesProtocol, SetAttributePack_Response_Unpack)
 
    LONGS_EQUAL (0x06, result.uid);
    LONGS_EQUAL (Result::FAIL_SUPPORT, result.code);
+}
+
+// =============================================================================
+// Filters
+// =============================================================================
+
+/* === FilterRepeated === */
+
+TEST_GROUP (FilterRepeated)
+{
+   struct FilterTest:public HF::Protocol::Filters::Repeated
+   {
+      void fill (uint16_t oldest)
+      {
+         Entry entry;
+
+         for (uint8_t i = 0; i < Filters::Repeated::max_size; i++)
+         {
+            entry.address   = i;
+            entry.reference = i;
+            entry.ttl       = (i != oldest ? 0x10 + i : 0x05);
+            entry.checksum  = 0xDEADBEEF;
+
+            db.push_back (entry);
+         }
+      }
+
+      bool exists (uint16_t address)
+      {
+         Entry temp (address);
+
+         auto  it = std::lower_bound (db.begin (), db.end (), temp);
+
+         return (it != db.end () && it->address == address ? true : false);
+      }
+
+      void clear ()
+      {
+         db.clear ();
+      }
+   };
+
+   FilterTest filter;
+
+   ByteArray  payload;
+
+   Packet packet;
+
+   TEST_SETUP ()
+   {
+      filter.clear ();
+
+      payload = ByteArray (sizeof(HF::Protocol::Packet) + 10);
+
+      fill (payload);
+
+      Packet packet;
+
+      packet.unpack (payload);
+
+   }
+
+   void fill (HF::Common::ByteArray &array)
+   {
+      std::random_device rd;
+      std::mt19937 mt (rd ());
+      std::uniform_int_distribution <uint8_t> dist;
+
+      auto gen = std::bind (dist, mt);
+
+      std::generate_n (array.begin (), array.size (), gen);
+   }
+};
+
+TEST (FilterRepeated, Empty)
+{
+   size_t size = filter.size ();
+
+   CHECK_FALSE (filter (packet, payload));
+
+   LONGS_EQUAL (size + 1, filter.size ());
+}
+
+TEST (FilterRepeated, NoMatch)
+{
+   packet.source.device     = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   size_t size = filter.size ();
+
+   packet.source.device     = 0x5ABC;
+   packet.message.reference = 0x22;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   LONGS_EQUAL (size + 1, filter.size ());
+
+   CHECK_TRUE (filter.exists (packet.source.device));
+}
+
+TEST (FilterRepeated, MatchAddess)
+{
+   packet.source.device     = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   size_t size = filter.size ();
+   packet.message.reference = 0x22;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   LONGS_EQUAL (size, filter.size ());
+}
+
+TEST (FilterRepeated, MatchAddessAndReference)
+{
+   packet.source.device     = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   size_t size = filter.size ();
+   fill (payload);
+
+   CHECK_FALSE (filter (packet, payload));
+   LONGS_EQUAL (size, filter.size ());
+}
+
+TEST (FilterRepeated, MatchAll)
+{
+   packet.source.device     = 0x5A5A;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   size_t size = filter.size ();
+   CHECK_TRUE (filter (packet, payload));
+   LONGS_EQUAL (size, filter.size ());
+}
+
+TEST (FilterRepeated, Update)
+{
+   packet.source.device     = 0x5A50;
+   packet.message.reference = 0x42;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   packet.source.device = 0x5A52;
+   CHECK_FALSE (filter (packet, payload));
+
+   size_t size = filter.size ();
+   packet.source.device = 0x5A51;
+   CHECK_FALSE (filter (packet, payload));
+
+   LONGS_EQUAL (size + 1, filter.size ());
+}
+
+TEST (FilterRepeated, MaxSize)
+{
+   filter.fill (4);
+
+   LONGS_EQUAL (Filters::Repeated::max_size, filter.size ());
+
+   packet.source.device = 0x5A5A;
+
+   CHECK_FALSE (filter (packet, payload));
+
+   LONGS_EQUAL (Filters::Repeated::max_size, filter.size ());
+}
+
+TEST (FilterRepeated, Oldest)
+{
+   for (uint8_t i = 0; i < Filters::Repeated::max_size; i++)
+   {
+      filter.clear ();
+
+      filter.fill (i);
+
+      packet.source.device = 0x5A5A;
+
+      if (filter (packet, payload))
+      {
+         FAIL_TEST ("Duplicated packet found !!");
+      }
+
+      if (filter.exists (i))
+      {
+         FAIL_TEST ("Oldest entry was not removed !!");
+      }
+   }
+}
+
+/* === ResponseRequired === */
+
+TEST_GROUP (ResponseRequired)
+{
+   struct FilterTest:public HF::Protocol::Filters::ResponseRequired
+   {
+      void clear ()
+      {
+         db.clear ();
+      }
+   };
+
+   FilterTest filter;
+
+   Packet packet;
+
+   TEST_SETUP ()
+   {
+      filter.clear ();
+   }
+};
+
+TEST (ResponseRequired, ShouldNotAddCommands)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   std::vector <Protocol::Message::Type> types {
+      Protocol::Message::COMMAND_REQ,
+      Protocol::Message::COMMAND_RESP_REQ,
+      Protocol::Message::GET_ATTR_REQ,
+      Protocol::Message::SET_ATTR_REQ,
+      Protocol::Message::SET_ATTR_RESP_REQ,
+      Protocol::Message::GET_ATTR_PACK_REQ,
+      Protocol::Message::SET_ATTR_PACK_REQ,
+      Protocol::Message::SET_ATTR_PACK_RESP_REQ,
+      Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ,
+      Protocol::Message::ATOMIC_SET_ATTR_PACK_RESP_REQ,
+   };
+
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
+                     packet.message.type = type;
+                     filter (packet);
+                  }
+                 );
+
+   LONGS_EQUAL (0, filter.size ());
+}
+
+TEST (ResponseRequired, ShouldAddResponses)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   std::vector <Protocol::Message::Type> types {
+      Protocol::Message::COMMAND_RES,
+      Protocol::Message::SET_ATTR_RES,
+      Protocol::Message::GET_ATTR_RES,
+      Protocol::Message::GET_ATTR_PACK_RES,
+      Protocol::Message::SET_ATTR_PACK_RES,
+      Protocol::Message::ATOMIC_SET_ATTR_PACK_RES,
+   };
+
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
+                     packet.message.type = type;
+                     filter (packet);
+                  }
+                 );
+
+   LONGS_EQUAL (types.size (), filter.size ());
+}
+
+TEST (ResponseRequired, NoResponse)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   packet.message.type = Protocol::Message::COMMAND_RES;
+
+   std::random_device rd;
+   std::mt19937 gen (rd ());
+   std::uniform_int_distribution <uint16_t> dist1 (0, 0xFFFF);
+   std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
+
+   auto g_id   = std::bind (dist1, gen);
+   auto g_unit = std::bind (dist2, gen);
+
+   packet.message.itf.member = g_unit ();
+   uint16_t address = g_id ();
+
+   packet.message.itf.id     = address & HF::Protocol::BROADCAST_ADDR;
+   packet.message.itf.member = address >> 15;
+
+   filter (packet);
+
+   packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+
+   CHECK_FALSE (filter (packet));
+
+   LONGS_EQUAL (0, filter.size ());
+}
+
+TEST (ResponseRequired, ResponseNeeded)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   packet.message.type = Protocol::Message::SET_ATTR_PACK_RES;
+
+   std::random_device rd;
+   std::mt19937 gen (rd ());
+   std::uniform_int_distribution <uint16_t> dist1 (0, 0xFFFF);
+   std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
+
+   auto g_id   = std::bind (dist1, gen);
+   auto g_unit = std::bind (dist2, gen);
+
+   packet.message.itf.member = g_unit ();
+   uint16_t address = g_id ();
+
+   packet.message.itf.id     = address & HF::Protocol::BROADCAST_ADDR;
+   packet.message.itf.member = address >> 15;
+
+   filter (packet);
+
+   packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+
+   CHECK_TRUE (filter (packet));
+
+   LONGS_EQUAL (1, filter.size ());
 }

@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Power Meter interface.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -170,7 +170,7 @@ namespace HF
              * This array contains an indication of with attributes should packed or
              * with were unpacked.
              */
-            array <bool, __LAST_ATTR__ + 1> enabled;
+            std::array <bool, __LAST_ATTR__ + 1> enabled;
 
             Report();
 

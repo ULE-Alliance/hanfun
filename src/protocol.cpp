@@ -5,7 +5,7 @@
  * This file contains the implementation of the classes for the protocol layer
  * in the HAN-FUN specification.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -14,8 +14,6 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-
-#include <iostream>
 
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
@@ -432,4 +430,289 @@ size_t GetAttributePack::Response::unpack (const Common::ByteArray &array, size_
 
    _end:
    return offset - start;
+}
+
+// =============================================================================
+// Filters Classes
+// =============================================================================
+
+// =============================================================================
+// Filters::Repeated::checksum
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint32_t Filters::Repeated::checksum (uint16_t const *data, size_t words)
+{
+   uint32_t sum1 = 0xFFFF, sum2 = 0xFFFF;
+
+   while (words)
+   {
+      unsigned tlen = words > 359 ? 359 : words;
+      words -= tlen;
+
+      do {
+         sum2 += sum1 += *data++;
+      } while (--tlen);
+
+      sum1 = (sum1 & 0xFFFF) + (sum1 >> 16);
+      sum2 = (sum2 & 0xFFFF) + (sum2 >> 16);
+   }
+
+   /* Second reduction step to reduce sums to 16 bits */
+   sum1 = (sum1 & 0xFFFF) + (sum1 >> 16);
+   sum2 = (sum2 & 0xFFFF) + (sum2 >> 16);
+
+   return sum2 << 16 | sum1;
+}
+
+// =============================================================================
+// Filters::Repeated::operator ()
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Filters::Repeated::operator ()(const HF::Protocol::Packet &packet, const HF::Common::ByteArray &payload)
+{
+#define MAX_TTL   std::numeric_limits <uint8_t>::max ()
+
+   bool  result = false;
+
+   Entry temp (packet.source.device, packet.message.reference);
+
+   temp.checksum = checksum ((uint16_t *) payload.data (), payload.size () / 2);
+
+   auto it = std::lower_bound (db.begin (), db.end (), temp);
+
+   // An entry was found.
+   if (it != db.end () && it->address == temp.address)
+   {
+      if (it->reference != temp.reference || temp.checksum != it->checksum)
+      {
+         temp.ttl = (it->ttl + 1 < MAX_TTL ? it->ttl + 1 : MAX_TTL);
+         *it      = temp;
+      }
+      else
+      {
+         result = true;
+      }
+   }
+   else
+   {
+      // Database full.
+      if (db.size () == max_size)
+      {
+         // Find the oldest entry, i.e., the one with the lowest ttl value.
+         auto oldest = std::min_element (db.begin (), db.end (), [](const Entry &lhs, const Entry &rhs) {
+                                            return lhs.ttl < rhs.ttl;
+                                         }
+                                        );
+
+         db.erase (oldest);
+      }
+
+      db.insert (it, temp);
+   }
+
+   return result;
+}
+
+
+// =============================================================================
+// Filters::ResponseRequired::operator ()
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
+{
+   if (response (packet.message.type))
+   {
+      Entry temp (packet);
+      db.push_front (temp);
+      return false;
+   }
+
+   /* *INDENT-OFF* */
+   auto it = std::find_if (db.begin(), db.end(), [&packet](const Entry entry)
+   {
+      return (entry.address == packet.source.device) && (entry.itf == packet.message.itf) &&
+              matches (entry.type, packet.message.type);
+   });
+   /* *INDENT-ON* */
+
+   if (it != db.end ())
+   {
+      db.erase (it);
+      return false;
+   }
+
+   if (request (packet.message.type, true))
+   {
+      return true;
+   }
+
+   return false;
+}
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+// =============================================================================
+// Protocol::request
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Protocol::request (Message::Type type, bool response)
+{
+   switch (type)
+   {
+      case Message::Type::COMMAND_RESP_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         response = false;
+      }
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::GET_ATTR_REQ:
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::GET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      {
+         return !response;
+      }
+      case Message::Type::COMMAND_RES:
+      case Message::Type::SET_ATTR_RES:
+      case Message::Type::GET_ATTR_RES:
+      case Message::Type::GET_ATTR_PACK_RES:
+      case Message::Type::SET_ATTR_PACK_RES:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      default:
+         return false;
+   }
+}
+
+// =============================================================================
+// Protocol::responce
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Protocol::response (Message::Type type)
+{
+   switch (type)
+   {
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::COMMAND_RESP_REQ:
+      case Message::Type::GET_ATTR_REQ:
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      case Message::Type::GET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         return false;
+      }
+      case Message::Type::COMMAND_RES:
+      case Message::Type::SET_ATTR_RES:
+      case Message::Type::GET_ATTR_RES:
+      case Message::Type::GET_ATTR_PACK_RES:
+      case Message::Type::SET_ATTR_PACK_RES:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      {
+         return true;
+      }
+      default:
+         return false;
+   }
+}
+
+
+// =============================================================================
+// Protocol::response
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Protocol::matches (Message::Type lhs, Message::Type rhs)
+{
+   if (lhs == rhs)
+   {
+      return false;
+   }
+
+   switch (lhs)
+   {
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::COMMAND_RESP_REQ:
+      {
+         return (rhs == Message::Type::COMMAND_RES);
+      }
+      case Message::Type::COMMAND_RES:
+      {
+         return (rhs == Message::Type::COMMAND_REQ || rhs == Message::Type::COMMAND_RESP_REQ);
+      }
+
+      case Message::Type::GET_ATTR_REQ:
+      {
+         return (rhs == Message::Type::GET_ATTR_RES);
+      }
+      case Message::Type::GET_ATTR_RES:
+      {
+         return (rhs == Message::Type::GET_ATTR_REQ);
+      }
+
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      {
+         return (rhs == Message::Type::SET_ATTR_RES);
+      }
+      case Message::Type::SET_ATTR_RES:
+      {
+         return (rhs == Message::Type::SET_ATTR_REQ || rhs == Message::Type::SET_ATTR_RESP_REQ);
+      }
+
+      case Message::Type::GET_ATTR_PACK_REQ:
+      {
+         return (rhs == Message::Type::GET_ATTR_PACK_RES);
+      }
+      case Message::Type::GET_ATTR_PACK_RES:
+      {
+         return (rhs == Message::Type::GET_ATTR_PACK_REQ);
+      }
+
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      {
+         return (rhs == Message::Type::SET_ATTR_PACK_RES);
+      }
+      case Message::Type::SET_ATTR_PACK_RES:
+      {
+         return (rhs == Message::Type::SET_ATTR_PACK_REQ || rhs == Message::Type::SET_ATTR_PACK_RESP_REQ);
+      }
+
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         return (rhs == Message::Type::ATOMIC_SET_ATTR_PACK_RES);
+      }
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      {
+         return (rhs == Message::Type::ATOMIC_SET_ATTR_PACK_REQ || rhs == Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ);
+      }
+      default:
+         return false;
+   }
 }
