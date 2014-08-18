@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Top CMakeList
 #
-#   \version    0.3.2
+#   \version    0.4.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -45,8 +45,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fno-exceptions")
 
 # The version number.
 set(PROJECT_MAJOR_VERSION 0)
-set(PROJECT_MINOR_VERSION 3)
-set(PROJECT_PATCH_VERSION 2)
+set(PROJECT_MINOR_VERSION 4)
+set(PROJECT_PATCH_VERSION 0)
 
 set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
 
