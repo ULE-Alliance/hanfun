@@ -106,10 +106,10 @@ struct BindManagement:public HF::Core::BindManagement::Server
 /*!
  * Custom Unit0 class to make use of the previous DeviceManagment class.
  */
-struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Default,
+struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
                                                       DeviceManagement, BindManagement>
 {
-   Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Default,
+   Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
                                                                 DeviceManagement, BindManagement>(device)
    {}
 };

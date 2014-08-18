@@ -151,7 +151,7 @@ namespace HF
          {
             static_assert (std::is_base_of <HF::Core::DeviceManagement::Client,
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceInformationClient");
+                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
             Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
@@ -160,10 +160,10 @@ namespace HF
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default, HF::Core::DeviceManagement::Client>
+         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server, HF::Core::DeviceManagement::Client>
          {
             DefaultUnit0(IDevice &device):
-               Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::Client>(device)
+               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client>(device)
             {}
          };
 
@@ -335,7 +335,7 @@ namespace HF
          {
             static_assert (std::is_base_of <HF::Core::DeviceManagement::Server,
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
+                           "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
 
             typedef typename std::tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
@@ -359,9 +359,9 @@ namespace HF
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default,
-                                           HF::Core::DeviceManagement::DefaultServer,
-                                           HF::Core::BindManagement::Server>
+         struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
+                                           Core::DeviceManagement::DefaultServer,
+                                           Core::BindManagement::Server>
          {
             DefaultUnit0(IDevice &device):
                Unit0 (device)

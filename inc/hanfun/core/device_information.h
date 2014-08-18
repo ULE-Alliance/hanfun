@@ -12,8 +12,6 @@
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
  * Initial development by Bithium S.A. [http://www.bithium.com]
- *
- * TODO Add support for attributes SET/GET.
  */
 // =============================================================================
 #ifndef HF_DEVICE_INFORMATION_H
@@ -34,11 +32,6 @@
    #define HF_DEVICE_SW_VERSION          "0.0.0"
 #endif
 
-#ifndef HF_DEVICE_HW_VERSION
-//! Device Hardware Version
-   #define HF_DEVICE_HW_VERSION          "revA"
-#endif
-
 #ifndef HF_DEVICE_MANUFACTURER_CODE
 //! Device Electronic Manufacturer Code
    #define HF_DEVICE_MANUFACTURER_CODE   0x0000
@@ -49,21 +42,6 @@
    #define HF_DEVICE_MANUFACTURER_NAME   "None"
 #endif
 
-#ifndef HF_DEVICE_LOCATION
-//! Device Location
-   #define HF_DEVICE_LOCATION            "Unknown"
-#endif
-
-#ifndef HF_DEVICE_FRIENDLY_NAME
-//! Device Friendly Name
-   #define HF_DEVICE_FRIENDLY_NAME       ""
-#endif
-
-#ifndef HF_DEVICE_SERIAL_NUMBER
-//! Device Serial Number.
-   #define HF_DEVICE_SERIAL_NUMBER       ""
-#endif
-
 // =============================================================================
 // API
 // =============================================================================
@@ -71,6 +49,14 @@ namespace HF
 {
    namespace Core
    {
+      // Forward declaration.
+      namespace DeviceInformation
+      {
+         struct Server;
+      }  // namespace DeviceInformation
+
+      HF::Attributes::IAttribute *create_attribute (const DeviceInformation::Server *server, uint8_t uid);
+
       namespace DeviceInformation
       {
          constexpr static uint8_t  CORE_VERSION      = HF::CORE_VERSION;       //!< HAN-FUN Core version.
@@ -80,145 +66,112 @@ namespace HF
          constexpr static uint16_t EMC               = HF_DEVICE_MANUFACTURER_CODE; //!< Electronic Manufacture Code.
 
          static const std::string  SW_VERSION;         //!< Application Version.
-         static const std::string  HW_VERSION;         //!< Hardware Version.
          static const std::string  MANUFACTURER;       //!< Manufacturer Name.
 
-         /*!
-          * This class defines the interface Device Information API.
-          */
-         struct Interface:public Service <HF::Interface::DEVICE_INFORMATION>
+         //! Attributes.
+         typedef enum
          {
-            Interface(Unit0 &unit):
-               Service (unit)
-            {}
+            CORE_VERSION_ATTR      = 0x01,   //!< HF Core version attribute.              (M)
+            PROFILE_VERSION_ATTR   = 0x02,   //!< HF Profile version attribute.           (M)
+            INTERFACE_VERSION_ATTR = 0x03,   //!< HF Interface version attribute.         (M)
+            UID_ATTR               = 0x04,   //!< Device UID attribute.                   (M)
+            APP_VERSION_ATTR       = 0x05,   //!< Hardware version attribute.             (O)
+            HW_VERSION_ATTR        = 0x06,   //!< Hardware version attribute.             (O)
+            EMC_ATTR               = 0x07,   //!< Electronic Manufacture Code attribute.  (O)
+            EXTRA_CAP_ATTR         = 0x08,   //!< Extra capabilities attribute.           (O)
+            MIN_SLEEP_TIME_ATTR    = 0x09,   //!< Minimum sleep time attribute.           (O)
+            ACTUAL_RESP_TIME_ATTR  = 0x0A,   //!< Actual response time attribute.         (O)
+            MANUFACTURE_NAME_ATTR  = 0x0B,   //!< Manufacture's name attribute.           (O)
+            SERIAL_NUMBER_ATTR     = 0x0C,   //!< Serial number attribute.                (O)
+            LOCATION_ATTR          = 0x0D,   //!< Location attribute.                     (O)
+            ENABLED_ATTR           = 0x0E,   //!< Device enabled attribute.               (O)
+            FRIENDLY_NAME_ATTR     = 0x0F,   //!< Device friendly name attribute.         (O)
+         } Attributes;
 
-            /*!
-             * Get the device serial number.
-             *
-             * @return  the device serial number.
-             */
-            virtual std::string serial_number () = 0;
-
-            /*!
-             * Set the device serial number.
-             *
-             * @param [in] serial the serial number to set for the device.
-             */
-            virtual void serial_number (std::string serial) = 0;
-
-            /*!
-             * Get the device location.
-             *
-             * @return  the devices location.
-             */
-            virtual std::string location () = 0;
-
-            /*!
-             * Set the device location.
-             *
-             * @param [in] value the location to set for the device.
-             */
-            virtual void location (std::string value) = 0;
-
-            /*!
-             * Get the device friendly name.
-             *
-             * @return  the device friendly name.
-             */
-            virtual std::string friendly_name () = 0;
-
-            /*!
-             * Set the device friendly name.
-             *
-             * @param [in] value the friendly name value to set for the device.
-             */
-            virtual void friendly_name (std::string value) = 0;
-
-            /*!
-             * Indicate if the device units are enabled or disabled.
-             *
-             * @retval  true the device's units are enabled.
-             * @retval  false the device's units are disabled.
-             */
-            virtual bool enabled () = 0;
-
-            /*!
-             * Enable or disable all units in the device.
-             *
-             * @param value   true all units in the device are enabled,
-             *                false all units in the device are disabled.
-             */
-            virtual void enable (bool value) = 0;
-
-            //! \see Interface::role
-            Interface::Role role () const
-            {
-               return Interface::SERVER_ROLE;
-            }
-         };
+         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
-          * This class provides a simple implementation of the DeviceInformation
-          * interface.
+          * Parent class for the Device Information interface implementation.
           */
-         class Default:public DeviceInformation::Interface
+         struct Abstract:public Service <HF::Interface::DEVICE_INFORMATION>
          {
+            // =============================================================================
+            // API
+            // =============================================================================
+
+
+            // =============================================================================
+
             protected:
 
-            bool _enabled;
+            Abstract(Unit0 &unit):
+               Service (unit)
+            {}
+         };
 
-            std::string _friendly_name;
+         /*!
+          * Device Information interface : Server side.
+          */
+         struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
+         {
+            HF::UID::UID device_uid;
 
-            std::string _location;
-
-            std::string _serial;
-
-            public:
-
-            Default(Unit0 &unit):
-               DeviceInformation::Interface (unit)
+            Server(HF::Core::Unit0 &unit):
+               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit)
             {}
 
-            std::string serial_number ()
+            virtual ~Server() {}
+
+            // =============================================================================
+            // Interface Attribute API.
+            // =============================================================================
+
+            //! \see Interface::attribute
+            HF::Attributes::IAttribute *attribute (uint8_t uid)
             {
-               return _serial;
+               return Core::create_attribute (this, uid);
             }
 
-            void serial_number (std::string serial)
-            {
-               _serial = serial;
-            }
+            protected:
 
-            std::string location ()
-            {
-               return _location;
-            }
-
-            void location (std::string value)
-            {
-               _location = value;
-            }
-
-            std::string friendly_name ()
-            {
-               return _friendly_name;
-            }
-
-            void friendly_name (std::string value)
-            {
-               _friendly_name = value;
-            }
-
-            bool enabled ()
-            {
-               return _enabled;
-            }
-
-            void enable (bool value)
-            {
-               _enabled = value;
-            }
+            //! \see AbstractInterface::attributes
+            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
          };
+
+         /*!
+          * Create a message that can be used to retrieve the mandatory attributes
+          * on a remote device.
+          *
+          * @return    pointer to a message to retrieve the mandatory attributes.
+          */
+         Protocol::Message *mandatory ();
+
+         /*!
+          * Create a message that can be used to retrieve all the attributes
+          * on a remote device.
+          *
+          * @return    pointer to a message to retrieve all the attributes.
+          */
+         Protocol::Message *all ();
+
+         /*!
+          * Create a message that can be used to retrieve the attributes with the given \c uids of the
+          * device information interface on a remote device.
+          *
+          * @param [in] uids array containing the attribute uids to retrive from the remote device.
+          *
+          * @return    pointer to a message to retrieve the attributes with the given uid's.
+          */
+         Protocol::Message *get (HF::Attributes::uids_t &uids);
+
+         /*!
+          * Create a message that can be used to retrieve the attribute with the given \c uid.
+          *
+          * @param [in] uid  attribute's uid to retrieve.
+          *
+          * @return    pointer to a message to retrieve the attribute with the given uid.
+          */
+         Protocol::Message *get (uint8_t uid);
 
       }  // namespace DeviceInformation
 

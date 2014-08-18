@@ -355,7 +355,8 @@ namespace HF
 
       struct DeviceUnit0:public HF::Devices::Node::IUnit0
       {
-         HF::Core::DeviceManagement::Client *dev_mgt;
+         HF::Core::DeviceManagement::Client  *dev_mgt;
+         HF::Core::DeviceInformation::Server *dev_info;
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0 (device), dev_mgt (nullptr)

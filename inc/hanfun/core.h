@@ -62,12 +62,12 @@ namespace HF
       struct IService:virtual public HF::Interface
       {
          //! The device this unit is associated with.
-         virtual Unit0 &unit () = 0;
+         virtual Unit0 &unit () const = 0;
       };
 
       struct AbstractService:virtual public IService, virtual public HF::Interfaces::AbstractInterface
       {
-         Unit0 &unit ()
+         Unit0 &unit () const
          {
             return _unit;
          }
@@ -155,7 +155,7 @@ namespace HF
       // Forward declaration.
       namespace DeviceInformation
       {
-         struct Interface;
+         struct Server;
       }
 
    }  // namespace Core
@@ -174,10 +174,10 @@ namespace HF
 
       typedef typename std::tuple_element <0, decltype (interfaces)>::type DeviceInfo;
 
-      static_assert (std::is_base_of <HF::Core::DeviceInformation::Interface, DeviceInfo>::value,
-                     "DeviceInfo must be of type HF::Core::DeviceInformation::Interface");
-
       typedef typename std::tuple_element <1, decltype (interfaces)>::type DeviceMgt;
+
+      static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
+                     "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
 
       Unit0(HF::IDevice &device):
          Base (device), interfaces (ITF (*this) ...)
