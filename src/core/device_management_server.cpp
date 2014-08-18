@@ -20,35 +20,36 @@
 
 using namespace HF;
 using namespace HF::Core;
+using namespace HF::Core::DeviceManagement;
 
 // =============================================================================
 // DeviceManagement::Server API
 // =============================================================================
 
-DeviceManagement::Server::Server(HF::Devices::Concentrator::IUnit0 &unit):
+Server::Server(HF::Devices::Concentrator::IUnit0 &unit):
    ServiceRole (unit)
 {}
 
 // =============================================================================
-// BindManagement::Server::unit
+// Server::unit0
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Devices::Concentrator::IUnit0 &DeviceManagement::Server::unit0 ()
+Devices::Concentrator::IUnit0 &Server::unit0 ()
 {
-   return static_cast <HF::Devices::Concentrator::IUnit0 &>(ServiceRole::unit ());
+   return static_cast <Devices::Concentrator::IUnit0 &>(ServiceRole::unit ());
 }
 
 // =============================================================================
-// DeviceManagemen::tServer::payload_size
+// Server::payload_size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Server::payload_size (Protocol::Message::Interface &itf) const
+size_t Server::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -64,14 +65,14 @@ size_t DeviceManagement::Server::payload_size (Protocol::Message::Interface &itf
 }
 
 // =============================================================================
-// DeviceManagement::Server::handle_command
+// Server::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                         size_t offset)
+Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
 {
    Common::Result result = AbstractInterface::check_message (packet.message, payload, offset);
 
@@ -99,14 +100,14 @@ Common::Result DeviceManagement::Server::handle_command (Protocol::Packet &packe
 }
 
 // =============================================================================
-// DeviceManagementServer::register_device
+// Server::register_device
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Server::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                          size_t offset)
+Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
+                                        size_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -162,14 +163,14 @@ Common::Result DeviceManagement::Server::register_device (Protocol::Packet &pack
 }
 
 // =============================================================================
-// DeviceManagementServer::deregister_device
+// Server::deregister_device
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                            size_t offset)
+Common::Result Server::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
+                                          size_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -221,13 +222,13 @@ Common::Result DeviceManagement::Server::deregister_device (Protocol::Packet &pa
 }
 
 // =============================================================================
-// DeviceManagement::Server::deregister
+// Server::deregister
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Server::deregister (Device &device)
+Common::Result Server::deregister (Device &device)
 {
    // TODO Remove group information.
 
@@ -274,7 +275,7 @@ std::vector <DeviceManagement::Device *> DeviceManagement::DefaultServer::entrie
  *
  */
 // =============================================================================
-DeviceManagement::Device *DeviceManagement::DefaultServer::entry (uint16_t address)
+Device *DefaultServer::entry (uint16_t address)
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(_entries.begin(), _entries.end(), [address](const Device *device)
@@ -300,7 +301,7 @@ DeviceManagement::Device *DeviceManagement::DefaultServer::entry (uint16_t addre
  *
  */
 // =============================================================================
-DeviceManagement::Device *DeviceManagement::DefaultServer::entry (HF::UID::UID const *uid)
+DeviceManagement::Device *DefaultServer::entry (const HF::UID::UID &uid)
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(_entries.begin(), _entries.end(), [&uid](const Device *device)
@@ -390,13 +391,13 @@ Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Devic
 }
 
 // =============================================================================
-// DefaultDeviceManagementServer::authorized
+// DefaultServer::authorized
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool DeviceManagement::DefaultServer::authorized (uint8_t member, DeviceManagement::Device *source, DeviceManagement::Device *destination)
+bool DefaultServer::authorized (uint8_t member, DeviceManagement::Device *source, DeviceManagement::Device *destination)
 {
    if (source == nullptr || destination == nullptr)
    {

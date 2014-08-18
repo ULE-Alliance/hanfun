@@ -258,8 +258,8 @@ namespace HF
             uint16_t address; //!< Address for the device.
 
             DeregisterResponse(Common::Result code = Common::FAIL_UNKNOWN,
-                                 uint16_t address = Protocol::BROADCAST_ADDR):
-               Protocol::Response(code), address (address & Protocol::BROADCAST_ADDR)
+                               uint16_t address = Protocol::BROADCAST_ADDR):
+               Protocol::Response (code), address (address & Protocol::BROADCAST_ADDR)
             {}
 
             //! \see HF::Protocol::Response::size.

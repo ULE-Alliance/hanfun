@@ -164,10 +164,12 @@ size_t DeviceManagement::Device::size () const
    size_t result = sizeof(uint16_t) +  // Device Address.
                    sizeof(uint8_t);    // Number of units.
 
-   std::for_each (units.begin (), units.end (), [&result](const Unit &unit) {
-                     result += unit.size ();
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
+   {
+      result += unit.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
@@ -187,10 +189,12 @@ size_t DeviceManagement::Device::pack (Common::ByteArray &array, size_t offset) 
 
    offset += array.write (offset, (uint8_t) units.size ());
 
-   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit) {
-                     offset += unit.pack (array, offset);
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
+   {
+      offset += unit.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }
@@ -248,10 +252,12 @@ size_t DeviceManagement::RegisterMessage::size () const
 
    result += sizeof(uint8_t); // Number of units.
 
-   for_each (units.begin (), units.end (), [&result](const Unit &unit) {
-                result += unit.size ();
-             }
-            );
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
+   {
+      result += unit.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
@@ -447,7 +453,7 @@ size_t DeviceManagement::DeregisterMessage::unpack (const Common::ByteArray &arr
 // =============================================================================
 size_t DeviceManagement::DeregisterResponse::size () const
 {
-   return Protocol::Response::size() + sizeof(address);
+   return Protocol::Response::size () + sizeof(address);
 }
 
 // =============================================================================
@@ -461,9 +467,9 @@ size_t DeviceManagement::DeregisterResponse::pack (Common::ByteArray &array, siz
 {
    size_t start = offset;
 
-   offset += Protocol::Response::pack(array, offset);
+   offset += Protocol::Response::pack (array, offset);
 
-   offset += array.write(offset, address);
+   offset += array.write (offset, address);
 
    return offset - start;
 }
@@ -479,9 +485,9 @@ size_t DeviceManagement::DeregisterResponse::unpack (const Common::ByteArray &ar
 {
    size_t start = offset;
 
-   offset += Protocol::Response::unpack(array, offset);
+   offset  += Protocol::Response::unpack (array, offset);
 
-   offset += array.read(offset, address);
+   offset  += array.read (offset, address);
 
    address &= Protocol::BROADCAST_ADDR;
 
@@ -598,10 +604,12 @@ size_t DeviceManagement::GetEntriesResponse::size () const
    size_t result = Response::size () + // Parent size.
                    sizeof(uint8_t);    // Number of entries.
 
-   std::for_each (entries.begin (), entries.end (), [&result](const Device &device) {
-                     result += device.size ();
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (), [&result](const Device &device)
+   {
+      result += device.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
@@ -620,10 +628,12 @@ size_t DeviceManagement::GetEntriesResponse::pack (Common::ByteArray &array, siz
    offset += Response::pack (array, offset);
    offset += array.write (offset, (uint8_t) entries.size ());
 
-   std::for_each (entries.begin (), entries.end (), [&array, &offset](const Device &device) {
-                     offset += device.pack (array, offset);
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (), [&array, &offset](const Device &device)
+   {
+      offset += device.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }

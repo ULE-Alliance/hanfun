@@ -441,7 +441,7 @@ TEST_GROUP (Attributes)
          return sizeof(type) + sizeof(value);
       }
 
-      size_t pack (ByteArray &array, size_t offset = 0) const
+      size_t pack (Common::ByteArray &array, size_t offset = 0) const
       {
          size_t start = offset;
 
@@ -451,7 +451,7 @@ TEST_GROUP (Attributes)
          return offset - start;
       }
 
-      size_t unpack (const ByteArray &array, size_t offset = 0)
+      size_t unpack (const Common::ByteArray &array, size_t offset = 0)
       {
          size_t start = offset;
 
@@ -502,18 +502,18 @@ TEST (Attributes, API2)
 
 TEST (Attributes, Serialize_Pack)
 {
-   ByteArray expected {0x00, 0x00, 0x00,
-                       0x12, 0x34,
-                       0x00, 0x00, 0x00};
+   Common::ByteArray expected {0x00, 0x00, 0x00,
+                               0x12, 0x34,
+                               0x00, 0x00, 0x00};
 
    uint16_t attr = 0x1234;
 
    TestInterface itf;
    HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
 
-   ByteArray result (expected.size ());
+   Common::ByteArray result (expected.size ());
 
-   fill (result.begin (), result.end (), 0);
+   std::fill (result.begin (), result.end (), 0);
 
    size_t w_size = attr_wrapper.pack (result, 3);
    LONGS_EQUAL (sizeof(attr), w_size);
@@ -523,9 +523,9 @@ TEST (Attributes, Serialize_Pack)
 
 TEST (Attributes, Serialize_Unpack)
 {
-   ByteArray expected {0x00, 0x00, 0x00,
-                       0x12, 0x34,
-                       0x00, 0x00, 0x00};
+   Common::ByteArray expected {0x00, 0x00, 0x00,
+                               0x12, 0x34,
+                               0x00, 0x00, 0x00};
 
    uint16_t attr = 0x6666;
 

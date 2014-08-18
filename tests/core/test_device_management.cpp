@@ -30,7 +30,6 @@ using namespace HF::Core;
 // Helper functions.
 // =============================================================================
 
-
 STRING_FROM (DeviceManagement::Unit)
 
 STRING_FROM (DeviceManagement::Device)
@@ -51,10 +50,10 @@ TEST (DeviceManagement, InterfaceServer)
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0xFA, 0xAA, // Optional Interface : Server Role.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0xFA, 0xAA,        // Optional Interface : Server Role.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    itf.role = HF::Interface::SERVER_ROLE;
@@ -81,10 +80,10 @@ TEST (DeviceManagement, InterfaceClient)
    size_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x75, 0x55, // Optional Interface : Client Role.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x75, 0x55,        // Optional Interface : Client Role.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    itf.role = HF::Interface::CLIENT_ROLE;
@@ -152,16 +151,16 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x0A,       // Unit entry size.
-                        0x42,       // Unit ID.
-                        0x5A, 0xA5, // Unit UID.
-                        0x03,       // Number of optional interfaces.
-                        0xD4, 0x32, // Optional interface 1
-                        0x12, 0x34, // Optional interface 2
-                        0xD6, 0x78, // Optional interface 3
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x0A,       // Unit entry size.
+                       0x42,       // Unit ID.
+                       0x5A, 0xA5, // Unit UID.
+                       0x03,       // Number of optional interfaces.
+                       0xD4, 0x32, // Optional interface 1
+                       0x12, 0x34, // Optional interface 2
+                       0xD6, 0x78, // Optional interface 3
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    size_t    wsize = wunit.pack (array, 3);
@@ -204,14 +203,14 @@ TEST (DeviceManagement, Device)
    size_t size = device.size ();
    LONGS_EQUAL (sizeof(uint16_t) + sizeof(uint8_t) + 3 * unit.size (), size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x33, 0x33,             // Device Address.
-                        0x03,                   // Number of units.
-                        0x03, 0x42, 0x5A, 0xA5, // Unit 1.
-                        0x03, 0x42, 0x5A, 0xA5, // Unit 2.
-                        0x03, 0x42, 0x5A, 0xA5, // Unit 3.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       0x33, 0x33,             // Device Address.
+                       0x03,                   // Number of units.
+                       0x03, 0x42, 0x5A, 0xA5, // Unit 1.
+                       0x03, 0x42, 0x5A, 0xA5, // Unit 2.
+                       0x03, 0x42, 0x5A, 0xA5, // Unit 3.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
    size_t    wsize = device.pack (array, 3);
