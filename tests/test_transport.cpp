@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the transport API.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -31,9 +31,7 @@ namespace HF
    {
       struct Endpoint:public HF::Transport::Endpoint
       {
-         typedef list <HF::Transport::Link *> links_t;
-
-         links_t links;
+         std::list <HF::Transport::Link *> links;
 
          virtual void connected (HF::Transport::Link *link)
          {
@@ -65,16 +63,12 @@ namespace HF
 
       struct Transport:public HF::Transport::Layer
       {
-         typedef list <HF::Transport::Endpoint *> endpoints_t;
+         std::list <HF::Transport::Endpoint *> endpoints;
+         std::list <Link *>                    links;
 
-         typedef list <Link *> links_t;
+         HF::UID::UID_T                        *_uid;
 
-         endpoints_t        endpoints;
-         links_t            links;
-
-         const HF::UID::UID *_uid;
-
-         Transport(const HF::UID::UID *uid):
+         Transport(HF::UID::UID_T *uid):
             _uid (uid)
          {}
 
@@ -124,12 +118,12 @@ namespace HF
             remove (nullptr);
          }
 
-         const HF::UID::UID *uid () const
+         const HF::UID::UID uid () const
          {
-            return _uid;
+            return HF::UID::UID(_uid);
          }
 
-         void create_link (HF::UID::UID *uid)
+         void create_link (HF::UID::UID_T *uid)
          {
             Testing::Link *link = new Testing::Link (uid, this);
             links.push_back (link);

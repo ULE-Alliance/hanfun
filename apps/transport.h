@@ -4,7 +4,7 @@
  *
  * This file contains the declarations of the transport layer over libuv.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -65,39 +65,20 @@ namespace HF
 
          uv_stream_s *stream;
 
-         HF::UID::UID *_uid;
-
          public:
 
-         Link(Transport *tsp, uv_stream_s *stream):
-            HF::Transport::AbstractLink (), tsp (tsp), stream (stream), _uid (nullptr)
+         Link(Transport *_tsp, uv_stream_s *stream):
+            HF::Transport::AbstractLink (), tsp (_tsp), stream (stream)
          {
             stream->data = this;
          }
 
          virtual ~Link()
-         {
-            delete _uid;
-         }
+         {}
 
          void send (HF::Common::ByteArray &array);
 
-         HF::UID::UID const *uid () const
-         {
-            return _uid;
-         }
-
-         void uid (HF::UID::UID *_uid)
-         {
-            if (this->_uid != nullptr)
-            {
-               delete this->_uid;
-            }
-
-            this->_uid = _uid;
-         }
-
-         HF::Transport::Layer const *transport () const
+         Transport *transport () const
          {
             return tsp;
          }

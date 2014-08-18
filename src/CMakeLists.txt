@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   \version    0.3.2
+#   \version    0.4.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -18,13 +18,11 @@
 # Configuration
 # ==============================================================================
 
-include_directories( "${PROJECT_INCLUDE_DIR}/hanfun" )
-
 # ==============================================================================
 # Build
 # ==============================================================================
 
-set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp uids.cpp)
+set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp uids.cpp debug.cpp)
 
 set(HF_PROTOCOL_SRCS protocol.cpp)
 set(HF_INTERFACES_SRCS interfaces.cpp
@@ -47,7 +45,8 @@ set(HF_CORE_SRCS       core.cpp
                        core/device_management_server.cpp
                        core/bind_management.cpp
                        core/bind_management_client.cpp
-                       core/bind_management_server.cpp)
+                       core/bind_management_server.cpp
+                       core/device_information.cpp)
 
 set(HF_UNITS_SRCS units.cpp)
 

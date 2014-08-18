@@ -4,7 +4,7 @@
  *
  * This file contains the prototypes of the debug functionality in HAN-FUN.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -23,7 +23,7 @@
 // Defines
 // =============================================================================
 
-#define NL                   std::endl
+#define NL                   std::endl;std::cout.clear ();std::cerr.clear ()
 
 #define HF_LOG_LEVEL_NONE    0
 #define HF_LOG_LEVEL_ERROR   1
@@ -37,13 +37,13 @@
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_ERROR
-   #define ERROR             std::cout.clear ();std::cerr << "[ERROR] "
+   #define ERROR             std::cerr.clear ();std::cerr << "[ERROR] "
 #else
    #define ERROR             std::cerr.setstate (std::ios_base::badbit);std::cerr
 #endif
 
 #if HF_LOG_LEVEL >= HF_LOG_LEVEL_WARN
-   #define WARN              std::cout.clear ();std::cerr << "[WARN ] "
+   #define WARN              std::cerr.clear ();std::cerr << "[WARN ] "
 #else
    #define WARN              std::cerr.setstate (std::ios_base::badbit);std::cerr
 #endif
@@ -69,5 +69,38 @@
 #define APP                  std::cout.clear ();std::cout
 
 #define LOG(X)   X
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+// Forward declarations
+namespace HF
+{
+   namespace Common
+   {
+      class ByteArray;
+
+   }  // namespace Common
+
+   namespace UID
+   {
+      class UID;
+
+   }  // namespace UID
+
+   namespace Protocol
+   {
+      struct Packet;
+
+   }  // namespace Protocol
+
+}  // namespace HF
+
+std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
+
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
 
 #endif /* HF_DEBUG_H */

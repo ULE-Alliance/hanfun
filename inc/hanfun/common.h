@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -30,9 +30,7 @@
 #include "hanfun/version.h"
 #include "hanfun/config.h"
 
-#include "hanfun/gcc.h"
-
-using namespace std;
+#include "gcc.h"
 
 // =============================================================================
 // Defines
@@ -95,7 +93,7 @@ namespace HF
        * The method in this class are used to serialize the messages to be sent over the
        * network, converting between the host's endianness and the big-endian network format.
        */
-      struct ByteArray:public vector <uint8_t>
+      struct ByteArray:public std::vector <uint8_t>
       {
          /*!
           * Create a byte array with the given initial size.
@@ -117,7 +115,7 @@ namespace HF
           *
           * @param raw  values to add to the byte array.
           */
-         ByteArray(initializer_list <uint8_t> raw):vector (raw)
+         ByteArray(std::initializer_list <uint8_t> raw):vector (raw)
          {}
 
          //! Destructor
@@ -342,7 +340,7 @@ namespace HF
        * Wrapper to pointers for classes that implement the Serializable concept.
        */
       template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_pointer <T>::value>::type> :
+      struct SerializableHelper <T, typename std::enable_if <std::is_pointer <T>::value>::type> :
          public Serializable
       {
          T data;
@@ -375,7 +373,7 @@ namespace HF
        * Wrapper for base integer types implementing the  Serializable API.
        */
       template<typename T>
-      struct SerializableHelper <T, typename enable_if <is_integral <typename remove_reference <T>::type>::value>::type> :
+      struct SerializableHelper <T, typename std::enable_if <std::is_integral <typename std::remove_reference <T>::type>::value>::type> :
          public Common::Serializable
       {
          T data;
@@ -415,6 +413,7 @@ namespace HF
        * This class represents the interface that cloneable objects need
        * to implement.
        */
+      template<typename T>
       struct Cloneable
       {
          /*!
@@ -422,7 +421,7 @@ namespace HF
           *
           * @return  a new object that is a clone of this object.
           */
-         virtual Cloneable *clone () const = 0;
+         virtual T *clone () const = 0;
       };
 
       /*!

@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \version    0.3.2
+#   \version    0.4.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -57,7 +57,8 @@ set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
 set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
-                         "core/test_bind_management.cpp")
+                         "core/test_bind_management.cpp"
+                         "core/test_device_information.cpp")
 
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
 

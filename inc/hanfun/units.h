@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the units implementation.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

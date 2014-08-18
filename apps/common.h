@@ -5,7 +5,7 @@
  * This file contains the definitions for the common funtionality in the HAN-FUN
  * example applications.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -91,16 +91,6 @@ class Command:public ICommand
    {                                   \
       ICommand::add (&command##_name); \
    }
-
-// =============================================================================
-// Stream Helpers
-// =============================================================================
-
-ostream &operator <<(ostream &stream, HF::Common::ByteArray const &array);
-
-ostream &operator <<(ostream &stream, const HF::UID::UID *uid);
-
-ostream &operator <<(ostream &stream, const HF::Protocol::Packet &packet);
 
 // =============================================================================
 // Parser helpers

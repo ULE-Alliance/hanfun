@@ -20,6 +20,12 @@
 # Project Configuration
 # =============================================================================
 
+option(HF_BUILD_TESTS "Build project's unit tests.")
+
+#
+# Package configuration options.
+#
+
 set(PACKAGE_NAME "hanfun")
 
 # Offer the user the choice of overriding the installation directories
@@ -78,3 +84,10 @@ option(HF_ITF_SPM_REPORT_INTERVAL_ATTR     "Interface - Simple Power Meter - Rep
 
 option(HF_ITF_SPM_REPORT_CMD               "Interface - Simple Power Meter - Periodic Report Command Support")
 option(HF_ITF_SPM_RESET_CMD                "Interface - Simple Power Meter - Reading Values Reset Command Support")
+
+# =============================================================================
+# Protocol Configuration
+# =============================================================================
+
+set (HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE "10" CACHE STRING
+    "Size of the database in the message duplication filter.")

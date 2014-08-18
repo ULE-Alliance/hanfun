@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Alert interface.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -78,7 +78,7 @@ size_t Alert::Message::unpack (const Common::ByteArray &array, size_t offset)
 // Alert
 // =============================================================================
 
-HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *HF::Interfaces::Alert::create_attribute (uint8_t uid)
 {
    return Interfaces::create_attribute (((Alert::Server *) nullptr), uid);
 }

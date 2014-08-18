@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -88,8 +88,15 @@ namespace HF
 
          //! Last reference number used to send a packet.
          uint8_t next_reference;
+
          //! List containing pointers to the units present in the device.
          units_t _units;
+
+         //! Support for filtering duplicated message from the network.
+         Protocol::Filters::Repeated repeated_filter;
+
+         //! Support for generating missing responses.
+         Protocol::Filters::ResponseRequired response_filter;
 
          AbstractDevice():
             next_reference (0)
@@ -106,45 +113,7 @@ namespace HF
           * @return             a pointer to the link that can be used to send the packet,
           *                     \c nullptr otherwise;
           */
-         virtual Transport::Link *link (uint16_t addr) const
-         {
-            UNUSED (addr);
-            return nullptr;
-         }
-
-         /*!
-          * Check if the incoming packet is a retransmission.
-          *
-          * This method uses the source address of the packet and the Protocol::Message::reference
-          * field to check if the packet is a retransmission or a new packet.
-          *
-          * @param [in] packet  reference to the incoming packet.
-          *
-          * @retval  true if the packet is a retransmission,
-          * @retval  false otherwise.
-          */
-         bool repeated (Protocol::Packet const &packet)
-         {
-            // FIXME Check if packet is a retransmission.
-            UNUSED (packet);
-            return false;
-         }
-
-         /*!
-          * Ensure that the incoming packet sends a response if it is required and
-          * no response has been sent.
-          *
-          * @param [in] result   the result of the IUnit::handle method call for
-          *                      the incoming packet.
-          *
-          * @param [in] packet   reference to the incoming packet.
-          */
-         virtual void respond (Common::Result result, Protocol::Packet &packet)
-         {
-            // FIXME Handle packets that require a response and no response has been sent.
-            UNUSED (result);
-            UNUSED (packet);
-         }
+         virtual Transport::Link *link (uint16_t addr) const = 0;
 
          /*!
           * Check if the given packet is for this device.
@@ -180,8 +149,9 @@ namespace HF
          template<typename... ITF>
          struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Client, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceInformationClient");
+            static_assert (std::is_base_of <HF::Core::DeviceManagement::Client,
+                                            typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
+                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
             Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
             {}
@@ -190,10 +160,10 @@ namespace HF
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default, HF::Core::DeviceManagement::Client>
+         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server, HF::Core::DeviceManagement::Client>
          {
             DefaultUnit0(IDevice &device):
-               Unit0 <Core::DeviceInformation::Default, Core::DeviceManagement::Client>(device)
+               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client>(device)
             {}
          };
 
@@ -363,12 +333,13 @@ namespace HF
          template<typename... ITF>
          struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (is_base_of <HF::Core::DeviceManagement::Server, typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceInformation::Server");
+            static_assert (std::is_base_of <HF::Core::DeviceManagement::Server,
+                                            typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
+                           "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
 
-            typedef typename tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename std::tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
-            static_assert (is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
+            static_assert (std::is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
                            "BindMgt must be of type HF::Core::BindManagement::Server");
 
             Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
@@ -376,21 +347,21 @@ namespace HF
 
             BindMgt *bind_management () const
             {
-               return const_cast <BindMgt *>(&get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+               return const_cast <BindMgt *>(&std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
             }
 
             BindMgt *bind_management ()
             {
-               return &get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+               return &std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
             }
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Default,
-                                           HF::Core::DeviceManagement::DefaultServer,
-                                           HF::Core::BindManagement::Server>
+         struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
+                                           Core::DeviceManagement::DefaultServer,
+                                           Core::BindManagement::Server>
          {
             DefaultUnit0(IDevice &device):
                Unit0 (device)
@@ -404,8 +375,6 @@ namespace HF
          class Abstract:public AbstractDevice
          {
             public:
-
-            typedef forward_list <Transport::Link *> links_t;
 
             CoreServices unit0;
 
@@ -454,7 +423,7 @@ namespace HF
 
             protected:
 
-            links_t _links; //!< List of link present in this Concentrator.
+            std::forward_list <Transport::Link *> _links; //!< List of link present in this Concentrator.
 
             Abstract():unit0 (*this)
             {}
@@ -470,7 +439,7 @@ namespace HF
                }
 
                /* *INDENT-OFF* */
-               auto it = find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
+               auto it = std::find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
                {
                   return link->address () == addr;
                });

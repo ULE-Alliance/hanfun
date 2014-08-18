@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -70,10 +70,12 @@ size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) co
    {
       offset += array.write (offset, (uint8_t) opt_ift.size ());
 
-      for (vector <Common::Interface>::const_iterator itf = opt_ift.begin (); itf != opt_ift.end (); ++itf)
+      /* *INDENT-OFF* */
+      std::for_each(opt_ift.begin (), opt_ift.end (), [&offset, &array](const HF::Common::Interface &itf)
       {
-         offset += itf->pack (array, offset);
-      }
+         offset += itf.pack (array, offset);
+      });
+      /* *INDENT-ON* */
    }
 
    return offset - start;
@@ -162,10 +164,12 @@ size_t DeviceManagement::Device::size () const
    size_t result = sizeof(uint16_t) +  // Device Address.
                    sizeof(uint8_t);    // Number of units.
 
-   for (vector <Unit>::const_iterator unit = units.begin (); unit != units.end (); ++unit)
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
    {
-      result += unit->size ();
-   }
+      result += unit.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
@@ -185,10 +189,12 @@ size_t DeviceManagement::Device::pack (Common::ByteArray &array, size_t offset) 
 
    offset += array.write (offset, (uint8_t) units.size ());
 
-   for (vector <Unit>::const_iterator unit = units.begin (); unit != units.end (); ++unit)
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
    {
-      offset += unit->pack (array, offset);
-   }
+      offset += unit.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }
@@ -226,11 +232,6 @@ size_t DeviceManagement::Device::unpack (const Common::ByteArray &array, size_t 
 DeviceManagement::RegisterMessage::~RegisterMessage()
 {
    units.clear ();
-
-   if (_uid != nullptr)
-   {
-      delete _uid;
-   }
 }
 
 // =============================================================================
@@ -242,9 +243,7 @@ DeviceManagement::RegisterMessage::~RegisterMessage()
 // =============================================================================
 size_t DeviceManagement::RegisterMessage::size () const
 {
-   size_t result = sizeof(uint8_t);    // Discriminator Type.
-
-   result += (_uid ? _uid->size () : 1);
+   size_t result = uid.size ();  // UID Size.
 
    if (emc != 0x0000)
    {
@@ -253,10 +252,12 @@ size_t DeviceManagement::RegisterMessage::size () const
 
    result += sizeof(uint8_t); // Number of units.
 
-   for_each (units.begin (), units.end (), [&result](const Unit &unit) {
-                result += unit.size ();
-             }
-            );
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
+   {
+      result += unit.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
@@ -270,39 +271,25 @@ size_t DeviceManagement::RegisterMessage::size () const
 // =============================================================================
 size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
 {
-   size_t  start = offset;
+   size_t start = offset;
 
-   uint8_t temp  = (_uid != nullptr ? _uid->type () : 0);
-
-   if (emc != 0x0000)
-   {
-      temp |= 0x80;
-   }
-
-   offset += array.write (offset, temp);
-
-   if (_uid != nullptr)
-   {
-      offset += _uid->pack (array, offset);
-   }
-   else
-   {
-      HF::UID::NONE none_uid;
-      offset += none_uid.pack (array, offset);
-   }
+   offset += uid.pack (array, offset);
 
    if (emc != 0x0000)
    {
-      offset += array.write (offset, emc);
+      array[start] |= 0x80;
+      offset       += array.write (offset, emc);
    }
 
-   temp    = units.size ();
+   uint8_t temp = units.size ();
    offset += array.write (offset, temp);
 
-   for (vector <Unit>::const_iterator unit = units.begin (); unit != units.end (); ++unit)
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
    {
-      offset += unit->pack (array, offset);
-   }
+      offset += unit.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }
@@ -316,42 +303,11 @@ size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t
 // =============================================================================
 size_t DeviceManagement::RegisterMessage::unpack (const Common::ByteArray &array, size_t offset)
 {
-   size_t  start = offset;
+   size_t start = offset;
 
-   uint8_t type  = 0;
-   offset += array.read (offset, type);
+   offset += uid.unpack (array, offset);
 
-   bool emc = (type & 0x80) != 0;
-
-   type &= ~0x80;
-
-   switch (type)
-   {
-      case HF::UID::NONE_UID:
-         _uid = new HF::UID::NONE ();
-         break;
-      case HF::UID::RFPI_UID:
-         _uid = new HF::UID::RFPI ();
-         break;
-      case HF::UID::IPUI_UID:
-         _uid = new HF::UID::IPUI ();
-         break;
-      case HF::UID::MAC_UID:
-         _uid = new HF::UID::MAC ();
-         break;
-      case HF::UID::URI_UID:
-         _uid = new HF::UID::URI ();
-         break;
-      default:
-         break;
-   }
-
-   if (_uid != nullptr)
-   {
-      offset += _uid->unpack (array, offset);
-   }
-
-   if (emc)
+   if ((array[start] & 0x80) != 0)
    {
       offset += array.read (offset, this->emc);
    }
@@ -487,6 +443,57 @@ size_t DeviceManagement::DeregisterMessage::unpack (const Common::ByteArray &arr
    return offset - start;
 }
 
+
+// =============================================================================
+// DeviceManagement::DeregisterResponse::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t DeviceManagement::DeregisterResponse::size () const
+{
+   return Protocol::Response::size () + sizeof(address);
+}
+
+// =============================================================================
+// DeviceManagement::DeregisterResponse::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t DeviceManagement::DeregisterResponse::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Protocol::Response::pack (array, offset);
+
+   offset += array.write (offset, address);
+
+   return offset - start;
+}
+
+// =============================================================================
+// DeviceManagement::DeregisterResponse::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t DeviceManagement::DeregisterResponse::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset  += Protocol::Response::unpack (array, offset);
+
+   offset  += array.read (offset, address);
+
+   address &= Protocol::BROADCAST_ADDR;
+
+   return offset - start;
+}
+
 // =============================================================================
 // Read Session Messages
 // =============================================================================
@@ -597,10 +604,12 @@ size_t DeviceManagement::GetEntriesResponse::size () const
    size_t result = Response::size () + // Parent size.
                    sizeof(uint8_t);    // Number of entries.
 
-   for (vector <Device>::const_iterator device = entries.begin (); device != entries.end (); ++device)
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (), [&result](const Device &device)
    {
-      result += device->size ();
-   }
+      result += device.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
@@ -619,10 +628,12 @@ size_t DeviceManagement::GetEntriesResponse::pack (Common::ByteArray &array, siz
    offset += Response::pack (array, offset);
    offset += array.write (offset, (uint8_t) entries.size ());
 
-   for (vector <Device>::const_iterator device = entries.begin (); device != entries.end (); ++device)
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (), [&array, &offset](const Device &device)
    {
-      offset += device->pack (array, offset);
-   }
+      offset += device.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }

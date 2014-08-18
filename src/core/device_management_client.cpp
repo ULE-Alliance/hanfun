@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -108,7 +108,7 @@ size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf
          return payload_size_helper <RegisterResponse>();
 
       case DEREGISTER_CMD:
-         return payload_size_helper <Protocol::Response>();
+         return payload_size_helper <DeregisterResponse>();
 
       default:
          return 0;
@@ -137,7 +137,7 @@ Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packe
       }
       case DEREGISTER_CMD:
       {
-         Protocol::Response response;
+         DeregisterResponse response;
          response.unpack (payload, offset);
          deregistered (response);
 
@@ -165,7 +165,7 @@ void DeviceManagement::Client::registered (RegisterResponse &response)
    }
 }
 
-void DeviceManagement::Client::deregistered (Protocol::Response &response)
+void DeviceManagement::Client::deregistered (DeregisterResponse &response)
 {
    if (response.code == Common::Result::OK)
    {

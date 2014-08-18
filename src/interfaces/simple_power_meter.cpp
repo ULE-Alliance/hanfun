@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Simple Power Meter interface.
  *
- * \version    0.3.2
+ * \version    0.4.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -44,7 +44,7 @@ SimplePowerMeter::Report::Report()
    memset (&current, 0, sizeof(Measurement));         // Current measurement.
    memset (&frequency, 0, sizeof(Measurement));       // Frequency measurement.
 
-   fill (enabled.begin (), enabled.end (), false);
+   std::fill (enabled.begin (), enabled.end (), false);
 }
 
 // =============================================================================
@@ -126,7 +126,7 @@ size_t SimplePowerMeter::Report::pack (Common::ByteArray &array, size_t offset) 
 
    // Number of attributes.
 
-   id      = count (enabled.begin (), enabled.end (), true);
+   id      = std::count (enabled.begin (), enabled.end (), true);
    offset += array.write (offset, id);
 
    // Energy measurement.
@@ -232,7 +232,7 @@ size_t SimplePowerMeter::Report::unpack (const Common::ByteArray &array, size_t 
 
    uint8_t attr_count = 0;
 
-   offset += array.read (offset, attr_count);  // FIXME Should check attribute count.
+   offset += array.read (offset, attr_count);  // TODO Should check attribute count.
 
    for (uint8_t i = 0; i < attr_count; i++)
    {
