@@ -118,16 +118,11 @@ Please see the help in the applications for further features.
 
    - Add Attribute Report support.
 
-  * Protocol :
-
-   - Ensure that messages that require a response always receive it.
-   - Discard duplicated messages.
-
   * Core :
 
    - Device Information :
 
-     * Add support for GET/SET attributes.
+     * Add support for GET/SET of optional attributes.
 
    - Device Management :
 
