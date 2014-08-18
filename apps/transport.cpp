@@ -110,7 +110,7 @@ struct hello_msg_t
    uint8_t      profiles;
    uint8_t      interfaces;
 
-   HF::UID::UID *uid;
+   HF::UID::UID uid;
 
    hello_msg_t():
       core (HF::CORE_VERSION), profiles (HF::PROFILES_VERSION), interfaces (HF::INTERFACES_VERSION)
@@ -118,7 +118,7 @@ struct hello_msg_t
 
    size_t size () const
    {
-      return 3 * sizeof(uint8_t) + sizeof(uint8_t) + (uid != nullptr ? uid->size () : 0);
+      return 3 * sizeof(uint8_t) + uid.size ();
    }
 
    size_t pack (HF::Common::ByteArray &array, size_t offset = 0) const
@@ -129,7 +129,7 @@ struct hello_msg_t
       offset += array.write (offset, profiles);
       offset += array.write (offset, interfaces);
 
-      offset += HF::UID::pack (*uid, array, offset);
+      offset += uid.pack (array, offset);
 
       return offset - start;
    }
@@ -142,7 +142,7 @@ struct hello_msg_t
       offset += array.read (offset, profiles);
       offset += array.read (offset, interfaces);
 
-      offset += HF::UID::unpack (uid, array, offset);
+      uid.unpack (array, offset);
 
       return offset - start;
    }
@@ -184,7 +184,7 @@ void print_error (uv_err_t status)
                << uv_strerror ((uv_err_t &) status) << NL;
 }
 
-static void handle_message (HF::Transport::Link *link, msg_t &msg);
+static void handle_message (HF::Application::Link *link, msg_t &msg);
 
 // =============================================================================
 // on_close
@@ -217,7 +217,7 @@ static void on_read (uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
    HF::Application::Link *link     = (HF::Application::Link *) stream->data;
 
-   HF::Application::Transport *tsp = (HF::Application::Transport *) link->transport ();
+   HF::Application::Transport *tsp = link->transport ();
 
    LOG (TRACE) << __PRETTY_FUNCTION__ << " : " << stream << " : " << link << NL;
 
@@ -289,7 +289,7 @@ static void send_hello (uv_stream_t *stream, HF::Application::Transport *tsp)
 {
    hello_msg_t hello;
 
-   hello.uid = const_cast <HF::UID::UID *>(tsp->uid ());
+   hello.uid = tsp->uid ();
 
    msg_t msg (HELLO_MSG);
 
@@ -300,9 +300,9 @@ static void send_hello (uv_stream_t *stream, HF::Application::Transport *tsp)
    send_message (stream, msg);
 }
 
-static void handle_message (HF::Transport::Link *link, msg_t &msg)
+static void handle_message (HF::Application::Link *link, msg_t &msg)
 {
-   HF::Application::Transport *tsp = (HF::Application::Transport *) link->transport ();
+   HF::Application::Transport *tsp = link->transport ();
 
    switch (msg.primitive)
    {
@@ -314,7 +314,7 @@ static void handle_message (HF::Transport::Link *link, msg_t &msg)
 
          LOG (TRACE) << hello.uid << NL;
 
-         ((HF::Application::Link *) link)->uid (hello.uid);
+         ((HF::Application::Link *) link)->uid (hello.uid.raw ()->clone ());
 
          tsp->add (link);
 

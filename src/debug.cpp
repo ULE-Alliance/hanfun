@@ -19,11 +19,15 @@
 
 #include "hanfun/debug.h"
 
+#include "hanfun/common.h"
+#include "hanfun/uids.h"
+#include "hanfun/protocol.h"
+
 // =============================================================================
 // Stream Helpers
 // =============================================================================
 
-std::ostream & operator <<(std::ostream &stream, HF::Common::ByteArray const &array)
+std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &array)
 {
    if (stream == std::cout || stream == std::cerr)
    {
@@ -53,77 +57,70 @@ std::ostream & operator <<(std::ostream &stream, HF::Common::ByteArray const &ar
    return stream;
 }
 
-std::ostream &operator <<(std::ostream &stream, const HF::UID::UID *uid)
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
 {
    std::ios_base::fmtflags ff;
    ff = stream.flags ();
    char f = stream.fill ('0');
 
-   if (uid == nullptr)
+   switch (uid.raw ()->type ())
    {
-      stream << "(null)";
-   }
-   else
-   {
-      switch (uid->type ())
+      case HF::UID::NONE_UID:
       {
-         case HF::UID::NONE_UID:
-         {
-            stream << "uid: NONE";
-            break;
-         }
-         case HF::UID::RFPI_UID:
-         {
-            HF::UID::RFPI *rfpi = (HF::UID::RFPI *) uid;
-            stream << "rfpi: ";
-
-            for (uint8_t i = 0; i < sizeof(rfpi->value); i++)
-            {
-               stream << std::hex << std::setw (2) << std::setfill ('0');
-               stream << (int) rfpi->value[i];
-            }
-
-            break;
-         }
-
-         case HF::UID::IPUI_UID:
-         {
-            HF::UID::IPUI *ipui = (HF::UID::IPUI *) uid;
-            stream << "ipui: ";
-
-            for (uint8_t i = 0; i < sizeof(ipui->value); i++)
-            {
-               stream << std::hex << std::setw (2) << std::setfill ('0');
-               stream << (int) ipui->value[i];
-            }
-
-            break;
-         }
-
-         case HF::UID::MAC_UID:
-         {
-            HF::UID::MAC *mac = (HF::UID::MAC *) uid;
-            stream << "mac: ";
-
-            for (uint8_t i = 0; i < sizeof(mac->value); i++)
-            {
-               stream << std::hex << std::setw (2) << std::setfill ('0');
-               stream << (int) mac->value[i] << ":";
-            }
-
-            break;
-         }
-
-         case HF::UID::URI_UID:
-         {
-            HF::UID::URI *uri = (HF::UID::URI *) uid;
-            stream << "uri: " << uri->value;
-            break;
-         }
-
-         default:
-            break;
+         stream << "uid: NONE";
+         break;
       }
+      case HF::UID::RFPI_UID:
+      {
+         HF::UID::RFPI *rfpi = (HF::UID::RFPI *) uid.raw ();
+         stream << "rfpi: ";
+
+         for (uint8_t i = 0; i < HF::UID::RFPI::length (); i++)
+         {
+            stream << std::hex << std::setw (2) << std::setfill ('0');
+            stream << (int) (*rfpi)[i];
+         }
+
+         break;
+      }
+
+      case HF::UID::IPUI_UID:
+      {
+         HF::UID::IPUI *ipui = (HF::UID::IPUI *) uid.raw ();
+         stream << "ipui: ";
+
+         for (uint8_t i = 0; i < sizeof(HF::UID::IPUI::length ()); i++)
+         {
+            stream << std::hex << std::setw (2) << std::setfill ('0');
+            stream << (int) (*ipui)[i];
+         }
+
+         break;
+      }
+
+      case HF::UID::MAC_UID:
+      {
+         HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw ();
+         stream << "mac: ";
+
+         for (uint8_t i = 0; i < sizeof(HF::UID::MAC::length ()); i++)
+         {
+            stream << std::hex << std::setw (2) << std::setfill ('0');
+            stream << (int) (*mac)[i] << ":";
+         }
+
+         break;
+      }
+
+      case HF::UID::URI_UID:
+      {
+         HF::UID::URI *uri = (HF::UID::URI *) uid.raw ();
+         stream << "uri: " << uri->str ();
+         break;
+      }
+
+      default:
+         break;
    }
 
    stream.setf (ff);

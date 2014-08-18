@@ -17,10 +17,6 @@
 #ifndef HF_DEBUG_H
 #define HF_DEBUG_H
 
-#include "common.h"
-#include "uids.h"
-#include "protocol.h"
-
 #include <iostream>
 
 // =============================================================================
@@ -78,9 +74,32 @@
 // Stream Helpers
 // =============================================================================
 
-std::ostream &operator <<(std::ostream &stream, HF::Common::ByteArray const &array);
+// Forward declarations
+namespace HF
+{
+   namespace Common
+   {
+      class ByteArray;
 
-std::ostream &operator <<(std::ostream &stream, const HF::UID::UID *uid);
+   }  // namespace Common
+
+   namespace UID
+   {
+      class UID;
+
+   }  // namespace UID
+
+   namespace Protocol
+   {
+      struct Packet;
+
+   }  // namespace Protocol
+
+}  // namespace HF
+
+std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
 
 std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
 

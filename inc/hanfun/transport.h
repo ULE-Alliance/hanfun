@@ -72,14 +72,7 @@ namespace HF
           *
           * @return  the UID of the remote device of this link.
           */
-         virtual HF::UID::UID const *uid () const = 0;
-
-         /*!
-          * Return the transport layer implementation this link belongs to.
-          *
-          * @return  pointer to the transport layer that created this link.
-          */
-         virtual Layer const *transport () const = 0;
+         virtual const HF::UID::UID uid () const = 0;
       };
 
       /*!
@@ -129,7 +122,6 @@ namespace HF
          //! @}
          // ======================================================================
       };
-
 
       /*!
        * This class defines common API for all transport layers.
@@ -184,7 +176,7 @@ namespace HF
           *
           * @return  the UID of the local device on this transport layer.
           */
-         virtual const HF::UID::UID *uid () const = 0;
+         virtual const HF::UID::UID uid () const = 0;
 
          //! @}
          // ======================================================================
@@ -197,12 +189,15 @@ namespace HF
       {
          protected:
 
+         HF::UID::UID_T *_uid;
+
          uint16_t _address;
 
          public:
 
-         AbstractLink(uint16_t _address = HF::Protocol::BROADCAST_ADDR):
-            _address (_address)
+         AbstractLink(UID::UID_T *__uid = nullptr,
+                      uint16_t _address = Protocol::BROADCAST_ADDR):
+            _uid (__uid), _address (_address)
          {}
 
          virtual ~AbstractLink() {}
@@ -216,6 +211,16 @@ namespace HF
          {
             _address = addr;
          }
+
+         const HF::UID::UID uid () const
+         {
+            return HF::UID::UID(_uid);
+         }
+
+         void uid (HF::UID::UID_T *_uid)
+         {
+            this->_uid = _uid;
+         }
       };
 
       /*!
@@ -227,11 +232,11 @@ namespace HF
 
          std::forward_list <HF::Transport::Endpoint *> endpoints;
 
-         HF::UID::UID *_uid;
+         HF::UID::UID_T *_uid;
 
          public:
 
-         AbstractLayer():_uid (nullptr)
+         AbstractLayer(UID::UID_T *__uid = nullptr):_uid (__uid)
          {}
 
          virtual ~AbstractLayer()
@@ -288,12 +293,12 @@ namespace HF
             delete packet;
          }
 
-         const HF::UID::UID *uid () const
+         const HF::UID::UID uid () const
          {
-            return _uid;
+            return HF::UID::UID(_uid);
          }
 
-         void uid (HF::UID::UID *_uid)
+         void uid (HF::UID::UID_T *_uid)
          {
             this->_uid = _uid;
          }

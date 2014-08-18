@@ -555,7 +555,6 @@ bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
       return true;
    }
 
-   // FIXME return HF::Interfaces::response(packet.message.itf);
    return false;
 }
 

@@ -228,11 +228,6 @@ size_t DeviceManagement::Device::unpack (const Common::ByteArray &array, size_t 
 DeviceManagement::RegisterMessage::~RegisterMessage()
 {
    units.clear ();
-
-   if (_uid != nullptr)
-   {
-      delete _uid;
-   }
 }
 
 // =============================================================================
@@ -244,9 +239,7 @@ DeviceManagement::RegisterMessage::~RegisterMessage()
 // =============================================================================
 size_t DeviceManagement::RegisterMessage::size () const
 {
-   size_t result = sizeof(uint8_t);    // Discriminator Type.
-
-   result += (_uid ? _uid->size () : 1);
+   size_t result = uid.size ();  // UID Size.
 
    if (emc != 0x0000)
    {
@@ -272,39 +265,25 @@ size_t DeviceManagement::RegisterMessage::size () const
 // =============================================================================
 size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
 {
-   size_t  start = offset;
+   size_t start = offset;
 
-   uint8_t temp  = (_uid != nullptr ? _uid->type () : 0);
-
-   if (emc != 0x0000)
-   {
-      temp |= 0x80;
-   }
-
-   offset += array.write (offset, temp);
-
-   if (_uid != nullptr)
-   {
-      offset += _uid->pack (array, offset);
-   }
-   else
-   {
-      HF::UID::NONE none_uid;
-      offset += none_uid.pack (array, offset);
-   }
+   offset += uid.pack (array, offset);
 
    if (emc != 0x0000)
    {
-      offset += array.write (offset, emc);
+      array[start] |= 0x80;
+      offset       += array.write (offset, emc);
    }
 
-   temp    = units.size ();
+   uint8_t temp = units.size ();
    offset += array.write (offset, temp);
 
-   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit) {
-                     offset += unit.pack (array, offset);
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
+   {
+      offset += unit.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }
@@ -318,42 +297,11 @@ size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t
 // =============================================================================
 size_t DeviceManagement::RegisterMessage::unpack (const Common::ByteArray &array, size_t offset)
 {
-   size_t  start = offset;
+   size_t start = offset;
 
-   uint8_t type  = 0;
-   offset += array.read (offset, type);
+   offset += uid.unpack (array, offset);
 
-   bool emc = (type & 0x80) != 0;
-
-   type &= ~0x80;
-
-   switch (type)
-   {
-      case HF::UID::NONE_UID:
-         _uid = new HF::UID::NONE ();
-         break;
-      case HF::UID::RFPI_UID:
-         _uid = new HF::UID::RFPI ();
-         break;
-      case HF::UID::IPUI_UID:
-         _uid = new HF::UID::IPUI ();
-         break;
-      case HF::UID::MAC_UID:
-         _uid = new HF::UID::MAC ();
-         break;
-      case HF::UID::URI_UID:
-         _uid = new HF::UID::URI ();
-         break;
-      default:
-         break;
-   }
-
-   if (_uid != nullptr)
-   {
-      offset += _uid->unpack (array, offset);
-   }
-
-   if (emc)
+   if ((array[start] & 0x80) != 0)
    {
       offset += array.read (offset, this->emc);
    }

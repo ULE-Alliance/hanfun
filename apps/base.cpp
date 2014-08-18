@@ -380,9 +380,9 @@ void to_json (const HF::Common::Interface &interface, Json::Value &node)
  *
  */
 // =============================================================================
-void to_json (HF::UID::UID *uid, Json::Value &node)
+void to_json (const HF::UID::UID &uid, Json::Value &node)
 {
-   switch (uid->type ())
+   switch (uid.type ())
    {
       case HF::UID::NONE_UID:
       {
@@ -394,9 +394,11 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
       {
          node["type"] = "rfpi";
 
-         for (int i = 0; i < 5; i++)
+         const HF::UID::RFPI *rfpi = static_cast <const HF::UID::RFPI *>(uid.raw ());
+
+         for (uint8_t i = 0; i < HF::UID::RFPI::length (); i++)
          {
-            node["value"][i] = (int) static_cast <HF::UID::RFPI *>(uid)->value[i];
+            node["value"][i] = (int) (*rfpi)[i];
          }
 
          break;
@@ -406,9 +408,11 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
       {
          node["type"] = "ipui";
 
-         for (int i = 0; i < 5; i++)
+         const HF::UID::IPUI *ipui = static_cast <const HF::UID::IPUI *>(uid.raw ());
+
+         for (uint8_t i = 0; i < HF::UID::IPUI::length (); i++)
          {
-            node["value"][i] = (int) static_cast <HF::UID::IPUI *>(uid)->value[i];
+            node["value"][i] = (int) (*ipui)[i];
          }
 
          break;
@@ -418,9 +422,11 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
       {
          node["type"] = "mac";
 
+         const HF::UID::MAC *mac = static_cast <const HF::UID::MAC *>(uid.raw ());
+
          for (int i = 0; i < 6; i++)
          {
-            node["value"][i] = (int) static_cast <HF::UID::MAC *>(uid)->value[i];
+            node["value"][i] = (int) (*mac)[i];
          }
 
          break;
@@ -429,7 +435,7 @@ void to_json (HF::UID::UID *uid, Json::Value &node)
       case HF::UID::URI_UID:
       {
          node["type"]  = "uri";
-         node["value"] = static_cast <HF::UID::URI *>(uid)->value;
+         node["value"] = static_cast <const HF::UID::URI *>(uid.raw ())->str ();
          break;
       }
    }
@@ -533,7 +539,7 @@ void from_json (Json::Value &node, HF::Common::Interface &interface)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::UID::UID * &uid)
+void from_json (Json::Value &node, HF::UID::UID &uid)
 {
    std::string uid_type = node.get ("type", "none").asString ();
 
@@ -548,7 +554,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         rfpi->value[i] = (uint8_t) node["value"][i].asUInt ();
+         (*rfpi)[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
       uid = rfpi;
@@ -559,7 +565,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         ipui->value[i] = (uint8_t) node["value"][i].asUInt ();
+         (*ipui)[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
       uid = ipui;
@@ -570,7 +576,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid)
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         mac->value[i] = (uint8_t) node["value"][i].asUInt ();
+         (*mac)[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
       uid = mac;

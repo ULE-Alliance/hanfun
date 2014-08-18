@@ -66,9 +66,9 @@ namespace HF
          std::list <HF::Transport::Endpoint *> endpoints;
          std::list <Link *>                    links;
 
-         const HF::UID::UID                    *_uid;
+         HF::UID::UID_T                        *_uid;
 
-         Transport(const HF::UID::UID *uid):
+         Transport(HF::UID::UID_T *uid):
             _uid (uid)
          {}
 
@@ -118,12 +118,12 @@ namespace HF
             remove (nullptr);
          }
 
-         const HF::UID::UID *uid () const
+         const HF::UID::UID uid () const
          {
-            return _uid;
+            return HF::UID::UID(_uid);
          }
 
-         void create_link (HF::UID::UID *uid)
+         void create_link (HF::UID::UID_T *uid)
          {
             Testing::Link *link = new Testing::Link (uid, this);
             links.push_back (link);

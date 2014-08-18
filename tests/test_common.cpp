@@ -169,25 +169,24 @@ TEST (ByteArray_Read, Available)
 // HF::UID
 // =============================================================================
 
-using namespace HF::UID;
-
 TEST_GROUP (UID)
 {};
 
 TEST (UID, NONE)
 {
-   NONE uid;
+   UID::NONE uid;
 
-   LONGS_EQUAL (NONE_UID, uid.type ());
+   LONGS_EQUAL (UID::NONE_UID, uid.type ());
 
    size_t size = uid.size ();
 
-   LONGS_EQUAL (1, size);
+   LONGS_EQUAL (2, size);
 
-   ByteArray expected ({0xAA, 0xAA, 0xAA,
-                        0x00, // UID size.
-                        0xAA, 0xAA, 0xAA}
-                      );
+   ByteArray expected {0xAA, 0xAA, 0xAA,
+                       UID::NONE_UID,     // UID type.
+                       0x00,              // UID size.
+                       0xAA, 0xAA, 0xAA};
+
    ByteArray array (size + 6);
 
    for (int i = 0; i < 3; i++)
@@ -195,7 +194,7 @@ TEST (UID, NONE)
       array[i] = 0xAA;
    }
 
-   for (int i = 4; i < 7; i++)
+   for (int i = 5; i < 8; i++)
    {
       array[i] = 0xAA;
    }
@@ -211,384 +210,216 @@ TEST (UID, NONE)
 
 TEST (UID, IPUI)
 {
-   IPUI uid;
+   UID::IPUI ipui;
 
-   LONGS_EQUAL (IPUI_UID, uid.type ());
+   LONGS_EQUAL (UID::IPUI_UID, ipui.type ());
 
-   size_t size = uid.size ();
+   LONGS_EQUAL (5, UID::IPUI::length ());
 
-   LONGS_EQUAL (1 + 5, size);
+   size_t size = ipui.size ();
 
-   uint8_t data[] = {0x00, 0x00, 0x00,
-                     0x05,                         // UID size.
-                     0x00, 0x73, 0x70,0x5A,  0xA5, // IPUI value.
-                     0x00, 0x00, 0x00};
+   LONGS_EQUAL (1 + 1 + 5, size);
 
-   ByteArray expected (data, sizeof(data));
+   ByteArray expected {0x00, 0x00, 0x00,
+                       UID::IPUI_UID,                // UID type.
+                       0x05,                         // UID size.
+                       0x00, 0x73, 0x70, 0x5A, 0xA5, // IPUI value.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
-   uid.value[0] = 0x00;
-   uid.value[1] = 0x73;
-   uid.value[2] = 0x70;
-   uid.value[3] = 0x5A;
-   uid.value[4] = 0xA5;
+   ipui[0] = 0x00;
+   ipui[1] = 0x73;
+   ipui[2] = 0x70;
+   ipui[3] = 0x5A;
+   ipui[4] = 0xA5;
 
-   size_t wsize = uid.pack (array, 3);
+   size_t wsize = ipui.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   memset (uid.value, 0xFF, sizeof(uid.value));
+   ipui.fill (0xFF);
 
-   size_t rsize = uid.unpack (array, 3);
+   size_t rsize = ipui.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
-   BYTES_EQUAL (0x00, uid.value[0]);
-   BYTES_EQUAL (0x73, uid.value[1]);
-   BYTES_EQUAL (0x70, uid.value[2]);
-   BYTES_EQUAL (0x5A, uid.value[3]);
-   BYTES_EQUAL (0xA5, uid.value[4]);
+   BYTES_EQUAL (0x00, ipui[0]);
+   BYTES_EQUAL (0x73, ipui[1]);
+   BYTES_EQUAL (0x70, ipui[2]);
+   BYTES_EQUAL (0x5A, ipui[3]);
+   BYTES_EQUAL (0xA5, ipui[4]);
 }
 
 TEST (UID, MAC)
 {
-   MAC uid;
+   UID::MAC mac;
 
-   LONGS_EQUAL (MAC_UID, uid.type ());
+   LONGS_EQUAL (UID::MAC_UID, mac.type ());
+   LONGS_EQUAL (6, UID::MAC::length ());
 
-   size_t size = uid.size ();
+   size_t size = mac.size ();
 
-   LONGS_EQUAL (1 + 6, size);
+   LONGS_EQUAL (1 + 1 + 6, size);
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x06,                               // UID size.
-                        0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, // MAC value.
-                        0x00, 0x00, 0x00}
-                      );
+   ByteArray expected {0x00, 0x00, 0x00,
+                       UID::MAC_UID,                       // UID type.
+                       0x06,                               // UID size.
+                       0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, // MAC value.
+                       0x00, 0x00, 0x00};
+
    ByteArray array (size + 6);
 
-   uid.value[0] = 0x12;
-   uid.value[1] = 0x34;
-   uid.value[2] = 0x56;
-   uid.value[3] = 0x78;
-   uid.value[4] = 0x9A;
-   uid.value[5] = 0xBC;
+   mac[0] = 0x12;
+   mac[1] = 0x34;
+   mac[2] = 0x56;
+   mac[3] = 0x78;
+   mac[4] = 0x9A;
+   mac[5] = 0xBC;
 
-   size_t wsize = uid.pack (array, 3);
+   size_t wsize = mac.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   memset (uid.value, 0xFF, sizeof(uid.value));
+   mac.fill (0xFF);
 
-   size_t rsize = uid.unpack (array, 3);
+   size_t rsize = mac.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
-   BYTES_EQUAL (0x12, uid.value[0]);
-   BYTES_EQUAL (0x34, uid.value[1]);
-   BYTES_EQUAL (0x56, uid.value[2]);
-   BYTES_EQUAL (0x78, uid.value[3]);
-   BYTES_EQUAL (0x9A, uid.value[4]);
-   BYTES_EQUAL (0xBC, uid.value[5]);
+   BYTES_EQUAL (0x12, mac[0]);
+   BYTES_EQUAL (0x34, mac[1]);
+   BYTES_EQUAL (0x56, mac[2]);
+   BYTES_EQUAL (0x78, mac[3]);
+   BYTES_EQUAL (0x9A, mac[4]);
+   BYTES_EQUAL (0xBC, mac[5]);
 }
 
 TEST (UID, URI)
 {
-   URI uid;
+   std::string str = "Hello World !";
+   UID::URI    uri (str);
 
-   LONGS_EQUAL (URI_UID, uid.type ());
+   LONGS_EQUAL (UID::URI_UID, uri.type ());
 
-   uid.value = "Hello World !";
+   size_t size = uri.size ();
 
-   size_t size = uid.size ();
+   LONGS_EQUAL (1 + 1 + str.length (), size);
 
-   LONGS_EQUAL (1 + 13, size);
+   ByteArray expected {0x00, 0x00, 0x00,
+                       UID::URI_UID, // UID type.
+                       0x0D,         // UID size.
+                       0x48,         // H
+                       0x65,         // e
+                       0x6c,         // l
+                       0x6c,         // l
+                       0x6f,         // o
+                       0x20,         //
+                       0x57,         // W
+                       0x6f,         // o
+                       0x72,         // r
+                       0x6c,         // l
+                       0x64,         // d
+                       0x20,         //
+                       0x21,         // !
+                       0x00, 0x00, 0x00};
 
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x0D, // UID size.
-                        0x48, // H
-                        0x65, // e
-                        0x6c, // l
-                        0x6c, // l
-                        0x6f, // o
-                        0x20, //
-                        0x57, // W
-                        0x6f, // o
-                        0x72, // r
-                        0x6c, // l
-                        0x64, // d
-                        0x20, //
-                        0x21, // !
-                        0x00, 0x00, 0x00}
-                      );
    ByteArray array (size + 6);
 
-   size_t    wsize = uid.pack (array, 3);
+   size_t    wsize = uri.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   uid.value = "";
+   uri = UID::URI ("");
 
-   size_t rsize = uid.unpack (array, 3);
+   size_t rsize = uri.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
-   STRCMP_EQUAL ("Hello World !", uid.value.c_str ())
+   STRCMP_EQUAL ("Hello World !", uri.str ().c_str ())
 }
 
 TEST (UID, Equals)
 {
-   UID::UID *temp;
+   UID::UID_T *temp;
 
-   IPUI ipui;
-   IPUI ipui2;
+   UID::IPUI  ipui;
+   UID::IPUI  ipui2;
 
-   ipui.value[0] = 0x00;
-   ipui.value[1] = 0x73;
-   ipui.value[2] = 0x70;
-   ipui.value[3] = 0xAA;
-   ipui.value[4] = 0xBB;
+   ipui[0] = 0x00;
+   ipui[1] = 0x73;
+   ipui[2] = 0x70;
+   ipui[3] = 0xAA;
+   ipui[4] = 0xBB;
 
-   temp          = &ipui;
-   ipui2         = ipui;
+   temp    = &ipui;
+   ipui2   = ipui;
 
    CHECK_EQUAL (ipui, *temp);
    CHECK_EQUAL (ipui, ipui2);
 
-   MAC mac;
-   MAC mac2;
+   UID::MAC mac;
+   UID::MAC mac2;
 
-   ipui.value[0] = 0x00;
-   ipui.value[1] = 0x73;
-   ipui.value[2] = 0x70;
-   ipui.value[3] = 0xAA;
-   ipui.value[4] = 0xBB;
-   ipui.value[4] = 0xCC;
+   mac[0] = 0x00;
+   mac[1] = 0x73;
+   mac[2] = 0x70;
+   mac[3] = 0xAA;
+   mac[4] = 0xBB;
+   mac[5] = 0xCC;
 
-   temp          = &mac;
-   mac2          = mac;
+   temp   = &mac;
+   mac2   = mac;
 
    CHECK_EQUAL (mac, *temp);
    CHECK_EQUAL (mac, mac2);
 
-   URI uri;
-   URI uri2;
+   UID::URI uri ("sn://1234567890");
+   UID::URI uri2;
 
-   uri.value = "sn://1234567890";
-
-   temp      = &uri;
-   uri2      = uri;
+   temp = &uri;
+   uri2 = uri;
 
    CHECK_EQUAL (uri, *temp);
    CHECK_EQUAL (uri, uri2);
 }
 
-TEST (UID, Order)
+TEST (UID, NotEquals)
 {
-   NONE none;
-   NONE none2;
+   UID::IPUI ipui;
+   UID::IPUI ipui2;
 
-   RFPI rfpi;
-   RFPI rfpi2;
+   ipui[0]  = 0x00;
+   ipui[1]  = 0x73;
+   ipui[2]  = 0x70;
+   ipui[3]  = 0xAA;
+   ipui[4]  = 0xBB;
 
-   IPUI ipui;
-   IPUI ipui2;
+   ipui2    = ipui;
 
-   MAC  mac;
-   MAC  mac2;
+   ipui2[3] = 0xCC;
 
-   URI  uri;
-   URI  uri2;
+   CHECK_FALSE (ipui == ipui2);
 
-   rfpi.value[0]  = rfpi2.value[0] = 0x12;
-   rfpi.value[1]  = rfpi2.value[1] = 0x23;
-   rfpi.value[2]  = rfpi2.value[2] = 0x45;
-   rfpi.value[3]  = rfpi2.value[3] = 0x67;
+   UID::MAC mac;
+   UID::MAC mac2;
 
-   rfpi.value[4]  = 0x89;
+   mac[0]  = 0x00;
+   mac[1]  = 0x73;
+   mac[2]  = 0x70;
+   mac[3]  = 0xAA;
+   mac[4]  = 0xBB;
+   mac[5]  = 0xCC;
 
-   rfpi2.value[4] = rfpi.value[4] + 2;
+   mac2    = mac;
+   mac2[3] = 0xCC;
 
-   ipui.value[0]  = ipui2.value[0] = 0x12;
-   ipui.value[1]  = ipui2.value[1] = 0x23;
-   ipui.value[2]  = ipui2.value[2] = 0x45;
-   ipui.value[3]  = ipui2.value[3] = 0x67;
+   CHECK_FALSE (mac == mac2);
 
-   ipui.value[4]  = 0x89;
+   UID::URI uri ("sn://1234567890");
+   UID::URI uri2 ("sn://0987654321");
 
-   ipui2.value[4] = ipui.value[4] + 3;
-
-   mac.value[0]   = mac2.value[0] = 0x12;
-   mac.value[1]   = mac2.value[1] = 0x23;
-   mac.value[2]   = mac2.value[2] = 0x45;
-   mac.value[3]   = mac2.value[3] = 0x67;
-   mac.value[4]   = mac2.value[4] = 0x89;
-   mac.value[5]   = 0x9A;
-
-   mac2.value[5]  = mac.value[5] + 4;
-
-   uri.value      = "hf://www.example.com";
-
-   uri2.value     = "hf://www.example1.com";
-
-   // Check if operation works.
-
-   std::less <UID::UID *> comp;
-
-   CHECK_FALSE (comp (&none, &none));
-   CHECK_FALSE (comp (&rfpi, &rfpi));
-   CHECK_FALSE (comp (&ipui, &ipui));
-   CHECK_FALSE (comp (&mac, &mac));
-   CHECK_FALSE (comp (&uri, &uri));
-
-   CHECK_TRUE (comp (&none, &rfpi));
-   CHECK_TRUE (comp (&none, &ipui));
-   CHECK_TRUE (comp (&none, &mac));
-   CHECK_TRUE (comp (&none, &uri));
-
-   CHECK_FALSE (comp (&rfpi, &none));
-   CHECK_TRUE (comp (&rfpi, &ipui));
-   CHECK_TRUE (comp (&rfpi, &mac));
-   CHECK_TRUE (comp (&rfpi, &uri));
-
-   CHECK_FALSE (comp (&ipui, &none));
-   CHECK_FALSE (comp (&ipui, &rfpi));
-   CHECK_TRUE (comp (&ipui, &mac));
-   CHECK_TRUE (comp (&ipui, &uri));
-
-   CHECK_FALSE (comp (&mac, &none));
-   CHECK_FALSE (comp (&mac, &rfpi));
-   CHECK_FALSE (comp (&mac, &ipui));
-   CHECK_TRUE (comp (&mac, &uri));
-
-   CHECK_FALSE (comp (&uri, &none));
-   CHECK_FALSE (comp (&uri, &rfpi));
-   CHECK_FALSE (comp (&uri, &ipui));
-   CHECK_FALSE (comp (&uri, &mac));
-
-   // Using it on an ordered collection.
-
-   std::map <UID::UID *, std::string> test_db;
-
-   // Only one NONE UID is possible.
-
-   std::string temp;
-   test_db[&none] = temp = "This is the NONE UID.";
-
-   LONGS_EQUAL (1, test_db.size ());
-
-   test_db[&none2] = temp = "This is the Other NONE UID.";
-
-   LONGS_EQUAL (1, test_db.size ());
-
-   STRCMP_EQUAL (temp.c_str (), test_db[&none].c_str ());
-
-   // All other UID should increase size value.
-
-   uint8_t size = test_db.size ();
-
-   test_db[&rfpi] = "This is the RFPI UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&rfpi2] = "This is the other RFPI UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&ipui] = "This is the IPUI UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&ipui2] = "This is the other IPUI UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&mac] = "This is the MAC UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&mac2] = "This is the other MAC UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&uri] = "This is the URI UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   test_db[&uri2] = "This is the other URI UID.";
-   LONGS_EQUAL (++size, test_db.size ());
-
-   RFPI rfpi3;
-
-   rfpi3.value[0] = rfpi.value[0];
-   rfpi3.value[1] = rfpi.value[1];
-   rfpi3.value[2] = rfpi.value[2];
-   rfpi3.value[3] = rfpi.value[3];
-   rfpi3.value[4] = rfpi.value[4];
-
-   STRCMP_EQUAL ("This is the RFPI UID.", test_db[&rfpi3].c_str ());
-
-   rfpi3.value[0] = rfpi2.value[0];
-   rfpi3.value[1] = rfpi2.value[1];
-   rfpi3.value[2] = rfpi2.value[2];
-   rfpi3.value[3] = rfpi2.value[3];
-   rfpi3.value[4] = rfpi2.value[4];
-
-   STRCMP_EQUAL ("This is the other RFPI UID.", test_db[&rfpi3].c_str ());
-
-   IPUI ipui3;
-
-   ipui3.value[0] = ipui.value[0];
-   ipui3.value[1] = ipui.value[1];
-   ipui3.value[2] = ipui.value[2];
-   ipui3.value[3] = ipui.value[3];
-   ipui3.value[4] = ipui.value[4];
-
-   STRCMP_EQUAL ("This is the IPUI UID.", test_db[&ipui3].c_str ());
-
-   ipui3.value[0] = ipui2.value[0];
-   ipui3.value[1] = ipui2.value[1];
-   ipui3.value[2] = ipui2.value[2];
-   ipui3.value[3] = ipui2.value[3];
-   ipui3.value[4] = ipui2.value[4];
-
-   STRCMP_EQUAL ("This is the other IPUI UID.", test_db[&ipui3].c_str ());
-
-   MAC mac3;
-
-   mac3.value[0] = mac.value[0];
-   mac3.value[1] = mac.value[1];
-   mac3.value[2] = mac.value[2];
-   mac3.value[3] = mac.value[3];
-   mac3.value[4] = mac.value[4];
-   mac3.value[5] = mac.value[5];
-
-   STRCMP_EQUAL ("This is the MAC UID.", test_db[&mac3].c_str ());
-
-   mac3.value[0] = mac2.value[0];
-   mac3.value[1] = mac2.value[1];
-   mac3.value[2] = mac2.value[2];
-   mac3.value[3] = mac2.value[3];
-   mac3.value[4] = mac2.value[4];
-   mac3.value[5] = mac2.value[5];
-
-   STRCMP_EQUAL ("This is the other MAC UID.", test_db[&mac3].c_str ());
-
-   URI uri3;
-
-   uri3.value = uri.value;
-
-   STRCMP_EQUAL ("This is the URI UID.", test_db[&uri3].c_str ());
-
-   uri3.value = uri2.value;
-
-   STRCMP_EQUAL ("This is the other URI UID.", test_db[&uri3].c_str ());
-}
-
-TEST (UID, Order_NULL)
-{
-   NONE uid;
-
-   std::less <UID::UID *> comp;
-
-   CHECK_TRUE (comp (nullptr, &uid));
-
-   CHECK_TRUE (comp (nullptr, nullptr));
-
-   CHECK_FALSE (comp (&uid, nullptr));
+   CHECK_FALSE (uri == uri2);
 }
 
 // =============================================================================

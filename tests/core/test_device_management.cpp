@@ -249,7 +249,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
    DeviceManagement::Unit unit;
 
    ByteArray expected;
-   UID::IPUI *ipui;
+   UID::IPUI ipui;
 
    TEST_SETUP ()
    {
@@ -262,21 +262,18 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
       message->units.push_back (unit);
       message->units.push_back (unit);
 
-      ipui           = new UID::IPUI ();
+      ipui[0]      = 0x00;
+      ipui[1]      = 0x73;
+      ipui[2]      = 0x70;
+      ipui[3]      = 0xAA;
+      ipui[4]      = 0xBB;
 
-      ipui->value[0] = 0x00;
-      ipui->value[1] = 0x73;
-      ipui->value[2] = 0x70;
-      ipui->value[3] = 0xAA;
-      ipui->value[4] = 0xBB;
-
-      message->uid (ipui);
+      message->uid = HF::UID::UID( &ipui);
    }
 
    TEST_TEARDOWN ()
    {
       delete message;
-      delete ipui;
    }
 };
 
@@ -311,7 +308,7 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    LONGS_EQUAL (0x0000, message->emc);
 
-   CHECK_EQUAL (*ipui, *message->uid ());
+   CHECK_EQUAL (ipui, message->uid);
 
    CHECK_EQUAL (3, message->units.size ());
 
@@ -338,7 +335,7 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 
    message->emc = 0x4243;
 
-   message->uid (nullptr);
+   message->uid = HF::UID::UID();
 
    size_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + 3 * unit.size (), size);
@@ -385,7 +382,7 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    LONGS_EQUAL (0x4243, message->emc);
 
-   CHECK_EQUAL (*ipui, *message->uid ());
+   CHECK_EQUAL (ipui, message->uid);
 
    CHECK_EQUAL (3, message->units.size ());
 
@@ -983,7 +980,7 @@ TEST_GROUP (DeviceManagementServer)
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
       packet.message.itf.id     = dev_mgt->uid ();
 
-      UID::UID *uid = new UID::URI ("hf://device@example.com");
+      UID::UID_T *uid = new UID::URI ("hf://device@example.com");
 
       link        = new Testing::Link (uid, nullptr);
       packet.link = link;
@@ -1058,7 +1055,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    delete link;
 
-   UID::UID *uid = new UID::URI ("hf://device2@example.com");
+   UID::UID_T *uid = new UID::URI ("hf://device2@example.com");
 
    link        = new Testing::Link (uid, nullptr);
    packet.link = link;
@@ -1218,19 +1215,21 @@ TEST (DeviceManagementServer, Entries)
 {
    UID::IPUI ipui;
 
-   ipui.value[0] = 0x12;
-   ipui.value[1] = 0x34;
-   ipui.value[2] = 0x56;
-   ipui.value[3] = 0x78;
-   ipui.value[4] = 0x90;
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
 
    for (int i = 0; i < 20; i++)
    {
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
-      UID::IPUI *temp               = ipui.clone ();
-      dev->address    = i + 1;
-      temp->value[4] += i;
-      dev->uid        = temp;
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
 
       dev_mgt->save (dev);
    }

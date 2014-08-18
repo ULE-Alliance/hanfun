@@ -430,12 +430,12 @@ namespace HF
 
       struct Link:public HF::Transport::AbstractLink
       {
-         HF::UID::UID         *_uid;
+         HF::UID::UID_T       *_uid;
          HF::Transport::Layer *tsp;
 
          Common::ByteArray    data;
 
-         Link(HF::UID::UID *uid = nullptr, HF::Transport::Layer *tsp = nullptr):
+         Link(HF::UID::UID_T *uid = new HF::UID::NONE (), HF::Transport::Layer *tsp = nullptr):
             _uid (uid), tsp (tsp)
          {}
 
@@ -450,9 +450,9 @@ namespace HF
             this->data = Common::ByteArray (array);
          }
 
-         HF::UID::UID const *uid () const
+         const HF::UID::UID uid () const
          {
-            return _uid;
+            return HF::UID::UID(_uid);
          }
 
          HF::Transport::Layer const *transport () const
