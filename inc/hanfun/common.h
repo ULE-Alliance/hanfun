@@ -413,6 +413,7 @@ namespace HF
        * This class represents the interface that cloneable objects need
        * to implement.
        */
+      template<typename T>
       struct Cloneable
       {
          /*!
@@ -420,7 +421,7 @@ namespace HF
           *
           * @return  a new object that is a clone of this object.
           */
-         virtual Cloneable *clone () const = 0;
+         virtual T *clone () const = 0;
       };
 
       /*!

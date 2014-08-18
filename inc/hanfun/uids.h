@@ -45,7 +45,7 @@ namespace HF
        *
        * Parent UID class.
        */
-      struct UID:public Common::Serializable, public Common::Cloneable
+      struct UID_T:public Common::Serializable, public Common::Cloneable <UID_T>
       {
          //! Type of the UID.
          virtual uint8_t type () const = 0;
