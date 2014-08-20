@@ -49,7 +49,7 @@ using namespace HF::Protocol;
       return StringFrom (wrapper);                                         \
    }
 
-SimpleString StringFrom (const std::vector<uint8_t> &array);
+SimpleString StringFrom (const std::vector <uint8_t> &array);
 
 SimpleString StringFrom (const HF::Common::Serializable &data);
 
