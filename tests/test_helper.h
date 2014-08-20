@@ -447,8 +447,8 @@ namespace HF
 
          void send (Common::ByteArray &array)
          {
+            this->data = array;
             mock ("Link").actualCall ("send");
-            this->data = Common::ByteArray (array);
          }
 
          const HF::UID::UID uid () const

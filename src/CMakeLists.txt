@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   \version    0.4.0
+#   \version 0.4.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
