@@ -43,9 +43,10 @@ namespace HF
       typedef enum
       {
          /* Core Services */
-         DEVICE_MANAGEMENT  = 0x0001,   //!< Device Management Interface UID.
-         BIND_MANAGEMENT    = 0x0002,   //!< Bind Management Interface UID.
-         DEVICE_INFORMATION = 0x0005,   //!< Device Information Interface UID.
+         DEVICE_MANAGEMENT   = 0x0001,   //!< Device Management Interface UID.
+         BIND_MANAGEMENT     = 0x0002,   //!< Bind Management Interface UID.
+         DEVICE_INFORMATION  = 0x0005,   //!< Device Information Interface UID.
+         ATTRIBUTE_REPORTING = 0x0006,   //!< Attribute Reporting Interface UID.
 
          /* Functional Interfaces. */
          ALERT              = 0x0100,  //!< Alert Interface UID

@@ -46,7 +46,8 @@ set(HF_CORE_SRCS       core.cpp
                        core/bind_management.cpp
                        core/bind_management_client.cpp
                        core/bind_management_server.cpp
-                       core/device_information.cpp)
+                       core/device_information.cpp
+                       core/attribute_reporting.cpp)
 
 set(HF_UNITS_SRCS units.cpp)
 
