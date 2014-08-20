@@ -24,7 +24,7 @@
 
 STRING_FROM (HF::Common::Interface)
 
-SimpleString StringFrom (const HF::Common::ByteArray &array)
+SimpleString StringFrom (const std::vector<uint8_t> &array)
 {
    SimpleString result = "";
 
