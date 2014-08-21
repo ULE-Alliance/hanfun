@@ -137,7 +137,7 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 
 void HF::Devices::Concentrator::Transport::destroy ()
 {
-   remove (nullptr);
+   remove ((HF::Transport::Endpoint *)nullptr);
 }
 
 // =============================================================================

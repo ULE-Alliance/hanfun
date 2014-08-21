@@ -290,6 +290,8 @@ namespace HF
                }
             }
 
+            using HF::Transport::AbstractLayer::remove;
+
             /*!
              * Find the link used to send messages to the HAN-FUN device with
              * the given \c address.
@@ -536,6 +538,8 @@ namespace HF
              * @param [in] link  pointer to the link to remove.
              */
             void remove (HF::Transport::Link *link = nullptr);
+
+            using HF::Transport::AbstractLayer::remove;
 
             /*!
              * Find the link used to send messages to the HAN-FUN device with
