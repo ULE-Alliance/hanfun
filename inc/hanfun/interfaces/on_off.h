@@ -26,7 +26,7 @@ namespace HF
    {
       namespace OnOff
       {
-         struct Server;
+         class Server;
       }
 
       HF::Attributes::IAttribute *create_attribute (OnOff::Server *server, uint8_t uid);

@@ -56,6 +56,8 @@ struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
 
    bool deregister (uint16_t address);
 
+   using HF::Core::DeviceManagement::DefaultServer::deregister;
+
    void clear ();
 
    HF::Common::Result save (HF::Core::DeviceManagement::Device *device);

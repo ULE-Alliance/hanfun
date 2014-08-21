@@ -261,7 +261,7 @@ namespace HF
                                                               Common::Interface const &itf,
                                                               Protocol::Address const &destination);
 
-            friend class HF::Core::BindManagement::Server;
+            friend struct HF::Core::BindManagement::Server;
 
             private:
 

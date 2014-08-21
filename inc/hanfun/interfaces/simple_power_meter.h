@@ -64,7 +64,7 @@ namespace HF
    {
       namespace SimplePowerMeter
       {
-         struct Server;
+         class Server;
       }
 
       HF::Attributes::IAttribute *create_attribute (SimplePowerMeter::Server *server, uint8_t uid);

@@ -79,7 +79,7 @@ namespace HF
 {
    namespace Common
    {
-      class ByteArray;
+      struct ByteArray;
 
    }  // namespace Common
 
