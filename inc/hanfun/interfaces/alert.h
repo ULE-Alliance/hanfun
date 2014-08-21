@@ -39,7 +39,7 @@ namespace HF
       namespace Alert
       {
          // Forward declaration.
-         struct Server;
+         class Server;
 
       }  // namespace Alert
 

@@ -26,7 +26,7 @@ namespace HF
    {
       namespace LevelControl
       {
-         struct Server;
+         class Server;
       }
 
       HF::Attributes::IAttribute *create_attribute (LevelControl::Server *server, uint8_t uid);
