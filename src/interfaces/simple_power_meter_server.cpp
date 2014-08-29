@@ -171,7 +171,7 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
 
       report->pack (message.payload);
 
-      sendMessage (addr, message);
+      send (addr, message);
 
       _last_periodic = time;
 

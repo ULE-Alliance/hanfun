@@ -244,5 +244,5 @@ void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
 
    alert_msg.pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 }

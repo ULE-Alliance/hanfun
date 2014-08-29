@@ -17,17 +17,3 @@
 
 #include "hanfun/common.h"
 #include "hanfun/core.h"
-
-// #include "hanfun/core/device_information.h"
-
-using namespace HF::Core;
-
-// =============================================================================
-// DeviceInformation
-// =============================================================================
-
-//const string DeviceInformation::SW_VERSION = HF_DEVICE_SW_VERSION;          //!< Application Version.
-
-//const string DeviceInformation::HW_VERSION = HF_DEVICE_HW_VERSION;          //!< Hardware Version.
-
-//const string DeviceInformation::MANUFACTURER = HF_DEVICE_MANUFACTURER_NAME; //!< Manufacturer Name.

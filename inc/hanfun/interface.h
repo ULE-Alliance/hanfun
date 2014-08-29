@@ -171,7 +171,7 @@ namespace HF
           * @param [in] addr        HF network address.
           * @param [in] message     pointer to the message to be sent to the network.
           */
-         virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+         virtual void send (Protocol::Address &addr, Protocol::Message &message) = 0;
 
          /*!
           * Check if message has correct attributes to be processed by the interface.
@@ -182,7 +182,7 @@ namespace HF
           *
           * \see Interface::handle.
           */
-         Common::Result check_message (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
+         Common::Result check (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
 
          /*!
           * Check if \c payload data size if sufficient for processing the \c message.
@@ -195,7 +195,7 @@ namespace HF
           * Return the minimal payload size that should be present for the given
           * message.
           *
-          * @param message message that was received.
+          * @param [in] message message that was received.
           *
           * @return  the minimum size in bytes that the packet payload should hold.
           */
@@ -205,7 +205,7 @@ namespace HF
           * Return the minimal payload size that a message should hold when
           * addressed at the given interface.
           *
-          * @param itf  the interface being address.
+          * @param [in] itf   the interface being address.
           *
           * @return  the minimum number of bytes for the message for the interface.
           */

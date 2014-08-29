@@ -41,6 +41,16 @@ namespace HF
 
          //! \see Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
+
+         /*!
+          * Create and send a new packet with the given message to the given address.
+          *
+          * @param [in] addr     address to send the message to.
+          * @param [in] message  message to send.
+          * @param [in] link     preferred link to send the message on.
+          */
+         virtual void send (const Protocol::Address &addr, Protocol::Message &message,
+                              Transport::Link *link = nullptr) = 0;
       };
 
       /*!
@@ -58,6 +68,9 @@ namespace HF
             return _device;
          }
 
+         void send (const Protocol::Address &addr, Protocol::Message &message,
+                     Transport::Link *link = nullptr);
+
          protected:
 
          AbstractUnit(IDevice &device):
@@ -65,16 +78,6 @@ namespace HF
          {
             device.add (this);
          }
-
-         /*!
-          * Create and send a new packet with the given message to the given address.
-          *
-          * @param [in] addr     address to send the message to.
-          * @param [in] message  message to send.
-          * @param [in] link     preferred link to send the message on.
-          */
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message,
-                           Transport::Link *link);
       };
 
       /*!
@@ -109,9 +112,9 @@ namespace HF
 
          protected:
 
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+         void send (Protocol::Address &addr, Protocol::Message &message)
          {
-            AbstractUnit::sendMessage (addr, message, nullptr);
+            AbstractUnit::send (addr, message, nullptr);
          }
       };
 

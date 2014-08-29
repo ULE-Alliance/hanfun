@@ -196,7 +196,7 @@ static Response *update_attributes_atomic (Interface *itf, Common::ByteArray &pa
 // =============================================================================
 Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Common::Result result = check_message (packet.message, payload, offset);
+   Common::Result result = check (packet.message, payload, offset);
 
    if (result != Common::Result::OK)
    {
@@ -230,7 +230,7 @@ Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &pay
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::check_message (Message &message, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::check (Message &message, Common::ByteArray &payload, size_t offset)
 {
    UNUSED (payload);
    UNUSED (offset);
@@ -353,7 +353,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_res->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete attr_res;
 
@@ -377,7 +377,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
          Message  response (packet.message, resp.size ());
          resp.pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          break;
       }
@@ -425,7 +425,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_response->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete attr_response;
 
@@ -449,7 +449,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_response->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete attr_response;
 
@@ -473,7 +473,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          resp->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete resp;
 

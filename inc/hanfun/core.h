@@ -53,7 +53,7 @@ namespace HF
             return 0;
          }
 
-         using Units::AbstractUnit::sendMessage;
+         using Units::AbstractUnit::send;
       };
 
       /*!
@@ -96,14 +96,14 @@ namespace HF
          AbstractService(Unit0 &unit):_unit (unit)
          {}
 
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+         void send (Protocol::Address &addr, Protocol::Message &message)
          {
-            unit ().sendMessage (addr, message, nullptr);
+            unit ().send (addr, message, nullptr);
          }
 
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
+         void send (Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
          {
-            unit ().sendMessage (addr, message, link);
+            unit ().send (addr, message, link);
          }
       };
 

@@ -227,9 +227,9 @@ namespace HF
             InterfaceProxy(profile_t &proxy):proxy (proxy)
             {}
 
-            void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+            void send (Protocol::Address &addr, Protocol::Message &message)
             {
-               proxy.sendMessage (addr, message);
+               proxy.send (addr, message);
             }
 
             private:
@@ -279,8 +279,9 @@ namespace HF
             return static_cast <Interface2 *>(&(this->interfaces.second));
          }
 
-         //! \see AbstractInterface::sendMessage
-         virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         //! \see AbstractInterface::send
+         virtual void send (Protocol::Address &addr, Protocol::Message &message) = 0;
 
          protected:
 

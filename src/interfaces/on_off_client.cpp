@@ -38,7 +38,7 @@ void OnOff::Client::on (Protocol::Address &addr)
    message.itf.id     = OnOff::Client::uid ();
    message.itf.member = ON_CMD;
 
-   sendMessage (addr, message);
+   send (addr, message);
 }
 
 // =============================================================================
@@ -56,7 +56,7 @@ void OnOff::Client::off (Protocol::Address &addr)
    message.itf.id     = OnOff::Client::uid ();
    message.itf.member = OFF_CMD;
 
-   sendMessage (addr, message);
+   send (addr, message);
 }
 
 // =============================================================================
@@ -74,5 +74,5 @@ void OnOff::Client::toggle (Protocol::Address &addr)
    message.itf.id     = OnOff::Client::uid ();
    message.itf.member = TOGGLE_CMD;
 
-   sendMessage (addr, message);
+   send (addr, message);
 }

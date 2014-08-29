@@ -19,14 +19,14 @@
 
 
 // =============================================================================
-// HF::Units::AbstractUnit::sendMessage
+// HF::Units::AbstractUnit::send
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Message &message,
-                                           Transport::Link *link)
+void HF::Units::AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &message,
+                                        Transport::Link *link)
 {
    Protocol::Packet *packet = new Protocol::Packet (message);
 
