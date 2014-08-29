@@ -35,7 +35,7 @@ using namespace HF::Devices;
  *
  */
 // =============================================================================
-Units::IUnit *AbstractDevice::unit (uint8_t id)
+Units::IUnit *AbstractDevice::unit (uint8_t id) const
 {
    if (_units.empty ())
    {

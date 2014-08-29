@@ -71,14 +71,7 @@ namespace HF
             _units.remove (unit);
          }
 
-         /*!
-          * Return a pointer to the unit with the given \c id.
-          *
-          * @param [in] id the id of the unit to retrieve.
-          *
-          * @return  a pointer to the unit if it exists, \c nullptr otherwise.
-          */
-         Units::IUnit *unit (uint8_t id);
+         Units::IUnit *unit (uint8_t id) const;
 
          void send (Protocol::Packet &packet);
 

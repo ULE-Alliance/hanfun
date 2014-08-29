@@ -118,6 +118,15 @@ namespace HF
        *             \c nullptr otherwise.
        */
       virtual HF::Attributes::IAttribute *attribute (uint8_t uid) = 0;
+
+      /*!
+       * Return a vector containing the attribute UIDs, for the given pack ID.
+       *
+       * @param [in] pack_id  the Attribute pack ID to get the attributes UIDs for.
+       *
+       * @return  vector containing the attributes UIDs.
+       */
+      virtual HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const = 0;
    };
 
    /*!

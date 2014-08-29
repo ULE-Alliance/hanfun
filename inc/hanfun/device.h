@@ -73,6 +73,16 @@ namespace HF
       virtual const units_t &units () const = 0;
 
       /*!
+       * Return pointer to the unit with the given id.
+       *
+       * @param [in] id    unit identifier.
+       *
+       * @return  pointer to the unit with the given id,
+       *          nullptr otherwise.
+       */
+      virtual Units::IUnit *unit (uint8_t id) const = 0;
+
+      /*!
        * Add unit to devices unit lists.
        *
        * @param unit    pointer to the unit to add to the list.
