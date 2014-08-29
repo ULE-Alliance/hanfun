@@ -151,8 +151,8 @@ static const Profile profiles[] =
    {HF::Profiles::VIBRATION_DETECTOR,                   0x001B, 1},      // 27
    {HF::Profiles::SIREN,                                0x001C, 1},      // 28
    {HF::Profiles::SIMPLE_PENDANT,                       0x001D, 1},      // 29
-   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
-   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
+   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      // 30
+   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      // 31
 };
 
 // =============================================================================

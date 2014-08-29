@@ -53,7 +53,7 @@ namespace HF
          //! Command IDs.
          typedef enum
          {
-            STATUS_CMD = 0x01       //! Alert Status Command ID.
+            STATUS_CMD = 0x01     //!< Alert Status Command ID.
          } CMD;
 
          //! Attributes

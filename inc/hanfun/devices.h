@@ -478,15 +478,17 @@ namespace HF
 
                other.message.payload.reserve (payload.size () - offset);
 
-               copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+               std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
-               for_each (range.first, range.second, [this, &other](const Core::BindManagement::Entry &entry)
+               /* *INDENT-OFF* */
+               std::for_each (range.first, range.second,
+                              [this, &other](const Core::BindManagement::Entry &entry)
                          {
                             other.link = nullptr;
                             other.destination = entry.destination;
                             this->send (other);
-                         }
-                        );
+               });
+               /* *INDENT-ON* */
             }
          };
 
@@ -508,11 +510,12 @@ namespace HF
             void add (HF::Transport::Endpoint *ep)
             {
                HF::Transport::AbstractLayer::add (ep);
+               /* *INDENT-OFF* */
                std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link)
                               {
                                  ep->connected (link);
-                              }
-                             );
+               });
+               /* *INDENT-ON* */
             }
 
             /*!

@@ -131,16 +131,16 @@ namespace HF
       struct AbstractInterface:virtual public Interface
       {
          //! \see Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          //! \see Interface::periodic
-         virtual void periodic (uint32_t time)
+         void periodic (uint32_t time)
          {
             UNUSED (time);
          }
 
          //! \see Interface::attribute
-         virtual HF::Attributes::IAttribute *attribute (uint8_t uid)
+         HF::Attributes::IAttribute *attribute (uint8_t uid)
          {
             UNUSED (uid);
             return nullptr;
