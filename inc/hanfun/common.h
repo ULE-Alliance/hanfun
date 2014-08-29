@@ -24,6 +24,8 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <iterator>
 
 #include <assert.h>
 
@@ -404,6 +406,52 @@ namespace HF
             size_t start = offset;
 
             offset += array.read (offset, data);
+
+            return offset - start;
+         }
+      };
+
+      template<>
+      struct SerializableHelper <Common::ByteArray> :
+         public Common::Serializable
+      {
+         Common::ByteArray data;
+
+         SerializableHelper()
+         {}
+
+         SerializableHelper(Common::ByteArray data):data (data) {}
+
+         size_t size () const
+         {
+            return data.size ();
+         }
+
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += array.write (offset, (uint8_t) data.size ());
+
+            auto it = array.begin ();
+            std::advance (it, offset);
+
+            std::copy (data.begin (), data.end (), it);
+
+            return offset - start;
+         }
+
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         {
+            size_t  start = offset;
+
+            uint8_t _size = 0;
+            offset += array.read (offset, _size);
+
+            auto it = array.begin ();
+            std::advance (it, offset);
+
+            std::copy_n (it, _size, data.begin ());
 
             return offset - start;
          }
