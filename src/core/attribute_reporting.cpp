@@ -26,6 +26,56 @@ using namespace HF::Core::AttributeReporting;
 // =============================================================================
 
 // =============================================================================
+// Identifier::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Reference::size () const
+{
+   return sizeof(uint8_t);
+}
+
+// =============================================================================
+// Identifier::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Reference::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t  start = offset;
+
+   uint8_t temp  = ((type & 0x01) << 7) | (id & 0x7F);
+
+   offset += array.write (offset, temp);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Identifier::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Reference::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t  start = offset;
+
+   uint8_t temp  = 0;
+   offset += array.read (offset, temp);
+
+   type    = ((temp & 0x80) != 0);
+   id      = temp & 0x7F;
+
+   return offset - start;
+}
+
+// =============================================================================
 // Entry::size
 // =============================================================================
 /*!
@@ -34,7 +84,7 @@ using namespace HF::Core::AttributeReporting;
 // =============================================================================
 size_t Entry::size () const
 {
-   return sizeof(unit) + itf.size () + sizeof(unit);
+   return sizeof(unit) + itf.size () + sizeof(pack_id);
 }
 
 // =============================================================================
@@ -98,11 +148,9 @@ size_t Rule::size () const
 // =============================================================================
 size_t Rule::pack (Common::ByteArray &array, size_t offset) const
 {
-   size_t  start = offset;
+   size_t start = offset;
 
-   uint8_t temp  = ((this->type & 0x01) << 7) | (this->id & 0x7F);
-
-   offset += array.write (offset, temp);
+   offset += report.pack (array, offset);
 
    offset += destination.pack (array, offset);
 
@@ -118,15 +166,11 @@ size_t Rule::pack (Common::ByteArray &array, size_t offset) const
 // =============================================================================
 size_t Rule::unpack (const Common::ByteArray &array, size_t offset)
 {
-   size_t  start = offset;
+   size_t start = offset;
 
-   uint8_t temp  = 0;
-   offset    += array.read (offset, temp);
+   offset += report.unpack (array, offset);
 
-   this->type = ((temp & 0x80) != 0);
-   this->id   = temp & 0x7F;
-
-   offset    += destination.unpack (array, offset);
+   offset += destination.unpack (array, offset);
 
    return offset - start;
 }
@@ -148,7 +192,7 @@ size_t Periodic::Entry::size () const
 
    if (pack_id == HF::Attributes::Pack::DYNAMIC)
    {
-      result += (sizeof(uint8_t) + attributes.size ());
+      result += uids.size ();
    }
 
    return result;
@@ -169,14 +213,7 @@ size_t Periodic::Entry::pack (Common::ByteArray &array, size_t offset) const
 
    if (pack_id == HF::Attributes::Pack::DYNAMIC)
    {
-      offset += array.write (offset, (uint8_t) attributes.size ());
-
-      /* *INDENT-OFF* */
-      std::for_each(attributes.begin(), attributes.end(), [&array, &offset](uint8_t uid)
-      {
-         offset += array.write (offset, uid);
-      });
-      /* *INDENT-ON* */
+      offset += uids.pack (array, offset);
    }
 
    return offset - start;
@@ -195,16 +232,9 @@ size_t Periodic::Entry::unpack (const Common::ByteArray &array, size_t offset)
 
    offset += AttributeReporting::Entry::unpack (array, offset);
 
-   uint8_t _size = 0;
-   offset += array.read (offset, _size);
-
-   for (uint8_t i = 0; i < _size; i++)
+   if (pack_id == HF::Attributes::Pack::DYNAMIC)
    {
-      uint8_t temp;
-
-      offset += array.read (offset, temp);
-
-      attributes.push_back (temp);
+      offset += uids.unpack (array, offset);
    }
 
    return offset - start;
@@ -219,12 +249,12 @@ size_t Periodic::Entry::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 size_t Periodic::Rule::size () const
 {
-   size_t result = AttributeReporting::Rule::size () + sizeof(interval);
+   size_t result = AttributeReporting::Rule::size () + sizeof(_interval);
 
    result += sizeof(uint8_t);  // Number of entries.
 
    /* *INDENT-OFF* */
-   std::for_each( entries.begin(), entries.end(), [&result](const Entry &entry)
+   std::for_each (entries.begin(), entries.end(), [&result](const Entry &entry)
    {
       result += entry.size();
    });
@@ -246,15 +276,19 @@ size_t Periodic::Rule::pack (Common::ByteArray &array, size_t offset) const
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
-   offset += array.write (offset, interval);
+   offset += array.write (offset, _interval);
 
-   offset += array.write (offset, (uint8_t) entries.size ());
+   uint8_t _size = std::distance (entries.begin (), entries.end ());
 
-   std::for_each (entries.begin (), entries.end (), [&offset, &array](const Entry &entry)
-                  {
-                     offset += entry.pack (array, offset);
-                  }
-                 );
+   offset += array.write (offset, _size);
+
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (),
+                  [&offset, &array](const Entry &entry)
+   {
+      offset += entry.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }
@@ -273,14 +307,23 @@ size_t Periodic::Rule::unpack (const Common::ByteArray &array, size_t offset)
 
    offset += AttributeReporting::Rule::unpack (array, offset);
 
-   if (this->type != PERIODIC)
+   if (report.type != PERIODIC)
    {
       goto end;
    }
 
-   offset += array.read (offset, interval);
+   offset += array.read (offset, _interval);
+
+   clear ();
 
    offset += array.read (offset, size);
+
+   for (uint8_t i = 0; i < size; i++)
+   {
+      Entry entry;
+      offset += entry.unpack (array, offset);
+      add (entry);
+   }
 
    end:
    return offset - start;
@@ -297,9 +340,10 @@ size_t Periodic::Rule::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Event::Field::size (bool _attr_uid) const
+size_t Event::Field::size (bool with_uid) const
 {
-   size_t result = sizeof(uint8_t);    // Field type.
+   // Field type.
+   size_t result = sizeof(uint8_t);
 
    // Size of value holder or COV value.
    result += sizeof(uint8_t);
@@ -308,7 +352,7 @@ size_t Event::Field::size (bool _attr_uid) const
    result += (type != Event::COV ? value.size () : 0);
 
    // Attribute UID for dynamic entries.
-   if (_attr_uid)
+   if (with_uid)
    {
       result += sizeof(attr_uid);
    }
@@ -323,27 +367,28 @@ size_t Event::Field::size (bool _attr_uid) const
  *
  */
 // =============================================================================
-size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool _attr_uid) const
+size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool with_uid) const
 {
    size_t start = offset;
 
-   if (_attr_uid)
+   offset += array.write (offset, (uint8_t) type);
+
+   if (with_uid)
    {
       offset += array.write (offset, attr_uid);
    }
 
-   offset += array.write (offset, (uint8_t) type);
-
    if (type == Event::COV)
    {
-      offset += array.write (offset, value.at (0));
+      uint8_t temp = (value.size () != 0 ? value.at(0) : 0);
+      offset += array.write (offset, temp);
    }
    else
    {
       offset += array.write (offset, (uint8_t) value.size ());
 
       auto dst = array.begin ();
-      dst += offset;
+      std::advance (dst, offset);
 
       std::copy (value.begin (), value.end (), dst);
 
@@ -360,19 +405,19 @@ size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool _attr_u
  *
  */
 // =============================================================================
-size_t Event::Field::unpack (const Common::ByteArray &array, size_t offset, bool _attr_uid)
+size_t Event::Field::unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
 {
-   size_t start = offset;
+   size_t  start = offset;
 
-   if (_attr_uid)
-   {
-      offset += array.read (offset, attr_uid);
-   }
-
-   uint8_t temp = 0;
+   uint8_t temp  = 0;
    offset += array.read (offset, temp);
 
    type    = static_cast <Event::Type>(temp);
+
+   if (with_uid)
+   {
+      offset += array.read (offset, attr_uid);
+   }
 
    if (type == Event::COV)
    {
@@ -384,15 +429,12 @@ size_t Event::Field::unpack (const Common::ByteArray &array, size_t offset, bool
       offset += array.read (offset, temp);
    }
 
-   auto start_it = array.begin ();
-   start_it += offset;
+   auto it = array.begin ();
+   std::advance (it, offset);
 
-   auto end_it = start_it;
-   end_it += temp;
+   value = Common::ByteArray (temp);
 
-   value   = Common::ByteArray (temp);
-
-   std::copy (start_it, end_it, value.begin ());
+   std::copy_n (it, temp, value.begin ());
 
    offset += value.size ();
 
@@ -417,9 +459,14 @@ size_t Event::Entry::size () const
       attr_uid = true;
       result  += sizeof(uint8_t);
    }
+   else if (fields.size() == 0)
+   {
+      result += (sizeof(uint8_t) + sizeof(uint8_t));
+   }
 
    /* *INDENT-OFF* */
-   std::for_each(fields.begin(), fields.end(), [&result, attr_uid](const Event::Field &field)
+   std::for_each(fields.begin(), fields.end(),
+                 [&result, attr_uid](const Event::Field &field)
    {
       result += field.size(attr_uid);
    });
@@ -448,9 +495,15 @@ size_t Event::Entry::pack (Common::ByteArray &array, size_t offset) const
       attr_uid = true;
       offset  += array.write (offset, (uint8_t) fields.size ());
    }
+   else if (fields.size () == 0)
+   {
+      offset  += array.write (offset, (uint8_t) COV);
+      offset  += array.write (offset, (uint8_t) 0);
+   }
 
    /* *INDENT-OFF* */
-   std::for_each(fields.begin(), fields.end(), [&offset, &array, attr_uid](const Event::Field &field)
+   std::for_each(fields.begin(), fields.end(),
+                 [&offset, &array, attr_uid](const Event::Field &field)
    {
       offset += field.pack(array, offset, attr_uid);
    });
@@ -480,7 +533,7 @@ size_t Event::Entry::unpack (const Common::ByteArray &array, size_t offset)
       for (uint8_t i = 0; i < _size; i++)
       {
          Event::Field field;
-         offset += field.unpack (array, offset);
+         offset += field.unpack (array, offset, true);
          fields.push_back (field);
       }
    }
@@ -508,7 +561,7 @@ size_t Event::Rule::size () const
    result += sizeof(uint8_t);
 
    /* *INDENT-OFF* */
-   std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
+   std::for_each (entries.begin(), entries.end(), [&result](const Entry &entry)
    {
       result += entry.size();
    });
@@ -530,14 +583,16 @@ size_t Event::Rule::pack (Common::ByteArray &array, size_t offset) const
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
-   offset += array.write (offset, (uint8_t) entries.size ());
+   uint8_t _size = std::distance (entries.begin (), entries.end ());
 
-   std::for_each (entries.begin (), entries.end (),
-                  [&offset, &array](const Entry &entry)
-                  {
-                     offset += entry.pack (array, offset);
-                  }
-                 );
+   offset += array.write (offset, _size);
+
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (), [&offset, &array](const Entry &entry)
+   {
+      offset += entry.pack (array, offset);
+   });
+   /* *INDENT-ON* */
 
    return offset - start;
 }
@@ -563,8 +618,863 @@ size_t Event::Rule::unpack (const Common::ByteArray &array, size_t offset)
    {
       Entry entry;
       offset += entry.unpack (array, offset);
-      entries.push_back (entry);
+      entries.push_front (entry);
    }
 
    return offset - start;
 }
+
+// =============================================================================
+// Report API - Notification Messages
+// =============================================================================
+
+// =============================================================================
+// Report::Entry::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Entry::size () const
+{
+   return sizeof(unit) + itf.size () + sizeof(uint8_t);
+}
+
+// =============================================================================
+// Report::Entry::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Entry::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += array.write (offset, unit);
+
+   offset += itf.pack (array, offset);
+
+   offset += array.write (offset, count ());
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Entry::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
+                              const Common::ByteArray &array,
+                              size_t offset)
+{
+   HF::Attributes::Factory factory = nullptr;
+   uint8_t next                    = 0;
+
+   size_t  start                   = offset;
+
+   offset += array.read (offset, unit);
+
+   offset += itf.unpack (array, offset);
+
+   uint8_t _count = 0;
+   offset += array.read (offset, _count);
+
+   if (get_factory == nullptr)
+   {
+      goto end;
+   }
+
+   factory = get_factory (itf);
+
+   if (factory == nullptr)
+   {
+      goto end;
+   }
+
+   next = count ();
+
+   for (uint8_t i = 0; i < _count; i++, next = count ())
+   {
+      offset += unpack (factory, array, offset);
+
+      // There was a problem reading entry field.
+      if (next == count ())
+      {
+         break;
+      }
+   }
+
+   end:
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::Entry::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::Entry::size () const
+{
+   size_t result = Report::Entry::size ();
+
+   /* *INDENT-OFF* */
+   std::for_each(attributes.begin(), attributes.end(), [&result](const Attribute &attr)
+   {
+      result += attr->size(true);
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// Report::Periodic::Entry::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::Entry::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::Entry::pack (array, offset);
+
+   /* *INDENT-OFF* */
+   std::for_each(attributes.begin(), attributes.end(), [&offset, &array](const Attribute &attr)
+   {
+      offset += attr->pack(array, offset, true);
+   });
+   /* *INDENT-ON* */
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::Entry::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::Entry::unpack (HF::Attributes::Factory factory,
+                                        const Common::ByteArray &array, size_t offset)
+{
+   size_t  start = offset;
+
+   uint8_t uid   = 0;
+   array.read (offset, uid);
+   auto    attr  = factory (uid);
+
+   if (attr != nullptr)
+   {
+      size_t _size = attr->unpack (array, offset, true);
+
+      if (_size == attr->size (true))
+      {
+         add (attr);
+         offset += _size;
+      }
+   }
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::Entry::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Report::Periodic::Entry::add (HF::Attributes::IAttribute * &attr)
+{
+   attributes.push_back (Attribute (std::move (attr)));
+}
+
+// =============================================================================
+// Report::Periodic::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::size () const
+{
+   size_t result = Reference::size () +
+                   sizeof(uint8_t);    // Number entries.
+
+   /* *INDENT-OFF* */
+   std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
+   {
+      result += entry.size();
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// Report::Periodic::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::Abstract::pack (array, offset);
+
+   uint8_t _count = std::distance (entries.begin (), entries.end ());
+
+   offset += array.write (offset, _count);
+
+   /* *INDENT-OFF* */
+   std::for_each(entries.begin(), entries.end(), [&offset, &array](const Entry &entry)
+   {
+      offset += entry.pack(array, offset);
+   });
+   /* *INDENT-ON* */
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::unpack (HF::Attributes::FactoryGetter get_factory,
+                                 const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += Report::Abstract::unpack (array, offset);
+
+   uint8_t count = 0;
+
+   offset += array.read (offset, count);
+
+   for (uint8_t i = 0; i < count; i++)
+   {
+      Entry entry;
+      offset += entry.unpack (get_factory, array, offset);
+      add (entry);
+   }
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Report::Periodic::add (Report::Periodic::Entry &entry)
+{
+   entries.push_front (std::move (entry));
+}
+
+// =============================================================================
+// Report::Event
+// =============================================================================
+
+// =============================================================================
+// Report::Event::Field::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::Field::size () const
+{
+   assert (attribute != nullptr);
+   return sizeof(uint8_t) + attribute->size (true);
+}
+
+// =============================================================================
+// Report::Event::Field::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::Field::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += array.write (offset, (uint8_t) type);
+
+   assert (attribute != nullptr);
+   offset += attribute->pack (array, offset, true);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Event::Field::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::Field::unpack (HF::Attributes::Factory factory,
+                                     const Common::ByteArray &array, size_t offset)
+{
+   size_t  start = offset;
+
+   uint8_t temp  = 0xFF;
+
+   offset += array.read (offset, temp);
+
+   type    = (AttributeReporting::Event::Type) temp;
+
+   array.read (offset, temp);
+   auto attr = factory (temp);
+
+   if (attr != nullptr)
+   {
+      size_t _size = attr->unpack (array, offset, true);
+
+      if (_size == attr->size (true))
+      {
+         set_attribute (attr);
+         offset += _size;
+      }
+   }
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Event::Entry::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::Entry::size () const
+{
+   size_t result = Report::Entry::size ();
+
+   std::for_each (fields.begin (), fields.end (), [&result](const Field &field)
+                  {
+                     result += field.size ();
+                  }
+                 );
+
+   return result;
+}
+
+// =============================================================================
+// Report::Event::Entry::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::Entry::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::Entry::pack (array, offset);
+
+   /* *INDENT-OFF* */
+   std::for_each (fields.begin (), fields.end (), [&offset, &array](const Field &field)
+   {
+      offset += field.pack (array, offset);
+   });
+   /* *INDENT-ON* */
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Event::Entry::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
+                                     const Common::ByteArray &array, size_t offset)
+{
+   Field  field;
+   size_t result = field.unpack (factory, array, offset);
+
+   if (field.attribute != nullptr)
+   {
+      add (field);
+   }
+
+   return result;
+}
+
+// =============================================================================
+// Report::Event::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::size () const
+{
+   size_t result = Reference::size () +
+                   sizeof(uint8_t);    // Number entries.
+
+   /* *INDENT-OFF* */
+   std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
+   {
+      result += entry.size();
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// Report::Event::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::Abstract::pack (array, offset);
+
+   uint8_t _count = std::distance (entries.begin (), entries.end ());
+
+   offset += array.write (offset, _count);
+
+   /* *INDENT-OFF* */
+   std::for_each(entries.begin(), entries.end(), [&offset, &array](const Entry &entry)
+   {
+      offset += entry.pack(array, offset);
+   });
+   /* *INDENT-ON* */
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Event::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
+                              const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += Report::Abstract::unpack (array, offset);
+
+   uint8_t count = 0;
+
+   offset += array.read (offset, count);
+
+   for (uint8_t i = 0; i < count; i++)
+   {
+      Entry entry;
+      offset += entry.unpack (get_factory, array, offset);
+      add (entry);
+   }
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report - Message API
+// =============================================================================
+
+// =============================================================================
+// Report::CreateMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::CreateMessage::size () const
+{
+   return destination.size ();
+}
+
+// =============================================================================
+// Report::CreateMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::CreateMessage::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += destination.pack (array, offset);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::CreateMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::CreateMessage::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += destination.unpack (array, offset);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::CreateMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::CreateMessage::size () const
+{
+   return Report::CreateMessage::size () + sizeof(interval);
+}
+
+// =============================================================================
+// Report::Periodic::CreateMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::CreateMessage::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::CreateMessage::pack (array, offset);
+
+   offset += array.write (offset, interval);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::CreateMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::CreateMessage::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += Report::CreateMessage::unpack (array, offset);
+
+   offset += array.read (offset, interval);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::DeleteMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::DeleteMessage::size () const
+{
+   return report.size ();
+}
+
+// =============================================================================
+// Report::DeleteMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::DeleteMessage::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += report.pack (array, offset);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::DeleteMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::DeleteMessage::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += report.unpack (array, offset);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::AddEntryMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::AddEntryMessage::size () const
+{
+   return report.size () + sizeof(uint8_t);
+}
+
+// =============================================================================
+// Report::AddEntryMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += report.pack (array, offset);
+
+   offset += array.write (offset, count ());
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::AddEntryMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::AddEntryMessage::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += report.unpack (array, offset);
+
+   uint8_t _count = 0;
+   offset += array.read (offset, _count);
+
+   for (uint8_t i = 0; i < _count; i++)
+   {
+      // TODO Add check if entry was read.
+      offset += unpack_entry (array, offset);
+   }
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::AddEntryMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::AddEntryMessage::size () const
+{
+   size_t result = Report::AddEntryMessage::size ();
+
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin(), entries.end(),
+                  [&result](const AttributeReporting::Periodic::Entry &entry)
+   {
+      result += entry.size();
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// Report::Periodic::AddEntryMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::AddEntryMessage::pack (array, offset);
+
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin(), entries.end(),
+                  [&array, &offset](const AttributeReporting::Periodic::Entry &entry)
+   {
+      offset += entry.pack (array, offset);
+   });
+   /* *INDENT-ON* */
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Periodic::AddEntryMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Periodic::AddEntryMessage::unpack_entry (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   AttributeReporting::Periodic::Entry entry;
+
+   offset += entry.unpack (array, offset);
+
+   entries.push_front (entry);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Event::AddEntryMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::AddEntryMessage::size () const
+{
+   size_t result = Report::AddEntryMessage::size ();
+
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin(), entries.end(),
+                  [&result](const AttributeReporting::Event::Entry &entry)
+   {
+      result += entry.size();
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// Report::Event::AddEntryMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += Report::AddEntryMessage::pack (array, offset);
+
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin(), entries.end(),
+                  [&array, &offset](const AttributeReporting::Event::Entry &entry)
+   {
+      offset += entry.pack (array, offset);
+   });
+   /* *INDENT-ON* */
+
+   return offset - start;
+}
+
+// =============================================================================
+// Report::Event::AddEntryMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Report::Event::AddEntryMessage::unpack_entry (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   AttributeReporting::Event::Entry entry;
+
+   offset += entry.unpack (array, offset);
+
+   entries.push_front (entry);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Message API
+// =============================================================================
+
+// =============================================================================
+// Response::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Response::size () const
+{
+   return HF::Protocol::Response::size () + report.size ();
+}
+
+// =============================================================================
+// Response::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Response::pack (Common::ByteArray &array, size_t offset) const
+{
+   size_t start = offset;
+
+   offset += HF::Protocol::Response::pack (array, offset);
+
+   offset += report.pack (array, offset);
+
+   return offset - start;
+}
+
+// =============================================================================
+// Response::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Response::unpack (const Common::ByteArray &array, size_t offset)
+{
+   size_t start = offset;
+
+   offset += HF::Protocol::Response::unpack (array, offset);
+
+   offset += report.unpack (array, offset);
+
+   return offset - start;
+}
+

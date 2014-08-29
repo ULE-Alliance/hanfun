@@ -34,6 +34,75 @@ using namespace HF::Core;
 // Attribute Factories
 // =============================================================================
 
+struct Entry
+{
+   uint16_t            id;
+   Attributes::Factory factory;
+};
+
+static const Entry factories[] =
+{
+   /* Core Services */
+   {
+      HF::Interface::DEVICE_MANAGEMENT,
+      HF::Core::DeviceManagement::create_attribute
+   },
+   {
+      HF::Interface::BIND_MANAGEMENT,
+      nullptr
+      // FIXME return HF::Core::BindManagement::create_attribute;
+   },
+   {
+      HF::Interface::DEVICE_INFORMATION,
+      HF::Core::DeviceInformation::create_attribute
+   },
+   {
+      HF::Interface::ATTRIBUTE_REPORTING,
+      nullptr
+      // FIXME return HF::Core::AttributeReporting::create_attribute;
+   },
+   /* Functional Interfaces. */
+   {
+      HF::Interface::ALERT,
+      HF::Interfaces::Alert::create_attribute,
+   },
+   {
+      HF::Interface::ON_OFF,
+      HF::Interfaces::OnOff::create_attribute
+   },
+   {
+      HF::Interface::LEVEL_CONTROL,
+      HF::Interfaces::LevelControl::create_attribute
+   },
+   {
+      HF::Interface::SIMPLE_POWER_METER,
+      HF::Interfaces::SimplePowerMeter::create_attribute
+   },
+};
+
+// =============================================================================
+// Attributes::get_factory
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Attributes::Factory Attributes::get_factory (Common::Interface itf)
+{
+   Attributes::Factory result = nullptr;
+
+   for (uint32_t index = 0; index < (sizeof(factories) / sizeof(*factories)); ++index)
+   {
+      if (factories[index].id == itf.id)
+      {
+         result = factories[index].factory;
+         break;
+      }
+   }
+
+   return result;
+}
+
 // =============================================================================
 // Interfaces
 // =============================================================================

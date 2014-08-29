@@ -56,6 +56,18 @@ std::ostream &operator <<(std::ostream &os, std::uint8_t val)
    return os << static_cast <int>(val);
 }
 
+HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
+{
+   HF::Attributes::Factory result = HF::Attributes::get_factory (itf);
+
+   if (result == nullptr)
+   {
+      result = TestInterface::create_attribute;
+   }
+
+   return result;
+}
+
 // =============================================================================
 // Main
 // =============================================================================

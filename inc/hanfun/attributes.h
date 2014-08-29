@@ -101,6 +101,26 @@ namespace HF
       //! Attribute factory function type.
       typedef IAttribute * (*Factory)(uint8_t);
 
+      /*!
+       * Function pointer to a function that returns the attribute
+       * factory associated with a given interface.
+       */
+      typedef Attributes::Factory (*FactoryGetter)(Common::Interface);
+
+      /*!
+       * Return the attribute factory associated with the given
+       * interface identifier.
+       *
+       * \warning This function only returns the factories for the
+       *          build in interfaces.
+       *
+       * @param itf  interface identifier.
+       *
+       * @return  the factory associated with the interface, or
+       *          \c nullptr if the interface is unknown.
+       */
+      Factory get_factory (Common::Interface itf);
+
       struct UIDS:public std::vector <uint8_t>
       {
          UIDS():std::vector <uint8_t>()
