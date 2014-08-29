@@ -190,6 +190,22 @@ namespace HF
             return create_attribute (this, uid);
          }
 
+         //! \see AbstractInterface::attributes
+         HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            HF::Attributes::UIDS result;
+
+            if (pack_id == HF::Attributes::Pack::ALL)
+            {
+               result.push_back (ATTR1);
+               result.push_back (ATTR2);
+            }
+
+            result.push_back (ATTR3);
+
+            return result;
+         }
+
          static HF::Attributes::IAttribute *create_attribute (uint8_t uid)
          {
             return create_attribute (nullptr, uid);
@@ -258,22 +274,6 @@ namespace HF
             mock ("Interface").actualCall ("handle_command").onObject (this);
 
             return Common::Result::OK;
-         }
-
-         //! \see AbstractInterface::attributes
-         HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-         {
-            HF::Attributes::uids_t result;
-
-            if (pack_id == HF::Attributes::Pack::ALL)
-            {
-               result.push_back (ATTR1);
-               result.push_back (ATTR2);
-            }
-
-            result.push_back (ATTR3);
-
-            return result;
          }
 
          bool check_uid (uint16_t uid) const

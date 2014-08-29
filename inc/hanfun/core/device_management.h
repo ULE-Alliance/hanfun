@@ -559,10 +559,10 @@ namespace HF
             {}
 
             //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
             {
                UNUSED (pack_id);
-               return HF::Attributes::uids_t {NUMBER_OF_ENTRIES_ATTR};
+               return HF::Attributes::UIDS {NUMBER_OF_ENTRIES_ATTR};
             }
 
             /*!

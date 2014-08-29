@@ -73,7 +73,7 @@ Protocol::Message *DeviceInformation::all ()
  *
  */
 // =============================================================================
-Protocol::Message *DeviceInformation::get (HF::Attributes::uids_t &uids)
+Protocol::Message *DeviceInformation::get (HF::Attributes::UIDS &uids)
 {
    HF::Protocol::GetAttributePack::Request *req = new HF::Protocol::GetAttributePack::Request (uids);
 
@@ -117,9 +117,9 @@ Protocol::Message *DeviceInformation::get (uint8_t uid)
  *
  */
 // =============================================================================
-HF::Attributes::uids_t DeviceInformation::Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) const
 {
-   HF::Attributes::uids_t result;
+   HF::Attributes::UIDS result;
 
    switch (pack_id)
    {

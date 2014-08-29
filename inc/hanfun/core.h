@@ -83,6 +83,11 @@ namespace HF
             return AbstractInterface::attribute (uid);
          }
 
+         //! \see AbstractInterface::attributes
+         HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            return AbstractInterface::attributes (pack_id);
+         }
 
          protected:
 
@@ -91,11 +96,6 @@ namespace HF
          AbstractService(Unit0 &unit):_unit (unit)
          {}
 
-         //! \see AbstractInterface::attributes
-         HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-         {
-            return AbstractInterface::attributes (pack_id);
-         }
          void sendMessage (Protocol::Address &addr, Protocol::Message &message)
          {
             unit ().sendMessage (addr, message, nullptr);

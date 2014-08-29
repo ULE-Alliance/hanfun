@@ -531,6 +531,9 @@ namespace HF
             //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid);
 
+            //! \see AbstractInterface::attributes
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+
             friend HF::Attributes::IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *, uint8_t);
 
             protected:
@@ -541,9 +544,6 @@ namespace HF
              * @return  message to send or \c nullptr if the message cannot be created.
              */
             virtual Report *report ();
-
-            //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
          };
 
          /*!

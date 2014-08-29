@@ -101,12 +101,12 @@ namespace HF
       //! Attribute factory function type.
       typedef IAttribute * (*Factory)(uint8_t);
 
-      struct uids_t:public std::vector <uint8_t>
+      struct UIDS:public std::vector <uint8_t>
       {
-         uids_t():vector <uint8_t>()
+         UIDS():std::vector <uint8_t>()
          {}
 
-         uids_t(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
+         UIDS(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
          {}
 
          vector <uint8_t>::size_type length () const
@@ -392,7 +392,7 @@ namespace HF
           */
          struct Request
          {
-            HF::Attributes::uids_t attributes; //!< Vector containing the attributes UID's to get.
+            HF::Attributes::UIDS attributes; //!< Vector containing the attributes UID's to get.
 
             /*!
              * Unpack attribute count.
@@ -404,7 +404,7 @@ namespace HF
 
             Request():count (0) {}
 
-            Request(HF::Attributes::uids_t &attributes):
+            Request(HF::Attributes::UIDS &attributes):
                attributes (attributes), count (0)
             {}
 

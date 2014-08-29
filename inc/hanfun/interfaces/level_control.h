@@ -177,21 +177,21 @@ namespace HF
                return Interfaces::create_attribute (this, uid);
             }
 
+            //! \see AbstractInterface::attributes
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED (pack_id);
+               /* *INDENT-OFF* */
+               return HF::Attributes::UIDS ({ LevelControl::LEVEL_ATTR });
+               /* *INDENT-ON* */
+            }
+
             friend HF::Attributes::IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t uid);
 
             protected:
 
             //! \see AbstractInterface::handle_command
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
-
-            //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-            {
-               UNUSED (pack_id);
-               /* *INDENT-OFF* */
-               return HF::Attributes::uids_t ({ LevelControl::LEVEL_ATTR });
-               /* *INDENT-ON* */
-            }
          };
 
          /*!

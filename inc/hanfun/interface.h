@@ -146,6 +146,13 @@ namespace HF
             return nullptr;
          }
 
+         //! \see HF::Interface::attributes
+         virtual HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            UNUSED (pack_id);
+            return HF::Attributes::UIDS ();
+         }
+
          bool operator ==(AbstractInterface &other)
          {
             return uid () == other.uid ();
@@ -237,20 +244,6 @@ namespace HF
           * \see Interface::handle
           */
          virtual Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
-
-         /*!
-          * Return a vector containing the attribute UIDs, for the given pack ID.
-          *
-          * @param [in] pack_id     the Attribute pack ID to get the attributes UIDs for.
-          *
-          * @return  vector containing the attributes UIDs.
-          */
-         //      virtual Attributes::uids_t attributes (uint8_t pack_id = Attributes::Pack::MANDATORY) const
-         virtual HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-         {
-            UNUSED (pack_id);
-            return HF::Attributes::uids_t ();
-         }
 
          /*!
           * Check if the given UID matches the interface UID.

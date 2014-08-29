@@ -309,11 +309,11 @@ namespace HF
             Alert::Message *create_status (uint16_t unit_type);
 
             //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
             {
                UNUSED (pack_id);
                /* *INDENT-OFF* */
-               return HF::Attributes::uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
+               return HF::Attributes::UIDS ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
          };

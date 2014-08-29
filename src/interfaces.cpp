@@ -25,7 +25,6 @@ using namespace HF::Interfaces;
 // Helper Functions
 // =============================================================================
 
-
 // =============================================================================
 // update_attribute
 // =============================================================================
@@ -387,7 +386,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
          Common::Result result = Common::Result::OK;
          GetAttributePack::Request request;
 
-         HF::Attributes::uids_t    attributes;
+         HF::Attributes::UIDS attributes;
 
          if (packet.message.itf.member == HF::Attributes::Pack::DYNAMIC)
          {
