@@ -1478,3 +1478,243 @@ size_t Response::unpack (const Common::ByteArray &array, size_t offset)
    return offset - start;
 }
 
+// =============================================================================
+// API
+// =============================================================================
+
+// =============================================================================
+// AttributeReporting::create
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Protocol::Message *AttributeReporting::create (Protocol::Address &destination)
+{
+   Report::Event::CreateMessage *create_msg = new Report::Event::CreateMessage ();
+
+   assert (create_msg != nullptr);
+
+   if (create_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   create_msg->destination = destination;
+
+   Protocol::Message *message = new Protocol::Message (create_msg->size ());
+
+   assert (message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   create_msg->pack (message->payload);
+
+   delete create_msg;
+
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::CREATE_EVENT_CMD;
+
+   return message;
+}
+
+// =============================================================================
+// AttributeReporting::create
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Protocol::Message *AttributeReporting::create (Protocol::Address &destination, uint32_t interval)
+{
+   Report::Periodic::CreateMessage *create_msg = new Report::Periodic::CreateMessage ();
+
+   assert (create_msg != nullptr);
+
+   if (create_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   create_msg->destination = destination;
+   create_msg->interval    = interval;
+
+   Protocol::Message *message = new Protocol::Message (create_msg->size ());
+
+   assert (message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   create_msg->pack (message->payload);
+
+   delete create_msg;
+
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::CREATE_PERIODIC_CMD;
+
+   return message;
+}
+
+// =============================================================================
+// AttributeReporting::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Protocol::Message *AttributeReporting::destroy (AttributeReporting::Type type, uint8_t report_id)
+{
+   Reference report (type, report_id);
+   return destroy (report);
+}
+
+// =============================================================================
+// AttributeReporting::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Protocol::Message *AttributeReporting::destroy (Reference report)
+{
+   Report::DeleteMessage *delete_msg = new Report::DeleteMessage ();
+   assert (delete_msg != nullptr);
+
+   if (delete_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   delete_msg->report = report;
+
+   Protocol::Message *message = new Protocol::Message (delete_msg->size ());
+   assert (message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   delete_msg->pack (message->payload);
+
+   delete delete_msg;
+
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::DELETE_REPORT_CMD;
+
+   return message;
+}
+
+// =============================================================================
+// AttributeReporting::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Protocol::Message *AttributeReporting::add (Reference report,
+                                              std::vector <Periodic::Entry>::iterator begin,
+                                              std::vector <Periodic::Entry>::iterator end)
+{
+   if (report.type != PERIODIC)
+   {
+      return nullptr;
+   }
+
+   Report::Periodic::AddEntryMessage *add_msg = new Report::Periodic::AddEntryMessage ();
+   assert (add_msg != nullptr);
+
+   if (add_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   add_msg->report = report;
+   /* *INDENT-OFF* */
+   std::for_each (begin, end, [add_msg](Periodic::Entry &entry)
+   {
+      add_msg->add (entry);
+   });
+   /* *INDENT-ON* */
+
+   Protocol::Message *message = new Protocol::Message (add_msg->size ());
+   assert (message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   add_msg->pack (message->payload);
+
+   delete add_msg;
+
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::ADD_PERIODIC_ENTRY_CMD;
+
+   return message;
+}
+
+// =============================================================================
+// AttributeReporting::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Protocol::Message *AttributeReporting::add (Reference report,
+                                              std::vector <Event::Entry>::iterator begin,
+                                              std::vector <Event::Entry>::iterator end)
+{
+   if (report.type != EVENT)
+   {
+      return nullptr;
+   }
+
+   Report::Event::AddEntryMessage *add_msg = new Report::Event::AddEntryMessage ();
+   assert (add_msg != nullptr);
+
+   if (add_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   add_msg->report = report;
+   std::for_each (begin, end, [add_msg](const Event::Entry &entry) {
+                     add_msg->add (entry);
+                  }
+                 );
+
+   Protocol::Message *message = new Protocol::Message (add_msg->size ());
+   assert (message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   add_msg->pack (message->payload);
+
+   delete add_msg;
+
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::ADD_EVENT_ENTRY_CMD;
+
+   return message;
+}

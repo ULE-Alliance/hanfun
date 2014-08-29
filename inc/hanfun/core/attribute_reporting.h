@@ -813,6 +813,31 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         //! Start value for report identifiers.
+         static constexpr uint8_t START_ADDR = 0x01;
+
+         //! Maximum value for report identifiers.
+         static constexpr uint8_t MAX_ADDR = 0x7E;
+
+         //! Value indicating all reports.
+         static constexpr uint8_t ALL_ADDR = 0x7F;
+
+         Protocol::Message *create (Protocol::Address &destination);
+
+         Protocol::Message *create (Protocol::Address &destination, uint32_t interval);
+
+         Protocol::Message *destroy (Type type, uint8_t report_id);
+
+         Protocol::Message *destroy (Reference report);
+
+         Protocol::Message *add (Reference report, std::vector <Periodic::Entry>::iterator begin, std::vector <Periodic::Entry>::iterator end);
+
+         Protocol::Message *add (Reference report, std::vector <Event::Entry>::iterator begin, std::vector <Event::Entry>::iterator end);
+
       }  // namespace AttributeReporting
 
    }  // namespace Core

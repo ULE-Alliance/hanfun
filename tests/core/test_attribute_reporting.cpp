@@ -2358,3 +2358,149 @@ TEST (AttributeReporting_Response, Unpack)
    LONGS_EQUAL (AttributeReporting::EVENT, response.report.type);
    LONGS_EQUAL (0x0A, response.report.id);
 }
+
+// =============================================================================
+// Service & Interface
+// =============================================================================
+
+// =============================================================================
+// AttributeReporting - Tests
+// =============================================================================
+
+TEST_GROUP (AttributeReporting)
+{};
+
+TEST (AttributeReporting, CreateEventReport)
+{
+   Protocol::Address dst;
+
+   dst.mod    = Protocol::Address::DEVICE;
+   dst.device = 0x5A5A;
+   dst.unit   = 0xDD;
+
+   Protocol::Message *message = AttributeReporting::create (dst);
+
+   CHECK_FALSE (message == nullptr);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, message->type);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+   LONGS_EQUAL (HF::Interface::ATTRIBUTE_REPORTING, message->itf.id);
+   LONGS_EQUAL (AttributeReporting::CREATE_EVENT_CMD, message->itf.member);
+
+   Report::Event::CreateMessage payload;
+   payload.unpack (message->payload);
+
+   LONGS_EQUAL (payload.destination.mod, Protocol::Address::DEVICE);
+   LONGS_EQUAL (payload.destination.device, 0x5A5A);
+   LONGS_EQUAL (payload.destination.unit, 0xDD);
+
+   delete message;
+}
+
+TEST (AttributeReporting, CreatePeriodicReport)
+{
+   Protocol::Address dst;
+
+   dst.mod    = Protocol::Address::DEVICE;
+   dst.device = 0x5A5A;
+   dst.unit   = 0xDD;
+
+   Protocol::Message *message = AttributeReporting::create (dst, 0x12345678);
+
+   CHECK_FALSE (message == nullptr);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, message->type);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+   LONGS_EQUAL (HF::Interface::ATTRIBUTE_REPORTING, message->itf.id);
+   LONGS_EQUAL (AttributeReporting::CREATE_PERIODIC_CMD, message->itf.member);
+
+   Report::Periodic::CreateMessage payload;
+   payload.unpack (message->payload);
+
+   LONGS_EQUAL (payload.destination.mod, Protocol::Address::DEVICE);
+   LONGS_EQUAL (payload.destination.device, 0x5A5A);
+   LONGS_EQUAL (payload.destination.unit, 0xDD);
+   LONGS_EQUAL (payload.interval, 0x12345678);
+
+   delete message;
+}
+
+TEST (AttributeReporting, DeleteReport)
+{
+   Reference report (PERIODIC, 0x55);
+
+   Protocol::Message *message = AttributeReporting::destroy (report);
+
+   CHECK_FALSE (message == nullptr);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, message->type);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+   LONGS_EQUAL (HF::Interface::ATTRIBUTE_REPORTING, message->itf.id);
+   LONGS_EQUAL (AttributeReporting::DELETE_REPORT_CMD, message->itf.member);
+
+   Report::DeleteMessage payload;
+   payload.unpack (message->payload);
+
+   LONGS_EQUAL (payload.report.type, PERIODIC);
+   LONGS_EQUAL (payload.report.id, 0x55);
+
+   delete message;
+}
+
+TEST (AttributeReporting, AddPeriodicEntry)
+{
+   std::vector <Periodic::Entry> entries (3);
+
+   Reference report (EVENT, 0x55);
+
+   Protocol::Message *message = AttributeReporting::add (report, entries.begin (), entries.end ());
+   CHECK_TRUE (message == nullptr);
+
+   report  = Reference (PERIODIC, 0x55);
+   message = AttributeReporting::add (report, entries.begin (), entries.end ());
+
+   CHECK_FALSE (message == nullptr);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, message->type);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+   LONGS_EQUAL (HF::Interface::ATTRIBUTE_REPORTING, message->itf.id);
+   LONGS_EQUAL (AttributeReporting::ADD_PERIODIC_ENTRY_CMD, message->itf.member);
+
+   Report::Periodic::AddEntryMessage payload;
+   payload.unpack (message->payload);
+
+   LONGS_EQUAL (payload.report.type, PERIODIC);
+   LONGS_EQUAL (payload.report.id, 0x55);
+   LONGS_EQUAL (0x03, std::distance (payload.begin (), payload.end ()));
+
+   delete message;
+}
+
+TEST (AttributeReporting, AddEventEntry)
+{
+   std::vector <Event::Entry> entries (3);
+
+   Reference report (PERIODIC, 0x55);
+
+   Protocol::Message *message = AttributeReporting::add (report, entries.begin (), entries.end ());
+   CHECK_TRUE (message == nullptr);
+
+   report  = Reference (EVENT, 0x55);
+   message = AttributeReporting::add (report, entries.begin (), entries.end ());
+
+   CHECK_FALSE (message == nullptr);
+
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, message->type);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+   LONGS_EQUAL (HF::Interface::ATTRIBUTE_REPORTING, message->itf.id);
+   LONGS_EQUAL (AttributeReporting::ADD_EVENT_ENTRY_CMD, message->itf.member);
+
+   Report::Event::AddEntryMessage payload;
+   payload.unpack (message->payload);
+
+   LONGS_EQUAL (payload.report.type, EVENT);
+   LONGS_EQUAL (payload.report.id, 0x55);
+   LONGS_EQUAL (0x03, std::distance (payload.begin (), payload.end ()));
+
+   delete message;
+}
