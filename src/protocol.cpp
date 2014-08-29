@@ -134,7 +134,7 @@ size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset
 // Message
 // =============================================================================
 
-Message::Message(Message &parent, size_t size):
+Message::Message(const Message &parent, size_t size):
    reference (parent.reference), itf (parent.itf), payload (Common::ByteArray (size)), length (0)
 {
    switch (parent.type)

@@ -122,7 +122,7 @@ namespace HF
          Message(size_t size = 0, Type _type = COMMAND_REQ):
             reference (0), type (_type), payload (Common::ByteArray (size)), length (0) {}
 
-         Message(Message &parent, size_t size);
+         Message(const Message &parent, size_t size);
 
          //! \see HF::Serializable::size.
          size_t size () const;
