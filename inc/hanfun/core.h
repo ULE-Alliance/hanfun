@@ -213,7 +213,16 @@ namespace HF
 
       Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
       {
-         return handle_proxy <0, ITF...>(packet, payload, offset);
+         Core::IService *service = find <0, ITF...>(packet.message.itf.id);
+
+         if (service != nullptr)
+         {
+            return service->handle (packet, payload, offset);
+         }
+         else
+         {
+            return Common::Result::FAIL_SUPPORT;
+         }
       }
 
 
@@ -222,30 +231,28 @@ namespace HF
       private:
 
       template<uint8_t N, typename Head, typename... Tail>
-      Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+      Core::IService *find (uint16_t itf_uid) const
       {
          static_assert (std::is_base_of <HF::Core::IService, Head>::value,
                         "Head must be of type HF::Core::IService");
 
-         Head &head = std::get <N>(interfaces);
+         const Head &head = std::get <N>(interfaces);
 
-         if (head.uid () == packet.message.itf.id)
+         if (head.uid () == itf_uid)
          {
-            return head.handle (packet, payload, offset);
+            return const_cast <Head *>(&head);
          }
          else
          {
-            return handle_proxy <N + 1, Tail...>(packet, payload, offset);
+            return find <N + 1, Tail...>(itf_uid);
          }
       }
 
       template<uint8_t N>
-      HF::Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+      Core::IService *find (uint16_t itf_uid) const
       {
-         UNUSED (packet);
-         UNUSED (payload);
-         UNUSED (offset);
-         return Common::Result::FAIL_SUPPORT;
+         UNUSED (itf_uid);
+         return nullptr;
       }
    };
 
