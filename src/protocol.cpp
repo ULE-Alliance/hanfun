@@ -134,8 +134,8 @@ size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset
 // Message
 // =============================================================================
 
-Message::Message(const Message &parent, size_t size):
-   reference (parent.reference), itf (parent.itf), payload (Common::ByteArray (size)), length (0)
+Message::Message(const Message &parent, size_t size):reference (parent.reference),
+   itf (parent.itf), payload (Common::ByteArray (size)), length (0)
 {
    switch (parent.type)
    {
@@ -216,7 +216,7 @@ size_t Message::pack (Common::ByteArray &array, size_t offset) const
 
    array.extend (length);
 
-   copy (payload.begin (), payload.end (), array.begin () + offset);
+   std::copy (payload.begin (), payload.end (), array.begin () + offset);
 
    offset += payload.size ();
 

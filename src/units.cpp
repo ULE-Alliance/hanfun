@@ -26,7 +26,7 @@
  */
 // =============================================================================
 void HF::Units::AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &message,
-                                        Transport::Link *link)
+                                    Transport::Link *link)
 {
    Protocol::Packet *packet = new Protocol::Packet (message);
 

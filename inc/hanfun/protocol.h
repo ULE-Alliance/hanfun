@@ -120,7 +120,8 @@ namespace HF
          uint16_t length;
 
          Message(size_t size = 0, Type _type = COMMAND_REQ):
-            reference (0), type (_type), payload (Common::ByteArray (size)), length (0) {}
+            reference (0), type (_type), payload (Common::ByteArray (size)), length (0)
+         {}
 
          Message(const Message &parent, size_t size);
 

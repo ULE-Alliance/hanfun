@@ -50,7 +50,7 @@ namespace HF
           * @param [in] link     preferred link to send the message on.
           */
          virtual void send (const Protocol::Address &addr, Protocol::Message &message,
-                              Transport::Link *link = nullptr) = 0;
+                            Transport::Link *link = nullptr) = 0;
       };
 
       /*!
@@ -69,7 +69,7 @@ namespace HF
          }
 
          void send (const Protocol::Address &addr, Protocol::Message &message,
-                     Transport::Link *link = nullptr);
+                    Transport::Link *link = nullptr);
 
          protected:
 

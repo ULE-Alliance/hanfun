@@ -380,7 +380,7 @@ size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool with_ui
 
    if (type == Event::COV)
    {
-      uint8_t temp = (value.size () != 0 ? value.at(0) : 0);
+      uint8_t temp = (value.size () != 0 ? value.at (0) : 0);
       offset += array.write (offset, temp);
    }
    else
@@ -459,7 +459,7 @@ size_t Event::Entry::size () const
       attr_uid = true;
       result  += sizeof(uint8_t);
    }
-   else if (fields.size() == 0)
+   else if (fields.size () == 0)
    {
       result += (sizeof(uint8_t) + sizeof(uint8_t));
    }
@@ -497,8 +497,8 @@ size_t Event::Entry::pack (Common::ByteArray &array, size_t offset) const
    }
    else if (fields.size () == 0)
    {
-      offset  += array.write (offset, (uint8_t) COV);
-      offset  += array.write (offset, (uint8_t) 0);
+      offset += array.write (offset, (uint8_t) COV);
+      offset += array.write (offset, (uint8_t) 0);
    }
 
    /* *INDENT-OFF* */
@@ -1625,8 +1625,8 @@ Protocol::Message *AttributeReporting::destroy (Reference report)
  */
 // =============================================================================
 Protocol::Message *AttributeReporting::add (Reference report,
-                                              std::vector <Periodic::Entry>::iterator begin,
-                                              std::vector <Periodic::Entry>::iterator end)
+                                            std::vector <Periodic::Entry>::iterator begin,
+                                            std::vector <Periodic::Entry>::iterator end)
 {
    if (report.type != PERIODIC)
    {
@@ -1649,7 +1649,7 @@ Protocol::Message *AttributeReporting::add (Reference report,
    });
    /* *INDENT-ON* */
 
-   Protocol::Message *message = new Protocol::Message (add_msg->size ());
+   Protocol::Message * message = new Protocol::Message (add_msg->size ());
    assert (message != nullptr);
 
    if (message == nullptr)
@@ -1677,8 +1677,8 @@ Protocol::Message *AttributeReporting::add (Reference report,
  */
 // =============================================================================
 Protocol::Message *AttributeReporting::add (Reference report,
-                                              std::vector <Event::Entry>::iterator begin,
-                                              std::vector <Event::Entry>::iterator end)
+                                            std::vector <Event::Entry>::iterator begin,
+                                            std::vector <Event::Entry>::iterator end)
 {
    if (report.type != EVENT)
    {
