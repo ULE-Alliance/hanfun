@@ -838,6 +838,231 @@ namespace HF
 
          Protocol::Message *add (Reference report, std::vector <Event::Entry>::iterator begin, std::vector <Event::Entry>::iterator end);
 
+         /*!
+          * Attribute Reporting - Client Role.
+          */
+         struct Client:public HF::Interfaces::Base <HF::Interface::ATTRIBUTE_REPORTING>
+         {
+            // =============================================================================
+            // Interface API
+            // =============================================================================
+
+            //! \see Interface::role
+            Interface::Role role () const
+            {
+               return HF::Interface::CLIENT_ROLE;
+            }
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! \name Events
+            //! @{
+
+            /*!
+             * Event indicating a \c PERIODIC_REPORT_CMD or a \c EVENT_REPORT_CMD.
+             *
+             * @param [in] type     type of report.
+             * @param [in] payload  data in the report.
+             * @param [in] offset   offset from which to start reading the data of the
+             *                      the report in the \c payload.
+             */
+            virtual void report (Type type, Common::ByteArray &payload, size_t offset)
+            {
+               UNUSED (type);
+               UNUSED (payload);
+               UNUSED (offset);
+            }
+
+            /*!
+             * Event indicating the result of a \c CREATE_PERIODIC_CMD or
+             * \c CREATE_EVENT_CMD.
+             *
+             * @param [in] address     device address that originated the event.
+             * @param [in] response    result of the operation.
+             */
+            virtual void created (const Protocol::Address &address,
+                                  const Response &response)
+            {
+               UNUSED (address);
+               UNUSED (response);
+            }
+
+            /*!
+             * Event indicating the result of a \c ADD_PERIODIC_ENTRY_CMD or
+             * \c ADD_EVENT_ENTRY_CMD.
+             *
+             * @param [in] address     device address that originated the event.
+             * @param [in] response    result of the operation.
+             */
+            virtual void added (const Protocol::Address &address,
+                                const Response &response)
+            {
+               UNUSED (address);
+               UNUSED (response);
+            }
+
+            /*!
+             * Event indicating the result of a \c DELETE_REPORT_CMD.
+             *
+             * @param [in] address     device address that originated the event.
+             * @param [in] response    result of the operation.
+             */
+            virtual void deleted (const Protocol::Address &address,
+                                  const Response &response)
+            {
+               UNUSED (address);
+               UNUSED (response);
+            }
+
+            //! @}
+            // ======================================================================
+
+            protected:
+
+            //! \see AbstractInterface::payload_size
+            size_t payload_size (Protocol::Message &message) const;
+
+            //! \see AbstractInterface::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const;
+
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
+
+         };
+
+         /*!
+          * Attribute Reporting - Server Role.
+          */
+         struct Server:public AbstractService
+         {
+            std::forward_list <Periodic::Rule> periodic_rules;
+            std::forward_list <Event::Rule>    event_rules;
+
+            Server(Unit0 &unit):
+               AbstractService (unit), last_time (0)
+            {}
+
+            virtual ~Server() {}
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * Return a reference to the unit that this service belongs to.
+             *
+             * This is the same reference as AbstractService::unit, but static casted
+             * to allow access to the the other interfaces.
+             *
+             * @return  a reference to the unit that holds this interface.
+             */
+            // HF::Devices::Concentrator::IUnit0 &unit0 ();
+
+            //! \see Interface::uid
+            uint16_t uid () const
+            {
+               return HF::Interface::ATTRIBUTE_REPORTING;
+            }
+
+            //! \see Interface::role
+            Interface::Role role () const
+            {
+               return HF::Interface::SERVER_ROLE;
+            }
+
+            virtual Common::Result handle (const Report::Periodic::CreateMessage &message);
+
+            virtual Common::Result handle (const Report::Periodic::AddEntryMessage &message);
+
+            virtual Common::Result handle (const Report::Event::CreateMessage &message);
+
+            virtual Common::Result handle (const Report::Event::AddEntryMessage &message);
+
+            virtual Common::Result handle (const Report::DeleteMessage &message);
+
+            using HF::Interfaces::AbstractInterface::handle;
+
+            void periodic (uint32_t time);
+
+            protected:
+
+            uint32_t last_time;
+
+            //! \see AbstractInterface::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const;
+
+            //! \see AbstractInterface::handle_command
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
+
+            /*!
+             * Send the response to a command with the given \c result.
+             *
+             * @param [in] packet   incoming packet to generate the response for.
+             * @param [in] report   report identification.
+             * @param [in] result   operation result.
+             */
+            void response (Protocol::Packet &packet, Reference &report, Common::Result result);
+
+            /*!
+             * Check if the given command is authorized for the device with
+             * the given address.
+             *
+             * @param [in] member interface member to check.
+             * @param [in] source device address of the incoming command.
+             *
+             * @retval  true  the command if authorized.
+             * @retval  false otherwise.
+             */
+            virtual bool authorized (uint8_t member, Protocol::Address &source)
+            {
+               UNUSED (member);
+               UNUSED (source);
+
+               return true;
+            }
+
+            template<typename _Rule, typename Iterator>
+            uint8_t find_available_id (Iterator begin, Iterator end)
+            {
+               // Find the next available entry.
+               std::vector <uint8_t> ids;
+
+               /* *INDENT-OFF* */
+               std::for_each(begin, end, [&ids](const _Rule &rule)
+               {
+                  ids.push_back(rule.report.id);
+               });
+               /* *INDENT-ON* */
+
+               std::sort (ids.begin (), ids.end ());
+
+               uint8_t id;
+
+               for (id = START_ADDR; id <= MAX_ADDR; id++)
+               {
+                  auto it = std::lower_bound (ids.begin (), ids.end (), id);
+
+                  if (it == ids.end () || *it != id)
+                  {
+                     break;
+                  }
+               }
+
+               return id;
+            }
+
+            bool check_uid (uint16_t uid) const
+            {
+               return Server::uid () == uid;
+            }
+         };
+
       }  // namespace AttributeReporting
 
    }  // namespace Core

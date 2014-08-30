@@ -2504,3 +2504,177 @@ TEST (AttributeReporting, AddEventEntry)
 
    delete message;
 }
+
+TEST_GROUP (AttributeReporting_Client)
+{
+   struct TestAttributeReportingClient:public InterfaceHelper <AttributeReporting::Client>
+   {
+      TestAttributeReportingClient():
+         InterfaceHelper <AttributeReporting::Client>()
+      {}
+
+      void report (Type type, Common::ByteArray &payload, size_t offset)
+      {
+         UNUSED (type);
+         UNUSED (payload);
+         UNUSED (offset);
+         mock ("AttributeReporting::Client").actualCall ("report").withParameter ("type", type);
+      }
+
+      void created (const Protocol::Address &address,
+                    const AttributeReporting::Response &response)
+      {
+         UNUSED (address);
+         UNUSED (response);
+
+         mock ("AttributeReporting::Client").actualCall ("created");
+      }
+
+      void added (const Protocol::Address &address,
+                  const AttributeReporting::Response &response)
+      {
+         UNUSED (address);
+         UNUSED (response);
+
+         mock ("AttributeReporting::Client").actualCall ("added");
+      }
+
+      void deleted (const Protocol::Address &address,
+                    const AttributeReporting::Response &response)
+      {
+         UNUSED (address);
+         UNUSED (response);
+
+         mock ("AttributeReporting::Client").actualCall ("deleted");
+      }
+   };
+
+   TestAttributeReportingClient client;
+
+
+   Protocol::Packet packet;
+
+   TEST_SETUP ()
+   {
+      client                = TestAttributeReportingClient ();
+
+      packet                = Protocol::Packet ();
+
+      packet.message.itf.id = HF::Interface::ATTRIBUTE_REPORTING;
+
+      mock ().ignoreOtherCalls ();
+   }
+
+   TEST_TEARDOWN ()
+   {
+      mock ().clear ();
+   }
+
+   void create_response (uint8_t member)
+   {
+      AttributeReporting::Response response;
+      response.code             = Common::Result::FAIL_UNKNOWN;
+      response.report.type      = EVENT;
+      response.report.id        = 0x5A;
+
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.type       = HF::Protocol::Message::COMMAND_RES;
+      packet.message.payload    = ByteArray (response.size ());
+      packet.message.length     = packet.message.payload.size ();
+      packet.message.itf.member = member;
+
+      response.pack (packet.message.payload);
+   }
+};
+
+TEST (AttributeReporting_Client, Created_Periodic)
+{
+   create_response (CREATE_PERIODIC_CMD);
+
+   mock ("AttributeReporting::Client").expectOneCall ("created");
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}
+
+TEST (AttributeReporting_Client, Created_Event)
+{
+   create_response (CREATE_EVENT_CMD);
+
+   mock ("AttributeReporting::Client").expectOneCall ("created");
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}
+
+TEST (AttributeReporting_Client, Added_Periodic)
+{
+   create_response (ADD_PERIODIC_ENTRY_CMD);
+
+   mock ("AttributeReporting::Client").expectOneCall ("added");
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}
+
+TEST (AttributeReporting_Client, Added_Event)
+{
+   create_response (ADD_EVENT_ENTRY_CMD);
+
+   mock ("AttributeReporting::Client").expectOneCall ("added");
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}
+
+TEST (AttributeReporting_Client, Deleted)
+{
+   create_response (DELETE_REPORT_CMD);
+
+   mock ("AttributeReporting::Client").expectOneCall ("deleted");
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}
+
+TEST (AttributeReporting_Client, Report_Periodic)
+{
+   Report::Periodic report;
+
+   packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
+   packet.message.type       = HF::Protocol::Message::COMMAND_REQ;
+   packet.message.payload    = ByteArray (report.size ());
+   packet.message.length     = packet.message.payload.size ();
+   packet.message.itf.member = PERIODIC_REPORT_CMD;
+
+   report.pack (packet.message.payload);
+
+   mock ("AttributeReporting::Client").expectOneCall ("report").withParameter ("type", PERIODIC);
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}
+
+TEST (AttributeReporting_Client, Report_Event)
+{
+   Report::Event report;
+
+   packet.message.payload    = ByteArray (report.size ());
+   packet.message.length     = packet.message.payload.size ();
+   packet.message.itf.member = EVENT_REPORT_CMD;
+   packet.message.type       = HF::Protocol::Message::COMMAND_REQ;
+
+   report.pack (packet.message.payload);
+
+   mock ("AttributeReporting::Client").expectOneCall ("report").withParameter ("type", EVENT);
+
+   LONGS_EQUAL (Common::Result::OK, client.handle (packet, packet.message.payload, 0));
+
+   mock ("AttributeReporting::Client").checkExpectations ();
+}

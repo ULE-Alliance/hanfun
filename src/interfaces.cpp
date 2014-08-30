@@ -305,15 +305,7 @@ Common::Result AbstractInterface::check_payload_size (Message &message, Common::
 // =============================================================================
 size_t AbstractInterface::payload_size (Message &message) const
 {
-   if (message.type == Message::GET_ATTR_PACK_REQ)
-   {
-      GetAttributePack::Request req;
-      return req.size ();
-   }
-   else
-   {
-      return payload_size (message.itf);
-   }
+   return payload_size (message.itf);
 }
 
 // =============================================================================
