@@ -110,6 +110,12 @@ namespace HF
             return Profile::handle (packet, payload, offset);
          }
 
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            return Profile::attributes (itf, pack_id, uids);
+         }
+
          protected:
 
          void send (Protocol::Address &addr, Protocol::Message &message)

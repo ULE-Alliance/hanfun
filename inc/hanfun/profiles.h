@@ -181,6 +181,19 @@ namespace HF
           * @return  the UID associated with this profile. \see IProfile::UID.
           */
          virtual uint16_t uid () const = 0;
+
+         /*!
+          * Return a list of all the attributes for a given interface, pack id and
+          * list of attributes UID's.
+          *
+          * @param [in] itf      interface UID.
+          * @param [in] pack_id  attribute pack id.
+          * @param [in] uids     list of attributes UID's.
+          *
+          * @return  attribute list.
+          */
+         virtual HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                                  const HF::Attributes::UIDS &uids) const = 0;
       };
 
       /*!
@@ -209,6 +222,19 @@ namespace HF
          {}
 
          using AbstractProfile <_uid>::uid;
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            if (Interface::uid () == itf.id)
+            {
+               return HF::Attributes::get (*this, pack_id, uids);
+            }
+            else
+            {
+               return HF::Attributes::List ();
+            }
+         }
       };
 
       /*!
@@ -279,9 +305,45 @@ namespace HF
             return static_cast <Interface2 *>(&(this->interfaces.second));
          }
 
+         /*!
+          * Pointer to the first interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         const Interface1 *first () const
+         {
+            return static_cast <const Interface1 *>(&(this->interfaces.first));
+         }
+
+         /*!
+          * Pointer to the second interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         const Interface2 *second () const
+         {
+            return static_cast <const Interface2 *>(&(this->interfaces.second));
+         }
 
          //! \see AbstractInterface::send
          virtual void send (Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            if (first ()->uid () == itf.id)
+            {
+               return HF::Attributes::get (*first (), pack_id, uids);
+            }
+            else if (second ()->uid () == itf.id)
+            {
+               return HF::Attributes::get (*second (), pack_id, uids);
+            }
+            else
+            {
+               return HF::Attributes::List ();
+            }
+         }
 
          protected:
 
@@ -313,6 +375,19 @@ namespace HF
          {
             Interfaces::Alert::Server::state (0, state);
             Interfaces::Alert::Server::status (addr, Detector::uid ());
+         }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          HF::Attributes::UIDS &uids) const
+         {
+            if (Interfaces::Alert::Server::uid () == itf.id)
+            {
+               return HF::Attributes::get (*this, pack_id, uids);
+            }
+            else
+            {
+               return HF::Attributes::List ();
+            }
          }
       };
 

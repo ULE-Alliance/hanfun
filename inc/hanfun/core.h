@@ -54,6 +54,15 @@ namespace HF
          }
 
          using Units::AbstractUnit::send;
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
+         }
       };
 
       /*!
@@ -225,6 +234,14 @@ namespace HF
          }
       }
 
+      HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                       const HF::Attributes::UIDS &uids) const
+      {
+         UNUSED (itf);
+         UNUSED (pack_id);
+         UNUSED (uids);
+         return HF::Attributes::List ();
+      }
 
       // =============================================================================
 

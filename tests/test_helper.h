@@ -287,6 +287,20 @@ namespace HF
 
       HF::Attributes::Factory FactoryGetter (HF::Common::Interface itf);
 
+      //! Test Interface.
+      template<class Base>
+      struct ProfileHelper:public InterfaceHelper <Base>
+      {
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
+         }
+      };
+
       struct Profile:public Profiles::IProfile, public TestInterface
       {
          uint16_t _uid;
@@ -294,6 +308,13 @@ namespace HF
          uint16_t uid () const
          {
             return _uid;
+         }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            return HF::Attributes::get (*this, pack_id, uids);
          }
       };
 
@@ -386,6 +407,15 @@ namespace HF
             UNUSED (offset);
             return Common::Result::FAIL_UNKNOWN;
          }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
+         }
       };
 
       struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
@@ -425,6 +455,15 @@ namespace HF
             UNUSED (payload);
             UNUSED (offset);
             return Common::Result::FAIL_UNKNOWN;
+         }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
          }
       };
 
