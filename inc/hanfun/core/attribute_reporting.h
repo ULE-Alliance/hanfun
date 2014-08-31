@@ -161,8 +161,11 @@ namespace HF
 
                typedef Container::const_iterator const_iterator;
 
+               //! Attribute indicating the last time rule was activated.
+               uint32_t last_time;
+
                Rule(uint32_t __interval = 0):
-                  _interval (__interval)
+                  last_time (0), _interval (__interval)
                {}
 
                //! \see HF::Common::Serializable::size
@@ -234,6 +237,7 @@ namespace HF
 
                protected:
 
+               //! Attribute indicating the time interval rule needs to be activated.
                uint32_t  _interval;
 
                Container entries;
@@ -1025,36 +1029,6 @@ namespace HF
                UNUSED (source);
 
                return true;
-            }
-
-            template<typename _Rule, typename Iterator>
-            uint8_t find_available_id (Iterator begin, Iterator end)
-            {
-               // Find the next available entry.
-               std::vector <uint8_t> ids;
-
-               /* *INDENT-OFF* */
-               std::for_each(begin, end, [&ids](const _Rule &rule)
-               {
-                  ids.push_back(rule.report.id);
-               });
-               /* *INDENT-ON* */
-
-               std::sort (ids.begin (), ids.end ());
-
-               uint8_t id;
-
-               for (id = START_ADDR; id <= MAX_ADDR; id++)
-               {
-                  auto it = std::lower_bound (ids.begin (), ids.end (), id);
-
-                  if (it == ids.end () || *it != id)
-                  {
-                     break;
-                  }
-               }
-
-               return id;
             }
 
             bool check_uid (uint16_t uid) const

@@ -2677,3 +2677,72 @@ TEST (AttributeReporting_Client, Report_Event)
 
    mock ("AttributeReporting::Client").checkExpectations ();
 }
+
+// =============================================================================
+// AttributeReporting::Server
+// =============================================================================
+
+TEST_GROUP (AttributeReporting_Server)
+{
+   Testing::Concentrator *base;
+   AttributeReporting::Server *server;
+
+   Testing::Unit *unit;
+
+   TEST_SETUP ()
+   {
+      base                       = new Testing::Concentrator ();
+      server                     = new AttributeReporting::Server (base->unit0);
+
+      base->unit0.attr_reporting = server;
+
+      unit                       = new Testing::Unit (1, *base);
+
+      mock ().ignoreOtherCalls ();
+   }
+
+   TEST_TEARDOWN ()
+   {
+      delete unit;
+      delete server;
+      delete base;
+
+      mock ().clear ();
+   }
+};
+
+TEST (AttributeReporting_Server, Periodic)
+{
+   Periodic::Rule  rule (50);
+   Periodic::Entry entry;
+
+   entry.itf.id  = HF::Interface::ALERT;
+   entry.pack_id = HF::Attributes::MANDATORY;
+   entry.unit    = 1;
+
+   rule.add (entry);
+
+   unit->attr3 = 0x1234;
+
+   server->periodic_rules.push_front (rule);
+
+   LONGS_EQUAL (0, base->packets.size ());
+
+   server->periodic (10);
+
+   LONGS_EQUAL (0, base->packets.size ());
+
+   server->periodic (60);
+
+   LONGS_EQUAL (1, base->packets.size ());
+
+   server->periodic (80);
+
+   LONGS_EQUAL (1, base->packets.size ());
+
+   Packet *packet = *base->packets.begin ();
+
+   ByteArray payload (packet->size ());
+
+   packet->pack (payload);
+}

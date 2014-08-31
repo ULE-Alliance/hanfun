@@ -72,6 +72,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
       case ADD_EVENT_ENTRY_CMD:
       case DELETE_REPORT_CMD:
          return payload_size_helper <Response>();
+
       default:
          return 0;
    }

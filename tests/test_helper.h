@@ -32,6 +32,7 @@
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+#include "hanfun/core/attribute_reporting.h"
 
 #include "hanfun/units.h"
 
@@ -420,11 +421,13 @@ namespace HF
 
       struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
-         HF::Core::DeviceManagement::Server *dev_mgt;
-         HF::Core::BindManagement::Server   *bind_mgt;
+         HF::Core::DeviceManagement::Server   *dev_mgt;
+         HF::Core::BindManagement::Server     *bind_mgt;
+         HF::Core::AttributeReporting::Server *attr_reporting;
 
          ConcentratorUnit0(HF::IDevice &device):
-            HF::Devices::Concentrator::IUnit0 (device), dev_mgt (nullptr), bind_mgt (nullptr)
+            HF::Devices::Concentrator::IUnit0 (device), dev_mgt (nullptr), bind_mgt (nullptr),
+            attr_reporting (nullptr)
          {}
 
          virtual ~ConcentratorUnit0() {}

@@ -541,7 +541,7 @@ List Attributes::get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uid
 
    if (pack_id != DYNAMIC)
    {
-      attr_uids = itf.attributes(pack_id);
+      attr_uids = itf.attributes (pack_id);
    }
 
    /* *INDENT-OFF* */
