@@ -525,3 +525,31 @@ IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t ui
          return nullptr;
    }
 }
+
+// =============================================================================
+// Attributes::attributes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+List Attributes::get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids)
+{
+   List result;
+
+   UIDS attr_uids = uids;
+
+   if (pack_id != DYNAMIC)
+   {
+      attr_uids = itf.attributes(pack_id);
+   }
+
+   /* *INDENT-OFF* */
+   std::for_each(attr_uids.begin (), attr_uids.end (), [&result, &itf](uint8_t uid)
+   {
+      result.push_back(const_cast<HF::Interface &>(itf).attribute(uid));
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}

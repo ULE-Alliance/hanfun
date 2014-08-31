@@ -396,6 +396,19 @@ namespace HF
          DYNAMIC   = 0xFF, //!< Return the attributes with the given attributes.
       } Pack;
 
+      /*!
+       * Get a list with the attributes for the given interface, pack id or the uids
+       * passed in.
+       *
+       * @param [in] itf      reference to the interface to retrieve the attributes for.
+       * @param [in] pack_id  pack id used to get attributes UIDs for. If HF::Attributes::DYNAMIC,
+       *                      use uids present in \c uids.
+       * @param [in] uids     array containing the attribute UID's if pack id equals HF::Attributes::DYNAMIC.
+       *
+       * @return  list containing the attributes.
+       */
+      List get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids);
+
    }  // namespace Attributes
 
    namespace Protocol
