@@ -49,7 +49,14 @@ Units::IUnit *AbstractDevice::unit (uint8_t id) const
    });
    /* *INDENT-ON* */
 
-   return *it;
+   if (it == _units.end ())
+   {
+      return nullptr;
+   }
+   else
+   {
+      return *it;
+   }
 }
 
 // =============================================================================

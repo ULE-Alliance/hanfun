@@ -322,6 +322,7 @@ namespace HF
 
          SerializableHelper(T data):data (data)
          {}
+
          size_t size () const
          {
             return data.size ();
@@ -349,7 +350,7 @@ namespace HF
 
          SerializableHelper()
          {
-            memset (&data, 0, sizeof(T));
+            data = nullptr;
          }
 
          SerializableHelper(T data):data (data)
@@ -382,7 +383,7 @@ namespace HF
 
          SerializableHelper()
          {
-            memset (&data, 0, sizeof(T));
+            data = 0;
          }
 
          SerializableHelper(T data):data (data) {}

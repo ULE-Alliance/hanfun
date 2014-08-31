@@ -2551,7 +2551,6 @@ TEST_GROUP (AttributeReporting_Client)
 
    TestAttributeReportingClient client;
 
-
    Protocol::Packet packet;
 
    TEST_SETUP ()

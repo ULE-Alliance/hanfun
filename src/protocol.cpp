@@ -662,7 +662,8 @@ bool Protocol::matches (Message::Type lhs, Message::Type rhs)
       }
       case Message::Type::COMMAND_RES:
       {
-         return (rhs == Message::Type::COMMAND_REQ || rhs == Message::Type::COMMAND_RESP_REQ);
+         return (rhs == Message::Type::COMMAND_REQ ||
+                 rhs == Message::Type::COMMAND_RESP_REQ);
       }
 
       case Message::Type::GET_ATTR_REQ:
@@ -681,7 +682,8 @@ bool Protocol::matches (Message::Type lhs, Message::Type rhs)
       }
       case Message::Type::SET_ATTR_RES:
       {
-         return (rhs == Message::Type::SET_ATTR_REQ || rhs == Message::Type::SET_ATTR_RESP_REQ);
+         return (rhs == Message::Type::SET_ATTR_REQ ||
+                 rhs == Message::Type::SET_ATTR_RESP_REQ);
       }
 
       case Message::Type::GET_ATTR_PACK_REQ:
@@ -700,7 +702,8 @@ bool Protocol::matches (Message::Type lhs, Message::Type rhs)
       }
       case Message::Type::SET_ATTR_PACK_RES:
       {
-         return (rhs == Message::Type::SET_ATTR_PACK_REQ || rhs == Message::Type::SET_ATTR_PACK_RESP_REQ);
+         return (rhs == Message::Type::SET_ATTR_PACK_REQ ||
+                 rhs == Message::Type::SET_ATTR_PACK_RESP_REQ);
       }
 
       case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
@@ -710,7 +713,8 @@ bool Protocol::matches (Message::Type lhs, Message::Type rhs)
       }
       case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
       {
-         return (rhs == Message::Type::ATOMIC_SET_ATTR_PACK_REQ || rhs == Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ);
+         return (rhs == Message::Type::ATOMIC_SET_ATTR_PACK_REQ ||
+                 rhs == Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ);
       }
       default:
          return false;

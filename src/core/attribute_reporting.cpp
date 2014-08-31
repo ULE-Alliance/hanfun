@@ -969,11 +969,12 @@ size_t Report::Event::Entry::size () const
 {
    size_t result = Report::Entry::size ();
 
+   /* *INDENT-OFF* */
    std::for_each (fields.begin (), fields.end (), [&result](const Field &field)
-                  {
-                     result += field.size ();
-                  }
-                 );
+   {
+      result += field.size ();
+   });
+   /* *INDENT-ON* */
 
    return result;
 }
