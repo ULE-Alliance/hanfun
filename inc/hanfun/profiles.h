@@ -253,7 +253,7 @@ namespace HF
             InterfaceProxy(profile_t &proxy):proxy (proxy)
             {}
 
-            void send (Protocol::Address &addr, Protocol::Message &message)
+            void send (const Protocol::Address &addr, Protocol::Message &message)
             {
                proxy.send (addr, message);
             }
@@ -326,7 +326,7 @@ namespace HF
          }
 
          //! \see AbstractInterface::send
-         virtual void send (Protocol::Address &addr, Protocol::Message &message) = 0;
+         virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const

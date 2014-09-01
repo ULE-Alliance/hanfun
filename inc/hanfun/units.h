@@ -118,7 +118,7 @@ namespace HF
 
          protected:
 
-         void send (Protocol::Address &addr, Protocol::Message &message)
+         void send (const Protocol::Address &addr, Protocol::Message &message)
          {
             AbstractUnit::send (addr, message, nullptr);
          }

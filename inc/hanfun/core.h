@@ -105,12 +105,12 @@ namespace HF
          AbstractService(Unit0 &unit):_unit (unit)
          {}
 
-         void send (Protocol::Address &addr, Protocol::Message &message)
+         void send (const Protocol::Address &addr, Protocol::Message &message)
          {
             unit ().send (addr, message, nullptr);
          }
 
-         void send (Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
+         void send (const Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
          {
             unit ().send (addr, message, link);
          }

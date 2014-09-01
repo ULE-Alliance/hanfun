@@ -180,7 +180,8 @@ namespace HF
           * @param [in] addr        HF network address.
           * @param [in] message     pointer to the message to be sent to the network.
           */
-         virtual void send (Protocol::Address &addr, Protocol::Message &message) = 0;
+         virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
+
 
          /*!
           * Check if message has correct attributes to be processed by the interface.
