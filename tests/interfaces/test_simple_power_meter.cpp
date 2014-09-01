@@ -714,7 +714,7 @@ TEST (SimplePowerMeterServer, periodic)
 
    server->report_interval (13);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    server->periodic (time);
 
@@ -731,7 +731,7 @@ TEST (SimplePowerMeterServer, periodic)
 
    LONGS_EQUAL (0, server->sendMsg.payload.size ());
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    time += 10;
    server->periodic (time);

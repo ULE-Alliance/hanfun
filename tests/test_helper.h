@@ -138,9 +138,9 @@ namespace HF
          virtual ~InterfaceHelper()
          {}
 
-         void send (Protocol::Address &addr, Protocol::Message &message)
+         void send (const Protocol::Address &addr, Protocol::Message &message)
          {
-            mock ("Interface").actualCall ("sendMessage");
+            mock ("Interface").actualCall ("send");
 
             this->addr    = addr;
             this->sendMsg = message;

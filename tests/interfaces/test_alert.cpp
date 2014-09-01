@@ -272,7 +272,7 @@ TEST (AlertServer, Status2)
 
    Protocol::Address addr;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    server->status (addr, 5);
 

@@ -125,7 +125,7 @@ TEST_GROUP (LevelControlClient)
 //! \test Should send an LevelControl::SET_LEVEL_CMD message.
 TEST (LevelControlClient, Level)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.level (addr, 0x42);
 

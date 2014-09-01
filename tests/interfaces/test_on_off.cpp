@@ -67,7 +67,7 @@ TEST_GROUP (OnOffClient)
 //! \test Should send an ON_CMD message.
 TEST (OnOffClient, On)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.on (addr);
 
@@ -82,7 +82,7 @@ TEST (OnOffClient, On)
 //! \test Should send an OFF_CMD message.
 TEST (OnOffClient, Off)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.off (addr);
 
@@ -97,7 +97,7 @@ TEST (OnOffClient, Off)
 //! \test Should send an TOGGLE_CMD message.
 TEST (OnOffClient, Toggle)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.toggle (addr);
 

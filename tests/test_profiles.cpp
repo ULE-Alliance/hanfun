@@ -107,7 +107,7 @@ TEST_GROUP (Profiles)
 
 TEST (Profiles, UIDs)
 {
-   Profiles::IProfile *profile = NULL;
+   Profiles::IProfile *profile = nullptr;
 
    // =============================================================================
    // Home Control Unit Types
@@ -243,7 +243,7 @@ TEST (Profiles, Detector)
    addr.device = 42;
    addr.unit   = 33;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    detector.alert (addr, true);
 
