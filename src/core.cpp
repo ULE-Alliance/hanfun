@@ -5,7 +5,7 @@
  * This file contains the implementation of common functionality in the core
  * services and interfaces of the HAN-FUN protocol.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

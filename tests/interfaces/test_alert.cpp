@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Alert Interface implementation.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
