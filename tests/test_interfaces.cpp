@@ -196,7 +196,7 @@ TEST (AbstractInterface, Handle_SetAttribute_Invalid)
    mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   CHECK_EQUAL (Result::FAIL_SUPPORT, result);
 
    mock ().checkExpectations ();
 
@@ -218,7 +218,7 @@ TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
    mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   CHECK_EQUAL (Result::FAIL_RO_ATTR, result);
 
    mock ().checkExpectations ();
 
@@ -449,7 +449,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
    mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   CHECK_EQUAL (Result::FAIL_SUPPORT, result);
 
    mock ().checkExpectations ();
 

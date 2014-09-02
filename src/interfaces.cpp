@@ -334,6 +334,8 @@ Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteAr
 // =============================================================================
 Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::ByteArray &payload, size_t offset)
 {
+   Common::Result result = Common::Result::OK;
+
    switch (packet.message.type)
    {
       case Message::GET_ATTR_REQ:
@@ -358,7 +360,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_REQ:
       {
-         update_attribute (this, packet.message.itf.member, payload, offset);
+         result = update_attribute (this, packet.message.itf.member, payload, offset);
          break;
       }
       case Message::SET_ATTR_RESP_REQ:
@@ -375,7 +377,6 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::GET_ATTR_PACK_REQ:
       {
-         Common::Result result = Common::Result::OK;
          GetAttributePack::Request request;
 
          HF::Attributes::UIDS attributes;
@@ -480,5 +481,5 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
          break;
    }
 
-   return Common::Result::OK;
+   return result;
 }
