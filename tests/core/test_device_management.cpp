@@ -682,27 +682,27 @@ TEST_GROUP (DeviceManagementClient)
 
    TEST_SETUP ()
    {
-      device                = new Testing::Device ();
+      device      = new Testing::Device ();
 
-      unit1                 = new Testing::Unit (1, *device);
-      unit2                 = new Testing::Unit (2, *device);
-      unit3                 = new Testing::Unit (3, *device);
+      unit1       = new Testing::Unit (1, *device);
+      unit2       = new Testing::Unit (2, *device);
+      unit3       = new Testing::Unit (3, *device);
 
-      unit1->_uid           = 0xFF01;
-      unit2->_uid           = 0xFF02;
-      unit3->_uid           = 0xFF03;
+      unit1->_uid = 0xFF01;
+      unit2->_uid = 0xFF02;
+      unit3->_uid = 0xFF03;
 
-      dev_mgt               = new TestDeviceManagementClient (device->unit0);
+      dev_mgt     = new TestDeviceManagementClient (*device->unit0 ());
 
-      device->unit0.dev_mgt = dev_mgt;
-
-      mock ().ignoreOtherCalls ();
+      device->unit0 ()->dev_mgt = dev_mgt;
 
       packet                  = Protocol::Packet ();
 
       packet.message.type     = Protocol::Message::COMMAND_RES;
       packet.message.itf.role = HF::Interface::SERVER_ROLE;
       packet.message.itf.id   = HF::Interface::DEVICE_MANAGEMENT;
+
+      mock ().ignoreOtherCalls ();
    }
 
    TEST_TEARDOWN ()
@@ -962,13 +962,13 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_SETUP ()
    {
-      device                    = new Testing::Concentrator ();
+      device  = new Testing::Concentrator ();
 
-      dev_mgt                   = new TestDeviceManagementServer (device->unit0);
+      dev_mgt = new TestDeviceManagementServer (*device->unit0 ());
 
-      device->unit0.dev_mgt     = dev_mgt;
+      device->unit0 ()->dev_mgt  = dev_mgt;
 
-      device->unit0.bind_mgt    = new HF::Core::BindManagement::Server (device->unit0);
+      device->unit0 ()->bind_mgt = new HF::Core::BindManagement::Server (*device->unit0 ());
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;
@@ -989,7 +989,7 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0.bind_mgt;
+      delete device->unit0 ()->bind_mgt;
 
       delete dev_mgt;
 
@@ -1143,30 +1143,30 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
    Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
    Protocol::Address dst (0x5A53, 4);
 
-   auto bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+   auto bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
    dst      = Protocol::Address (0x5A55, 6);
 
-   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+   bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
    dst      = Protocol::Address (0x5A57, 8);
 
-   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+   bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
    src      = Protocol::Address (0x5A54, 5);
    dst      = Protocol::Address (0x5A53, 4);
 
-   bind_res = device->unit0.bind_management ()->add (src, dst, itf);
+   bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
    CHECK_EQUAL (Result::OK, bind_res.first);
 
-   LONGS_EQUAL (4, device->unit0.bind_management ()->entries.size ());
+   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
 
    // == De-register the device.
 
@@ -1190,7 +1190,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    mock ("DeviceManagementServer").checkExpectations ();
 
-   LONGS_EQUAL (4, device->unit0.bind_management ()->entries.size ());
+   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
 
    LONGS_EQUAL (size, dev_mgt->entries_count ());
 
@@ -1207,7 +1207,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
 
-   LONGS_EQUAL (1, device->unit0.bind_management ()->entries.size ());
+   LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries.size ());
 }
 
 TEST (DeviceManagementServer, Entries)

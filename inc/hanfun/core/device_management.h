@@ -333,23 +333,14 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
+         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+
          /*!
           * Parent class for the Device Management interface implementation.
           */
          struct Abstract:public Service <HF::Interface::DEVICE_MANAGEMENT>
          {
             static constexpr uint16_t START_ADDR = 0x0001;
-
-            // =============================================================================
-            // API
-            // =============================================================================
-
-            HF::Attributes::IAttribute *create_attribute (uint8_t uid)
-            {
-               return Core::create_attribute ((DeviceManagement::Server *) nullptr, uid);
-            }
-
-            // =============================================================================
 
             protected:
 
@@ -559,10 +550,10 @@ namespace HF
             {}
 
             //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
             {
                UNUSED (pack_id);
-               return HF::Attributes::uids_t {NUMBER_OF_ENTRIES_ATTR};
+               return HF::Attributes::UIDS {NUMBER_OF_ENTRIES_ATTR};
             }
 
             /*!

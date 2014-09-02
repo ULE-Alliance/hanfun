@@ -477,7 +477,11 @@ TEST (SimplePowerMeterServer, energy)
 {
    check_equal (initial, server->energy ());
 
+   mock ("Interface").expectOneCall ("notify");
+
    server->energy (other);
+
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -491,7 +495,9 @@ TEST (SimplePowerMeterServer, last_energy)
 {
    check_equal (initial, server->last_energy ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->last_energy (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -509,7 +515,9 @@ TEST (SimplePowerMeterServer, last_time)
 
    check_equal (initial, server->last_time ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->last_time (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit   = Time::UTC;
    other.value += 42;
@@ -523,7 +531,9 @@ TEST (SimplePowerMeterServer, power)
 {
    check_equal (initial, server->power ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->power (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -537,7 +547,9 @@ TEST (SimplePowerMeterServer, avg_power)
 {
    check_equal (initial, server->avg_power ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->avg_power (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -551,7 +563,9 @@ TEST (SimplePowerMeterServer, avg_power_interval)
 {
    CHECK_EQUAL (0, server->avg_power_interval ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->avg_power_interval (42);
+   mock ("Interface").checkExpectations ();
 
    CHECK_EQUAL (42, server->avg_power_interval ());
 }
@@ -560,7 +574,9 @@ TEST (SimplePowerMeterServer, voltage)
 {
    check_equal (initial, server->voltage ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->voltage (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -574,7 +590,9 @@ TEST (SimplePowerMeterServer, current)
 {
    check_equal (initial, server->current ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->current (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -588,7 +606,9 @@ TEST (SimplePowerMeterServer, frequency)
 {
    check_equal (initial, server->frequency ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->frequency (other);
+   mock ("Interface").checkExpectations ();
 
    other.unit  += 1;
    other.value += 42;
@@ -602,7 +622,9 @@ TEST (SimplePowerMeterServer, power_factor)
 {
    CHECK_EQUAL (0, server->power_factor ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->power_factor (42);
+   mock ("Interface").checkExpectations ();
 
    CHECK_EQUAL (42, server->power_factor ());
 }
@@ -611,7 +633,9 @@ TEST (SimplePowerMeterServer, report_interval)
 {
    CHECK_EQUAL (0, server->report_interval ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->report_interval (42);
+   mock ("Interface").checkExpectations ();
 
    CHECK_EQUAL (42, server->report_interval ());
 }
@@ -712,9 +736,10 @@ TEST (SimplePowerMeterServer, periodic)
 {
    uint16_t time = 1234;
 
+   mock ("Interface").expectOneCall ("notify");
    server->report_interval (13);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    server->periodic (time);
 
@@ -731,7 +756,7 @@ TEST (SimplePowerMeterServer, periodic)
 
    LONGS_EQUAL (0, server->sendMsg.payload.size ());
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    time += 10;
    server->periodic (time);
@@ -746,7 +771,9 @@ TEST (SimplePowerMeterServer, periodic_disabled)
 {
    uint16_t time = 1234;
 
+   mock ("Interface").expectOneCall ("notify");
    server->report_interval (0);
+   mock ("Interface").checkExpectations ();
 
    server->periodic (time);
    LONGS_EQUAL (0, server->sendMsg.payload.size ());

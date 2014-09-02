@@ -53,7 +53,7 @@ namespace HF
          //! Command IDs.
          typedef enum
          {
-            STATUS_CMD = 0x01       //! Alert Status Command ID.
+            STATUS_CMD = 0x01     //!< Alert Status Command ID.
          } CMD;
 
          //! Attributes
@@ -83,39 +83,27 @@ namespace HF
 
          /*!
           * Helper class to handle the State attribute for the Alert interface.
-          *
-          * \warning This class is not meant to be instantiated. It only serves as a
-          *          helper type to cast created IAttribute into a class that has
-          *          methods to manipulate the underling data.
           */
          struct State:public HF::Attributes::Attribute <uint32_t>
          {
             static constexpr uint8_t ID        = STATE_ATTR;
             static constexpr bool    WRITABBLE = false;
 
-            private:
-
-            State(uint32_t data):
-               Attribute <uint32_t>(Interface::ALERT, ID, data, WRITABBLE)
+            State(uint32_t data = 0, const HF::Interface *itf = nullptr):
+               Attribute <uint32_t>(Interface::ALERT, ID, itf, data, WRITABBLE)
             {}
          };
 
          /*!
           * Helper class to handle the Enabled attribute for the Alert interface.
-          *
-          * \warning This class is not meant to be instantiated. It only serves as a
-          *          helper type to cast created IAttribute into a class that has methods
-          *          to manipulate the underling data.
           */
          struct Enable:public HF::Attributes::Attribute <uint32_t>
          {
             static constexpr uint8_t ID        = ENABLE_ATTR;
             static constexpr bool    WRITABBLE = true;
 
-            private:
-
-            Enable(uint32_t data):
-               Attribute <uint32_t>(Interface::ALERT, ID, data, WRITABBLE)
+            Enable(uint32_t data = 0, const HF::Interface *itf = nullptr):
+               Attribute <uint32_t>(Interface::ALERT, ID, itf, data, WRITABBLE)
             {}
          };
 
@@ -309,11 +297,11 @@ namespace HF
             Alert::Message *create_status (uint16_t unit_type);
 
             //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
             {
                UNUSED (pack_id);
                /* *INDENT-OFF* */
-               return HF::Attributes::uids_t ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
+               return HF::Attributes::UIDS ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
          };

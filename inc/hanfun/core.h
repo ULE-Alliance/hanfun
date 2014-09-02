@@ -53,7 +53,17 @@ namespace HF
             return 0;
          }
 
-         using Units::AbstractUnit::sendMessage;
+         using Units::AbstractUnit::send;
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
+         }
+
       };
 
       /*!
@@ -83,6 +93,11 @@ namespace HF
             return AbstractInterface::attribute (uid);
          }
 
+         //! \see AbstractInterface::attributes
+         HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            return AbstractInterface::attributes (pack_id);
+         }
 
          protected:
 
@@ -91,19 +106,14 @@ namespace HF
          AbstractService(Unit0 &unit):_unit (unit)
          {}
 
-         //! \see AbstractInterface::attributes
-         HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         void send (const Protocol::Address &addr, Protocol::Message &message)
          {
-            return AbstractInterface::attributes (pack_id);
-         }
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
-         {
-            unit ().sendMessage (addr, message, nullptr);
+            unit ().send (addr, message, nullptr);
          }
 
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
+         void send (const Protocol::Address &addr, Protocol::Message &message, Transport::Link *link)
          {
-            unit ().sendMessage (addr, message, link);
+            unit ().send (addr, message, link);
          }
       };
 
@@ -176,6 +186,8 @@ namespace HF
 
       typedef typename std::tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
+      typedef typename std::tuple_element <2, decltype (interfaces)>::type AttrReporting;
+
       static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
                      "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
 
@@ -187,12 +199,12 @@ namespace HF
 
       // =============================================================================
 
-      DeviceInfo *info () const
+      DeviceInfo *device_info () const
       {
          return const_cast <DeviceInfo *>(&std::get <0>(interfaces));
       }
 
-      DeviceInfo *info ()
+      DeviceInfo *device_info ()
       {
          return &std::get <0>(interfaces);
       }
@@ -207,45 +219,70 @@ namespace HF
          return &std::get <1>(interfaces);
       }
 
+      AttrReporting *attribute_reporting () const
+      {
+         return const_cast <AttrReporting *>(&std::get <2>(interfaces));
+      }
+
+      AttrReporting *attribute_reporting ()
+      {
+         return &std::get <2>(interfaces);
+      }
+
       // =============================================================================
       // IUnit API
       // =============================================================================
 
       Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
       {
-         return handle_proxy <0, ITF...>(packet, payload, offset);
+         Core::IService *service = find <0, ITF...>(packet.message.itf.id);
+
+         if (service != nullptr)
+         {
+            return service->handle (packet, payload, offset);
+         }
+         else
+         {
+            return Common::Result::FAIL_SUPPORT;
+         }
       }
 
+      HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                       const HF::Attributes::UIDS &uids) const
+      {
+         UNUSED (itf);
+         UNUSED (pack_id);
+         UNUSED (uids);
+         return HF::Attributes::List ();
+      }
 
       // =============================================================================
 
       private:
 
       template<uint8_t N, typename Head, typename... Tail>
-      Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+      Core::IService *find (uint16_t itf_uid) const
       {
          static_assert (std::is_base_of <HF::Core::IService, Head>::value,
                         "Head must be of type HF::Core::IService");
 
-         Head &head = std::get <N>(interfaces);
+         const Head &head = std::get <N>(interfaces);
 
-         if (head.uid () == packet.message.itf.id)
+         if (head.uid () == itf_uid)
          {
-            return head.handle (packet, payload, offset);
+            return const_cast <Head *>(&head);
          }
          else
          {
-            return handle_proxy <N + 1, Tail...>(packet, payload, offset);
+            return find <N + 1, Tail...>(itf_uid);
          }
       }
 
       template<uint8_t N>
-      HF::Common::Result handle_proxy (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+      Core::IService *find (uint16_t itf_uid) const
       {
-         UNUSED (packet);
-         UNUSED (payload);
-         UNUSED (offset);
-         return Common::Result::FAIL_SUPPORT;
+         UNUSED (itf_uid);
+         return nullptr;
       }
    };
 

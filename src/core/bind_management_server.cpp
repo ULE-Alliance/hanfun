@@ -91,7 +91,7 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
    resp.pack (response.payload);
 
-   sendMessage (packet.source, response);
+   send (packet.source, response);
 
    return res;
 }

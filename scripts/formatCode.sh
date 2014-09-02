@@ -59,19 +59,19 @@ do
 
  sed -i '
 # Remove any extra slashes on a C++ type comment
-s|////*|//|
+# s|////*|//|
 
 # Remove spaces between ")" and ";".
 # This happens in "while(statement);" as a uncrustify side effect
 s/)[[:space:]]*;/);/
 
 # Remove added | to comments.
-s/^[[:space:]]*|\+\(+-\+\)/\1/
+# s/^[[:space:]]*|\+\(+-\+\)/\1/
 
 # Remove added * to comments.
-s/^[[:space:]]*\*\*\+\(-\+\)/ *\1/
+# s/^[[:space:]]*\*\*\+\(-\+\)/ *\1/
 
-s/^[[:space:]]*\(\*\+-\+\)/ \1/
+# s/^[[:space:]]*\(\*\+-\+\)/ \1/
 
 # Remove extra space on comments after one-line while
 s|\(while[^;]\+;\)[[:space:]]\+\(//.\+\)|\1 \2|

@@ -43,5 +43,5 @@ void LevelControl::Client::level (Protocol::Address &addr, uint8_t new_level)
 
    level_msg.pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 }

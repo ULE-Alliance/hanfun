@@ -67,7 +67,7 @@ TEST_GROUP (OnOffClient)
 //! \test Should send an ON_CMD message.
 TEST (OnOffClient, On)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.on (addr);
 
@@ -82,7 +82,7 @@ TEST (OnOffClient, On)
 //! \test Should send an OFF_CMD message.
 TEST (OnOffClient, Off)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.off (addr);
 
@@ -97,7 +97,7 @@ TEST (OnOffClient, Off)
 //! \test Should send an TOGGLE_CMD message.
 TEST (OnOffClient, Toggle)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.toggle (addr);
 
@@ -156,6 +156,9 @@ TEST_GROUP (OnOffServer)
       packet.message.itf.role   = Interface::SERVER_ROLE;
       packet.message.itf.id     = server.uid ();
       packet.message.itf.member = 0xFF;
+
+      mock ("OnOffServer").ignoreOtherCalls ();
+      mock ("Interface").ignoreOtherCalls ();
    }
 
    TEST_TEARDOWN ()
@@ -166,6 +169,8 @@ TEST_GROUP (OnOffServer)
 
 TEST (OnOffServer, State)
 {
+   mock ("Interface").expectNCalls (2, "notify");
+
    CHECK_FALSE (server.state ());
 
    server.state (true);
@@ -173,6 +178,8 @@ TEST (OnOffServer, State)
 
    server.state (false);
    CHECK_FALSE (server.state ());
+
+   mock ("Interface").checkExpectations ();
 }
 
 TEST (OnOffServer, DefaultCallbacks)

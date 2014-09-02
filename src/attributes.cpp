@@ -34,6 +34,75 @@ using namespace HF::Core;
 // Attribute Factories
 // =============================================================================
 
+struct Entry
+{
+   uint16_t            id;
+   Attributes::Factory factory;
+};
+
+static const Entry factories[] =
+{
+   /* Core Services */
+   {
+      HF::Interface::DEVICE_MANAGEMENT,
+      HF::Core::DeviceManagement::create_attribute
+   },
+   {
+      HF::Interface::BIND_MANAGEMENT,
+      nullptr
+      // FIXME return HF::Core::BindManagement::create_attribute;
+   },
+   {
+      HF::Interface::DEVICE_INFORMATION,
+      HF::Core::DeviceInformation::create_attribute
+   },
+   {
+      HF::Interface::ATTRIBUTE_REPORTING,
+      nullptr
+      // FIXME return HF::Core::AttributeReporting::create_attribute;
+   },
+   /* Functional Interfaces. */
+   {
+      HF::Interface::ALERT,
+      HF::Interfaces::Alert::create_attribute,
+   },
+   {
+      HF::Interface::ON_OFF,
+      HF::Interfaces::OnOff::create_attribute
+   },
+   {
+      HF::Interface::LEVEL_CONTROL,
+      HF::Interfaces::LevelControl::create_attribute
+   },
+   {
+      HF::Interface::SIMPLE_POWER_METER,
+      HF::Interfaces::SimplePowerMeter::create_attribute
+   },
+};
+
+// =============================================================================
+// Attributes::get_factory
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Attributes::Factory Attributes::get_factory (Common::Interface itf)
+{
+   Attributes::Factory result = nullptr;
+
+   for (uint32_t index = 0; index < (sizeof(factories) / sizeof(*factories)); ++index)
+   {
+      if (factories[index].id == itf.id)
+      {
+         result = factories[index].factory;
+         break;
+      }
+   }
+
+   return result;
+}
+
 // =============================================================================
 // Interfaces
 // =============================================================================
@@ -59,11 +128,11 @@ IAttribute *Interfaces::create_attribute (Alert::Server *server, uint8_t uid)
 
          if (server != nullptr)
          {
-            return new Attribute <uint32_t &>(itf_uid, attr, server->_state, writabble);
+            return new Attribute <uint32_t &>(itf_uid, attr, server, server->_state, writabble);
          }
          else
          {
-            return new Attribute <uint32_t>(itf_uid, attr, writabble);
+            return new Attribute <uint32_t>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -73,11 +142,11 @@ IAttribute *Interfaces::create_attribute (Alert::Server *server, uint8_t uid)
 
          if (server != nullptr)
          {
-            return new Attribute <uint32_t &>(itf_uid, attr, server->_enabled, writabble);
+            return new Attribute <uint32_t &>(itf_uid, attr, server, server->_enabled, writabble);
          }
          else
          {
-            return new Attribute <uint32_t>(itf_uid, attr, writabble);
+            return new Attribute <uint32_t>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -107,11 +176,11 @@ IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t 
 
          if (server != nullptr)
          {
-            return new Attribute <uint8_t &>(itf_uid, attr, server->_level, writabble);
+            return new Attribute <uint8_t &>(itf_uid, attr, server, server->_level, writabble);
          }
          else
          {
-            return new Attribute <uint8_t>(itf_uid, attr, writabble);
+            return new Attribute <uint8_t>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -141,11 +210,11 @@ IAttribute *Interfaces::create_attribute (OnOff::Server *server, uint8_t uid)
 
          if (server != nullptr)
          {
-            return new Attribute <bool &>(itf_uid, attr, server->_state, writabble);
+            return new Attribute <bool &>(itf_uid, attr, server, server->_state, writabble);
          }
          else
          {
-            return new Attribute <bool>(itf_uid, attr, false, writabble);
+            return new Attribute <bool>(itf_uid, attr, server, false, writabble);
          }
       }
 
@@ -175,7 +244,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_ENERGY_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr,
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
                                                                    server->_energy, writabble);
 
 #else
@@ -185,7 +254,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -194,7 +263,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr,
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
                                                                    server->_last_energy, writabble);
 
 #else
@@ -204,7 +273,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -213,8 +282,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_last_time,
-                                                                   writabble);
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
+                                                                   server->_last_time, writabble);
 
 #else
             return nullptr;
@@ -223,7 +292,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -232,7 +301,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_POWER_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_power,
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server, server->_power,
                                                                    writabble);
 
 #else
@@ -242,7 +311,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -251,8 +320,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_AVG_POWER_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_avg_power,
-                                                                   writabble);
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
+                                                                   server->_avg_power, writabble);
 
 #else
             return nullptr;
@@ -261,7 +330,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -272,7 +341,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
-            return new Attribute <uint16_t &>(itf_uid, attr, server->_avg_power_interval, writabble);
+            return new Attribute <uint16_t &>(itf_uid, attr, server,
+                                              server->_avg_power_interval, writabble);
 
 #else
             return nullptr;
@@ -282,7 +352,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <uint16_t>(itf_uid, attr, writabble);
+            return new Attribute <uint16_t>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -291,8 +361,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_VOLTAGE_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_voltage,
-                                                                   writabble);
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
+                                                                   server->_voltage, writabble);
 
 #else
             return nullptr;
@@ -301,7 +371,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -310,8 +380,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_CURRENT_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_current,
-                                                                   writabble);
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
+                                                                   server->_current, writabble);
 
 #else
             return nullptr;
@@ -320,7 +390,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -329,8 +399,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_FREQUENCY_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server->_frequency,
-                                                                   writabble);
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
+                                                                   server->_frequency, writabble);
 
 #else
             return nullptr;
@@ -339,7 +409,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, writabble);
+            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -348,7 +418,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
-            return new Attribute <uint8_t &>(itf_uid, attr, server->_power_factor, writabble);
+            return new Attribute <uint8_t &>(itf_uid, attr, server, server->_power_factor, writabble);
 
 #else
             return nullptr;
@@ -357,7 +427,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <uint8_t>(itf_uid, attr, writabble);
+            return new Attribute <uint8_t>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -368,7 +438,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_REPORT_INTERVAL_ATTR
-            return new Attribute <uint16_t &>(itf_uid, attr, server->_report_interval, writabble);
+            return new Attribute <uint16_t &>(itf_uid, attr, server, server->_report_interval, writabble);
 
 #else
             return nullptr;
@@ -377,7 +447,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <uint16_t>(itf_uid, attr, writabble);
+            return new Attribute <uint16_t>(itf_uid, attr, server, writabble);
          }
       }
 
@@ -397,7 +467,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
  *
  */
 // =============================================================================
-IAttribute *Core::create_attribute (const DeviceInformation::Server *server, uint8_t uid)
+IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t uid)
 {
    DeviceInformation::Attributes attr = static_cast <DeviceInformation::Attributes>(uid);
 
@@ -406,17 +476,17 @@ IAttribute *Core::create_attribute (const DeviceInformation::Server *server, uin
       case DeviceInformation::CORE_VERSION_ATTR:
       {
          uint8_t value = (server != nullptr ? DeviceInformation::CORE_VERSION : 0xFF);
-         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, value);
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case DeviceInformation::PROFILE_VERSION_ATTR:
       {
          uint8_t value = (server != nullptr ? DeviceInformation::PROFILE_VERSION : 0xFF);
-         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, value);
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case DeviceInformation::INTERFACE_VERSION_ATTR:
       {
          uint8_t value = (server != nullptr ? DeviceInformation::INTERFACE_VERSION : 0xFF);
-         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, value);
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case DeviceInformation::UID_ATTR:
       {
@@ -427,7 +497,7 @@ IAttribute *Core::create_attribute (const DeviceInformation::Server *server, uin
             value = server->device_uid;
          }
 
-         return new Attribute <HF::UID::UID>(Interface::DEVICE_INFORMATION, attr, value);
+         return new Attribute <HF::UID::UID>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
       default:
          return nullptr;
@@ -450,9 +520,37 @@ IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t ui
       case DeviceManagement::NUMBER_OF_ENTRIES_ATTR:
       {
          uint16_t value = (server != nullptr ? server->entries_count () : 0);
-         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, value);
+         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:
          return nullptr;
    }
+}
+
+// =============================================================================
+// Attributes::attributes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+List Attributes::get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids)
+{
+   List result;
+
+   UIDS attr_uids = uids;
+
+   if (pack_id != DYNAMIC)
+   {
+      attr_uids = itf.attributes (pack_id);
+   }
+
+   /* *INDENT-OFF* */
+   std::for_each(attr_uids.begin (), attr_uids.end (), [&result, &itf](uint8_t uid)
+   {
+      result.push_back(const_cast<HF::Interface &>(itf).attribute(uid));
+   });
+   /* *INDENT-ON* */
+
+   return result;
 }

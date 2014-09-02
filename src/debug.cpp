@@ -48,10 +48,12 @@ std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &ar
    }
    else
    {
-      for_each (array.begin (), array.end (), [&stream](uint8_t byte) {
-                   stream << byte;
-                }
-               );
+      /* *INDENT-OFF* */
+      std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
+      {
+         stream << byte;
+      });
+      /* *INDENT-ON* */
    }
 
    return stream;

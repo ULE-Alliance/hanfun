@@ -55,7 +55,7 @@ namespace HF
          struct Server;
       }  // namespace DeviceInformation
 
-      HF::Attributes::IAttribute *create_attribute (const DeviceInformation::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute (DeviceInformation::Server *server, uint8_t uid);
 
       namespace DeviceInformation
       {
@@ -135,7 +135,7 @@ namespace HF
             protected:
 
             //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
          };
 
          /*!
@@ -162,7 +162,7 @@ namespace HF
           *
           * @return    pointer to a message to retrieve the attributes with the given uid's.
           */
-         Protocol::Message *get (HF::Attributes::uids_t &uids);
+         Protocol::Message *get (HF::Attributes::UIDS &uids);
 
          /*!
           * Create a message that can be used to retrieve the attribute with the given \c uid.

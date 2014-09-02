@@ -25,7 +25,7 @@ using namespace HF::Testing;
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS(_name)                           \
-struct _name:public InterfaceHelper<Profiles::_name>  \
+struct _name:public ProfileHelper<Profiles::_name>   \
 {                                                      \
    virtual ~_name() {}                                \
 }
@@ -33,7 +33,7 @@ struct _name:public InterfaceHelper<Profiles::_name>  \
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS2(_name)                            \
-struct _name:public InterfaceHelper<Profiles::_name<>>   \
+struct _name:public ProfileHelper<Profiles::_name<>>   \
 {                                                        \
    virtual ~_name() {}                                  \
 }
@@ -107,7 +107,7 @@ TEST_GROUP (Profiles)
 
 TEST (Profiles, UIDs)
 {
-   Profiles::IProfile *profile = NULL;
+   Profiles::IProfile *profile = nullptr;
 
    // =============================================================================
    // Home Control Unit Types
@@ -243,7 +243,7 @@ TEST (Profiles, Detector)
    addr.device = 42;
    addr.unit   = 33;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    detector.alert (addr, true);
 

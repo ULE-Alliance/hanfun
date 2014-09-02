@@ -105,7 +105,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Valid)
    packet.message.type       = Protocol::Message::GET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR1;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 0);
    CHECK_EQUAL (Result::OK, result);
@@ -137,7 +137,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
    packet.message.type       = Protocol::Message::GET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR3 + 4;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 0);
    CHECK_EQUAL (Result::OK, result);
@@ -171,7 +171,7 @@ TEST (AbstractInterface, Handle_SetAttribute_Valid)
 
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -193,7 +193,7 @@ TEST (AbstractInterface, Handle_SetAttribute_Invalid)
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -215,7 +215,7 @@ TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -237,7 +237,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
 
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -259,7 +259,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -290,7 +290,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 
    LONGS_EQUAL (0x5A51, itf->attr1);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -321,7 +321,7 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
 
    payload                   = ByteArray {0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -360,7 +360,7 @@ TEST (AbstractInterface, Handle_GeAttributesPack_All)
 
    payload                   = ByteArray {0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -403,7 +403,7 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
                                           0x01, 0x03,
                                           0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -446,7 +446,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
                                           0x01, 0x03, 0x04,
                                           0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -501,7 +501,7 @@ TEST (AbstractInterface, Handle_SetAttributePack)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -531,7 +531,7 @@ TEST (AbstractInterface, Handle_SetAttributePackResponse)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -578,7 +578,7 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -618,7 +618,7 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack)
 
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -645,7 +645,7 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -671,7 +671,7 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
    LONGS_EQUAL (0x5A52, itf->attr2);
    LONGS_EQUAL (0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "sendMessage");
+   mock ("Interface").expectNCalls (0, "send");
 
    Result result = itf->handle (packet, payload, 3);
    CHECK_EQUAL (Result::OK, result);

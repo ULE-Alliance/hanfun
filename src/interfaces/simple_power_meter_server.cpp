@@ -171,7 +171,7 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
 
       report->pack (message.payload);
 
-      sendMessage (addr, message);
+      send (addr, message);
 
       _last_periodic = time;
 
@@ -282,9 +282,9 @@ HF::Attributes::IAttribute *SimplePowerMeter::Server::attribute (uint8_t uid)
  *
  */
 // =============================================================================
-HF::Attributes::uids_t SimplePowerMeter::Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) const
 {
-   HF::Attributes::uids_t result;
+   HF::Attributes::UIDS result;
 
    if (pack_id == HF::Attributes::Pack::ALL)
    {

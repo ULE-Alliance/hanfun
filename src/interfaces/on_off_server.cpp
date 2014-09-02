@@ -100,7 +100,14 @@ void OnOff::Server::toggle ()
 // =============================================================================
 void OnOff::Server::state (bool state)
 {
+   bool old = this->_state;
+
    this->_state = state;
+
+   State old_attr (old);
+   State new_attr (this->_state);
+
+   notify (old_attr, new_attr);
 }
 
 // =============================================================================

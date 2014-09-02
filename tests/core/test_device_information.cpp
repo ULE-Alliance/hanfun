@@ -34,7 +34,7 @@ using namespace HF::Core;
 // Tests
 // =============================================================================
 
-TEST_GROUP(DeviceInformation)
+TEST_GROUP (DeviceInformation)
 {
    struct TestDeviceInformationServer:public DeviceInformation::Server
    {
@@ -45,10 +45,10 @@ TEST_GROUP(DeviceInformation)
 
    struct TestDeviceManagementClient:public DeviceManagement::Client
    {
-      TestDeviceManagementClient(HF::Core::Unit0 &unit) : Client(unit)
+      TestDeviceManagementClient(HF::Core::Unit0 &unit):Client (unit)
       {}
 
-      void address(uint16_t _address)
+      void address (uint16_t _address)
       {
          this->_address = _address;
       }
@@ -56,20 +56,20 @@ TEST_GROUP(DeviceInformation)
       using DeviceManagement::Client::address;
    };
 
-   Testing::Device * device;
+   Testing::Device *device;
 
    TestDeviceInformationServer *dev_info;
 
    TEST_SETUP ()
    {
-      device = new Testing::Device();
+      device = new Testing::Device ();
 
-      device->unit0.dev_mgt = new TestDeviceManagementClient(device->unit0);
-      ((TestDeviceManagementClient *)device->unit0.dev_mgt)->address(0x5A5A);
+      device->unit0 ()->dev_mgt = new TestDeviceManagementClient (*device->unit0 ());
+      ((TestDeviceManagementClient *) device->unit0 ()->dev_mgt)->address (0x5A5A);
 
-      dev_info = new TestDeviceInformationServer (device->unit0);
+      dev_info             = new TestDeviceInformationServer (*device->unit0 ());
 
-      dev_info->device_uid = new HF::UID::URI("hf://device@example.com");
+      dev_info->device_uid = new HF::UID::URI ("hf://device@example.com");
 
       mock ().ignoreOtherCalls ();
    }
@@ -78,7 +78,7 @@ TEST_GROUP(DeviceInformation)
    {
       delete dev_info;
 
-      delete device->unit0.dev_mgt;
+      delete device->unit0 ()->dev_mgt;
 
       delete device;
 
@@ -86,28 +86,28 @@ TEST_GROUP(DeviceInformation)
    }
 };
 
-TEST(DeviceInformation, Mandatory)
+TEST (DeviceInformation, Mandatory)
 {
-   Protocol::Message * msg = HF::Core::DeviceInformation::mandatory();
+   Protocol::Message *msg = HF::Core::DeviceInformation::mandatory ();
 
    CHECK_FALSE (msg == nullptr);
 
-   Protocol::Packet packet(*msg);
+   Protocol::Packet packet (*msg);
 
    delete msg;
 
-   mock("AbstractDevice").expectOneCall("send");
+   mock ("AbstractDevice").expectOneCall ("send");
 
-   dev_info->handle(packet, packet.message.payload, 0);
+   dev_info->handle (packet, packet.message.payload, 0);
 
-   mock("AbstractDevice").checkExpectations();
+   mock ("AbstractDevice").checkExpectations ();
 
-   Protocol::Packet *packet_resp = device->packets.front();
+   Protocol::Packet *packet_resp = device->packets.front ();
 
-   Protocol::GetAttributePack::Response resp(HF::Core::DeviceInformation::create_attribute);
+   Protocol::GetAttributePack::Response resp (HF::Core::DeviceInformation::create_attribute);
 
-   resp.unpack(packet_resp->message.payload);
+   resp.unpack (packet_resp->message.payload);
 
    LONGS_EQUAL (Result::OK, resp.code);
-   LONGS_EQUAL (4, resp.attributes.size())
+   LONGS_EQUAL (4, resp.attributes.size ())
 }

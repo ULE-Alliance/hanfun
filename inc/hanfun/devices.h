@@ -27,6 +27,7 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
+#include "hanfun/core/attribute_reporting.h"
 
 #include "hanfun/transport.h"
 
@@ -71,14 +72,7 @@ namespace HF
             _units.remove (unit);
          }
 
-         /*!
-          * Return a pointer to the unit with the given \c id.
-          *
-          * @param [in] id the id of the unit to retrieve.
-          *
-          * @return  a pointer to the unit if it exists, \c nullptr otherwise.
-          */
-         Units::IUnit *unit (uint8_t id);
+         Units::IUnit *unit (uint8_t id) const;
 
          void send (Protocol::Packet &packet);
 
@@ -133,9 +127,10 @@ namespace HF
        */
       namespace Node
       {
-         struct IUnit0:public HF::Core::Unit0
+         struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
-            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            IUnit0(HF::IDevice &device):
+               HF::Core::Unit0 (device)
             {}
 
             virtual HF::Core::DeviceManagement::Client *device_management ()       = 0;
@@ -153,17 +148,40 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
-            Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
+            Unit0(IDevice &device):
+               HF::Unit0 <IUnit0, ITF...>(device)
             {}
+
+            Core::DeviceInformation::Server *device_info () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
+            Core::DeviceInformation::Server *device_info ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
+            Core::AttributeReporting::Server *attribute_reporting () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
+
+            Core::AttributeReporting::Server *attribute_reporting ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server, HF::Core::DeviceManagement::Client>
+         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server,
+                                           HF::Core::DeviceManagement::Client, HF::Core::AttributeReporting::Server>
          {
             DefaultUnit0(IDevice &device):
-               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client>(device)
+               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client,
+                      Core::AttributeReporting::Server>(device)
             {}
          };
 
@@ -173,13 +191,7 @@ namespace HF
          template<typename CoreServices>
          class Abstract:public AbstractDevice
          {
-            protected:
-
-            Transport::Link *_link;
-
             public:
-
-            CoreServices unit0;
 
             // =============================================================================
             // IDevice API.
@@ -187,7 +199,7 @@ namespace HF
 
             uint16_t address () const
             {
-               return unit0.device_management ()->address ();
+               return _unit0.device_management ()->address ();
             }
 
             // =============================================================================
@@ -212,9 +224,18 @@ namespace HF
                AbstractDevice::receive (packet, payload, offset);
             }
 
+            CoreServices *unit0 () const
+            {
+               return const_cast <CoreServices *>(&_unit0);
+            }
+
             protected:
 
-            Abstract():unit0 (*this)
+            Transport::Link *_link;
+
+            CoreServices    _unit0;
+
+            Abstract():_unit0 (*this)
             {}
 
             // =============================================================================
@@ -245,7 +266,8 @@ namespace HF
 
             public:
 
-            Transport():link (nullptr)
+            Transport():
+               link (nullptr)
             {}
 
             //! \see HF::Transport::AbstractLayer::add
@@ -315,9 +337,10 @@ namespace HF
        */
       namespace Concentrator
       {
-         struct IUnit0:public HF::Core::Unit0
+         struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
-            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            IUnit0(HF::IDevice &device):
+               HF::Core::Unit0 (device)
             {}
 
             virtual HF::Core::DeviceManagement::Server *device_management ()       = 0;
@@ -339,22 +362,43 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
 
-            typedef typename std::tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename std::tuple_element <3, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
             static_assert (std::is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
                            "BindMgt must be of type HF::Core::BindManagement::Server");
 
-            Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
+            Unit0(HF::IDevice &device):
+               HF::Unit0 <IUnit0, ITF...>(device)
             {}
 
             BindMgt *bind_management () const
             {
-               return const_cast <BindMgt *>(&std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+               return const_cast <BindMgt *>(&std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces));
             }
 
             BindMgt *bind_management ()
             {
-               return &std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+               return &std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+            }
+
+            Core::DeviceInformation::Server *device_info () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
+            Core::DeviceInformation::Server *device_info ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
+            Core::AttributeReporting::Server *attribute_reporting () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
+
+            Core::AttributeReporting::Server *attribute_reporting ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
             }
          };
 
@@ -363,6 +407,7 @@ namespace HF
           */
          struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
                                            Core::DeviceManagement::DefaultServer,
+                                           Core::AttributeReporting::Server,
                                            Core::BindManagement::Server>
          {
             DefaultUnit0(IDevice &device):
@@ -377,8 +422,6 @@ namespace HF
          class Abstract:public AbstractDevice
          {
             public:
-
-            CoreServices unit0;
 
             // =============================================================================
             // IDevice API.
@@ -398,7 +441,8 @@ namespace HF
                _links.push_front (link);
 
                // Check if a registration exists for this link.
-               Core::DeviceManagement::Device *entry = unit0.device_management ()->entry (link->uid ());
+               Core::DeviceManagement::Device *entry =
+                  _unit0.device_management ()->entry (link->uid ());
 
                if (entry != nullptr)
                {
@@ -423,11 +467,18 @@ namespace HF
                }
             }
 
+            CoreServices *unit0 () const
+            {
+               return const_cast <CoreServices *>(&_unit0);
+            }
+
             protected:
+
+            CoreServices _unit0;
 
             std::forward_list <Transport::Link *> _links; //!< List of link present in this Concentrator.
 
-            Abstract():unit0 (*this)
+            Abstract():_unit0 (*this)
             {}
 
             // =============================================================================
@@ -441,10 +492,11 @@ namespace HF
                }
 
                /* *INDENT-OFF* */
-               auto it = std::find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
-               {
-                  return link->address () == addr;
-               });
+               auto it = std::find_if(_links.begin(), _links.end(),
+                                      [addr](HF::Transport::Link *link)
+                                      {
+                                         return link->address () == addr;
+                                      });
                /* *INDENT-ON* */
 
                if (it == _links.end ())
@@ -462,11 +514,12 @@ namespace HF
              * @param [in] payload reference to the ByteArray containing the packet payload.
              * @param [in] offset  offset from where the packet data starts.
              */
-            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
             {
-               HF::Core::BindManagement::Entries &entries = unit0.bind_management ()->entries;
+               auto &entries = _unit0.bind_management ()->entries;
 
-               auto range                                 = entries.find (packet.source, packet.message.itf);
+               auto range    = entries.find (packet.source, packet.message.itf);
 
                // No bindings found !
                if (range.first == entries.end () && range.second == entries.end ())
@@ -478,15 +531,17 @@ namespace HF
 
                other.message.payload.reserve (payload.size () - offset);
 
-               copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+               std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
-               for_each (range.first, range.second, [this, &other](const Core::BindManagement::Entry &entry)
-                         {
-                            other.link = nullptr;
-                            other.destination = entry.destination;
-                            this->send (other);
-                         }
-                        );
+               /* *INDENT-OFF* */
+               std::for_each(range.first, range.second,
+                             [this, &other](const Core::BindManagement::Entry &entry)
+                             {
+                                other.link = nullptr;
+                                other.destination = entry.destination;
+                                this->send (other);
+                             });
+               /* *INDENT-ON* */
             }
          };
 
@@ -508,11 +563,12 @@ namespace HF
             void add (HF::Transport::Endpoint *ep)
             {
                HF::Transport::AbstractLayer::add (ep);
-               std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link)
-                              {
-                                 ep->connected (link);
-                              }
-                             );
+               /* *INDENT-OFF* */
+               std::for_each(links.begin(), links.end(), [ep](HF::Transport::Link *link)
+               {
+                  ep->connected (link);
+               });
+               /* *INDENT-ON* */
             }
 
             /*!

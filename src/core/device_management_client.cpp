@@ -65,7 +65,7 @@ void DeviceManagement::Client::register_device ()
 
    payload->pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 
    delete payload;
 }
@@ -90,7 +90,7 @@ void DeviceManagement::Client::deregister (uint16_t address)
 
    payload.pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 }
 
 // =============================================================================
