@@ -65,11 +65,11 @@ void LevelControl::Server::level (uint8_t __level)
 // =============================================================================
 Common::Result LevelControl::Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Common::Result result = AbstractInterface::handle_attribute(packet, payload, offset);
+   Common::Result result = AbstractInterface::handle_attribute (packet, payload, offset);
 
    if (result == Common::Result::OK && packet.message.type == Protocol::Message::SET_ATTR_REQ)
    {
-      level_change(level());
+      level_change (level ());
    }
 
    return result;

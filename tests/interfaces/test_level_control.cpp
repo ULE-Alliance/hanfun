@@ -81,7 +81,7 @@ TEST (LevelControlClient, Level)
 
    level.unpack (client.sendMsg.payload);
 
-   BYTES_EQUAL (0x42, level.get());
+   BYTES_EQUAL (0x42, level.get ());
 }
 
 // =============================================================================
