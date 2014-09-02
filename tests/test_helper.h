@@ -384,9 +384,11 @@ namespace HF
       {
          HF::Core::DeviceInformation::Server  *dev_info;
          HF::Core::DeviceManagement::Client   *dev_mgt;
+         HF::Core::AttributeReporting::Server *attr_reporting;
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
+            attr_reporting (nullptr)
          {}
 
          virtual ~DeviceUnit0() {}
@@ -409,6 +411,16 @@ namespace HF
          HF::Core::DeviceManagement::Client *device_management () const
          {
             return dev_mgt;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         {
+            return attr_reporting;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting ()
+         {
+            return attr_reporting;
          }
 
          Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
@@ -461,6 +473,16 @@ namespace HF
          HF::Core::DeviceManagement::Server *device_management () const
          {
             return dev_mgt;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         {
+            return attr_reporting;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting ()
+         {
+            return attr_reporting;
          }
 
          HF::Core::BindManagement::Server *bind_management ()

@@ -186,6 +186,8 @@ namespace HF
 
       typedef typename std::tuple_element <1, decltype (interfaces)>::type DeviceMgt;
 
+      typedef typename std::tuple_element <2, decltype (interfaces)>::type AttrReporting;
+
       static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
                      "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
 
@@ -215,6 +217,16 @@ namespace HF
       DeviceMgt *device_management ()
       {
          return &std::get <1>(interfaces);
+      }
+
+      AttrReporting *attribute_reporting () const
+      {
+         return const_cast <AttrReporting *>(&std::get <2>(interfaces));
+      }
+
+      AttrReporting *attribute_reporting ()
+      {
+         return &std::get <2>(interfaces);
       }
 
       // =============================================================================

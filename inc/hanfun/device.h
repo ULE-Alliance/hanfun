@@ -33,7 +33,14 @@ namespace HF
 
       }  // namespace DeviceInformation
 
+      namespace AttributeReporting
+      {
+         struct Server;
+
+      }  // namespace DeviceInformation
+
    }  // namespace Devices
+
 
    // Forward declaration of the units namespace.
    namespace Units
@@ -72,6 +79,10 @@ namespace HF
          virtual Core::DeviceInformation::Server  *device_info () const         = 0;
 
          virtual Core::DeviceInformation::Server  *device_info ()               = 0;
+
+         virtual Core::AttributeReporting::Server *attribute_reporting () const = 0;
+
+         virtual Core::AttributeReporting::Server *attribute_reporting ()       = 0;
       };
 
       /*!

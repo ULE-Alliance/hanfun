@@ -27,6 +27,7 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
+#include "hanfun/core/attribute_reporting.h"
 
 #include "hanfun/transport.h"
 
@@ -161,15 +162,26 @@ namespace HF
                return HF::Unit0 <IUnit0, ITF...>::device_info ();
             }
 
+            Core::AttributeReporting::Server *attribute_reporting () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
+
+            Core::AttributeReporting::Server *attribute_reporting ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server, HF::Core::DeviceManagement::Client>
+         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server,
+                                           HF::Core::DeviceManagement::Client, HF::Core::AttributeReporting::Server>
          {
             DefaultUnit0(IDevice &device):
-               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client>(device)
+               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client,
+                      Core::AttributeReporting::Server>(device)
             {}
          };
 
@@ -350,22 +362,24 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
 
-            typedef typename std::tuple_element <2, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename std::tuple_element <3, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
             static_assert (std::is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
                            "BindMgt must be of type HF::Core::BindManagement::Server");
 
-            Unit0(HF::IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
+            Unit0(HF::IDevice &device):
+               HF::Unit0 <IUnit0, ITF...>(device)
             {}
 
             BindMgt *bind_management () const
             {
-               return const_cast <BindMgt *>(&std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+               return const_cast <BindMgt *>(&std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces));
             }
 
             BindMgt *bind_management ()
             {
-               return &std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+               return &std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+            }
 
             Core::DeviceInformation::Server *device_info () const
             {
@@ -376,6 +390,16 @@ namespace HF
             {
                return HF::Unit0 <IUnit0, ITF...>::device_info ();
             }
+
+            Core::AttributeReporting::Server *attribute_reporting () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
+
+            Core::AttributeReporting::Server *attribute_reporting ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+            }
          };
 
          /*!
@@ -383,6 +407,7 @@ namespace HF
           */
          struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
                                            Core::DeviceManagement::DefaultServer,
+                                           Core::AttributeReporting::Server,
                                            Core::BindManagement::Server>
          {
             DefaultUnit0(IDevice &device):
