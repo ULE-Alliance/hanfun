@@ -94,7 +94,7 @@ bool Alert::Server::state (uint8_t index)
       return false;
    }
 
-   return (this->_state & (1L << index)) != 0;
+   return (this->_state & (1U << index)) != 0;
 }
 
 // =============================================================================

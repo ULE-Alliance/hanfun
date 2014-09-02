@@ -225,11 +225,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr1);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr1);
                   }
 
                   break;
@@ -239,11 +239,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr2);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr2);
                   }
 
                   break;
@@ -252,11 +252,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, true);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, true);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr3, true);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr3, true);
                   }
 
                   break;

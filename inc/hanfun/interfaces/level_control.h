@@ -87,10 +87,8 @@ namespace HF
             static constexpr uint8_t ID        = LEVEL_ATTR;
             static constexpr bool    WRITABBLE = false;
 
-            private:
-
-            Level(uint8_t level = 0):
-               Attribute <uint8_t>(Interface::ALERT, ID, level, WRITABBLE)
+            Level(uint8_t level = 0, HF::Interface *owner = nullptr):
+               Attribute <uint8_t>(Interface::ALERT, ID, owner, level, WRITABBLE)
             {}
          };
 

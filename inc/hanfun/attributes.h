@@ -61,6 +61,16 @@ namespace HF
          virtual uint16_t interface () const = 0;
 
          /*!
+          * Pointer to the interface that owns this attribute.
+          *
+          * This can return nullptr if the attribute was created for a remote interface.
+          *
+          * @return  pointer to the interface that owns this attribute,
+          *          or nullptr if owner is a remote object.
+          */
+         virtual HF::Interface const *owner () const = 0;
+
+         /*!
           * \see Serializable::size
           *
           * @param [in] with_uid    include uid() size in the calculation.
@@ -193,12 +203,14 @@ namespace HF
       {
          protected:
 
-         const uint16_t _itf_uid;  //! Interface this attribute belongs to.
-         const uint8_t  _uid;      //! Attribute unique identifier.
-         const bool _writable;     //! Attribute access mode.
+         const uint16_t _itf_uid;      //! Interface this attribute belongs to.
+         const uint8_t  _uid;          //! Attribute unique identifier.
+         const bool _writable;         //! Attribute access mode.
+         const HF::Interface *_owner;  //! Owner interface.
 
-         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const bool writable = false):
-            _itf_uid (itf_uid), _uid (uid), _writable (writable)
+         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const HF::Interface *owner,
+                           const bool writable = false):
+            _itf_uid (itf_uid), _uid (uid), _writable (writable), _owner (owner)
          {}
 
          public:
@@ -217,17 +229,25 @@ namespace HF
          {
             return _itf_uid;
          }
+
+         HF::Interface const *owner () const
+         {
+            return _owner;
+         }
+
       };
 
       template<typename T, typename = void>
       struct Attribute:public AbstractAttribute
       {
-         Attribute(const uint16_t interface, const uint8_t uid, T data, bool writable = false):
-            AbstractAttribute (interface, uid, writable), helper (data)
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner, T data,
+                   bool writable = false):
+            AbstractAttribute (interface, uid, owner, writable), helper (data)
          {}
 
-         Attribute(const uint16_t interface, const uint8_t uid, bool writable = false):
-            AbstractAttribute (interface, uid, writable)
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner,
+                   bool writable = false):
+            AbstractAttribute (interface, uid, owner, writable)
          {}
 
          typedef typename std::remove_reference <T>::type value_type;

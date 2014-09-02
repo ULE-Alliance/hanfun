@@ -56,10 +56,8 @@ namespace HF
             static constexpr uint8_t ID        = STATE_ATTR;
             static constexpr bool    WRITABBLE = false;
 
-            private:
-
-            State(bool state = false):
-               Attribute <bool>(Interface::ON_OFF, ID, state, WRITABBLE)
+            State(bool state = false, HF::Interface *owner = nullptr):
+               Attribute <bool>(Interface::ON_OFF, ID, owner, state, WRITABBLE)
             {}
          };
 

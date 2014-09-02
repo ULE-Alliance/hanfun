@@ -111,8 +111,8 @@ namespace HF
             //! \see HF::Serializable::size.
             size_t size () const
             {
-               return sizeof(uint8_t) +            // Precision size.
-                      sizeof(uint32_t);            // Value size.
+               return sizeof(uint8_t) +  // Precision size.
+                      sizeof(uint32_t);  // Value size.
             }
 
             //! \see HF::Serializable::pack.
