@@ -547,6 +547,11 @@ namespace HF
             return *this;
          }
 
+         int compare (const UID &other) const
+         {
+            return _raw->compare (*(other._raw));
+         }
+
          int compare (const UID_T &other) const
          {
             return _raw->compare (other);
@@ -555,6 +560,12 @@ namespace HF
          UID_T const *raw () const
          {
             return _raw;
+         }
+
+         float changed (const UID &other) const
+         {
+            UNUSED (other);
+            return 0.0;
          }
       };
 

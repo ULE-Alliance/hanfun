@@ -460,6 +460,24 @@ TEST_GROUP (Attributes)
 
          return offset - start;
       }
+
+      int compare (const TestMeasure &other) const
+      {
+         int res = type - other.type;
+
+         if (res == 0)
+         {
+            res = value - other.value;
+         }
+
+         return res;
+      }
+
+      float changed (const TestMeasure &other) const
+      {
+         UNUSED (other);
+         return 0.0;
+      }
    };
 };
 

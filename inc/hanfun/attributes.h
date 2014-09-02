@@ -36,7 +36,7 @@ namespace HF
       /*!
        * Interface/Service Attribute's API.
        */
-      struct IAttribute:public Common::Serializable
+      struct IAttribute:public Common::Serializable, public Common::Cloneable <IAttribute>
       {
          /*!
           * Attribute's UID.
@@ -106,6 +106,14 @@ namespace HF
 
          //! \see Serializable::unpack
          virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
+
+         virtual bool operator ==(const IAttribute &other) const               = 0;
+
+         virtual bool operator <(const IAttribute &other) const                = 0;
+
+         virtual bool operator >(const IAttribute &other) const                = 0;
+
+         virtual float changed (const IAttribute &other) const                 = 0;
       };
 
       //! Attribute factory function type.
@@ -235,6 +243,49 @@ namespace HF
             return _owner;
          }
 
+         bool operator ==(const IAttribute &other) const
+         {
+            return this->compare (other) == 0;
+         }
+
+         bool operator ==(IAttribute &other) const
+         {
+            return this->compare (other) == 0;
+         }
+
+         bool operator <(const IAttribute &other) const
+         {
+            return this->compare (other) < 0;
+         }
+
+         bool operator <(IAttribute &other) const
+         {
+            return this->compare (other) < 0;
+         }
+
+         bool operator >(const IAttribute &other) const
+         {
+            return this->compare (other) > 0;
+         }
+
+         bool operator >(IAttribute &other) const
+         {
+            return this->compare (other) > 0;
+         }
+
+         protected:
+
+         virtual int compare (const IAttribute &other) const
+         {
+            int res = this->interface () - other.interface ();
+
+            if (res != 0)
+            {
+               return res;
+            }
+
+            return this->uid () - other.uid ();
+         }
       };
 
       template<typename T, typename = void>
@@ -324,9 +375,41 @@ namespace HF
             return helper.unpack (array, offset);
          }
 
+         IAttribute *clone () const
+         {
+            return new HF::Attributes::Attribute <T>(this->_itf_uid, this->_uid, this->_owner,
+                                                     this->helper.data, this->_writable);
+         }
+
          protected:
 
          Common::SerializableHelper <T> helper;
+
+         int compare (const IAttribute &other) const
+         {
+            int res = AbstractAttribute::compare (other);
+
+            if (res == 0)
+            {
+               Attribute <T> *temp = (Attribute <T> *) & other;
+               res = helper.compare (temp->helper);
+            }
+
+            return res;
+         }
+
+         float changed (const IAttribute &other) const
+         {
+            int res = AbstractAttribute::compare (other);
+
+            if (res == 0)
+            {
+               Attribute <T> *temp = (Attribute <T> *) & other;
+               return helper.changed (temp->helper);
+            }
+
+            return 0.0;
+         }
 
          private:
 

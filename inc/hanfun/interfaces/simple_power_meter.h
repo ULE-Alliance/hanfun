@@ -163,6 +163,19 @@ namespace HF
 
                return offset - start;
             }
+
+            int compare (const Measurement &other) const
+            {
+               // FIXME Take unit into consideration.
+               int res = value - other.value;
+               return res;
+            }
+
+            float changed (const Measurement &other) const
+            {
+               // FIXME Take unit into consideration.
+               return (((float) (value - other.value)) / other.value);
+            }
          };
 
          /*!

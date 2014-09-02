@@ -337,6 +337,16 @@ namespace HF
          {
             return data.unpack (array, offset);
          }
+
+         int compare (const SerializableHelper <T> &other) const
+         {
+            return data.compare (other.data);
+         }
+
+         float changed (const SerializableHelper <T> &other) const
+         {
+            return data.changed (other.data);
+         }
       };
 
       /*!
@@ -369,6 +379,16 @@ namespace HF
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             return data->unpack (array, offset);
+         }
+
+         int compare (const SerializableHelper <T> &other) const
+         {
+            return data->compare (other.data);
+         }
+
+         float changed (const SerializableHelper <T> &other) const
+         {
+            return data->changed (other.data);
          }
       };
 
@@ -409,6 +429,16 @@ namespace HF
             offset += array.read (offset, data);
 
             return offset - start;
+         }
+
+         int compare (const SerializableHelper <T> &other) const
+         {
+            return data - other.data;
+         }
+
+         float changed (const SerializableHelper <T> &other) const
+         {
+            return (((float) (data - other.data)) / other.data);
          }
       };
 
