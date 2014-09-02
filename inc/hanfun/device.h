@@ -24,6 +24,17 @@
 
 namespace HF
 {
+   // Forward declaration of the devices namespace.
+   namespace Core
+   {
+      namespace DeviceInformation
+      {
+         struct Server;
+
+      }  // namespace DeviceInformation
+
+   }  // namespace Devices
+
    // Forward declaration of the units namespace.
    namespace Units
    {
@@ -56,6 +67,13 @@ namespace HF
          }
       };
 
+      struct IUnit0
+      {
+         virtual Core::DeviceInformation::Server  *device_info () const         = 0;
+
+         virtual Core::DeviceInformation::Server  *device_info ()               = 0;
+      };
+
       /*!
        * Return the device address on the HAN-FUN network, when the device is registered,
        * or \c HF_BROADCAST_ADDR otherwise.
@@ -81,6 +99,16 @@ namespace HF
        *          nullptr otherwise.
        */
       virtual Units::IUnit *unit (uint8_t id) const = 0;
+
+      /*!
+       * Return pointer to the unit with the given id.
+       *
+       * @param [in] id    unit identifier.
+       *
+       * @return  pointer to the unit with the given id,
+       *          nullptr otherwise.
+       */
+      virtual IUnit0 *unit0 () const = 0;
 
       /*!
        * Add unit to devices unit lists.

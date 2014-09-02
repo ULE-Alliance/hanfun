@@ -63,6 +63,7 @@ namespace HF
             UNUSED (uids);
             return HF::Attributes::List ();
          }
+
       };
 
       /*!
@@ -196,12 +197,12 @@ namespace HF
 
       // =============================================================================
 
-      DeviceInfo *info () const
+      DeviceInfo *device_info () const
       {
          return const_cast <DeviceInfo *>(&std::get <0>(interfaces));
       }
 
-      DeviceInfo *info ()
+      DeviceInfo *device_info ()
       {
          return &std::get <0>(interfaces);
       }

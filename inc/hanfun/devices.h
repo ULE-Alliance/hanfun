@@ -126,9 +126,10 @@ namespace HF
        */
       namespace Node
       {
-         struct IUnit0:public HF::Core::Unit0
+         struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
-            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            IUnit0(HF::IDevice &device):
+               HF::Core::Unit0 (device)
             {}
 
             virtual HF::Core::DeviceManagement::Client *device_management ()       = 0;
@@ -146,8 +147,20 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
-            Unit0(IDevice &device):HF::Unit0 <IUnit0, ITF...>(device)
+            Unit0(IDevice &device):
+               HF::Unit0 <IUnit0, ITF...>(device)
             {}
+
+            Core::DeviceInformation::Server *device_info () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
+            Core::DeviceInformation::Server *device_info ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
          };
 
          /*!
@@ -166,13 +179,7 @@ namespace HF
          template<typename CoreServices>
          class Abstract:public AbstractDevice
          {
-            protected:
-
-            Transport::Link *_link;
-
             public:
-
-            CoreServices unit0;
 
             // =============================================================================
             // IDevice API.
@@ -180,7 +187,7 @@ namespace HF
 
             uint16_t address () const
             {
-               return unit0.device_management ()->address ();
+               return _unit0.device_management ()->address ();
             }
 
             // =============================================================================
@@ -205,9 +212,18 @@ namespace HF
                AbstractDevice::receive (packet, payload, offset);
             }
 
+            CoreServices *unit0 () const
+            {
+               return const_cast <CoreServices *>(&_unit0);
+            }
+
             protected:
 
-            Abstract():unit0 (*this)
+            Transport::Link *_link;
+
+            CoreServices    _unit0;
+
+            Abstract():_unit0 (*this)
             {}
 
             // =============================================================================
@@ -238,7 +254,8 @@ namespace HF
 
             public:
 
-            Transport():link (nullptr)
+            Transport():
+               link (nullptr)
             {}
 
             //! \see HF::Transport::AbstractLayer::add
@@ -308,9 +325,10 @@ namespace HF
        */
       namespace Concentrator
       {
-         struct IUnit0:public HF::Core::Unit0
+         struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
-            IUnit0(HF::IDevice &device):HF::Core::Unit0 (device)
+            IUnit0(HF::IDevice &device):
+               HF::Core::Unit0 (device)
             {}
 
             virtual HF::Core::DeviceManagement::Server *device_management ()       = 0;
@@ -348,6 +366,15 @@ namespace HF
             BindMgt *bind_management ()
             {
                return &std::get <2>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+
+            Core::DeviceInformation::Server *device_info () const
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+            }
+
+            Core::DeviceInformation::Server *device_info ()
+            {
+               return HF::Unit0 <IUnit0, ITF...>::device_info ();
             }
          };
 
@@ -371,8 +398,6 @@ namespace HF
          {
             public:
 
-            CoreServices unit0;
-
             // =============================================================================
             // IDevice API.
             // =============================================================================
@@ -391,7 +416,8 @@ namespace HF
                _links.push_front (link);
 
                // Check if a registration exists for this link.
-               Core::DeviceManagement::Device *entry = unit0.device_management ()->entry (link->uid ());
+               Core::DeviceManagement::Device *entry =
+                  _unit0.device_management ()->entry (link->uid ());
 
                if (entry != nullptr)
                {
@@ -416,11 +442,18 @@ namespace HF
                }
             }
 
+            CoreServices *unit0 () const
+            {
+               return const_cast <CoreServices *>(&_unit0);
+            }
+
             protected:
+
+            CoreServices _unit0;
 
             std::forward_list <Transport::Link *> _links; //!< List of link present in this Concentrator.
 
-            Abstract():unit0 (*this)
+            Abstract():_unit0 (*this)
             {}
 
             // =============================================================================

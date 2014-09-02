@@ -382,14 +382,24 @@ namespace HF
 
       struct DeviceUnit0:public HF::Devices::Node::IUnit0
       {
-         HF::Core::DeviceManagement::Client  *dev_mgt;
-         HF::Core::DeviceInformation::Server *dev_info;
+         HF::Core::DeviceInformation::Server  *dev_info;
+         HF::Core::DeviceManagement::Client   *dev_mgt;
 
          DeviceUnit0(HF::IDevice &device):
-            HF::Devices::Node::IUnit0 (device), dev_mgt (nullptr)
+            HF::Devices::Node::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
          {}
 
          virtual ~DeviceUnit0() {}
+
+         HF::Core::DeviceInformation::Server *device_info () const
+         {
+            return dev_info;
+         }
+
+         HF::Core::DeviceInformation::Server *device_info ()
+         {
+            return dev_info;
+         }
 
          HF::Core::DeviceManagement::Client *device_management ()
          {
@@ -421,16 +431,27 @@ namespace HF
 
       struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
+         HF::Core::DeviceInformation::Server  *dev_info;
          HF::Core::DeviceManagement::Server   *dev_mgt;
-         HF::Core::BindManagement::Server     *bind_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::BindManagement::Server     *bind_mgt;
 
          ConcentratorUnit0(HF::IDevice &device):
-            HF::Devices::Concentrator::IUnit0 (device), dev_mgt (nullptr), bind_mgt (nullptr),
-            attr_reporting (nullptr)
+            HF::Devices::Concentrator::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
+            attr_reporting (nullptr), bind_mgt (nullptr)
          {}
 
          virtual ~ConcentratorUnit0() {}
+
+         HF::Core::DeviceInformation::Server *device_info () const
+         {
+            return dev_info;
+         }
+
+         HF::Core::DeviceInformation::Server *device_info ()
+         {
+            return dev_info;
+         }
 
          HF::Core::DeviceManagement::Server *device_management ()
          {

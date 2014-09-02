@@ -51,6 +51,11 @@ TEST_GROUP (Devices)
          mock ("Device").actualCall ("link").withIntParameter ("address", addr);
          return _link;
       }
+
+      IDevice::IUnit0 *unit0 () const
+      {
+         return nullptr;
+      }
    };
 
    Device device;

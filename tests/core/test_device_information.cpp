@@ -62,12 +62,12 @@ TEST_GROUP (DeviceInformation)
 
    TEST_SETUP ()
    {
-      device                = new Testing::Device ();
+      device = new Testing::Device ();
 
-      device->unit0.dev_mgt = new TestDeviceManagementClient (device->unit0);
-      ((TestDeviceManagementClient *) device->unit0.dev_mgt)->address (0x5A5A);
+      device->unit0 ()->dev_mgt = new TestDeviceManagementClient (*device->unit0 ());
+      ((TestDeviceManagementClient *) device->unit0 ()->dev_mgt)->address (0x5A5A);
 
-      dev_info             = new TestDeviceInformationServer (device->unit0);
+      dev_info             = new TestDeviceInformationServer (*device->unit0 ());
 
       dev_info->device_uid = new HF::UID::URI ("hf://device@example.com");
 
@@ -78,7 +78,7 @@ TEST_GROUP (DeviceInformation)
    {
       delete dev_info;
 
-      delete device->unit0.dev_mgt;
+      delete device->unit0 ()->dev_mgt;
 
       delete device;
 

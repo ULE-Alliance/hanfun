@@ -276,7 +276,7 @@ bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
    HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
    HF::Protocol::Address destination (dev_addr_2, 1);
 
-   return unit0.bind_management ()->entries.find (source, itf, destination) != nullptr;
+   return _unit0.bind_management ()->entries.find (source, itf, destination) != nullptr;
 }
 
 // =============================================================================
@@ -297,19 +297,19 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
    HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
    HF::Protocol::Address destination (dev_addr_2, 1);
 
-   auto res = unit0.bind_management ()->add (source, destination, itf);
+   auto res = _unit0.bind_management ()->add (source, destination, itf);
 
    if (res.first == HF::Common::OK)
    {
       return 0;
    }
 
-   if (unit0.device_management ()->entry (dev_addr_1) == nullptr)
+   if (_unit0.device_management ()->entry (dev_addr_1) == nullptr)
    {
       return 2;
    }
 
-   if (unit0.device_management ()->entry (dev_addr_2) == nullptr)
+   if (_unit0.device_management ()->entry (dev_addr_2) == nullptr)
    {
       return 3;
    }
@@ -330,7 +330,7 @@ bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
    HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
    HF::Protocol::Address destination (dev_addr_2, 1);
 
-   return unit0.bind_management ()->remove (source, destination, itf) == HF::Common::Result::OK;
+   return _unit0.bind_management ()->remove (source, destination, itf) == HF::Common::Result::OK;
 }
 
 // =============================================================================

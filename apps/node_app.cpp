@@ -49,7 +49,7 @@ COMMAND (Register, "r", "r:register device")
    UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   node.unit0.device_management ()->register_device ();
+   node.unit0 ()->device_management ()->register_device ();
 }
 
 COMMAND (Address, "a", "a:device address")
