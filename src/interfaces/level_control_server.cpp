@@ -63,20 +63,16 @@ void LevelControl::Server::level (uint8_t __level)
  *
  */
 // =============================================================================
-Common::Result LevelControl::Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result LevelControl::Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Message level_msg;
+   Common::Result result = AbstractInterface::handle_attribute(packet, payload, offset);
 
-   if (packet.message.itf.member != LevelControl::SET_LEVEL_CMD)
+   if (result == Common::Result::OK && packet.message.type == Protocol::Message::SET_ATTR_REQ)
    {
-      return Common::Result::FAIL_SUPPORT;
+      level_change(level());
    }
 
-   level_msg.unpack (payload, offset);
-
-   level_change (level_msg.level);
-
-   return Common::Result::OK;
+   return result;
 }
 
 // =============================================================================
