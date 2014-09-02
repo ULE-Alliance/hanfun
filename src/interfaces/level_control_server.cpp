@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Level Control interface : Server role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -65,11 +65,11 @@ void LevelControl::Server::level (uint8_t __level)
 // =============================================================================
 Common::Result LevelControl::Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Common::Result result = AbstractInterface::handle_attribute(packet, payload, offset);
+   Common::Result result = AbstractInterface::handle_attribute (packet, payload, offset);
 
    if (result == Common::Result::OK && packet.message.type == Protocol::Message::SET_ATTR_REQ)
    {
-      level_change(level());
+      level_change (level ());
    }
 
    return result;

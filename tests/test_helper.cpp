@@ -4,7 +4,7 @@
  *
  * This file contains helper functions used the tests.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -44,7 +44,7 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
 
    size_t size = data.pack (array);
 
-   result += HexStringFrom ((long int)size);
+   result += HexStringFrom ((long int) size);
    result += " : ";
    result += StringFrom (array);
 

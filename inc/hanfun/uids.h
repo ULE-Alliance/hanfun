@@ -5,7 +5,7 @@
  * This file contains the declaration of the classes that implement the HAN-FUN
  * UIDs.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

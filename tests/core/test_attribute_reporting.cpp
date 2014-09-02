@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the Attribute
  * Reporting core service in HAN-FUN.
  *
- * \version    x.x.x
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

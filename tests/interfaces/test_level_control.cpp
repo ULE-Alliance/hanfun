@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Level Control Interface implementation.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -81,7 +81,7 @@ TEST (LevelControlClient, Level)
 
    level.unpack (client.sendMsg.payload);
 
-   BYTES_EQUAL (0x42, level.get());
+   BYTES_EQUAL (0x42, level.get ());
 }
 
 // =============================================================================
