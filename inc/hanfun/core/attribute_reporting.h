@@ -388,7 +388,7 @@ namespace HF
             // Notification API
             // =============================================================================
 
-            typedef std::unique_ptr <HF::Attributes::IAttribute> Attribute;
+            typedef std::shared_ptr <HF::Attributes::IAttribute> Attribute;
 
             /*!
              * Top-level parent for all notification.
