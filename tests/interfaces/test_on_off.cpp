@@ -156,6 +156,9 @@ TEST_GROUP (OnOffServer)
       packet.message.itf.role   = Interface::SERVER_ROLE;
       packet.message.itf.id     = server.uid ();
       packet.message.itf.member = 0xFF;
+
+      mock ("OnOffServer").ignoreOtherCalls ();
+      mock ("Interface").ignoreOtherCalls ();
    }
 
    TEST_TEARDOWN ()
@@ -166,6 +169,8 @@ TEST_GROUP (OnOffServer)
 
 TEST (OnOffServer, State)
 {
+   mock ("Interface").expectNCalls (2, "notify");
+
    CHECK_FALSE (server.state ());
 
    server.state (true);
@@ -173,6 +178,8 @@ TEST (OnOffServer, State)
 
    server.state (false);
    CHECK_FALSE (server.state ());
+
+   mock ("Interface").checkExpectations ();
 }
 
 TEST (OnOffServer, DefaultCallbacks)

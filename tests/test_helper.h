@@ -145,6 +145,15 @@ namespace HF
             this->addr    = addr;
             this->sendMsg = message;
          }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            UNUSED (old_value);
+            UNUSED (new_value);
+
+            mock ("Interface").actualCall ("notify");
+         }
       };
 
       template<class Base>

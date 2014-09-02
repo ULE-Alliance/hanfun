@@ -258,6 +258,12 @@ namespace HF
                proxy.send (addr, message);
             }
 
+            void notify (const HF::Attributes::IAttribute &old_value,
+                         const HF::Attributes::IAttribute &new_value) const
+            {
+               proxy.notify (old_value, new_value);
+            }
+
             private:
 
             profile_t &proxy;
@@ -327,6 +333,10 @@ namespace HF
 
          //! \see AbstractInterface::send
          virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         //! \see AbstractInterface::notify
+         virtual void notify (const HF::Attributes::IAttribute &old_value,
+                              const HF::Attributes::IAttribute &new_value) const = 0;
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const

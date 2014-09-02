@@ -78,6 +78,9 @@ namespace HF
          {
             device.add (this);
          }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const;
       };
 
       /*!
@@ -121,6 +124,12 @@ namespace HF
          void send (const Protocol::Address &addr, Protocol::Message &message)
          {
             AbstractUnit::send (addr, message, nullptr);
+         }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            AbstractUnit::notify (old_value, new_value);
          }
       };
 

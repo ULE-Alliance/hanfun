@@ -16,7 +16,7 @@
 // =============================================================================
 
 #include "hanfun/units.h"
-
+#include "hanfun/devices.h"
 
 // =============================================================================
 // HF::Units::AbstractUnit::send
@@ -40,4 +40,17 @@ void HF::Units::AbstractUnit::send (const Protocol::Address &addr, Protocol::Mes
    message.reference = packet->message.reference;
 
    delete packet;
+}
+
+// =============================================================================
+// HF::Units::AbstractUnit::notify
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Units::AbstractUnit::notify (const HF::Attributes::IAttribute &old_value,
+                                      const HF::Attributes::IAttribute &new_value) const
+{
+   device ().unit0 ()->attribute_reporting ()->notify (this->id (), old_value, new_value);
 }

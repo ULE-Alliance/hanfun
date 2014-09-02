@@ -44,9 +44,16 @@ uint8_t LevelControl::Server::level ()
  *
  */
 // =============================================================================
-void LevelControl::Server::level (uint8_t new_level)
+void LevelControl::Server::level (uint8_t __level)
 {
-   _level = new_level;
+   uint8_t old = this->_level;
+
+   this->_level = __level;
+
+   Level old_attr (old);
+   Level new_attr (this->_level);
+
+   notify (old_attr, new_attr);
 }
 
 // =============================================================================

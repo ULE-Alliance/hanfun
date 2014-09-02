@@ -61,7 +61,7 @@ namespace HF
 
       enum Commands
       {
-         MAX_CMD_ID = 0xFF,           //! Maximum value for command IDs.
+         MAX_CMD_ID = 0xFF,           //!< Maximum value for command IDs.
       };
 
       // =============================================================================
@@ -182,6 +182,18 @@ namespace HF
           */
          virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
 
+         /*!
+          * Notify that an attribute value as changed.
+          *
+          * @param [in] old_value   attribute's old value.
+          * @param [in] new_value   attribute's new value.
+          */
+         virtual void notify (const HF::Attributes::IAttribute &old_value,
+                              const HF::Attributes::IAttribute &new_value) const
+         {
+            UNUSED (old_value);
+            UNUSED (new_value);
+         }
 
          /*!
           * Check if message has correct attributes to be processed by the interface.
@@ -199,7 +211,8 @@ namespace HF
           *
           * \see Interface::handle.
           */
-         Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
+         Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload,
+                                            size_t offset);
 
          /*!
           * Return the minimal payload size that should be present for the given

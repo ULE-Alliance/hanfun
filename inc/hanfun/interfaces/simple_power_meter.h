@@ -55,6 +55,29 @@
 #endif
 
 // =============================================================================
+// Define
+// =============================================================================
+
+#define ATTR_SETTER(__type, __arg, __uid)                                              \
+   {                                                                                   \
+      __type old = __arg;                                                              \
+                                                                                       \
+      __arg = value;                                                                   \
+                                                                                       \
+      HF::Attributes::Attribute <__type> *old_attr =                                   \
+         static_cast <HF::Attributes::Attribute <__type> *>(create_attribute (__uid)); \
+      old_attr->set (old);                                                             \
+                                                                                       \
+      HF::Attributes::Attribute <__type> *new_attr =                                   \
+         static_cast <HF::Attributes::Attribute <__type> *>(attribute (__uid));        \
+                                                                                       \
+      notify (*old_attr, *new_attr);                                                   \
+                                                                                       \
+      delete old_attr;                                                                 \
+      delete new_attr;                                                                 \
+   }
+
+// =============================================================================
 // API
 // =============================================================================
 
@@ -298,7 +321,7 @@ namespace HF
              */
             void energy (Measurement &value)
             {
-               _energy = value;
+               ATTR_SETTER (Measurement, _energy, ENERGY_ATTR);
             }
 #endif
 
@@ -320,7 +343,7 @@ namespace HF
              */
             void last_energy (Measurement &value)
             {
-               _last_energy = value;
+               ATTR_SETTER (Measurement, _last_energy, ENERGY_AT_RESET_ATTR);
             }
 #endif
 
@@ -342,7 +365,7 @@ namespace HF
              */
             void last_time (Measurement &value)
             {
-               _last_time = value;
+               ATTR_SETTER (Measurement, _last_time, TIME_AT_RESET_ATTR);
             }
 #endif
 
@@ -364,7 +387,7 @@ namespace HF
              */
             void power (Measurement &value)
             {
-               _power = value;
+               ATTR_SETTER (Measurement, _power, POWER_ATTR);
             }
 #endif
 
@@ -386,7 +409,7 @@ namespace HF
              */
             void avg_power (Measurement &value)
             {
-               _avg_power = value;
+               ATTR_SETTER (Measurement, _avg_power, AVG_POWER_ATTR);
             }
 #endif
 
@@ -408,7 +431,7 @@ namespace HF
              */
             void avg_power_interval (uint16_t value)
             {
-               _avg_power_interval = value;
+               ATTR_SETTER (uint16_t, _avg_power_interval, AVG_POWER_INTERVAL_ATTR);
             }
 #endif
 
@@ -430,7 +453,7 @@ namespace HF
              */
             void power_factor (uint8_t value)
             {
-               _power_factor = value;
+               ATTR_SETTER (uint8_t, _power_factor, POWER_FACTOR_ATTR);
             }
 #endif
 
@@ -452,7 +475,7 @@ namespace HF
              */
             void voltage (Measurement &value)
             {
-               _voltage = value;
+               ATTR_SETTER (Measurement, _voltage, VOLTAGE_ATTR);
             }
 #endif
 
@@ -474,7 +497,7 @@ namespace HF
              */
             void current (Measurement &value)
             {
-               _current = value;
+               ATTR_SETTER (Measurement, _current, CURRENT_ATTR);
             }
 #endif
 
@@ -496,7 +519,7 @@ namespace HF
              */
             void frequency (Measurement &value)
             {
-               _frequency = value;
+               ATTR_SETTER (Measurement, _frequency, FREQUENCY_ATTR);
             }
 #endif
 
@@ -518,7 +541,7 @@ namespace HF
              */
             void report_interval (uint16_t value)
             {
-               _report_interval = value;
+               ATTR_SETTER (uint16_t, _report_interval, REPORT_INTERVAL_ATTR);
             }
 #endif
 

@@ -168,6 +168,7 @@ TEST_GROUP (LevelControlServer)
    TEST_SETUP ()
    {
       mock ("LevelControlServer").ignoreOtherCalls ();
+      mock ("Interface").ignoreOtherCalls ();
 
       expected = ByteArray {0x00, 0x00, 0x00,
                             0xAA,  // Level value.
@@ -189,7 +190,9 @@ TEST_GROUP (LevelControlServer)
 TEST (LevelControlServer, Level)
 {
    CHECK_EQUAL (0, server.level ());
+   mock ("Interface").expectOneCall ("notify");
    server.level (42);
+   mock ("Interface").checkExpectations ();
    CHECK_EQUAL (42, server.level ());
 }
 

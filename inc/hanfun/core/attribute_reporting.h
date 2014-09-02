@@ -993,6 +993,9 @@ namespace HF
 
             void periodic (uint32_t time);
 
+            virtual void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                                 const HF::Attributes::IAttribute &new_value);
+
             protected:
 
             uint32_t last_time;
