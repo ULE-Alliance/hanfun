@@ -2739,10 +2739,115 @@ TEST (AttributeReporting_Server, Periodic)
    server->periodic (80);
 
    LONGS_EQUAL (1, base->packets.size ());
+}
 
-   Packet *packet = *base->packets.begin ();
+TEST (AttributeReporting_Server, Event_Equal)
+{
+   Event::Field field;
+   Event::Rule  rule;
+   Event::Entry entry;
 
-   ByteArray payload (packet->size ());
+   field.attr_uid = 0x5A;
+   field.type     = Event::EQ;
+   field.value    = {0x12, 0x34, 0x56, 0x78};
 
-   packet->pack (payload);
+   entry.itf.id   = 0x7ABC;
+   entry.pack_id  = HF::Attributes::DYNAMIC;
+   entry.unit     = 1;
+
+   entry.fields.push_back (field);
+
+   rule.add (entry);
+
+   server->event_rules.push_front (rule);
+
+   uint32_t old_value = 0x12345679;
+   uint32_t new_value = 0x1234567A;
+
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, 0x5A, nullptr, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, 0x5A, nullptr, new_value);
+
+   server->notify (1, old_attr, new_attr);
+
+   LONGS_EQUAL (0, base->packets.size ());
+
+   new_value = 0x12345678;
+
+   server->notify (1, old_attr, new_attr);
+
+   LONGS_EQUAL (1, base->packets.size ());
+}
+
+TEST (AttributeReporting_Server, Event_Lower)
+{
+   Event::Field field;
+   Event::Rule  rule;
+   Event::Entry entry;
+
+   field.attr_uid = 0x5A;
+   field.type     = Event::LT;
+   field.value    = {0x12, 0x34, 0x56, 0x78};
+
+   entry.itf.id   = 0x7ABC;
+   entry.pack_id  = HF::Attributes::DYNAMIC;
+   entry.unit     = 1;
+
+   entry.fields.push_back (field);
+
+   rule.add (entry);
+
+   server->event_rules.push_front (rule);
+
+   uint32_t old_value = 0x12345679;
+   uint32_t new_value = 0x1234567A;
+
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, 0x5A, nullptr, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, 0x5A, nullptr, new_value);
+
+   server->notify (1, old_attr, new_attr);
+
+   LONGS_EQUAL (0, base->packets.size ());
+
+   new_value = 0x12345670;
+
+   server->notify (1, old_attr, new_attr);
+
+   LONGS_EQUAL (1, base->packets.size ());
+}
+
+TEST (AttributeReporting_Server, Event_Upper)
+{
+   Event::Field field;
+   Event::Rule  rule;
+   Event::Entry entry;
+
+   field.attr_uid = 0x5A;
+   field.type     = Event::HT;
+   field.value    = {0x12, 0x34, 0x56, 0x78};
+
+   entry.itf.id   = 0x7ABC;
+   entry.pack_id  = HF::Attributes::DYNAMIC;
+   entry.unit     = 1;
+
+   entry.fields.push_back (field);
+
+   rule.add (entry);
+
+   server->event_rules.push_front (rule);
+
+   uint32_t old_value = 0x12345670;
+   uint32_t new_value = 0x12345675;
+
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, 0x5A, nullptr, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, 0x5A, nullptr, new_value);
+
+   server->notify (1, old_attr, new_attr);
+
+   LONGS_EQUAL (0, base->packets.size ());
+
+   new_value = 0x1234567A;
+
+   server->notify (1, old_attr, new_attr);
+
+   LONGS_EQUAL (1, base->packets.size ());
 }

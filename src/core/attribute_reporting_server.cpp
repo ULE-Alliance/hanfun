@@ -14,6 +14,7 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
+#include <algorithm>
 
 #include "hanfun/core/attribute_reporting.h"
 
@@ -465,13 +466,75 @@ void Server::response (Protocol::Packet &packet, Reference &report, Common::Resu
    delete resp_msg;
 }
 
-static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit, const Common::Interface &itf,
-                                                     uint8_t pack_id, const HF::Attributes::UIDS &uids);
+// =============================================================================
+// Helper functions.
+// =============================================================================
 
+// =============================================================================
+// create_report_entry
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
+                                                     const Common::Interface &itf,
+                                                     uint8_t pack_id,
+                                                     const HF::Attributes::UIDS &uids)
+{
+   Report::Periodic::Entry *result = new Report::Periodic::Entry ();
+
+   auto attrs                      = unit->attributes (itf, pack_id, uids);
+   /* *INDENT-OFF* */
+   std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
+   {
+      result->add (attr);
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// fill_report
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
-                         const Units::IUnit *unit);
+                         const Units::IUnit *unit)
+{
+   assert (report != nullptr);
+   assert (unit != nullptr);
 
-#include "hanfun/debug.h"
+   if (entry.itf.id == HF::Interface::MAX_UID)
+   {
+      // Search the official interfaces.
+      uint16_t count;
+      const Common::Interface *itf = Profiles::interfaces (unit->uid (), count);
+
+      assert (itf != nullptr);
+
+      if (itf != nullptr)
+      {
+         for (uint16_t i = 0; i < count; ++i, ++itf)
+         {
+            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id, entry.uids);
+            report->add (*_entry);
+
+            delete _entry;
+         }
+      }
+   }
+   else
+   {
+      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id, entry.uids);
+      report->add (*_entry);
+
+      delete _entry;
+   }
+}
 
 // =============================================================================
 // Server::periodic
@@ -524,71 +587,136 @@ void Server::periodic (uint32_t time)
 }
 
 // =============================================================================
-// Helper functions.
-// =============================================================================
-
-// =============================================================================
-// fill_report
+// Server::notify
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
-                         const Units::IUnit *unit)
+void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                     const HF::Attributes::IAttribute &new_value)
 {
-   assert (report != nullptr);
-   assert (unit != nullptr);
-
-   if (entry.itf.id == HF::Interface::MAX_UID)
+   /* *INDENT-OFF* */
+   std::for_each (event_rules.begin (), event_rules.end (),
+                  [this, unit, &old_value, &new_value](const Event::Rule &rule)
    {
-      // Search the official interfaces.
-      uint16_t count;
-      const Common::Interface *itf = Profiles::interfaces (unit->uid (), count);
-
-      assert (itf != nullptr);
-
-      if (itf != nullptr)
+      std::vector<Report::Event::Entry *> entries;
+      std::for_each (rule.cbegin (), rule.cend (),
+                     [unit, &entries, &old_value, &new_value](const Event::Entry &entry)
       {
-         for (uint16_t i = 0; i < count; ++i, ++itf)
+         if (entry.unit == unit && entry.itf.id == new_value.interface())
          {
-            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id, entry.uids);
-            report->add (*_entry);
+            entries.push_back (Report::Event::process (entry, old_value, new_value));
+         }
+      });
 
-            delete _entry;
+      if (std::any_of (entries.begin(), entries.end(),
+                       [](const Report::Event::Entry * entry) { return entry != nullptr; }))
+      {
+         Report::Event * report = new Report::Event ();
+
+         report->id   = rule.report.id;
+         report->type = rule.report.type;
+
+         std::for_each (entries.begin(), entries.end(), [report](Report::Event::Entry * entry)
+         {
+            if (entry != nullptr)
+            {
+               report->add(*entry);
+               delete entry;
+            }
+         });
+
+         Protocol::Message * message = new Protocol::Message ();
+
+         message->itf.role   = HF::Interface::CLIENT_ROLE;
+         message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+         message->itf.member = EVENT_REPORT_CMD;
+
+         message->payload = Common::ByteArray (report->size());
+
+         report->pack(message->payload);
+
+         send (rule.destination, *message);
+
+         delete report;
+         delete message;
+      }
+
+   });
+   /* *INDENT-ON* */
+}
+
+// =============================================================================
+// Server::process_event
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::process_event (Report::Event::Entry &entry, const Event::Field &field,
+                            const HF::Attributes::IAttribute &old_value,
+                            const HF::Attributes::IAttribute &new_value) const
+{
+   bool generate = false;
+
+   if (field.type == Event::COV)
+   {
+      if (field.value[0] == 0x00)
+      {
+         generate = true;
+      }
+      else
+      {
+         float expected = (float) field.value[0] / 0xFF;
+         float actual   = new_value.changed (old_value);
+
+         if (expected < actual)
+         {
+            generate = true;
          }
       }
    }
    else
    {
-      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id, entry.uids);
-      report->add (*_entry);
+      if (new_value.size (false) > field.value.size ())
+      {
+         return;
+      }
 
-      delete _entry;
+      HF::Attributes::IAttribute *attr = old_value.clone ();
+      attr->unpack (field.value, 0);
+
+      switch (field.type)
+      {
+         case Event::HT:
+         {
+            generate = new_value > *attr;
+            break;
+         }
+         case Event::LT:
+         {
+            generate = new_value < *attr;
+            break;
+         }
+         case Event::EQ:
+         {
+            generate = new_value == *attr;
+            break;
+         }
+         default:
+            break;
+      }
+
+      delete attr;
    }
-}
 
-// =============================================================================
-// create_report_entry
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
-                                                     const Common::Interface &itf,
-                                                     uint8_t pack_id,
-                                                     const HF::Attributes::UIDS &uids)
-{
-   Report::Periodic::Entry *result = new Report::Periodic::Entry ();
-
-   auto attrs                      = unit->attributes (itf, pack_id, uids);
-   /* *INDENT-OFF* */
-   std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
+   if (generate)
    {
-      result->add (attr);
-   });
-   /* *INDENT-ON* */
+      Report::Event::Field *_field = new Report::Event::Field ();
+      _field->set_attribute (new_value.clone ());
+      entry.add (*_field);
 
-   return result;
+      delete _field;
+   }
 }

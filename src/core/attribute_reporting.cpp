@@ -1428,6 +1428,158 @@ size_t Report::Event::AddEntryMessage::unpack_entry (const Common::ByteArray &ar
 }
 
 // =============================================================================
+// process
+// =============================================================================
+/*!
+ *
+ * @param field
+ * @param old_value
+ * @param new_value
+ *
+ * @return
+ */
+// =============================================================================
+static Report::Event::Field *process_field (const AttributeReporting::Event::Field &field,
+                                            const HF::Attributes::IAttribute &old_value,
+                                            const HF::Attributes::IAttribute &new_value)
+{
+   bool generate = false;
+
+   if (field.type == Event::COV)
+   {
+      if (field.value[0] == 0x00)
+      {
+         generate = true;
+      }
+      else
+      {
+         float expected = (float) field.value[0] / 0xFF;
+         float actual   = new_value.changed (old_value);
+
+         if (expected < actual)
+         {
+            generate = true;
+         }
+      }
+   }
+   else
+   {
+      if (new_value.size (false) > field.value.size ())
+      {
+         return nullptr;
+      }
+
+      HF::Attributes::IAttribute *attr = old_value.clone ();
+      attr->unpack (field.value, 0);
+
+      switch (field.type)
+      {
+         case Event::HT:
+         {
+            generate = new_value > *attr;
+            break;
+         }
+         case Event::LT:
+         {
+            generate = new_value < *attr;
+            break;
+         }
+         case Event::EQ:
+         {
+            generate = new_value == *attr;
+            break;
+         }
+         default:
+            break;
+      }
+
+      delete attr;
+   }
+
+   if (generate)
+   {
+      Report::Event::Field *_field = new Report::Event::Field ();
+      _field->set_attribute (new_value.clone ());
+      return _field;
+   }
+
+   return nullptr;
+}
+
+// =============================================================================
+// Report::Event::process
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::Entry &entry,
+                                              const HF::Attributes::IAttribute &old_value,
+                                              const HF::Attributes::IAttribute &new_value)
+{
+   Report::Event::Entry *result = nullptr;
+
+   std::vector <Event::Field *> fields;
+
+   if (entry.pack_id == HF::Attributes::DYNAMIC)
+   {
+      /* *INDENT-OFF* */
+      std::for_each (entry.fields.begin (),entry.fields.end (),
+                     [&fields, &old_value, &new_value](const AttributeReporting::Event::Field &field)
+      {
+         if (field.attr_uid == new_value.uid())
+         {
+            fields.push_back(process_field(field, old_value, new_value));
+         }
+      });
+      /* *INDENT-ON* */
+   }
+   else
+   {
+      const HF::Interface *itf = new_value.owner ();
+
+      assert (itf != nullptr);
+
+      if (itf == nullptr)
+      {
+         return result;
+      }
+
+      HF::Attributes::UIDS expected_uids = itf->attributes (entry.pack_id);
+
+      uint8_t actual_uid                 = new_value.uid ();
+
+      // Find if attribute is in pack ID.
+      if (std::any_of (expected_uids.begin (), expected_uids.end (),
+                       [actual_uid](uint8_t uid) {return uid == actual_uid;}
+                      ))
+      {
+         const AttributeReporting::Event::Field &field = *entry.fields.begin ();
+         fields.push_back (process_field (field, old_value, new_value));
+      }
+   }
+
+   if (std::any_of (fields.begin (), fields.end (),
+                    [](const Event::Field *field) {return field != nullptr;}
+                   ))
+   {
+      result = new Report::Event::Entry ();
+
+      std::for_each (fields.begin (), fields.end (), [result](Event::Field *field)
+                     {
+                        if (field != nullptr)
+                        {
+                           result->add (*field);
+                           delete field;
+                        }
+                     }
+                    );
+   }
+
+   return result;
+}
+
+// =============================================================================
 // Message API
 // =============================================================================
 

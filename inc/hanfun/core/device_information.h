@@ -55,7 +55,7 @@ namespace HF
          struct Server;
       }  // namespace DeviceInformation
 
-      HF::Attributes::IAttribute *create_attribute (const DeviceInformation::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute (DeviceInformation::Server *server, uint8_t uid);
 
       namespace DeviceInformation
       {

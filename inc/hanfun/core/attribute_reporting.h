@@ -795,6 +795,10 @@ namespace HF
                      return std::distance (entries.begin (), entries.end ());
                   }
                };
+
+               static Report::Event::Entry *process (const AttributeReporting::Event::Entry &entry,
+                                                     const HF::Attributes::IAttribute &old_value,
+                                                     const HF::Attributes::IAttribute &new_value);
             };
 
          }  // namespace Report
@@ -1040,6 +1044,10 @@ namespace HF
             {
                return Server::uid () == uid;
             }
+
+            void process_event (Report::Event::Entry &entry, const Event::Field &field,
+                                const HF::Attributes::IAttribute &old_value,
+                                const HF::Attributes::IAttribute &new_value) const;
          };
 
       }  // namespace AttributeReporting
