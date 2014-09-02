@@ -838,9 +838,11 @@ namespace HF
 
          Protocol::Message *destroy (Reference report);
 
-         Protocol::Message *add (Reference report, std::vector <Periodic::Entry>::iterator begin, std::vector <Periodic::Entry>::iterator end);
+         Protocol::Message *add (Reference report, std::vector <Periodic::Entry>::iterator begin,
+                                 std::vector <Periodic::Entry>::iterator end);
 
-         Protocol::Message *add (Reference report, std::vector <Event::Entry>::iterator begin, std::vector <Event::Entry>::iterator end);
+         Protocol::Message *add (Reference report, std::vector <Event::Entry>::iterator begin,
+                                 std::vector <Event::Entry>::iterator end);
 
          /*!
           * Attribute Reporting - Client Role.

@@ -492,10 +492,11 @@ namespace HF
                }
 
                /* *INDENT-OFF* */
-               auto it = std::find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
-               {
-                  return link->address () == addr;
-               });
+               auto it = std::find_if(_links.begin(), _links.end(),
+                                      [addr](HF::Transport::Link *link)
+                                      {
+                                         return link->address () == addr;
+                                      });
                /* *INDENT-ON* */
 
                if (it == _links.end ())
@@ -513,11 +514,12 @@ namespace HF
              * @param [in] payload reference to the ByteArray containing the packet payload.
              * @param [in] offset  offset from where the packet data starts.
              */
-            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
             {
-               HF::Core::BindManagement::Entries &entries = unit0.bind_management ()->entries;
+               auto &entries = _unit0.bind_management ()->entries;
 
-               auto range                                 = entries.find (packet.source, packet.message.itf);
+               auto range    = entries.find (packet.source, packet.message.itf);
 
                // No bindings found !
                if (range.first == entries.end () && range.second == entries.end ())
@@ -532,13 +534,13 @@ namespace HF
                std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
                /* *INDENT-OFF* */
-               std::for_each (range.first, range.second,
-                              [this, &other](const Core::BindManagement::Entry &entry)
-                         {
-                            other.link = nullptr;
-                            other.destination = entry.destination;
-                            this->send (other);
-               });
+               std::for_each(range.first, range.second,
+                             [this, &other](const Core::BindManagement::Entry &entry)
+                             {
+                                other.link = nullptr;
+                                other.destination = entry.destination;
+                                this->send (other);
+                             });
                /* *INDENT-ON* */
             }
          };
@@ -562,9 +564,9 @@ namespace HF
             {
                HF::Transport::AbstractLayer::add (ep);
                /* *INDENT-OFF* */
-               std::for_each (links.begin (), links.end (), [ep](HF::Transport::Link *link)
-                              {
-                                 ep->connected (link);
+               std::for_each(links.begin(), links.end(), [ep](HF::Transport::Link *link)
+               {
+                  ep->connected (link);
                });
                /* *INDENT-ON* */
             }

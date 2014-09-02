@@ -23,10 +23,10 @@
 #include "hanfun/debug.h"
 
 using namespace HF;
-using namespace HF::Testing;
-using namespace HF::Core;
 using namespace HF::Common;
+using namespace HF::Core;
 using namespace HF::Core::AttributeReporting;
+using namespace HF::Testing;
 
 // =============================================================================
 // Helper Functions
@@ -2691,12 +2691,12 @@ TEST_GROUP (AttributeReporting_Server)
 
    TEST_SETUP ()
    {
-      base                       = new Testing::Concentrator ();
-      server                     = new AttributeReporting::Server (base->unit0);
+      base   = new Testing::Concentrator ();
+      server = new AttributeReporting::Server (*base->unit0 ());
 
-      base->unit0.attr_reporting = server;
+      base->unit0 ()->attr_reporting = server;
 
-      unit                       = new Testing::Unit (1, *base);
+      unit = new Testing::Unit (1, *base);
 
       mock ().ignoreOtherCalls ();
    }

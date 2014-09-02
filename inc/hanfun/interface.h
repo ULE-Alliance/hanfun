@@ -253,7 +253,8 @@ namespace HF
           *
           * \see Interface::handle
           */
-         virtual Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         virtual Common::Result handle_command (Protocol::Packet &packet,
+                                                Common::ByteArray &payload, size_t offset);
 
          /*!
           * Handle attributes request/response messages, i.e. :
@@ -266,7 +267,8 @@ namespace HF
           *
           * \see Interface::handle
           */
-         virtual Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         virtual Common::Result handle_attribute (Protocol::Packet &packet,
+                                                  Common::ByteArray &payload, size_t offset);
 
          /*!
           * Check if the given UID matches the interface UID.
