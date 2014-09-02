@@ -118,6 +118,9 @@ namespace HF
          //! This unit will be acting upon some physical siren that will sound an alert.
          SIREN = 0x0280,
 
+         //! This profile can be used to receive alerts.
+         ALERTABLE = 0x0281,
+
          // =============================================================================
          // Home care Unit Types
          // =============================================================================
@@ -735,6 +738,16 @@ namespace HF
          public:
 
          virtual ~Siren() {}
+      };
+
+      /*!
+       * Siren profile implementation.
+       */
+      class Alertable:public Profile <ALERTABLE, Interfaces::Alert::Client>
+      {
+         public:
+
+         virtual ~Alertable() {}
       };
 
       // =============================================================================

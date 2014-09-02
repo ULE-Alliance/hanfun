@@ -68,6 +68,7 @@ namespace HF
       HELPER_CLASS (GlassBreakDetector);
       HELPER_CLASS (VibrationDetector);
       HELPER_CLASS (Siren);
+      HELPER_CLASS (Alertable);
 
       HELPER_CLASS (SimplePendant);
 
@@ -211,6 +212,10 @@ TEST (Profiles, UIDs)
 
    profile = new Siren ();
    CHECK_EQUAL (Profiles::SIREN, profile->uid ());
+   delete profile;
+
+   profile = new Alertable ();
+   CHECK_EQUAL (Profiles::ALERTABLE, profile->uid ());
    delete profile;
 
    // =============================================================================
@@ -523,6 +528,14 @@ TEST (Profiles, InterfaceMapping)
 
    LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::ALERTABLE
+   itf = Profiles::interfaces (HF::Profiles::ALERTABLE, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
 
    // HF::Profiles::SIMPLE_PENDANT
    itf = Profiles::interfaces (HF::Profiles::SIMPLE_PENDANT, count);

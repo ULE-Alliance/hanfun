@@ -323,7 +323,10 @@ namespace HF
              * Callback function called when a status update message is received
              * from an Alert server.
              */
-            virtual void status (Message &message) = 0;
+            virtual void status (Message &message)
+            {
+               UNUSED (message);
+            }
 
             //! @}
             // ======================================================================
