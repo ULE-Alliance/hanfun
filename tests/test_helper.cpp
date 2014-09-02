@@ -44,7 +44,7 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
 
    size_t size = data.pack (array);
 
-   result += HexStringFrom (size);
+   result += HexStringFrom ((long int)size);
    result += " : ";
    result += StringFrom (array);
 
