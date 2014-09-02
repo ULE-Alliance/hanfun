@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the common
  * functions and classes for the HAN-FUN library.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -460,6 +460,24 @@ TEST_GROUP (Attributes)
 
          return offset - start;
       }
+
+      int compare (const TestMeasure &other) const
+      {
+         int res = type - other.type;
+
+         if (res == 0)
+         {
+            res = value - other.value;
+         }
+
+         return res;
+      }
+
+      float changed (const TestMeasure &other) const
+      {
+         UNUSED (other);
+         return 0.0;
+      }
    };
 };
 
@@ -470,9 +488,9 @@ TEST (Attributes, API)
    uint32_t data3 = 0x5A50;
 
    TestInterface itf;
-   HF::Attributes::Attribute <uint8_t &>  attr (itf.uid (), 0x5B, data);
-   HF::Attributes::Attribute <uint16_t &> attr2 (itf.uid (), 0x5A, data2);
-   HF::Attributes::Attribute <uint32_t &> attr3 (itf.uid (), 0x5C, data3);
+   HF::Attributes::Attribute <uint8_t &>  attr (itf.uid (), 0x5B, &itf, data);
+   HF::Attributes::Attribute <uint16_t &> attr2 (itf.uid (), 0x5A, &itf, data2);
+   HF::Attributes::Attribute <uint32_t &> attr3 (itf.uid (), 0x5C, &itf, data3);
 
    LONGS_EQUAL (data2, attr2.value ());
 
@@ -491,7 +509,7 @@ TEST (Attributes, API2)
    TestMeasure data;
 
    TestInterface itf;
-   HF::Attributes::Attribute <TestMeasure &> attr (itf.uid (), 0x5A, data, true);
+   HF::Attributes::Attribute <TestMeasure &> attr (itf.uid (), 0x5A, &itf, data, true);
 
    data.type  = 0x55;
    data.value = 0x5A5A;
@@ -509,7 +527,7 @@ TEST (Attributes, Serialize_Pack)
    uint16_t attr = 0x1234;
 
    TestInterface itf;
-   HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
+   HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, &itf, attr);
 
    Common::ByteArray result (expected.size ());
 
@@ -530,7 +548,7 @@ TEST (Attributes, Serialize_Unpack)
    uint16_t attr = 0x6666;
 
    TestInterface itf;
-   HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, attr);
+   HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, &itf, attr);
 
 
    size_t r_size = attr_wrapper.unpack (expected, 3);

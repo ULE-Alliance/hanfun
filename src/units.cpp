@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for
  * the HAN-FUN Units.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -16,17 +16,17 @@
 // =============================================================================
 
 #include "hanfun/units.h"
-
+#include "hanfun/devices.h"
 
 // =============================================================================
-// HF::Units::AbstractUnit::sendMessage
+// HF::Units::AbstractUnit::send
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Message &message,
-                                           Transport::Link *link)
+void HF::Units::AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &message,
+                                    Transport::Link *link)
 {
    Protocol::Packet *packet = new Protocol::Packet (message);
 
@@ -40,4 +40,17 @@ void HF::Units::AbstractUnit::sendMessage (Protocol::Address &addr, Protocol::Me
    message.reference = packet->message.reference;
 
    delete packet;
+}
+
+// =============================================================================
+// HF::Units::AbstractUnit::notify
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void HF::Units::AbstractUnit::notify (const HF::Attributes::IAttribute &old_value,
+                                      const HF::Attributes::IAttribute &new_value) const
+{
+   device ().unit0 ()->attribute_reporting ()->notify (this->id (), old_value, new_value);
 }

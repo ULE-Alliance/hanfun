@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the On-Off interface : Client role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -38,7 +38,7 @@ void OnOff::Client::on (Protocol::Address &addr)
    message.itf.id     = OnOff::Client::uid ();
    message.itf.member = ON_CMD;
 
-   sendMessage (addr, message);
+   send (addr, message);
 }
 
 // =============================================================================
@@ -56,7 +56,7 @@ void OnOff::Client::off (Protocol::Address &addr)
    message.itf.id     = OnOff::Client::uid ();
    message.itf.member = OFF_CMD;
 
-   sendMessage (addr, message);
+   send (addr, message);
 }
 
 // =============================================================================
@@ -74,5 +74,5 @@ void OnOff::Client::toggle (Protocol::Address &addr)
    message.itf.id     = OnOff::Client::uid ();
    message.itf.member = TOGGLE_CMD;
 
-   sendMessage (addr, message);
+   send (addr, message);
 }

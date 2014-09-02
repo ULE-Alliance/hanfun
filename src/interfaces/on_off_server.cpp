@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the On-Off interface : Server role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -100,7 +100,14 @@ void OnOff::Server::toggle ()
 // =============================================================================
 void OnOff::Server::state (bool state)
 {
+   bool old = this->_state;
+
    this->_state = state;
+
+   State old_attr (old);
+   State new_attr (this->_state);
+
+   notify (old_attr, new_attr);
 }
 
 // =============================================================================
