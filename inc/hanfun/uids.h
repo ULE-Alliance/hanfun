@@ -407,10 +407,6 @@ namespace HF
          }
       };
 
-      // size_t pack (UID_T &uid, Common::ByteArray &array, size_t offset);
-
-      // size_t unpack (UID_T * &uid, const Common::ByteArray &array, size_t offset);
-
       /*!
        * Wrapper around UID_T pointer's.
        *
