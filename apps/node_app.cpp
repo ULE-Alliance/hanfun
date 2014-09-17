@@ -5,7 +5,7 @@
  * This file contains the implementation of the example application for a
  * HAN-FUN Node.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -49,7 +49,7 @@ COMMAND (Register, "r", "r:register device")
    UNUSED (args);
    LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   node.unit0.device_management ()->register_device ();
+   node.unit0 ()->device_management ()->register_device ();
 }
 
 COMMAND (Address, "a", "a:device address")

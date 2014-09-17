@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Alert Interface implementation.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -120,7 +120,7 @@ TEST_GROUP (AlertServer)
    TEST_SETUP ()
    {
       server = new TestAlertServer ();
-      mock ().ignoreOtherCalls ();
+      mock ("Interface").ignoreOtherCalls ();
    }
 
    TEST_TEARDOWN ()
@@ -136,25 +136,32 @@ TEST_GROUP (AlertServer)
 //! \test Should disable all alarms.
 TEST (AlertServer, DisableAll)
 {
+   mock ("Interface").expectOneCall ("notify");
    CHECK_EQUAL (UINT32_MAX, server->enabled ());
    server->disableAll ();
    CHECK_EQUAL (0, server->enabled ());
+   mock ("Interface").checkExpectations ();
 }
 
 //! \test Should enable all alarms.
 TEST (AlertServer, EnableAll)
 {
+   mock ("Interface").expectNCalls (2, "notify");
    server->disableAll ();
    server->enableAll ();
    CHECK_EQUAL (UINT32_MAX, server->enabled ());
+   mock ("Interface").checkExpectations ();
 }
 
 //! \test Should enable only the selected alarm.
 TEST (AlertServer, Enable)
 {
+   mock ("Interface").expectOneCall ("notify");
    server->disableAll ();
 
    CHECK_FALSE (server->enabled (42));
+
+   mock ("Interface").expectNCalls (2 * 32, "notify");
 
    for (int i = 0; i < 32; i++)
    {
@@ -174,14 +181,19 @@ TEST (AlertServer, Enable)
 
       server->disable (i);
    }
+
+   mock ("Interface").checkExpectations ();
 }
 
 //! \test Should disable only the selected alarm.
 TEST (AlertServer, Disable)
 {
+   mock ("Interface").expectOneCall ("notify");
    server->enableAll ();
 
    CHECK_TRUE (server->disabled (42));
+
+   mock ("Interface").expectNCalls (2 * 32, "notify");
 
    for (int i = 0; i < 32; i++)
    {
@@ -201,6 +213,8 @@ TEST (AlertServer, Disable)
 
       server->enable (i);
    }
+
+   mock ("Interface").checkExpectations ();
 }
 
 //! \test Should change the alarm state correctly.
@@ -211,6 +225,8 @@ TEST (AlertServer, State)
    CHECK_FALSE (server->state (42));
 
    CHECK_EQUAL (0, server->state ());
+
+   mock ("Interface").expectNCalls (2 * 32, "notify");
 
    // Check individual assignment.
    for (int i = 0; i < 32; i++)
@@ -230,6 +246,8 @@ TEST (AlertServer, State)
       CHECK_FALSE (server->state (i));
    }
 
+   mock ("Interface").expectNCalls (32, "notify");
+
    // Check clear.
    for (int i = 0; i < 32; i++)
    {
@@ -238,9 +256,12 @@ TEST (AlertServer, State)
 
    CHECK_EQUAL (UINT32_MAX, server->state ());
 
+   mock ("Interface").expectOneCall ("notify");
    server->clear ();
 
    CHECK_EQUAL (0, server->state ());
+
+   mock ("Interface").checkExpectations ();
 }
 
 //! \test Should create the correct Alert::Message.
@@ -272,7 +293,7 @@ TEST (AlertServer, Status2)
 
    Protocol::Address addr;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    server->status (addr, 5);
 

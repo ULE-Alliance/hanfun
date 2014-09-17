@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the units implementation.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -41,6 +41,16 @@ namespace HF
 
          //! \see Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
+
+         /*!
+          * Create and send a new packet with the given message to the given address.
+          *
+          * @param [in] addr     address to send the message to.
+          * @param [in] message  message to send.
+          * @param [in] link     preferred link to send the message on.
+          */
+         virtual void send (const Protocol::Address &addr, Protocol::Message &message,
+                            Transport::Link *link = nullptr) = 0;
       };
 
       /*!
@@ -58,6 +68,9 @@ namespace HF
             return _device;
          }
 
+         void send (const Protocol::Address &addr, Protocol::Message &message,
+                    Transport::Link *link = nullptr);
+
          protected:
 
          AbstractUnit(IDevice &device):
@@ -66,15 +79,8 @@ namespace HF
             device.add (this);
          }
 
-         /*!
-          * Create and send a new packet with the given message to the given address.
-          *
-          * @param [in] addr     address to send the message to.
-          * @param [in] message  message to send.
-          * @param [in] link     preferred link to send the message on.
-          */
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message,
-                           Transport::Link *link);
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const;
       };
 
       /*!
@@ -107,11 +113,23 @@ namespace HF
             return Profile::handle (packet, payload, offset);
          }
 
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            return Profile::attributes (itf, pack_id, uids);
+         }
+
          protected:
 
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+         void send (const Protocol::Address &addr, Protocol::Message &message)
          {
-            AbstractUnit::sendMessage (addr, message, nullptr);
+            AbstractUnit::send (addr, message, nullptr);
+         }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            AbstractUnit::notify (old_value, new_value);
          }
       };
 

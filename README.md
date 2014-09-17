@@ -14,7 +14,7 @@ The build system used is [CMake](http://www.cmake.org/).
 
 * Dependencies
 
-  * gcc (>= 4.5)
+  * gcc (>= 4.6)
   * cmake (>= 2.8.11)
 
 * Building:
@@ -113,10 +113,6 @@ toggle command was received.
 Please see the help in the applications for further features.
 
 ## TODO
-
-  * Interfaces :
-
-   - Add Attribute Report support.
 
   * Core :
 

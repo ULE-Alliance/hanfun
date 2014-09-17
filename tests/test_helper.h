@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -32,6 +32,7 @@
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+#include "hanfun/core/attribute_reporting.h"
 
 #include "hanfun/units.h"
 
@@ -49,7 +50,7 @@ using namespace HF::Protocol;
       return StringFrom (wrapper);                                         \
    }
 
-SimpleString StringFrom (const HF::Common::ByteArray &array);
+SimpleString StringFrom (const std::vector <uint8_t> &array);
 
 SimpleString StringFrom (const HF::Common::Serializable &data);
 
@@ -74,6 +75,9 @@ void check_index (_type expected, _type actual, uint32_t index, const char *head
 }
 
 std::ostream &operator <<(std::ostream &os, std::uint8_t val);
+
+#define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
+   check_index <uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
 // =============================================================================
 // Helper Test Classes
@@ -134,12 +138,21 @@ namespace HF
          virtual ~InterfaceHelper()
          {}
 
-         void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+         void send (const Protocol::Address &addr, Protocol::Message &message)
          {
-            mock ("Interface").actualCall ("sendMessage");
+            mock ("Interface").actualCall ("send");
 
             this->addr    = addr;
             this->sendMsg = message;
+         }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            UNUSED (old_value);
+            UNUSED (new_value);
+
+            mock ("Interface").actualCall ("notify");
          }
       };
 
@@ -190,6 +203,22 @@ namespace HF
             return create_attribute (this, uid);
          }
 
+         //! \see AbstractInterface::attributes
+         HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            HF::Attributes::UIDS result;
+
+            if (pack_id == HF::Attributes::Pack::ALL)
+            {
+               result.push_back (ATTR1);
+               result.push_back (ATTR2);
+            }
+
+            result.push_back (ATTR3);
+
+            return result;
+         }
+
          static HF::Attributes::IAttribute *create_attribute (uint8_t uid)
          {
             return create_attribute (nullptr, uid);
@@ -205,11 +234,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr1);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr1);
                   }
 
                   break;
@@ -219,11 +248,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr2);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr2);
                   }
 
                   break;
@@ -232,11 +261,11 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, true);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, true);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf->attr3, true);
+                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr3, true);
                   }
 
                   break;
@@ -260,25 +289,25 @@ namespace HF
             return Common::Result::OK;
          }
 
-         //! \see AbstractInterface::attributes
-         HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-         {
-            HF::Attributes::uids_t result;
-
-            if (pack_id == HF::Attributes::Pack::ALL)
-            {
-               result.push_back (ATTR1);
-               result.push_back (ATTR2);
-            }
-
-            result.push_back (ATTR3);
-
-            return result;
-         }
-
          bool check_uid (uint16_t uid) const
          {
             return this->_uid == uid;
+         }
+      };
+
+      HF::Attributes::Factory FactoryGetter (HF::Common::Interface itf);
+
+      //! Test Interface.
+      template<class Base>
+      struct ProfileHelper:public InterfaceHelper <Base>
+      {
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
          }
       };
 
@@ -289,6 +318,13 @@ namespace HF
          uint16_t uid () const
          {
             return _uid;
+         }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            return HF::Attributes::get (*this, pack_id, uids);
          }
       };
 
@@ -355,14 +391,26 @@ namespace HF
 
       struct DeviceUnit0:public HF::Devices::Node::IUnit0
       {
-         HF::Core::DeviceManagement::Client  *dev_mgt;
-         HF::Core::DeviceInformation::Server *dev_info;
+         HF::Core::DeviceInformation::Server  *dev_info;
+         HF::Core::DeviceManagement::Client   *dev_mgt;
+         HF::Core::AttributeReporting::Server *attr_reporting;
 
          DeviceUnit0(HF::IDevice &device):
-            HF::Devices::Node::IUnit0 (device), dev_mgt (nullptr)
+            HF::Devices::Node::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
+            attr_reporting (nullptr)
          {}
 
          virtual ~DeviceUnit0() {}
+
+         HF::Core::DeviceInformation::Server *device_info () const
+         {
+            return dev_info;
+         }
+
+         HF::Core::DeviceInformation::Server *device_info ()
+         {
+            return dev_info;
+         }
 
          HF::Core::DeviceManagement::Client *device_management ()
          {
@@ -374,6 +422,16 @@ namespace HF
             return dev_mgt;
          }
 
+         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         {
+            return attr_reporting;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting ()
+         {
+            return attr_reporting;
+         }
+
          Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
             UNUSED (packet);
@@ -381,18 +439,40 @@ namespace HF
             UNUSED (offset);
             return Common::Result::FAIL_UNKNOWN;
          }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
+         }
       };
 
       struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
-         HF::Core::DeviceManagement::Server *dev_mgt;
-         HF::Core::BindManagement::Server   *bind_mgt;
+         HF::Core::DeviceInformation::Server  *dev_info;
+         HF::Core::DeviceManagement::Server   *dev_mgt;
+         HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::BindManagement::Server     *bind_mgt;
 
          ConcentratorUnit0(HF::IDevice &device):
-            HF::Devices::Concentrator::IUnit0 (device), dev_mgt (nullptr), bind_mgt (nullptr)
+            HF::Devices::Concentrator::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
+            attr_reporting (nullptr), bind_mgt (nullptr)
          {}
 
          virtual ~ConcentratorUnit0() {}
+
+         HF::Core::DeviceInformation::Server *device_info () const
+         {
+            return dev_info;
+         }
+
+         HF::Core::DeviceInformation::Server *device_info ()
+         {
+            return dev_info;
+         }
 
          HF::Core::DeviceManagement::Server *device_management ()
          {
@@ -402,6 +482,16 @@ namespace HF
          HF::Core::DeviceManagement::Server *device_management () const
          {
             return dev_mgt;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         {
+            return attr_reporting;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting ()
+         {
+            return attr_reporting;
          }
 
          HF::Core::BindManagement::Server *bind_management ()
@@ -420,6 +510,15 @@ namespace HF
             UNUSED (payload);
             UNUSED (offset);
             return Common::Result::FAIL_UNKNOWN;
+         }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+            return HF::Attributes::List ();
          }
       };
 
@@ -447,8 +546,8 @@ namespace HF
 
          void send (Common::ByteArray &array)
          {
+            this->data = array;
             mock ("Link").actualCall ("send");
-            this->data = Common::ByteArray (array);
          }
 
          const HF::UID::UID uid () const

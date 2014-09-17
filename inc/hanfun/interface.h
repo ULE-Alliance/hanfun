@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -43,9 +43,10 @@ namespace HF
       typedef enum
       {
          /* Core Services */
-         DEVICE_MANAGEMENT  = 0x0001,   //!< Device Management Interface UID.
-         BIND_MANAGEMENT    = 0x0002,   //!< Bind Management Interface UID.
-         DEVICE_INFORMATION = 0x0005,   //!< Device Information Interface UID.
+         DEVICE_MANAGEMENT   = 0x0001,   //!< Device Management Interface UID.
+         BIND_MANAGEMENT     = 0x0002,   //!< Bind Management Interface UID.
+         DEVICE_INFORMATION  = 0x0005,   //!< Device Information Interface UID.
+         ATTRIBUTE_REPORTING = 0x0006,   //!< Attribute Reporting Interface UID.
 
          /* Functional Interfaces. */
          ALERT              = 0x0100,  //!< Alert Interface UID
@@ -60,7 +61,7 @@ namespace HF
 
       enum Commands
       {
-         MAX_CMD_ID = 0xFF,           //! Maximum value for command IDs.
+         MAX_CMD_ID = 0xFF,           //!< Maximum value for command IDs.
       };
 
       // =============================================================================
@@ -117,6 +118,15 @@ namespace HF
        *             \c nullptr otherwise.
        */
       virtual HF::Attributes::IAttribute *attribute (uint8_t uid) = 0;
+
+      /*!
+       * Return a vector containing the attribute UIDs, for the given pack ID.
+       *
+       * @param [in] pack_id  the Attribute pack ID to get the attributes UIDs for.
+       *
+       * @return  vector containing the attributes UIDs.
+       */
+      virtual HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const = 0;
    };
 
    /*!
@@ -130,19 +140,26 @@ namespace HF
       struct AbstractInterface:virtual public Interface
       {
          //! \see Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
          //! \see Interface::periodic
-         virtual void periodic (uint32_t time)
+         void periodic (uint32_t time)
          {
             UNUSED (time);
          }
 
          //! \see Interface::attribute
-         virtual HF::Attributes::IAttribute *attribute (uint8_t uid)
+         HF::Attributes::IAttribute *attribute (uint8_t uid)
          {
             UNUSED (uid);
             return nullptr;
+         }
+
+         //! \see HF::Interface::attributes
+         virtual HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         {
+            UNUSED (pack_id);
+            return HF::Attributes::UIDS ();
          }
 
          bool operator ==(AbstractInterface &other)
@@ -163,7 +180,20 @@ namespace HF
           * @param [in] addr        HF network address.
           * @param [in] message     pointer to the message to be sent to the network.
           */
-         virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+         virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         /*!
+          * Notify that an attribute value as changed.
+          *
+          * @param [in] old_value   attribute's old value.
+          * @param [in] new_value   attribute's new value.
+          */
+         virtual void notify (const HF::Attributes::IAttribute &old_value,
+                              const HF::Attributes::IAttribute &new_value) const
+         {
+            UNUSED (old_value);
+            UNUSED (new_value);
+         }
 
          /*!
           * Check if message has correct attributes to be processed by the interface.
@@ -174,20 +204,21 @@ namespace HF
           *
           * \see Interface::handle.
           */
-         Common::Result check_message (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
+         Common::Result check (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
 
          /*!
           * Check if \c payload data size if sufficient for processing the \c message.
           *
           * \see Interface::handle.
           */
-         Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
+         Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload,
+                                            size_t offset);
 
          /*!
           * Return the minimal payload size that should be present for the given
           * message.
           *
-          * @param message message that was received.
+          * @param [in] message message that was received.
           *
           * @return  the minimum size in bytes that the packet payload should hold.
           */
@@ -197,7 +228,7 @@ namespace HF
           * Return the minimal payload size that a message should hold when
           * addressed at the given interface.
           *
-          * @param itf  the interface being address.
+          * @param [in] itf   the interface being address.
           *
           * @return  the minimum number of bytes for the message for the interface.
           */
@@ -222,7 +253,8 @@ namespace HF
           *
           * \see Interface::handle
           */
-         virtual Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         virtual Common::Result handle_command (Protocol::Packet &packet,
+                                                Common::ByteArray &payload, size_t offset);
 
          /*!
           * Handle attributes request/response messages, i.e. :
@@ -235,21 +267,8 @@ namespace HF
           *
           * \see Interface::handle
           */
-         virtual Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
-
-         /*!
-          * Return a vector containing the attribute UIDs, for the given pack ID.
-          *
-          * @param [in] pack_id     the Attribute pack ID to get the attributes UIDs for.
-          *
-          * @return  vector containing the attributes UIDs.
-          */
-         //      virtual Attributes::uids_t attributes (uint8_t pack_id = Attributes::Pack::MANDATORY) const
-         virtual HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-         {
-            UNUSED (pack_id);
-            return HF::Attributes::uids_t ();
-         }
+         virtual Common::Result handle_attribute (Protocol::Packet &packet,
+                                                  Common::ByteArray &payload, size_t offset);
 
          /*!
           * Check if the given UID matches the interface UID.

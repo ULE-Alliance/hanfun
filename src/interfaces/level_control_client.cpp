@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Level Control interface : Client role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -32,16 +32,20 @@ using namespace HF::Interfaces;
 // =============================================================================
 void LevelControl::Client::level (Protocol::Address &addr, uint8_t new_level)
 {
-   Message level_msg (new_level);
+   Level *level_attr          = new Level (new_level, this);
 
-   Protocol::Message message (level_msg.size ());
+   Protocol::Message *message = new Protocol::Message (level_attr->size ());
 
-   message.itf.role   = SERVER_ROLE;
-   message.itf.id     = LevelControl::Client::uid ();
-   message.itf.member = SET_LEVEL_CMD;
+   message->itf.role   = SERVER_ROLE;
+   message->itf.id     = LevelControl::Client::uid ();
+   message->itf.member = Level::ID;
 
+   message->type       = Protocol::Message::SET_ATTR_REQ;
 
-   level_msg.pack (message.payload);
+   level_attr->pack (message->payload);
 
-   sendMessage (addr, message);
+   send (addr, *message);
+
+   delete level_attr;
+   delete message;
 }

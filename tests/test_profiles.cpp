@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the profiles.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -25,7 +25,7 @@ using namespace HF::Testing;
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS(_name)                           \
-struct _name:public InterfaceHelper<Profiles::_name>  \
+struct _name:public ProfileHelper<Profiles::_name>   \
 {                                                      \
    virtual ~_name() {}                                \
 }
@@ -33,7 +33,7 @@ struct _name:public InterfaceHelper<Profiles::_name>  \
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS2(_name)                            \
-struct _name:public InterfaceHelper<Profiles::_name<>>   \
+struct _name:public ProfileHelper<Profiles::_name<>>   \
 {                                                        \
    virtual ~_name() {}                                  \
 }
@@ -68,6 +68,7 @@ namespace HF
       HELPER_CLASS (GlassBreakDetector);
       HELPER_CLASS (VibrationDetector);
       HELPER_CLASS (Siren);
+      HELPER_CLASS (Alertable);
 
       HELPER_CLASS (SimplePendant);
 
@@ -107,7 +108,7 @@ TEST_GROUP (Profiles)
 
 TEST (Profiles, UIDs)
 {
-   Profiles::IProfile *profile = NULL;
+   Profiles::IProfile *profile = nullptr;
 
    // =============================================================================
    // Home Control Unit Types
@@ -213,6 +214,10 @@ TEST (Profiles, UIDs)
    CHECK_EQUAL (Profiles::SIREN, profile->uid ());
    delete profile;
 
+   profile = new Alertable ();
+   CHECK_EQUAL (Profiles::ALERTABLE, profile->uid ());
+   delete profile;
+
    // =============================================================================
    // Home care Unit Types
    // =============================================================================
@@ -243,7 +248,7 @@ TEST (Profiles, Detector)
    addr.device = 42;
    addr.unit   = 33;
 
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    detector.alert (addr, true);
 
@@ -523,6 +528,14 @@ TEST (Profiles, InterfaceMapping)
 
    LONGS_EQUAL (HF::Interface::ON_OFF, itf->id);
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::ALERTABLE
+   itf = Profiles::interfaces (HF::Profiles::ALERTABLE, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf->role);
 
    // HF::Profiles::SIMPLE_PENDANT
    itf = Profiles::interfaces (HF::Profiles::SIMPLE_PENDANT, count);

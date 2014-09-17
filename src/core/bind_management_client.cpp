@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Bind Management : Client Role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -49,7 +49,7 @@ void BindManagement::Client::add (const Protocol::Address &source,
 
    payload->pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 
    delete payload;
 }
@@ -81,7 +81,7 @@ void BindManagement::Client::remove (const Protocol::Address &source,
 
    payload->pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 
    delete payload;
 }

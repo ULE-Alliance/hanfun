@@ -5,7 +5,7 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -55,6 +55,8 @@ struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
    bool available (uint16_t address);
 
    bool deregister (uint16_t address);
+
+   using HF::Core::DeviceManagement::DefaultServer::deregister;
 
    void clear ();
 
@@ -106,11 +108,13 @@ struct BindManagement:public HF::Core::BindManagement::Server
 /*!
  * Custom Unit0 class to make use of the previous DeviceManagment class.
  */
-struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                      DeviceManagement, BindManagement>
+struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server, DeviceManagement,
+                                                      HF::Core::AttributeReporting::Server, BindManagement>
 {
    Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                                DeviceManagement, BindManagement>(device)
+                                                                DeviceManagement,
+                                                                HF::Core::AttributeReporting::Server,
+                                                                BindManagement>(device)
    {}
 };
 

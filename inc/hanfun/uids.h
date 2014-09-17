@@ -5,7 +5,7 @@
  * This file contains the declaration of the classes that implement the HAN-FUN
  * UIDs.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -407,10 +407,6 @@ namespace HF
          }
       };
 
-      // size_t pack (UID_T &uid, Common::ByteArray &array, size_t offset);
-
-      // size_t unpack (UID_T * &uid, const Common::ByteArray &array, size_t offset);
-
       /*!
        * Wrapper around UID_T pointer's.
        *
@@ -547,6 +543,11 @@ namespace HF
             return *this;
          }
 
+         int compare (const UID &other) const
+         {
+            return _raw->compare (*(other._raw));
+         }
+
          int compare (const UID_T &other) const
          {
             return _raw->compare (other);
@@ -555,6 +556,12 @@ namespace HF
          UID_T const *raw () const
          {
             return _raw;
+         }
+
+         float changed (const UID &other) const
+         {
+            UNUSED (other);
+            return 0.0;
          }
       };
 
