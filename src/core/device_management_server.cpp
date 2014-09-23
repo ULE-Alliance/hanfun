@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Server Role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -74,7 +74,7 @@ size_t Server::payload_size (Protocol::Message::Interface &itf) const
 Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
                                        size_t offset)
 {
-   Common::Result result = AbstractInterface::check_message (packet.message, payload, offset);
+   Common::Result result = AbstractInterface::check (packet.message, payload, offset);
 
    if (result != Common::Result::OK)
    {
@@ -155,7 +155,7 @@ Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteAr
 
    Protocol::Address res_addr (address, 0);
 
-   sendMessage (res_addr, response, packet.link);
+   send (res_addr, response, packet.link);
 
    delete reg_res;
 
@@ -216,7 +216,7 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
 
    Protocol::Address res_addr (packet.source.device, 0);
 
-   sendMessage (res_addr, response);
+   send (res_addr, response);
 
    return Common::Result::OK;
 }

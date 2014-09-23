@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the interfaces common code.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,7 +24,6 @@ using namespace HF::Interfaces;
 // =============================================================================
 // Helper Functions
 // =============================================================================
-
 
 // =============================================================================
 // update_attribute
@@ -197,7 +196,7 @@ static Response *update_attributes_atomic (Interface *itf, Common::ByteArray &pa
 // =============================================================================
 Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &payload, size_t offset)
 {
-   Common::Result result = check_message (packet.message, payload, offset);
+   Common::Result result = check (packet.message, payload, offset);
 
    if (result != Common::Result::OK)
    {
@@ -231,7 +230,7 @@ Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &pay
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::check_message (Message &message, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::check (Message &message, Common::ByteArray &payload, size_t offset)
 {
    UNUSED (payload);
    UNUSED (offset);
@@ -306,15 +305,7 @@ Common::Result AbstractInterface::check_payload_size (Message &message, Common::
 // =============================================================================
 size_t AbstractInterface::payload_size (Message &message) const
 {
-   if (message.type == Message::GET_ATTR_PACK_REQ)
-   {
-      GetAttributePack::Request req;
-      return req.size ();
-   }
-   else
-   {
-      return payload_size (message.itf);
-   }
+   return payload_size (message.itf);
 }
 
 // =============================================================================
@@ -343,6 +334,8 @@ Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteAr
 // =============================================================================
 Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::ByteArray &payload, size_t offset)
 {
+   Common::Result result = Common::Result::OK;
+
    switch (packet.message.type)
    {
       case Message::GET_ATTR_REQ:
@@ -354,7 +347,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_res->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete attr_res;
 
@@ -367,7 +360,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_REQ:
       {
-         update_attribute (this, packet.message.itf.member, payload, offset);
+         result = update_attribute (this, packet.message.itf.member, payload, offset);
          break;
       }
       case Message::SET_ATTR_RESP_REQ:
@@ -378,16 +371,15 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
          Message  response (packet.message, resp.size ());
          resp.pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          break;
       }
       case Message::GET_ATTR_PACK_REQ:
       {
-         Common::Result result = Common::Result::OK;
          GetAttributePack::Request request;
 
-         HF::Attributes::uids_t    attributes;
+         HF::Attributes::UIDS attributes;
 
          if (packet.message.itf.member == HF::Attributes::Pack::DYNAMIC)
          {
@@ -426,7 +418,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_response->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete attr_response;
 
@@ -450,7 +442,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_response->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete attr_response;
 
@@ -474,7 +466,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          resp->pack (response.payload);
 
-         sendMessage (packet.source, response);
+         send (packet.source, response);
 
          delete resp;
 
@@ -489,5 +481,5 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
          break;
    }
 
-   return Common::Result::OK;
+   return result;
 }

@@ -4,7 +4,7 @@
  *
  * This file contains the API definitions for the Attributes.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -36,7 +36,7 @@ namespace HF
       /*!
        * Interface/Service Attribute's API.
        */
-      struct IAttribute:public Common::Serializable
+      struct IAttribute:public Common::Serializable, public Common::Cloneable <IAttribute>
       {
          /*!
           * Attribute's UID.
@@ -59,6 +59,16 @@ namespace HF
           * @return  UID of the interface the attribute belongs to.
           */
          virtual uint16_t interface () const = 0;
+
+         /*!
+          * Pointer to the interface that owns this attribute.
+          *
+          * This can return nullptr if the attribute was created for a remote interface.
+          *
+          * @return  pointer to the interface that owns this attribute,
+          *          or nullptr if owner is a remote object.
+          */
+         virtual HF::Interface const *owner () const = 0;
 
          /*!
           * \see Serializable::size
@@ -96,17 +106,45 @@ namespace HF
 
          //! \see Serializable::unpack
          virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
+
+         virtual bool operator ==(const IAttribute &other) const               = 0;
+
+         virtual bool operator <(const IAttribute &other) const                = 0;
+
+         virtual bool operator >(const IAttribute &other) const                = 0;
+
+         virtual float changed (const IAttribute &other) const                 = 0;
       };
 
       //! Attribute factory function type.
       typedef IAttribute * (*Factory)(uint8_t);
 
-      struct uids_t:public std::vector <uint8_t>
+      /*!
+       * Function pointer to a function that returns the attribute
+       * factory associated with a given interface.
+       */
+      typedef Attributes::Factory (*FactoryGetter)(Common::Interface);
+
+      /*!
+       * Return the attribute factory associated with the given
+       * interface identifier.
+       *
+       * \warning This function only returns the factories for the
+       *          build in interfaces.
+       *
+       * @param itf  interface identifier.
+       *
+       * @return  the factory associated with the interface, or
+       *          \c nullptr if the interface is unknown.
+       */
+      Factory get_factory (Common::Interface itf);
+
+      struct UIDS:public std::vector <uint8_t>
       {
-         uids_t():vector <uint8_t>()
+         UIDS():std::vector <uint8_t>()
          {}
 
-         uids_t(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
+         UIDS(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
          {}
 
          vector <uint8_t>::size_type length () const
@@ -173,12 +211,14 @@ namespace HF
       {
          protected:
 
-         const uint16_t _itf_uid;  //! Interface this attribute belongs to.
-         const uint8_t  _uid;      //! Attribute unique identifier.
-         const bool _writable;     //! Attribute access mode.
+         const uint16_t _itf_uid;      //! Interface this attribute belongs to.
+         const uint8_t  _uid;          //! Attribute unique identifier.
+         const bool _writable;         //! Attribute access mode.
+         const HF::Interface *_owner;  //! Owner interface.
 
-         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const bool writable = false):
-            _itf_uid (itf_uid), _uid (uid), _writable (writable)
+         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const HF::Interface *owner,
+                           const bool writable = false):
+            _itf_uid (itf_uid), _uid (uid), _writable (writable), _owner (owner)
          {}
 
          public:
@@ -197,17 +237,68 @@ namespace HF
          {
             return _itf_uid;
          }
+
+         HF::Interface const *owner () const
+         {
+            return _owner;
+         }
+
+         bool operator ==(const IAttribute &other) const
+         {
+            return this->compare (other) == 0;
+         }
+
+         bool operator ==(IAttribute &other) const
+         {
+            return this->compare (other) == 0;
+         }
+
+         bool operator <(const IAttribute &other) const
+         {
+            return this->compare (other) < 0;
+         }
+
+         bool operator <(IAttribute &other) const
+         {
+            return this->compare (other) < 0;
+         }
+
+         bool operator >(const IAttribute &other) const
+         {
+            return this->compare (other) > 0;
+         }
+
+         bool operator >(IAttribute &other) const
+         {
+            return this->compare (other) > 0;
+         }
+
+         protected:
+
+         virtual int compare (const IAttribute &other) const
+         {
+            int res = this->interface () - other.interface ();
+
+            if (res != 0)
+            {
+               return res;
+            }
+
+            return this->uid () - other.uid ();
+         }
       };
 
       template<typename T, typename = void>
       struct Attribute:public AbstractAttribute
       {
-         Attribute(const uint16_t interface, const uint8_t uid, T data, bool writable = false):
-            AbstractAttribute (interface, uid, writable), helper (data)
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner, T data,
+                   bool writable = false):
+            AbstractAttribute (interface, uid, owner, writable), helper (data)
          {}
 
-         Attribute(const uint16_t interface, const uint8_t uid, bool writable = false):
-            AbstractAttribute (interface, uid, writable)
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner,
+                   bool writable = false):
+            AbstractAttribute (interface, uid, owner, writable)
          {}
 
          typedef typename std::remove_reference <T>::type value_type;
@@ -284,9 +375,41 @@ namespace HF
             return helper.unpack (array, offset);
          }
 
+         IAttribute *clone () const
+         {
+            return new HF::Attributes::Attribute <T>(this->_itf_uid, this->_uid, this->_owner,
+                                                     this->helper.data, this->_writable);
+         }
+
          protected:
 
          Common::SerializableHelper <T> helper;
+
+         int compare (const IAttribute &other) const
+         {
+            int res = AbstractAttribute::compare (other);
+
+            if (res == 0)
+            {
+               Attribute <T> *temp = (Attribute <T> *) & other;
+               res = helper.compare (temp->helper);
+            }
+
+            return res;
+         }
+
+         float changed (const IAttribute &other) const
+         {
+            int res = AbstractAttribute::compare (other);
+
+            if (res == 0)
+            {
+               Attribute <T> *temp = (Attribute <T> *) & other;
+               return helper.changed (temp->helper);
+            }
+
+            return 0.0;
+         }
 
          private:
 
@@ -376,6 +499,19 @@ namespace HF
          DYNAMIC   = 0xFF, //!< Return the attributes with the given attributes.
       } Pack;
 
+      /*!
+       * Get a list with the attributes for the given interface, pack id or the uids
+       * passed in.
+       *
+       * @param [in] itf      reference to the interface to retrieve the attributes for.
+       * @param [in] pack_id  pack id used to get attributes UIDs for. If HF::Attributes::DYNAMIC,
+       *                      use uids present in \c uids.
+       * @param [in] uids     array containing the attribute UID's if pack id equals HF::Attributes::DYNAMIC.
+       *
+       * @return  list containing the attributes.
+       */
+      List get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids);
+
    }  // namespace Attributes
 
    namespace Protocol
@@ -392,7 +528,7 @@ namespace HF
           */
          struct Request
          {
-            HF::Attributes::uids_t attributes; //!< Vector containing the attributes UID's to get.
+            HF::Attributes::UIDS attributes; //!< Vector containing the attributes UID's to get.
 
             /*!
              * Unpack attribute count.
@@ -404,7 +540,7 @@ namespace HF
 
             Request():count (0) {}
 
-            Request(HF::Attributes::uids_t &attributes):
+            Request(HF::Attributes::UIDS &attributes):
                attributes (attributes), count (0)
             {}
 

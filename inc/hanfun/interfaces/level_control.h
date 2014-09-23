@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Level Control interface.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -26,7 +26,7 @@ namespace HF
    {
       namespace LevelControl
       {
-         struct Server;
+         class Server;
       }
 
       HF::Attributes::IAttribute *create_attribute (LevelControl::Server *server, uint8_t uid);
@@ -36,12 +36,6 @@ namespace HF
        */
       namespace LevelControl
       {
-         //! Command IDs.
-         typedef enum
-         {
-            SET_LEVEL_CMD = 0x01            //!< Set Level Command ID.
-         } CMD;
-
          //! Attributes
          typedef enum
          {
@@ -49,48 +43,13 @@ namespace HF
             __LAST_ATTR__ = LEVEL_ATTR,
          } Attributes;
 
-         struct Message
-         {
-            uint8_t level;
-
-            Message(uint8_t level = 0):level (level) {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const
-            {
-               return sizeof(level);
-            }
-
-            //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
-            {
-               size_t start = offset;
-
-               offset += array.write (offset, level);
-
-               return offset - start;
-            }
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
-            {
-               size_t start = offset;
-
-               offset += array.read (offset, level);
-
-               return offset - start;
-            }
-         };
-
          struct Level:public HF::Attributes::Attribute <uint8_t>
          {
             static constexpr uint8_t ID        = LEVEL_ATTR;
-            static constexpr bool    WRITABBLE = false;
+            static constexpr bool    WRITABBLE = true;
 
-            private:
-
-            Level(uint8_t level = 0):
-               Attribute <uint8_t>(Interface::ALERT, ID, level, WRITABBLE)
+            Level(uint8_t level = 0, HF::Interface *owner = nullptr):
+               Attribute <uint8_t>(Interface::ALERT, ID, owner, level, WRITABBLE)
             {}
          };
 
@@ -112,7 +71,7 @@ namespace HF
             size_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
-               return payload_size_helper <Message>();
+               return payload_size_helper <Level>();
             }
          };
 
@@ -177,21 +136,21 @@ namespace HF
                return Interfaces::create_attribute (this, uid);
             }
 
+            //! \see AbstractInterface::attributes
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED (pack_id);
+               /* *INDENT-OFF* */
+               return HF::Attributes::UIDS ({ LevelControl::LEVEL_ATTR });
+               /* *INDENT-ON* */
+            }
+
             friend HF::Attributes::IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t uid);
 
             protected:
 
-            //! \see AbstractInterface::handle_command
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
-
-            //! \see AbstractInterface::attributes
-            HF::Attributes::uids_t attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
-            {
-               UNUSED (pack_id);
-               /* *INDENT-OFF* */
-               return HF::Attributes::uids_t ({ LevelControl::LEVEL_ATTR });
-               /* *INDENT-ON* */
-            }
+            //! \see AbstractInterface::handle_attribute
+            Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
          };
 
          /*!
@@ -210,17 +169,17 @@ namespace HF
             //@{
 
             /*!
-             * Send \c SET_LEVEL_CMD message to the given network address and
-             * the given level.
+             * Send a \c SET_ATTR_REQ to the given address to set the level
+             * at \c new_level.
              *
-             * @param [in] addr       network address to send the message to.
-             * @param [in] new_level    level value to send in the message.
+             * @param [in] addr        network address to send the message to.
+             * @param [in] new_level   level value to send in the message.
              */
             void level (Protocol::Address &addr, uint8_t new_level);
 
             /*!
-             * Send \c SET_LEVEL_CMD message to the broadcast network address and
-             * the given level.
+             * Send a \c SET_ATTR_REQ to broadcast network address to set the level
+             * at \c new_level.
              *
              * @param [in] new_level    level value to send in the message.
              */

@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Information : Server Role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -34,9 +34,9 @@ using namespace HF::Core;
  *
  */
 // =============================================================================
-Protocol::Message * DeviceInformation::mandatory()
+Protocol::Message *DeviceInformation::mandatory ()
 {
-   Protocol::Message * result = new Protocol::Message();
+   Protocol::Message *result = new Protocol::Message ();
 
    result->type       = Protocol::Message::GET_ATTR_PACK_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
@@ -53,9 +53,9 @@ Protocol::Message * DeviceInformation::mandatory()
  *
  */
 // =============================================================================
-Protocol::Message * DeviceInformation::all()
+Protocol::Message *DeviceInformation::all ()
 {
-   Protocol::Message * result = new Protocol::Message();
+   Protocol::Message *result = new Protocol::Message ();
 
 
    result->type       = Protocol::Message::GET_ATTR_PACK_REQ;
@@ -73,18 +73,18 @@ Protocol::Message * DeviceInformation::all()
  *
  */
 // =============================================================================
-Protocol::Message * DeviceInformation::get(HF::Attributes::uids_t &uids)
+Protocol::Message *DeviceInformation::get (HF::Attributes::UIDS &uids)
 {
-   HF::Protocol::GetAttributePack::Request * req = new HF::Protocol::GetAttributePack::Request (uids);
+   HF::Protocol::GetAttributePack::Request *req = new HF::Protocol::GetAttributePack::Request (uids);
 
-   Protocol::Message * result = new Protocol::Message();
+   Protocol::Message *result                    = new Protocol::Message ();
 
    result->type       = Protocol::Message::GET_ATTR_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
    result->itf.role   = HF::Interface::SERVER_ROLE;
    result->itf.member = HF::Attributes::DYNAMIC;
 
-   req->pack(result->payload);
+   req->pack (result->payload);
 
    delete req;
 
@@ -98,9 +98,9 @@ Protocol::Message * DeviceInformation::get(HF::Attributes::uids_t &uids)
  *
  */
 // =============================================================================
-Protocol::Message * DeviceInformation::get(uint8_t uid)
+Protocol::Message *DeviceInformation::get (uint8_t uid)
 {
-   Protocol::Message * result = new Protocol::Message();
+   Protocol::Message *result = new Protocol::Message ();
 
    result->type       = Protocol::Message::GET_ATTR_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
@@ -117,28 +117,28 @@ Protocol::Message * DeviceInformation::get(uint8_t uid)
  *
  */
 // =============================================================================
-HF::Attributes::uids_t DeviceInformation::Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) const
 {
-   HF::Attributes::uids_t result;
+   HF::Attributes::UIDS result;
 
    switch (pack_id)
    {
       case HF::Attributes::Pack::ALL:
       {
-         result.push_back(ENABLED_ATTR);
-         result.push_back(MANUFACTURE_NAME_ATTR);
-         result.push_back(EMC_ATTR);
+         result.push_back (ENABLED_ATTR);
+         result.push_back (MANUFACTURE_NAME_ATTR);
+         result.push_back (EMC_ATTR);
       }
       case HF::Attributes::Pack::MANDATORY:
       {
-         result.push_back(UID_ATTR);
-         result.push_back(INTERFACE_VERSION_ATTR);
-         result.push_back(PROFILE_VERSION_ATTR);
-         result.push_back(CORE_VERSION_ATTR);
+         result.push_back (UID_ATTR);
+         result.push_back (INTERFACE_VERSION_ATTR);
+         result.push_back (PROFILE_VERSION_ATTR);
+         result.push_back (CORE_VERSION_ATTR);
          break;
       }
       default:
-      break;
+         break;
    }
 
    return result;

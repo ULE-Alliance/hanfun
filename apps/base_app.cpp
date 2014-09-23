@@ -4,7 +4,7 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -56,7 +56,7 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
 {
    UNUSED (args);
 
-   auto devices = base.unit0.device_management ()->entries ();
+   auto devices = base.unit0 ()->device_management ()->entries ();
 
    LOG (APP) << std::setfill (' ');
    LOG (APP) << "HAN-FUN" << "  Registered Devices (" << (int) devices.size () << "):" << NL;
@@ -75,7 +75,7 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
 {
    UNUSED (args);
 
-   HF::Core::BindManagement::Entries &entries = base.unit0.bind_management ()->entries;
+   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries;
 
    LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
    std::for_each (entries.begin (), entries.end (), [](const HF::Core::BindManagement::Entry &entry)
@@ -108,10 +108,10 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
    {
       uint16_t address = STRTOL (args[1]);
 
-      if (base.unit0.device_management ()->available (address) && address != 0 &&
+      if (base.unit0 ()->device_management ()->available (address) && address != 0 &&
           address < HF::Protocol::BROADCAST_ADDR)
       {
-         base.unit0.device_management ()->next_address (address);
+         base.unit0 ()->device_management ()->next_address (address);
 #ifdef HF_APP_EXT_REG
 
          if (HF::Application::Registration (true))
@@ -155,7 +155,7 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
 #endif
 
    /* HAN-FUN de-registration */
-   bool res = base.unit0.device_management ()->deregister (address);
+   bool res = base.unit0 ()->device_management ()->deregister (address);
    LOG (INFO) << "Device " << (int) address << " de-registration: "
               << (res ? "SUCCESS" : "FAIL") << " !" << NL;
 }
@@ -266,8 +266,8 @@ void HF::Application::Save ()
    Json::StyledWriter writer;
    std::ofstream ofs (HF_APP_CONFIG_FILE);
 
-   base.unit0.device_management ()->save (root["core"]["device_management"]);
-   base.unit0.bind_management ()->save (root["core"]["bind_management"]);
+   base.unit0 ()->device_management ()->save (root["core"]["device_management"]);
+   base.unit0 ()->bind_management ()->save (root["core"]["bind_management"]);
 
    if (ofs.is_open ())
    {
@@ -298,8 +298,8 @@ void HF::Application::Restore ()
    }
    else
    {
-      base.unit0.device_management ()->restore (root["core"]["device_management"]);
-      base.unit0.bind_management ()->restore (root["core"]["bind_management"]);
+      base.unit0 ()->device_management ()->restore (root["core"]["device_management"]);
+      base.unit0 ()->bind_management ()->restore (root["core"]["bind_management"]);
    }
 
    ifs.close ();

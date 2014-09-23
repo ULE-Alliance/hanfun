@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \version    0.4.0
+#   \version 1.0.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -20,6 +20,7 @@
 
 set(CPPUTEST_TESTS OFF CACHE BOOL "Disable CppUTest internal tests" FORCE)
 set(CPPUTEST_COVERAGE OFF CACHE BOOL "Enable CppUTest code coverage." FORCE)
+set(CPPUTEST_C++11 ON CACHE BOOL "Enable CppUTest C++11 support." FORCE)
 
 add_subdirectory(cpputest)
 
@@ -58,7 +59,8 @@ set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
 set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
                          "core/test_bind_management.cpp"
-                         "core/test_device_information.cpp")
+                         "core/test_device_information.cpp"
+                         "core/test_attribute_reporting.cpp")
 
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
 

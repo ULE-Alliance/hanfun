@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Alert interface : Server role.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -67,6 +67,8 @@ bool Alert::Server::state (uint8_t index, bool state)
    {
       uint32_t mask = 1U << index;
 
+      uint32_t old  = this->_state;
+
       if (state)
       {
          this->_state |= mask;
@@ -75,6 +77,11 @@ bool Alert::Server::state (uint8_t index, bool state)
       {
          this->_state &= ~mask;
       }
+
+      State old_value (old, this);
+      State new_value (this->_state, this);
+
+      this->notify (old_value, new_value);
    }
 
    return res;
@@ -94,7 +101,7 @@ bool Alert::Server::state (uint8_t index)
       return false;
    }
 
-   return (this->_state & (1L << index)) != 0;
+   return (this->_state & (1U << index)) != 0;
 }
 
 // =============================================================================
@@ -106,7 +113,14 @@ bool Alert::Server::state (uint8_t index)
 // =============================================================================
 void Alert::Server::clear ()
 {
+   uint32_t old = this->_state;
+
    this->_state = 0;
+
+   State old_value (old, this);
+   State new_value (this->_state, this);
+
+   notify (old_value, new_value);
 }
 
 // =============================================================================
@@ -123,7 +137,14 @@ void Alert::Server::enable (uint8_t index)
       return;
    }
 
+   uint32_t old = this->_enabled;
+
    this->_enabled |= (1U << index);
+
+   Enable old_value (old, this);
+   Enable new_value (this->_enabled, this);
+
+   notify (old_value, new_value);
 }
 
 // =============================================================================
@@ -135,7 +156,14 @@ void Alert::Server::enable (uint8_t index)
 // =============================================================================
 void Alert::Server::enableAll ()
 {
+   uint32_t old = this->_enabled;
+
    this->_enabled = UINT32_MAX;
+
+   Enable old_value (old, this);
+   Enable new_value (this->_enabled, this);
+
+   notify (old_value, new_value);
 }
 
 // =============================================================================
@@ -181,7 +209,14 @@ void Alert::Server::disable (uint8_t index)
       return;
    }
 
+   uint32_t old = this->_enabled;
+
    this->_enabled &= (~(1U << index));
+
+   Enable old_value (old, this);
+   Enable new_value (this->_enabled, this);
+
+   notify (old_value, new_value);
 }
 
 // =============================================================================
@@ -193,7 +228,14 @@ void Alert::Server::disable (uint8_t index)
 // =============================================================================
 void Alert::Server::disableAll ()
 {
+   uint32_t old = this->_enabled;
+
    this->_enabled = 0;
+
+   Enable old_value (old, this);
+   Enable new_value (this->_enabled, this);
+
+   notify (old_value, new_value);
 }
 
 // =============================================================================
@@ -210,7 +252,7 @@ bool Alert::Server::disabled (uint8_t index)
       return true;
    }
 
-   return (this->_enabled & (1L << index)) == 0;
+   return (this->_enabled & (1U << index)) == 0;
 }
 
 // =============================================================================
@@ -244,5 +286,5 @@ void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
 
    alert_msg.pack (message.payload);
 
-   sendMessage (addr, message);
+   send (addr, message);
 }
