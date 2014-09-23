@@ -14,22 +14,22 @@
 
 // In testing mode support all attributes.
 
-#define HF_ITF_SPM_ENERGY_ATTR               OFF
-#define HF_ITF_SPM_POWER_ATTR                OFF
-#define HF_ITF_SPM_ENERGY_AT_RESET_ATTR      OFF
-#define HF_ITF_SPM_TIME_AT_RESET_ATTR        OFF
-#define HF_ITF_SPM_AVG_POWER_ATTR            OFF
-#define HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR   OFF
-#define HF_ITF_SPM_VOLTAGE_ATTR              OFF
-#define HF_ITF_SPM_CURRENT_ATTR              OFF
-#define HF_ITF_SPM_FREQUENCY_ATTR            OFF
-#define HF_ITF_SPM_POWER_FACTOR_ATTR         OFF
-#define HF_ITF_SPM_REPORT_INTERVAL_ATTR      OFF
+#define HF_ITF_SPM_ENERGY_ATTR               ON
+#define HF_ITF_SPM_POWER_ATTR                ON
+#define HF_ITF_SPM_ENERGY_AT_RESET_ATTR      ON
+#define HF_ITF_SPM_TIME_AT_RESET_ATTR        ON
+#define HF_ITF_SPM_AVG_POWER_ATTR            ON
+#define HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR   ON
+#define HF_ITF_SPM_VOLTAGE_ATTR              ON
+#define HF_ITF_SPM_CURRENT_ATTR              ON
+#define HF_ITF_SPM_FREQUENCY_ATTR            ON
+#define HF_ITF_SPM_POWER_FACTOR_ATTR         ON
+#define HF_ITF_SPM_REPORT_INTERVAL_ATTR      ON
 
 // In testing mode support all commands.
 
-#define HF_ITF_SPM_REPORT_CMD                OFF
-#define HF_ITF_SPM_RESET_CMD                 OFF
+#define HF_ITF_SPM_REPORT_CMD                ON
+#define HF_ITF_SPM_RESET_CMD                 ON
 
 // =============================================================================
 
