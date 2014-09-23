@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Level Control Interface implementation.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -40,65 +40,6 @@ TEST (LevelControl, UID)
 }
 
 // =============================================================================
-// LevelControl / Messages
-// =============================================================================
-
-//! LevelControl::Message test group.
-TEST_GROUP (LevelControl_Message)
-{
-   LevelControl::Message *message;
-
-   ByteArray expected;
-
-   TEST_SETUP ()
-   {
-      message  = new LevelControl::Message ();
-
-      expected = ByteArray {0x00, 0x00, 0x00,
-                            0xAA,  // Level value.
-                            0x00, 0x00, 0x00};
-   }
-
-   TEST_TEARDOWN ()
-   {
-      delete message;
-   }
-
-};
-
-//! \test LevelControl::Message::size should return the correct value.
-TEST (LevelControl_Message, Size)
-{
-   LONGS_EQUAL (sizeof(uint8_t), message->size ());
-
-   BYTES_EQUAL (0, message->level);
-}
-
-//! \test LevelControl::Message::pack should write the correct values to the ByteArray.
-TEST (LevelControl_Message, Pack)
-{
-   message->level = 0xAA;
-
-   ByteArray array (message->size () + 6);
-
-   size_t    wsize = message->pack (array, 3);
-
-   LONGS_EQUAL (message->size (), wsize);
-
-   CHECK_EQUAL (expected, array);
-}
-
-//! \test LevelControl::Message::unpack should read the correct values from the ByteArray.
-TEST (LevelControl_Message, Unpack)
-{
-   size_t rsize = message->unpack (expected, 3);
-
-   LONGS_EQUAL (message->size (), rsize);
-
-   BYTES_EQUAL (0xAA, message->level);
-}
-
-// =============================================================================
 // LevelControlClient
 // =============================================================================
 
@@ -125,7 +66,7 @@ TEST_GROUP (LevelControlClient)
 //! \test Should send an LevelControl::SET_LEVEL_CMD message.
 TEST (LevelControlClient, Level)
 {
-   mock ("Interface").expectOneCall ("sendMessage");
+   mock ("Interface").expectOneCall ("send");
 
    client.level (addr, 0x42);
 
@@ -133,14 +74,14 @@ TEST (LevelControlClient, Level)
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
-   LONGS_EQUAL (LevelControl::SET_LEVEL_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   LONGS_EQUAL (LevelControl::LEVEL_ATTR, client.sendMsg.itf.member);
+   LONGS_EQUAL (Protocol::Message::SET_ATTR_REQ, client.sendMsg.type);
 
-   LevelControl::Message msg;
+   LevelControl::Level level;
 
-   msg.unpack (client.sendMsg.payload);
+   level.unpack (client.sendMsg.payload);
 
-   BYTES_EQUAL (0x42, msg.level);
+   BYTES_EQUAL (0x42, level.get ());
 }
 
 // =============================================================================
@@ -168,6 +109,7 @@ TEST_GROUP (LevelControlServer)
    TEST_SETUP ()
    {
       mock ("LevelControlServer").ignoreOtherCalls ();
+      mock ("Interface").ignoreOtherCalls ();
 
       expected = ByteArray {0x00, 0x00, 0x00,
                             0xAA,  // Level value.
@@ -175,7 +117,9 @@ TEST_GROUP (LevelControlServer)
 
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
       packet.message.itf.id     = server.uid ();
-      packet.message.itf.member = LevelControl::SET_LEVEL_CMD;
+      packet.message.itf.member = LevelControl::LEVEL_ATTR;
+
+      packet.message.type       = Protocol::Message::SET_ATTR_REQ;
 
       packet.message.length     = expected.size ();
    }
@@ -189,7 +133,9 @@ TEST_GROUP (LevelControlServer)
 TEST (LevelControlServer, Level)
 {
    CHECK_EQUAL (0, server.level ());
+   mock ("Interface").expectOneCall ("notify");
    server.level (42);
+   mock ("Interface").checkExpectations ();
    CHECK_EQUAL (42, server.level ());
 }
 
@@ -225,8 +171,8 @@ TEST (LevelControlServer, Handle_Invalid_UID)
 //! \test Should not handle message with invalid payload size.
 TEST (LevelControlServer, Handle_Invalid_Payload_Size)
 {
-   LevelControl::Message level_msg;
-   packet.message.length = level_msg.size () - 1;
+   LevelControl::Level level_attr;
+   packet.message.length = level_attr.size () - 1;
 
    CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 3));
 }
@@ -249,7 +195,7 @@ TEST (LevelControlServer, Attribute)
    CHECK_TRUE (attr != nullptr);
 
    LONGS_EQUAL (LevelControl::LEVEL_ATTR, attr->uid ());
-   CHECK_FALSE (attr->isWritable ());
+   CHECK_TRUE (attr->isWritable ());
 
    LONGS_EQUAL (server.uid (), attr->interface ());
 

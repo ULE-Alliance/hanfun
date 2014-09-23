@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Bind Management Interface.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -75,8 +75,7 @@ TEST (BindManagement, EntryUnpack)
                             0xA5, 0xAA,    // Source Address.
                             0x83, 0x33,          // interface.
                             0xDA, 0x5A, 0xBB,    // Destination Address.
-                            0x00, 0x00, 0x00
-   };
+                            0x00, 0x00, 0x00 };
    /* *INDENT-ON* */
 
    BindManagement::Entry entry;
@@ -155,10 +154,10 @@ TEST_GROUP (BindManagementClient)
 
    TEST_SETUP ()
    {
-      device                  = new Testing::Device ();
-      client                  = new TestBindManagementClient (device->unit0);
+      device = new Testing::Device ();
+      client = new TestBindManagementClient (*device->unit0 ());
 
-      device->unit0.dev_mgt   = new HF::Core::DeviceManagement::Client (device->unit0);
+      device->unit0 ()->dev_mgt = new HF::Core::DeviceManagement::Client (*device->unit0 ());
 
       packet                  = Protocol::Packet ();
 
@@ -169,7 +168,7 @@ TEST_GROUP (BindManagementClient)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0.dev_mgt;
+      delete device->unit0 ()->dev_mgt;
       delete client;
       delete device;
 
@@ -728,10 +727,10 @@ TEST_GROUP (BindManagementServer)
 
    TEST_SETUP ()
    {
-      device                  = new Testing::Concentrator ();
-      server                  = new TestBindManagementServer (device->unit0);
+      device = new Testing::Concentrator ();
+      server = new TestBindManagementServer (*device->unit0 ());
 
-      device->unit0.dev_mgt   = new HF::Core::DeviceManagement::DefaultServer (device->unit0);
+      device->unit0 ()->dev_mgt = new HF::Core::DeviceManagement::DefaultServer (*device->unit0 ());
 
       packet                  = Protocol::Packet ();
 
@@ -744,7 +743,7 @@ TEST_GROUP (BindManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0.dev_mgt;
+      delete device->unit0 ()->dev_mgt;
       delete server;
       delete device;
 
@@ -769,7 +768,7 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0.device_management ()->save (dev);
+      device->unit0 ()->device_management ()->save (dev);
 
       dev          = new DeviceManagement::Device ();
 
@@ -780,7 +779,7 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0.device_management ()->save (dev);
+      device->unit0 ()->device_management ()->save (dev);
 
       entry.source.device      = 0x1111;
       entry.source.unit        = 0x22;

@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality related with HAN-FUN
  * Profiles.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -120,7 +120,10 @@ static const HF::Common::Interface profiles_interfaces[] =
    // 28 - HF::Profiles::SIREN,
    {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
 
-   // 29 - HF::Profiles::SIMPLE_PENDANT,
+   // 29 - HF::Profiles::SIREN,
+   {HF::Interface::ALERT,              HF::Interface::CLIENT_ROLE},
+
+   // 30 - HF::Profiles::SIMPLE_PENDANT,
    {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
 };
 
@@ -150,9 +153,10 @@ static const Profile profiles[] =
    {HF::Profiles::GLASS_BREAK_DETECTOR,                 0x001A, 1},      // 26
    {HF::Profiles::VIBRATION_DETECTOR,                   0x001B, 1},      // 27
    {HF::Profiles::SIREN,                                0x001C, 1},      // 28
-   {HF::Profiles::SIMPLE_PENDANT,                       0x001D, 1},      // 29
-   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
-   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
+   {HF::Profiles::ALERTABLE,                            0x001D, 1},      // 29
+   {HF::Profiles::SIMPLE_PENDANT,                       0x001E, 1},      // 30
+   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      // 31
+   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      // 32
 };
 
 // =============================================================================

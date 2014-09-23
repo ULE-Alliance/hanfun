@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Bind Management Interface
  * of the HAN-FUN protocol.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -261,7 +261,7 @@ namespace HF
                                                               Common::Interface const &itf,
                                                               Protocol::Address const &destination);
 
-            friend class HF::Core::BindManagement::Server;
+            friend struct HF::Core::BindManagement::Server;
 
             private:
 

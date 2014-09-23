@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -20,6 +20,18 @@
 
 using namespace HF;
 using namespace HF::Core;
+
+// =============================================================================
+// DeviceManagement::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *DeviceManagement::create_attribute (uint8_t uid)
+{
+   return Core::create_attribute ((DeviceManagement::Server *) nullptr, uid);
+}
 
 // =============================================================================
 // Unit Entry

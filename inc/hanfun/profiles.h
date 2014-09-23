@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -118,6 +118,9 @@ namespace HF
          //! This unit will be acting upon some physical siren that will sound an alert.
          SIREN = 0x0280,
 
+         //! This profile can be used to receive alerts.
+         ALERTABLE = 0x0281,
+
          // =============================================================================
          // Home care Unit Types
          // =============================================================================
@@ -181,6 +184,19 @@ namespace HF
           * @return  the UID associated with this profile. \see IProfile::UID.
           */
          virtual uint16_t uid () const = 0;
+
+         /*!
+          * Return a list of all the attributes for a given interface, pack id and
+          * list of attributes UID's.
+          *
+          * @param [in] itf      interface UID.
+          * @param [in] pack_id  attribute pack id.
+          * @param [in] uids     list of attributes UID's.
+          *
+          * @return  attribute list.
+          */
+         virtual HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                                  const HF::Attributes::UIDS &uids) const = 0;
       };
 
       /*!
@@ -209,6 +225,19 @@ namespace HF
          {}
 
          using AbstractProfile <_uid>::uid;
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            if (Interface::uid () == itf.id)
+            {
+               return HF::Attributes::get (*this, pack_id, uids);
+            }
+            else
+            {
+               return HF::Attributes::List ();
+            }
+         }
       };
 
       /*!
@@ -227,9 +256,15 @@ namespace HF
             InterfaceProxy(profile_t &proxy):proxy (proxy)
             {}
 
-            void sendMessage (Protocol::Address &addr, Protocol::Message &message)
+            void send (const Protocol::Address &addr, Protocol::Message &message)
             {
-               proxy.sendMessage (addr, message);
+               proxy.send (addr, message);
+            }
+
+            void notify (const HF::Attributes::IAttribute &old_value,
+                         const HF::Attributes::IAttribute &new_value) const
+            {
+               proxy.notify (old_value, new_value);
             }
 
             private:
@@ -279,8 +314,49 @@ namespace HF
             return static_cast <Interface2 *>(&(this->interfaces.second));
          }
 
-         //! \see AbstractInterface::sendMessage
-         virtual void sendMessage (Protocol::Address &addr, Protocol::Message &message) = 0;
+         /*!
+          * Pointer to the first interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         const Interface1 *first () const
+         {
+            return static_cast <const Interface1 *>(&(this->interfaces.first));
+         }
+
+         /*!
+          * Pointer to the second interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         const Interface2 *second () const
+         {
+            return static_cast <const Interface2 *>(&(this->interfaces.second));
+         }
+
+         //! \see AbstractInterface::send
+         virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         //! \see AbstractInterface::notify
+         virtual void notify (const HF::Attributes::IAttribute &old_value,
+                              const HF::Attributes::IAttribute &new_value) const = 0;
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            if (first ()->uid () == itf.id)
+            {
+               return HF::Attributes::get (*first (), pack_id, uids);
+            }
+            else if (second ()->uid () == itf.id)
+            {
+               return HF::Attributes::get (*second (), pack_id, uids);
+            }
+            else
+            {
+               return HF::Attributes::List ();
+            }
+         }
 
          protected:
 
@@ -312,6 +388,19 @@ namespace HF
          {
             Interfaces::Alert::Server::state (0, state);
             Interfaces::Alert::Server::status (addr, Detector::uid ());
+         }
+
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          HF::Attributes::UIDS &uids) const
+         {
+            if (Interfaces::Alert::Server::uid () == itf.id)
+            {
+               return HF::Attributes::get (*this, pack_id, uids);
+            }
+            else
+            {
+               return HF::Attributes::List ();
+            }
          }
       };
 
@@ -649,6 +738,16 @@ namespace HF
          public:
 
          virtual ~Siren() {}
+      };
+
+      /*!
+       * Siren profile implementation.
+       */
+      class Alertable:public Profile <ALERTABLE, Interfaces::Alert::Client>
+      {
+         public:
+
+         virtual ~Alertable() {}
       };
 
       // =============================================================================

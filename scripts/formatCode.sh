@@ -6,7 +6,7 @@
 #   This is a helper script to format the code present in HAN-FUN source
 #   repository using the library's configuration for uncrustify.
 #
-#   \version    0.4.0
+#   \version    1.0.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -59,19 +59,19 @@ do
 
  sed -i '
 # Remove any extra slashes on a C++ type comment
-s|////*|//|
+# s|////*|//|
 
 # Remove spaces between ")" and ";".
 # This happens in "while(statement);" as a uncrustify side effect
 s/)[[:space:]]*;/);/
 
 # Remove added | to comments.
-s/^[[:space:]]*|\+\(+-\+\)/\1/
+# s/^[[:space:]]*|\+\(+-\+\)/\1/
 
 # Remove added * to comments.
-s/^[[:space:]]*\*\*\+\(-\+\)/ *\1/
+# s/^[[:space:]]*\*\*\+\(-\+\)/ *\1/
 
-s/^[[:space:]]*\(\*\+-\+\)/ \1/
+# s/^[[:space:]]*\(\*\+-\+\)/ \1/
 
 # Remove extra space on comments after one-line while
 s|\(while[^;]\+;\)[[:space:]]\+\(//.\+\)|\1 \2|

@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * \version    0.4.0
+ * \version    1.0.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,7 +35,7 @@ using namespace HF::Devices;
  *
  */
 // =============================================================================
-Units::IUnit *AbstractDevice::unit (uint8_t id)
+Units::IUnit *AbstractDevice::unit (uint8_t id) const
 {
    if (_units.empty ())
    {
@@ -49,7 +49,14 @@ Units::IUnit *AbstractDevice::unit (uint8_t id)
    });
    /* *INDENT-ON* */
 
-   return *it;
+   if (it == _units.end ())
+   {
+      return nullptr;
+   }
+   else
+   {
+      return *it;
+   }
 }
 
 // =============================================================================
@@ -137,7 +144,7 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 
 void HF::Devices::Concentrator::Transport::destroy ()
 {
-   remove (nullptr);
+   remove ((HF::Transport::Endpoint *) nullptr);
 }
 
 // =============================================================================
