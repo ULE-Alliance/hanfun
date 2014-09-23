@@ -900,7 +900,7 @@ void Report::Periodic::add (Report::Periodic::Entry &entry)
 // =============================================================================
 size_t Report::Event::Field::size () const
 {
-   assert (attribute != nullptr);
+   assert (nullptr != attribute);
    return sizeof(uint8_t) + attribute->size (true);
 }
 
@@ -917,7 +917,7 @@ size_t Report::Event::Field::pack (Common::ByteArray &array, size_t offset) cons
 
    offset += array.write (offset, (uint8_t) type);
 
-   assert (attribute != nullptr);
+   assert (nullptr != attribute);
    offset += attribute->pack (array, offset, true);
 
    return offset - start;
@@ -1015,7 +1015,7 @@ size_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
    Field  field;
    size_t result = field.unpack (factory, array, offset);
 
-   if (field.attribute != nullptr)
+   if (nullptr != field.attribute)
    {
       add (field);
    }
