@@ -33,4 +33,6 @@
 
 // =============================================================================
 
+#define HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE 5
+
 #endif  /* HF_CONFIG_H */
