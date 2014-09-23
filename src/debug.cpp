@@ -38,10 +38,12 @@ std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &ar
       stream << std::hex << std::setw (2) << std::setfill ('0');
       stream << "(" << array.size () << ") ";
 
-      for (auto byte : array)
+      /* *INDENT-OFF* */
+      std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
       {
-         stream << (int) byte << " ";
-      }
+         stream << byte;
+      });
+      /* *INDENT-ON* */
 
       stream.setf (ff);
       stream.fill (f);

@@ -314,7 +314,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
 #if HF_ITF_SPM_ENERGY_ATTR
    #if !HF_ITF_SPM_RESET_CMD
 
-   if (pack_id == AttributePack::ALL)
+   if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
       result.push_back (SimplePowerMeter::ENERGY_ATTR);
@@ -325,7 +325,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
    #if !HF_ITF_SPM_RESET_CMD
 
-   if (pack_id == AttributePack::ALL)
+   if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
       result.push_back (SimplePowerMeter::ENERGY_AT_RESET_ATTR);
@@ -336,7 +336,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
    #if !HF_ITF_SPM_RESET_CMD
 
-   if (pack_id == AttributePack::ALL)
+   if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
       result.push_back (SimplePowerMeter::TIME_AT_RESET_ATTR);
@@ -347,7 +347,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
 #if HF_ITF_SPM_REPORT_INTERVAL_ATTR
    #if !HF_ITF_SPM_REPORT_CMD
 
-   if (pack_id == AttributePack::ALL)
+   if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
       result.push_back (SimplePowerMeter::REPORT_INTERVAL_ATTR);

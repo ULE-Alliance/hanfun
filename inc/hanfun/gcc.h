@@ -43,6 +43,18 @@ const class nullptr_t
       return 0;
    }
 
+   template<typename T>
+   bool operator==(const T &other) const
+   {
+      return *this == other;
+   }
+
+   template<typename T>
+   bool operator!=(const T &other) const
+   {
+      return *this != other;
+   }
+
    private:
 
    /* Not allowed to get the address */
@@ -50,6 +62,8 @@ const class nullptr_t
 
 }
 nullptr = {};
+
+
 #endif
 
 #endif /* HF_GCC_H */
