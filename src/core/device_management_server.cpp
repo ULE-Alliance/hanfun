@@ -128,10 +128,11 @@ Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteAr
    {
       device          = DevicePtr (new Device(), false);
       device->uid     = packet.link->uid ();
-      device->emc     = reg_msg.emc;
-      device->units   = reg_msg.units;
       device->address = next_address ();
    }
+
+   device->emc     = reg_msg.emc;
+   device->units   = reg_msg.units;
 
    RegisterResponse *reg_res = new RegisterResponse ();
 
