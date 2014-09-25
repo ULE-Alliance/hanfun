@@ -38,7 +38,7 @@ TEST (BindManagement, EntryPack)
    /* *INDENT-OFF* */
    Common::ByteArray expected { 0x00, 0x00, 0x00,
                                 0xF5,
-                                0xA5, 0xAA,    // Source Address.
+                                0xA5, 0xAA,          // Source Address.
                                 0x83, 0x33,          // interface.
                                 0xDA, 0x5A, 0xBB,    // Destination Address.
                                 0x00, 0x00, 0x00
@@ -72,7 +72,7 @@ TEST (BindManagement, EntryUnpack)
    /* *INDENT-OFF* */
    Common::ByteArray data { 0x00, 0x00, 0x00,
                             0xF5,
-                            0xA5, 0xAA,    // Source Address.
+                            0xA5, 0xAA,          // Source Address.
                             0x83, 0x33,          // interface.
                             0xDA, 0x5A, 0xBB,    // Destination Address.
                             0x00, 0x00, 0x00 };
@@ -154,10 +154,8 @@ TEST_GROUP (BindManagementClient)
 
    TEST_SETUP ()
    {
-      device = new Testing::Device ();
-      client = new TestBindManagementClient (*device->unit0 ());
-
-      device->unit0 ()->dev_mgt = new HF::Core::DeviceManagement::Client (*device->unit0 ());
+      device                  = new Testing::Device ();
+      client                  = new TestBindManagementClient (*device->unit0 ());
 
       packet                  = Protocol::Packet ();
 
@@ -168,7 +166,6 @@ TEST_GROUP (BindManagementClient)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->dev_mgt;
       delete client;
       delete device;
 
@@ -727,10 +724,8 @@ TEST_GROUP (BindManagementServer)
 
    TEST_SETUP ()
    {
-      device = new Testing::Concentrator ();
-      server = new TestBindManagementServer (*device->unit0 ());
-
-      device->unit0 ()->dev_mgt = new HF::Core::DeviceManagement::DefaultServer (*device->unit0 ());
+      device                  = new Testing::Concentrator ();
+      server                  = new TestBindManagementServer (*device->unit0 ());
 
       packet                  = Protocol::Packet ();
 
@@ -743,7 +738,6 @@ TEST_GROUP (BindManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->dev_mgt;
       delete server;
       delete device;
 

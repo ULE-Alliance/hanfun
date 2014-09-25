@@ -199,7 +199,7 @@ namespace HF
 
             uint16_t address () const
             {
-               return _unit0.device_management ()->address ();
+               return unit0 ()->device_management ()->address ();
             }
 
             // =============================================================================

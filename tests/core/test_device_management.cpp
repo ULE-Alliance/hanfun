@@ -694,7 +694,7 @@ TEST_GROUP (DeviceManagementClient)
 
       dev_mgt     = new TestDeviceManagementClient (*device->unit0 ());
 
-      device->unit0 ()->dev_mgt = dev_mgt;
+      device->unit0 ()->device_management (dev_mgt);
 
       packet                  = Protocol::Packet ();
 
@@ -710,8 +710,6 @@ TEST_GROUP (DeviceManagementClient)
       delete unit1;
       delete unit2;
       delete unit3;
-
-      delete dev_mgt;
 
       delete device;
 
@@ -966,9 +964,9 @@ TEST_GROUP (DeviceManagementServer)
 
       dev_mgt = new TestDeviceManagementServer (*device->unit0 ());
 
-      device->unit0 ()->dev_mgt  = dev_mgt;
+      device->unit0 ()->device_management (dev_mgt);
 
-      device->unit0 ()->bind_mgt = new HF::Core::BindManagement::Server (*device->unit0 ());
+      device->unit0 ()->bind_management (new HF::Core::BindManagement::Server (*device->unit0 ()));
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;
@@ -989,10 +987,6 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->bind_mgt;
-
-      delete dev_mgt;
-
       delete device;
 
       delete link;

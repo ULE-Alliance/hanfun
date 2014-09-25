@@ -2694,7 +2694,7 @@ TEST_GROUP (AttributeReporting_Server)
       base   = new Testing::Concentrator ();
       server = new AttributeReporting::Server (*base->unit0 ());
 
-      base->unit0 ()->attr_reporting = server;
+      base->unit0 ()->attribute_reporting (server);
 
       unit = new Testing::Unit (1, *base);
 
@@ -2704,7 +2704,6 @@ TEST_GROUP (AttributeReporting_Server)
    TEST_TEARDOWN ()
    {
       delete unit;
-      delete server;
       delete base;
 
       mock ().clear ();
