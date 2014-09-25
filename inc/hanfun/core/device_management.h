@@ -89,7 +89,8 @@ namespace HF
             uint8_t                         id;      //!< Unit Id.
             uint16_t                        profile; //!< Unit UID. \see IProfile::UID.
 
-            std::vector <Common::Interface> opt_ift; //!< Optional interfaces.
+            //! Optional interfaces.
+            std::vector <Common::Interface> interfaces;
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)

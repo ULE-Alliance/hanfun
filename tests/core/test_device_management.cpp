@@ -144,9 +144,9 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    Common::Interface itf2 (0x1234, HF::Interface::CLIENT_ROLE);
    Common::Interface itf3 (0x5678, HF::Interface::SERVER_ROLE);
 
-   wunit.opt_ift.push_back (itf1);
-   wunit.opt_ift.push_back (itf2);
-   wunit.opt_ift.push_back (itf3);
+   wunit.interfaces.push_back (itf1);
+   wunit.interfaces.push_back (itf2);
+   wunit.interfaces.push_back (itf3);
 
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
@@ -174,11 +174,11 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    LONGS_EQUAL (wunit.id, runit.id);
    LONGS_EQUAL (wunit.profile, runit.profile);
 
-   LONGS_EQUAL (wunit.opt_ift.size (), runit.opt_ift.size ());
+   LONGS_EQUAL (wunit.interfaces.size (), runit.interfaces.size ());
 
-   for (uint8_t i = 0; i < runit.opt_ift.size (); i++)
+   for (uint8_t i = 0; i < runit.interfaces.size (); i++)
    {
-      CHECK_EQUAL (wunit.opt_ift[i], runit.opt_ift[i]);
+      CHECK_EQUAL (wunit.interfaces[i], runit.interfaces[i]);
    }
 }
 
