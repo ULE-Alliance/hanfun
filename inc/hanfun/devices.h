@@ -416,10 +416,9 @@ namespace HF
          };
 
          /*!
-          * Template for HAN-FUN concentrator devices.
+          *
           */
-         template<typename CoreServices>
-         class Abstract:public AbstractDevice
+         class AbstractBase:public AbstractDevice
          {
             public:
 
@@ -436,36 +435,44 @@ namespace HF
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected (HF::Transport::Link *link)
-            {
-               _links.push_front (link);
+            void connected (HF::Transport::Link *link);
 
-               // Check if a registration exists for this link.
-               Core::DeviceManagement::Device *entry =
-                  _unit0.device_management ()->entry (link->uid ());
+            void disconnected (HF::Transport::Link *link);
 
-               if (entry != nullptr)
-               {
-                  link->address (entry->address);
-               }
-            }
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
-            void disconnected (HF::Transport::Link *link)
-            {
-               _links.remove (link);
-            }
+            virtual ~AbstractBase() {}
 
-            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
-            {
-               if (packet.destination.device == Protocol::BROADCAST_ADDR)
-               {
-                  route_packet (packet, payload, offset);
-               }
-               else
-               {
-                  AbstractDevice::receive (packet, payload, offset);
-               }
-            }
+            protected:
+
+            //! List of link present in this Concentrator.
+            std::forward_list <Transport::Link *> _links;
+
+            // =============================================================================
+
+            //! \see AbstractDevice::link
+            HF::Transport::Link *link (uint16_t addr) const;
+
+            /*!
+             * Route the given packet to the corresponding device.
+             *
+             * @param [in] packet  reference for the packet to route.
+             * @param [in] payload reference to the ByteArray containing the packet payload.
+             * @param [in] offset  offset from where the packet data starts.
+             */
+            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
+                                         size_t offset);
+
+            virtual Concentrator::IUnit0 *unit0 () const = 0;
+         };
+
+         /*!
+          * Template for HAN-FUN concentrator devices.
+          */
+         template<typename CoreServices>
+         class Abstract:public AbstractBase
+         {
+            public:
 
             CoreServices *unit0 () const
             {
@@ -476,73 +483,8 @@ namespace HF
 
             CoreServices _unit0;
 
-            std::forward_list <Transport::Link *> _links; //!< List of link present in this Concentrator.
-
-            Abstract():_unit0 (*this)
+            Abstract() : AbstractBase(), _unit0 (*this)
             {}
-
-            // =============================================================================
-
-            //! \see AbstractDevice::link
-            HF::Transport::Link *link (uint16_t addr) const
-            {
-               if (_links.empty ())
-               {
-                  return nullptr;
-               }
-
-               /* *INDENT-OFF* */
-               auto it = std::find_if(_links.begin(), _links.end(),
-                                      [addr](HF::Transport::Link *link)
-                                      {
-                                         return link->address () == addr;
-                                      });
-               /* *INDENT-ON* */
-
-               if (it == _links.end ())
-               {
-                  return nullptr;
-               }
-
-               return *it;
-            }
-
-            /*!
-             * Route the given packet to the corresponding device.
-             *
-             * @param [in] packet  reference for the packet to route.
-             * @param [in] payload reference to the ByteArray containing the packet payload.
-             * @param [in] offset  offset from where the packet data starts.
-             */
-            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
-            {
-               auto &entries = _unit0.bind_management ()->entries;
-
-               auto range    = entries.find (packet.source, packet.message.itf);
-
-               // No bindings found !
-               if (range.first == entries.end () && range.second == entries.end ())
-               {
-                  return;
-               }
-
-               Protocol::Packet other = packet;
-
-               other.message.payload.reserve (payload.size () - offset);
-
-               std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
-
-               /* *INDENT-OFF* */
-               std::for_each(range.first, range.second,
-                             [this, &other](const Core::BindManagement::Entry &entry)
-                             {
-                                other.link = nullptr;
-                                other.destination = entry.destination;
-                                this->send (other);
-                             });
-               /* *INDENT-ON* */
-            }
          };
 
          /*!
