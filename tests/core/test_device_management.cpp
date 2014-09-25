@@ -1229,7 +1229,7 @@ TEST (DeviceManagementServer, Entries)
 
    LONGS_EQUAL (20, dev_mgt->entries_count ());
 
-   std::vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
+   std::vector <const DeviceManagement::Device *> entries = dev_mgt->entries ();
 
    LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
 
@@ -1251,4 +1251,38 @@ TEST (DeviceManagementServer, Entries)
    {
       CHECK_DEVICE_ADDRESS (6 + i, entries[i]->address, i);
    }
+}
+
+TEST (DeviceManagementServer, FindEntry)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
+
+      dev_mgt->save (dev);
+   }
+
+   ipui[4] = 0x90 + 4;
+
+   auto entry = dev_mgt->entry(5);
+
+   CHECK_EQUAL (entry->uid, ipui);
+
+   entry = dev_mgt->entry(HF::UID::UID(&ipui));
+
+   CHECK_EQUAL (entry->address, 5);
 }

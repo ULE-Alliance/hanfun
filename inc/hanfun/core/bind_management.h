@@ -106,6 +106,8 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
+         typedef HF::Common::Pointer<Entry>  EntryPtr;
+
          /*!
           * Add/Remove Bind message.
           */

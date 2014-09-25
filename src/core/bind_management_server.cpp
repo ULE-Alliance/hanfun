@@ -122,14 +122,14 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
    }
 
    // Get device entries from device management.
-   DeviceManagement::Device *src_dev = unit0 ().device_management ()->entry (source.device);
+   auto src_dev = unit0 ().device_management ()->entry (source.device);
 
    if (src_dev == nullptr)
    {
       return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
-   DeviceManagement::Device *dst_dev = unit0 ().device_management ()->entry (destination.device);
+   auto dst_dev = unit0 ().device_management ()->entry (destination.device);
 
    if (dst_dev == nullptr)
    {

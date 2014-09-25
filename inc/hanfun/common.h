@@ -560,6 +560,100 @@ namespace HF
          return (lhs.role < rhs.role) || (lhs.role == rhs.role && lhs.id < rhs.id);
       }
 
+      // =============================================================================
+      // Helper Classes
+      // =============================================================================
+
+      /*!
+       * Simple raw pointer wrapper.
+       */
+      template<typename T>
+      class Pointer
+      {
+         T * pointer;
+
+         bool owner;
+
+         public:
+
+         Pointer(T * _pointer = nullptr, bool _owner = false):
+            pointer(_pointer), owner(_owner)
+         {}
+
+         Pointer(T &_pointer):
+            pointer(&_pointer), owner(false)
+         {}
+
+         Pointer(Pointer<T> &&other) : pointer(nullptr), owner(false)
+         {
+            std::swap(this->pointer, other.pointer);
+            std::swap(this->owner, other.owner);
+         }
+
+         ~Pointer()
+         {
+            if (owner)
+            {
+               delete pointer;
+            }
+         }
+
+         T &operator*() const
+         {
+            return *pointer;
+         }
+
+         T *operator->() const
+         {
+            return pointer;
+         }
+
+         bool operator==(const Pointer<T> &other) const
+         {
+            return pointer == other.pointer;
+         }
+
+         bool operator!=(const Pointer<T> &other) const
+         {
+            return !(*this == other);
+         }
+
+         bool operator==(const T *other) const
+         {
+            return pointer == other;
+         }
+
+         bool operator!=(const T *other) const
+         {
+            return pointer != other;
+         }
+
+         bool operator==(const T &other) const
+         {
+            return pointer == &other;
+         }
+
+         bool operator!=(const T &other) const
+         {
+            return pointer != &other;
+         }
+
+         Pointer<T>& operator=(Pointer<T>&& other)
+         {
+            if (this->owner)
+            {
+               delete this->pointer;
+            }
+
+            this->pointer = other.pointer;
+            this->owner = other.owner;
+
+            other.owner = false;
+
+            return *this;
+         }
+      };
+
    }  // namespace Common
 
 }  // namespace HF
