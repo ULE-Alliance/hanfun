@@ -51,6 +51,15 @@ namespace HF
           */
          virtual void send (const Protocol::Address &addr, Protocol::Message &message,
                             Transport::Link *link = nullptr) = 0;
+
+         /*!
+          * Return a vector containing a list of extra interfaces, other than the interfaces
+          * specified by the profile the unit implements)
+          *
+          * @return  vector containing the list of extra interfaces.
+          */
+         virtual std::vector <Common::Interface> interfaces () const = 0;
+
       };
 
       /*!
@@ -70,6 +79,11 @@ namespace HF
 
          void send (const Protocol::Address &addr, Protocol::Message &message,
                     Transport::Link *link = nullptr);
+
+         std::vector <Common::Interface> interfaces () const
+         {
+            return std::vector <Common::Interface>();
+         }
 
          protected:
 

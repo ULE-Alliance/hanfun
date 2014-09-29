@@ -28,6 +28,7 @@
 
 #include "hanfun/core.h"
 #include "hanfun/device.h"
+#include "hanfun/units.h"
 
 namespace HF
 {
@@ -86,14 +87,18 @@ namespace HF
           */
          struct Unit
          {
-            uint8_t                         id;      //!< Unit Id.
-            uint16_t                        profile; //!< Unit UID. \see IProfile::UID.
+            uint8_t  id;                             //!< Unit Id.
+            uint16_t profile;                        //!< Unit UID. \see IProfile::UID.
 
             //! Optional interfaces.
             std::vector <Common::Interface> interfaces;
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
+            {}
+
+            Unit(const HF::Units::IUnit &unit):
+               id (unit.id ()), profile (unit.uid ()), interfaces (unit.interfaces ())
             {}
 
             //! \see HF::Serializable::size.
