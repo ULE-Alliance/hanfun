@@ -930,6 +930,50 @@ TEST (BindManagementServer, AddMatch)
    POINTERS_EQUAL (p_entry, res.second);
 }
 
+TEST (BindManagementServer, AddMatchFromConcentrator)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   HF::Units::Unit<HF::Profiles::SimpleOnOffSwitch> unit(1, *device);
+
+   LONGS_EQUAL (0, server->entries.size ());
+
+   entry.source.device      = 0x0;
+   entry.source.unit        = 0x1;
+   entry.destination.device = 0x3333;
+   entry.destination.unit   = 0x44;
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (1, server->entries.size ());
+}
+
+TEST (BindManagementServer, AddMatchToConcentrator)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   HF::Units::Unit<HF::Profiles::SimpleLight> sl_unit(2, *device);
+
+   LONGS_EQUAL (0, server->entries.size ());
+
+   entry.source.device      = 0x1111;
+   entry.source.unit        = 0x22;
+   entry.destination.device = 0x0;
+   entry.destination.unit   = 0x2;
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (1, server->entries.size ());
+}
+
 TEST (BindManagementServer, AddNoMatch)
 {
    BindManagement::Entry entry;

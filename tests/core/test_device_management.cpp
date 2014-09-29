@@ -1286,3 +1286,39 @@ TEST (DeviceManagementServer, FindEntry)
 
    CHECK_EQUAL (entry->address, 5);
 }
+
+
+TEST (DeviceManagementServer, FindEntrySelf)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
+
+      dev_mgt->save (dev);
+   }
+
+   auto entry = dev_mgt->entry (device->address ());
+   CHECK_FALSE (entry == nullptr);
+
+   LONGS_EQUAL (1, entry->units.size ());
+
+   Testing::Unit unit1 (1, *device);
+
+   entry = dev_mgt->entry (device->address ());
+
+   LONGS_EQUAL (2, entry->units.size ());
+}

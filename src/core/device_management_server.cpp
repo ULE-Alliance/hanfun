@@ -278,6 +278,31 @@ std::vector <const DeviceManagement::Device *> DeviceManagement::DefaultServer::
 // =============================================================================
 DeviceManagement::DevicePtr DefaultServer::entry (uint16_t address) const
 {
+   // Build Device Management entry for self.
+   if (address == unit ().device ().address ())
+   {
+      DevicePtr device (new Device (), true);
+
+      device->address = address;
+      device->emc     = HF::Core::DeviceInformation::EMC;
+
+      // FIXME Retrive device UID.
+      // auto attr = this->unit0().device_info()->attribute(HF::Core::DeviceInformation::UID_ATTR);
+      // device->uid = static_cast<HF::Attributes::Attribute<HF::UID::UID> *>(attr)->get();
+      // delete attr;
+
+      auto &units = unit ().device ().units ();
+
+      /* *INDENT-OFF* */
+      std::for_each(units.begin(), units.end(), [&device](const HF::Units::IUnit *unit)
+      {
+         device->units.push_back(DeviceManagement::Unit(*unit));
+      });
+      /* *INDENT-ON* */
+
+      return device;
+   }
+
    /* *INDENT-OFF* */
    auto it = std::find_if(_entries.begin(), _entries.end(), [address](const Device *device)
    {
