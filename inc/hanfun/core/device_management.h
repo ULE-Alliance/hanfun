@@ -179,7 +179,7 @@ namespace HF
             }
          };
 
-         typedef Common::Pointer<Device>  DevicePtr;
+         typedef Common::Pointer <Device> DevicePtr;
 
          // =============================================================================
          // Register Command Messages

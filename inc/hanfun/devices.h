@@ -461,7 +461,7 @@ namespace HF
              * @param [in] offset  offset from where the packet data starts.
              */
             virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                         size_t offset);
+                                       size_t offset);
 
             virtual Concentrator::IUnit0 *unit0 () const = 0;
          };
@@ -483,7 +483,7 @@ namespace HF
 
             CoreServices _unit0;
 
-            Abstract() : AbstractBase(), _unit0 (*this)
+            Abstract():AbstractBase (), _unit0 (*this)
             {}
          };
 

@@ -1278,11 +1278,11 @@ TEST (DeviceManagementServer, FindEntry)
 
    ipui[4] = 0x90 + 4;
 
-   auto entry = dev_mgt->entry(5);
+   auto entry = dev_mgt->entry (5);
 
    CHECK_EQUAL (entry->uid, ipui);
 
-   entry = dev_mgt->entry(HF::UID::UID(&ipui));
+   entry = dev_mgt->entry (HF::UID::UID( &ipui));
 
    CHECK_EQUAL (entry->address, 5);
 }

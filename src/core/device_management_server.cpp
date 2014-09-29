@@ -122,17 +122,17 @@ Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteAr
 
    uint16_t address = Protocol::BROADCAST_ADDR;
 
-   auto device = entry (packet.link->uid ());
+   auto device      = entry (packet.link->uid ());
 
    if (device == nullptr)
    {
-      device          = DevicePtr (new Device(), false);
+      device          = DevicePtr (new Device (), false);
       device->uid     = packet.link->uid ();
       device->address = next_address ();
    }
 
-   device->emc     = reg_msg.emc;
-   device->units   = reg_msg.units;
+   device->emc   = reg_msg.emc;
+   device->units = reg_msg.units;
 
    RegisterResponse *reg_res = new RegisterResponse ();
 
@@ -256,8 +256,7 @@ DeviceManagement::DefaultServer::~DefaultServer()
  *
  */
 // =============================================================================
-std::vector <const DeviceManagement::Device *> DeviceManagement::DefaultServer::entries
-   (uint16_t offset, uint16_t count) const
+std::vector <const DeviceManagement::Device *> DeviceManagement::DefaultServer::entries (uint16_t offset, uint16_t count) const
 {
    std::vector <Device *>::const_iterator start = _entries.begin ();
 
@@ -288,11 +287,11 @@ DeviceManagement::DevicePtr DefaultServer::entry (uint16_t address) const
 
    if (it == _entries.end ())
    {
-      return std::move(DeviceManagement::DevicePtr());
+      return std::move (DeviceManagement::DevicePtr ());
    }
    else
    {
-      return std::move(DeviceManagement::DevicePtr(*(it.base())));
+      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
    }
 }
 
@@ -314,11 +313,11 @@ DeviceManagement::DevicePtr DefaultServer::entry (const HF::UID::UID &uid) const
 
    if (it == _entries.end ())
    {
-      return std::move(DeviceManagement::DevicePtr());
+      return std::move (DeviceManagement::DevicePtr ());
    }
    else
    {
-      return std::move(DeviceManagement::DevicePtr(*(it.base())));
+      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
    }
 }
 
@@ -400,7 +399,7 @@ Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Devic
  */
 // =============================================================================
 bool DefaultServer::authorized (uint8_t member, DeviceManagement::DevicePtr &source,
-                                   DeviceManagement::DevicePtr &destination)
+                                DeviceManagement::DevicePtr &destination)
 {
    if (source == nullptr || destination == nullptr)
    {
