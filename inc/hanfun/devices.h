@@ -270,6 +270,11 @@ namespace HF
                link (nullptr)
             {}
 
+            void destroy ()
+            {
+               remove ((HF::Transport::Link *) nullptr);
+            }
+
             //! \see HF::Transport::AbstractLayer::add
             void add (HF::Transport::Endpoint *ep)
             {
@@ -308,6 +313,7 @@ namespace HF
                if ((_link == nullptr && this->link != nullptr) || (_link == this->link))
                {
                   HF::Transport::AbstractLayer::disconnected (this->link);
+                  delete this->link;
                   this->link = nullptr;
                }
             }
@@ -497,6 +503,11 @@ namespace HF
             std::forward_list <HF::Transport::Link *> links;
 
             public:
+
+            virtual ~Transport()
+            {
+               destroy ();
+            }
 
             //! \see HF::Transport:Layer::destroy
             void destroy ();
