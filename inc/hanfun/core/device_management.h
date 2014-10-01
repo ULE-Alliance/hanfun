@@ -28,6 +28,7 @@
 
 #include "hanfun/core.h"
 #include "hanfun/device.h"
+#include "hanfun/units.h"
 
 namespace HF
 {
@@ -86,13 +87,18 @@ namespace HF
           */
          struct Unit
          {
-            uint8_t                         id;      //!< Unit Id.
-            uint16_t                        profile; //!< Unit UID. \see IProfile::UID.
+            uint8_t  id;                             //!< Unit Id.
+            uint16_t profile;                        //!< Unit UID. \see IProfile::UID.
 
-            std::vector <Common::Interface> opt_ift; //!< Optional interfaces.
+            //! Optional interfaces.
+            std::vector <Common::Interface> interfaces;
 
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
+            {}
+
+            Unit(const HF::Units::IUnit &unit):
+               id (unit.id ()), profile (unit.uid ()), interfaces (unit.interfaces ())
             {}
 
             //! \see HF::Serializable::size.
@@ -172,6 +178,8 @@ namespace HF
                return !(*this == other);
             }
          };
+
+         typedef Common::Pointer <Device> DevicePtr;
 
          // =============================================================================
          // Register Command Messages
@@ -469,7 +477,7 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given address,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual Device *entry (uint16_t address) = 0;
+            virtual DevicePtr entry (uint16_t address) const = 0;
 
             /*!
              * Return the Device entry for the given UID.
@@ -479,7 +487,7 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given UID,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual Device *entry (const HF::UID::UID &uid) = 0;
+            virtual DevicePtr entry (const HF::UID::UID &uid) const = 0;
 
             /*!
              * Store the given \c device entry to persistent storage.
@@ -513,7 +521,7 @@ namespace HF
              * @param [in] count    the
              * @return
              */
-            virtual std::vector <Device *> entries (uint16_t offset, uint16_t count) = 0;
+            virtual std::vector <const Device *> entries (uint16_t offset, uint16_t count) const = 0;
 
             /*!
              * Return all device entries starting at \c offset.
@@ -522,7 +530,7 @@ namespace HF
              *
              * @return a vector containing the requested entries.
              */
-            std::vector <Device *> entries (uint16_t offset = 0)
+            std::vector <const Device *> entries (uint16_t offset = 0)
             {
                if (offset < entries_count ())
                {
@@ -530,7 +538,7 @@ namespace HF
                }
                else
                {
-                  return std::vector <Device *>(0);
+                  return std::vector <const Device *>(0);
                }
             }
 
@@ -604,7 +612,7 @@ namespace HF
              * @retval  true     the operation is allowed,
              * @retval  false    otherwise.
              */
-            virtual bool authorized (uint8_t member, Device *source, Device *destination) = 0;
+            virtual bool authorized (uint8_t member, DevicePtr &source, DevicePtr &destination) = 0;
 
             /*!
              * De-register the device that corresponds to the given Device entry.
@@ -648,20 +656,20 @@ namespace HF
             // API
             // =============================================================================
 
-            virtual Device *entry (uint16_t address);
+            DevicePtr entry (uint16_t address) const;
 
-            virtual Device *entry (const HF::UID::UID &uid);
+            DevicePtr entry (const HF::UID::UID &uid) const;
 
-            virtual Common::Result save (Device *device);
+            Common::Result save (Device *device);
 
-            virtual Common::Result destroy (Device *device);
+            Common::Result destroy (Device *device);
 
             uint16_t entries_count () const
             {
                return _entries.size ();
             }
 
-            std::vector <DeviceManagement::Device *> entries (uint16_t offset, uint16_t count);
+            std::vector <const DeviceManagement::Device *> entries (uint16_t offset, uint16_t count) const;
 
             using Server::entries;
 
@@ -671,7 +679,7 @@ namespace HF
 
             std::vector <Device *> _entries;
 
-            virtual bool authorized (uint8_t member, Device *source, Device *destination);
+            virtual bool authorized (uint8_t member, DevicePtr &source, DevicePtr &destination);
          };
 
          // =============================================================================
@@ -690,14 +698,14 @@ namespace HF
                return false;
             }
 
-            if (lhs.opt_ift.size () != rhs.opt_ift.size ())
+            if (lhs.interfaces.size () != rhs.interfaces.size ())
             {
                return false;
             }
 
-            for (uint8_t i = 0; i < lhs.opt_ift.size (); i++)
+            for (uint8_t i = 0; i < lhs.interfaces.size (); i++)
             {
-               if (lhs.opt_ift[i] != rhs.opt_ift[i])
+               if (lhs.interfaces[i] != rhs.interfaces[i])
                {
                   return false;
                }

@@ -389,31 +389,68 @@ namespace HF
          }
       };
 
-      struct DeviceUnit0:public HF::Devices::Node::IUnit0
+#define SET_SERVICE(_X, _Y) \
+   {                        \
+      if (_X != nullptr)    \
+      {                     \
+         delete _X;         \
+      }                     \
+                            \
+      _X = _Y;              \
+   }
+
+      class DeviceUnit0:public HF::Devices::Node::IUnit0
       {
-         HF::Core::DeviceInformation::Server  *dev_info;
-         HF::Core::DeviceManagement::Client   *dev_mgt;
+         HF::Core::DeviceInformation::Server *dev_info;
+         HF::Core::DeviceManagement::Client  *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+
+         public:
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
             attr_reporting (nullptr)
          {}
 
-         virtual ~DeviceUnit0() {}
+         virtual ~DeviceUnit0()
+         {
+            delete dev_info;
+            delete dev_mgt;
+            delete attr_reporting;
+         }
+
+         void device_info (HF::Core::DeviceInformation::Server *_dev_info)
+         {
+            SET_SERVICE (dev_info, _dev_info);
+         }
+
+         HF::Core::DeviceInformation::Server *device_info ()
+         {
+            if (dev_info == nullptr)
+            {
+               device_info (new HF::Core::DeviceInformation::Server (*this));
+            }
+
+            return dev_info;
+         }
 
          HF::Core::DeviceInformation::Server *device_info () const
          {
             return dev_info;
          }
 
-         HF::Core::DeviceInformation::Server *device_info ()
+         void device_management (HF::Core::DeviceManagement::Client *_dev_mgt)
          {
-            return dev_info;
+            SET_SERVICE (dev_mgt, _dev_mgt);
          }
 
          HF::Core::DeviceManagement::Client *device_management ()
          {
+            if (dev_mgt == nullptr)
+            {
+               device_management (new HF::Core::DeviceManagement::Client (*this));
+            }
+
             return dev_mgt;
          }
 
@@ -422,12 +459,22 @@ namespace HF
             return dev_mgt;
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         void attribute_reporting (HF::Core::AttributeReporting::Server *_attr_reporting)
          {
-            return attr_reporting;
+            SET_SERVICE (attr_reporting, _attr_reporting);
          }
 
          HF::Core::AttributeReporting::Server *attribute_reporting ()
+         {
+            if (attr_reporting == nullptr)
+            {
+               attribute_reporting (new HF::Core::AttributeReporting::Server (*this));
+            }
+
+            return attr_reporting;
+         }
+
+         HF::Core::AttributeReporting::Server *attribute_reporting () const
          {
             return attr_reporting;
          }
@@ -450,19 +497,36 @@ namespace HF
          }
       };
 
-      struct ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
+      class ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
-         HF::Core::DeviceInformation::Server  *dev_info;
-         HF::Core::DeviceManagement::Server   *dev_mgt;
+         HF::Core::DeviceInformation::Server *dev_info;
+         HF::Core::DeviceManagement::Server  *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
-         HF::Core::BindManagement::Server     *bind_mgt;
+         HF::Core::BindManagement::Server    *bind_mgt;
+
+         public:
 
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
             attr_reporting (nullptr), bind_mgt (nullptr)
          {}
 
-         virtual ~ConcentratorUnit0() {}
+         virtual ~ConcentratorUnit0()
+         {
+            delete dev_info;
+            delete dev_mgt;
+            delete attr_reporting;
+            delete bind_mgt;
+         }
+
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         void device_info (HF::Core::DeviceInformation::Server *_dev_info)
+         {
+            SET_SERVICE (dev_info, _dev_info);
+         }
 
          HF::Core::DeviceInformation::Server *device_info () const
          {
@@ -471,17 +535,37 @@ namespace HF
 
          HF::Core::DeviceInformation::Server *device_info ()
          {
+            if (dev_info == nullptr)
+            {
+               device_info (new HF::Core::DeviceInformation::Server (*this));
+            }
+
             return dev_info;
+         }
+
+         void device_management (HF::Core::DeviceManagement::Server *_dev_mgt)
+         {
+            SET_SERVICE (dev_mgt, _dev_mgt);
          }
 
          HF::Core::DeviceManagement::Server *device_management ()
          {
+            if (dev_mgt == nullptr)
+            {
+               device_management (new HF::Core::DeviceManagement::DefaultServer (*this));
+            }
+
             return dev_mgt;
          }
 
          HF::Core::DeviceManagement::Server *device_management () const
          {
             return dev_mgt;
+         }
+
+         void attribute_reporting (HF::Core::AttributeReporting::Server *_attr_reporting)
+         {
+            SET_SERVICE (attr_reporting, _attr_reporting);
          }
 
          HF::Core::AttributeReporting::Server *attribute_reporting () const
@@ -491,11 +575,26 @@ namespace HF
 
          HF::Core::AttributeReporting::Server *attribute_reporting ()
          {
+            if (attr_reporting == nullptr)
+            {
+               attribute_reporting (new HF::Core::AttributeReporting::Server (*this));
+            }
+
             return attr_reporting;
+         }
+
+         void bind_management (HF::Core::BindManagement::Server *_bind_mgt)
+         {
+            SET_SERVICE (bind_mgt, _bind_mgt);
          }
 
          HF::Core::BindManagement::Server *bind_management ()
          {
+            if (bind_mgt == nullptr)
+            {
+               bind_management (new HF::Core::BindManagement::Server (*this));
+            }
+
             return bind_mgt;
          }
 

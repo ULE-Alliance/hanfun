@@ -287,7 +287,7 @@ size_t SimplePowerMeter::Report::unpack (const Common::ByteArray &array, size_t 
 }
 
 // =============================================================================
-// create_attribute
+// SimplePowerMeter::create_attribute
 // =============================================================================
 /*!
  *

@@ -18,12 +18,11 @@
 #define HF_TRANSPORT_H
 
 #include <algorithm>
+#include <forward_list>
 
 #include "hanfun/common.h"
-
 #include "hanfun/uids.h"
-
-#include "hanfun/device.h"
+#include "hanfun/protocol.h"
 
 namespace HF
 {
@@ -243,6 +242,10 @@ namespace HF
          {
             delete _uid;
          }
+
+         void initialize () {}
+
+         void destroy () {}
 
          /*!
           * Add an entry to the list of end-points connected to the transport layer.
