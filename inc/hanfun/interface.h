@@ -315,6 +315,33 @@ namespace HF
          }
       };
 
+      template<typename _Interface, typename _Proxy>
+      struct Proxy:public _Interface
+      {
+         static_assert (std::is_base_of <Interfaces::AbstractInterface, _Interface>::value,
+                         "Interface MUST be of type HF::Interfaces::AbstractInterface !");
+
+         typedef _Interface base;
+
+         Proxy(_Proxy &_proxy):proxy (_proxy)
+         {}
+
+         void send (const Protocol::Address &addr, Protocol::Message &message)
+         {
+            proxy.send (addr, message);
+         }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            proxy.notify (old_value, new_value);
+         }
+
+         private:
+
+         _Proxy &proxy;
+      };
+
    }  // namespace Interfaces
 
 }  // namespace HF

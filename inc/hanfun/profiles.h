@@ -248,36 +248,11 @@ namespace HF
       {
          virtual ~Profile2()
          {}
+
          typedef Profile2 <_uid, Interface1, Interface2> profile_t;
 
-         template<typename Itf>
-         struct InterfaceProxy:public Itf
-         {
-            InterfaceProxy(profile_t &proxy):proxy (proxy)
-            {}
-
-            void send (const Protocol::Address &addr, Protocol::Message &message)
-            {
-               proxy.send (addr, message);
-            }
-
-            void notify (const HF::Attributes::IAttribute &old_value,
-                         const HF::Attributes::IAttribute &new_value) const
-            {
-               proxy.notify (old_value, new_value);
-            }
-
-            private:
-
-            profile_t &proxy;
-         };
-
-         typedef InterfaceProxy <Interface1> first_itf_t;
-         typedef InterfaceProxy <Interface2> second_itf_t;
-
-         static_assert (std::is_base_of <Interfaces::AbstractInterface, Interface1>::value &&
-                        std::is_base_of <Interfaces::AbstractInterface, Interface2>::value,
-                        "Interface1 and Interface 2 MUST be of type HF::AbstractInterface !");
+         typedef HF::Interfaces::Proxy <Interface1, profile_t> first_itf_t;
+         typedef HF::Interfaces::Proxy <Interface2, profile_t> second_itf_t;
 
          //! \see Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
