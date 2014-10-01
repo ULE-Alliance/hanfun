@@ -68,6 +68,11 @@ Units::IUnit *AbstractDevice::unit (uint8_t id) const
 // =============================================================================
 void AbstractDevice::send (Protocol::Packet &packet)
 {
+   if (is_local (packet) && is_registered ())
+   {
+      receive (packet, packet.message.payload, 0);
+   }
+
    Transport::Link *tsp_link = packet.link;
 
    // Update message reference.

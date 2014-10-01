@@ -120,6 +120,11 @@ namespace HF
          {
             return packet.destination.device == address ();
          }
+
+         bool is_registered ()
+         {
+            return this->address () != Protocol::BROADCAST_ADDR;
+         }
       };
 
       /*!
