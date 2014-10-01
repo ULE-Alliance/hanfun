@@ -235,7 +235,7 @@ namespace HF
 
             CoreServices    _unit0;
 
-            Abstract():_unit0 (*this)
+            Abstract():_link (nullptr), _unit0 (*this)
             {}
 
             // =============================================================================
