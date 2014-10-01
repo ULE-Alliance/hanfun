@@ -974,6 +974,22 @@ TEST (BindManagementServer, AddMatchToConcentrator)
    LONGS_EQUAL (1, server->entries.size ());
 }
 
+TEST (BindManagementServer, AddMatchCatchAll)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   entry.source.device = HF::Protocol::BROADCAST_ADDR;
+   entry.source.unit   = HF::Protocol::BROADCAST_UNIT;
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (1, server->entries.size ());
+}
+
 TEST (BindManagementServer, AddNoMatch)
 {
    BindManagement::Entry entry;
