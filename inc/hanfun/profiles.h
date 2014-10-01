@@ -386,6 +386,7 @@ namespace HF
          {}
 
          using AbstractProfile <_uid>::uid;
+         using Interfaces::Alert::Server::handle;
 
          //! \see Alert::Server::status()
          void alert (Protocol::Address &addr, bool state)
@@ -395,7 +396,7 @@ namespace HF
          }
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          HF::Attributes::UIDS &uids) const
+                                          const HF::Attributes::UIDS &uids) const
          {
             if (Interfaces::Alert::Server::uid () == itf.id)
             {
