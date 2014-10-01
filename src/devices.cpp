@@ -246,33 +246,44 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                           size_t offset)
+void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet,
+                                               Common::ByteArray &payload, size_t offset)
 {
-   auto &entries = unit0()->bind_management ()->entries;
+   // Find bind entries for device.
+   auto &entries = unit0 ()->bind_management ()->entries;
 
    auto range    = entries.find (packet.source, packet.message.itf);
 
+   Protocol::Address any_addr;
+   auto range_any = entries.find (any_addr, packet.message.itf);
+
    // No bindings found !
-   if (range.first == entries.end () && range.second == entries.end ())
+   if (range.first == entries.end () && range.second == entries.end () &&
+       range_any.first == entries.end () && range_any.second == entries.end ())
    {
       return;
    }
 
+   // Send packets to binded destination devices.
    Protocol::Packet other = packet;
 
    other.message.payload = Common::ByteArray (payload.size () - offset);
 
    std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
+   auto process_entry = [this, &other, &packet](const Core::BindManagement::Entry &entry)
+                        {
+                           other.destination = entry.destination;
+                           other.link        = this->is_local (other) ? packet.link : nullptr;
+                           this->send (other);
+                        };
+
    /* *INDENT-OFF* */
-   std::for_each(range.first, range.second,
-                 [this, &other](const Core::BindManagement::Entry &entry)
-                 {
-                    other.link = nullptr;
-                    other.destination = entry.destination;
-                    this->send (other);
-                 });
+   std::for_each(range.first, range.second, process_entry);
+   /* *INDENT-ON* */
+
+   /* *INDENT-OFF* */
+   std::for_each(range_any.first, range_any.second, process_entry);
    /* *INDENT-ON* */
 }
 
