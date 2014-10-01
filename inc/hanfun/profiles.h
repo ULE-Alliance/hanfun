@@ -213,6 +213,28 @@ namespace HF
          {
             return _uid;
          }
+
+         //! \see Interface::attributes
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+
+            return HF::Attributes::List ();
+         }
+
+         //! \see Interface::handle
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                size_t offset)
+         {
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
+
+            return Common::Result::FAIL_ID;
+         }
       };
 
       /*!
@@ -225,6 +247,7 @@ namespace HF
          {}
 
          using AbstractProfile <_uid>::uid;
+         using Interface::handle;
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
@@ -267,6 +290,12 @@ namespace HF
             {
                return interfaces.second.handle (packet, payload, offset);
             }
+         }
+
+         virtual void periodic(uint32_t time)
+         {
+            first()->periodic(time);
+            second()->periodic(time);
          }
 
          /*!
@@ -751,6 +780,12 @@ namespace HF
          public:
 
          virtual ~UserInterface() {}
+
+         //! \see Interface::periodic
+         virtual void periodic(uint32_t time)
+         {
+            UNUSED(time);
+         }
       };
 
       /*!
@@ -761,6 +796,12 @@ namespace HF
          public:
 
          virtual ~GenericApplicationLogic() {}
+
+         //! \see Interface::periodic
+         virtual void periodic(uint32_t time)
+         {
+            UNUSED(time);
+         }
       };
 
    }  // namespace Profiles
