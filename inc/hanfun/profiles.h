@@ -745,7 +745,7 @@ namespace HF
       };
 
       /*!
-       * Siren profile implementation.
+       * Alertable profile implementation.
        */
       class Alertable:public Profile <ALERTABLE, Interfaces::Alert::Client>
       {
