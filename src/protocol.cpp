@@ -15,6 +15,7 @@
  */
 // =============================================================================
 
+#include "hanfun/transport.h"
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
 
@@ -477,6 +478,13 @@ uint32_t Filters::Repeated::checksum (uint16_t const *data, size_t words)
 bool Filters::Repeated::operator ()(const HF::Protocol::Packet &packet, const HF::Common::ByteArray &payload)
 {
 #define MAX_TTL   std::numeric_limits <uint8_t>::max ()
+
+   assert (packet.link != nullptr);
+
+   if (packet.link->address () == HF::Protocol::BROADCAST_ADDR)
+   {
+      return false;
+   }
 
    bool  result = false;
 

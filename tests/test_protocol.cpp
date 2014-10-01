@@ -743,10 +743,13 @@ TEST_GROUP (FilterRepeated)
 
       fill (payload);
 
-      Packet packet;
+      packet.link = new Testing::Link ();
+      packet.link->address (0xAA);
+   }
 
-      packet.unpack (payload);
-
+   TEST_TEARDOWN ()
+   {
+      delete packet.link;
    }
 
    void fill (HF::Common::ByteArray &array)
