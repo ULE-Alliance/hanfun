@@ -104,7 +104,7 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
-   if (!repeated_filter (packet, payload) && is_local (packet))
+   if (is_local (packet) && !repeated_filter (packet, payload))
    {
       IUnit *unit = this->unit (packet.destination.unit);
 
