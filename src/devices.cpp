@@ -196,7 +196,7 @@ void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::Byte
       Protocol::Packet other = packet;
       other.link = nullptr;
 
-      other.message.payload.reserve (payload.size () - offset);
+      other.message.payload = Common::ByteArray (payload.size () - offset);
 
       std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
@@ -256,7 +256,7 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
 
    Protocol::Packet other = packet;
 
-   other.message.payload.reserve (payload.size () - offset);
+   other.message.payload = Common::ByteArray (payload.size () - offset);
 
    std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
