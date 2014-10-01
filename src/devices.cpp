@@ -187,9 +187,20 @@ void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::Byte
    {
       route_packet (packet, payload, offset);
    }
-   else
+   else if(is_local(packet))  // The message is for us.
    {
       AbstractDevice::receive (packet, payload, offset);
+   }
+   else  // Route message to the proper device.
+   {
+      Protocol::Packet other = packet;
+      other.link = nullptr;
+
+      other.message.payload.reserve (payload.size () - offset);
+
+      std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+
+      send(other);
    }
 }
 
