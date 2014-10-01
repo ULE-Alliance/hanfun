@@ -292,10 +292,10 @@ namespace HF
             }
          }
 
-         virtual void periodic(uint32_t time)
+         virtual void periodic (uint32_t time)
          {
-            first()->periodic(time);
-            second()->periodic(time);
+            first ()->periodic (time);
+            second ()->periodic (time);
          }
 
          /*!
@@ -782,9 +782,9 @@ namespace HF
          virtual ~UserInterface() {}
 
          //! \see Interface::periodic
-         virtual void periodic(uint32_t time)
+         virtual void periodic (uint32_t time)
          {
-            UNUSED(time);
+            UNUSED (time);
          }
       };
 
@@ -798,9 +798,9 @@ namespace HF
          virtual ~GenericApplicationLogic() {}
 
          //! \see Interface::periodic
-         virtual void periodic(uint32_t time)
+         virtual void periodic (uint32_t time)
          {
-            UNUSED(time);
+            UNUSED (time);
          }
       };
 

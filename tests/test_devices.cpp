@@ -134,11 +134,11 @@ TEST (Devices, ResponseRequired)
 
    /* *INDENT-OFF* */
    std::for_each (types.begin (), types.end (),
-         [this, &packet, &payload](Protocol::Message::Type type)
-         {
-            packet.message.type = type;
-            device.receive (packet, payload, 0);
-         });
+                  [this, &packet, &payload](Protocol::Message::Type type)
+   {
+      packet.message.type = type;
+      device.receive (packet, payload, 0);
+   });
    /* *INDENT-ON* */
 
    mock ("Link").checkExpectations ();

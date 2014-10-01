@@ -154,7 +154,7 @@ void Concentrator::AbstractBase::connected (HF::Transport::Link *link)
    _links.push_front (link);
 
    // Check if a registration exists for this link.
-   auto entry = unit0()->device_management ()->entry (link->uid ());
+   auto entry = unit0 ()->device_management ()->entry (link->uid ());
 
    if (entry != nullptr)
    {
@@ -187,20 +187,20 @@ void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::Byte
    {
       route_packet (packet, payload, offset);
    }
-   else if(is_local(packet))  // The message is for us.
+   else if (is_local (packet))  // The message is for us.
    {
       AbstractDevice::receive (packet, payload, offset);
    }
    else  // Route message to the proper device.
    {
       Protocol::Packet other = packet;
-      other.link = nullptr;
+      other.link            = nullptr;
 
       other.message.payload = Common::ByteArray (payload.size () - offset);
 
       std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
-      send(other);
+      send (other);
    }
 }
 

@@ -935,7 +935,7 @@ TEST (BindManagementServer, AddMatchFromConcentrator)
    BindManagement::Entry entry;
    CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
 
-   HF::Units::Unit<HF::Profiles::SimpleOnOffSwitch> unit(1, *device);
+   HF::Units::Unit <HF::Profiles::SimpleOnOffSwitch> unit (1, *device);
 
    LONGS_EQUAL (0, server->entries.size ());
 
@@ -957,7 +957,7 @@ TEST (BindManagementServer, AddMatchToConcentrator)
    BindManagement::Entry entry;
    CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
 
-   HF::Units::Unit<HF::Profiles::SimpleLight> sl_unit(2, *device);
+   HF::Units::Unit <HF::Profiles::SimpleLight> sl_unit (2, *device);
 
    LONGS_EQUAL (0, server->entries.size ());
 
