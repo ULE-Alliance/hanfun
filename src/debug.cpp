@@ -35,13 +35,13 @@ std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &ar
       ff = stream.flags ();
       char f = stream.fill ('0');
 
-      stream << std::hex << std::setw (2) << std::setfill ('0');
+      stream << std::noshowbase << std::hex << std::setw (2) << std::setfill ('0');
       stream << "(" << array.size () << ") ";
 
       /* *INDENT-OFF* */
       std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
       {
-         stream << byte;
+         stream << std::hex << std::setw (2) << std::setfill ('0') << (int)byte << " ";
       });
       /* *INDENT-ON* */
 
@@ -168,6 +168,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &pack
 
    stream << "    Length   : " << std::showbase
           << (int) packet.message.length << NL;
+
+   stream << "    Payload  : " << packet.message.payload << NL;
 
    stream << std::noshowbase;
 
