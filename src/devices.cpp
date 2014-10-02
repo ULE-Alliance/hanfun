@@ -71,6 +71,7 @@ void AbstractDevice::send (Protocol::Packet &packet)
    if (is_local (packet) && is_registered ())
    {
       receive (packet, packet.message.payload, 0);
+      return;
    }
 
    Transport::Link *tsp_link = packet.link;
