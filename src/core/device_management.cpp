@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -50,11 +50,11 @@ size_t DeviceManagement::Unit::size () const
                    sizeof(uint8_t) +   // Unit ID.
                    sizeof(uint16_t);   // Unit's profile UID.
 
-   if (!opt_ift.empty ())
+   if (!interfaces.empty ())
    {
       Common::Interface temp;
       result += sizeof(uint8_t); // Number of optional units.
-      result += (temp.size () * opt_ift.size ());
+      result += (temp.size () * interfaces.size ());
    }
 
    return result;
@@ -78,12 +78,13 @@ size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) co
    offset += array.write (offset, this->profile);  // Unit's profile UID.
 
    // Pack the existing optional interfaces.
-   if (!opt_ift.empty ())
+   if (!interfaces.empty ())
    {
-      offset += array.write (offset, (uint8_t) opt_ift.size ());
+      offset += array.write (offset, (uint8_t) interfaces.size ());
 
       /* *INDENT-OFF* */
-      std::for_each(opt_ift.begin (), opt_ift.end (), [&offset, &array](const HF::Common::Interface &itf)
+      std::for_each(interfaces.begin (), interfaces.end (),
+                    [&offset, &array](const HF::Common::Interface &itf)
       {
          offset += itf.pack (array, offset);
       });
@@ -121,7 +122,7 @@ size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t of
       {
          Common::Interface itf;
          offset += itf.unpack (array, offset);
-         this->opt_ift.push_back (itf);
+         this->interfaces.push_back (itf);
       }
    }
 
@@ -148,13 +149,9 @@ bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Rol
    }
    else  // Search the optional interfaces.
    {
-      for (auto it = opt_ift.begin (); it != opt_ift.end (); ++it)
-      {
-         if (*it == temp)
-         {
-            return true;
-         }
-      }
+      return std::any_of(interfaces.begin (), interfaces.end (), [&temp](Common::Interface &itf){
+         return temp == itf;
+      });
    }
 
    return false;

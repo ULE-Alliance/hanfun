@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Server Role.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -122,22 +122,23 @@ Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteAr
 
    uint16_t address = Protocol::BROADCAST_ADDR;
 
-   Device   *device = entry (packet.link->uid ());
+   auto device      = entry (packet.link->uid ());
 
    if (device == nullptr)
    {
-      device          = new Device ();
+      device          = DevicePtr (new Device (), false);
       device->uid     = packet.link->uid ();
-      device->emc     = reg_msg.emc;
-      device->units   = reg_msg.units;
       device->address = next_address ();
    }
+
+   device->emc   = reg_msg.emc;
+   device->units = reg_msg.units;
 
    RegisterResponse *reg_res = new RegisterResponse ();
 
    reg_res->emc     = DeviceInformation::EMC;
 
-   reg_res->code    = save (device);
+   reg_res->code    = save (&(*device));
 
    address          = (reg_res->code == Common::Result::OK ? device->address : Protocol::BROADCAST_ADDR);
 
@@ -179,7 +180,7 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
       return result;
    }
 
-   Device *source = entry (packet.source.device);
+   auto source = entry (packet.source.device);
 
    if (source == nullptr)
    {
@@ -190,7 +191,7 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
 
    offset += incomming.unpack (payload, offset);
 
-   Device *destination = entry (incomming.address);
+   auto destination = entry (incomming.address);
 
    if (destination == nullptr)
    {
@@ -255,17 +256,17 @@ DeviceManagement::DefaultServer::~DefaultServer()
  *
  */
 // =============================================================================
-std::vector <DeviceManagement::Device *> DeviceManagement::DefaultServer::entries (uint16_t offset, uint16_t count)
+std::vector <const DeviceManagement::Device *> DeviceManagement::DefaultServer::entries (uint16_t offset, uint16_t count) const
 {
-   std::vector <Device *>::iterator start = _entries.begin ();
+   std::vector <Device *>::const_iterator start = _entries.begin ();
 
    start += offset;
 
    count  = std::min (static_cast <int>(count), static_cast <int>(_entries.size () - offset));
 
-   std::vector <Device *>::iterator end = start + count;
+   std::vector <Device *>::const_iterator end = start + count;
 
-   return std::vector <Device *>(start, end);
+   return std::vector <const Device *>(start, end);
 }
 
 // =============================================================================
@@ -275,8 +276,33 @@ std::vector <DeviceManagement::Device *> DeviceManagement::DefaultServer::entrie
  *
  */
 // =============================================================================
-Device *DefaultServer::entry (uint16_t address)
+DeviceManagement::DevicePtr DefaultServer::entry (uint16_t address) const
 {
+   // Build Device Management entry for self.
+   if (address == unit ().device ().address ())
+   {
+      DevicePtr device (new Device (), true);
+
+      device->address = address;
+      device->emc     = HF::Core::DeviceInformation::EMC;
+
+      // FIXME Retrive device UID.
+      // auto attr = this->unit0().device_info()->attribute(HF::Core::DeviceInformation::UID_ATTR);
+      // device->uid = static_cast<HF::Attributes::Attribute<HF::UID::UID> *>(attr)->get();
+      // delete attr;
+
+      auto &units = unit ().device ().units ();
+
+      /* *INDENT-OFF* */
+      std::for_each(units.begin(), units.end(), [&device](const HF::Units::IUnit *unit)
+      {
+         device->units.push_back(DeviceManagement::Unit(*unit));
+      });
+      /* *INDENT-ON* */
+
+      return device;
+   }
+
    /* *INDENT-OFF* */
    auto it = std::find_if(_entries.begin(), _entries.end(), [address](const Device *device)
    {
@@ -286,11 +312,11 @@ Device *DefaultServer::entry (uint16_t address)
 
    if (it == _entries.end ())
    {
-      return nullptr;
+      return std::move (DeviceManagement::DevicePtr ());
    }
    else
    {
-      return *it;
+      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
    }
 }
 
@@ -301,7 +327,7 @@ Device *DefaultServer::entry (uint16_t address)
  *
  */
 // =============================================================================
-DeviceManagement::Device *DefaultServer::entry (const HF::UID::UID &uid)
+DeviceManagement::DevicePtr DefaultServer::entry (const HF::UID::UID &uid) const
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(_entries.begin(), _entries.end(), [&uid](const Device *device)
@@ -312,11 +338,11 @@ DeviceManagement::Device *DefaultServer::entry (const HF::UID::UID &uid)
 
    if (it == _entries.end ())
    {
-      return nullptr;
+      return std::move (DeviceManagement::DevicePtr ());
    }
    else
    {
-      return *it;
+      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
    }
 }
 
@@ -340,7 +366,7 @@ Common::Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *
 
    // Add new entry into the database.
 
-   Device *other = entry (device->address);
+   auto other = entry (device->address);
 
    if (other == nullptr)
    {
@@ -367,7 +393,7 @@ Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Devic
       return Common::Result::FAIL_UNKNOWN;
    }
 
-   Device *other = entry (device->address);
+   auto other = entry (device->address);
 
    if (other == nullptr)
    {
@@ -397,7 +423,8 @@ Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Devic
  *
  */
 // =============================================================================
-bool DefaultServer::authorized (uint8_t member, DeviceManagement::Device *source, DeviceManagement::Device *destination)
+bool DefaultServer::authorized (uint8_t member, DeviceManagement::DevicePtr &source,
+                                DeviceManagement::DevicePtr &destination)
 {
    if (source == nullptr || destination == nullptr)
    {
@@ -424,7 +451,7 @@ uint16_t DefaultServer::next_address ()
 {
    uint16_t result = START_ADDR;
 
-   for (Device *device = entry (result); device != nullptr; device = entry (++result))
+   for (auto device = entry (result); device != nullptr; device = entry (++result))
    {}
 
    return result;

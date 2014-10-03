@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -43,19 +43,20 @@ void DeviceManagement::Client::register_device ()
 
    HF::IDevice &device        = unit ().device ();
 
-   // TODO Add support for optional interfaces.
-   for_each (device.units ().begin (), device.units ().end (), [&payload](const Units::IUnit *dev_unit)
-             {
-                if (dev_unit != nullptr && dev_unit->id () != 0)
-                {
-                   Unit unit;
-                   unit.id = dev_unit->id ();
-                   unit.profile = dev_unit->uid ();
-
-                   payload->units.push_back (unit);
-                }
-             }
-            );
+   /* *INDENT-OFF* */
+   for_each (device.units ().begin (), device.units ().end (),
+             [&payload](const Units::IUnit *dev_unit)
+   {
+      /*
+       * Add a unit entry if not unit 0 or unit 0 has optional interfaces.
+       */
+      if (dev_unit != nullptr && (dev_unit->id () != 0 ||
+          (dev_unit->id () == 0 && dev_unit->interfaces().size() != 0)))
+      {
+         payload->units.push_back (Unit(*dev_unit));
+      }
+   });
+   /* *INDENT-ON* */
 
    Protocol::Message message (payload->size ());
 

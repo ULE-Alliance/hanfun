@@ -5,7 +5,7 @@
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -454,9 +454,9 @@ void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
 
    node["profile"] = json_uid (unit.profile);
 
-   for (unsigned i = 0; i < unit.opt_ift.size (); i++)
+   for (unsigned i = 0; i < unit.interfaces.size (); i++)
    {
-      to_json (unit.opt_ift[i], node["opts"][i]);
+      to_json (unit.interfaces[i], node["opts"][i]);
    }
 }
 
@@ -604,8 +604,8 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
 
    for (unsigned i = 0; i < node["opts"].size (); i++)
    {
-      unit.opt_ift.push_back (0);
-      from_json (node["opts"][i], unit.opt_ift[i]);
+      unit.interfaces.push_back (0);
+      from_json (node["opts"][i], unit.interfaces[i]);
    }
 }
 

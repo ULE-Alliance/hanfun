@@ -5,7 +5,7 @@
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -144,9 +144,9 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    Common::Interface itf2 (0x1234, HF::Interface::CLIENT_ROLE);
    Common::Interface itf3 (0x5678, HF::Interface::SERVER_ROLE);
 
-   wunit.opt_ift.push_back (itf1);
-   wunit.opt_ift.push_back (itf2);
-   wunit.opt_ift.push_back (itf3);
+   wunit.interfaces.push_back (itf1);
+   wunit.interfaces.push_back (itf2);
+   wunit.interfaces.push_back (itf3);
 
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
@@ -174,11 +174,11 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    LONGS_EQUAL (wunit.id, runit.id);
    LONGS_EQUAL (wunit.profile, runit.profile);
 
-   LONGS_EQUAL (wunit.opt_ift.size (), runit.opt_ift.size ());
+   LONGS_EQUAL (wunit.interfaces.size (), runit.interfaces.size ());
 
-   for (uint8_t i = 0; i < runit.opt_ift.size (); i++)
+   for (uint8_t i = 0; i < runit.interfaces.size (); i++)
    {
-      CHECK_EQUAL (wunit.opt_ift[i], runit.opt_ift[i]);
+      CHECK_EQUAL (wunit.interfaces[i], runit.interfaces[i]);
    }
 }
 
@@ -694,7 +694,7 @@ TEST_GROUP (DeviceManagementClient)
 
       dev_mgt     = new TestDeviceManagementClient (*device->unit0 ());
 
-      device->unit0 ()->dev_mgt = dev_mgt;
+      device->unit0 ()->device_management (dev_mgt);
 
       packet                  = Protocol::Packet ();
 
@@ -710,8 +710,6 @@ TEST_GROUP (DeviceManagementClient)
       delete unit1;
       delete unit2;
       delete unit3;
-
-      delete dev_mgt;
 
       delete device;
 
@@ -966,9 +964,9 @@ TEST_GROUP (DeviceManagementServer)
 
       dev_mgt = new TestDeviceManagementServer (*device->unit0 ());
 
-      device->unit0 ()->dev_mgt  = dev_mgt;
+      device->unit0 ()->device_management (dev_mgt);
 
-      device->unit0 ()->bind_mgt = new HF::Core::BindManagement::Server (*device->unit0 ());
+      device->unit0 ()->bind_management (new HF::Core::BindManagement::Server (*device->unit0 ()));
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;
@@ -989,10 +987,6 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->bind_mgt;
-
-      delete dev_mgt;
-
       delete device;
 
       delete link;
@@ -1235,7 +1229,7 @@ TEST (DeviceManagementServer, Entries)
 
    LONGS_EQUAL (20, dev_mgt->entries_count ());
 
-   std::vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
+   std::vector <const DeviceManagement::Device *> entries = dev_mgt->entries ();
 
    LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
 
@@ -1257,4 +1251,74 @@ TEST (DeviceManagementServer, Entries)
    {
       CHECK_DEVICE_ADDRESS (6 + i, entries[i]->address, i);
    }
+}
+
+TEST (DeviceManagementServer, FindEntry)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
+
+      dev_mgt->save (dev);
+   }
+
+   ipui[4] = 0x90 + 4;
+
+   auto entry = dev_mgt->entry (5);
+
+   CHECK_EQUAL (entry->uid, ipui);
+
+   entry = dev_mgt->entry (HF::UID::UID( &ipui));
+
+   CHECK_EQUAL (entry->address, 5);
+}
+
+
+TEST (DeviceManagementServer, FindEntrySelf)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
+
+      dev_mgt->save (dev);
+   }
+
+   auto entry = dev_mgt->entry (device->address ());
+   CHECK_FALSE (entry == nullptr);
+
+   LONGS_EQUAL (1, entry->units.size ());
+
+   Testing::Unit unit1 (1, *device);
+
+   entry = dev_mgt->entry (device->address ());
+
+   LONGS_EQUAL (2, entry->units.size ());
 }

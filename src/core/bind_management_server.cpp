@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Bind Management : Server Role.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -122,30 +122,11 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
    }
 
    // Get device entries from device management.
-   DeviceManagement::Device *src_dev = unit0 ().device_management ()->entry (source.device);
+   HF::Interface::Role role = static_cast <HF::Interface::Role>(itf.role);
 
-   if (src_dev == nullptr)
-   {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
-   }
-
-   DeviceManagement::Device *dst_dev = unit0 ().device_management ()->entry (destination.device);
+   auto dst_dev             = unit0 ().device_management ()->entry (destination.device);
 
    if (dst_dev == nullptr)
-   {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
-   }
-
-   // Check if the source unit exist.
-   /* *INDENT-OFF* */
-   auto src_unit_it = std::find_if(src_dev->units.begin(), src_dev->units.end(),
-                                   [&source](DeviceManagement::Unit &unit)
-                                   {
-                                      return unit.id == source.unit;
-                                   });
-   /* *INDENT-ON* */
-
-   if (src_unit_it == src_dev->units.end ())
    {
       return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
@@ -164,21 +145,44 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
       return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
-   HF::Interface::Role role = static_cast <HF::Interface::Role>(itf.role);
-
    // Check if destination unit has requested interface.
    if (!dst_unit_it->has_interface (itf.id, role))
    {
       return std::make_pair (Common::Result::FAIL_ARG, nullptr);
    }
 
-   // Check if source has complementary interface.
-
-   role = (role == Interface::CLIENT_ROLE ? Interface::SERVER_ROLE : Interface::CLIENT_ROLE);
-
-   if (!src_unit_it->has_interface (itf.id, role))
+   // Skip source validation if catch all rule.
+   if (!(source.device == HF::Protocol::BROADCAST_ADDR && source.unit == HF::Protocol::BROADCAST_UNIT))
    {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      auto src_dev = unit0 ().device_management ()->entry (source.device);
+
+      if (src_dev == nullptr)
+      {
+         return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      }
+
+      // Check if the source unit exist.
+      /* *INDENT-OFF* */
+      auto src_unit_it = std::find_if(src_dev->units.begin(), src_dev->units.end(),
+                                      [&source](DeviceManagement::Unit &unit)
+      {
+         return unit.id == source.unit;
+      });
+      /* *INDENT-ON* */
+
+      if (src_unit_it == src_dev->units.end ())
+      {
+         return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      }
+
+      // Check if source has complementary interface.
+
+      role = (role == Interface::CLIENT_ROLE ? Interface::SERVER_ROLE : Interface::CLIENT_ROLE);
+
+      if (!src_unit_it->has_interface (itf.id, role))
+      {
+         return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      }
    }
 
    return this->entries.create (source, itf, destination);

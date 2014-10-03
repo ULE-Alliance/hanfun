@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the debug helper functions.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,13 +35,15 @@ std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &ar
       ff = stream.flags ();
       char f = stream.fill ('0');
 
-      stream << std::hex << std::setw (2) << std::setfill ('0');
+      stream << std::noshowbase << std::hex << std::setw (2) << std::setfill ('0');
       stream << "(" << array.size () << ") ";
 
-      for (auto byte : array)
+      /* *INDENT-OFF* */
+      std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
       {
-         stream << (int) byte << " ";
-      }
+         stream << std::hex << std::setw (2) << std::setfill ('0') << (int)byte << " ";
+      });
+      /* *INDENT-ON* */
 
       stream.setf (ff);
       stream.fill (f);
@@ -166,6 +168,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &pack
 
    stream << "    Length   : " << std::showbase
           << (int) packet.message.length << NL;
+
+   stream << "    Payload  : " << packet.message.payload << NL;
 
    stream << std::noshowbase;
 

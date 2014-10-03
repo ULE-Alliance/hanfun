@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Server role.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -566,7 +566,7 @@ void Server::periodic (uint32_t time)
       std::for_each(rule.cbegin(), rule.cend(),
                     [this, report](const Periodic::Entry &entry)
       {
-         Units::IUnit * _unit = unit().device().unit(entry.unit);
+         Units::IUnit * _unit = this->unit().device().unit(entry.unit);
          assert (_unit != nullptr);
          if (_unit != nullptr)
          {
@@ -578,7 +578,7 @@ void Server::periodic (uint32_t time)
 
       report->pack(message->payload);
 
-      send (rule.destination, *message);
+      this->send (rule.destination, *message);
 
       delete report;
       delete message;
@@ -637,7 +637,7 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
 
          report->pack(message->payload);
 
-         send (rule.destination, *message);
+         this->send (rule.destination, *message);
 
          delete report;
          delete message;

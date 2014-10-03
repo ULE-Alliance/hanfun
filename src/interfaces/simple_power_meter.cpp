@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Simple Power Meter interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -287,7 +287,7 @@ size_t SimplePowerMeter::Report::unpack (const Common::ByteArray &array, size_t 
 }
 
 // =============================================================================
-// create_attribute
+// SimplePowerMeter::create_attribute
 // =============================================================================
 /*!
  *

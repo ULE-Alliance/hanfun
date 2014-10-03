@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the protocol
  * layer in the HAN-FUN specification.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -743,10 +743,13 @@ TEST_GROUP (FilterRepeated)
 
       fill (payload);
 
-      Packet packet;
+      packet.link = new Testing::Link ();
+      packet.link->address (0xAA);
+   }
 
-      packet.unpack (payload);
-
+   TEST_TEARDOWN ()
+   {
+      delete packet.link;
    }
 
    void fill (HF::Common::ByteArray &array)

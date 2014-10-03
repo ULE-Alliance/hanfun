@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -213,6 +213,28 @@ namespace HF
          {
             return _uid;
          }
+
+         //! \see Interface::attributes
+         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                          const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED (itf);
+            UNUSED (pack_id);
+            UNUSED (uids);
+
+            return HF::Attributes::List ();
+         }
+
+         //! \see Interface::handle
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                size_t offset)
+         {
+            UNUSED (packet);
+            UNUSED (payload);
+            UNUSED (offset);
+
+            return Common::Result::FAIL_ID;
+         }
       };
 
       /*!
@@ -225,6 +247,7 @@ namespace HF
          {}
 
          using AbstractProfile <_uid>::uid;
+         using Interface::handle;
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
@@ -248,36 +271,11 @@ namespace HF
       {
          virtual ~Profile2()
          {}
+
          typedef Profile2 <_uid, Interface1, Interface2> profile_t;
 
-         template<typename Itf>
-         struct InterfaceProxy:public Itf
-         {
-            InterfaceProxy(profile_t &proxy):proxy (proxy)
-            {}
-
-            void send (const Protocol::Address &addr, Protocol::Message &message)
-            {
-               proxy.send (addr, message);
-            }
-
-            void notify (const HF::Attributes::IAttribute &old_value,
-                         const HF::Attributes::IAttribute &new_value) const
-            {
-               proxy.notify (old_value, new_value);
-            }
-
-            private:
-
-            profile_t &proxy;
-         };
-
-         typedef InterfaceProxy <Interface1> first_itf_t;
-         typedef InterfaceProxy <Interface2> second_itf_t;
-
-         static_assert (std::is_base_of <Interfaces::AbstractInterface, Interface1>::value &&
-                        std::is_base_of <Interfaces::AbstractInterface, Interface2>::value,
-                        "Interface1 and Interface 2 MUST be of type HF::AbstractInterface !");
+         typedef HF::Interfaces::Proxy <Interface1, profile_t> first_itf_t;
+         typedef HF::Interfaces::Proxy <Interface2, profile_t> second_itf_t;
 
          //! \see Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
@@ -292,6 +290,12 @@ namespace HF
             {
                return interfaces.second.handle (packet, payload, offset);
             }
+         }
+
+         virtual void periodic (uint32_t time)
+         {
+            first ()->periodic (time);
+            second ()->periodic (time);
          }
 
          /*!
@@ -382,6 +386,7 @@ namespace HF
          {}
 
          using AbstractProfile <_uid>::uid;
+         using Interfaces::Alert::Server::handle;
 
          //! \see Alert::Server::status()
          void alert (Protocol::Address &addr, bool state)
@@ -391,7 +396,7 @@ namespace HF
          }
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          HF::Attributes::UIDS &uids) const
+                                          const HF::Attributes::UIDS &uids) const
          {
             if (Interfaces::Alert::Server::uid () == itf.id)
             {
@@ -466,12 +471,12 @@ namespace HF
 
          virtual ~SimpleLevelControllableSwitchable() {}
 
-         Interfaces::OnOff::Server *on_off ()
+         OnOffServer *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Server *level_control ()
+         LevelControlServer *level_control ()
          {
             return this->second ();
          }
@@ -493,12 +498,12 @@ namespace HF
 
          virtual ~SimpleLevelControlSwitch() {}
 
-         Interfaces::OnOff::Client *on_off ()
+         OnOffClient *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Client *level_control ()
+         LevelControlClient *level_control ()
          {
             return this->second ();
          }
@@ -531,12 +536,12 @@ namespace HF
 
          virtual ~AC_OutletWithPowerMetering() {}
 
-         Interfaces::OnOff::Server *on_off ()
+         OnOffServer *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::SimplePowerMeter::Server *power_meter ()
+         SimplePowerMeterServer *power_meter ()
          {
             return this->second ();
          }
@@ -568,12 +573,12 @@ namespace HF
 
          virtual ~DimmableLight() {}
 
-         Interfaces::OnOff::Server *on_off ()
+         OnOffServer *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Server *level_control ()
+         LevelControlServer *level_control ()
          {
             return this->second ();
          }
@@ -595,12 +600,12 @@ namespace HF
 
          virtual ~DimmerSwitch() {}
 
-         Interfaces::OnOff::Client *on_off ()
+         OnOffClient *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Client *level_control ()
+         LevelControlClient *level_control ()
          {
             return this->second ();
          }
@@ -741,7 +746,7 @@ namespace HF
       };
 
       /*!
-       * Siren profile implementation.
+       * Alertable profile implementation.
        */
       class Alertable:public Profile <ALERTABLE, Interfaces::Alert::Client>
       {
@@ -776,6 +781,12 @@ namespace HF
          public:
 
          virtual ~UserInterface() {}
+
+         //! \see Interface::periodic
+         virtual void periodic (uint32_t time)
+         {
+            UNUSED (time);
+         }
       };
 
       /*!
@@ -786,6 +797,12 @@ namespace HF
          public:
 
          virtual ~GenericApplicationLogic() {}
+
+         //! \see Interface::periodic
+         virtual void periodic (uint32_t time)
+         {
+            UNUSED (time);
+         }
       };
 
    }  // namespace Profiles
