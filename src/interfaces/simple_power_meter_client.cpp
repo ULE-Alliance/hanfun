@@ -5,7 +5,7 @@
  * This file contains the implementation of the Simple Power Meter interface :
  * Client role.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
