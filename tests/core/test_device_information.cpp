@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Device Information Interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

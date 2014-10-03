@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Level Control interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

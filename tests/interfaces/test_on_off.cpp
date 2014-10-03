@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the On-Off Interface implementation.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
