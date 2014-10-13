@@ -64,7 +64,7 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
    /* *INDENT-OFF* */
    std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device *device)
    {
-      LOG (APP) << std::setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
+      LOG (APP) << (base.link (device->address) != nullptr ? "+ " : "- ");
       LOG (APP) << std::setw (5) << device->address << " | ";
       LOG (APP) << device->uid << NL;
    });
