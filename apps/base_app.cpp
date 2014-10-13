@@ -228,6 +228,22 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
    }
 }
 
+COMMAND (Links, "ll", "ll :list links.")
+{
+   UNUSED (args);
+
+   auto &links = base.links();
+
+   /* *INDENT-OFF* */
+   std::for_each(links.begin(), links.end(), [](const HF::Transport::Link *link)
+   {
+      LOG (APP) << std::setw (5) << link->address() << " | ";
+      LOG (APP) << link->uid() << NL;
+   });
+   /* *INDENT-ON* */
+
+}
+
 // =============================================================================
 // HF::Application::Initialize
 // =============================================================================
@@ -249,6 +265,7 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    COMMAND_ADD (Deregister);
    COMMAND_ADD (Bind);
    COMMAND_ADD (Unbind);
+   COMMAND_ADD (Links);
 
    Restore ();
 }
