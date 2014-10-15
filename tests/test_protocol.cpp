@@ -904,6 +904,23 @@ TEST_GROUP (ResponseRequired)
    TEST_SETUP ()
    {
       filter.clear ();
+
+      std::random_device rd;
+      std::mt19937 gen (rd ());
+      std::uniform_int_distribution <uint16_t> dist1 (0, 0x7FFF);
+      std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
+
+      auto g_id   = std::bind (dist1, gen);
+      auto g_unit = std::bind (dist2, gen);
+
+      packet.message.itf.id     = g_id ();
+      packet.message.itf.member = g_unit ();
+
+      packet.source.device = g_id ();
+      packet.source.unit = g_unit ();
+
+      packet.destination.device = g_id ();
+      packet.destination.unit = g_unit ();
    }
 };
 
@@ -946,11 +963,13 @@ TEST (ResponseRequired, ShouldAddResponses)
       Protocol::Message::ATOMIC_SET_ATTR_PACK_RES,
    };
 
-   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
+   /* *INDENT-OFF* */
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
+   {
                      packet.message.type = type;
                      filter (packet);
-                  }
-                 );
+   });
+   /* *INDENT-ON* */
 
    LONGS_EQUAL (types.size (), filter.size ());
 }
@@ -961,23 +980,10 @@ TEST (ResponseRequired, NoResponse)
 
    packet.message.type = Protocol::Message::COMMAND_RES;
 
-   std::random_device rd;
-   std::mt19937 gen (rd ());
-   std::uniform_int_distribution <uint16_t> dist1 (0, 0xFFFF);
-   std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
-
-   auto g_id   = std::bind (dist1, gen);
-   auto g_unit = std::bind (dist2, gen);
-
-   packet.message.itf.member = g_unit ();
-   uint16_t address = g_id ();
-
-   packet.message.itf.id     = address & HF::Protocol::BROADCAST_ADDR;
-   packet.message.itf.member = address >> 15;
-
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+   std::swap(packet.source, packet.destination);
 
    CHECK_FALSE (filter (packet));
 
@@ -990,23 +996,10 @@ TEST (ResponseRequired, ResponseNeeded)
 
    packet.message.type = Protocol::Message::SET_ATTR_PACK_RES;
 
-   std::random_device rd;
-   std::mt19937 gen (rd ());
-   std::uniform_int_distribution <uint16_t> dist1 (0, 0xFFFF);
-   std::uniform_int_distribution <uint8_t>  dist2 (0, 0xFF);
-
-   auto g_id   = std::bind (dist1, gen);
-   auto g_unit = std::bind (dist2, gen);
-
-   packet.message.itf.member = g_unit ();
-   uint16_t address = g_id ();
-
-   packet.message.itf.id     = address & HF::Protocol::BROADCAST_ADDR;
-   packet.message.itf.member = address >> 15;
-
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+   std::swap(packet.source, packet.destination);
 
    CHECK_TRUE (filter (packet));
 
