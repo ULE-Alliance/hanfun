@@ -762,7 +762,8 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0 ()->device_management ()->save (dev);
+      device->unit0 ()->device_management ()->entries ().save (*dev);
+      delete dev;
 
       dev          = new DeviceManagement::Device ();
 
@@ -773,7 +774,8 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0 ()->device_management ()->save (dev);
+      device->unit0 ()->device_management ()->entries ().save (*dev);
+      delete dev;
 
       entry.source.device      = 0x1111;
       entry.source.unit        = 0x22;

@@ -54,10 +54,10 @@ namespace HF
       // Forward declaration.
       namespace DeviceManagement
       {
-         struct Server;
+         struct IServer;
       }  // namespace DeviceManagement
 
-      HF::Attributes::IAttribute *create_attribute (DeviceManagement::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute (DeviceManagement::IServer *server, uint8_t uid);
 
       /*!
        * This namespace contains the classes that implement the Device Management service.
@@ -65,7 +65,7 @@ namespace HF
       namespace DeviceManagement
       {
          //! Commands.
-         typedef enum
+         typedef enum _CMD
          {
             REGISTER_CMD      = 0x01, //!< Register device command.
             DEREGISTER_CMD    = 0x02, //!< De-register device command.
@@ -75,10 +75,13 @@ namespace HF
          } CMD;
 
          //! Attributes.
-         typedef enum
+         typedef enum _Attributes
          {
             NUMBER_OF_ENTRIES_ATTR = 0x01, //!< Number of entries attribute.
          } Attributes;
+
+         constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN Address.
+         constexpr static uint16_t END_ADDR   = 0x7FFE;  //!< Last HAN-FUN Address.
 
          // =============================================================================
 
@@ -123,7 +126,7 @@ namespace HF
              * @retval  true     if this unit implements the requested interface,
              * @retval  false    otherwise.
              */
-            bool has_interface (uint16_t itf_uid, HF::Interface::Role role);
+            bool has_interface (uint16_t itf_uid, HF::Interface::Role role) const;
          };
 
          /*!
@@ -179,7 +182,7 @@ namespace HF
             }
          };
 
-         typedef Common::Pointer <Device> DevicePtr;
+         typedef Common::Pointer <const Device> DevicePtr;
 
          // =============================================================================
          // Register Command Messages
@@ -341,6 +344,66 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
+         /*!
+          * Device Management - Persistent Storage API.
+          */
+         struct IEntries
+         {
+            virtual ~IEntries() {}
+
+            /*!
+             * Return the number of available entries.
+             *
+             * @return  number of device entries.
+             */
+            virtual size_t size () const = 0;
+
+            /*!
+             * Return the Device entry for the given address.
+             *
+             * @param [in] address    the device address.
+             *
+             * @retval  a pointer to the Device entry associated with the given address,
+             * @retval  nullptr if the entry does not exist.
+             */
+            virtual DevicePtr find (uint16_t address) const = 0;
+
+            /*!
+             * Return the Device entry for the given UID.
+             *
+             * @param [in] uid   the device UID.
+             *
+             * @retval  a pointer the Device entry associated with the given UID,
+             * @retval  nullptr if the entry does not exist.
+             */
+            virtual DevicePtr find (const HF::UID::UID &uid) const = 0;
+
+            /*!
+             * Store the given \c device entry to persistent storage.
+             *
+             * @param [in] device   the device entry to store.
+             *
+             * @return     if the device entry was saved.
+             */
+            virtual Common::Result save (Device &device) = 0;
+
+            /*!
+             * Remove the given \c device entry from persistent storage.
+             *
+             * @param [in] device   the device entry to remove.
+             *
+             * @return     if the device entry was removed.
+             */
+            virtual std::pair <Common::Result, DevicePtr> destroy (DevicePtr &device) = 0;
+
+            /*!
+             * Return next available address for registering a device.
+             *
+             * @return  the address to use in the next registration.
+             */
+            virtual uint16_t next_address () const = 0;
+         };
+
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
@@ -447,13 +510,11 @@ namespace HF
          };
 
          /*!
-          * Device Management interface : Server side.
+          * Device Management interface : Server side API.
           */
-         struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
+         struct IServer:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
          {
-            Server(HF::Devices::Concentrator::IUnit0 &unit);
-
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // =============================================================================
             // API
@@ -467,7 +528,7 @@ namespace HF
              *
              * @return  a reference to the unit that holds this interface.
              */
-            HF::Devices::Concentrator::IUnit0 &unit0 ();
+            HF::Devices::Concentrator::IUnit0 &unit0 () const;
 
             /*!
              * Return the Device entry for the given address.
@@ -477,7 +538,7 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given address,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual DevicePtr entry (uint16_t address) const = 0;
+            DevicePtr entry (uint16_t address) const;
 
             /*!
              * Return the Device entry for the given UID.
@@ -487,60 +548,18 @@ namespace HF
              * @retval  a pointer the Device entry associated with the given UID,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual DevicePtr entry (const HF::UID::UID &uid) const = 0;
-
-            /*!
-             * Store the given \c device entry to persistent storage.
-             *
-             * @param [in] device   the device entry to store.
-             *
-             * @return     if the device entry was saved.
-             */
-            virtual Common::Result save (Device *device) = 0;
-
-            /*!
-             * Remove the given \c device entry from persistent storage.
-             *
-             * @param [in] device   the device entry to remove.
-             *
-             * @return     if the device entry was removed.
-             */
-            virtual Common::Result destroy (Device *device) = 0;
-
-            /*!
-             * Return the number of Device entries available.
-             *
-             * @return  number of Device entries present.
-             */
-            virtual uint16_t entries_count () const = 0;
-
-            /*!
-             * Return the a vector with \c count Device entries starting at \c offset.
-             *
-             * @param [in] offset   the offset to start at.
-             * @param [in] count    the
-             * @return
-             */
-            virtual std::vector <const Device *> entries (uint16_t offset, uint16_t count) const = 0;
-
-            /*!
-             * Return all device entries starting at \c offset.
-             *
-             * @param [in] offset   the offset to start at.
-             *
-             * @return a vector containing the requested entries.
-             */
-            std::vector <const Device *> entries (uint16_t offset = 0)
+            DevicePtr entry (const HF::UID::UID &uid) const
             {
-               if (offset < entries_count ())
-               {
-                  return entries (offset, static_cast <uint16_t>(entries_count () - offset));
-               }
-               else
-               {
-                  return std::vector <const Device *>(0);
-               }
+               return entries ().find (uid);
             }
+
+            /*!
+             * Get a reference to the current object implementing the persistence API,
+             * for the device information.
+             *
+             * @return  reference to the current object for the persistence API.
+             */
+            virtual IEntries &entries () const = 0;
 
             // =============================================================================
             // Interface Attribute API.
@@ -551,11 +570,6 @@ namespace HF
             {
                return Core::create_attribute (this, uid);
             }
-
-            protected:
-
-            Server(Unit0 &unit):ServiceRole (unit)
-            {}
 
             //! \see AbstractInterface::attributes
             HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
@@ -569,7 +583,63 @@ namespace HF
              *
              * @return  the address to use in the next registration.
              */
-            virtual uint16_t next_address () = 0;
+            virtual uint16_t next_address ()
+            {
+               return entries ().next_address ();
+            }
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! \name Events
+            //! @{
+
+            /*!
+             * Indicate that a device has been registered.
+             *
+             * @param [in] device  pointer to the device entry corresponding to the registered
+             *                     device.
+             */
+            virtual void registered (DevicePtr &device)
+            {
+               UNUSED (device);
+            }
+
+            /*!
+             * Indicate that a device has been de-registered.
+             *
+             * @param [in] device  pointer to the device entry corresponding to the de-registered
+             *                     device.
+             */
+            virtual void deregistered (DevicePtr &device)
+            {
+               UNUSED (device);
+            }
+
+            //! @}
+            // ======================================================================
+
+            protected:
+
+            IServer(Unit0 &unit):ServiceRole (unit)
+            {}
+         };
+
+         /*!
+          * Device Management interface : Server side default implementation.
+          */
+         struct AbstractServer:public IServer
+         {
+            virtual ~AbstractServer() {}
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            protected:
+
+            AbstractServer(Unit0 &unit):IServer (unit)
+            {}
 
             // ======================================================================
             // Events
@@ -582,14 +652,16 @@ namespace HF
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Common::Result register_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            virtual Common::Result register_device (Protocol::Packet &packet,
+                                                    Common::ByteArray &payload, size_t offset);
 
             /*!
              * This method is called when a deregistration message is received.
              *
              * \see DeviceManagementServer::handle
              */
-            virtual Common::Result deregister_device (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            virtual Common::Result deregister_device (Protocol::Packet &packet,
+                                                      Common::ByteArray &payload, size_t offset);
 
             //! @}
             // ======================================================================
@@ -612,18 +684,18 @@ namespace HF
              * @retval  true     the operation is allowed,
              * @retval  false    otherwise.
              */
-            virtual bool authorized (uint8_t member, DevicePtr &source, DevicePtr &destination) = 0;
+            virtual bool authorized (uint8_t member, DevicePtr &source, DevicePtr &destination);
 
             /*!
              * De-register the device that corresponds to the given Device entry.
              *
              * \warning this method by-passes the authorization scheme.
              *
-             * @param [in] device   reference to the device entry to de-register.
+             * @param [in] device   pointer to the device entry to de-register.
              *
              * @return the result of the destroy method.
              */
-            virtual Common::Result deregister (Device &device);
+            virtual Common::Result deregister (DevicePtr &device);
 
             //! @}
             // ======================================================================
@@ -634,53 +706,84 @@ namespace HF
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //! \see AbstractInterface::handle_command
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
+         };
+
+         struct Entries:public IEntries
+         {
+            typedef std::vector <Device> Container;
+            typedef Container::iterator iterator;
+            typedef Container::const_iterator const_iterator;
+            typedef Container::value_type value_type;
+
+            Entries()          = default;
+
+            virtual ~Entries() = default;
+
+            size_t size () const
+            {
+               return _entries.size ();
+            }
+
+            DevicePtr find (uint16_t address) const;
+
+            DevicePtr find (const HF::UID::UID &uid) const;
+
+            Common::Result save (Device &device);
+
+            std::pair <Common::Result, DevicePtr> destroy (DevicePtr &device);
+
+            uint16_t next_address () const;
+
+            iterator begin ()
+            {
+               return _entries.begin ();
+            }
+
+            iterator end ()
+            {
+               return _entries.end ();
+            }
+
+            const_iterator begin () const
+            {
+               return _entries.cbegin ();
+            }
+
+            const_iterator end () const
+            {
+               return _entries.cend ();
+            }
+
+            protected:
+
+            Container _entries;
+         };
+
+         template<typename _Entries = Entries>
+         class Server:public AbstractServer
+         {
+            _Entries _entries;
+
+            public:
+
+            Server(Unit0 &unit):AbstractServer (unit)
+            {}
+
+            virtual ~Server() {}
+
+            _Entries &entries () const
+            {
+               return const_cast <_Entries &>(_entries);
+            }
          };
 
          // =========================================================================
          // Default API Implementations
          // =========================================================================
 
-         /*!
-          * This class provide a simple RAM based implementation of the DeviceManagement::Server
-          * interface.
-          */
-         struct DefaultServer:public Server
-         {
-            DefaultServer(Unit0 &unit):Server (unit)
-            {}
-
-            virtual ~DefaultServer();
-
-            // =============================================================================
-            // API
-            // =============================================================================
-
-            DevicePtr entry (uint16_t address) const;
-
-            DevicePtr entry (const HF::UID::UID &uid) const;
-
-            Common::Result save (Device *device);
-
-            Common::Result destroy (Device *device);
-
-            uint16_t entries_count () const
-            {
-               return _entries.size ();
-            }
-
-            std::vector <const DeviceManagement::Device *> entries (uint16_t offset, uint16_t count) const;
-
-            using Server::entries;
-
-            uint16_t next_address ();
-
-            protected:
-
-            std::vector <Device *> _entries;
-
-            virtual bool authorized (uint8_t member, DevicePtr &source, DevicePtr &destination);
-         };
+         typedef Server <> DefaultServer;
 
          // =============================================================================
          // Operators

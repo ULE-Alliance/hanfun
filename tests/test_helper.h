@@ -500,7 +500,7 @@ namespace HF
       class ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
          HF::Core::DeviceInformation::Server *dev_info;
-         HF::Core::DeviceManagement::Server  *dev_mgt;
+         HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
          HF::Core::BindManagement::Server    *bind_mgt;
 
@@ -543,12 +543,12 @@ namespace HF
             return dev_info;
          }
 
-         void device_management (HF::Core::DeviceManagement::Server *_dev_mgt)
+         void device_management (HF::Core::DeviceManagement::IServer *_dev_mgt)
          {
             SET_SERVICE (dev_mgt, _dev_mgt);
          }
 
-         HF::Core::DeviceManagement::Server *device_management ()
+         HF::Core::DeviceManagement::IServer *device_management ()
          {
             if (dev_mgt == nullptr)
             {
@@ -558,7 +558,7 @@ namespace HF
             return dev_mgt;
          }
 
-         HF::Core::DeviceManagement::Server *device_management () const
+         HF::Core::DeviceManagement::IServer *device_management () const
          {
             return dev_mgt;
          }

@@ -948,8 +948,6 @@ TEST_GROUP (DeviceManagementServer)
          mock ("DeviceManagementServer").actualCall ("deregister_device");
          return DeviceManagement::DefaultServer::deregister_device (packet, payload, offset);
       }
-
-      using DeviceManagement::DefaultServer::save;
    };
 
    TestDeviceManagementServer *dev_mgt;
@@ -1019,7 +1017,7 @@ TEST (DeviceManagementServer, Handle_Register)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (1, dev_mgt->entries_count ());
+   LONGS_EQUAL (1, dev_mgt->entries ().size ());
 
    // Check response packet destination address.
    LONGS_EQUAL (1, device->packets.size ());
@@ -1042,7 +1040,7 @@ TEST (DeviceManagementServer, Handle_Register)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (1, dev_mgt->entries_count ());
+   LONGS_EQUAL (1, dev_mgt->entries ().size ());
 
    // Should add entry for other device.
 
@@ -1062,7 +1060,7 @@ TEST (DeviceManagementServer, Handle_Register)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (2, dev_mgt->entries_count ());
+   LONGS_EQUAL (2, dev_mgt->entries ().size ());
 }
 
 TEST (DeviceManagementServer, Handle_Deregister)
@@ -1074,10 +1072,11 @@ TEST (DeviceManagementServer, Handle_Deregister)
       std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
       dev->uid = new UID::URI (uri.str ());
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+      delete dev;
    }
 
-   size_t size = dev_mgt->entries_count ();
+   size_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
@@ -1097,7 +1096,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
    mock ("DeviceManagementServer").checkExpectations ();
 
-   LONGS_EQUAL (size, dev_mgt->entries_count ());
+   LONGS_EQUAL (size, dev_mgt->entries ().size ());
 
    packet.source.device = 0x5A5A;
 
@@ -1110,7 +1109,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+   LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
 }
 
 TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
@@ -1125,7 +1124,8 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
       dev->uid = new UID::URI (uri.str ());
       uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
       dev->units.push_back (DeviceManagement::Unit (i + 1, profile));
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+      delete dev;
    }
 
    // == Set-up some bindings. ==
@@ -1164,7 +1164,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    // == De-register the device.
 
-   size_t size = dev_mgt->entries_count ();
+   size_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
@@ -1186,7 +1186,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
 
-   LONGS_EQUAL (size, dev_mgt->entries_count ());
+   LONGS_EQUAL (size, dev_mgt->entries ().size ());
 
    packet.source.device = 0x5A52;
 
@@ -1199,7 +1199,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+   LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
 
    LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries.size ());
 }
@@ -1216,41 +1216,20 @@ TEST (DeviceManagementServer, Entries)
 
    for (int i = 0; i < 20; i++)
    {
-      DeviceManagement::Device *dev = new DeviceManagement::Device ();
-      dev->address = i + 1;
+      DeviceManagement::Device dev;
+      dev.address = i + 1;
 
       UID::IPUI *temp = new UID::IPUI (ipui);
       (*temp)[4] += i;
 
-      dev->uid    = temp;
+      dev.uid     = temp;
 
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (dev);
    }
 
-   LONGS_EQUAL (20, dev_mgt->entries_count ());
+   LONGS_EQUAL (20, dev_mgt->entries ().size ());
 
-   std::vector <const DeviceManagement::Device *> entries = dev_mgt->entries ();
-
-   LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
-
-   entries = dev_mgt->entries (14);
-
-   LONGS_EQUAL (6, entries.size ());
-
-   entries = dev_mgt->entries (16, 10);
-
-   LONGS_EQUAL (4, entries.size ());
-
-   entries = dev_mgt->entries (5, 10);
-
-   LONGS_EQUAL (10, entries.size ());
-
-   LONGS_EQUAL (entries.front ()->address + 10 - 1, entries.back ()->address);
-
-   for (uint16_t i = 0; i < entries.size (); i++)
-   {
-      CHECK_DEVICE_ADDRESS (6 + i, entries[i]->address, i);
-   }
+   LONGS_EQUAL (21, dev_mgt->entries ().next_address ());
 }
 
 TEST (DeviceManagementServer, FindEntry)
@@ -1273,7 +1252,8 @@ TEST (DeviceManagementServer, FindEntry)
 
       dev->uid    = temp;
 
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+      delete dev;
    }
 
    ipui[4] = 0x90 + 4;
@@ -1308,7 +1288,9 @@ TEST (DeviceManagementServer, FindEntrySelf)
 
       dev->uid    = temp;
 
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+
+      delete dev;
    }
 
    auto entry = dev_mgt->entry (device->address ());

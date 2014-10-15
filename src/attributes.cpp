@@ -511,7 +511,7 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
  *
  */
 // =============================================================================
-IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t uid)
+IAttribute *Core::create_attribute (DeviceManagement::IServer *server, uint8_t uid)
 {
    DeviceManagement::Attributes attr = static_cast <DeviceManagement::Attributes>(uid);
 
@@ -519,7 +519,7 @@ IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t ui
    {
       case DeviceManagement::NUMBER_OF_ENTRIES_ATTR:
       {
-         uint16_t value = (server != nullptr ? server->entries_count () : 0);
+         uint16_t value = (server != nullptr ? server->entries ().size () : 0);
          return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:

@@ -134,7 +134,7 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
    // Check if the destination unit exist.
    /* *INDENT-OFF* */
    auto dst_unit_it = std::find_if(dst_dev->units.begin(), dst_dev->units.end(),
-                                   [&destination](DeviceManagement::Unit &unit)
+                                   [&destination](const DeviceManagement::Unit &unit)
                                    {
                                       return unit.id == destination.unit;
                                    });
@@ -164,7 +164,7 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
       // Check if the source unit exist.
       /* *INDENT-OFF* */
       auto src_unit_it = std::find_if(src_dev->units.begin(), src_dev->units.end(),
-                                      [&source](DeviceManagement::Unit &unit)
+                                      [&source](const DeviceManagement::Unit &unit)
       {
          return unit.id == source.unit;
       });

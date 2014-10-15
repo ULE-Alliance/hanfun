@@ -31,49 +31,68 @@
 // Base
 // =============================================================================
 
-/*!
- * Custom Device Management class.
- *
- * This class allows for the application to select the address to
- * be given to next device that registers.
- */
-struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
+namespace DeviceManagement
 {
-   DeviceManagement(HF::Core::Unit0 &unit):
-      HF::Core::DeviceManagement::DefaultServer (unit), loaded (false),
-      _next_address (HF::Protocol::BROADCAST_ADDR)
-   {}
-
-   virtual ~DeviceManagement() {}
-
-   uint16_t next_address (uint16_t addr)
+   /*!
+    * Custom Device Management Entries class.
+    *
+    * This class saves the application configuration every time an entry
+    * is save or destroyed.
+    */
+   struct Entries:public HF::Core::DeviceManagement::Entries
    {
-      _next_address = addr;
-      return _next_address;
-   }
+      typedef HF::Core::DeviceManagement::Device Device;
+      typedef HF::Core::DeviceManagement::DevicePtr DevicePtr;
+      typedef std::pair <HF::Common::Result, DevicePtr> DestroyRes;
 
-   bool available (uint16_t address);
+      HF::Common::Result save (Device &device);
 
-   bool deregister (uint16_t address);
+      void insert (Device &device);
 
-   using HF::Core::DeviceManagement::DefaultServer::deregister;
+      DestroyRes destroy (DevicePtr &device);
+   };
 
-   void clear ();
+   /*!
+    * Custom Device Management class.
+    *
+    * This class allows for the application to select the address to
+    * be given to next device that registers.
+    */
+   struct Server:public HF::Core::DeviceManagement::Server <Entries>
+   {
+      Server(HF::Core::Unit0 &unit):
+         HF::Core::DeviceManagement::Server <Entries>(unit), loaded (false),
+         _next_address (HF::Protocol::BROADCAST_ADDR)
+      {}
 
-   HF::Common::Result save (HF::Core::DeviceManagement::Device *device);
+      virtual ~Server() {}
 
-   void save (Json::Value &root);
+      uint16_t next_address (uint16_t addr)
+      {
+         _next_address = addr;
+         return _next_address;
+      }
 
-   void restore (Json::Value root);
+      bool available (uint16_t address);
 
-   protected:
+      bool deregister (uint16_t address);
 
-   bool     loaded;
+      void clear ();
 
-   uint16_t _next_address;
+      void save (Json::Value &root);
 
-   uint16_t next_address ();
-};
+      void restore (Json::Value root);
+
+      protected:
+
+      bool     loaded;
+
+      uint16_t _next_address;
+
+      uint16_t next_address ();
+   };
+
+}     // namespace DeviceManagement
 
 /*!
  * Custom Bind Management class.
@@ -108,11 +127,13 @@ struct BindManagement:public HF::Core::BindManagement::Server
 /*!
  * Custom Unit0 class to make use of the previous DeviceManagment class.
  */
-struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server, DeviceManagement,
-                                                      HF::Core::AttributeReporting::Server, BindManagement>
+struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
+                                                         ::DeviceManagement::Server,
+                                                      HF::Core::AttributeReporting::Server,
+                                                      BindManagement>
 {
    Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                                DeviceManagement,
+                                                                   ::DeviceManagement::Server,
                                                                 HF::Core::AttributeReporting::Server,
                                                                 BindManagement>(device)
    {}
