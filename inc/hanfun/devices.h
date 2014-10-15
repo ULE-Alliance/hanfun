@@ -358,9 +358,9 @@ namespace HF
 
             virtual HF::Core::DeviceManagement::IServer *device_management () const = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management ()           = 0;
+            virtual HF::Core::BindManagement::Server *bind_management ()            = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management () const     = 0;
+            virtual HF::Core::BindManagement::Server *bind_management () const      = 0;
          };
 
          /*!
