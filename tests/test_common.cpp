@@ -252,11 +252,11 @@ TEST (UID, IPUI)
    BYTES_EQUAL (0x5A, ipui[3]);
    BYTES_EQUAL (0xA5, ipui[4]);
 
-   HF::UID::UID uid = HF::UID::UID(&ipui);
+   HF::UID::UID uid = HF::UID::UID( &ipui);
    std::stringstream ss;
    ss << uid;
 
-   CHECK_EQUAL ("ipui: 0073705AA5", ss.str());
+   STRCMP_EQUAL (std::string ("ipui: 0073705AA5").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, MAC)
@@ -302,11 +302,11 @@ TEST (UID, MAC)
    BYTES_EQUAL (0x9A, mac[4]);
    BYTES_EQUAL (0xBC, mac[5]);
 
-   HF::UID::UID uid = HF::UID::UID(&mac);
+   HF::UID::UID uid = HF::UID::UID( &mac);
    std::stringstream ss;
    ss << uid;
 
-   CHECK_EQUAL ("mac: 12:34:56:78:9A:BC", ss.str());
+   STRCMP_EQUAL (std::string ("mac: 12:34:56:78:9A:BC").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, URI)
