@@ -188,6 +188,9 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
 
    packet.link->address (address);
 
+   // Update incoming packet source address with new allocated address for device.
+   packet.source.device = address;
+
    Protocol::Message response (packet.message, reg_res->size ());
 
    response.itf.role   = SERVER_ROLE;

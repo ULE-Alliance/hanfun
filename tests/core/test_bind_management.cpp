@@ -154,6 +154,8 @@ TEST_GROUP (BindManagementClient)
 
    TEST_SETUP ()
    {
+      mock().ignoreOtherCalls();
+
       device                  = new Testing::Device ();
       client                  = new TestBindManagementClient (*device->unit0 ());
 
