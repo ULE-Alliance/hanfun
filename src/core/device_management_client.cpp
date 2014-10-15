@@ -32,7 +32,7 @@ using namespace HF::Core;
 // DeviceManagementClient::register_device
 // =============================================================================
 /*!
- * TODO Add support for optional interfaces.
+ *
  */
 // =============================================================================
 void DeviceManagement::Client::register_device ()
