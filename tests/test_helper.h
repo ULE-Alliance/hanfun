@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -335,12 +335,47 @@ namespace HF
          {}
       };
 
+      struct Link:public HF::Transport::AbstractLink
+      {
+         HF::UID::UID_T       *_uid;
+         HF::Transport::Layer *tsp;
+
+         Common::ByteArray    data;
+
+         Link(HF::UID::UID_T *uid = new HF::UID::NONE (), HF::Transport::Layer *tsp = nullptr):
+            _uid (uid), tsp (tsp)
+         {}
+
+         virtual ~Link()
+         {
+            delete _uid;
+         }
+
+         void send (Common::ByteArray &array)
+         {
+            this->data = array;
+            mock ("Link").actualCall ("send");
+         }
+
+         const HF::UID::UID uid () const
+         {
+            return HF::UID::UID(_uid);
+         }
+
+         HF::Transport::Layer const *transport () const
+         {
+            return tsp;
+         }
+      };
+
       template<class Parent>
       struct AbstractDevice:public Parent
       {
          uint16_t                         _address;
 
          std::vector <Protocol::Packet *> packets;
+
+         Link link;
 
          AbstractDevice():
             _address (Protocol::BROADCAST_ADDR)
@@ -374,6 +409,13 @@ namespace HF
          {
             mock ("AbstractDevice").actualCall ("send");
 
+            if (packet.link == nullptr)
+            {
+               packet.link = &link;
+            }
+
+            Parent::send(packet);
+
             Protocol::Packet *temp = new Protocol::Packet (packet);
 
             packets.push_back (temp);
@@ -381,11 +423,8 @@ namespace HF
 
          void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
-            UNUSED (packet);
-            UNUSED (payload);
-            UNUSED (offset);
-
             mock ("AbstractDevice").actualCall ("receive");
+            Parent::receive (packet, payload, offset);
          }
       };
 
@@ -500,7 +539,7 @@ namespace HF
       class ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
       {
          HF::Core::DeviceInformation::Server *dev_info;
-         HF::Core::DeviceManagement::Server  *dev_mgt;
+         HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
          HF::Core::BindManagement::Server    *bind_mgt;
 
@@ -543,12 +582,12 @@ namespace HF
             return dev_info;
          }
 
-         void device_management (HF::Core::DeviceManagement::Server *_dev_mgt)
+         void device_management (HF::Core::DeviceManagement::IServer *_dev_mgt)
          {
             SET_SERVICE (dev_mgt, _dev_mgt);
          }
 
-         HF::Core::DeviceManagement::Server *device_management ()
+         HF::Core::DeviceManagement::IServer *device_management ()
          {
             if (dev_mgt == nullptr)
             {
@@ -558,7 +597,7 @@ namespace HF
             return dev_mgt;
          }
 
-         HF::Core::DeviceManagement::Server *device_management () const
+         HF::Core::DeviceManagement::IServer *device_management () const
          {
             return dev_mgt;
          }
@@ -605,10 +644,27 @@ namespace HF
 
          Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
          {
-            UNUSED (packet);
-            UNUSED (payload);
-            UNUSED (offset);
-            return Common::Result::FAIL_UNKNOWN;
+            switch (packet.message.itf.id)
+            {
+               case HF::Interface::DEVICE_INFORMATION:
+               {
+                  return device_info()->handle(packet, payload, offset);
+               }
+               case HF::Interface::ATTRIBUTE_REPORTING:
+               {
+                  return attribute_reporting()->handle(packet, payload, offset);
+               }
+               case HF::Interface::DEVICE_MANAGEMENT:
+               {
+                  return device_management()->handle(packet, payload, offset);
+               }
+               case HF::Interface::BIND_MANAGEMENT:
+               {
+                  return bind_management()->handle(packet, payload, offset);
+               }
+               default:
+                  return Common::Result::FAIL_UNKNOWN;
+            }
          }
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
@@ -626,39 +682,6 @@ namespace HF
 
       struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Abstract < ConcentratorUnit0 >>
       {};
-
-      struct Link:public HF::Transport::AbstractLink
-      {
-         HF::UID::UID_T       *_uid;
-         HF::Transport::Layer *tsp;
-
-         Common::ByteArray    data;
-
-         Link(HF::UID::UID_T *uid = new HF::UID::NONE (), HF::Transport::Layer *tsp = nullptr):
-            _uid (uid), tsp (tsp)
-         {}
-
-         virtual ~Link()
-         {
-            delete _uid;
-         }
-
-         void send (Common::ByteArray &array)
-         {
-            this->data = array;
-            mock ("Link").actualCall ("send");
-         }
-
-         const HF::UID::UID uid () const
-         {
-            return HF::UID::UID(_uid);
-         }
-
-         HF::Transport::Layer const *transport () const
-         {
-            return tsp;
-         }
-      };
 
    } // namespace Testing
 

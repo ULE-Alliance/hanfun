@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Bind Management Interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -154,6 +154,8 @@ TEST_GROUP (BindManagementClient)
 
    TEST_SETUP ()
    {
+      mock().ignoreOtherCalls();
+
       device                  = new Testing::Device ();
       client                  = new TestBindManagementClient (*device->unit0 ());
 
@@ -762,7 +764,8 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0 ()->device_management ()->save (dev);
+      device->unit0 ()->device_management ()->entries ().save (*dev);
+      delete dev;
 
       dev          = new DeviceManagement::Device ();
 
@@ -773,7 +776,8 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0 ()->device_management ()->save (dev);
+      device->unit0 ()->device_management ()->entries ().save (*dev);
+      delete dev;
 
       entry.source.device      = 0x1111;
       entry.source.unit        = 0x22;

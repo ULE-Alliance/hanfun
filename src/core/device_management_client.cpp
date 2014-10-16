@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -32,7 +32,7 @@ using namespace HF::Core;
 // DeviceManagementClient::register_device
 // =============================================================================
 /*!
- * TODO Add support for optional interfaces.
+ *
  */
 // =============================================================================
 void DeviceManagement::Client::register_device ()

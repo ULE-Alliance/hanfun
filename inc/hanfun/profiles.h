@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -471,12 +471,12 @@ namespace HF
 
          virtual ~SimpleLevelControllableSwitchable() {}
 
-         Interfaces::OnOff::Server *on_off ()
+         OnOffServer *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Server *level_control ()
+         LevelControlServer *level_control ()
          {
             return this->second ();
          }
@@ -498,12 +498,12 @@ namespace HF
 
          virtual ~SimpleLevelControlSwitch() {}
 
-         Interfaces::OnOff::Client *on_off ()
+         OnOffClient *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Client *level_control ()
+         LevelControlClient *level_control ()
          {
             return this->second ();
          }
@@ -536,12 +536,12 @@ namespace HF
 
          virtual ~AC_OutletWithPowerMetering() {}
 
-         Interfaces::OnOff::Server *on_off ()
+         OnOffServer *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::SimplePowerMeter::Server *power_meter ()
+         SimplePowerMeterServer *power_meter ()
          {
             return this->second ();
          }
@@ -573,12 +573,12 @@ namespace HF
 
          virtual ~DimmableLight() {}
 
-         Interfaces::OnOff::Server *on_off ()
+         OnOffServer *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Server *level_control ()
+         LevelControlServer *level_control ()
          {
             return this->second ();
          }
@@ -600,12 +600,12 @@ namespace HF
 
          virtual ~DimmerSwitch() {}
 
-         Interfaces::OnOff::Client *on_off ()
+         OnOffClient *on_off ()
          {
             return this->first ();
          }
 
-         Interfaces::LevelControl::Client *level_control ()
+         LevelControlClient *level_control ()
          {
             return this->second ();
          }

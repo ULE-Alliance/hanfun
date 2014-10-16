@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -354,13 +354,13 @@ namespace HF
                HF::Core::Unit0 (device)
             {}
 
-            virtual HF::Core::DeviceManagement::Server *device_management ()       = 0;
+            virtual HF::Core::DeviceManagement::IServer *device_management ()       = 0;
 
-            virtual HF::Core::DeviceManagement::Server *device_management () const = 0;
+            virtual HF::Core::DeviceManagement::IServer *device_management () const = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management ()           = 0;
+            virtual HF::Core::BindManagement::Server *bind_management ()            = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management () const     = 0;
+            virtual HF::Core::BindManagement::Server *bind_management () const      = 0;
          };
 
          /*!
@@ -369,7 +369,7 @@ namespace HF
          template<typename... ITF>
          struct Unit0:public HF::Unit0 <IUnit0, ITF...>
          {
-            static_assert (std::is_base_of <HF::Core::DeviceManagement::Server,
+            static_assert (std::is_base_of <HF::Core::DeviceManagement::IServer,
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
 

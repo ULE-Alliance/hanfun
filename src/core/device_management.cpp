@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -30,7 +30,7 @@ using namespace HF::Core;
 // =============================================================================
 HF::Attributes::IAttribute *DeviceManagement::create_attribute (uint8_t uid)
 {
-   return Core::create_attribute ((DeviceManagement::Server *) nullptr, uid);
+   return Core::create_attribute ((DeviceManagement::IServer *) nullptr, uid);
 }
 
 // =============================================================================
@@ -129,7 +129,7 @@ size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t of
    return offset - start;
 }
 
-bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role)
+bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
 {
    // Search the official interfaces.
    uint16_t count;
@@ -149,9 +149,13 @@ bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Rol
    }
    else  // Search the optional interfaces.
    {
-      return std::any_of(interfaces.begin (), interfaces.end (), [&temp](Common::Interface &itf){
-         return temp == itf;
-      });
+      /* *INDENT-OFF* */
+      return std::any_of (interfaces.begin (), interfaces.end (),
+                           [&temp](const Common::Interface &itf)
+                           {
+                              return temp == itf;
+                           });
+      /* *INDENT-ON* */
    }
 
    return false;

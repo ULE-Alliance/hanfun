@@ -4,7 +4,7 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -56,17 +56,17 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
 {
    UNUSED (args);
 
-   auto devices = base.unit0 ()->device_management ()->entries ();
+   auto &devices = base.unit0 ()->device_management ()->entries ();
 
    LOG (APP) << std::setfill (' ');
    LOG (APP) << "HAN-FUN" << "  Registered Devices (" << (int) devices.size () << "):" << NL;
 
    /* *INDENT-OFF* */
-   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device *device)
+   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device &device)
    {
-      LOG (APP) << std::setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
-      LOG (APP) << std::setw (5) << device->address << " | ";
-      LOG (APP) << device->uid << NL;
+      LOG (APP) << (base.link (device.address) != nullptr ? "+ " : "- ");
+      LOG (APP) << std::setw (5) << device.address << " | ";
+      LOG (APP) << device.uid << NL;
    });
    /* *INDENT-ON* */
 }

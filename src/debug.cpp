@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the debug helper functions.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -63,9 +63,8 @@ std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &ar
 
 std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
 {
-   std::ios_base::fmtflags ff;
-   ff = stream.flags ();
-   char f = stream.fill ('0');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f = stream.fill('0');
 
    switch (uid.raw ()->type ())
    {
@@ -77,12 +76,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
       case HF::UID::RFPI_UID:
       {
          HF::UID::RFPI *rfpi = (HF::UID::RFPI *) uid.raw ();
-         stream << "rfpi: ";
+         stream << "rfpi: "  << std::uppercase << std::setw(2) << std::right << std::hex;
 
          for (uint8_t i = 0; i < HF::UID::RFPI::length (); i++)
          {
-            stream << std::hex << std::setw (2) << std::setfill ('0');
-            stream << (int) (*rfpi)[i];
+            stream << static_cast<int>((*rfpi)[i]);
          }
 
          break;
@@ -91,12 +89,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
       case HF::UID::IPUI_UID:
       {
          HF::UID::IPUI *ipui = (HF::UID::IPUI *) uid.raw ();
-         stream << "ipui: ";
+         stream << "ipui: " << std::uppercase << std::setw(2) << std::right << std::hex;
 
-         for (uint8_t i = 0; i < sizeof(HF::UID::IPUI::length ()); i++)
+         for (uint8_t i = 0; i < HF::UID::IPUI::length (); i++)
          {
-            stream << std::hex << std::setw (2) << std::setfill ('0');
-            stream << (int) (*ipui)[i];
+            stream << static_cast<int>((*ipui)[i]);
          }
 
          break;
@@ -105,13 +102,13 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
       case HF::UID::MAC_UID:
       {
          HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw ();
-         stream << "mac: ";
+         stream << "mac: " << std::uppercase << std::setw(2) << std::right << std::hex;
 
-         for (uint8_t i = 0; i < sizeof(HF::UID::MAC::length ()); i++)
+         for (uint8_t i = 0; i < HF::UID::MAC::length () - 1; i++)
          {
-            stream << std::hex << std::setw (2) << std::setfill ('0');
-            stream << (int) (*mac)[i] << ":";
+            stream << static_cast<int>((*mac)[i]) << ":";
          }
+         stream << static_cast<int>((*mac)[HF::UID::MAC::length () - 1]);
 
          break;
       }
@@ -129,6 +126,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
 
    stream.setf (ff);
    stream.fill (f);
+   stream << std::nouppercase << std::dec;
 
    return stream;
 }

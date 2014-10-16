@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \version 1.0.0
+#   \version 1.0.1
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #

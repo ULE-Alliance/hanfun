@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Attribute Reporting Service
  * in HAN-FUN.
  *
- * \version    1.0.0
+ * \version    1.0.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
