@@ -282,12 +282,14 @@ Common::Result AbstractServer::deregister (DevicePtr &device)
 
    auto res = entries ().destroy (device);
 
-   if (res.first == Common::Result::OK)
+   DevicePtr temp(new Device(*device), true);
+
+   if (res == Common::Result::OK)
    {
-      this->deregistered (res.second);
+      this->deregistered (temp);
    }
 
-   return res.first;
+   return res;
 }
 
 // =============================================================================
@@ -312,148 +314,4 @@ bool AbstractServer::authorized (uint8_t member, DeviceManagement::DevicePtr &so
    {
       return true;
    }
-}
-
-// =============================================================================
-// IEntries API - Default Implementation
-// =============================================================================
-
-// =============================================================================
-// Entries::find
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-DevicePtr Entries::find (uint16_t address) const
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [address](const Device &device)
-   {
-      return device.address == address;
-   });
-   /* *INDENT-ON* */
-
-   if (it == db.end ())
-   {
-      return std::move (DeviceManagement::DevicePtr ());
-   }
-   else
-   {
-      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
-   }
-}
-
-// =============================================================================
-// Entries::find
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-DevicePtr Entries::find (const HF::UID::UID &uid) const
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&uid](const Device &device)
-   {
-      return device.uid == uid;
-   });
-   /* *INDENT-ON* */
-
-   if (it == db.end ())
-   {
-      return std::move (DeviceManagement::DevicePtr ());
-   }
-   else
-   {
-      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
-   }
-}
-
-// =============================================================================
-// Entries::save
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-Common::Result Entries::save (Device &device)
-{
-   if (device.address == HF::Protocol::BROADCAST_ADDR)
-   {
-      return Common::Result::FAIL_UNKNOWN;
-   }
-
-   // Add new entry into the database.
-
-   /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
-   {
-      return device.address == other.address;
-   });
-   /* *INDENT-ON* */
-
-   if (it != db.end ()) // Update existing entry.
-   {
-      db.erase (it);
-   }
-
-   db.push_back (device);
-
-   return Common::Result::OK;
-}
-
-// =============================================================================
-// Entries::destroy
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::pair <Common::Result, DevicePtr> Entries::destroy (DevicePtr &device)
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
-   {
-      return device->address == other.address;
-   });
-   /* *INDENT-ON* */
-
-   if (it == db.end ())
-   {
-      return std::make_pair (Common::Result::FAIL_ARG, DevicePtr ());
-   }
-
-   auto res = std::make_pair (Common::Result::OK, DevicePtr (new Device (*it), true));
-
-   db.erase (it);
-
-   return res;
-}
-
-// =============================================================================
-// DefaultServer::next_address
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint16_t Entries::next_address () const
-{
-   uint16_t address    = DeviceManagement::START_ADDR;
-
-   auto address_equals = [&address](const Device &device)
-                         {
-                            return device.address == address;
-                         };
-
-   while (std::any_of (db.begin (), db.end (), address_equals))
-   {
-      if (++address == Protocol::BROADCAST_ADDR)
-      {
-         break;
-      }
-   }
-
-   return address;
 }

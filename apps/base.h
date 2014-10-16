@@ -43,13 +43,12 @@ namespace DeviceManagement
    {
       typedef HF::Core::DeviceManagement::Device Device;
       typedef HF::Core::DeviceManagement::DevicePtr DevicePtr;
-      typedef std::pair <HF::Common::Result, DevicePtr> DestroyRes;
 
       HF::Common::Result save (Device &device);
 
-      void insert (Device &device);
+      HF::Common::Result destroy (DevicePtr &device);
 
-      DestroyRes destroy (DevicePtr &device);
+      void insert (Device &device);
    };
 
    /*!

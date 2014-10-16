@@ -383,18 +383,23 @@ namespace HF
              *
              * @param [in] device   the device entry to store.
              *
-             * @return     if the device entry was saved.
+             * @retval  Common::Result::OK if the device entry was saved,
+             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
             virtual Common::Result save (Device &device) = 0;
 
             /*!
              * Remove the given \c device entry from persistent storage.
              *
+             * \warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             *
              * @param [in] device   the device entry to remove.
              *
-             * @return     if the device entry was removed.
+             * @retval  Common::Result::OK, if the entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG otherwise.
              */
-            virtual std::pair <Common::Result, DevicePtr> destroy (DevicePtr &device) = 0;
+            virtual Common::Result destroy (DevicePtr &device) = 0;
 
             /*!
              * Return next available address for registering a device.
@@ -728,7 +733,7 @@ namespace HF
 
             Common::Result save (Device &device);
 
-            std::pair <Common::Result, DevicePtr> destroy (DevicePtr &device);
+            Common::Result destroy (DevicePtr &device);
 
             uint16_t next_address () const;
 

@@ -66,7 +66,7 @@ void DeviceManagement::Entries::insert (Device &device)
  *
  */
 // =============================================================================
-DeviceManagement::Entries::DestroyRes DeviceManagement::Entries::destroy (DevicePtr &device)
+HF::Common::Result DeviceManagement::Entries::destroy (DevicePtr &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::destroy (device);
    HF::Application::Save ();

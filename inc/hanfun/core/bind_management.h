@@ -147,7 +147,7 @@ namespace HF
             /*!
              * Destroy the given \c entry in the persistent storage.
              *
-             * \warning the reference passed into this method SHOULD not be considered
+             * \warning the reference passed into this method SHOULD NOT be considered
              *          valid if it was obtained by calling the find method.
              *
              * @param [in] entry   reference to the bind entry to erase.
