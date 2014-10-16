@@ -328,13 +328,13 @@ bool AbstractServer::authorized (uint8_t member, DeviceManagement::DevicePtr &so
 DevicePtr Entries::find (uint16_t address) const
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [address](const Device &device)
+   auto it = std::find_if(db.begin(), db.end(), [address](const Device &device)
    {
       return device.address == address;
    });
    /* *INDENT-ON* */
 
-   if (it == _entries.end ())
+   if (it == db.end ())
    {
       return std::move (DeviceManagement::DevicePtr ());
    }
@@ -354,13 +354,13 @@ DevicePtr Entries::find (uint16_t address) const
 DevicePtr Entries::find (const HF::UID::UID &uid) const
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&uid](const Device &device)
+   auto it = std::find_if(db.begin(), db.end(), [&uid](const Device &device)
    {
       return device.uid == uid;
    });
    /* *INDENT-ON* */
 
-   if (it == _entries.end ())
+   if (it == db.end ())
    {
       return std::move (DeviceManagement::DevicePtr ());
    }
@@ -387,18 +387,18 @@ Common::Result Entries::save (Device &device)
    // Add new entry into the database.
 
    /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&device](const Device &other)
+   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
    {
       return device.address == other.address;
    });
    /* *INDENT-ON* */
 
-   if (it != _entries.end ()) // Update existing entry.
+   if (it != db.end ()) // Update existing entry.
    {
-      _entries.erase (it);
+      db.erase (it);
    }
 
-   _entries.push_back (device);
+   db.push_back (device);
 
    return Common::Result::OK;
 }
@@ -413,20 +413,20 @@ Common::Result Entries::save (Device &device)
 std::pair <Common::Result, DevicePtr> Entries::destroy (DevicePtr &device)
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&device](const Device &other)
+   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
    {
       return device->address == other.address;
    });
    /* *INDENT-ON* */
 
-   if (it == _entries.end ())
+   if (it == db.end ())
    {
       return std::make_pair (Common::Result::FAIL_ARG, DevicePtr ());
    }
 
    auto res = std::make_pair (Common::Result::OK, DevicePtr (new Device (*it), true));
 
-   _entries.erase (it);
+   db.erase (it);
 
    return res;
 }
@@ -447,7 +447,7 @@ uint16_t Entries::next_address () const
                             return device.address == address;
                          };
 
-   while (std::any_of (_entries.begin (), _entries.end (), address_equals))
+   while (std::any_of (db.begin (), db.end (), address_equals))
    {
       if (++address == Protocol::BROADCAST_ADDR)
       {

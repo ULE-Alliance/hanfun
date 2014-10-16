@@ -717,13 +717,9 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            Entries()          = default;
-
-            virtual ~Entries() = default;
-
             size_t size () const
             {
-               return _entries.size ();
+               return db.size ();
             }
 
             DevicePtr find (uint16_t address) const;
@@ -738,27 +734,27 @@ namespace HF
 
             iterator begin ()
             {
-               return _entries.begin ();
+               return db.begin ();
             }
 
             iterator end ()
             {
-               return _entries.end ();
+               return db.end ();
             }
 
             const_iterator begin () const
             {
-               return _entries.cbegin ();
+               return db.cbegin ();
             }
 
             const_iterator end () const
             {
-               return _entries.cend ();
+               return db.cend ();
             }
 
             protected:
 
-            Container _entries;
+            Container db;
          };
 
          template<typename _Entries = Entries>
