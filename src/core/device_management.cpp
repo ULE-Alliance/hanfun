@@ -741,7 +741,7 @@ DeviceManagement::DevicePtr DeviceManagement::Entries::find (const HF::UID::UID 
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Entries::save (Device &device)
+Common::Result DeviceManagement::Entries::save (const Device &device)
 {
    if (device.address == HF::Protocol::BROADCAST_ADDR)
    {
@@ -774,12 +774,12 @@ Common::Result DeviceManagement::Entries::save (Device &device)
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Entries::destroy (DevicePtr &device)
+Common::Result DeviceManagement::Entries::destroy (const Device &device)
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
    {
-      return device->address == other.address;
+      return device.address == other.address;
    });
    /* *INDENT-ON* */
 

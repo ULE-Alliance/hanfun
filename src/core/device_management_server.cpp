@@ -280,9 +280,10 @@ Common::Result AbstractServer::deregister (DevicePtr &device)
 
    unit0 ().bind_management ()->entries ().destroy (device->address);
 
-   auto res = entries ().destroy (device);
-
+   // Destroy MAY invalidate _device_, create a copy to send to *deregistered* event.
    DevicePtr temp(new Device(*device), true);
+
+   auto res = entries ().destroy (*device);
 
    if (res == Common::Result::OK)
    {

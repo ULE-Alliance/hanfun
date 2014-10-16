@@ -121,41 +121,13 @@ namespace HF
          /*!
           * Bind Management persistent storage API.
           */
-         struct IEntries
+         struct IEntries:public Common::IEntries<Entry>
          {
             // =============================================================================
             // API
             // =============================================================================
 
-            /*!
-             * Return the number of entries in the container.
-             *
-             * @return  the number of entries in the container.
-             */
-            virtual size_t size () const = 0;
-
-            /*!
-             * Store the given bind \c entry to persistent storage.
-             *
-             * @param [in] device   the bind entry to store.
-             *
-             * @retval  Common::Result::OK if the bind entry was saved,
-             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
-             */
-            virtual Common::Result save (const Entry &entry) = 0;
-
-            /*!
-             * Destroy the given \c entry in the persistent storage.
-             *
-             * \warning the reference passed into this method SHOULD NOT be considered
-             *          valid if it was obtained by calling the find method.
-             *
-             * @param [in] entry   reference to the bind entry to erase.
-             *
-             * @retval  Common::Result::OK, if the entry was destroyed.
-             * @retval  Common::Result::FAIL_ARG otherwise.
-             */
-            virtual Common::Result destroy (EntryPtr &entry) = 0;
+            using Common::IEntries<Entry>::destroy;
 
             /*!
              * Destroy the entries in the persistent storage, that refer to the
@@ -392,12 +364,16 @@ namespace HF
 
             Common::Result save (const Entry &entry);
 
-            Common::Result destroy (EntryPtr &entry);
+            /*!
+             * \see IEntries::destroy
+             *
+             * \warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             */
+            Common::Result destroy (const Entry &entry);
 
             Common::Result destroy (uint16_t address,
                                     Protocol::Address::Type type = Protocol::Address::DEVICE);
-
-            Common::Result destroy (const Entry &entry);
 
             // =============================================================================
             // Query API

@@ -203,5 +203,5 @@ Common::Result AbstractServer::remove (const Protocol::Address &source,
       return Common::Result::FAIL_ARG;
    }
 
-   return this->entries ().destroy (entry);
+   return this->entries ().destroy (*entry);
 }

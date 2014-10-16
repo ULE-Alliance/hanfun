@@ -125,23 +125,6 @@ Common::Result Entries::save (const Entry &entry)
  *
  */
 // =============================================================================
-Common::Result Entries::destroy (EntryPtr &entry)
-{
-   if (this->db.erase (*entry) == 1)
-   {
-      return Common::Result::OK;
-   }
-
-   return Common::Result::FAIL_ARG;
-}
-
-// =============================================================================
-// Entries::destroy
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
 Common::Result Entries::destroy (uint16_t address, Protocol::Address::Type type)
 {
    /* *INDENT-OFF* */

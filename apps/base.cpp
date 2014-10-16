@@ -40,7 +40,7 @@
  *
  */
 // =============================================================================
-HF::Common::Result DeviceManagement::Entries::save (Device &device)
+HF::Common::Result DeviceManagement::Entries::save (const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::save (device);
    HF::Application::Save ();
@@ -54,7 +54,7 @@ HF::Common::Result DeviceManagement::Entries::save (Device &device)
  *
  */
 // =============================================================================
-void DeviceManagement::Entries::insert (Device &device)
+void DeviceManagement::Entries::insert (const Device &device)
 {
    HF::Core::DeviceManagement::Entries::save (device);
 }
@@ -66,7 +66,7 @@ void DeviceManagement::Entries::insert (Device &device)
  *
  */
 // =============================================================================
-HF::Common::Result DeviceManagement::Entries::destroy (DevicePtr &device)
+HF::Common::Result DeviceManagement::Entries::destroy (const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::destroy (device);
    HF::Application::Save ();
@@ -198,7 +198,7 @@ void DeviceManagement::Server::restore (Json::Value root)
  *
  */
 // =============================================================================
-HF::Common::Result BindManagement::Entries::save (Entry &entry)
+HF::Common::Result BindManagement::Entries::save (const Entry &entry)
 {
    auto res = HF::Core::BindManagement::Entries::save (entry);
    HF::Application::Save ();
@@ -224,7 +224,7 @@ void BindManagement::Entries::insert (Entry &entry)
  *
  */
 // =============================================================================
-HF::Common::Result BindManagement::Entries::destroy (EntryPtr &entry)
+HF::Common::Result BindManagement::Entries::destroy (const Entry &entry)
 {
    auto res = HF::Core::BindManagement::Entries::destroy (entry);
    HF::Application::Save ();

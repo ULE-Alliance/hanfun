@@ -654,6 +654,44 @@ namespace HF
          }
       };
 
+      /*!
+       * Basic API for persistent storage implementations.
+       */
+      template<typename T>
+      struct IEntries
+      {
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         /*!
+          * Return the number of entries in the container.
+          *
+          * @return  the number of entries in the container.
+          */
+         virtual size_t size () const = 0;
+
+         /*!
+          * Store the given bind \c entry to persistent storage.
+          *
+          * @param [in] device   the bind entry to store.
+          *
+          * @retval  Common::Result::OK if the bind entry was saved,
+          * @retval  Common::Result::FAIL_UNKNOWN otherwise.
+          */
+         virtual Result save (const T &) = 0;
+
+         /*!
+          * Destroy the given \c entry in the persistent storage.
+          *
+          * @param [in] entry   reference to the bind entry to erase.
+          *
+          * @retval  Common::Result::OK, if the entry was destroyed.
+          * @retval  Common::Result::FAIL_ARG otherwise.
+          */
+         virtual Result destroy (const T &) = 0;
+      };
+
    }  // namespace Common
 
 }  // namespace HF

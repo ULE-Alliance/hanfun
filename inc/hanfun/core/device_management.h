@@ -347,17 +347,8 @@ namespace HF
          /*!
           * Device Management - Persistent Storage API.
           */
-         struct IEntries
+         struct IEntries:public Common::IEntries<Device>
          {
-            virtual ~IEntries() {}
-
-            /*!
-             * Return the number of available entries.
-             *
-             * @return  number of device entries.
-             */
-            virtual size_t size () const = 0;
-
             /*!
              * Return the Device entry for the given address.
              *
@@ -377,29 +368,6 @@ namespace HF
              * @retval  nullptr if the entry does not exist.
              */
             virtual DevicePtr find (const HF::UID::UID &uid) const = 0;
-
-            /*!
-             * Store the given \c device entry to persistent storage.
-             *
-             * @param [in] device   the device entry to store.
-             *
-             * @retval  Common::Result::OK if the device entry was saved,
-             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
-             */
-            virtual Common::Result save (Device &device) = 0;
-
-            /*!
-             * Remove the given \c device entry from persistent storage.
-             *
-             * \warning the reference passed into this method SHOULD NOT be considered
-             *          valid if it was obtained by calling the find method.
-             *
-             * @param [in] device   the device entry to remove.
-             *
-             * @retval  Common::Result::OK, if the entry was destroyed.
-             * @retval  Common::Result::FAIL_ARG otherwise.
-             */
-            virtual Common::Result destroy (DevicePtr &device) = 0;
 
             /*!
              * Return next available address for registering a device.
@@ -727,13 +695,19 @@ namespace HF
                return db.size ();
             }
 
+            Common::Result save (const Device &device);
+
+            /*!
+             * \see IEntries::destroy
+             *
+             * \warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             */
+            Common::Result destroy (const Device &device);
+
             DevicePtr find (uint16_t address) const;
 
             DevicePtr find (const HF::UID::UID &uid) const;
-
-            Common::Result save (Device &device);
-
-            Common::Result destroy (DevicePtr &device);
 
             uint16_t next_address () const;
 

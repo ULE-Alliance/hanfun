@@ -44,11 +44,11 @@ namespace DeviceManagement
       typedef HF::Core::DeviceManagement::Device Device;
       typedef HF::Core::DeviceManagement::DevicePtr DevicePtr;
 
-      HF::Common::Result save (Device &device);
+      HF::Common::Result save (const Device &device);
 
-      HF::Common::Result destroy (DevicePtr &device);
+      HF::Common::Result destroy (const Device &device);
 
-      void insert (Device &device);
+      void insert (const Device &device);
    };
 
    /*!
@@ -60,7 +60,7 @@ namespace DeviceManagement
    struct Server:public HF::Core::DeviceManagement::Server <Entries>
    {
       Server(HF::Core::Unit0 &unit):
-         HF::Core::DeviceManagement::Server <Entries>(unit), loaded (false),
+         HF::Core::DeviceManagement::Server <Entries>(unit),
          _next_address (HF::Protocol::BROADCAST_ADDR)
       {}
 
@@ -84,8 +84,6 @@ namespace DeviceManagement
 
       protected:
 
-      bool     loaded;
-
       uint16_t _next_address;
 
       uint16_t next_address ();
@@ -106,9 +104,9 @@ namespace BindManagement
       typedef HF::Core::BindManagement::Entry Entry;
       typedef HF::Core::BindManagement::EntryPtr EntryPtr;
 
-      HF::Common::Result save (Entry &device);
+      HF::Common::Result save (const Entry &entry);
 
-      HF::Common::Result destroy (EntryPtr &device);
+      HF::Common::Result destroy (const Entry &entry);
 
       void insert (Entry &device);
    };
@@ -121,16 +119,12 @@ namespace BindManagement
    struct Server:public HF::Core::BindManagement::Server <Entries>
    {
       Server(HF::Devices::Concentrator::IUnit0 &unit):
-         HF::Core::BindManagement::Server <Entries>(unit), loaded (false)
+         HF::Core::BindManagement::Server <Entries>(unit)
       {}
 
       void save (Json::Value &root);
 
       void restore (Json::Value root);
-
-      protected:
-
-      bool loaded;
    };
 
 }  // namespace BindManagement
