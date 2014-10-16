@@ -375,7 +375,7 @@ namespace HF
 
          std::vector <Protocol::Packet *> packets;
 
-         Link link;
+         Link                             link;
 
          AbstractDevice():
             _address (Protocol::BROADCAST_ADDR)
@@ -414,7 +414,7 @@ namespace HF
                packet.link = &link;
             }
 
-            Parent::send(packet);
+            Parent::send (packet);
 
             Protocol::Packet *temp = new Protocol::Packet (packet);
 

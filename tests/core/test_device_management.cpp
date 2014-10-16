@@ -994,13 +994,13 @@ TEST_GROUP (DeviceManagementServer)
 TEST (DeviceManagementServer, Handle_Register)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                          // Discriminator Type.
-                         0x05,                          // Size of UID.
-                         0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
-                         0x03,                          // Number of units.
-                         0x03, 0x42, 0x5A, 0xA5,        // Unit 1.
-                         0x03, 0x42, 0x5A, 0xA5,        // Unit 2.
-                         0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
+                         0x02,                         // Discriminator Type.
+                         0x05,                         // Size of UID.
+                         0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                         0x03,                         // Number of units.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 3.
                          0x00, 0x00, 0x00};
 
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
@@ -1068,13 +1068,13 @@ TEST (DeviceManagementServer, Handle_Register)
 TEST (DeviceManagementServer, Handle_Register2)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                          // Discriminator Type.
-                         0x05,                          // Size of UID.
-                         0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
-                         0x03,                          // Number of units.
-                         0x03, 0x42, 0x5A, 0xA5,        // Unit 1.
-                         0x03, 0x42, 0x5A, 0xA5,        // Unit 2.
-                         0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
+                         0x02,                         // Discriminator Type.
+                         0x05,                         // Size of UID.
+                         0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                         0x03,                         // Number of units.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 3.
                          0x00, 0x00, 0x00};
 
    packet.message.type       = Protocol::Message::COMMAND_RESP_REQ;
