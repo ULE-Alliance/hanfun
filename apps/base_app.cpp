@@ -75,16 +75,18 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
 {
    UNUSED (args);
 
-   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries;
+   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries ();
 
    LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
-   std::for_each (entries.begin (), entries.end (), [](const HF::Core::BindManagement::Entry &entry)
-                  {
-                     LOG (APP) << "       - "
-                               << entry.source.device << ":" << (int) entry.source.unit << " -> "
-                               << entry.destination.device << ":" << (int) entry.destination.unit << NL;
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (),
+                  [](const HF::Core::BindManagement::Entry &entry)
+   {
+      LOG (APP) << "       - "
+      << entry.source.device << ":" << (int) entry.source.unit << " -> "
+      << entry.destination.device << ":" << (int) entry.destination.unit << NL;
+   });
+   /* *INDENT-ON* */
 }
 
 COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")

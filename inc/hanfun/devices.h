@@ -358,9 +358,9 @@ namespace HF
 
             virtual HF::Core::DeviceManagement::IServer *device_management () const = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management ()            = 0;
+            virtual HF::Core::BindManagement::IServer *bind_management ()           = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management () const      = 0;
+            virtual HF::Core::BindManagement::IServer *bind_management () const     = 0;
          };
 
          /*!
@@ -371,12 +371,12 @@ namespace HF
          {
             static_assert (std::is_base_of <HF::Core::DeviceManagement::IServer,
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
+                           "DeviceMgt must be of type HF::Core::DeviceManagement::IServer");
 
             typedef typename std::tuple_element <3, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
 
-            static_assert (std::is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
-                           "BindMgt must be of type HF::Core::BindManagement::Server");
+            static_assert (std::is_base_of <HF::Core::BindManagement::IServer, BindMgt>::value,
+                           "BindMgt must be of type HF::Core::BindManagement::IServer");
 
             Unit0(HF::IDevice &device):
                HF::Unit0 <IUnit0, ITF...>(device)
@@ -419,7 +419,7 @@ namespace HF
          struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
                                            Core::DeviceManagement::DefaultServer,
                                            Core::AttributeReporting::Server,
-                                           Core::BindManagement::Server>
+                                           Core::BindManagement::DefaultServer>
          {
             DefaultUnit0(IDevice &device):
                Unit0 (device)

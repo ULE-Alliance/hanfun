@@ -278,7 +278,7 @@ Common::Result AbstractServer::deregister (DevicePtr &device)
 {
    // TODO Remove group information.
 
-   unit0 ().bind_management ()->entries.destroy (device->address);
+   unit0 ().bind_management ()->entries ().destroy (device->address);
 
    auto res = entries ().destroy (device);
 

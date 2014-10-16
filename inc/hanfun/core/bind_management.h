@@ -106,7 +106,7 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
-         typedef HF::Common::Pointer<Entry>  EntryPtr;
+         typedef HF::Common::Pointer <const Entry> EntryPtr;
 
          /*!
           * Add/Remove Bind message.
@@ -118,19 +118,11 @@ namespace HF
          // API
          // =============================================================================
 
-         // Forward declaration
-         struct Server;
-
          /*!
-          * This structure defines the API that devices using the BindManagement::Server,
-          * must implement to store the BindManagement::Entries.
+          * Bind Management persistent storage API.
           */
-         struct Entries
+         struct IEntries
          {
-            typedef std::set <Entry> Container;
-
-            typedef typename Container::iterator Iterator;
-
             // =============================================================================
             // API
             // =============================================================================
@@ -140,65 +132,30 @@ namespace HF
              *
              * @return  the number of entries in the container.
              */
-            size_t size () const;
-
-            // =============================================================================
-            // Query API
-            // =============================================================================
+            virtual size_t size () const = 0;
 
             /*!
-             * Return a reference of the iterator for the first element in the collection
-             * containing the bind management entries in the system.
+             * Store the given bind \c entry to persistent storage.
              *
-             * @return a reference of the iterator for the first element.
+             * @param [in] device   the bind entry to store.
+             *
+             * @retval  Common::Result::OK if the bind entry was saved,
+             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
-            Iterator begin () const;
-
-            /*!
-             * Return a reference of the iterator for the last element in the collection
-             * containing the bind management entries in the system.
-             *
-             * @return a reference of the iterator for the last element.
-             */
-            Iterator end () const;
-
-            /*!
-             * Returns the start and end iterators for the bind management entries, that
-             * exist for the given source address and interface.
-             *
-             * If no entries exist then the returned iterators are equal to the iterator
-             * returned by BindManagement::Entries::end().
-             *
-             * @param source  the source address for the bind entry.
-             * @param itf     the interface the bind entry refers to.
-             *
-             * @return  a pair containing the start and end iterators for entries requested.
-             */
-            std::pair <Iterator, Iterator> find (Protocol::Address const &source,
-                                                 Common::Interface const &itf) const;
-
-            /*!
-             * Return the Bind entry for the given parameters.
-             *
-             * @param [in] source         source address of the device.
-             * @param [in] destination    destination address of the device.
-             * @param [in] itf            interface to bind.
-             *
-             * @retval a pointer to bind entry for the given parameters,
-             * @retval nullptr if bind entry does not exist.
-             */
-            const Entry *find (const Protocol::Address &source, const Common::Interface &itf,
-                               const Protocol::Address &destination);
+            virtual Common::Result save (const Entry &entry) = 0;
 
             /*!
              * Destroy the given \c entry in the persistent storage.
              *
+             * \warning the reference passed into this method SHOULD not be considered
+             *          valid if it was obtained by calling the find method.
+             *
              * @param [in] entry   reference to the bind entry to erase.
              *
-             * @retval  Common::Result::OK if the entry was destroyed.
-             * @retval  Common::Result::FAIL_ARG, otherwise.
+             * @retval  Common::Result::OK, if the entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG otherwise.
              */
-            Common::Result destroy (Entry const &entry);
+            virtual Common::Result destroy (EntryPtr &entry) = 0;
 
             /*!
              * Destroy the entries in the persistent storage, that refer to the
@@ -210,64 +167,52 @@ namespace HF
              * @param [in] address   HF address to remove entries for.
              * @param [in] type      HF address type.
              *
-             * @retval  Common::Result::OK if at least one entry was destroyed.
-             * @retval  Common::Result::FAIL_ARG, otherwise.
+             * @retval  Common::Result::OK and a copy of the destroyed entry if the entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG and \c nullptr otherwise.
              */
-            Common::Result destroy (uint16_t address,
-                                    Protocol::Address::Type type = Protocol::Address::DEVICE);
+            virtual Common::Result destroy (uint16_t address,
+                                            Protocol::Address::Type type = Protocol::Address::DEVICE) = 0;
+
+            // =============================================================================
+            // Query API
+            // =============================================================================
 
             /*!
-             * Destroy the entries in the persistent storage, for which the given
-             * predicate function returns \c true.
-             *
-             * @param [in] func  predicate to call for each entry to check if it
-             *                   should be deleted.
-             *
-             * @retval  Common::Result::OK if at least one entry was destroyed.
-             * @retval  Common::Result::FAIL_ARG, otherwise.
-             */
-            template<typename Func>
-            Common::Result destroy (Func func)
-            {
-               Common::Result res = Common::Result::FAIL_ARG;
-
-               for (Iterator itr = db.begin (); itr != db.end ();)
-               {
-                  if (func (*itr))
-                  {
-                     this->db.erase (itr++);
-                     res = Common::Result::OK;
-                  }
-                  else
-                  {
-                     ++itr;
-                  }
-               }
-
-               return res;
-            }
-
-            protected:
-
-            /*!
-             * Create a new bind entry in the persistent storage.
+             * Return the Bind entry for the given parameters.
              *
              * @param [in] source         source address of the device.
              * @param [in] destination    destination address of the device.
              * @param [in] itf            interface to bind.
              *
-             * @return a pair containing the result indicating if the entry was created and
-             *         a pointer to the newlly created entry.
+             * @retval a pointer to bind entry for the given parameters,
+             * @retval nullptr if bind entry does not exist.
              */
-            std::pair <Common::Result, const Entry *> create (Protocol::Address const &source,
-                                                              Common::Interface const &itf,
-                                                              Protocol::Address const &destination);
+            virtual EntryPtr find (const Protocol::Address &source, const Common::Interface &itf,
+                                   const Protocol::Address &destination) const = 0;
 
-            friend struct HF::Core::BindManagement::Server;
+            /*!
+             * Check if entries for the device with given \c source address and for the given
+             * interface \c ifc exist.
+             *
+             * @param [in] source   device address to search for.
+             * @param [in] itf      interface id to search for.
+             *
+             * @retval  true if entries exist,
+             * @retval  false otherwise.
+             */
+            virtual bool any_of (Protocol::Address const &source,
+                                 Common::Interface const &itf) const = 0;
 
-            private:
-
-            Container db;
+            /*!
+             * Call the given function for all the entries with given \c source address and
+             * for the given interface \c ifc.
+             *
+             * @param [in] source   device address to search for.
+             * @param [in] itf      interface id to search for.
+             * @param [in] func     function to call for all the entries.
+             */
+            virtual void for_each (Protocol::Address const &source, Common::Interface const &itf,
+                                   std::function <void(const Entry &)> func) const = 0;
          };
 
          /*!
@@ -345,16 +290,11 @@ namespace HF
          };
 
          /*!
-          * Bind Management interface : Server side.
+          * Bind Management interface : Server side API.
           */
-         struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
+         struct IServer:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
          {
-            //! This field contains the bind entries present in the system.
-            Entries entries;
-
-            Server(HF::Devices::Concentrator::IUnit0 &unit);
-
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // =============================================================================
             // API
@@ -368,7 +308,7 @@ namespace HF
              *
              * @return  a reference to the unit that holds this interface.
              */
-            HF::Devices::Concentrator::IUnit0 &unit0 ();
+            HF::Devices::Concentrator::IUnit0 &unit0 () const;
 
             // ======================================================================
             // Commands
@@ -385,9 +325,9 @@ namespace HF
              *
              * @return  Common::Result::OK if the bind was created or Result::FAIL_* otherwise.
              */
-            virtual std::pair <Common::Result, const Entry *> add (const Protocol::Address &source,
-                                                                   const Protocol::Address &destination,
-                                                                   const Common::Interface &itf);
+            virtual Common::Result add (const Protocol::Address &source,
+                                        const Protocol::Address &destination,
+                                        const Common::Interface &itf) = 0;
 
             /*!
              * Remove a bind entry from the database.
@@ -400,17 +340,163 @@ namespace HF
              */
             virtual Common::Result remove (const Protocol::Address &source,
                                            const Protocol::Address &destination,
-                                           const Common::Interface &itf);
+                                           const Common::Interface &itf) = 0;
 
             //! @}
             // ======================================================================
 
+            virtual IEntries &entries () const = 0;
+
             protected:
+
+            IServer(Unit0 &unit):
+               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit)
+            {}
+         };
+
+         struct AbstractServer:public IServer
+         {
+            virtual ~AbstractServer() {}
+
+            // =============================================================================
+            // API.
+            // =============================================================================
+
+            //! \see IServer::add
+            Common::Result add (const Protocol::Address &source,
+                                const Protocol::Address &destination,
+                                const Common::Interface &itf);
+
+            //! \see IServer::remove
+            Common::Result remove (const Protocol::Address &source,
+                                   const Protocol::Address &destination,
+                                   const Common::Interface &itf);
+
+            protected:
+
+            AbstractServer(Unit0 &unit):IServer (unit)
+            {}
 
             //! \see AbstractInterface::handle_command
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
                                            size_t offset);
          };
+
+         struct Entries:public IEntries
+         {
+            typedef std::set <Entry> Container;
+            typedef Container::iterator iterator;
+            typedef Container::const_iterator const_iterator;
+
+            size_t size () const;
+
+            Common::Result save (const Entry &entry);
+
+            Common::Result destroy (EntryPtr &entry);
+
+            Common::Result destroy (uint16_t address,
+                                    Protocol::Address::Type type = Protocol::Address::DEVICE);
+
+            Common::Result destroy (const Entry &entry);
+
+            // =============================================================================
+            // Query API
+            // =============================================================================
+
+            EntryPtr find (const Protocol::Address &source, const Common::Interface &itf,
+                           const Protocol::Address &destination) const;
+
+            bool any_of (Protocol::Address const &source, Common::Interface const &itf) const;
+
+            void for_each (Protocol::Address const &source, Common::Interface const &itf,
+                           std::function <void(const Entry &)> func) const;
+
+            iterator begin ()
+            {
+               return db.begin ();
+            }
+
+            iterator end ()
+            {
+               return db.end ();
+            }
+
+            const_iterator begin () const
+            {
+               return db.begin ();
+            }
+
+            iterator end () const
+            {
+               return db.end ();
+            }
+
+            /*!
+             * Return a pair of iterators for the entries that match the given search
+             * criteria.
+             *
+             * @param [in] source   device address to search for.
+             * @param [in] itf      interface id to search for.
+             *
+             * @return  iterators to the entries found.
+             */
+            std::pair <iterator, iterator> find (Protocol::Address const &source,
+                                                 Common::Interface const &itf) const;
+
+            /*!
+             * Destroy the entries in the persistent storage, for which the given
+             * predicate function returns \c true.
+             *
+             * @param [in] func  predicate to call for each entry to check if it
+             *                   should be deleted.
+             *
+             * @retval  Common::Result::OK if at least one entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG, otherwise.
+             */
+            template<typename Func>
+            Common::Result destroy (Func func)
+            {
+               Common::Result result = Common::Result::FAIL_ARG;
+
+               for (iterator itr = db.begin (); itr != db.end ();)
+               {
+                  if (func (*itr))
+                  {
+                     this->db.erase (itr++);
+                     result = Common::Result::OK;
+                  }
+                  else
+                  {
+                     ++itr;
+                  }
+               }
+
+               return result;
+            }
+
+            protected:
+
+            Container db;
+         };
+
+         template<typename _Entries = Entries>
+         class Server:public AbstractServer
+         {
+            //! This field contains the bind entries present in the system.
+            _Entries _entries;
+
+            public:
+
+            Server(Unit0 &unit):AbstractServer (unit)
+            {}
+
+            _Entries &entries () const
+            {
+               return const_cast <_Entries &>(_entries);
+            }
+         };
+
+         typedef Server <> DefaultServer;
 
          // =============================================================================
          // Operators

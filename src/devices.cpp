@@ -251,16 +251,13 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet,
                                                Common::ByteArray &payload, size_t offset)
 {
    // Find bind entries for device.
-   auto &entries = unit0 ()->bind_management ()->entries;
-
-   auto range    = entries.find (packet.source, packet.message.itf);
+   auto &entries = unit0 ()->bind_management ()->entries ();
 
    Protocol::Address any_addr;
-   auto range_any = entries.find (any_addr, packet.message.itf);
 
    // No bindings found !
-   if (range.first == entries.end () && range.second == entries.end () &&
-       range_any.first == entries.end () && range_any.second == entries.end ())
+   if (!entries.any_of (packet.source, packet.message.itf) &&
+       !entries.any_of (any_addr, packet.message.itf))
    {
       return;
    }
@@ -279,13 +276,8 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet,
                            this->send (other);
                         };
 
-   /* *INDENT-OFF* */
-   std::for_each(range.first, range.second, process_entry);
-   /* *INDENT-ON* */
-
-   /* *INDENT-OFF* */
-   std::for_each(range_any.first, range_any.second, process_entry);
-   /* *INDENT-ON* */
+   entries.for_each (packet.source, packet.message.itf, process_entry);
+   entries.for_each (any_addr, packet.message.itf, process_entry);
 }
 
 // =============================================================================

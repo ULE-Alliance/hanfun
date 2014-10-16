@@ -363,11 +363,11 @@ TEST (Concentrator, BroadcastToDevice)
    Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
 
    auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
-   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (Common::Result::OK, res);
 
    src = Protocol::Address (2, 1);
    res = base->unit0 ()->bind_management ()->add (src, dst, itf);
-   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (Common::Result::OK, res);
 
    mock ("Alertable").expectNCalls (2, "status").onObject (&(device3->unit));
 
@@ -386,7 +386,7 @@ TEST (Concentrator, PacketToAny)
 
    auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (Common::Result::OK, res);
 
    mock ("Alertable").expectNCalls (2, "status").onObject (&(base->unit));
 

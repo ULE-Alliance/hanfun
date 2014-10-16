@@ -94,50 +94,52 @@ namespace DeviceManagement
 
 }     // namespace DeviceManagement
 
-/*!
- * Custom Bind Management class.
- *
- * This class allows for the application to save and restore bindings from a file.
- */
-struct BindManagement:public HF::Core::BindManagement::Server
+namespace BindManagement
 {
-   BindManagement(HF::Devices::Concentrator::IUnit0 &unit):
-      HF::Core::BindManagement::Server (unit), loaded (false)
-   {}
+   /*!
+    * Custom Bind Management Entries class.
+    *
+    * This class saves the application configuration every time an entry
+    * is save or destroyed.
+    */
+   struct Entries:public HF::Core::BindManagement::Entries
+   {
+      typedef HF::Core::BindManagement::Entry Entry;
+      typedef HF::Core::BindManagement::EntryPtr EntryPtr;
 
-   std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> add (
-      const HF::Protocol::Address &source,
-      const HF::Protocol::Address &destination,
-      const HF::Common::Interface &itf);
+      HF::Common::Result save (Entry &device);
 
-   HF::Common::Result remove (const HF::Protocol::Address &source,
-                              const HF::Protocol::Address &destination,
-                              const HF::Common::Interface &itf);
+      HF::Common::Result destroy (EntryPtr &device);
 
+      void insert (Entry &device);
+   };
 
-   void save (Json::Value &root);
+   /*!
+    * Custom Bind Management class.
+    *
+    * This class allows for the application to save and restore bindings from a file.
+    */
+   struct Server:public HF::Core::BindManagement::Server <Entries>
+   {
+      Server(HF::Devices::Concentrator::IUnit0 &unit):
+         HF::Core::BindManagement::Server <Entries>(unit), loaded (false)
+      {}
 
-   void restore (Json::Value root);
+      void save (Json::Value &root);
 
-   protected:
+      void restore (Json::Value root);
 
-   bool loaded;
-};
+      protected:
 
-/*!
- * Custom Unit0 class to make use of the previous DeviceManagment class.
- */
-struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                         ::DeviceManagement::Server,
-                                                      HF::Core::AttributeReporting::Server,
-                                                      BindManagement>
-{
-   Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                                   ::DeviceManagement::Server,
-                                                                HF::Core::AttributeReporting::Server,
-                                                                BindManagement>(device)
-   {}
-};
+      bool loaded;
+   };
+
+}  // namespace BindManagement
+
+typedef HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
+                                             ::DeviceManagement::Server,
+                                          HF::Core::AttributeReporting::Server,
+                                             ::BindManagement::Server> Unit0;
 
 struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {

@@ -1166,28 +1166,28 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    auto bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
    dst      = Protocol::Address (0x5A55, 6);
 
    bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
    dst      = Protocol::Address (0x5A57, 8);
 
    bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
    src      = Protocol::Address (0x5A54, 5);
    dst      = Protocol::Address (0x5A53, 4);
 
    bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
-   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
+   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries ().size ());
 
    // == De-register the device.
 
@@ -1211,7 +1211,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    mock ("DeviceManagementServer").checkExpectations ();
 
-   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
+   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries ().size ());
 
    LONGS_EQUAL (size, dev_mgt->entries ().size ());
 
@@ -1228,7 +1228,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
 
-   LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries.size ());
+   LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries ().size ());
 }
 
 TEST (DeviceManagementServer, Entries)
