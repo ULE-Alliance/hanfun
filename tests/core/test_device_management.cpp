@@ -503,145 +503,6 @@ TEST (DeviceManagement, DeregisterMessage)
 }
 
 // =============================================================================
-// DeviceManagement::StartSessionResponse
-// =============================================================================
-
-TEST (DeviceManagement, StartSessionResponse)
-{
-   DeviceManagement::StartSessionResponse response;
-
-   size_t size = response.size ();
-   LONGS_EQUAL (1 + 2, size);
-
-   response.code  = Result::FAIL_READ_SESSION;
-   response.count = 0x4243;
-
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        Result::FAIL_READ_SESSION, // Response code.
-                        0x42, 0x43,                // Device Address.
-                        0x00, 0x00, 0x00}
-                      );
-   ByteArray array (size + 6);
-
-   size_t    wsize = response.pack (array, 3);
-   LONGS_EQUAL (size, wsize);
-
-   CHECK_EQUAL (expected, array);
-
-   response.code  = Result::OK;
-   response.count = 0;
-
-   size_t rsize = response.unpack (expected, 3);
-   LONGS_EQUAL (size, rsize);
-
-   LONGS_EQUAL (Result::FAIL_READ_SESSION, response.code);
-   LONGS_EQUAL (0x4243, response.count);
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesMessage
-// =============================================================================
-
-TEST (DeviceManagement, GetEntriesMessage)
-{
-   DeviceManagement::GetEntriesMessage message;
-
-   message.offset = 0x4243;
-   message.count  = 0xAA;
-
-   size_t size = message.size ();
-   LONGS_EQUAL (2 + 1, size);
-
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x42, 0x43, // Offset.
-                        0xAA,       // Count.
-                        0x00, 0x00, 0x00}
-                      );
-   ByteArray array (size + 6);
-
-   size_t    wsize = message.pack (array, 3);
-   LONGS_EQUAL (size, wsize);
-
-   CHECK_EQUAL (expected, array);
-
-   message.offset = message.count = 0;
-
-   size_t rsize = message.unpack (expected, 3);
-   LONGS_EQUAL (size, rsize);
-
-   LONGS_EQUAL (0x4243, message.offset);
-   LONGS_EQUAL (0xAA, message.count);
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesResponse
-// =============================================================================
-
-TEST (DeviceManagement, GetEntriesResponse)
-{
-   DeviceManagement::GetEntriesResponse response;
-
-   DeviceManagement::Unit unit;
-   DeviceManagement::Device device;
-
-   unit.id        = 0x42;
-   unit.profile   = 0x5AA5;
-
-   device.address = 0x4321;
-   device.units.push_back (unit);
-
-   response.entries.push_back (device);
-
-   device.address++;
-   response.entries.push_back (device);
-
-   device.address++;
-   response.entries.push_back (device);
-
-   size_t size = response.size ();
-   LONGS_EQUAL (1 + 1 + device.size () * 3, size);
-
-   response.code = Result::FAIL_READ_SESSION;
-
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        Result::FAIL_READ_SESSION, // Response code.
-                        0x03,                      // Number of entries.
-                                                   // Device 1
-                        0x43, 0x21,                //  + Device Address.
-                        0x01,                      //  + Number of units.
-                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
-                                                   // Device 2
-                        0x43, 0x22,                //  + Device Address.
-                        0x01,                      //  + Number of units.
-                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
-                                                   // Device 3
-                        0x43, 0x23,                //  + Device Address.
-                        0x01,                      //  + Number of units.
-                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
-                        0x00, 0x00, 0x00}
-                      );
-   ByteArray array (size + 6);
-
-   size_t    wsize = response.pack (array, 3);
-   LONGS_EQUAL (size, wsize);
-
-   CHECK_EQUAL (expected, array);
-
-   DeviceManagement::GetEntriesResponse other;
-
-   size_t rsize = other.unpack (expected, 3);
-   LONGS_EQUAL (size, rsize);
-
-   LONGS_EQUAL (Result::FAIL_READ_SESSION, other.code);
-   LONGS_EQUAL (3, other.entries.size ());
-
-   for (uint8_t i = 0; i < 3; i++)
-   {
-      CHECK_EQUAL (response.entries[i], other.entries[i]);
-   }
-}
-
-// =============================================================================
 // DeviceManagementClient
 // =============================================================================
 
@@ -1330,4 +1191,51 @@ TEST (DeviceManagementServer, FindEntrySelf)
    entry = dev_mgt->entry (device->address ());
 
    LONGS_EQUAL (2, entry->units.size ());
+}
+
+TEST (DeviceManagementServer, EntriesSession)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device dev;
+      dev.address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev.uid     = temp;
+
+      dev_mgt->entries ().save (dev);
+   }
+
+   dev_mgt->sessions ().start_session (0x1234);
+
+   DeviceManagement::Device dev;
+   dev.address = 0xAAAA;
+
+   UID::IPUI *temp = new UID::IPUI (ipui);
+   (*temp)[4] += 0xFF;
+
+   dev.uid     = temp;
+
+   dev_mgt->entries ().save (dev);
+
+   LONGS_EQUAL (21, dev_mgt->entries ().size ());
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x1234));
+
+   dev_mgt->sessions ().start_session (0x1234);
+   CHECK_TRUE (dev_mgt->sessions ().is_valid (0x1234));
+
+   dev_mgt->entries ().destroy (dev);
+
+   LONGS_EQUAL (20, dev_mgt->entries ().size ());
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x1234));
 }

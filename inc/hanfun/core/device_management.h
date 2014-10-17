@@ -30,6 +30,8 @@
 #include "hanfun/device.h"
 #include "hanfun/units.h"
 
+#include "hanfun/core/session_management.h"
+
 namespace HF
 {
    // =============================================================================
@@ -283,71 +285,10 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
-         // =============================================================================
-         // Read Session Messages
-         // =============================================================================
-
-         /*!
-          * Start Read Session Command Message.
-          */
-         struct StartSessionResponse:public Protocol::Response
-         {
-            uint16_t count; //!< Number of device entries.
-
-            StartSessionResponse(uint16_t count = 0):
-               count (count)
-            {}
-
-            //! \see HF::Protocol::Response::size.
-            size_t size () const;
-
-            //! \see HF::Protocol::Response::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         /*!
-          * Get Entries Command Message.
-          */
-         struct GetEntriesMessage
-         {
-            uint16_t offset; //! Start index for the first entry to be provided.
-            uint8_t  count;  //! Number of entries to be sent in the response.
-
-            GetEntriesMessage(uint16_t offset = 0, uint8_t count = 0):
-               offset (offset), count (count)
-            {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const;
-
-            //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         struct GetEntriesResponse:public Protocol::Response
-         {
-            std::vector <Device> entries;
-
-            //! \see HF::Protocol::Response::size.
-            size_t size () const;
-
-            //! \see HF::Protocol::Response::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
          /*!
           * Device Management - Persistent Storage API.
           */
-         struct IEntries:public Common::IEntries<Device>
+         struct IEntries:public Common::IEntries <Device>
          {
             /*!
              * Return the Device entry for the given address.
@@ -736,21 +677,79 @@ namespace HF
             Container db;
          };
 
+         /*!
+          *
+          */
          template<typename _Entries = Entries>
-         class Server:public AbstractServer
+         struct Server:public AbstractServer, protected Core::SessionManagement::Server <_Entries>
          {
-            _Entries _entries;
-
-            public:
+            typedef SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionMgr::Container Container;
 
             Server(Unit0 &unit):AbstractServer (unit)
             {}
 
             virtual ~Server() {}
 
-            _Entries &entries () const
+            Container &entries () const
             {
-               return const_cast <_Entries &>(_entries);
+               return SessionMgr::entries ();
+            }
+
+            SessionMgr &sessions ()
+            {
+               return *this;
+            }
+
+            using AbstractServer::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               AbstractServer::send (addr, message);
+            }
+
+            protected:
+
+            //! \see AbstractServer::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const
+            {
+               switch (itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::START);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::payload_size (SessionManagement::GET);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::END);
+
+                  default:
+                     return AbstractService::payload_size (itf);
+               }
+            }
+
+            //! \see AbstractServer::handle_command
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset)
+            {
+               switch (packet.message.itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::START, packet, payload,
+                                                        offset);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::handle_command (SessionManagement::GET, packet, payload,
+                                                        offset);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::END, packet, payload,
+                                                        offset);
+
+                  default:
+                     return AbstractServer::handle_command (packet, payload, offset);
+               }
             }
          };
 
