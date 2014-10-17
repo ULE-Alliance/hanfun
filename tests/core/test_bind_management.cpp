@@ -1015,3 +1015,36 @@ TEST (BindManagementServer, RemoveNoMatch)
 
    mock ().checkExpectations ();
 }
+
+TEST (BindManagementServer, EntriesSession)
+{
+   // Create entry.
+   BindManagement::Entry entry;
+
+   for (uint8_t i = 0; i < 20; i++)
+   {
+      entry.source.device      = 0x1111 + i;
+      entry.source.unit        = 0x22 + i;
+      entry.destination.device = 0x1111 + i;
+      entry.destination.unit   = 0x44 + i;
+      server->entries ().save (entry);
+   }
+
+   LONGS_EQUAL (20, server->entries ().size ());
+
+   server->sessions ().start_session (0x1234);
+
+   entry.destination.device++;
+   server->entries ().save (entry);
+
+   LONGS_EQUAL (21, server->entries ().size ());
+   CHECK_FALSE (server->sessions ().is_valid (0x1234));
+
+   server->sessions ().start_session (0x1234);
+   CHECK_TRUE (server->sessions ().is_valid (0x1234));
+
+   server->entries ().destroy (entry);
+
+   LONGS_EQUAL (20, server->entries ().size ());
+   CHECK_FALSE (server->sessions ().is_valid (0x1234));
+}

@@ -26,6 +26,8 @@
 
 #include "hanfun/interface.h"
 
+#include "hanfun/core/session_management.h"
+
 // =============================================================================
 // API
 // =============================================================================
@@ -121,13 +123,13 @@ namespace HF
          /*!
           * Bind Management persistent storage API.
           */
-         struct IEntries:public Common::IEntries<Entry>
+         struct IEntries:public Common::IEntries <Entry>
          {
             // =============================================================================
             // API
             // =============================================================================
 
-            using Common::IEntries<Entry>::destroy;
+            using Common::IEntries <Entry>::destroy;
 
             /*!
              * Destroy the entries in the persistent storage, that refer to the
@@ -359,6 +361,7 @@ namespace HF
             typedef std::set <Entry> Container;
             typedef Container::iterator iterator;
             typedef Container::const_iterator const_iterator;
+            typedef Container::value_type value_type;
 
             size_t size () const;
 
@@ -455,20 +458,78 @@ namespace HF
             Container db;
          };
 
+         /*!
+          *
+          */
          template<typename _Entries = Entries>
-         class Server:public AbstractServer
+         struct Server:public AbstractServer, protected Core::SessionManagement::Server <_Entries>
          {
-            //! This field contains the bind entries present in the system.
-            _Entries _entries;
-
-            public:
+            typedef SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionMgr::Container Container;
 
             Server(Unit0 &unit):AbstractServer (unit)
             {}
 
-            _Entries &entries () const
+            virtual ~Server() {}
+
+            Container &entries () const
             {
-               return const_cast <_Entries &>(_entries);
+               return SessionMgr::entries ();
+            }
+
+            SessionMgr &sessions ()
+            {
+               return *this;
+            }
+
+            using AbstractServer::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               AbstractServer::send (addr, message);
+            }
+
+            protected:
+
+            //! \see AbstractServer::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const
+            {
+               switch (itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::START);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::payload_size (SessionManagement::GET);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::END);
+
+                  default:
+                     return AbstractService::payload_size (itf);
+               }
+            }
+
+            //! \see AbstractServer::handle_command
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+            {
+               switch (packet.message.itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::START, packet, payload,
+                                                        offset);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::handle_command (SessionManagement::GET, packet, payload,
+                                                        offset);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::END, packet, payload,
+                                                        offset);
+
+                  default:
+                     return AbstractServer::handle_command (packet, payload, offset);
+               }
             }
          };
 
