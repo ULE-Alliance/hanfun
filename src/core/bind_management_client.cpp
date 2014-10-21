@@ -85,6 +85,34 @@ void Client::remove (const Protocol::Address &source, const Protocol::Address &d
    delete payload;
 }
 
+// =============================================================================
+// Client::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Client::payload_size (Protocol::Message::Interface &itf) const
+{
+   switch (itf.member)
+   {
+      case ADD_BIND_CMD:
+      case REMOVE_BIND_CMD:
+         return Protocol::Response::min_size;
+
+      case START_SESSION_CMD:
+         return SessionMgr::payload_size (SessionManagement::START);
+
+      case GET_ENTRIES_CMD:
+         return SessionMgr::payload_size (SessionManagement::GET);
+
+      case END_SESSION_CMD:
+         return SessionMgr::payload_size (SessionManagement::END);
+
+      default:
+         return 0;
+   }
+}
 
 // =============================================================================
 // BindManagement::Client::handle_command
@@ -93,7 +121,9 @@ void Client::remove (const Protocol::Address &source, const Protocol::Address &d
  *
  */
 // =============================================================================
-Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
+                                                       Common::ByteArray &payload,
+                                                       size_t offset)
 {
    Common::Result result   = Common::Result::FAIL_UNKNOWN;
 
@@ -111,6 +141,15 @@ Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
          result = Common::Result::OK;
          break;
       }
+      case START_SESSION_CMD:
+         return SessionMgr::handle_command (SessionManagement::START, packet, payload, offset);
+
+      case GET_ENTRIES_CMD:
+         return SessionMgr::handle_command (SessionManagement::GET, packet, payload, offset);
+
+      case END_SESSION_CMD:
+         return SessionMgr::handle_command (SessionManagement::END, packet, payload, offset);
+
       default:
          break;
    }

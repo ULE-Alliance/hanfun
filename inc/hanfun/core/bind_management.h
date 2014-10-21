@@ -202,13 +202,25 @@ namespace HF
          /*!
           * Bind Management interface : Client side.
           */
-         struct Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>,
+            protected SessionManagement::Client <Entry>
          {
+            typedef ServiceRole <Abstract, HF::Interface::CLIENT_ROLE> Service;
+
+            public:
+
+            typedef SessionManagement::Client <Entry> SessionMgr;
+
             Client(HF::Core::Unit0 &unit):
                ServiceRole (unit)
             {}
 
             virtual ~Client() {}
+
+            SessionMgr &session ()
+            {
+               return *this;
+            }
 
             // ======================================================================
             // Commands
@@ -236,6 +248,28 @@ namespace HF
             void remove (const Protocol::Address &source, const Protocol::Address &destination,
                          const Common::Interface &itf);
 
+            // ======================================================================
+            // Session Management
+            // ======================================================================
+
+            void start_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    START_SESSION_CMD>();
+            }
+
+            void get_entries (uint16_t offset, uint8_t count = 0) const
+            {
+               SessionMgr::get_entries <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                        GET_ENTRIES_CMD>(offset, count);
+            }
+
+            void end_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    END_SESSION_CMD>();
+            }
+
             //! @}
             // ======================================================================
 
@@ -256,7 +290,19 @@ namespace HF
             //! @}
             // ======================================================================
 
+            using Service::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message) const
+            {
+               this->send (addr, message);
+            }
+
             protected:
+
+            using ServiceRole::payload_size;
+
+            //! \see AbstractInterface::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //!< \see AbstractInterface::handle_command
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
@@ -333,7 +379,7 @@ namespace HF
              * @return  reference to the object implementing the session management API for
              *          this bind management server.
              */
-            virtual SessionManagement::IServer &sessions() = 0;
+            virtual SessionManagement::IServer &sessions () = 0;
 
             protected:
 
