@@ -336,13 +336,18 @@ namespace HF
          /*!
           * Device Management interface : Client side.
           */
-         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>,
+            protected SessionManagement::Client <Device>
          {
+            typedef ServiceRole <Abstract, HF::Interface::CLIENT_ROLE> Service;
+
             protected:
 
             uint16_t _address; //! Device HAN-FUN Address.
 
             public:
+
+            typedef SessionManagement::Client <Device> SessionMgr;
 
             Client(Unit0 &unit):
                ServiceRole (unit), _address (Protocol::BROADCAST_ADDR)
@@ -358,6 +363,11 @@ namespace HF
             virtual uint16_t address () const
             {
                return _address;
+            }
+
+            SessionMgr &session ()
+            {
+               return *this;
             }
 
             // ======================================================================
@@ -381,6 +391,28 @@ namespace HF
             void deregister ()
             {
                deregister (_address);
+            }
+
+            // ======================================================================
+            // Session Management
+            // ======================================================================
+
+            void start_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    START_SESSION_CMD>();
+            }
+
+            void get_entries (uint16_t offset, uint8_t count = 0) const
+            {
+               SessionMgr::get_entries <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                        GET_ENTRIES_CMD>(offset, count);
+            }
+
+            void end_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    END_SESSION_CMD>();
             }
 
             //! @}
@@ -410,6 +442,13 @@ namespace HF
 
             //! @}
             // ======================================================================
+
+            using Service::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message) const
+            {
+               this->send (addr, message);
+            }
 
             protected:
 
@@ -480,7 +519,7 @@ namespace HF
              * @return  reference to the object implementing the session management API for
              *          this bind management server.
              */
-            virtual SessionManagement::IServer &sessions() = 0;
+            virtual SessionManagement::IServer &sessions () = 0;
 
             // =============================================================================
             // Interface Attribute API.
@@ -688,7 +727,7 @@ namespace HF
           *
           */
          template<typename _Entries = Entries>
-         struct Server:public AbstractServer,public SessionManagement::Server <_Entries>
+         struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
          {
             typedef SessionManagement::Server <_Entries> SessionMgr;
             typedef typename SessionMgr::Container Container;
@@ -760,6 +799,8 @@ namespace HF
                      return AbstractServer::handle_command (packet, payload, offset);
                }
             }
+
+            using SessionMgr::entries;
          };
 
          // =========================================================================

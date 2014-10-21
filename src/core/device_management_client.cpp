@@ -111,6 +111,15 @@ size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf
       case DEREGISTER_CMD:
          return payload_size_helper <DeregisterResponse>();
 
+      case START_SESSION_CMD:
+         return SessionMgr::payload_size (SessionManagement::START);
+
+      case GET_ENTRIES_CMD:
+         return SessionMgr::payload_size (SessionManagement::GET);
+
+      case END_SESSION_CMD:
+         return SessionMgr::payload_size (SessionManagement::END);
+
       default:
          return 0;
    }
@@ -123,7 +132,8 @@ size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packet,
+                                                         Common::ByteArray &payload,
                                                          size_t offset)
 {
    switch (packet.message.itf.member)
@@ -144,8 +154,20 @@ Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packe
 
          break;
       }
+      case START_SESSION_CMD:
+      {
+         return SessionMgr::handle_command (SessionManagement::START, packet, payload, offset);
+      }
+      case GET_ENTRIES_CMD:
+      {
+         return SessionMgr::handle_command (SessionManagement::GET, packet, payload, offset);
+      }
+      case END_SESSION_CMD:
+      {
+         return SessionMgr::handle_command (SessionManagement::END, packet, payload, offset);
+      }
       default:
-         break;
+         return Common::Result::FAIL_UNKNOWN;
    }
 
    return Common::Result::OK;
