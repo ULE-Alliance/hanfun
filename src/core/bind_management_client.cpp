@@ -17,21 +17,21 @@
 
 using namespace HF;
 using namespace HF::Core;
+using namespace HF::Core::BindManagement;
 
 // =============================================================================
 // BindManagement::Client.
 // =============================================================================
 
 // =============================================================================
-// BindManagement::Client::add
+// Client::add
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::Client::add (const Protocol::Address &source,
-                                  const Protocol::Address &destination,
-                                  const Common::Interface &itf)
+void Client::add (const Protocol::Address &source, const Protocol::Address &destination,
+                  const Common::Interface &itf)
 {
    Protocol::Address addr (0, 0);
 
@@ -55,15 +55,14 @@ void BindManagement::Client::add (const Protocol::Address &source,
 }
 
 // =============================================================================
-// BindManagement::Client::remove
+// Client::remove
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::Client::remove (const Protocol::Address &source,
-                                     const Protocol::Address &destination,
-                                     const Common::Interface &itf)
+void Client::remove (const Protocol::Address &source, const Protocol::Address &destination,
+                     const Common::Interface &itf)
 {
    Protocol::Address addr (0, 0);
 
