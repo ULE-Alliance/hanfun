@@ -64,6 +64,8 @@ namespace HF
          MAX_CMD_ID = 0xFF,           //!< Maximum value for command IDs.
       };
 
+      virtual ~Interface() {}
+
       // =============================================================================
       // API
       // =============================================================================
@@ -139,6 +141,8 @@ namespace HF
        */
       struct AbstractInterface:virtual public Interface
       {
+         virtual ~AbstractInterface() {}
+
          //! \see Interface::handle
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 

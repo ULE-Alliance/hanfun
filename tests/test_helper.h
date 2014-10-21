@@ -320,6 +320,8 @@ namespace HF
             return _uid;
          }
 
+         using TestInterface::attributes;
+
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
          {

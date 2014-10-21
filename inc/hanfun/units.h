@@ -33,6 +33,8 @@ namespace HF
        */
       struct IUnit:public Profiles::IProfile
       {
+         virtual ~IUnit() {}
+
          //! Id number of this unit on the device.
          virtual uint8_t id () const = 0;
 
@@ -70,6 +72,8 @@ namespace HF
 
          public:
 
+         virtual ~AbstractUnit() {}
+
          //! Get the device associated with this unit.
          IDevice &device () const
          {
@@ -77,7 +81,7 @@ namespace HF
          }
 
          void send (const Protocol::Address &addr, Protocol::Message &message,
-                    Transport::Link *link = nullptr);
+                    Transport::Link *link);
 
          std::vector <Common::Interface> interfaces () const
          {
@@ -156,6 +160,8 @@ namespace HF
 
             return result;
          }
+
+         using HF::Units::AbstractUnit::send;
 
          void send (const Protocol::Address &addr, Protocol::Message &message)
          {

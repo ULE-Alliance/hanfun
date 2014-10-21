@@ -248,6 +248,7 @@ namespace HF
 
          using AbstractProfile <_uid>::uid;
          using Interface::handle;
+         using Interface::attributes;
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
@@ -394,6 +395,8 @@ namespace HF
             Interfaces::Alert::Server::state (0, state);
             Interfaces::Alert::Server::status (addr, Detector::uid ());
          }
+
+         using Interfaces::Alert::Server::attributes;
 
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
