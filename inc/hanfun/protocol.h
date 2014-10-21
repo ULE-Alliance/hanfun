@@ -252,6 +252,9 @@ namespace HF
          // API
          // =============================================================================
 
+         //! Minimum number of bytes required by this message.
+         constexpr static size_t min_size = sizeof(uint8_t);
+
          Common::Result code;
 
          Response(Common::Result code = Common::Result::OK):code (code) {}

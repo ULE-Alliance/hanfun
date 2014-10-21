@@ -266,7 +266,7 @@ size_t Message::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 size_t Response::size () const
 {
-   return sizeof(uint8_t);
+   return min_size;
 }
 
 // =============================================================================

@@ -567,3 +567,243 @@ TEST (SessionManagementServer, HandleGet_Ok)
 
    delete message;
 }
+
+// =============================================================================
+// Session Management Client
+// =============================================================================
+
+TEST_GROUP (SessionManagementClient)
+{
+   typedef Common::SerializableHelper <uint16_t> TestType;
+
+   struct TestClient:public Client <TestType>
+   {
+      void send (const Protocol::Address &addr, Protocol::Message &message) const
+      {
+         auto &call = mock ("SessionManagementClient").actualCall ("send");
+         call.withParameter ("addr_dev", addr.device);
+         call.withParameter ("addr_unit", addr.unit);
+
+         mock ("SessionManagementClient").setData ("message", new Protocol::Message (message));
+      }
+
+//      using AbstractServer::payload_size;
+      using Client<TestType>::handle_command;
+
+      void start_session () const
+      {
+         Client<TestType>::request<HF::Interface::SERVER_ROLE, 0x1234, 0x91>();
+      }
+
+      void get_entries (uint16_t offset, uint8_t count = 0) const
+      {
+         Client<TestType>::get_entries<HF::Interface::SERVER_ROLE, 0x1234, 0x92>(offset, count);
+      }
+
+      void end_session () const
+      {
+         Client<TestType>::request<HF::Interface::SERVER_ROLE, 0x1234, 0x93>();
+      }
+
+      void entries (GetEntriesResponse<TestType> &response)
+      {
+         auto &call = mock ("SessionManagementClient").actualCall ("entries");
+         call.withParameter("code", response.code);
+         call.withParameter("size", response.entries.size());
+      }
+
+      void session_started(StartResponse &response)
+      {
+         auto &call = mock ("SessionManagementClient").actualCall ("session_started");
+         call.withParameter("code", response.code);
+         call.withParameter("count", response.count);
+      }
+
+      void session_ended(Protocol::Response &response)
+      {
+         auto &call = mock ("SessionManagementClient").actualCall ("session_ended");
+         call.withParameter("code", response.code);
+      }
+   };
+
+   TestClient client;
+
+   TEST_SETUP ()
+   {
+      mock ().ignoreOtherCalls ();
+   }
+
+   TEST_TEARDOWN ()
+   {
+      mock ().clear ();
+   }
+};
+
+TEST (SessionManagementClient, Start)
+{
+   auto &call = mock ("SessionManagementClient").expectOneCall ("send");
+   call.withParameter ("addr_dev", 0);
+   call.withParameter ("addr_unit", 0);
+
+   client.start_session();
+
+   mock ("SessionManagementClient").checkExpectations();
+
+   auto res     = mock ("SessionManagementClient").getData ("message").getObjectPointer ();
+
+   auto message = static_cast <const Protocol::Message *>(res);
+
+   LONGS_EQUAL (0x1234, message->itf.id);
+   LONGS_EQUAL (0x91, message->itf.member);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+
+   delete message;
+}
+
+TEST (SessionManagementClient, Get)
+{
+   auto &call = mock ("SessionManagementClient").expectOneCall ("send");
+   call.withParameter ("addr_dev", 0);
+   call.withParameter ("addr_unit", 0);
+
+   client.get_entries(0x1234, 0x56);
+
+   mock ("SessionManagementClient").checkExpectations();
+
+   auto res     = mock ("SessionManagementClient").getData ("message").getObjectPointer ();
+
+   auto message = static_cast <const Protocol::Message *>(res);
+
+   LONGS_EQUAL (0x1234, message->itf.id);
+   LONGS_EQUAL (0x92, message->itf.member);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+
+   GetEntriesMessage req;
+   req.unpack(message->payload);
+
+   LONGS_EQUAL (0x1234, req.offset);
+   LONGS_EQUAL (0x56, req.count);
+
+   delete message;
+}
+
+TEST (SessionManagementClient, End)
+{
+   auto &call = mock ("SessionManagementClient").expectOneCall ("send");
+   call.withParameter ("addr_dev", 0);
+   call.withParameter ("addr_unit", 0);
+
+   client.end_session();
+
+   mock ("SessionManagementClient").checkExpectations();
+
+   auto res     = mock ("SessionManagementClient").getData ("message").getObjectPointer ();
+
+   auto message = static_cast <const Protocol::Message *>(res);
+
+   LONGS_EQUAL (0x1234, message->itf.id);
+   LONGS_EQUAL (0x93, message->itf.member);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
+
+   delete message;
+}
+
+TEST (SessionManagementClient, Handle_Started)
+{
+   Protocol::Packet packet;
+
+   packet.source.device = 0x0;
+   packet.source.unit   = 0x0;
+
+   StartResponse resp;
+   resp.code = Result::OK;
+   resp.count = 0x55;
+
+   Common::ByteArray payload = Common::ByteArray (resp.size ());
+   resp.pack (payload);
+
+   auto &call = mock ("SessionManagementClient").expectOneCall ("session_started");
+   call.withParameter ("code", Result::OK);
+   call.withParameter ("count", 0x55);
+
+   LONGS_EQUAL (Result::OK, client.handle_command (START, packet, payload));
+
+   mock ("SessionManagementClient").checkExpectations ();
+}
+
+TEST (SessionManagementClient, Handle_Entries)
+{
+   Protocol::Packet packet;
+
+   packet.source.device = 0x0;
+   packet.source.unit   = 0x0;
+
+   GetEntriesResponse<TestType> resp;
+
+   // FAIL - Session not established;
+
+   resp.code = Result::FAIL_READ_SESSION;
+
+   Common::ByteArray payload = Common::ByteArray (resp.size ());
+   resp.pack (payload);
+
+   auto &call_1 = mock ("SessionManagementClient").expectOneCall ("entries");
+   call_1.withParameter ("code", Result::FAIL_READ_SESSION);
+   call_1.withParameter ("size", 0);
+
+   LONGS_EQUAL (Result::OK, client.handle_command (GET, packet, payload));
+
+   mock ("SessionManagementClient").checkExpectations ();
+
+   // FAIL - Entries modified.
+
+   resp.code = Result::FAIL_MODIFIED;
+   resp.pack (payload);
+
+   auto &call_2 = mock ("SessionManagementClient").expectOneCall ("entries");
+   call_2.withParameter ("code", Result::FAIL_MODIFIED);
+   call_2.withParameter ("size", 0);
+
+   LONGS_EQUAL (Result::OK, client.handle_command (GET, packet, payload));
+
+   mock ("SessionManagementClient").checkExpectations ();
+
+   // OK - Got some entries.
+
+   resp.code = Result::OK;
+   resp.entries.push_back(TestType(0x1234));
+   resp.entries.push_back(TestType(0x5678));
+   resp.entries.push_back(TestType(0x9ABC));
+
+   payload = Common::ByteArray (resp.size ());
+   resp.pack (payload);
+
+   auto &call_3 = mock ("SessionManagementClient").expectOneCall ("entries");
+   call_3.withParameter ("code", Result::OK);
+   call_3.withParameter ("size", 3);
+
+   LONGS_EQUAL (Result::OK, client.handle_command (GET, packet, payload));
+
+   mock ("SessionManagementClient").checkExpectations ();
+}
+
+TEST (SessionManagementClient, Handle_End)
+{
+   Protocol::Packet packet;
+
+   packet.source.device = 0x0;
+   packet.source.unit   = 0x0;
+
+   Protocol::Response resp;
+   resp.code = Result::FAIL_ID;
+
+   Common::ByteArray payload = Common::ByteArray (resp.size ());
+   resp.pack (payload);
+
+   auto &call = mock ("SessionManagementClient").expectOneCall ("session_ended");
+   call.withParameter ("code", Result::FAIL_ID);
+
+   LONGS_EQUAL (Result::OK, client.handle_command (END, packet, payload));
+
+   mock ("SessionManagementClient").checkExpectations ();
+}

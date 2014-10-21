@@ -47,15 +47,16 @@ namespace HF
          {
             uint16_t count; //!< Number of device entries.
 
+            constexpr static size_t min_size = Protocol::Response::min_size + sizeof(count);
             StartResponse (uint16_t count = 0) :
                   count(count)
             {
             }
 
             //! \see HF::Protocol::Response::size.
-            size_t size () const
+            static size_t size ()
             {
-               return Protocol::Response::size() + sizeof(count);
+               return min_size;
             }
 
             //! \see HF::Protocol::Response::pack.
@@ -496,6 +497,178 @@ namespace HF
             private:
 
             Container _entries;
+         };
+
+         // =============================================================================
+         // Client API
+         // =============================================================================
+
+         /*!
+          *
+          */
+         class AbstractClient
+         {
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            //! \name Commands
+            //! @{
+
+            /*!
+             * Send a message to start a session on the server.
+             */
+            virtual void start_session() const = 0;
+
+            /*!
+             * Send a message to end the current session on the server.
+             */
+            virtual void end_session() const = 0;
+
+            /*!
+             * Send a message to get \c count entries starting at \c offset.
+             *
+             * @param [in] offset   the index to start the entries from.
+             * @param [in] count    the number of entries to retrieve.
+             */
+            virtual void get_entries (uint16_t offset, uint8_t count = 0) const = 0;
+
+            //! @}
+            // ======================================================================
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! \name Events
+            //! @{
+
+            /*!
+             * This is event is called when a response to a start session message is
+             * received.
+             *
+             * @param [in] response the received response.
+             */
+            virtual void session_started(StartResponse &response)
+            {
+               UNUSED(response);
+            }
+
+            /*!
+             * This is event is called when a response to a end session message is
+             * received.
+             *
+             * @param [in] response the received response.
+             */
+            virtual void session_ended(Protocol::Response &response)
+            {
+               UNUSED(response);
+            }
+
+            //! @}
+            // ======================================================================
+
+            protected:
+
+            /*!
+             * \see AbstractInterface::handle_command.
+             *
+             * @param [in] cmd      the session operation to process.
+             *
+             * @param [in] packet   the packet receive from the network.
+             *
+             * @param [in] payload  the byte array containing the data received from the
+             *                      network.
+             *
+             * @param [in] offset   the offset the payload start at in the byte array.
+             *
+             * @return  the result of the message processing.
+             */
+            Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
+                                            Common::ByteArray &payload, size_t offset = 0);
+
+            /*!
+             *
+             * @param [in] cmd
+             *
+             * @return
+             */
+            size_t payload_size (CMD cmd) const;
+
+            template<uint8_t _role, uint16_t _uid, uint8_t _member>
+            void get_entries (uint16_t offset, uint8_t count = 0) const
+            {
+               SessionManagement::GetEntriesMessage msg (offset, count);
+
+               Protocol::Address addr (0, 0);
+               Protocol::Message message;
+
+               message.itf.role   = _role;
+               message.itf.id     = _uid;
+               message.itf.member = _member;
+
+               message.payload    = Common::ByteArray(msg.size());
+
+               msg.pack(message.payload);
+
+               this->send (addr, message);
+            }
+
+            template<uint8_t _role, uint16_t _uid, uint8_t _member>
+            void request () const
+            {
+               Protocol::Address addr (0, 0);
+               Protocol::Message message;
+
+               message.itf.role   = _role;
+               message.itf.id     = _uid;
+               message.itf.member = _member;
+
+               this->send (addr, message);
+            }
+
+            virtual void send (const Protocol::Address &addr, Protocol::Message &message) const = 0;
+         };
+
+         /*!
+          *
+          */
+         template<typename _Entry>
+         struct Client:public AbstractClient
+         {
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! \name Events
+            //! @{
+
+            /*!
+             * This event is called when a response to a get entries is received.
+             *
+             * @param entries
+             */
+            virtual void entries (GetEntriesResponse<_Entry> &response)
+            {
+               UNUSED (response);
+            }
+
+            //! @}
+            // ======================================================================
+
+            protected:
+
+            Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
+                                            Common::ByteArray &payload, size_t offset = 0)
+            {
+               if (cmd == GET)
+               {
+                  GetEntriesResponse<_Entry> response;
+                  response.unpack(payload, offset);
+                  entries(response);
+                  return Common::Result::OK;
+               }
+               else
+               {
+                  return AbstractClient::handle_command(cmd, packet, payload, offset);
+               }
+            }
          };
 
       }  // namespace SessionManagement
