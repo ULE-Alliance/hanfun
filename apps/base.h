@@ -84,6 +84,8 @@ namespace DeviceManagement
 
       protected:
 
+      using HF::Core::DeviceManagement::Server <Entries>::deregister;
+
       uint16_t _next_address;
 
       uint16_t next_address ();

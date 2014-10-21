@@ -461,7 +461,7 @@ void Server::response (Protocol::Packet &packet, Reference &report, Common::Resu
 
    delete resp;
 
-   unit ().send (packet.source, *resp_msg);
+   unit ().send (packet.source, *resp_msg, packet.link);
 
    delete resp_msg;
 }

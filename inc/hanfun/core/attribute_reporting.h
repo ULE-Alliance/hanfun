@@ -18,6 +18,7 @@
 #define HF_CORE_ATTRIBUTE_REPORTING_H
 
 #include <forward_list>
+#include <memory>
 
 #include "hanfun/common.h"
 #include "hanfun/core.h"
@@ -1005,6 +1006,8 @@ namespace HF
             protected:
 
             uint32_t last_time;
+
+            using AbstractService::notify;
 
             //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;

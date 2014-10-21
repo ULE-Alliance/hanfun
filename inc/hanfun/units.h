@@ -77,7 +77,7 @@ namespace HF
          }
 
          void send (const Protocol::Address &addr, Protocol::Message &message,
-                    Transport::Link *link = nullptr);
+                    Transport::Link *link);
 
          std::vector <Common::Interface> interfaces () const
          {
@@ -156,6 +156,8 @@ namespace HF
 
             return result;
          }
+
+         using HF::Units::AbstractUnit::send;
 
          void send (const Protocol::Address &addr, Protocol::Message &message)
          {
