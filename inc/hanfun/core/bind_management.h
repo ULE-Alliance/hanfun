@@ -26,6 +26,8 @@
 
 #include "hanfun/interface.h"
 
+#include "hanfun/core/session_management.h"
+
 // =============================================================================
 // API
 // =============================================================================
@@ -121,13 +123,13 @@ namespace HF
          /*!
           * Bind Management persistent storage API.
           */
-         struct IEntries:public Common::IEntries<Entry>
+         struct IEntries:public Common::IEntries <Entry>
          {
             // =============================================================================
             // API
             // =============================================================================
 
-            using Common::IEntries<Entry>::destroy;
+            using Common::IEntries <Entry>::destroy;
 
             /*!
              * Destroy the entries in the persistent storage, that refer to the
@@ -200,13 +202,25 @@ namespace HF
          /*!
           * Bind Management interface : Client side.
           */
-         struct Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>,
+            protected SessionManagement::Client <Entry>
          {
+            typedef ServiceRole <Abstract, HF::Interface::CLIENT_ROLE> Service;
+
+            public:
+
+            typedef SessionManagement::Client <Entry> SessionMgr;
+
             Client(HF::Core::Unit0 &unit):
                ServiceRole (unit)
             {}
 
             virtual ~Client() {}
+
+            SessionMgr &session ()
+            {
+               return *this;
+            }
 
             // ======================================================================
             // Commands
@@ -234,6 +248,28 @@ namespace HF
             void remove (const Protocol::Address &source, const Protocol::Address &destination,
                          const Common::Interface &itf);
 
+            // ======================================================================
+            // Session Management
+            // ======================================================================
+
+            void start_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    START_SESSION_CMD>();
+            }
+
+            void get_entries (uint16_t offset, uint8_t count = 0) const
+            {
+               SessionMgr::get_entries <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                        GET_ENTRIES_CMD>(offset, count);
+            }
+
+            void end_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    END_SESSION_CMD>();
+            }
+
             //! @}
             // ======================================================================
 
@@ -254,7 +290,19 @@ namespace HF
             //! @}
             // ======================================================================
 
+            using Service::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message) const
+            {
+               this->send (addr, message);
+            }
+
             protected:
+
+            using ServiceRole::payload_size;
+
+            //! \see AbstractInterface::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const;
 
             //!< \see AbstractInterface::handle_command
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
@@ -317,7 +365,21 @@ namespace HF
             //! @}
             // ======================================================================
 
+            /*!
+             * Reference to the persistent storage implementation.
+             *
+             * @return  reference to the object responsible by the persistent storage of the
+             *          bind entries.
+             */
             virtual IEntries &entries () const = 0;
+
+            /*!
+             * Reference to the session management API.
+             *
+             * @return  reference to the object implementing the session management API for
+             *          this bind management server.
+             */
+            virtual SessionManagement::IServer &sessions () = 0;
 
             protected:
 
@@ -359,6 +421,7 @@ namespace HF
             typedef std::set <Entry> Container;
             typedef Container::iterator iterator;
             typedef Container::const_iterator const_iterator;
+            typedef Container::value_type value_type;
 
             size_t size () const;
 
@@ -438,7 +501,8 @@ namespace HF
                {
                   if (func (*itr))
                   {
-                     this->db.erase (itr++);
+                     auto old = itr++;
+                     destroy (*old);
                      result = Common::Result::OK;
                   }
                   else
@@ -455,21 +519,84 @@ namespace HF
             Container db;
          };
 
+         /*!
+          *
+          */
          template<typename _Entries = Entries>
-         class Server:public AbstractServer
+         struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
          {
-            //! This field contains the bind entries present in the system.
-            _Entries _entries;
+            typedef SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionMgr::Container Container;
 
-            public:
-
-            Server(Unit0 &unit):AbstractServer (unit)
+            Server(Unit0 &unit):AbstractServer (unit) //, SessionMgr()
             {}
 
-            _Entries &entries () const
+            virtual ~Server()
+            {}
+
+            Container &entries () const
             {
-               return const_cast <_Entries &>(_entries);
+               return SessionMgr::entries ();
             }
+
+            SessionMgr &sessions ()
+            {
+               return *this;
+            }
+
+            using AbstractServer::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               AbstractServer::send (addr, message);
+            }
+
+            protected:
+
+            _Entries _entries;
+
+            //! \see AbstractServer::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const
+            {
+               switch (itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::START);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::payload_size (SessionManagement::GET);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::END);
+
+                  default:
+                     return AbstractService::payload_size (itf);
+               }
+            }
+
+            //! \see AbstractServer::handle_command
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+            {
+               switch (packet.message.itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::START, packet, payload,
+                                                        offset);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::handle_command (SessionManagement::GET, packet, payload,
+                                                        offset);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::END, packet, payload,
+                                                        offset);
+
+                  default:
+                     return AbstractServer::handle_command (packet, payload, offset);
+               }
+            }
+
+            using SessionMgr::entries;
          };
 
          typedef Server <> DefaultServer;

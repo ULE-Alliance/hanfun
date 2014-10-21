@@ -18,7 +18,6 @@
 #define HF_DEVICE_MANGEMENT_H
 
 #include <algorithm>
-#include <map>
 #include <vector>
 
 #include "hanfun/common.h"
@@ -29,6 +28,8 @@
 #include "hanfun/core.h"
 #include "hanfun/device.h"
 #include "hanfun/units.h"
+
+#include "hanfun/core/session_management.h"
 
 namespace HF
 {
@@ -69,9 +70,9 @@ namespace HF
          {
             REGISTER_CMD      = 0x01, //!< Register device command.
             DEREGISTER_CMD    = 0x02, //!< De-register device command.
-            START_SESSION_CMD = 0x03, //!< TODO Start Session Read Registration Info.
-            END_SESSION_CMD   = 0x04, //!< TODO End Session Read Registration Info.
-            GET_ENTRIES_CMD   = 0x05, //!< TODO Get Entries Command.
+            START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
+            END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
+            GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
          } CMD;
 
          //! Attributes.
@@ -283,71 +284,10 @@ namespace HF
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
-         // =============================================================================
-         // Read Session Messages
-         // =============================================================================
-
-         /*!
-          * Start Read Session Command Message.
-          */
-         struct StartSessionResponse:public Protocol::Response
-         {
-            uint16_t count; //!< Number of device entries.
-
-            StartSessionResponse(uint16_t count = 0):
-               count (count)
-            {}
-
-            //! \see HF::Protocol::Response::size.
-            size_t size () const;
-
-            //! \see HF::Protocol::Response::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         /*!
-          * Get Entries Command Message.
-          */
-         struct GetEntriesMessage
-         {
-            uint16_t offset; //! Start index for the first entry to be provided.
-            uint8_t  count;  //! Number of entries to be sent in the response.
-
-            GetEntriesMessage(uint16_t offset = 0, uint8_t count = 0):
-               offset (offset), count (count)
-            {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const;
-
-            //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         struct GetEntriesResponse:public Protocol::Response
-         {
-            std::vector <Device> entries;
-
-            //! \see HF::Protocol::Response::size.
-            size_t size () const;
-
-            //! \see HF::Protocol::Response::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
          /*!
           * Device Management - Persistent Storage API.
           */
-         struct IEntries:public Common::IEntries<Device>
+         struct IEntries:public Common::IEntries <Device>
          {
             /*!
              * Return the Device entry for the given address.
@@ -396,13 +336,18 @@ namespace HF
          /*!
           * Device Management interface : Client side.
           */
-         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>,
+            protected SessionManagement::Client <Device>
          {
+            typedef ServiceRole <Abstract, HF::Interface::CLIENT_ROLE> Service;
+
             protected:
 
             uint16_t _address; //! Device HAN-FUN Address.
 
             public:
+
+            typedef SessionManagement::Client <Device> SessionMgr;
 
             Client(Unit0 &unit):
                ServiceRole (unit), _address (Protocol::BROADCAST_ADDR)
@@ -418,6 +363,11 @@ namespace HF
             virtual uint16_t address () const
             {
                return _address;
+            }
+
+            SessionMgr &session ()
+            {
+               return *this;
             }
 
             // ======================================================================
@@ -441,6 +391,28 @@ namespace HF
             void deregister ()
             {
                deregister (_address);
+            }
+
+            // ======================================================================
+            // Session Management
+            // ======================================================================
+
+            void start_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    START_SESSION_CMD>();
+            }
+
+            void get_entries (uint16_t offset, uint8_t count = 0) const
+            {
+               SessionMgr::get_entries <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                        GET_ENTRIES_CMD>(offset, count);
+            }
+
+            void end_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    END_SESSION_CMD>();
             }
 
             //! @}
@@ -470,6 +442,13 @@ namespace HF
 
             //! @}
             // ======================================================================
+
+            using Service::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message) const
+            {
+               this->send (addr, message);
+            }
 
             protected:
 
@@ -533,6 +512,14 @@ namespace HF
              * @return  reference to the current object for the persistence API.
              */
             virtual IEntries &entries () const = 0;
+
+            /*!
+             * Reference to the session management API.
+             *
+             * @return  reference to the object implementing the session management API for
+             *          this bind management server.
+             */
+            virtual SessionManagement::IServer &sessions () = 0;
 
             // =============================================================================
             // Interface Attribute API.
@@ -736,22 +723,84 @@ namespace HF
             Container db;
          };
 
+         /*!
+          *
+          */
          template<typename _Entries = Entries>
-         class Server:public AbstractServer
+         struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
          {
-            _Entries _entries;
+            typedef SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionMgr::Container Container;
 
-            public:
-
-            Server(Unit0 &unit):AbstractServer (unit)
+            Server(Unit0 &unit):
+               AbstractServer (unit), SessionManagement::Server <_Entries>()
             {}
 
-            virtual ~Server() {}
+            virtual ~Server()
+            {}
 
-            _Entries &entries () const
+            Container &entries () const
             {
-               return const_cast <_Entries &>(_entries);
+               return SessionMgr::entries ();
             }
+
+            SessionMgr &sessions ()
+            {
+               return *this;
+            }
+
+            using AbstractServer::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               AbstractServer::send (addr, message);
+            }
+
+            protected:
+
+            //! \see AbstractServer::payload_size
+            size_t payload_size (Protocol::Message::Interface &itf) const
+            {
+               switch (itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::START);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::payload_size (SessionManagement::GET);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::END);
+
+                  default:
+                     return AbstractService::payload_size (itf);
+               }
+            }
+
+            //! \see AbstractServer::handle_command
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset)
+            {
+               switch (packet.message.itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::START, packet, payload,
+                                                        offset);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::handle_command (SessionManagement::GET, packet, payload,
+                                                        offset);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::END, packet, payload,
+                                                        offset);
+
+                  default:
+                     return AbstractServer::handle_command (packet, payload, offset);
+               }
+            }
+
+            using SessionMgr::entries;
          };
 
          // =========================================================================
