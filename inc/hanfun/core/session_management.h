@@ -17,6 +17,7 @@
 #define HF_SESSION_MANAGEMENT_H
 
 #include <algorithm>
+#include <vector>
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
@@ -231,13 +232,55 @@ namespace HF
          typedef GetEntriesResponse<void> GetEntriesEmptyResponse;
 
          // =============================================================================
-         // API
+         // Server API
          // =============================================================================
+
+         struct IServer
+         {
+            /*!
+             * Start a session for the device with the given \c address.
+             *
+             * Only one session is associated with any given device at any time.
+             *
+             * @param [in] address  device address to start the session for.
+             */
+            virtual void start_session (uint16_t address) = 0;
+
+            /*!
+             * Terminate the session associated with the device with the
+             * given \c address.
+             *
+             * @param [in] address  device address to end the session for.
+             */
+            virtual void end_session (uint16_t address) = 0;
+
+            /*!
+             * Check if a session for the device with the given \c address exists.
+             *
+             * @param [in] address  device address to check is a session exists.
+             *
+             * @retval  true     if a session exists,
+             * @retval  false    otherwise.
+             */
+            virtual bool exists (uint16_t address) const = 0;
+
+            /*!
+             * Check if the session for the device with the given \c address is
+             * valid, i.e., the underling entries have not been modified since the
+             * start of the session.
+             *
+             * @param [in] address  device address to check is the session is valid.
+             *
+             * @retval  true     if the session exists and is valid,
+             * @retval  false    otherwise.
+             */
+            virtual bool is_valid (uint16_t address) const = 0;
+         };
 
          /*!
           * Top-level parent for session management functionality.
           */
-         class AbstractServer
+         class AbstractServer:public IServer
          {
             protected:
 
@@ -263,6 +306,12 @@ namespace HF
             // =============================================================================
 
             public:
+
+            AbstractServer():sessions(Container())
+            {}
+
+            virtual ~AbstractServer()
+            {}
 
             void start_session (uint16_t address)
             {
@@ -353,29 +402,34 @@ namespace HF
          template<typename Parent>
          class Entries:public Parent
          {
-            AbstractServer &session_mgr;
+            AbstractServer &manager;
 
             public:
 
             typedef typename Parent::value_type  value_type;
 
-            Entries(AbstractServer &_session_mgr):Parent(),
-                  session_mgr(_session_mgr)
+            Entries(AbstractServer &_manager):Parent(),
+                  manager(_manager)
             {}
 
-            template<typename... Args>
-            Common::Result save (Args... _args)
+            Entries(const Entries &other, AbstractServer &_manager):
+               Parent(other), manager(_manager)
+            {}
+
+            virtual ~Entries()
+            {}
+
+            Common::Result save (const value_type &value)
             {
-               auto res = Parent::save(_args...);
-               session_mgr.invalidate();
+               auto res = Parent::save(value);
+               manager.invalidate();
                return res;
             }
 
-            template<typename... Args>
-            Common::Result destroy (Args... _args)
+            Common::Result destroy (const value_type &value)
             {
-               auto res = Parent::destroy(_args...);
-               session_mgr.invalidate();
+               auto res = Parent::destroy(value);
+               manager.invalidate();
                return res;
             }
          };
@@ -389,9 +443,6 @@ namespace HF
          {
             typedef Entries<_Entries> Container;
 
-            Server():_entries(Entries<_Entries>(*this))
-            {}
-
             Container &entries () const
             {
                return const_cast<Container &>(_entries);
@@ -399,6 +450,19 @@ namespace HF
 
             protected:
 
+            Server():AbstractServer(), _entries(*this)
+            {}
+
+            virtual ~Server()
+            {}
+
+            Server(const Server &other):
+               AbstractServer(other), _entries(other._entries, *this)
+            {}
+
+            // =============================================================================
+            // API
+            // =============================================================================
             uint16_t entries_size() const
             {
                return static_cast<uint16_t>(_entries.size());

@@ -20,21 +20,6 @@
 #include "test_helper.h"
 
 // =============================================================================
-// API declaration
-// =============================================================================
-
-namespace HF
-{
-   namespace Core
-   {
-      namespace SessionManagement
-      {}  // namespace SessionManagement
-
-   }  // namespace Core
-
-}  // namespace HF
-
-// =============================================================================
 // Tests
 // =============================================================================
 
@@ -181,9 +166,7 @@ TEST_GROUP (SessionManagementServer)
       Common::Result destroy (const TestType &value)
       {
          auto it = std::find_if (begin (), end (), [value](TestType &entry)
-                                 {return entry.data == value.data;
-                                 }
-                                );
+                                 {return entry.data == value.data;});
 
          if (it != end ())
          {
@@ -203,9 +186,7 @@ TEST_GROUP (SessionManagementServer)
       Common::Result destroy (uint16_t value)
       {
          auto it = std::find_if (begin (), end (), [value](TestType &entry)
-                                 {return entry.data == value;
-                                 }
-                                );
+                                 {return entry.data == value;});
 
          if (it != end ())
          {

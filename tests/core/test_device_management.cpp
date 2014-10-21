@@ -923,7 +923,7 @@ TEST (DeviceManagementServer, Handle_Register)
 }
 
 /*!
- * Registration messages with a Protocol::Message::COMMAND_RESP_REQ type,
+ * New registration messages with a Protocol::Message::COMMAND_RESP_REQ type,
  * should not generate more that one response.
  */
 TEST (DeviceManagementServer, Handle_Register2)
@@ -938,7 +938,7 @@ TEST (DeviceManagementServer, Handle_Register2)
                          0x03, 0x42, 0x5A,0xA5,        // Unit 3.
                          0x00, 0x00, 0x00};
 
-   packet.message.type       = Protocol::Message::COMMAND_RESP_REQ;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
    packet.message.length     = expected.size ();
 
@@ -949,6 +949,35 @@ TEST (DeviceManagementServer, Handle_Register2)
 
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
+}
+
+/*!
+ * Registration messages should invalidate current sessions.
+ */
+TEST (DeviceManagementServer, Handle_RegisterWithSession)
+{
+   ByteArray expected = {0x00, 0x00, 0x00,
+                         0x02,                         // Discriminator Type.
+                         0x05,                         // Size of UID.
+                         0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                         0x03,                         // Number of units.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                         0x00, 0x00, 0x00};
+
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.itf.member = DeviceManagement::REGISTER_CMD;
+   packet.message.length     = expected.size ();
+
+   dev_mgt->sessions().start_session(0x5555);
+   CHECK_TRUE (dev_mgt->sessions().exists(0x5555));
+   CHECK_TRUE (dev_mgt->sessions().is_valid(0x5555));
+
+   device->receive (packet, expected, 3);
+
+   CHECK_TRUE (dev_mgt->sessions().exists(0x5555));
+   CHECK_FALSE (dev_mgt->sessions().is_valid(0x5555));
 }
 
 TEST (DeviceManagementServer, Handle_Deregister)
@@ -969,6 +998,10 @@ TEST (DeviceManagementServer, Handle_Deregister)
    packet.source.device = 0x5A51;
 
    DeviceManagement::DeregisterMessage message (0x5A5A);
+
+   dev_mgt->sessions().start_session(0x5555);
+
+   CHECK_TRUE (dev_mgt->sessions().is_valid(0x5555));
 
    ByteArray expected (message.size ());
 
@@ -998,6 +1031,8 @@ TEST (DeviceManagementServer, Handle_Deregister)
    mock ("AbstractDevice").checkExpectations ();
 
    LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
+
+   CHECK_FALSE (dev_mgt->sessions().is_valid(0x5555));
 }
 
 TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
@@ -1050,6 +1085,9 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries ().size ());
 
+   device->unit0 ()->bind_management ()->sessions().start_session (0x5555);
+   CHECK_TRUE (device->unit0 ()->bind_management ()->sessions().is_valid(0x5555));
+
    // == De-register the device.
 
    size_t size = dev_mgt->entries ().size ();
@@ -1090,6 +1128,8 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
    LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
 
    LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries ().size ());
+
+   CHECK_FALSE (device->unit0 ()->bind_management ()->sessions().is_valid(0x5555));
 }
 
 TEST (DeviceManagementServer, Entries)

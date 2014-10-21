@@ -319,7 +319,21 @@ namespace HF
             //! @}
             // ======================================================================
 
+            /*!
+             * Reference to the persistent storage implementation.
+             *
+             * @return  reference to the object responsible by the persistent storage of the
+             *          bind entries.
+             */
             virtual IEntries &entries () const = 0;
+
+            /*!
+             * Reference to the session management API.
+             *
+             * @return  reference to the object implementing the session management API for
+             *          this bind management server.
+             */
+            virtual SessionManagement::IServer &sessions() = 0;
 
             protected:
 
@@ -441,7 +455,8 @@ namespace HF
                {
                   if (func (*itr))
                   {
-                     this->db.erase (itr++);
+                     auto old = itr++;
+                     destroy (*old);
                      result = Common::Result::OK;
                   }
                   else
@@ -462,15 +477,16 @@ namespace HF
           *
           */
          template<typename _Entries = Entries>
-         struct Server:public AbstractServer, protected Core::SessionManagement::Server <_Entries>
+         struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
          {
             typedef SessionManagement::Server <_Entries> SessionMgr;
             typedef typename SessionMgr::Container Container;
 
-            Server(Unit0 &unit):AbstractServer (unit)
+            Server(Unit0 &unit):AbstractServer (unit) //, SessionMgr()
             {}
 
-            virtual ~Server() {}
+            virtual ~Server()
+            {}
 
             Container &entries () const
             {
@@ -490,6 +506,8 @@ namespace HF
             }
 
             protected:
+
+            _Entries _entries;
 
             //! \see AbstractServer::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const
@@ -531,6 +549,8 @@ namespace HF
                      return AbstractServer::handle_command (packet, payload, offset);
                }
             }
+
+            using SessionMgr::entries;
          };
 
          typedef Server <> DefaultServer;
