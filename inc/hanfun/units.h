@@ -33,6 +33,8 @@ namespace HF
        */
       struct IUnit:public Profiles::IProfile
       {
+         virtual ~IUnit() {}
+
          //! Id number of this unit on the device.
          virtual uint8_t id () const = 0;
 
@@ -69,6 +71,8 @@ namespace HF
          IDevice &_device;
 
          public:
+
+         virtual ~AbstractUnit() {}
 
          //! Get the device associated with this unit.
          IDevice &device () const
