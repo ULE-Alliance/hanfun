@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the session management
  * functionality.
  *
- * \version    x.x.x
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

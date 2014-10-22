@@ -5,7 +5,7 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
