@@ -73,9 +73,9 @@ namespace HF
          {
             ADD_BIND_CMD      = 0x01, //!< Add bind entry command.
             REMOVE_BIND_CMD   = 0x02, //!< Remove bind entry command.
-            START_SESSION_CMD = 0x03, //!< TODO Start Session Read Registration Info.
-            END_SESSION_CMD   = 0x04, //!< TODO End Session Read Registration Info.
-            GET_ENTRIES_CMD   = 0x05, //!< TODO Get Entries Command.
+            START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
+            END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
+            GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
          } CMD;
 
          //! Attributes.
