@@ -5,7 +5,7 @@
  * This file contains the definition of the common transport layer API for
  * the HAN-FUN protocol.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

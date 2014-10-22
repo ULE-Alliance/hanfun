@@ -5,7 +5,7 @@
  * This file contains workarounds for the implementation on C++11 in older versions
  * of GCC.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -44,13 +44,13 @@ const class nullptr_t
    }
 
    template<typename T>
-   bool operator==(const T &other) const
+   bool operator ==(const T &other) const
    {
       return *this == other;
    }
 
    template<typename T>
-   bool operator!=(const T &other) const
+   bool operator !=(const T &other) const
    {
       return *this != other;
    }

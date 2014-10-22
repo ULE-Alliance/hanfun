@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the session management
  * functionality.
  *
- * \version    x.x.x
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -165,8 +165,10 @@ TEST_GROUP (SessionManagementServer)
 
       Common::Result destroy (const TestType &value)
       {
-         auto it = std::find_if (begin (), end (), [value](TestType &entry)
-                                 {return entry.data == value.data;});
+         /* *INDENT-OFF* */
+         auto it = std::find_if(begin(), end(), [value](TestType &entry)
+                                 { return entry.data == value.data; });
+         /* *INDENT-ON* */
 
          if (it != end ())
          {
@@ -185,8 +187,10 @@ TEST_GROUP (SessionManagementServer)
 
       Common::Result destroy (uint16_t value)
       {
-         auto it = std::find_if (begin (), end (), [value](TestType &entry)
-                                 {return entry.data == value;});
+         /* *INDENT-OFF* */
+         auto it = std::find_if(begin(), end(), [value](TestType &entry)
+                                { return entry.data == value; });
+         /* *INDENT-ON* */
 
          if (it != end ())
          {
@@ -587,42 +591,41 @@ TEST_GROUP (SessionManagementClient)
          mock ("SessionManagementClient").setData ("message", new Protocol::Message (message));
       }
 
-//      using AbstractServer::payload_size;
-      using Client<TestType>::handle_command;
+      using Client <TestType>::handle_command;
 
       void start_session () const
       {
-         Client<TestType>::request<HF::Interface::SERVER_ROLE, 0x1234, 0x91>();
+         Client <TestType>::request <HF::Interface::SERVER_ROLE, 0x1234, 0x91>();
       }
 
       void get_entries (uint16_t offset, uint8_t count = 0) const
       {
-         Client<TestType>::get_entries<HF::Interface::SERVER_ROLE, 0x1234, 0x92>(offset, count);
+         Client <TestType>::get_entries <HF::Interface::SERVER_ROLE, 0x1234, 0x92>(offset, count);
       }
 
       void end_session () const
       {
-         Client<TestType>::request<HF::Interface::SERVER_ROLE, 0x1234, 0x93>();
+         Client <TestType>::request <HF::Interface::SERVER_ROLE, 0x1234, 0x93>();
       }
 
-      void entries (GetEntriesResponse<TestType> &response)
+      void entries (GetEntriesResponse <TestType> &response)
       {
          auto &call = mock ("SessionManagementClient").actualCall ("entries");
-         call.withParameter("code", response.code);
-         call.withParameter("size", response.entries.size());
+         call.withParameter ("code", response.code);
+         call.withParameter ("size", response.entries.size ());
       }
 
-      void session_started(StartResponse &response)
+      void session_started (StartResponse &response)
       {
          auto &call = mock ("SessionManagementClient").actualCall ("session_started");
-         call.withParameter("code", response.code);
-         call.withParameter("count", response.count);
+         call.withParameter ("code", response.code);
+         call.withParameter ("count", response.count);
       }
 
-      void session_ended(Protocol::Response &response)
+      void session_ended (Protocol::Response &response)
       {
          auto &call = mock ("SessionManagementClient").actualCall ("session_ended");
-         call.withParameter("code", response.code);
+         call.withParameter ("code", response.code);
       }
    };
 
@@ -645,9 +648,9 @@ TEST (SessionManagementClient, Start)
    call.withParameter ("addr_dev", 0);
    call.withParameter ("addr_unit", 0);
 
-   client.start_session();
+   client.start_session ();
 
-   mock ("SessionManagementClient").checkExpectations();
+   mock ("SessionManagementClient").checkExpectations ();
 
    auto res     = mock ("SessionManagementClient").getData ("message").getObjectPointer ();
 
@@ -666,9 +669,9 @@ TEST (SessionManagementClient, Get)
    call.withParameter ("addr_dev", 0);
    call.withParameter ("addr_unit", 0);
 
-   client.get_entries(0x1234, 0x56);
+   client.get_entries (0x1234, 0x56);
 
-   mock ("SessionManagementClient").checkExpectations();
+   mock ("SessionManagementClient").checkExpectations ();
 
    auto res     = mock ("SessionManagementClient").getData ("message").getObjectPointer ();
 
@@ -679,7 +682,7 @@ TEST (SessionManagementClient, Get)
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, message->itf.role);
 
    GetEntriesMessage req;
-   req.unpack(message->payload);
+   req.unpack (message->payload);
 
    LONGS_EQUAL (0x1234, req.offset);
    LONGS_EQUAL (0x56, req.count);
@@ -693,9 +696,9 @@ TEST (SessionManagementClient, End)
    call.withParameter ("addr_dev", 0);
    call.withParameter ("addr_unit", 0);
 
-   client.end_session();
+   client.end_session ();
 
-   mock ("SessionManagementClient").checkExpectations();
+   mock ("SessionManagementClient").checkExpectations ();
 
    auto res     = mock ("SessionManagementClient").getData ("message").getObjectPointer ();
 
@@ -716,7 +719,7 @@ TEST (SessionManagementClient, Handle_Started)
    packet.source.unit   = 0x0;
 
    StartResponse resp;
-   resp.code = Result::OK;
+   resp.code  = Result::OK;
    resp.count = 0x55;
 
    Common::ByteArray payload = Common::ByteArray (resp.size ());
@@ -738,7 +741,7 @@ TEST (SessionManagementClient, Handle_Entries)
    packet.source.device = 0x0;
    packet.source.unit   = 0x0;
 
-   GetEntriesResponse<TestType> resp;
+   GetEntriesResponse <TestType> resp;
 
    // FAIL - Session not established;
 
@@ -771,9 +774,9 @@ TEST (SessionManagementClient, Handle_Entries)
    // OK - Got some entries.
 
    resp.code = Result::OK;
-   resp.entries.push_back(TestType(0x1234));
-   resp.entries.push_back(TestType(0x5678));
-   resp.entries.push_back(TestType(0x9ABC));
+   resp.entries.push_back (TestType (0x1234));
+   resp.entries.push_back (TestType (0x5678));
+   resp.entries.push_back (TestType (0x9ABC));
 
    payload = Common::ByteArray (resp.size ());
    resp.pack (payload);

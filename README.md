@@ -26,7 +26,7 @@ The build system used is [CMake](http://www.cmake.org/).
 
 ## Testing
 
-Currently the build of the unit tests is only supported when compiling using the code repository.
+Currently the build of the unit tests is only supported when compiling using the code from the repository.
 
 To build the unit tests present in the source code, issue the following commands
 (on the root of the project):
@@ -38,7 +38,7 @@ To build the unit tests present in the source code, issue the following commands
     $ cmake -DHAN-FUN_BUILD_TESTS=ON ..
     $ make
 
-The unit tests will be run at the end of the compilation.
+The unit tests will be run at the end of the compilation if not cross-compiling.
 
 To re-run the tests, issue:
 
@@ -118,15 +118,14 @@ Please see the help in the applications for further features.
 
    - Device Information :
 
-     * Add support for GET/SET of optional attributes.
+     * Add API for GET/SET of optional attributes.
 
-   - Device Management :
-
-     * Session Management for entry table read.
-
-   - Bind Management :
-
-     * Session Management for entry table read.
+   - Group Management (Optional)
+   - Identify (Optional)
+   - Tamper Alert (Optional)
+   - Time (Optional)
+   - Power (Optional)
+   - Keep Alive (Optional)
 
 ## Author
 

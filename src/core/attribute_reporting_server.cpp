@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Server role.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -718,5 +718,27 @@ void Server::process_event (Report::Event::Entry &entry, const Event::Field &fie
       entry.add (*_field);
 
       delete _field;
+   }
+}
+
+// =============================================================================
+// Server::entries_count
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Server::count (Type type) const
+{
+   switch (type)
+   {
+      case PERIODIC:
+         return std::distance (periodic_rules.begin (), periodic_rules.end ());
+
+      case EVENT:
+         return std::distance (event_rules.begin (), event_rules.end ());
+
+      default:
+         return 0;
    }
 }

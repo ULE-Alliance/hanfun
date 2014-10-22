@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Bind Management core interface.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,6 +24,18 @@
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::BindManagement;
+
+// =============================================================================
+// BindManagement::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
+{
+   return Core::create_attribute ((BindManagement::IServer *) nullptr, uid);
+}
 
 // =============================================================================
 // BindManagement::Entry

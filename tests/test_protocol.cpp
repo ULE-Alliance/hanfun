@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the protocol
  * layer in the HAN-FUN specification.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -916,11 +916,11 @@ TEST_GROUP (ResponseRequired)
       packet.message.itf.id     = g_id ();
       packet.message.itf.member = g_unit ();
 
-      packet.source.device = g_id ();
-      packet.source.unit = g_unit ();
+      packet.source.device      = g_id ();
+      packet.source.unit        = g_unit ();
 
       packet.destination.device = g_id ();
-      packet.destination.unit = g_unit ();
+      packet.destination.unit   = g_unit ();
    }
 };
 
@@ -983,7 +983,7 @@ TEST (ResponseRequired, NoResponse)
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
-   std::swap(packet.source, packet.destination);
+   std::swap (packet.source, packet.destination);
 
    CHECK_FALSE (filter (packet));
 
@@ -999,7 +999,7 @@ TEST (ResponseRequired, ResponseNeeded)
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
-   std::swap(packet.source, packet.destination);
+   std::swap (packet.source, packet.destination);
 
    CHECK_TRUE (filter (packet));
 

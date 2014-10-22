@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * \version    1.0.1
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -323,7 +323,7 @@ namespace HF
       struct Proxy:public _Interface
       {
          static_assert (std::is_base_of <Interfaces::AbstractInterface, _Interface>::value,
-                         "Interface MUST be of type HF::Interfaces::AbstractInterface !");
+                        "Interface MUST be of type HF::Interfaces::AbstractInterface !");
 
          typedef _Interface base;
 
