@@ -37,7 +37,7 @@ using namespace HF::Core::SessionManagement;
  */
 // =============================================================================
 Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet,
-                                                  Common::ByteArray &payload, size_t offset)
+                                               Common::ByteArray &payload, size_t offset)
 {
    // Don't process group address.
    if (packet.source.mod == HF::Protocol::Address::GROUP)
@@ -53,36 +53,38 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
    {
       case START:
       {
-         start_session(packet.source.device);
+         start_session (packet.source.device);
 
          StartResponse resp;
-         result = resp.code = Result::OK;
-         resp.count = entries_size();
+         result           = resp.code = Result::OK;
+         resp.count       = entries_size ();
 
-         resp_msg.payload = Common::ByteArray(resp.size());
-         resp.pack(resp_msg.payload);
+         resp_msg.payload = Common::ByteArray (resp.size ());
+         resp.pack (resp_msg.payload);
 
          break;
       }
       case GET:
       {
-         result = check_session(packet.source.device, resp_msg.payload);
+         result = check_session (packet.source.device, resp_msg.payload);
+
          if (result == Result::OK)
          {
             GetEntriesMessage msg;
-            msg.unpack(payload, offset);
-            result = entries(msg.offset, msg.count, resp_msg.payload);
+            msg.unpack (payload, offset);
+            result = entries (msg.offset, msg.count, resp_msg.payload);
          }
+
          break;
       }
       case END:
       {
-         end_session(packet.source.device);
+         end_session (packet.source.device);
 
          Protocol::Response resp;
-         result = resp.code = Result::OK;
-         resp_msg.payload = Common::ByteArray (resp.size());
-         resp.pack(resp_msg.payload);
+         result           = resp.code = Result::OK;
+         resp_msg.payload = Common::ByteArray (resp.size ());
+         resp.pack (resp_msg.payload);
 
          break;
       }
@@ -90,7 +92,7 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
          return Result::FAIL_SUPPORT;
    }
 
-   send(packet.source, resp_msg);
+   send (packet.source, resp_msg);
 
    return result;
 }
@@ -106,11 +108,11 @@ Common::Result AbstractServer::check_session (uint16_t address, Common::ByteArra
 {
    Result result = Result::OK;
 
-   if (!exists(address))
+   if (!exists (address))
    {
       result = Result::FAIL_READ_SESSION;
    }
-   else if (!is_valid(address))
+   else if (!is_valid (address))
    {
       result = Result::FAIL_MODIFIED;
    }
@@ -119,8 +121,8 @@ Common::Result AbstractServer::check_session (uint16_t address, Common::ByteArra
    {
       GetEntriesEmptyResponse resp;
       resp.code = result;
-      payload = Common::ByteArray(resp.size());
-      resp.pack(payload);
+      payload   = Common::ByteArray (resp.size ());
+      resp.pack (payload);
    }
 
    return result;
@@ -160,10 +162,10 @@ size_t AbstractServer::payload_size (CMD cmd) const
    {
       case GET:
          return GetEntriesMessage::min_size;
+
       case START:
       case END:
       default:
          return 0;
-      break;
    }
 }

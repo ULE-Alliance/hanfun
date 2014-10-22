@@ -43,15 +43,14 @@ namespace HF
          /*!
           * Start Read Session Command Message.
           */
-         struct StartResponse: public Protocol::Response
+         struct StartResponse:public Protocol::Response
          {
-            uint16_t count; //!< Number of device entries.
+            uint16_t                count; //!< Number of device entries.
 
             constexpr static size_t min_size = Protocol::Response::min_size + sizeof(count);
-            StartResponse (uint16_t count = 0) :
-                  count(count)
-            {
-            }
+            StartResponse(uint16_t count = 0):
+               count (count)
+            {}
 
             //! \see HF::Protocol::Response::size.
             static size_t size ()
@@ -61,11 +60,11 @@ namespace HF
 
             //! \see HF::Protocol::Response::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
-                         {
+            {
                size_t start = offset;
 
-               offset += Protocol::Response::pack(array, offset);
-               offset += array.write(offset, count);
+               offset += Protocol::Response::pack (array, offset);
+               offset += array.write (offset, count);
 
                return offset - start;
             }
@@ -75,8 +74,8 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += Protocol::Response::unpack(array, offset);
-               offset += array.read(offset, count);
+               offset += Protocol::Response::unpack (array, offset);
+               offset += array.read (offset, count);
 
                return offset - start;
             }
@@ -87,15 +86,14 @@ namespace HF
           */
          struct GetEntriesMessage
          {
-            uint16_t offset; //!< Start index for the first entry to be provided.
-            uint8_t count;  //!< Number of entries to be sent in the response.
+            uint16_t                offset; //!< Start index for the first entry to be provided.
+            uint8_t                 count;  //!< Number of entries to be sent in the response.
 
             constexpr static size_t min_size = sizeof(offset) + sizeof(count);
 
-            GetEntriesMessage (uint16_t offset = 0, uint8_t count = 0) :
-                  offset(offset), count(count)
-            {
-            }
+            GetEntriesMessage(uint16_t offset = 0, uint8_t count = 0):
+               offset (offset), count (count)
+            {}
 
             //! \see HF::Serializable::size.
             size_t size () const
@@ -108,8 +106,8 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += array.write(offset, this->offset);
-               offset += array.write(offset, this->count);
+               offset += array.write (offset, this->offset);
+               offset += array.write (offset, this->count);
 
                return offset - start;
             }
@@ -119,27 +117,28 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += array.read(offset, this->offset);
-               offset += array.read(offset, this->count);
+               offset += array.read (offset, this->offset);
+               offset += array.read (offset, this->count);
 
                return offset - start;
             }
          };
 
          template<typename _Entry>
-         struct GetEntriesResponse: public Protocol::Response
+         struct GetEntriesResponse:public Protocol::Response
          {
-            std::vector<_Entry> entries;
+            std::vector <_Entry> entries;
 
             //! \see HF::Protocol::Response::size.
             size_t size () const
             {
-               size_t result = Protocol::Response::size() + sizeof(uint8_t);
+               size_t result = Protocol::Response::size () + sizeof(uint8_t);
 
-               std::for_each(entries.begin(), entries.end(), [&result](const _Entry &entry)
-               {
-                  result += entry.size();
-               });
+               std::for_each (entries.begin (), entries.end (), [&result](const _Entry &entry)
+                              {
+                                 result += entry.size ();
+                              }
+                             );
 
                return result;
             }
@@ -149,10 +148,10 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += Protocol::Response::pack(array, offset);
+               offset += Protocol::Response::pack (array, offset);
 
-               uint8_t count = entries.size();
-               offset += array.write(offset, count);
+               uint8_t count = entries.size ();
+               offset += array.write (offset, count);
 
                /* *INDENT-OFF* */
                std::for_each(entries.begin(), entries.end(),
@@ -170,18 +169,19 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += Protocol::Response::unpack(array, offset);
+               offset += Protocol::Response::unpack (array, offset);
 
                uint8_t count = 0;
-               offset += array.read(offset, count);
+               offset += array.read (offset, count);
 
-               entries.clear();
+               entries.clear ();
 
                _Entry entry;
+
                for (uint8_t i = 0; i < count; i++)
                {
-                  offset += entry.unpack(array, offset);
-                  entries.push_back(entry);
+                  offset += entry.unpack (array, offset);
+                  entries.push_back (entry);
                }
 
                return offset - start;
@@ -189,17 +189,17 @@ namespace HF
          };
 
          template<>
-         struct GetEntriesResponse<void>: public Protocol::Response
+         struct GetEntriesResponse <void> :public Protocol::Response
          {
             uint8_t count;
 
-            GetEntriesResponse() : count(0)
+            GetEntriesResponse():count (0)
             {}
 
             //! \see HF::Protocol::Response::size.
             size_t size () const
             {
-               size_t result = Protocol::Response::size() + sizeof(uint8_t);
+               size_t result = Protocol::Response::size () + sizeof(uint8_t);
                return result;
             }
 
@@ -208,10 +208,10 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += Protocol::Response::pack(array, offset);
+               offset += Protocol::Response::pack (array, offset);
 
                uint8_t count = 0;
-               offset += array.write(offset, count);
+               offset += array.write (offset, count);
 
                return offset - start;
             }
@@ -221,16 +221,16 @@ namespace HF
             {
                size_t start = offset;
 
-               offset += Protocol::Response::unpack(array, offset);
+               offset += Protocol::Response::unpack (array, offset);
 
                uint8_t count = 0;
-               offset += array.read(offset, count);
+               offset += array.read (offset, count);
 
                return offset - start;
             }
          };
 
-         typedef GetEntriesResponse<void> GetEntriesEmptyResponse;
+         typedef GetEntriesResponse <void> GetEntriesEmptyResponse;
 
          // =============================================================================
          // Server API
@@ -288,16 +288,16 @@ namespace HF
             struct Session
             {
                uint16_t address;
-               bool valid;
+               bool     valid;
 
-               Session (uint16_t _address = HF::Protocol::BROADCAST_ADDR, bool _valid = false):
-                  address(_address), valid(_valid)
+               Session(uint16_t _address = HF::Protocol::BROADCAST_ADDR, bool _valid = false):
+                  address (_address), valid (_valid)
                {}
             };
 
-            typedef std::vector<Session>        Container;
-            typedef Container::iterator         iterator;
-            typedef Container::const_iterator   const_iterator;
+            typedef std::vector <Session> Container;
+            typedef Container::iterator iterator;
+            typedef Container::const_iterator const_iterator;
 
             //! Session's database.
             Container sessions;
@@ -308,7 +308,7 @@ namespace HF
 
             public:
 
-            AbstractServer():sessions(Container())
+            AbstractServer():sessions (Container ())
             {}
 
             virtual ~AbstractServer()
@@ -318,9 +318,9 @@ namespace HF
             {
                auto it = find (address);
 
-               if (it == sessions.end())  // Session does not exist.
+               if (it == sessions.end ())  // Session does not exist.
                {
-                  sessions.push_back(Session(address, true));
+                  sessions.push_back (Session (address, true));
                }
                else  // Session already exists. Update state.
                {
@@ -330,56 +330,62 @@ namespace HF
 
             void end_session (uint16_t address)
             {
-               auto it = find(address);
-               if (it != sessions.end())
+               auto it = find (address);
+
+               if (it != sessions.end ())
                {
-                  sessions.erase(it);
+                  sessions.erase (it);
                }
             }
 
             bool exists (uint16_t address) const
             {
-               return find(address) != sessions.end();
+               return find (address) != sessions.end ();
             }
 
             bool is_valid (uint16_t address) const
             {
-               auto it = find(address);
-               if (it != sessions.end())
+               auto it = find (address);
+
+               if (it != sessions.end ())
                {
                   return it->valid;
                }
+
                return false;
             }
 
-            void invalidate()
+            void invalidate ()
             {
-               std::for_each(sessions.begin(), sessions.end(), [](Session &session){
-                  session.valid = false;
-               });
+               std::for_each (sessions.begin (), sessions.end (), [](Session &session) {
+                                 session.valid = false;
+                              }
+                             );
             }
 
             protected:
 
             Common::Result handle_command (CMD cmd, Protocol::Packet &packet, Common::ByteArray &payload,
-                                            size_t offset = 0);
+                                           size_t offset = 0);
 
-            iterator find(uint16_t address)
+            iterator find (uint16_t address)
             {
                return std::find_if (sessions.begin (), sessions.end (),
-                                     [address](const Session &session)
-               {
-                  return address == session.address;
-               });
+                                    [address](const Session &session)
+                                    {
+                                       return address == session.address;
+                                    }
+                                   );
             }
 
-            const_iterator find(uint16_t address) const
+            const_iterator find (uint16_t address) const
             {
                return std::find_if (sessions.cbegin (), sessions.cend (),
-                                     [address](const Session &session)
-               {
-                  return address == session.address;
-               });
+                                    [address](const Session &session)
+                                    {
+                                       return address == session.address;
+                                    }
+                                   );
             }
 
             size_t payload_size (CMD cmd) const;
@@ -388,10 +394,10 @@ namespace HF
 
             virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
 
-            virtual uint16_t entries_size() const = 0;
+            virtual uint16_t entries_size () const                                        = 0;
 
-            virtual Common::Result entries(uint16_t offset, uint8_t count,
-                                             Common::ByteArray &payload) = 0;
+            virtual Common::Result entries (uint16_t offset, uint8_t count,
+                                            Common::ByteArray &payload) = 0;
 
             Common::Result check_session (uint16_t address, Common::ByteArray &payload) const;
          };
@@ -407,14 +413,14 @@ namespace HF
 
             public:
 
-            typedef typename Parent::value_type  value_type;
+            typedef typename Parent::value_type value_type;
 
-            Entries(AbstractServer &_manager):Parent(),
-                  manager(_manager)
+            Entries(AbstractServer &_manager):Parent (),
+               manager (_manager)
             {}
 
             Entries(const Entries &other, AbstractServer &_manager):
-               Parent(other), manager(_manager)
+               Parent (other), manager (_manager)
             {}
 
             virtual ~Entries()
@@ -422,15 +428,15 @@ namespace HF
 
             Common::Result save (const value_type &value)
             {
-               auto res = Parent::save(value);
-               manager.invalidate();
+               auto res = Parent::save (value);
+               manager.invalidate ();
                return res;
             }
 
             Common::Result destroy (const value_type &value)
             {
-               auto res = Parent::destroy(value);
-               manager.invalidate();
+               auto res = Parent::destroy (value);
+               manager.invalidate ();
                return res;
             }
          };
@@ -442,52 +448,53 @@ namespace HF
          template<typename _Entries>
          struct Server:public AbstractServer
          {
-            typedef Entries<_Entries> Container;
+            typedef Entries <_Entries> Container;
 
             Container &entries () const
             {
-               return const_cast<Container &>(_entries);
+               return const_cast <Container &>(_entries);
             }
 
             protected:
 
-            Server():AbstractServer(), _entries(*this)
+            Server():AbstractServer (), _entries (*this)
             {}
 
             virtual ~Server()
             {}
 
             Server(const Server &other):
-               AbstractServer(other), _entries(other._entries, *this)
+               AbstractServer (other), _entries (other._entries, *this)
             {}
 
             // =============================================================================
             // API
             // =============================================================================
-            uint16_t entries_size() const
+            uint16_t entries_size () const
             {
-               return static_cast<uint16_t>(_entries.size());
+               return static_cast <uint16_t>(_entries.size ());
             }
 
             typedef typename _Entries::value_type value_type;
 
             Common::Result entries (uint16_t offset, uint8_t count,
-                                     Common::ByteArray &payload)
+                                    Common::ByteArray &payload)
             {
-               GetEntriesResponse<value_type> response;
+               GetEntriesResponse <value_type> response;
 
-               response.code = check_offset (offset, count, entries_size());
+               response.code = check_offset (offset, count, entries_size ());
+
                if (response.code == Common::Result::OK)
                {
-                  auto start = _entries.begin();
-                  std::advance(start, offset);
+                  auto start = _entries.begin ();
+                  std::advance (start, offset);
 
                   auto end = start;
-                  std::advance(end, count);
-                  std::copy (start, end, std::back_inserter(response.entries));
+                  std::advance (end, count);
+                  std::copy (start, end, std::back_inserter (response.entries));
                }
 
-               payload = Common::ByteArray(response.size());
+               payload = Common::ByteArray (response.size ());
 
                response.pack (payload);
 
@@ -517,12 +524,12 @@ namespace HF
             /*!
              * Send a message to start a session on the server.
              */
-            virtual void start_session() const = 0;
+            virtual void start_session () const = 0;
 
             /*!
              * Send a message to end the current session on the server.
              */
-            virtual void end_session() const = 0;
+            virtual void end_session () const = 0;
 
             /*!
              * Send a message to get \c count entries starting at \c offset.
@@ -546,9 +553,9 @@ namespace HF
              *
              * @param [in] response the received response.
              */
-            virtual void session_started(StartResponse &response)
+            virtual void session_started (StartResponse &response)
             {
-               UNUSED(response);
+               UNUSED (response);
             }
 
             /*!
@@ -557,9 +564,9 @@ namespace HF
              *
              * @param [in] response the received response.
              */
-            virtual void session_ended(Protocol::Response &response)
+            virtual void session_ended (Protocol::Response &response)
             {
-               UNUSED(response);
+               UNUSED (response);
             }
 
             //! @}
@@ -582,7 +589,7 @@ namespace HF
              * @return  the result of the message processing.
              */
             Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
-                                            Common::ByteArray &payload, size_t offset = 0);
+                                           Common::ByteArray &payload, size_t offset = 0);
 
             /*!
              *
@@ -604,9 +611,9 @@ namespace HF
                message.itf.id     = _uid;
                message.itf.member = _member;
 
-               message.payload    = Common::ByteArray(msg.size());
+               message.payload    = Common::ByteArray (msg.size ());
 
-               msg.pack(message.payload);
+               msg.pack (message.payload);
 
                this->send (addr, message);
             }
@@ -644,7 +651,7 @@ namespace HF
              *
              * @param entries
              */
-            virtual void entries (GetEntriesResponse<_Entry> &response)
+            virtual void entries (GetEntriesResponse <_Entry> &response)
             {
                UNUSED (response);
             }
@@ -655,18 +662,18 @@ namespace HF
             protected:
 
             Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
-                                            Common::ByteArray &payload, size_t offset = 0)
+                                           Common::ByteArray &payload, size_t offset = 0)
             {
                if (cmd == GET)
                {
-                  GetEntriesResponse<_Entry> response;
-                  response.unpack(payload, offset);
-                  entries(response);
+                  GetEntriesResponse <_Entry> response;
+                  response.unpack (payload, offset);
+                  entries (response);
                   return Common::Result::OK;
                }
                else
                {
-                  return AbstractClient::handle_command(cmd, packet, payload, offset);
+                  return AbstractClient::handle_command (cmd, packet, payload, offset);
                }
             }
          };

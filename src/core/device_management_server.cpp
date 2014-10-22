@@ -55,8 +55,8 @@ DevicePtr IServer::entry (uint16_t address) const
       device->address = address;
       device->emc     = HF::Core::DeviceInformation::EMC;
 
-      auto attr = this->unit0().device_info()->attribute(HF::Core::DeviceInformation::UID_ATTR);
-      device->uid = static_cast<HF::Attributes::Attribute<HF::UID::UID> *>(attr)->get();
+      auto attr = this->unit0 ().device_info ()->attribute (HF::Core::DeviceInformation::UID_ATTR);
+      device->uid = static_cast <HF::Attributes::Attribute <HF::UID::UID> *>(attr)->get ();
       delete attr;
 
       auto &units = unit ().device ().units ();
@@ -280,7 +280,7 @@ Common::Result AbstractServer::deregister (DevicePtr &device)
    unit0 ().bind_management ()->entries ().destroy (device->address);
 
    // Destroy MAY invalidate _device_, create a copy to send to *deregistered* event.
-   DevicePtr temp(new Device(*device), true);
+   DevicePtr temp (new Device (*device), true);
 
    auto res = entries ().destroy (*device);
 

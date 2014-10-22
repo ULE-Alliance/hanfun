@@ -844,7 +844,7 @@ namespace HF
          static constexpr uint8_t ALL_ADDR = 0x7F;
 
          typedef std::vector <Periodic::Entry>::iterator periodic_iterator;
-         typedef std::vector <Event::Entry>::iterator    event_iterator;
+         typedef std::vector <Event::Entry>::iterator event_iterator;
 
          Protocol::Message *create (Protocol::Address &destination);
 
@@ -854,9 +854,9 @@ namespace HF
 
          Protocol::Message *destroy (Reference report);
 
-         Protocol::Message *add (Reference report,  periodic_iterator begin, periodic_iterator end);
+         Protocol::Message *add (Reference report, periodic_iterator begin, periodic_iterator end);
 
-         Protocol::Message *add (Reference report,  event_iterator begin, event_iterator end);
+         Protocol::Message *add (Reference report, event_iterator begin, event_iterator end);
 
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
@@ -1014,7 +1014,7 @@ namespace HF
             virtual void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
                                  const HF::Attributes::IAttribute &new_value);
 
-            size_t count(Type type) const;
+            size_t count (Type type) const;
 
             // =============================================================================
             // Interface Attribute API.
@@ -1031,7 +1031,7 @@ namespace HF
             {
                UNUSED (pack_id);
                return HF::Attributes::UIDS {REPORT_COUNT_ATTR, PERIODIC_REPORT_COUNT_ATTR,
-                                             EVENT_REPORT_COUNT_ATTR};
+                                            EVENT_REPORT_COUNT_ATTR};
             }
 
             protected:

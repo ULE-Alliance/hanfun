@@ -44,13 +44,13 @@ const class nullptr_t
    }
 
    template<typename T>
-   bool operator==(const T &other) const
+   bool operator ==(const T &other) const
    {
       return *this == other;
    }
 
    template<typename T>
-   bool operator!=(const T &other) const
+   bool operator !=(const T &other) const
    {
       return *this != other;
    }

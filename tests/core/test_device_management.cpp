@@ -970,14 +970,14 @@ TEST (DeviceManagementServer, Handle_RegisterWithSession)
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
    packet.message.length     = expected.size ();
 
-   dev_mgt->sessions().start_session(0x5555);
-   CHECK_TRUE (dev_mgt->sessions().exists(0x5555));
-   CHECK_TRUE (dev_mgt->sessions().is_valid(0x5555));
+   dev_mgt->sessions ().start_session (0x5555);
+   CHECK_TRUE (dev_mgt->sessions ().exists (0x5555));
+   CHECK_TRUE (dev_mgt->sessions ().is_valid (0x5555));
 
    device->receive (packet, expected, 3);
 
-   CHECK_TRUE (dev_mgt->sessions().exists(0x5555));
-   CHECK_FALSE (dev_mgt->sessions().is_valid(0x5555));
+   CHECK_TRUE (dev_mgt->sessions ().exists (0x5555));
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x5555));
 }
 
 TEST (DeviceManagementServer, Handle_Deregister)
@@ -999,9 +999,9 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
    DeviceManagement::DeregisterMessage message (0x5A5A);
 
-   dev_mgt->sessions().start_session(0x5555);
+   dev_mgt->sessions ().start_session (0x5555);
 
-   CHECK_TRUE (dev_mgt->sessions().is_valid(0x5555));
+   CHECK_TRUE (dev_mgt->sessions ().is_valid (0x5555));
 
    ByteArray expected (message.size ());
 
@@ -1032,7 +1032,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
    LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
 
-   CHECK_FALSE (dev_mgt->sessions().is_valid(0x5555));
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x5555));
 }
 
 TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
@@ -1085,8 +1085,8 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries ().size ());
 
-   device->unit0 ()->bind_management ()->sessions().start_session (0x5555);
-   CHECK_TRUE (device->unit0 ()->bind_management ()->sessions().is_valid(0x5555));
+   device->unit0 ()->bind_management ()->sessions ().start_session (0x5555);
+   CHECK_TRUE (device->unit0 ()->bind_management ()->sessions ().is_valid (0x5555));
 
    // == De-register the device.
 
@@ -1129,7 +1129,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries ().size ());
 
-   CHECK_FALSE (device->unit0 ()->bind_management ()->sessions().is_valid(0x5555));
+   CHECK_FALSE (device->unit0 ()->bind_management ()->sessions ().is_valid (0x5555));
 }
 
 TEST (DeviceManagementServer, Entries)
@@ -1228,9 +1228,9 @@ TEST (DeviceManagementServer, FindEntrySelf)
    rfpi[3] = 0x78;
    rfpi[4] = 0x90;
 
-   device->unit0()->device_info()->device_uid = HF::UID::UID(&rfpi);
+   device->unit0 ()->device_info ()->device_uid = HF::UID::UID( &rfpi);
 
-   auto entry = dev_mgt->entry (device->address ());
+   auto entry                                   = dev_mgt->entry (device->address ());
    CHECK_FALSE (entry == nullptr);
 
    LONGS_EQUAL (1, entry->units.size ());

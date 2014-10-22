@@ -33,7 +33,7 @@ using namespace HF::Core::SessionManagement;
  */
 // =============================================================================
 Common::Result AbstractClient::handle_command (CMD cmd, Protocol::Packet &packet,
-                                                  Common::ByteArray &payload, size_t offset)
+                                               Common::ByteArray &payload, size_t offset)
 {
    UNUSED (packet);
 
@@ -42,15 +42,15 @@ Common::Result AbstractClient::handle_command (CMD cmd, Protocol::Packet &packet
       case START:
       {
          StartResponse response;
-         response.unpack(payload, offset);
-         session_started(response);
+         response.unpack (payload, offset);
+         session_started (response);
          break;
       }
       case END:
       {
          Protocol::Response response;
-         response.unpack(payload, offset);
-         session_ended(response);
+         response.unpack (payload, offset);
+         session_ended (response);
          break;
       }
       default:
@@ -75,12 +75,16 @@ size_t AbstractClient::payload_size (CMD cmd) const
    {
       case GET:
          return GetEntriesMessage::min_size;
+
       case START:
          return StartResponse::min_size;
+
       case END:
          return Protocol::Response::min_size;
+
       default:
          return 0;
-      break;
+
+         break;
    }
 }

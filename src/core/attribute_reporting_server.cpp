@@ -728,14 +728,16 @@ void Server::process_event (Report::Event::Entry &entry, const Event::Field &fie
  *
  */
 // =============================================================================
-size_t Server::count(Type type) const
+size_t Server::count (Type type) const
 {
    switch (type)
    {
       case PERIODIC:
-         return std::distance(periodic_rules.begin (), periodic_rules.end ());
+         return std::distance (periodic_rules.begin (), periodic_rules.end ());
+
       case EVENT:
-         return std::distance(event_rules.begin (), event_rules.end ());
+         return std::distance (event_rules.begin (), event_rules.end ());
+
       default:
          return 0;
    }

@@ -566,19 +566,19 @@ IAttribute *Core::create_attribute (AttributeReporting::Server *server, uint8_t 
       case AttributeReporting::REPORT_COUNT_ATTR:
       {
          uint16_t value = (server != nullptr ?
-                           server->count(AttributeReporting::Type::PERIODIC) +
-                           server->count(AttributeReporting::Type::EVENT) : 0);
+                           server->count (AttributeReporting::Type::PERIODIC) +
+                           server->count (AttributeReporting::Type::EVENT) : 0);
          return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       case AttributeReporting::PERIODIC_REPORT_COUNT_ATTR:
       {
          uint16_t value = (server != nullptr ?
-                           server->count(AttributeReporting::Type::PERIODIC) : 0);
+                           server->count (AttributeReporting::Type::PERIODIC) : 0);
          return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       case AttributeReporting::EVENT_REPORT_COUNT_ATTR:
       {
-         uint16_t value = (server != nullptr ? server->count(AttributeReporting::Type::EVENT) : 0);
+         uint16_t value = (server != nullptr ? server->count (AttributeReporting::Type::EVENT) : 0);
          return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:
