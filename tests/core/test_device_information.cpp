@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Device Information Interface.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -64,8 +64,8 @@ TEST_GROUP (DeviceInformation)
    {
       device = new Testing::Device ();
 
-      device->unit0 ()->dev_mgt = new TestDeviceManagementClient (*device->unit0 ());
-      ((TestDeviceManagementClient *) device->unit0 ()->dev_mgt)->address (0x5A5A);
+      device->unit0 ()->device_management (new TestDeviceManagementClient (*device->unit0 ()));
+      ((TestDeviceManagementClient *) device->unit0 ()->device_management ())->address (0x5A5A);
 
       dev_info             = new TestDeviceInformationServer (*device->unit0 ());
 
@@ -77,8 +77,6 @@ TEST_GROUP (DeviceInformation)
    TEST_TEARDOWN ()
    {
       delete dev_info;
-
-      delete device->unit0 ()->dev_mgt;
 
       delete device;
 

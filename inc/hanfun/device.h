@@ -4,7 +4,7 @@
  *
  * This file contains the declaration of the API for a HAN-FUN device.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

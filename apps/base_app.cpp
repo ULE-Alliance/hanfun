@@ -4,7 +4,7 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -56,17 +56,17 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
 {
    UNUSED (args);
 
-   auto devices = base.unit0 ()->device_management ()->entries ();
+   auto &devices = base.unit0 ()->device_management ()->entries ();
 
    LOG (APP) << std::setfill (' ');
    LOG (APP) << "HAN-FUN" << "  Registered Devices (" << (int) devices.size () << "):" << NL;
 
    /* *INDENT-OFF* */
-   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device *device)
+   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device &device)
    {
-      LOG (APP) << std::setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
-      LOG (APP) << std::setw (5) << device->address << " | ";
-      LOG (APP) << device->uid << NL;
+      LOG (APP) << (base.link (device.address) != nullptr ? "+ " : "- ");
+      LOG (APP) << std::setw (5) << device.address << " | ";
+      LOG (APP) << device.uid << NL;
    });
    /* *INDENT-ON* */
 }
@@ -75,16 +75,18 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
 {
    UNUSED (args);
 
-   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries;
+   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries ();
 
    LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
-   std::for_each (entries.begin (), entries.end (), [](const HF::Core::BindManagement::Entry &entry)
-                  {
-                     LOG (APP) << "       - "
-                               << entry.source.device << ":" << (int) entry.source.unit << " -> "
-                               << entry.destination.device << ":" << (int) entry.destination.unit << NL;
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (),
+                  [](const HF::Core::BindManagement::Entry &entry)
+   {
+      LOG (APP) << "       - "
+      << entry.source.device << ":" << (int) entry.source.unit << " -> "
+      << entry.destination.device << ":" << (int) entry.destination.unit << NL;
+   });
+   /* *INDENT-ON* */
 }
 
 COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")

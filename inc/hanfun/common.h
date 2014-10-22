@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -49,9 +49,9 @@
  */
 namespace HF
 {
-   constexpr uint8_t CORE_VERSION       = 0;
-   constexpr uint8_t PROFILES_VERSION   = 0;
-   constexpr uint8_t INTERFACES_VERSION = 0;
+   constexpr uint8_t CORE_VERSION       = 1;
+   constexpr uint8_t PROFILES_VERSION   = 1;
+   constexpr uint8_t INTERFACES_VERSION = 1;
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -559,6 +559,138 @@ namespace HF
       {
          return (lhs.role < rhs.role) || (lhs.role == rhs.role && lhs.id < rhs.id);
       }
+
+      // =============================================================================
+      // Helper Classes
+      // =============================================================================
+
+      /*!
+       * Simple raw pointer wrapper.
+       */
+      template<typename T>
+      class Pointer
+      {
+         T *pointer;
+
+         bool owner;
+
+         public:
+
+         Pointer(T *_pointer = nullptr, bool _owner = false):
+            pointer (_pointer), owner (_owner)
+         {}
+
+         Pointer(T &_pointer):
+            pointer (&_pointer), owner (false)
+         {}
+
+         Pointer(Pointer <T> &&other):pointer (nullptr), owner (false)
+         {
+            std::swap (this->pointer, other.pointer);
+            std::swap (this->owner, other.owner);
+         }
+
+         ~Pointer()
+         {
+            if (owner)
+            {
+               delete pointer;
+            }
+         }
+
+         T &operator *() const
+         {
+            return *pointer;
+         }
+
+         T *operator ->() const
+         {
+            return pointer;
+         }
+
+         bool operator ==(const Pointer <T> &other) const
+         {
+            return pointer == other.pointer;
+         }
+
+         bool operator !=(const Pointer <T> &other) const
+         {
+            return !(*this == other);
+         }
+
+         bool operator ==(const T *other) const
+         {
+            return pointer == other;
+         }
+
+         bool operator !=(const T *other) const
+         {
+            return pointer != other;
+         }
+
+         bool operator ==(const T &other) const
+         {
+            return pointer == &other;
+         }
+
+         bool operator !=(const T &other) const
+         {
+            return pointer != &other;
+         }
+
+         Pointer <T> &operator =(Pointer <T> &&other)
+         {
+            if (this->owner)
+            {
+               delete this->pointer;
+            }
+
+            this->pointer = other.pointer;
+            this->owner   = other.owner;
+
+            other.owner   = false;
+
+            return *this;
+         }
+      };
+
+      /*!
+       * Basic API for persistent storage implementations.
+       */
+      template<typename T>
+      struct IEntries
+      {
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         /*!
+          * Return the number of entries in the container.
+          *
+          * @return  the number of entries in the container.
+          */
+         virtual size_t size () const = 0;
+
+         /*!
+          * Store the given bind \c entry to persistent storage.
+          *
+          * @param [in] device   the bind entry to store.
+          *
+          * @retval  Common::Result::OK if the bind entry was saved,
+          * @retval  Common::Result::FAIL_UNKNOWN otherwise.
+          */
+         virtual Result save (const T &) = 0;
+
+         /*!
+          * Destroy the given \c entry in the persistent storage.
+          *
+          * @param [in] entry   reference to the bind entry to erase.
+          *
+          * @retval  Common::Result::OK, if the entry was destroyed.
+          * @retval  Common::Result::FAIL_ARG otherwise.
+          */
+         virtual Result destroy (const T &) = 0;
+      };
 
    }  // namespace Common
 

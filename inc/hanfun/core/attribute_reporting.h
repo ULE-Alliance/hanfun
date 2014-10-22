@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Attribute Reporting Service
  * in HAN-FUN.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -18,6 +18,7 @@
 #define HF_CORE_ATTRIBUTE_REPORTING_H
 
 #include <forward_list>
+#include <memory>
 
 #include "hanfun/common.h"
 #include "hanfun/core.h"
@@ -28,6 +29,14 @@ namespace HF
 {
    namespace Core
    {
+      // Forward declaration.
+      namespace AttributeReporting
+      {
+         struct Server;
+      }  // namespace AttributeReporting
+
+      HF::Attributes::IAttribute *create_attribute (AttributeReporting::Server *server, uint8_t uid);
+
       /*!
        * This namespace contains the classes that implements
        * HAN-FUN's Core interface - Attribute Reporting.
@@ -834,6 +843,9 @@ namespace HF
          //! Value indicating all reports.
          static constexpr uint8_t ALL_ADDR = 0x7F;
 
+         typedef std::vector <Periodic::Entry>::iterator periodic_iterator;
+         typedef std::vector <Event::Entry>::iterator event_iterator;
+
          Protocol::Message *create (Protocol::Address &destination);
 
          Protocol::Message *create (Protocol::Address &destination, uint32_t interval);
@@ -842,11 +854,11 @@ namespace HF
 
          Protocol::Message *destroy (Reference report);
 
-         Protocol::Message *add (Reference report, std::vector <Periodic::Entry>::iterator begin,
-                                 std::vector <Periodic::Entry>::iterator end);
+         Protocol::Message *add (Reference report, periodic_iterator begin, periodic_iterator end);
 
-         Protocol::Message *add (Reference report, std::vector <Event::Entry>::iterator begin,
-                                 std::vector <Event::Entry>::iterator end);
+         Protocol::Message *add (Reference report, event_iterator begin, event_iterator end);
+
+         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
           * Attribute Reporting - Client Role.
@@ -1002,9 +1014,31 @@ namespace HF
             virtual void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
                                  const HF::Attributes::IAttribute &new_value);
 
+            size_t count (Type type) const;
+
+            // =============================================================================
+            // Interface Attribute API.
+            // =============================================================================
+
+            //! \see Interface::attribute
+            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            {
+               return Core::create_attribute (this, uid);
+            }
+
+            //! \see AbstractInterface::attributes
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED (pack_id);
+               return HF::Attributes::UIDS {REPORT_COUNT_ATTR, PERIODIC_REPORT_COUNT_ATTR,
+                                            EVENT_REPORT_COUNT_ATTR};
+            }
+
             protected:
 
             uint32_t last_time;
+
+            using AbstractService::notify;
 
             //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;

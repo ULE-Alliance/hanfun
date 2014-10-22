@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -63,6 +63,8 @@ namespace HF
       {
          MAX_CMD_ID = 0xFF,           //!< Maximum value for command IDs.
       };
+
+      virtual ~Interface() {}
 
       // =============================================================================
       // API
@@ -139,6 +141,8 @@ namespace HF
        */
       struct AbstractInterface:virtual public Interface
       {
+         virtual ~AbstractInterface() {}
+
          //! \see Interface::handle
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
@@ -313,6 +317,33 @@ namespace HF
          {
             return _role;
          }
+      };
+
+      template<typename _Interface, typename _Proxy>
+      struct Proxy:public _Interface
+      {
+         static_assert (std::is_base_of <Interfaces::AbstractInterface, _Interface>::value,
+                        "Interface MUST be of type HF::Interfaces::AbstractInterface !");
+
+         typedef _Interface base;
+
+         Proxy(_Proxy &_proxy):proxy (_proxy)
+         {}
+
+         void send (const Protocol::Address &addr, Protocol::Message &message)
+         {
+            proxy.send (addr, message);
+         }
+
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            proxy.notify (old_value, new_value);
+         }
+
+         private:
+
+         _Proxy &proxy;
       };
 
    }  // namespace Interfaces

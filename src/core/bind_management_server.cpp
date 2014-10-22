@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Bind Management : Server Role.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,34 +24,30 @@ using namespace HF::Core::BindManagement;
 
 
 // =============================================================================
-// BindManagement::Server
+// BindManagement::IServer
 // =============================================================================
 
-Server::Server(HF::Devices::Concentrator::IUnit0 &unit):
-   ServiceRole (unit)
-{}
-
 // =============================================================================
-// BindManagement::Server::unit
+// BindManagement::IServer::unit
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Devices::Concentrator::IUnit0 &Server::unit0 ()
+HF::Devices::Concentrator::IUnit0 &IServer::unit0 () const
 {
    return static_cast <HF::Devices::Concentrator::IUnit0 &>(ServiceRole::unit ());
 }
 
 // =============================================================================
-// BindManagement::Server::handle_command
+// BindManagement::AbstractServer::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                               size_t offset)
 {
    Common::Result res      = Common::Result::FAIL_UNKNOWN;
 
@@ -65,7 +61,7 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
       {
          entry.unpack (payload, offset);
 
-         res = this->add (entry.source, entry.destination, entry.itf).first;
+         res = this->add (entry.source, entry.destination, entry.itf);
 
          break;
       }
@@ -86,7 +82,7 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
    Protocol::Message  response (packet.message, resp.size ());
 
    response.itf.role   = SERVER_ROLE;
-   response.itf.id     = BindManagement::Server::uid ();
+   response.itf.id     = BindManagement::IServer::uid ();
    response.itf.member = cmd;
 
    resp.pack (response.payload);
@@ -103,57 +99,38 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &source,
-                                                       const Protocol::Address &destination,
-                                                       const Common::Interface &itf)
+Common::Result AbstractServer::add (const Protocol::Address &source,
+                                    const Protocol::Address &destination,
+                                    const Common::Interface &itf)
 {
-   const Entry *entry = this->entries.find (source, itf, destination);
+   auto entry = this->entries ().find (source, itf, destination);
 
    // If the entry already exists, do nothing.
    if (entry != nullptr)
    {
-      return std::make_pair (Common::Result::OK, entry);
+      return Common::Result::OK;
    }
 
    // TODO Add support for group binding.
    if (destination.mod == HF::Protocol::Address::GROUP)
    {
-      return std::make_pair (Common::Result::FAIL_SUPPORT, nullptr);
+      return Common::Result::FAIL_SUPPORT;
    }
 
    // Get device entries from device management.
-   DeviceManagement::Device *src_dev = unit0 ().device_management ()->entry (source.device);
+   HF::Interface::Role role = static_cast <HF::Interface::Role>(itf.role);
 
-   if (src_dev == nullptr)
-   {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
-   }
-
-   DeviceManagement::Device *dst_dev = unit0 ().device_management ()->entry (destination.device);
+   auto dst_dev             = unit0 ().device_management ()->entry (destination.device);
 
    if (dst_dev == nullptr)
    {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
-   }
-
-   // Check if the source unit exist.
-   /* *INDENT-OFF* */
-   auto src_unit_it = std::find_if(src_dev->units.begin(), src_dev->units.end(),
-                                   [&source](DeviceManagement::Unit &unit)
-                                   {
-                                      return unit.id == source.unit;
-                                   });
-   /* *INDENT-ON* */
-
-   if (src_unit_it == src_dev->units.end ())
-   {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      return Common::Result::FAIL_ARG;
    }
 
    // Check if the destination unit exist.
    /* *INDENT-OFF* */
    auto dst_unit_it = std::find_if(dst_dev->units.begin(), dst_dev->units.end(),
-                                   [&destination](DeviceManagement::Unit &unit)
+                                   [&destination](const DeviceManagement::Unit &unit)
                                    {
                                       return unit.id == destination.unit;
                                    });
@@ -161,27 +138,50 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
 
    if (dst_unit_it == dst_dev->units.end ())
    {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      return Common::Result::FAIL_ARG;
    }
-
-   HF::Interface::Role role = static_cast <HF::Interface::Role>(itf.role);
 
    // Check if destination unit has requested interface.
    if (!dst_unit_it->has_interface (itf.id, role))
    {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      return Common::Result::FAIL_ARG;
    }
 
-   // Check if source has complementary interface.
-
-   role = (role == Interface::CLIENT_ROLE ? Interface::SERVER_ROLE : Interface::CLIENT_ROLE);
-
-   if (!src_unit_it->has_interface (itf.id, role))
+   // Skip source validation if catch all rule.
+   if (!(source.device == HF::Protocol::BROADCAST_ADDR && source.unit == HF::Protocol::BROADCAST_UNIT))
    {
-      return std::make_pair (Common::Result::FAIL_ARG, nullptr);
+      auto src_dev = unit0 ().device_management ()->entry (source.device);
+
+      if (src_dev == nullptr)
+      {
+         return Common::Result::FAIL_ARG;
+      }
+
+      // Check if the source unit exist.
+      /* *INDENT-OFF* */
+      auto src_unit_it = std::find_if(src_dev->units.begin(), src_dev->units.end(),
+                                      [&source](const DeviceManagement::Unit &unit)
+      {
+         return unit.id == source.unit;
+      });
+      /* *INDENT-ON* */
+
+      if (src_unit_it == src_dev->units.end ())
+      {
+         return Common::Result::FAIL_ARG;
+      }
+
+      // Check if source has complementary interface.
+
+      role = (role == Interface::CLIENT_ROLE ? Interface::SERVER_ROLE : Interface::CLIENT_ROLE);
+
+      if (!src_unit_it->has_interface (itf.id, role))
+      {
+         return Common::Result::FAIL_ARG;
+      }
    }
 
-   return this->entries.create (source, itf, destination);
+   return entries ().save (Entry (source, itf, destination));
 }
 
 // =============================================================================
@@ -191,11 +191,11 @@ std::pair <Common::Result, const Entry *> Server::add (const Protocol::Address &
  *
  */
 // =============================================================================
-Common::Result Server::remove (const Protocol::Address &source,
-                               const Protocol::Address &destination,
-                               const Common::Interface &itf)
+Common::Result AbstractServer::remove (const Protocol::Address &source,
+                                       const Protocol::Address &destination,
+                                       const Common::Interface &itf)
 {
-   const Entry *entry = this->entries.find (source, itf, destination);
+   auto entry = this->entries ().find (source, itf, destination);
 
    // If the entry does not exists, fail.
    if (entry == nullptr)
@@ -203,5 +203,5 @@ Common::Result Server::remove (const Protocol::Address &source,
       return Common::Result::FAIL_ARG;
    }
 
-   return this->entries.destroy (*entry);
+   return this->entries ().destroy (*entry);
 }

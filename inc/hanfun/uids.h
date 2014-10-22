@@ -5,7 +5,7 @@
  * This file contains the declaration of the classes that implement the HAN-FUN
  * UIDs.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -165,6 +165,13 @@ namespace HF
 
          public:
 
+         ByteArray():Abstract <_type>() {}
+
+         ByteArray(uint8_t _value[_size]):Abstract <_type>()
+         {
+            memcpy (value, _value, _size * sizeof(uint8_t));
+         }
+
          //! \see HF::Serializable::size.
          size_t size () const
          {
@@ -282,6 +289,12 @@ namespace HF
        */
       struct RFPI:public ByteArray <RFPI, 5, RFPI_UID>
       {
+         RFPI():ByteArray <RFPI, 5, RFPI_UID>()
+         {}
+
+         RFPI(uint8_t _value[5]):ByteArray <RFPI, 5, RFPI_UID>(_value)
+         {}
+
          // ===================================================================
          // Cloneable
          // ===================================================================
@@ -297,6 +310,12 @@ namespace HF
        */
       struct IPUI:public ByteArray <IPUI, 5, IPUI_UID>
       {
+         IPUI():ByteArray <IPUI, 5, IPUI_UID>()
+         {}
+
+         IPUI(uint8_t _value[5]):ByteArray <IPUI, 5, IPUI_UID>(_value)
+         {}
+
          // ===================================================================
          // Cloneable
          // ===================================================================
@@ -312,6 +331,12 @@ namespace HF
        */
       struct MAC:public ByteArray <MAC, 6, MAC_UID>
       {
+         MAC():ByteArray <MAC, 6, MAC_UID>()
+         {}
+
+         MAC(uint8_t _value[6]):ByteArray <MAC, 6, MAC_UID>(_value)
+         {}
+
          // ===================================================================
          // Cloneable
          // ===================================================================

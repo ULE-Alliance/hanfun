@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the common
  * functions and classes for the HAN-FUN library.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -17,6 +17,8 @@
 
 #include "hanfun/common.h"
 #include "hanfun/uids.h"
+
+#include "hanfun/debug.h"
 
 #include "test_helper.h"
 
@@ -249,6 +251,12 @@ TEST (UID, IPUI)
    BYTES_EQUAL (0x70, ipui[2]);
    BYTES_EQUAL (0x5A, ipui[3]);
    BYTES_EQUAL (0xA5, ipui[4]);
+
+   HF::UID::UID uid = HF::UID::UID( &ipui);
+   std::stringstream ss;
+   ss << uid;
+
+   STRCMP_EQUAL (std::string ("ipui: 0073705AA5").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, MAC)
@@ -293,6 +301,12 @@ TEST (UID, MAC)
    BYTES_EQUAL (0x78, mac[3]);
    BYTES_EQUAL (0x9A, mac[4]);
    BYTES_EQUAL (0xBC, mac[5]);
+
+   HF::UID::UID uid = HF::UID::UID( &mac);
+   std::stringstream ss;
+   ss << uid;
+
+   STRCMP_EQUAL (std::string ("mac: 12:34:56:78:9A:BC").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, URI)

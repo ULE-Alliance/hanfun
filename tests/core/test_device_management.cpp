@@ -5,7 +5,7 @@
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -144,9 +144,9 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    Common::Interface itf2 (0x1234, HF::Interface::CLIENT_ROLE);
    Common::Interface itf3 (0x5678, HF::Interface::SERVER_ROLE);
 
-   wunit.opt_ift.push_back (itf1);
-   wunit.opt_ift.push_back (itf2);
-   wunit.opt_ift.push_back (itf3);
+   wunit.interfaces.push_back (itf1);
+   wunit.interfaces.push_back (itf2);
+   wunit.interfaces.push_back (itf3);
 
    size_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
@@ -174,11 +174,11 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    LONGS_EQUAL (wunit.id, runit.id);
    LONGS_EQUAL (wunit.profile, runit.profile);
 
-   LONGS_EQUAL (wunit.opt_ift.size (), runit.opt_ift.size ());
+   LONGS_EQUAL (wunit.interfaces.size (), runit.interfaces.size ());
 
-   for (uint8_t i = 0; i < runit.opt_ift.size (); i++)
+   for (uint8_t i = 0; i < runit.interfaces.size (); i++)
    {
-      CHECK_EQUAL (wunit.opt_ift[i], runit.opt_ift[i]);
+      CHECK_EQUAL (wunit.interfaces[i], runit.interfaces[i]);
    }
 }
 
@@ -503,145 +503,6 @@ TEST (DeviceManagement, DeregisterMessage)
 }
 
 // =============================================================================
-// DeviceManagement::StartSessionResponse
-// =============================================================================
-
-TEST (DeviceManagement, StartSessionResponse)
-{
-   DeviceManagement::StartSessionResponse response;
-
-   size_t size = response.size ();
-   LONGS_EQUAL (1 + 2, size);
-
-   response.code  = Result::FAIL_READ_SESSION;
-   response.count = 0x4243;
-
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        Result::FAIL_READ_SESSION, // Response code.
-                        0x42, 0x43,                // Device Address.
-                        0x00, 0x00, 0x00}
-                      );
-   ByteArray array (size + 6);
-
-   size_t    wsize = response.pack (array, 3);
-   LONGS_EQUAL (size, wsize);
-
-   CHECK_EQUAL (expected, array);
-
-   response.code  = Result::OK;
-   response.count = 0;
-
-   size_t rsize = response.unpack (expected, 3);
-   LONGS_EQUAL (size, rsize);
-
-   LONGS_EQUAL (Result::FAIL_READ_SESSION, response.code);
-   LONGS_EQUAL (0x4243, response.count);
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesMessage
-// =============================================================================
-
-TEST (DeviceManagement, GetEntriesMessage)
-{
-   DeviceManagement::GetEntriesMessage message;
-
-   message.offset = 0x4243;
-   message.count  = 0xAA;
-
-   size_t size = message.size ();
-   LONGS_EQUAL (2 + 1, size);
-
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        0x42, 0x43, // Offset.
-                        0xAA,       // Count.
-                        0x00, 0x00, 0x00}
-                      );
-   ByteArray array (size + 6);
-
-   size_t    wsize = message.pack (array, 3);
-   LONGS_EQUAL (size, wsize);
-
-   CHECK_EQUAL (expected, array);
-
-   message.offset = message.count = 0;
-
-   size_t rsize = message.unpack (expected, 3);
-   LONGS_EQUAL (size, rsize);
-
-   LONGS_EQUAL (0x4243, message.offset);
-   LONGS_EQUAL (0xAA, message.count);
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesResponse
-// =============================================================================
-
-TEST (DeviceManagement, GetEntriesResponse)
-{
-   DeviceManagement::GetEntriesResponse response;
-
-   DeviceManagement::Unit unit;
-   DeviceManagement::Device device;
-
-   unit.id        = 0x42;
-   unit.profile   = 0x5AA5;
-
-   device.address = 0x4321;
-   device.units.push_back (unit);
-
-   response.entries.push_back (device);
-
-   device.address++;
-   response.entries.push_back (device);
-
-   device.address++;
-   response.entries.push_back (device);
-
-   size_t size = response.size ();
-   LONGS_EQUAL (1 + 1 + device.size () * 3, size);
-
-   response.code = Result::FAIL_READ_SESSION;
-
-   ByteArray expected ({0x00, 0x00, 0x00,
-                        Result::FAIL_READ_SESSION, // Response code.
-                        0x03,                      // Number of entries.
-                                                   // Device 1
-                        0x43, 0x21,                //  + Device Address.
-                        0x01,                      //  + Number of units.
-                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
-                                                   // Device 2
-                        0x43, 0x22,                //  + Device Address.
-                        0x01,                      //  + Number of units.
-                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
-                                                   // Device 3
-                        0x43, 0x23,                //  + Device Address.
-                        0x01,                      //  + Number of units.
-                        0x03, 0x42, 0x5A, 0xA5,    //  + Unit 1.
-                        0x00, 0x00, 0x00}
-                      );
-   ByteArray array (size + 6);
-
-   size_t    wsize = response.pack (array, 3);
-   LONGS_EQUAL (size, wsize);
-
-   CHECK_EQUAL (expected, array);
-
-   DeviceManagement::GetEntriesResponse other;
-
-   size_t rsize = other.unpack (expected, 3);
-   LONGS_EQUAL (size, rsize);
-
-   LONGS_EQUAL (Result::FAIL_READ_SESSION, other.code);
-   LONGS_EQUAL (3, other.entries.size ());
-
-   for (uint8_t i = 0; i < 3; i++)
-   {
-      CHECK_EQUAL (response.entries[i], other.entries[i]);
-   }
-}
-
-// =============================================================================
 // DeviceManagementClient
 // =============================================================================
 
@@ -694,7 +555,7 @@ TEST_GROUP (DeviceManagementClient)
 
       dev_mgt     = new TestDeviceManagementClient (*device->unit0 ());
 
-      device->unit0 ()->dev_mgt = dev_mgt;
+      device->unit0 ()->device_management (dev_mgt);
 
       packet                  = Protocol::Packet ();
 
@@ -710,8 +571,6 @@ TEST_GROUP (DeviceManagementClient)
       delete unit1;
       delete unit2;
       delete unit3;
-
-      delete dev_mgt;
 
       delete device;
 
@@ -950,8 +809,6 @@ TEST_GROUP (DeviceManagementServer)
          mock ("DeviceManagementServer").actualCall ("deregister_device");
          return DeviceManagement::DefaultServer::deregister_device (packet, payload, offset);
       }
-
-      using DeviceManagement::DefaultServer::save;
    };
 
    TestDeviceManagementServer *dev_mgt;
@@ -966,9 +823,7 @@ TEST_GROUP (DeviceManagementServer)
 
       dev_mgt = new TestDeviceManagementServer (*device->unit0 ());
 
-      device->unit0 ()->dev_mgt  = dev_mgt;
-
-      device->unit0 ()->bind_mgt = new HF::Core::BindManagement::Server (*device->unit0 ());
+      device->unit0 ()->device_management (dev_mgt);
 
       packet.destination.device = 0;
       packet.destination.unit   = 0;
@@ -989,10 +844,6 @@ TEST_GROUP (DeviceManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->bind_mgt;
-
-      delete dev_mgt;
-
       delete device;
 
       delete link;
@@ -1003,15 +854,15 @@ TEST_GROUP (DeviceManagementServer)
 
 TEST (DeviceManagementServer, Handle_Register)
 {
-   ByteArray expected = ByteArray {0x00, 0x00, 0x00,
-                                   0x02,                          // Discriminator Type.
-                                   0x05,                          // Size of UID.
-                                   0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
-                                   0x03,                          // Number of units.
-                                   0x03, 0x42, 0x5A, 0xA5,        // Unit 1.
-                                   0x03, 0x42, 0x5A, 0xA5,        // Unit 2.
-                                   0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
-                                   0x00, 0x00, 0x00};
+   ByteArray expected = {0x00, 0x00, 0x00,
+                         0x02,                         // Discriminator Type.
+                         0x05,                         // Size of UID.
+                         0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                         0x03,                         // Number of units.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                         0x00, 0x00, 0x00};
 
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
    packet.message.length     = expected.size ();
@@ -1025,7 +876,7 @@ TEST (DeviceManagementServer, Handle_Register)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (1, dev_mgt->entries_count ());
+   LONGS_EQUAL (1, dev_mgt->entries ().size ());
 
    // Check response packet destination address.
    LONGS_EQUAL (1, device->packets.size ());
@@ -1048,7 +899,7 @@ TEST (DeviceManagementServer, Handle_Register)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (1, dev_mgt->entries_count ());
+   LONGS_EQUAL (1, dev_mgt->entries ().size ());
 
    // Should add entry for other device.
 
@@ -1068,7 +919,65 @@ TEST (DeviceManagementServer, Handle_Register)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (2, dev_mgt->entries_count ());
+   LONGS_EQUAL (2, dev_mgt->entries ().size ());
+}
+
+/*!
+ * New registration messages with a Protocol::Message::COMMAND_RESP_REQ type,
+ * should not generate more that one response.
+ */
+TEST (DeviceManagementServer, Handle_Register2)
+{
+   ByteArray expected = {0x00, 0x00, 0x00,
+                         0x02,                         // Discriminator Type.
+                         0x05,                         // Size of UID.
+                         0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                         0x03,                         // Number of units.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                         0x00, 0x00, 0x00};
+
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.itf.member = DeviceManagement::REGISTER_CMD;
+   packet.message.length     = expected.size ();
+
+   mock ("DeviceManagementServer").expectOneCall ("register_device");
+   mock ("AbstractDevice").expectOneCall ("send");
+
+   device->receive (packet, expected, 3);
+
+   mock ("DeviceManagementServer").checkExpectations ();
+   mock ("AbstractDevice").checkExpectations ();
+}
+
+/*!
+ * Registration messages should invalidate current sessions.
+ */
+TEST (DeviceManagementServer, Handle_RegisterWithSession)
+{
+   ByteArray expected = {0x00, 0x00, 0x00,
+                         0x02,                         // Discriminator Type.
+                         0x05,                         // Size of UID.
+                         0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
+                         0x03,                         // Number of units.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 1.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 2.
+                         0x03, 0x42, 0x5A,0xA5,        // Unit 3.
+                         0x00, 0x00, 0x00};
+
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.itf.member = DeviceManagement::REGISTER_CMD;
+   packet.message.length     = expected.size ();
+
+   dev_mgt->sessions ().start_session (0x5555);
+   CHECK_TRUE (dev_mgt->sessions ().exists (0x5555));
+   CHECK_TRUE (dev_mgt->sessions ().is_valid (0x5555));
+
+   device->receive (packet, expected, 3);
+
+   CHECK_TRUE (dev_mgt->sessions ().exists (0x5555));
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x5555));
 }
 
 TEST (DeviceManagementServer, Handle_Deregister)
@@ -1080,14 +989,19 @@ TEST (DeviceManagementServer, Handle_Deregister)
       std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
       dev->uid = new UID::URI (uri.str ());
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+      delete dev;
    }
 
-   size_t size = dev_mgt->entries_count ();
+   size_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
    DeviceManagement::DeregisterMessage message (0x5A5A);
+
+   dev_mgt->sessions ().start_session (0x5555);
+
+   CHECK_TRUE (dev_mgt->sessions ().is_valid (0x5555));
 
    ByteArray expected (message.size ());
 
@@ -1103,7 +1017,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
    mock ("DeviceManagementServer").checkExpectations ();
 
-   LONGS_EQUAL (size, dev_mgt->entries_count ());
+   LONGS_EQUAL (size, dev_mgt->entries ().size ());
 
    packet.source.device = 0x5A5A;
 
@@ -1116,7 +1030,9 @@ TEST (DeviceManagementServer, Handle_Deregister)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+   LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
+
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x5555));
 }
 
 TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
@@ -1131,7 +1047,8 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
       dev->uid = new UID::URI (uri.str ());
       uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
       dev->units.push_back (DeviceManagement::Unit (i + 1, profile));
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+      delete dev;
    }
 
    // == Set-up some bindings. ==
@@ -1145,32 +1062,35 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    auto bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
    dst      = Protocol::Address (0x5A55, 6);
 
    bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
    dst      = Protocol::Address (0x5A57, 8);
 
    bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
    src      = Protocol::Address (0x5A54, 5);
    dst      = Protocol::Address (0x5A53, 4);
 
    bind_res = device->unit0 ()->bind_management ()->add (src, dst, itf);
 
-   CHECK_EQUAL (Result::OK, bind_res.first);
+   CHECK_EQUAL (Result::OK, bind_res);
 
-   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
+   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries ().size ());
+
+   device->unit0 ()->bind_management ()->sessions ().start_session (0x5555);
+   CHECK_TRUE (device->unit0 ()->bind_management ()->sessions ().is_valid (0x5555));
 
    // == De-register the device.
 
-   size_t size = dev_mgt->entries_count ();
+   size_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
@@ -1190,9 +1110,9 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    mock ("DeviceManagementServer").checkExpectations ();
 
-   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries.size ());
+   LONGS_EQUAL (4, device->unit0 ()->bind_management ()->entries ().size ());
 
-   LONGS_EQUAL (size, dev_mgt->entries_count ());
+   LONGS_EQUAL (size, dev_mgt->entries ().size ());
 
    packet.source.device = 0x5A52;
 
@@ -1205,12 +1125,42 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
    mock ("DeviceManagementServer").checkExpectations ();
    mock ("AbstractDevice").checkExpectations ();
 
-   LONGS_EQUAL (size - 1, dev_mgt->entries_count ());
+   LONGS_EQUAL (size - 1, dev_mgt->entries ().size ());
 
-   LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries.size ());
+   LONGS_EQUAL (1, device->unit0 ()->bind_management ()->entries ().size ());
+
+   CHECK_FALSE (device->unit0 ()->bind_management ()->sessions ().is_valid (0x5555));
 }
 
 TEST (DeviceManagementServer, Entries)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device dev;
+      dev.address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev.uid     = temp;
+
+      dev_mgt->entries ().save (dev);
+   }
+
+   LONGS_EQUAL (20, dev_mgt->entries ().size ());
+
+   LONGS_EQUAL (21, dev_mgt->entries ().next_address ());
+}
+
+TEST (DeviceManagementServer, FindEntry)
 {
    UID::IPUI ipui;
 
@@ -1230,31 +1180,112 @@ TEST (DeviceManagementServer, Entries)
 
       dev->uid    = temp;
 
-      dev_mgt->save (dev);
+      dev_mgt->entries ().save (*dev);
+      delete dev;
    }
 
-   LONGS_EQUAL (20, dev_mgt->entries_count ());
+   ipui[4] = 0x90 + 4;
 
-   std::vector <DeviceManagement::Device *> entries = dev_mgt->entries ();
+   auto entry = dev_mgt->entry (5);
 
-   LONGS_EQUAL (dev_mgt->entries_count (), entries.size ());
+   CHECK_EQUAL (entry->uid, ipui);
 
-   entries = dev_mgt->entries (14);
+   entry = dev_mgt->entry (HF::UID::UID( &ipui));
 
-   LONGS_EQUAL (6, entries.size ());
+   CHECK_EQUAL (entry->address, 5);
+}
 
-   entries = dev_mgt->entries (16, 10);
 
-   LONGS_EQUAL (4, entries.size ());
+TEST (DeviceManagementServer, FindEntrySelf)
+{
+   UID::IPUI ipui;
 
-   entries = dev_mgt->entries (5, 10);
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
 
-   LONGS_EQUAL (10, entries.size ());
-
-   LONGS_EQUAL (entries.front ()->address + 10 - 1, entries.back ()->address);
-
-   for (uint16_t i = 0; i < entries.size (); i++)
+   for (int i = 0; i < 20; i++)
    {
-      CHECK_DEVICE_ADDRESS (6 + i, entries[i]->address, i);
+      DeviceManagement::Device *dev = new DeviceManagement::Device ();
+      dev->address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev->uid    = temp;
+
+      dev_mgt->entries ().save (*dev);
+
+      delete dev;
    }
+
+   UID::RFPI rfpi;
+   rfpi[0] = 0x12;
+   rfpi[1] = 0x34;
+   rfpi[2] = 0x56;
+   rfpi[3] = 0x78;
+   rfpi[4] = 0x90;
+
+   device->unit0 ()->device_info ()->device_uid = HF::UID::UID( &rfpi);
+
+   auto entry                                   = dev_mgt->entry (device->address ());
+   CHECK_FALSE (entry == nullptr);
+
+   LONGS_EQUAL (1, entry->units.size ());
+   CHECK_EQUAL (rfpi, entry->uid);
+
+   Testing::Unit unit1 (1, *device);
+
+   entry = dev_mgt->entry (device->address ());
+
+   LONGS_EQUAL (2, entry->units.size ());
+}
+
+TEST (DeviceManagementServer, EntriesSession)
+{
+   UID::IPUI ipui;
+
+   ipui[0] = 0x12;
+   ipui[1] = 0x34;
+   ipui[2] = 0x56;
+   ipui[3] = 0x78;
+   ipui[4] = 0x90;
+
+   for (int i = 0; i < 20; i++)
+   {
+      DeviceManagement::Device dev;
+      dev.address = i + 1;
+
+      UID::IPUI *temp = new UID::IPUI (ipui);
+      (*temp)[4] += i;
+
+      dev.uid     = temp;
+
+      dev_mgt->entries ().save (dev);
+   }
+
+   dev_mgt->sessions ().start_session (0x1234);
+
+   DeviceManagement::Device dev;
+   dev.address = 0xAAAA;
+
+   UID::IPUI *temp = new UID::IPUI (ipui);
+   (*temp)[4] += 0xFF;
+
+   dev.uid     = temp;
+
+   dev_mgt->entries ().save (dev);
+
+   LONGS_EQUAL (21, dev_mgt->entries ().size ());
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x1234));
+
+   dev_mgt->sessions ().start_session (0x1234);
+   CHECK_TRUE (dev_mgt->sessions ().is_valid (0x1234));
+
+   dev_mgt->entries ().destroy (dev);
+
+   LONGS_EQUAL (20, dev_mgt->entries ().size ());
+   CHECK_FALSE (dev_mgt->sessions ().is_valid (0x1234));
 }

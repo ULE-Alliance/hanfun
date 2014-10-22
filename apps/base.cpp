@@ -5,7 +5,7 @@
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -34,37 +34,78 @@
 // =============================================================================
 
 // =============================================================================
-// DeviceManagement::available
+// DeviceManagement::Entries::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool DeviceManagement::available (uint16_t address)
+HF::Common::Result DeviceManagement::Entries::save (const Device &device)
+{
+   auto res = HF::Core::DeviceManagement::Entries::save (device);
+   HF::Application::Save ();
+   return res;
+}
+
+// =============================================================================
+// DeviceManagement::Entries::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void DeviceManagement::Entries::insert (const Device &device)
+{
+   HF::Core::DeviceManagement::Entries::save (device);
+}
+
+// =============================================================================
+// DeviceManagement::Entries::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Common::Result DeviceManagement::Entries::destroy (const Device &device)
+{
+   auto res = HF::Core::DeviceManagement::Entries::destroy (device);
+   HF::Application::Save ();
+   return res;
+}
+
+// =============================================================================
+// DeviceManagement::Server::available
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool DeviceManagement::Server::available (uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)
    {
       return false;
    }
 
-   auto it = std::find_if (_entries.begin (), _entries.end (),
-                           [address](HF::Core::DeviceManagement::Device *dev)
-                           {
-                              return address == dev->address;
-                           }
-                          );
+   /* *INDENT-OFF* */
+   auto it = std::find_if(entries().begin(), entries().end(),
+                          [address](const HF::Core::DeviceManagement::Device &dev)
+                          {
+                             return address == dev.address;
+                          });
+   /* *INDENT-ON* */
 
-   return it == _entries.end ();
+   return it == entries ().end ();
 }
 
 // =============================================================================
-// DeviceManagement::next_address
+// DeviceManagement::Server::next_address
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint16_t DeviceManagement::next_address ()
+uint16_t DeviceManagement::Server::next_address ()
 {
    uint16_t result = _next_address;
 
@@ -72,21 +113,20 @@ uint16_t DeviceManagement::next_address ()
 
    if (result == HF::Protocol::BROADCAST_ADDR)
    {
-      for (result = 1; result < HF::Protocol::BROADCAST_ADDR && !available (result); result++)
-      {}
+      result = HF::Core::DeviceManagement::Server <Entries>::next_address ();
    }
 
    return result;
 }
 
 // =============================================================================
-// DeviceManagement::deregister
+// DeviceManagement::Server::deregister
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool DeviceManagement::deregister (uint16_t address)
+bool DeviceManagement::Server::deregister (uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)
    {
@@ -97,8 +137,7 @@ bool DeviceManagement::deregister (uint16_t address)
 
    if (_entry != nullptr)
    {
-      HF::Core::DeviceManagement::Server::deregister (*_entry);
-      HF::Application::Save ();
+      HF::Core::DeviceManagement::Server <Entries>::deregister (_entry);
       return true;
    }
 
@@ -106,58 +145,45 @@ bool DeviceManagement::deregister (uint16_t address)
 }
 
 // =============================================================================
-// DeviceManagement::save
+// DeviceManagement::Server::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Common::Result DeviceManagement::save (HF::Core::DeviceManagement::Device *device)
-{
-   HF::Common::Result result = HF::Core::DeviceManagement::DefaultServer::save (device);
-   HF::Application::Save ();
-   return result;
-}
-
-// =============================================================================
-// DeviceManagement::save
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void DeviceManagement::save (Json::Value &root)
+void DeviceManagement::Server::save (Json::Value &root)
 {
    LOG (INFO) << "Saving registration entries ..." << NL;
 
    unsigned i = 0;
 
    /* *INDENT-OFF* */
-   for_each(_entries.begin(), _entries.end(),
-         [&root, &i](HF::Core::DeviceManagement::Device *device)
-         {
-            to_json (*device, root[i]);
-            i++;
-         });
+   for_each( entries ().begin (), entries ().end (),
+             [&root, &i](HF::Core::DeviceManagement::Device &device)
+   {
+      to_json (device, root[i]);
+      i++;
+   });
    /* *INDENT-ON* */
 }
 
 // =============================================================================
-// DeviceManagement::restore
+// DeviceManagement::Server::restore
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void DeviceManagement::restore (Json::Value root)
+void DeviceManagement::Server::restore (Json::Value root)
 {
    LOG (INFO) << "Restoring registration entries ..." << NL;
 
+   HF::Core::DeviceManagement::Device device;
+
    for (unsigned i = 0; i < root.size (); i++)
    {
-      HF::Core::DeviceManagement::Device *device = new HF::Core::DeviceManagement::Device ();
-      from_json (root[i], *device);
-      HF::Core::DeviceManagement::DefaultServer::save (device);
+      from_json (root[i], device);
+      HF::Core::DeviceManagement::Server <Entries>::entries ().insert (device);
    }
 }
 
@@ -166,69 +192,76 @@ void DeviceManagement::restore (Json::Value root)
 // =============================================================================
 
 // =============================================================================
-// BindManagement::add
+// BindManagement::Entries::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> BindManagement::add (
-   const HF::Protocol::Address &source,
-   const HF::Protocol::Address &destination,
-   const HF::Common::Interface &itf)
+HF::Common::Result BindManagement::Entries::save (const Entry &entry)
 {
-   auto result = HF::Core::BindManagement::Server::add (source, destination, itf);
+   auto res = HF::Core::BindManagement::Entries::save (entry);
    HF::Application::Save ();
-   return result;
+   return res;
 }
 
 // =============================================================================
-// BindManagement::remove
+// BindManagement::Entries::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Common::Result BindManagement::remove (const HF::Protocol::Address &source,
-                                           const HF::Protocol::Address &destination,
-                                           const HF::Common::Interface &itf)
+void BindManagement::Entries::insert (Entry &entry)
 {
-   HF::Common::Result result = HF::Core::BindManagement::Server::remove (source, destination, itf);
-   HF::Application::Save ();
-   return result;
+   HF::Core::BindManagement::Entries::save (entry);
 }
 
 // =============================================================================
-// BindManagement::save
+// DeviceManagement::Entries::destroy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::save (Json::Value &root)
+HF::Common::Result BindManagement::Entries::destroy (const Entry &entry)
+{
+   auto res = HF::Core::BindManagement::Entries::destroy (entry);
+   HF::Application::Save ();
+   return res;
+}
+
+// =============================================================================
+// BindManagement::Server::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void BindManagement::Server::save (Json::Value &root)
 {
    LOG (INFO) << "Saving binding entries ..." << NL;
 
    unsigned i = 0;
 
    /* *INDENT-OFF* */
-   for_each(entries.begin(), entries.end(),
-         [&root, &i](const HF::Core::BindManagement::Entry &entry)
-         {
-            to_json (entry, root[i]);
-            i++;
-         });
+   for_each(entries().begin(), entries().end(),
+            [&root, &i](const HF::Core::BindManagement::Entry &entry)
+            {
+               to_json (entry, root[i]);
+               i++;
+            });
    /* *INDENT-ON* */
 }
 
 // =============================================================================
-// BindManagement::restore
+// BindManagement::Server::restore
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::restore (Json::Value root)
+void BindManagement::Server::restore (Json::Value root)
 {
    LOG (INFO) << "Restoring binding entries ..." << NL;
 
@@ -236,8 +269,9 @@ void BindManagement::restore (Json::Value root)
    {
       HF::Core::BindManagement::Entry entry;
       from_json (root[i], entry);
-      auto res = this->add (entry.source, entry.destination, entry.itf);
-      LOG (TRACE) << "Bind Add : " << res.first << NL;
+      entries ().insert (entry);
+      LOG (TRACE) << "Bind Add : " << entry.source.device
+                  << " -> " << entry.destination.device << NL;
    }
 }
 
@@ -276,7 +310,7 @@ bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
    HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
    HF::Protocol::Address destination (dev_addr_2, 1);
 
-   return _unit0.bind_management ()->entries.find (source, itf, destination) != nullptr;
+   return _unit0.bind_management ()->entries ().find (source, itf, destination) != nullptr;
 }
 
 // =============================================================================
@@ -299,7 +333,7 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 
    auto res = _unit0.bind_management ()->add (source, destination, itf);
 
-   if (res.first == HF::Common::OK)
+   if (res == HF::Common::OK)
    {
       return 0;
    }
@@ -454,9 +488,9 @@ void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
 
    node["profile"] = json_uid (unit.profile);
 
-   for (unsigned i = 0; i < unit.opt_ift.size (); i++)
+   for (unsigned i = 0; i < unit.interfaces.size (); i++)
    {
-      to_json (unit.opt_ift[i], node["opts"][i]);
+      to_json (unit.interfaces[i], node["opts"][i]);
    }
 }
 
@@ -604,8 +638,8 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
 
    for (unsigned i = 0; i < node["opts"].size (); i++)
    {
-      unit.opt_ift.push_back (0);
-      from_json (node["opts"][i], unit.opt_ift[i]);
+      unit.interfaces.push_back (0);
+      from_json (node["opts"][i], unit.interfaces[i]);
    }
 }
 

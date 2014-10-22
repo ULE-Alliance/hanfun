@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN protocol messages.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -252,7 +252,10 @@ namespace HF
          // API
          // =============================================================================
 
-         Common::Result code;
+         //! Minimum number of bytes required by this message.
+         constexpr static size_t min_size = sizeof(uint8_t);
+
+         Common::Result          code;
 
          Response(Common::Result code = Common::Result::OK):code (code) {}
 

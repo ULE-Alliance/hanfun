@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   \version 1.0.0
+#   \version 1.1.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -49,7 +49,9 @@ set(HF_CORE_SRCS       core.cpp
                        core/device_information.cpp
                        core/attribute_reporting.cpp
                        core/attribute_reporting_server.cpp
-                       core/attribute_reporting_client.cpp)
+                       core/attribute_reporting_client.cpp
+                       core/session_management_server.cpp
+                       core/session_management_client.cpp)
 
 set(HF_UNITS_SRCS units.cpp)
 

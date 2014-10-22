@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,6 +24,8 @@
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
+#include "hanfun/core/bind_management.h"
+#include "hanfun/core/attribute_reporting.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -49,8 +51,7 @@ static const Entry factories[] =
    },
    {
       HF::Interface::BIND_MANAGEMENT,
-      nullptr
-      // FIXME return HF::Core::BindManagement::create_attribute;
+      HF::Core::BindManagement::create_attribute,
    },
    {
       HF::Interface::DEVICE_INFORMATION,
@@ -58,8 +59,7 @@ static const Entry factories[] =
    },
    {
       HF::Interface::ATTRIBUTE_REPORTING,
-      nullptr
-      // FIXME return HF::Core::AttributeReporting::create_attribute;
+      HF::Core::AttributeReporting::create_attribute,
    },
    /* Functional Interfaces. */
    {
@@ -511,7 +511,7 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
  *
  */
 // =============================================================================
-IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t uid)
+IAttribute *Core::create_attribute (DeviceManagement::IServer *server, uint8_t uid)
 {
    DeviceManagement::Attributes attr = static_cast <DeviceManagement::Attributes>(uid);
 
@@ -519,7 +519,66 @@ IAttribute *Core::create_attribute (DeviceManagement::Server *server, uint8_t ui
    {
       case DeviceManagement::NUMBER_OF_ENTRIES_ATTR:
       {
-         uint16_t value = (server != nullptr ? server->entries_count () : 0);
+         uint16_t value = (server != nullptr ? server->entries ().size () : 0);
+         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+      }
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// Core::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Core::create_attribute (BindManagement::IServer *server, uint8_t uid)
+{
+   BindManagement::Attributes attr = static_cast <BindManagement::Attributes>(uid);
+
+   switch (attr)
+   {
+      case BindManagement::NUMBER_OF_ENTRIES_ATTR:
+      {
+         uint16_t value = (server != nullptr ? server->entries ().size () : 0);
+         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+      }
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// Core::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Core::create_attribute (AttributeReporting::Server *server, uint8_t uid)
+{
+   AttributeReporting::Attributes attr = static_cast <AttributeReporting::Attributes>(uid);
+
+   switch (attr)
+   {
+      case AttributeReporting::REPORT_COUNT_ATTR:
+      {
+         uint16_t value = (server != nullptr ?
+                           server->count (AttributeReporting::Type::PERIODIC) +
+                           server->count (AttributeReporting::Type::EVENT) : 0);
+         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+      }
+      case AttributeReporting::PERIODIC_REPORT_COUNT_ATTR:
+      {
+         uint16_t value = (server != nullptr ?
+                           server->count (AttributeReporting::Type::PERIODIC) : 0);
+         return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+      }
+      case AttributeReporting::EVENT_REPORT_COUNT_ATTR:
+      {
+         uint16_t value = (server != nullptr ? server->count (AttributeReporting::Type::EVENT) : 0);
          return new Attribute <uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:
@@ -538,11 +597,15 @@ List Attributes::get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uid
 {
    List result;
 
-   UIDS attr_uids = uids;
+   UIDS attr_uids;
 
    if (pack_id != DYNAMIC)
    {
       attr_uids = itf.attributes (pack_id);
+   }
+   else
+   {
+      attr_uids = uids;
    }
 
    /* *INDENT-OFF* */

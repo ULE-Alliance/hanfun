@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the interfaces common code.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -43,12 +43,12 @@ using namespace HF::Interfaces;
  * @retval Common::Result::FAIL_UNKNOWN  otherwise.
  */
 // =============================================================================
-static Common::Result update_attribute (Interface *itf, uint8_t uid, Common::ByteArray &payload, size_t &offset,
+static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::ByteArray &payload, size_t &offset,
                                         bool nop = false)
 {
    Common::Result result            = Common::Result::FAIL_UNKNOWN;
 
-   HF::Attributes::IAttribute *attr = itf->attribute (uid);
+   HF::Attributes::IAttribute *attr = itf.attribute (uid);
 
    if (attr == nullptr)
    {
@@ -99,7 +99,7 @@ static Common::Result update_attribute (Interface *itf, uint8_t uid, Common::Byt
  *          is necessary, \c nullptr otherwise.
  */
 // =============================================================================
-static SetAttributePack::Response *update_attributes (Interface *itf, Common::ByteArray &payload,
+static SetAttributePack::Response *update_attributes (Interface &itf, Common::ByteArray &payload,
                                                       size_t &offset, bool resp, bool nop = false)
 {
    SetAttributePack::Request request;
@@ -145,7 +145,7 @@ static SetAttributePack::Response *update_attributes (Interface *itf, Common::By
  * @return  pointer to a HF::Response instance if a response is necessary, \c nullptr otherwise.
  */
 // =============================================================================
-static Response *update_attributes_atomic (Interface *itf, Common::ByteArray &payload, size_t &offset,
+static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &payload, size_t &offset,
                                            bool resp)
 {
    size_t start                         = offset;
@@ -360,12 +360,12 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_REQ:
       {
-         result = update_attribute (this, packet.message.itf.member, payload, offset);
+         result = update_attribute (*this, packet.message.itf.member, payload, offset);
          break;
       }
       case Message::SET_ATTR_RESP_REQ:
       {
-         Common::Result result = update_attribute (this, packet.message.itf.member, payload, offset);
+         Common::Result result = update_attribute (*this, packet.message.itf.member, payload, offset);
          Response resp (result);
 
          Message  response (packet.message, resp.size ());
@@ -431,12 +431,12 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_PACK_REQ:
       {
-         update_attributes (this, payload, offset, false);
+         update_attributes (*this, payload, offset, false);
          break;
       }
       case Message::SET_ATTR_PACK_RESP_REQ:
       {
-         SetAttributePack::Response *attr_response = update_attributes (this, payload, offset, true);
+         SetAttributePack::Response *attr_response = update_attributes (*this, payload, offset, true);
 
          Message response (packet.message, attr_response->size ());
 
@@ -455,12 +455,12 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::ATOMIC_SET_ATTR_PACK_REQ:
       {
-         update_attributes_atomic (this, payload, offset, false);
+         update_attributes_atomic (*this, payload, offset, false);
          break;
       }
       case Message::ATOMIC_SET_ATTR_PACK_RESP_REQ:
       {
-         Protocol::Response *resp = update_attributes_atomic (this, payload, offset, true);
+         Protocol::Response *resp = update_attributes_atomic (*this, payload, offset, true);
 
          Message response (packet.message, resp->size ());
 

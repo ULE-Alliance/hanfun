@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -40,6 +40,8 @@ namespace HF
        */
       struct Unit0:public Units::AbstractUnit
       {
+         virtual ~Unit0() {}
+
          Unit0(IDevice &device):Units::AbstractUnit (device)
          {}
 
@@ -71,12 +73,16 @@ namespace HF
        */
       struct IService:virtual public HF::Interface
       {
+         virtual ~IService() {}
+
          //! The device this unit is associated with.
          virtual Unit0 &unit () const = 0;
       };
 
       struct AbstractService:virtual public IService, virtual public HF::Interfaces::AbstractInterface
       {
+         virtual ~AbstractService() {}
+
          Unit0 &unit () const
          {
             return _unit;

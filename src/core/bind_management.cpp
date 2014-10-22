@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Bind Management core interface.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,6 +24,18 @@
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::BindManagement;
+
+// =============================================================================
+// BindManagement::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
+{
+   return Core::create_attribute ((BindManagement::IServer *) nullptr, uid);
+}
 
 // =============================================================================
 // BindManagement::Entry
@@ -86,17 +98,27 @@ size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 
 // =============================================================================
-// BindManagement::Entries::create
+// Entries::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-std::pair <Common::Result, const Entry *> Entries::create (Protocol::Address const &source,
-                                                           Common::Interface const &itf,
-                                                           Protocol::Address const &destination)
+size_t Entries::size () const
 {
-   auto res              = this->db.insert (Entry (source, itf, destination));
+   return this->db.size ();
+}
+
+// =============================================================================
+// Entries::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Entries::save (const Entry &entry)
+{
+   auto res              = this->db.insert (entry);
 
    Common::Result result = Common::Result::FAIL_ARG;
 
@@ -105,17 +127,42 @@ std::pair <Common::Result, const Entry *> Entries::create (Protocol::Address con
       result = Common::Result::OK;
    }
 
-   return std::make_pair (result, res.second ? &(*(res.first)) : nullptr);
+   return result;
 }
 
 // =============================================================================
-// BindManagement::Entries::destroy
+// Entries::destroy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Entries::destroy (Entry const &entry)
+Common::Result Entries::destroy (uint16_t address, Protocol::Address::Type type)
+{
+   /* *INDENT-OFF* */
+   return destroy ([address, type](BindManagement::Entry const &entry)
+   {
+      if ((entry.source.device == address && entry.source.mod == type) ||
+            (entry.destination.device == address && entry.destination.mod == type))
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   });
+   /* *INDENT-ON* */
+}
+
+// =============================================================================
+// Entries::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Entries::destroy (const Entry &entry)
 {
    if (this->db.erase (entry) == 1)
    {
@@ -126,55 +173,69 @@ Common::Result Entries::destroy (Entry const &entry)
 }
 
 // =============================================================================
-// BindManagement::Entries::destroy
+// Entries - Query API
+// =============================================================================
+
+// =============================================================================
+// Entries::find
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Entries::destroy (uint16_t address, Protocol::Address::Type type)
+EntryPtr Entries::find (const Protocol::Address &source, const Common::Interface &itf,
+                        const Protocol::Address &destination) const
 {
-   return destroy ([address, type](BindManagement::Entry const &entry) {
-                      if ((entry.source.device == address && entry.source.mod == type) ||
-                          (entry.destination.device == address && entry.destination.mod == type))
-                      {
-                         return true;
-                      }
-                      else
-                      {
-                         return false;
-                      }
-                   }
-                  );
+   Entry temp (source, itf, destination);
+
+   auto  it = this->db.find (temp);
+
+   if (it == this->db.end ())
+   {
+      return EntryPtr ();
+   }
+   else
+   {
+      return EntryPtr (&(*it));
+   }
 }
 
 // =============================================================================
-// BindManagement::Entries::size
+// Entries::any_of
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t BindManagement::Entries::size () const
+bool Entries::any_of (Protocol::Address const &source, Common::Interface const &itf) const
 {
-   return this->db.size ();
+   auto range = find (source, itf);
+
+   return range.first != db.end () || range.second != db.end ();
 }
 
 // =============================================================================
-// BindManagement::Entries - Query API
+// Entries::for_each
 // =============================================================================
-
-Entries::Iterator Entries::begin () const
+/*!
+ *
+ */
+// =============================================================================
+void Entries::for_each (Protocol::Address const &source, Common::Interface const &itf,
+                        std::function <void(const Entry &)> func) const
 {
-   return this->db.begin ();
+   auto range = find (source, itf);
+   std::for_each (range.first, range.second, func);
 }
 
-Entries::Iterator Entries::end () const
-{
-   return this->db.end ();
-}
-
-std::pair <Entries::Iterator, Entries::Iterator> Entries::find (Protocol::Address const &source,
+// =============================================================================
+// Entries::find
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::pair <Entries::iterator, Entries::iterator> Entries::find (Protocol::Address const &source,
                                                                 Common::Interface const &itf) const
 {
    Entry _begin (source, itf);
@@ -183,31 +244,5 @@ std::pair <Entries::Iterator, Entries::Iterator> Entries::find (Protocol::Addres
    memset (&(_begin.destination), 0x00, sizeof(Protocol::Address));
    memset (&(_end.destination), 0xFF, sizeof(Protocol::Address));
 
-   return std::make_pair (this->db.lower_bound (_begin), this->db.upper_bound (_end));
-}
-
-// =============================================================================
-// BindManagement::Entries::find
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-const Entry *Entries::find (const Protocol::Address &source, const Common::Interface &itf,
-                            const Protocol::Address &destination)
-{
-   Entry *temp = new Entry (source, itf, destination);
-
-   auto  it    = this->db.find (*temp);
-
-   delete temp;
-
-   if (it == this->db.end ())
-   {
-      return nullptr;
-   }
-   else
-   {
-      return &(*it);
-   }
+   return std::make_pair (db.lower_bound (_begin), db.upper_bound (_end));
 }

@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN example applications.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

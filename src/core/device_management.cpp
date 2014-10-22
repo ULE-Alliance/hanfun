@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -14,7 +14,6 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-
 
 #include "hanfun/core/device_management.h"
 
@@ -30,7 +29,7 @@ using namespace HF::Core;
 // =============================================================================
 HF::Attributes::IAttribute *DeviceManagement::create_attribute (uint8_t uid)
 {
-   return Core::create_attribute ((DeviceManagement::Server *) nullptr, uid);
+   return Core::create_attribute ((DeviceManagement::IServer *) nullptr, uid);
 }
 
 // =============================================================================
@@ -50,11 +49,11 @@ size_t DeviceManagement::Unit::size () const
                    sizeof(uint8_t) +   // Unit ID.
                    sizeof(uint16_t);   // Unit's profile UID.
 
-   if (!opt_ift.empty ())
+   if (!interfaces.empty ())
    {
       Common::Interface temp;
       result += sizeof(uint8_t); // Number of optional units.
-      result += (temp.size () * opt_ift.size ());
+      result += (temp.size () * interfaces.size ());
    }
 
    return result;
@@ -78,12 +77,13 @@ size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) co
    offset += array.write (offset, this->profile);  // Unit's profile UID.
 
    // Pack the existing optional interfaces.
-   if (!opt_ift.empty ())
+   if (!interfaces.empty ())
    {
-      offset += array.write (offset, (uint8_t) opt_ift.size ());
+      offset += array.write (offset, (uint8_t) interfaces.size ());
 
       /* *INDENT-OFF* */
-      std::for_each(opt_ift.begin (), opt_ift.end (), [&offset, &array](const HF::Common::Interface &itf)
+      std::for_each(interfaces.begin (), interfaces.end (),
+                    [&offset, &array](const HF::Common::Interface &itf)
       {
          offset += itf.pack (array, offset);
       });
@@ -121,14 +121,14 @@ size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t of
       {
          Common::Interface itf;
          offset += itf.unpack (array, offset);
-         this->opt_ift.push_back (itf);
+         this->interfaces.push_back (itf);
       }
    }
 
    return offset - start;
 }
 
-bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role)
+bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
 {
    // Search the official interfaces.
    uint16_t count;
@@ -148,13 +148,13 @@ bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Rol
    }
    else  // Search the optional interfaces.
    {
-      for (auto it = opt_ift.begin (); it != opt_ift.end (); ++it)
-      {
-         if (*it == temp)
-         {
-            return true;
-         }
-      }
+      /* *INDENT-OFF* */
+      return std::any_of (interfaces.begin (), interfaces.end (),
+                           [&temp](const Common::Interface &itf)
+                           {
+                              return temp == itf;
+                           });
+      /* *INDENT-ON* */
    }
 
    return false;
@@ -507,171 +507,145 @@ size_t DeviceManagement::DeregisterResponse::unpack (const Common::ByteArray &ar
 }
 
 // =============================================================================
-// Read Session Messages
+// IEntries API - Default Implementation
 // =============================================================================
 
 // =============================================================================
-// DeviceManagement::StartSessionResponse::size
+// Entries::find
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::StartSessionResponse::size () const
+DeviceManagement::DevicePtr DeviceManagement::Entries::find (uint16_t address) const
 {
-   return Response::size () + // Parent size.
-          sizeof(uint16_t);   // Number of entries field.
-}
-
-// =============================================================================
-// DeviceManagement::StartSessionResponse::pack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::StartSessionResponse::pack (Common::ByteArray &array, size_t offset) const
-{
-   size_t start = offset;
-
-   offset += Response::pack (array, offset);
-   offset += array.write (offset, count);
-
-   return offset - start;
-}
-
-// =============================================================================
-// DeviceManagement::StartSessionResponse::unpack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::StartSessionResponse::unpack (const Common::ByteArray &array, size_t offset)
-{
-   size_t start = offset;
-
-   offset += Response::unpack (array, offset);
-   offset += array.read (offset, count);
-
-   return offset - start;
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesMessage::size
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::GetEntriesMessage::size () const
-{
-   return sizeof(uint16_t) + // Offset
-          sizeof(uint8_t);   // Count
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesMessage::pack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::GetEntriesMessage::pack (Common::ByteArray &array, size_t offset) const
-{
-   size_t start = offset;
-
-   offset += array.write (offset, this->offset);
-   offset += array.write (offset, this->count);
-
-   return offset - start;
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesMessage::unpack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::GetEntriesMessage::unpack (const Common::ByteArray &array, size_t offset)
-{
-   size_t start = offset;
-
-   offset += array.read (offset, this->offset);
-   offset += array.read (offset, this->count);
-
-   return offset - start;
-}
-
-// =============================================================================
-// DeviceManagement::GetEntriesResponse::size
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-size_t DeviceManagement::GetEntriesResponse::size () const
-{
-   size_t result = Response::size () + // Parent size.
-                   sizeof(uint8_t);    // Number of entries.
-
    /* *INDENT-OFF* */
-   std::for_each (entries.begin (), entries.end (), [&result](const Device &device)
+   auto it = std::find_if(db.begin(), db.end(), [address](const Device &device)
    {
-      result += device.size ();
+      return device.address == address;
    });
    /* *INDENT-ON* */
 
-   return result;
+   if (it == db.end ())
+   {
+      return std::move (DeviceManagement::DevicePtr ());
+   }
+   else
+   {
+      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
+   }
 }
 
 // =============================================================================
-// DeviceManagement::GetEntriesResponse::pack
+// Entries::find
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::GetEntriesResponse::pack (Common::ByteArray &array, size_t offset) const
+DeviceManagement::DevicePtr DeviceManagement::Entries::find (const HF::UID::UID &uid) const
 {
-   size_t start = offset;
-
-   offset += Response::pack (array, offset);
-   offset += array.write (offset, (uint8_t) entries.size ());
-
    /* *INDENT-OFF* */
-   std::for_each (entries.begin (), entries.end (), [&array, &offset](const Device &device)
+   auto it = std::find_if(db.begin(), db.end(), [&uid](const Device &device)
    {
-      offset += device.pack (array, offset);
+      return device.uid == uid;
    });
    /* *INDENT-ON* */
 
-   return offset - start;
+   if (it == db.end ())
+   {
+      return std::move (DeviceManagement::DevicePtr ());
+   }
+   else
+   {
+      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
+   }
 }
 
 // =============================================================================
-// DeviceManagement::GetEntriesResponse::unpack
+// Entries::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::GetEntriesResponse::unpack (const Common::ByteArray &array, size_t offset)
+Common::Result DeviceManagement::Entries::save (const Device &device)
 {
-   size_t start = offset;
-
-   offset += Response::unpack (array, offset);
-
-   uint8_t size;
-   offset += array.read (offset, size);
-
-   for (uint8_t i = 0; i < size; i++)
+   if (device.address == HF::Protocol::BROADCAST_ADDR)
    {
-      Device device;
-      offset += device.unpack (array, offset);
-      entries.push_back (device);
+      return Common::Result::FAIL_UNKNOWN;
    }
 
-   return offset - start;
+   // Add new entry into the database.
+
+   /* *INDENT-OFF* */
+   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
+   {
+      return device.address == other.address;
+   });
+   /* *INDENT-ON* */
+
+   if (it != db.end ()) // Update existing entry.
+   {
+      db.erase (it);
+   }
+
+   db.push_back (device);
+
+   return Common::Result::OK;
+}
+
+// =============================================================================
+// Entries::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result DeviceManagement::Entries::destroy (const Device &device)
+{
+   /* *INDENT-OFF* */
+   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
+   {
+      return device.address == other.address;
+   });
+   /* *INDENT-ON* */
+
+   if (it == db.end ())
+   {
+      return Common::Result::FAIL_ARG;
+   }
+
+   auto res = Common::Result::OK;
+
+   db.erase (it);
+
+   return res;
+}
+
+// =============================================================================
+// DefaultServer::next_address
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t DeviceManagement::Entries::next_address () const
+{
+   uint16_t address    = DeviceManagement::START_ADDR;
+
+   auto address_equals = [&address](const DeviceManagement::Device &device)
+                         {
+                            return device.address == address;
+                         };
+
+   while (std::any_of (db.begin (), db.end (), address_equals))
+   {
+      if (++address == Protocol::BROADCAST_ADDR)
+      {
+         break;
+      }
+   }
+
+   return address;
 }

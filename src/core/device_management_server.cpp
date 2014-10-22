@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Server Role.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -23,33 +23,71 @@ using namespace HF::Core;
 using namespace HF::Core::DeviceManagement;
 
 // =============================================================================
-// DeviceManagement::Server API
+// HF::Core::DeviceManagement::IServer
 // =============================================================================
 
-Server::Server(HF::Devices::Concentrator::IUnit0 &unit):
-   ServiceRole (unit)
-{}
-
 // =============================================================================
-// Server::unit0
+// IServer::unit0
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Devices::Concentrator::IUnit0 &Server::unit0 ()
+HF::Devices::Concentrator::IUnit0 &IServer::unit0 () const
 {
    return static_cast <Devices::Concentrator::IUnit0 &>(ServiceRole::unit ());
 }
 
 // =============================================================================
-// Server::payload_size
+// AbstractServer::entry
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t Server::payload_size (Protocol::Message::Interface &itf) const
+DevicePtr IServer::entry (uint16_t address) const
+{
+   // Build Device Management entry for self.
+   if (address == unit ().device ().address ())
+   {
+      Device *device = new Device ();
+
+      device->address = address;
+      device->emc     = HF::Core::DeviceInformation::EMC;
+
+      auto attr = this->unit0 ().device_info ()->attribute (HF::Core::DeviceInformation::UID_ATTR);
+      device->uid = static_cast <HF::Attributes::Attribute <HF::UID::UID> *>(attr)->get ();
+      delete attr;
+
+      auto &units = unit ().device ().units ();
+
+      /* *INDENT-OFF* */
+      std::for_each(units.begin(), units.end(), [&device](const HF::Units::IUnit *unit)
+      {
+         device->units.push_back(DeviceManagement::Unit(*unit));
+      });
+      /* *INDENT-ON* */
+
+      return DevicePtr (device, true);
+   }
+   else
+   {
+      return entries ().find (address);
+   }
+}
+
+// =============================================================================
+// HF::Core::DeviceManagement::AbstractServer
+// =============================================================================
+
+// =============================================================================
+// AbstractServer::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -65,14 +103,14 @@ size_t Server::payload_size (Protocol::Message::Interface &itf) const
 }
 
 // =============================================================================
-// Server::handle_command
+// AbstractServer::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                               size_t offset)
 {
    Common::Result result = AbstractInterface::check (packet.message, payload, offset);
 
@@ -100,14 +138,14 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 }
 
 // =============================================================================
-// Server::register_device
+// AbstractServer::register_device
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                        size_t offset)
+Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                size_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -122,33 +160,40 @@ Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteAr
 
    uint16_t address = Protocol::BROADCAST_ADDR;
 
-   Device   *device = entry (packet.link->uid ());
+   auto _entry      = entry (packet.link->uid ());
 
-   if (device == nullptr)
+   Device device;
+
+   if (_entry == nullptr)
    {
-      device          = new Device ();
-      device->uid     = packet.link->uid ();
-      device->emc     = reg_msg.emc;
-      device->units   = reg_msg.units;
-      device->address = next_address ();
+      device.uid     = packet.link->uid ();
+      device.address = next_address ();
+   }
+   else
+   {
+      device = Device (*_entry);
    }
 
-   RegisterResponse *reg_res = new RegisterResponse ();
+   device.emc   = reg_msg.emc;
+   device.units = reg_msg.units;
 
-   reg_res->emc     = DeviceInformation::EMC;
+   result       = entries ().save (device);
+   address      = (result == Common::Result::OK ? device.address : Protocol::BROADCAST_ADDR);
 
-   reg_res->code    = save (device);
+   RegisterResponse *reg_res = new RegisterResponse (address);
 
-   address          = (reg_res->code == Common::Result::OK ? device->address : Protocol::BROADCAST_ADDR);
+   reg_res->emc  = DeviceInformation::EMC;
+   reg_res->code = result;
 
-   reg_res->address = address;
+   packet.link->address (address);
 
-   packet.link->address (reg_res->address);
+   // Update incoming packet source address with new allocated address for device.
+   packet.source.device = address;
 
    Protocol::Message response (packet.message, reg_res->size ());
 
    response.itf.role   = SERVER_ROLE;
-   response.itf.id     = DeviceManagement::Server::uid ();
+   response.itf.id     = DeviceManagement::AbstractServer::uid ();
    response.itf.member = REGISTER_CMD;
 
    reg_res->pack (response.payload);
@@ -159,18 +204,18 @@ Common::Result Server::register_device (Protocol::Packet &packet, Common::ByteAr
 
    delete reg_res;
 
-   return Common::Result::OK;
+   return result;
 }
 
 // =============================================================================
-// Server::deregister_device
+// AbstractServer::deregister_device
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                          size_t offset)
+Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
+                                                  size_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -179,7 +224,7 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
       return result;
    }
 
-   Device *source = entry (packet.source.device);
+   auto source = entry (packet.source.device);
 
    if (source == nullptr)
    {
@@ -190,7 +235,7 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
 
    offset += incomming.unpack (payload, offset);
 
-   Device *destination = entry (incomming.address);
+   auto destination = entry (incomming.address);
 
    if (destination == nullptr)
    {
@@ -202,14 +247,14 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
       return Common::Result::FAIL_AUTH;
    }
 
-   result = deregister (*destination);
+   result = deregister (destination);
 
    DeregisterResponse res (result, incomming.address);
 
    Protocol::Message  response (packet.message, res.size ());
 
    response.itf.role   = SERVER_ROLE;
-   response.itf.id     = DeviceManagement::Server::uid ();
+   response.itf.id     = DeviceManagement::AbstractServer::uid ();
    response.itf.member = DEREGISTER_CMD;
 
    res.pack (response.payload);
@@ -222,172 +267,29 @@ Common::Result Server::deregister_device (Protocol::Packet &packet, Common::Byte
 }
 
 // =============================================================================
-// Server::deregister
+// AbstractServer::deregister
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::deregister (Device &device)
+Common::Result AbstractServer::deregister (DevicePtr &device)
 {
    // TODO Remove group information.
 
-   unit0 ().bind_management ()->entries.destroy (device.address);
+   unit0 ().bind_management ()->entries ().destroy (device->address);
 
-   return destroy (&device);
-}
+   // Destroy MAY invalidate _device_, create a copy to send to *deregistered* event.
+   DevicePtr temp (new Device (*device), true);
 
-// =============================================================================
-// DefaultDeviceManagementServer API
-// =============================================================================
+   auto res = entries ().destroy (*device);
 
-DeviceManagement::DefaultServer::~DefaultServer()
-{
-   /* *INDENT-OFF* */
-   std::for_each (_entries.begin (), _entries.end (), [](Device *dev) { delete dev; });
-   /* *INDENT-ON* */
-}
-
-// =============================================================================
-// DeviceManagement::DefaultServer::entries
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::vector <DeviceManagement::Device *> DeviceManagement::DefaultServer::entries (uint16_t offset, uint16_t count)
-{
-   std::vector <Device *>::iterator start = _entries.begin ();
-
-   start += offset;
-
-   count  = std::min (static_cast <int>(count), static_cast <int>(_entries.size () - offset));
-
-   std::vector <Device *>::iterator end = start + count;
-
-   return std::vector <Device *>(start, end);
-}
-
-// =============================================================================
-// DeviceManagement::DefaultServer::entry
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-Device *DefaultServer::entry (uint16_t address)
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [address](const Device *device)
+   if (res == Common::Result::OK)
    {
-      return device->address == address;
-   });
-   /* *INDENT-ON* */
-
-   if (it == _entries.end ())
-   {
-      return nullptr;
-   }
-   else
-   {
-      return *it;
-   }
-}
-
-// =============================================================================
-// DefaultDeviceManagementServer::entry
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-DeviceManagement::Device *DefaultServer::entry (const HF::UID::UID &uid)
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&uid](const Device *device)
-   {
-      return device->uid == uid;
-   });
-   /* *INDENT-ON* */
-
-   if (it == _entries.end ())
-   {
-      return nullptr;
-   }
-   else
-   {
-      return *it;
-   }
-}
-
-// =============================================================================
-// DeviceManagement::DefaultServer::save
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-Common::Result DeviceManagement::DefaultServer::save (DeviceManagement::Device *device)
-{
-   if (device == nullptr)
-   {
-      return Common::Result::FAIL_UNKNOWN;
-   }
-   else if (device->address == HF::Protocol::BROADCAST_ADDR)
-   {
-      return Common::Result::FAIL_UNKNOWN;
+      this->deregistered (temp);
    }
 
-   // Add new entry into the database.
-
-   Device *other = entry (device->address);
-
-   if (other == nullptr)
-   {
-      _entries.push_back (device);
-      return Common::Result::OK;
-   }
-   else
-   {
-      return Common::Result::FAIL_ARG;
-   }
-}
-
-// =============================================================================
-// DeviceManagement::DefaultServer::destroy
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Device *device)
-{
-   if (device == nullptr)
-   {
-      return Common::Result::FAIL_UNKNOWN;
-   }
-
-   Device *other = entry (device->address);
-
-   if (other == nullptr)
-   {
-      return Common::Result::FAIL_ARG;
-   }
-
-   auto it = std::find (_entries.begin (), _entries.end (), device);
-
-   if (it == _entries.end ())
-   {
-      return Common::Result::FAIL_ARG;
-   }
-
-   DeviceManagement::Device *entry = *it;
-
-   _entries.erase (it);
-
-   delete entry;
-
-   return Common::Result::OK;
+   return res;
 }
 
 // =============================================================================
@@ -397,7 +299,8 @@ Common::Result DeviceManagement::DefaultServer::destroy (DeviceManagement::Devic
  *
  */
 // =============================================================================
-bool DefaultServer::authorized (uint8_t member, DeviceManagement::Device *source, DeviceManagement::Device *destination)
+bool AbstractServer::authorized (uint8_t member, DeviceManagement::DevicePtr &source,
+                                 DeviceManagement::DevicePtr &destination)
 {
    if (source == nullptr || destination == nullptr)
    {
@@ -411,21 +314,4 @@ bool DefaultServer::authorized (uint8_t member, DeviceManagement::Device *source
    {
       return true;
    }
-}
-
-// =============================================================================
-// DefaultServer::next_address
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint16_t DefaultServer::next_address ()
-{
-   uint16_t result = START_ADDR;
-
-   for (Device *device = entry (result); device != nullptr; device = entry (++result))
-   {}
-
-   return result;
 }

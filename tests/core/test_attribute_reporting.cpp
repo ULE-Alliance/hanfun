@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the Attribute
  * Reporting core service in HAN-FUN.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -330,7 +330,7 @@ TEST (AttrReport_Periodic_Entry, Unpack)
                0x03, 0xA1, 0xA2,0xA3,         // Attributes UID's
                0xFF, 0xFF, 0xFF};
 
-   LONGS_EQUAL (entry.size (), entry.unpack (expected, 3));
+   LONGS_EQUAL (1 + 2 + 1 + 1 + 3, entry.unpack (expected, 3));
 
    LONGS_EQUAL (0x5A, entry.unit);
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, entry.itf.role);
@@ -443,7 +443,9 @@ TEST (AttrReport_Periodic_Rule, Pack)
 
 TEST (AttrReport_Periodic_Rule, Unpack)
 {
-   LONGS_EQUAL (rule.size (), rule.unpack (expected, 3));
+   Periodic::Entry entry;
+   LONGS_EQUAL (1 + 1 + 2 + 1 + 4 + 1 + (1 + 2 + 1) + (1 + 2 + 1) + (1 + 2 + 1 + 4),
+                rule.unpack (expected, 3));
 
    LONGS_EQUAL (PERIODIC, rule.report.type);
    LONGS_EQUAL (0x0A, rule.report.id);
@@ -562,7 +564,7 @@ TEST (AttrReport_Event_Field, Pack2)
 
 TEST (AttrReport_Event_Field, Unpack)
 {
-   LONGS_EQUAL (field.size (true), field.unpack (expected, 3, true));
+   LONGS_EQUAL (1 + 1 + 1 + 4, field.unpack (expected, 3, true));
 
    LONGS_EQUAL (Event::EQ, field.type);
    LONGS_EQUAL (0x5A, field.attr_uid);
@@ -1085,7 +1087,7 @@ TEST (AttrReport_Report_Periodic_Entry, Pack)
 TEST (AttrReport_Report_Periodic_Entry, Unpack)
 {
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
-   LONGS_EQUAL (entry.size (), entry.unpack (get_factory, expected, 3));
+   LONGS_EQUAL (1 + 2 + 1 + 3 * (1 + 2), entry.unpack (get_factory, expected, 3));
 
    LONGS_EQUAL (0x55, entry.unit);
    LONGS_EQUAL (0x05A5, entry.itf.id);
@@ -1502,7 +1504,7 @@ TEST (AttrReport_Report_Event_Entry, Pack)
 TEST (AttrReport_Report_Event_Entry, Unpack)
 {
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
-   LONGS_EQUAL (entry.size (), entry.unpack (get_factory, expected, 3));
+   LONGS_EQUAL (1 + 2 + 1 + 3 * (1 + 1 + 2), entry.unpack (get_factory, expected, 3));
 
    LONGS_EQUAL (0x55, entry.unit);
    LONGS_EQUAL (0x05A5, entry.itf.id);
@@ -2114,7 +2116,8 @@ TEST (AttrReport_Report_Periodic_AddEntryMessage, Pack)
 
 TEST (AttrReport_Report_Periodic_AddEntryMessage, Unpack)
 {
-   LONGS_EQUAL (message.size (), message.unpack (expected, 3));
+   LONGS_EQUAL (1 + 1 + (1 + 2 + 1) + (1 + 2 + 1) + (1 + 2 + 1 + 1 + 4),
+                message.unpack (expected, 3));
 
    LONGS_EQUAL (PERIODIC, message.report.type);
    LONGS_EQUAL (0x0A, message.report.id);
@@ -2694,7 +2697,7 @@ TEST_GROUP (AttributeReporting_Server)
       base   = new Testing::Concentrator ();
       server = new AttributeReporting::Server (*base->unit0 ());
 
-      base->unit0 ()->attr_reporting = server;
+      base->unit0 ()->attribute_reporting (server);
 
       unit = new Testing::Unit (1, *base);
 
@@ -2704,7 +2707,6 @@ TEST_GROUP (AttributeReporting_Server)
    TEST_TEARDOWN ()
    {
       delete unit;
-      delete server;
       delete base;
 
       mock ().clear ();

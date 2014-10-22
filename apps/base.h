@@ -5,7 +5,7 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * \version    1.0.0
+ * \version    1.1.0
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -31,92 +31,110 @@
 // Base
 // =============================================================================
 
-/*!
- * Custom Device Management class.
- *
- * This class allows for the application to select the address to
- * be given to next device that registers.
- */
-struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
+namespace DeviceManagement
 {
-   DeviceManagement(HF::Core::Unit0 &unit):
-      HF::Core::DeviceManagement::DefaultServer (unit), loaded (false),
-      _next_address (HF::Protocol::BROADCAST_ADDR)
-   {}
-
-   virtual ~DeviceManagement() {}
-
-   uint16_t next_address (uint16_t addr)
+   /*!
+    * Custom Device Management Entries class.
+    *
+    * This class saves the application configuration every time an entry
+    * is save or destroyed.
+    */
+   struct Entries:public HF::Core::DeviceManagement::Entries
    {
-      _next_address = addr;
-      return _next_address;
-   }
+      typedef HF::Core::DeviceManagement::Device Device;
+      typedef HF::Core::DeviceManagement::DevicePtr DevicePtr;
 
-   bool available (uint16_t address);
+      HF::Common::Result save (const Device &device);
 
-   bool deregister (uint16_t address);
+      HF::Common::Result destroy (const Device &device);
 
-   using HF::Core::DeviceManagement::DefaultServer::deregister;
+      void insert (const Device &device);
+   };
 
-   void clear ();
+   /*!
+    * Custom Device Management class.
+    *
+    * This class allows for the application to select the address to
+    * be given to next device that registers.
+    */
+   struct Server:public HF::Core::DeviceManagement::Server <Entries>
+   {
+      Server(HF::Core::Unit0 &unit):
+         HF::Core::DeviceManagement::Server <Entries>(unit),
+         _next_address (HF::Protocol::BROADCAST_ADDR)
+      {}
 
-   HF::Common::Result save (HF::Core::DeviceManagement::Device *device);
+      virtual ~Server() {}
 
-   void save (Json::Value &root);
+      uint16_t next_address (uint16_t addr)
+      {
+         _next_address = addr;
+         return _next_address;
+      }
 
-   void restore (Json::Value root);
+      bool available (uint16_t address);
 
-   protected:
+      bool deregister (uint16_t address);
 
-   bool     loaded;
+      void clear ();
 
-   uint16_t _next_address;
+      void save (Json::Value &root);
 
-   uint16_t next_address ();
-};
+      void restore (Json::Value root);
 
-/*!
- * Custom Bind Management class.
- *
- * This class allows for the application to save and restore bindings from a file.
- */
-struct BindManagement:public HF::Core::BindManagement::Server
+      protected:
+
+      using HF::Core::DeviceManagement::Server <Entries>::deregister;
+
+      uint16_t _next_address;
+
+      uint16_t next_address ();
+   };
+
+}     // namespace DeviceManagement
+
+namespace BindManagement
 {
-   BindManagement(HF::Devices::Concentrator::IUnit0 &unit):
-      HF::Core::BindManagement::Server (unit), loaded (false)
-   {}
+   /*!
+    * Custom Bind Management Entries class.
+    *
+    * This class saves the application configuration every time an entry
+    * is save or destroyed.
+    */
+   struct Entries:public HF::Core::BindManagement::Entries
+   {
+      typedef HF::Core::BindManagement::Entry Entry;
+      typedef HF::Core::BindManagement::EntryPtr EntryPtr;
 
-   std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> add (
-      const HF::Protocol::Address &source,
-      const HF::Protocol::Address &destination,
-      const HF::Common::Interface &itf);
+      HF::Common::Result save (const Entry &entry);
 
-   HF::Common::Result remove (const HF::Protocol::Address &source,
-                              const HF::Protocol::Address &destination,
-                              const HF::Common::Interface &itf);
+      HF::Common::Result destroy (const Entry &entry);
 
+      void insert (Entry &device);
+   };
 
-   void save (Json::Value &root);
+   /*!
+    * Custom Bind Management class.
+    *
+    * This class allows for the application to save and restore bindings from a file.
+    */
+   struct Server:public HF::Core::BindManagement::Server <Entries>
+   {
+      Server(HF::Devices::Concentrator::IUnit0 &unit):
+         HF::Core::BindManagement::Server <Entries>(unit)
+      {}
 
-   void restore (Json::Value root);
+      void save (Json::Value &root);
 
-   protected:
+      void restore (Json::Value root);
+   };
 
-   bool loaded;
-};
+}  // namespace BindManagement
 
-/*!
- * Custom Unit0 class to make use of the previous DeviceManagment class.
- */
-struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server, DeviceManagement,
-                                                      HF::Core::AttributeReporting::Server, BindManagement>
-{
-   Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                                DeviceManagement,
-                                                                HF::Core::AttributeReporting::Server,
-                                                                BindManagement>(device)
-   {}
-};
+typedef HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
+                                             ::DeviceManagement::Server,
+                                          HF::Core::AttributeReporting::Server,
+                                             ::BindManagement::Server> Unit0;
 
 struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {

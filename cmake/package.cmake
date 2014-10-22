@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library package export helpers.
 #
-#   \version    0.3.2
+#   \version    1.1.0
 #
 #   \copyright  Copyright (c) 2014  ULE Alliance
 #
