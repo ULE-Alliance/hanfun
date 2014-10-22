@@ -26,6 +26,18 @@ using namespace HF::Core;
 using namespace HF::Core::BindManagement;
 
 // =============================================================================
+// BindManagement::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
+{
+   return Core::create_attribute ((BindManagement::IServer *) nullptr, uid);
+}
+
+// =============================================================================
 // BindManagement::Entry
 // =============================================================================
 

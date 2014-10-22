@@ -54,6 +54,14 @@ namespace HF
 
    namespace Core
    {
+      // Forward declaration.
+      namespace BindManagement
+      {
+         struct IServer;
+      }  // namespace BindManagement
+
+      HF::Attributes::IAttribute *create_attribute (BindManagement::IServer *server, uint8_t uid);
+
       /*!
        * This namespace contains the classes that implements
        * HAN-FUN's Core interface - Bind Management.
@@ -188,6 +196,8 @@ namespace HF
             virtual void for_each (Protocol::Address const &source, Common::Interface const &itf,
                                    std::function <void(const Entry &)> func) const = 0;
          };
+
+         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
           * Parent class for the Bind Management interface implementation.
@@ -405,6 +415,23 @@ namespace HF
             Common::Result remove (const Protocol::Address &source,
                                    const Protocol::Address &destination,
                                    const Common::Interface &itf);
+
+            // =============================================================================
+            // Interface Attribute API.
+            // =============================================================================
+
+            //! \see Interface::attribute
+            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            {
+               return Core::create_attribute (this, uid);
+            }
+
+            //! \see AbstractInterface::attributes
+            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED (pack_id);
+               return HF::Attributes::UIDS {NUMBER_OF_ENTRIES_ATTR};
+            }
 
             protected:
 
