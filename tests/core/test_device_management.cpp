@@ -1221,10 +1221,20 @@ TEST (DeviceManagementServer, FindEntrySelf)
       delete dev;
    }
 
+   UID::RFPI rfpi;
+   rfpi[0] = 0x12;
+   rfpi[1] = 0x34;
+   rfpi[2] = 0x56;
+   rfpi[3] = 0x78;
+   rfpi[4] = 0x90;
+
+   device->unit0()->device_info()->device_uid = HF::UID::UID(&rfpi);
+
    auto entry = dev_mgt->entry (device->address ());
    CHECK_FALSE (entry == nullptr);
 
    LONGS_EQUAL (1, entry->units.size ());
+   CHECK_EQUAL (rfpi, entry->uid);
 
    Testing::Unit unit1 (1, *device);
 
