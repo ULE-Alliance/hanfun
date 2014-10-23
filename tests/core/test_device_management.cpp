@@ -809,6 +809,18 @@ TEST_GROUP (DeviceManagementServer)
          mock ("DeviceManagementServer").actualCall ("deregister_device");
          return DeviceManagement::DefaultServer::deregister_device (packet, payload, offset);
       }
+
+      void registered (DeviceManagement::DevicePtr &device)
+      {
+         mock ("DeviceManagementServer").actualCall ("registered");
+         DeviceManagement::DefaultServer::registered (device);
+      }
+
+      void deregistered (DeviceManagement::DevicePtr &device)
+      {
+         mock ("DeviceManagementServer").actualCall ("deregistered");
+         DeviceManagement::DefaultServer::deregistered (device);
+      }
    };
 
    TestDeviceManagementServer *dev_mgt;
@@ -869,6 +881,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    mock ("AbstractDevice").expectOneCall ("send");
    mock ("DeviceManagementServer").expectOneCall ("register_device");
+   mock ("DeviceManagementServer").expectOneCall ("registered");
 
    Result result = dev_mgt->handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -892,6 +905,7 @@ TEST (DeviceManagementServer, Handle_Register)
    // Should not add entry for same device.
    mock ("AbstractDevice").expectOneCall ("send");
    mock ("DeviceManagementServer").expectOneCall ("register_device");
+   mock ("DeviceManagementServer").expectOneCall ("registered");
 
    result = dev_mgt->handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -912,6 +926,7 @@ TEST (DeviceManagementServer, Handle_Register)
 
    mock ("AbstractDevice").expectOneCall ("send");
    mock ("DeviceManagementServer").expectOneCall ("register_device");
+   mock ("DeviceManagementServer").expectOneCall ("registered");
 
    result = dev_mgt->handle (packet, expected, 3);
    CHECK_EQUAL (Result::OK, result);
@@ -938,7 +953,7 @@ TEST (DeviceManagementServer, Handle_Register2)
                          0x03, 0x42, 0x5A,0xA5,        // Unit 3.
                          0x00, 0x00, 0x00};
 
-   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.type       = Protocol::Message::COMMAND_RESP_REQ;
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
    packet.message.length     = expected.size ();
 
@@ -1023,6 +1038,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
 
    mock ("AbstractDevice").expectOneCall ("send");
    mock ("DeviceManagementServer").expectOneCall ("deregister_device");
+   mock ("DeviceManagementServer").expectOneCall ("deregistered");
 
    result = dev_mgt->handle (packet, expected, 0);
    CHECK_EQUAL (Result::OK, result);

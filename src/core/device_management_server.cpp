@@ -204,6 +204,9 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
 
    delete reg_res;
 
+   DevicePtr temp(&device);
+   this->registered(temp);
+
    return result;
 }
 
