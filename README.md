@@ -2,6 +2,8 @@
 
 This project aims at providing an implementation of the HAN-FUN application specification.
 
+## Overview
+
 A HAN-FUN network is a star network, it consists of a concentrator (base) and several nodes that
 connect to the concentrator to send/receive messages to/from the network.
 
@@ -23,6 +25,7 @@ The build system used is [CMake](http://www.cmake.org/).
       $ cd build/
       $ cmake ..
       $ make
+      $ make doc # Build the documentation
 
 ## Testing
 
@@ -133,6 +136,7 @@ Please see the help in the applications for further features.
 
 ## License
 
-This library is released under dual-license : GLPv2 and Apache 2.0.
+This library is released under dual-license, [GLPv2](http://www.gnu.org/licenses/gpl-2.0.html) and
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
-For more licensing information, please see the file 'LICENSE'.
+Please see the file 'LICENSE' in the root folder for further information.
