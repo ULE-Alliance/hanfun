@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the Device API.
  *
- * \version    1.1.0
+ * \version    1.1.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
