@@ -378,9 +378,9 @@ namespace HF
 
             using Service::send;
 
-            void send (const Protocol::Address &addr, Protocol::Message &message) const
+            void send (const Protocol::Address &addr, Protocol::Message &message)
             {
-               this->send (addr, message);
+               Service::send (addr, message);
             }
 
             protected:

@@ -760,7 +760,7 @@ namespace HF
 
                msg.pack (message.payload);
 
-               this->send (addr, message);
+               const_cast <AbstractClient *>(this)->send (addr, message);
             }
 
             /*!
@@ -781,10 +781,11 @@ namespace HF
                message.itf.id     = _uid;
                message.itf.member = _member;
 
-               this->send (addr, message);
+               const_cast <AbstractClient *>(this)->send (addr, message);
             }
 
-            virtual void send (const Protocol::Address &addr, Protocol::Message &message) const = 0;
+            //! @copydoc HF::Interfaces::AbstractInterface::send
+            virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
          };
 
          /*!

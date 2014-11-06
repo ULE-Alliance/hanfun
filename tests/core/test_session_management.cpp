@@ -583,7 +583,7 @@ TEST_GROUP (SessionManagementClient)
 
    struct TestClient:public Client <TestType>
    {
-      void send (const Protocol::Address &addr, Protocol::Message &message) const
+      void send (const Protocol::Address &addr, Protocol::Message &message)
       {
          auto &call = mock ("SessionManagementClient").actualCall ("send");
          call.withParameter ("addr_dev", addr.device);
