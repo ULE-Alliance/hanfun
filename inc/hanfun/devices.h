@@ -188,6 +188,12 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
+            typedef typename HF::Unit0 <IUnit0, ITF...> _Parent;
+
+            typedef typename _Parent::DeviceInfo DeviceInfo;
+            typedef typename _Parent::DeviceMgt DeviceMgt;
+            typedef typename _Parent::AttrReporting AttrReporting;
+
             /*!
              * Constructor
              *
@@ -202,9 +208,9 @@ namespace HF
              *
              * @return pointer to the node's Device Information service.
              */
-            Core::DeviceInformation::Server *device_info () const
+            DeviceInfo *device_info () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
             /*!
@@ -212,9 +218,9 @@ namespace HF
              *
              * @return pointer to the node's Device Information service.
              */
-            Core::DeviceInformation::Server *device_info ()
+            DeviceInfo *device_info ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
             /*!
@@ -222,9 +228,9 @@ namespace HF
              *
              * @return pointer to the node's Attribute Reporting service.
              */
-            Core::AttributeReporting::Server *attribute_reporting () const
+            AttrReporting *attribute_reporting () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
             }
 
             /*!
@@ -232,9 +238,29 @@ namespace HF
              *
              * @return pointer to the node's Attribute Reporting service.
              */
-            Core::AttributeReporting::Server *attribute_reporting ()
+            AttrReporting *attribute_reporting ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
+            }
+
+            /*!
+             * Get the pointer to the node's Device Management service.
+             *
+             * @return pointer to the node's Device Management service.
+             */
+            DeviceMgt *device_management ()
+            {
+               return &std::get <_Parent::DEV_MGT>(_Parent::interfaces);
+            }
+
+            /*!
+             * Get the pointer to the node's Device Management service.
+             *
+             * @return pointer to the node's Device Management service.
+             */
+            DeviceMgt *device_management () const
+            {
+               return const_cast <DeviceMgt *>(&std::get <_Parent::DEV_MGT>(_Parent::interfaces));
             }
          };
 
@@ -484,7 +510,13 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::IServer");
 
-            typedef typename std::tuple_element <3, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename HF::Unit0 <IUnit0, ITF...> _Parent;
+
+            typedef typename _Parent::DeviceInfo DeviceInfo;
+            typedef typename _Parent::DeviceMgt DeviceMgt;
+            typedef typename _Parent::AttrReporting AttrReporting;
+
+            typedef typename std::tuple_element <3, decltype (_Parent::interfaces)>::type BindMgt;
 
             static_assert (std::is_base_of <HF::Core::BindManagement::IServer, BindMgt>::value,
                            "BindMgt must be of type HF::Core::BindManagement::IServer");
@@ -500,32 +532,32 @@ namespace HF
 
             BindMgt *bind_management () const
             {
-               return const_cast <BindMgt *>(&std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+               return const_cast <BindMgt *>(&std::get <3>(_Parent::interfaces));
             }
 
             BindMgt *bind_management ()
             {
-               return &std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+               return &std::get <3>(_Parent::interfaces);
             }
 
-            Core::DeviceInformation::Server *device_info () const
+            DeviceInfo *device_info () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
-            Core::DeviceInformation::Server *device_info ()
+            DeviceInfo *device_info ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
-            Core::AttributeReporting::Server *attribute_reporting () const
+            AttrReporting *attribute_reporting () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
             }
 
-            Core::AttributeReporting::Server *attribute_reporting ()
+            AttrReporting *attribute_reporting ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
             }
          };
 
