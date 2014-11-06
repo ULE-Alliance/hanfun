@@ -245,11 +245,15 @@ namespace HF
 
       interfaces_t interfaces;
 
-      typedef typename std::tuple_element <0, decltype (interfaces)>::type DeviceInfo;
+      static constexpr uint8_t DEV_INFO = 0;    //!< Device Information service index.
+      static constexpr uint8_t DEV_MGT  = 1;    //!< Device Management service index.
+      static constexpr uint8_t ATTR_RPT = 2;    //!< Attribute Reporting service index.
 
-      typedef typename std::tuple_element <1, decltype (interfaces)>::type DeviceMgt;
+      typedef typename std::tuple_element <DEV_INFO, decltype (interfaces)>::type DeviceInfo;
 
-      typedef typename std::tuple_element <2, decltype (interfaces)>::type AttrReporting;
+      typedef typename std::tuple_element <DEV_MGT, decltype (interfaces)>::type DeviceMgt;
+
+      typedef typename std::tuple_element <ATTR_RPT, decltype (interfaces)>::type AttrReporting;
 
       static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
                      "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
@@ -275,7 +279,7 @@ namespace HF
        */
       DeviceInfo *device_info () const
       {
-         return const_cast <DeviceInfo *>(&std::get <0>(interfaces));
+         return const_cast <DeviceInfo *>(&std::get <DEV_INFO>(interfaces));
       }
 
       /*!
@@ -285,7 +289,7 @@ namespace HF
        */
       DeviceInfo *device_info ()
       {
-         return &std::get <0>(interfaces);
+         return &std::get <DEV_INFO>(interfaces);
       }
 
       /*!
@@ -295,7 +299,7 @@ namespace HF
        */
       DeviceMgt *device_management () const
       {
-         return const_cast <DeviceMgt *>(&std::get <1>(interfaces));
+         return const_cast <DeviceMgt *>(&std::get <DEV_MGT>(interfaces));
       }
 
       /*!
@@ -305,7 +309,7 @@ namespace HF
        */
       DeviceMgt *device_management ()
       {
-         return &std::get <1>(interfaces);
+         return &std::get <DEV_MGT>(interfaces);
       }
 
       /*!
@@ -315,7 +319,7 @@ namespace HF
        */
       AttrReporting *attribute_reporting () const
       {
-         return const_cast <AttrReporting *>(&std::get <2>(interfaces));
+         return const_cast <AttrReporting *>(&std::get <ATTR_RPT>(interfaces));
       }
 
       /*!
@@ -325,7 +329,7 @@ namespace HF
        */
       AttrReporting *attribute_reporting ()
       {
-         return &std::get <2>(interfaces);
+         return &std::get <ATTR_RPT>(interfaces);
       }
 
       // =============================================================================
