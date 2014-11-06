@@ -71,13 +71,16 @@ namespace HF
       /*!
        * Unit list type.
        */
-      struct units_t:public std::forward_list <Units::IUnit *>
+      struct IUnits:public std::forward_list <Units::IUnit *>
       {
-         units_t::size_type size () const
+         IUnits::size_type size () const
          {
             return distance (begin (), end ());
          }
       };
+
+      //! @deprecated Please use HF::IDevice::IUnits
+      typedef IUnits units_t __attribute__ ((deprecated));
 
       /*!
        * HAN-FUN device Unit 0 common API.
@@ -127,7 +130,7 @@ namespace HF
        *
        * @return     list containing the device's registered units.
        */
-      virtual const units_t &units () const = 0;
+      virtual const IUnits &units () const = 0;
 
       /*!
        * Return pointer to the unit with the given id.

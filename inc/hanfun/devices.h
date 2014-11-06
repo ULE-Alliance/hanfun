@@ -58,7 +58,7 @@ namespace HF
          // IDevice API
          // =============================================================================
 
-         const units_t &units () const
+         const IUnits &units () const
          {
             return _units;
          }
@@ -85,7 +85,7 @@ namespace HF
          uint8_t next_reference;
 
          //! List containing pointers to the units present in the device.
-         units_t _units;
+         IUnits _units;
 
          //! Support for filtering duplicated message from the network.
          Protocol::Filters::Repeated repeated_filter;
