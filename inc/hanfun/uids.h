@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/uids.h
+ * @file       inc/hanfun/uids.h
  *
  * This file contains the declaration of the classes that implement the HAN-FUN
  * UIDs.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -30,15 +30,23 @@ namespace HF
     */
    namespace UID
    {
-      //! Types of UID available.
-      enum Type
+      /*!
+       * @addtogroup uid_t UIDs
+       * @ingroup devices
+       *
+       * This module contains the classes implementing the available %UID for HAN-FUN devices.
+       * @{
+       */
+
+      //! Types of UIDs available.
+      typedef enum _Type
       {
          NONE_UID = 0x00,   //!< Empty UID.
          RFPI_UID = 0x01,   //!< Radio Fixed Part Identifier.
          IPUI_UID = 0x02,   //!< International Portable User Identifier.
          MAC_UID  = 0x03,   //!< Media Access Control (IEEE-MAC-48)
          URI_UID  = 0x04,   //!< Uniform Resource Identifier.
-      };
+      } Type;
 
       /*!
        * API for all UIDs.
@@ -47,7 +55,11 @@ namespace HF
        */
       struct UID_T:public Common::Serializable, public Common::Cloneable <UID_T>
       {
-         //! Type of the UID.
+         /*!
+          * Type of the UID. @see HF::UID::Type.
+          *
+          * @return  type of the UID.
+          */
          virtual uint8_t type () const = 0;
 
          bool operator ==(const UID_T &other) const
@@ -70,24 +82,21 @@ namespace HF
           *
           * @param [in] other  a pointer to a UID object to compare to.
           *
-          * @retval     < 0, the current UID is lower that the given UID.
-          * @retval     0  , the current UID is the same as given UID.
-          * @retval     > 0, the current UID is greater that the given UID.
+          * @retval     <0 the current UID is lower that the given UID.
+          * @retval     0  the current UID is the same as given UID.
+          * @retval     >0 the current UID is greater that the given UID.
           */
          virtual int compare (const UID_T &other) const
          {
-            // return (other != nullptr ? this->type () - other.type () : this->type ());
             return (this->type () - other.type ());
          }
 
-         //! \see HF::Common::Serializable::size.
          size_t size () const
          {
             return sizeof(uint8_t) + // UID Type.
                    sizeof(uint8_t);  // Size of the UID.
          }
 
-         //! \see HF::Common::Serializable::pack.
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
@@ -95,7 +104,6 @@ namespace HF
             return offset - start;
          }
 
-         //! \see HF::Common::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             size_t  start = offset;
@@ -109,6 +117,11 @@ namespace HF
          }
       };
 
+      /*!
+       * Helper template parent class for all UID's implementation.
+       *
+       * @tparam _type type value for the UID.
+       */
       template<uint8_t _type>
       struct Abstract:public UID_T
       {
@@ -123,7 +136,6 @@ namespace HF
        */
       struct NONE:public Abstract <NONE_UID>
       {
-         //! \see HF::Common::Serializable::pack.
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
@@ -134,7 +146,6 @@ namespace HF
             return offset - start;
          }
 
-         //! \see HF::Common::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             size_t start = offset;
@@ -149,13 +160,19 @@ namespace HF
             return offset - start;
          }
 
-         //! \see HF::Common::Clonable
          NONE *clone () const
          {
             return new NONE (*this);
          }
       };
 
+      /*!
+       * Helper template parent class for all UIDs based on fixed number of bytes.
+       *
+       * @tparam  _Class   child class being created.
+       * @tparam  _size    number of bytes in the UID.
+       * @tparam  _type    UID type value.
+       */
       template<typename _Class, uint8_t _size, uint8_t _type>
       class ByteArray:public Abstract <_type>
       {
@@ -167,23 +184,26 @@ namespace HF
 
          ByteArray():Abstract <_type>() {}
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] _value   initial value for UID.
+          */
          ByteArray(uint8_t _value[_size]):Abstract <_type>()
          {
             memcpy (value, _value, _size * sizeof(uint8_t));
          }
 
-         //! \see HF::Serializable::size.
          size_t size () const
          {
             return UID_T::size () + sizeof(value);
          }
 
-         //! \see HF::Serializable::pack.
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
 
-            offset += UID_T::pack (array, offset);
+            offset += Abstract <_type>::pack (array, offset);
 
             offset += array.write (offset, (uint8_t) sizeof(value));
 
@@ -195,12 +215,11 @@ namespace HF
             return offset - start;
          }
 
-         //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             size_t start = offset;
 
-            offset += UID_T::unpack (array, offset);
+            offset += Abstract <_type>::unpack (array, offset);
 
             uint8_t size;
             offset += array.read (offset, size);
@@ -221,30 +240,65 @@ namespace HF
 
          int compare (const UID_T &other) const
          {
-            int res = UID_T::compare (other);
-            return (res == 0 ? memcmp (value, ((_Class *) &other)->value, sizeof(value)) : res);
+            int res = Abstract <_type>::compare (other);
+            return (res ==
+                    0 ? memcmp (value, ((_Class *) &other)->value, sizeof(value)) : res);
          }
 
          // =============================================================================
          // Array style API.
          // =============================================================================
 
+         /*!
+          * Get byte at the given @c index.
+          *
+          * @param [in] index index to get the byte from.
+          *
+          * @return  the byte at the given index.
+          */
          uint8_t const &operator [](size_t index) const
          {
             return value[index];
          }
 
+         /*!
+          * Get byte at the given @c index.
+          *
+          * @param [in] index index to get the byte from.
+          *
+          * @return  the byte at the given index.
+          */
          uint8_t &operator [](size_t index)
          {
             return value[index];
          }
 
+         /*!
+          * Get byte at the given @c index, asserting that the index is
+          * within the correct range.
+          *
+          * @warning the assert is only in effect if NDEBUG is not defined.
+          *
+          * @param [in] index index to get the byte from.
+          *
+          * @return  the byte at the given index.
+          */
          uint8_t const &at (size_t index) const
          {
             assert (index < _size);
             return value[index];
          }
 
+         /*!
+          * Get byte at the given @c index, asserting that the index is
+          * within the correct range.
+          *
+          * @warning the assert is only in effect if NDEBUG is not defined.
+          *
+          * @param [in] index index to get the byte from.
+          *
+          * @return  the byte at the given index.
+          */
          uint8_t &at (size_t index)
          {
             assert (index < _size);
@@ -289,9 +343,17 @@ namespace HF
        */
       struct RFPI:public ByteArray <RFPI, 5, RFPI_UID>
       {
+         //! Number of bytes in a RFPI UID.
+         constexpr static uint8_t SIZE = 5;
+
          RFPI():ByteArray <RFPI, 5, RFPI_UID>()
          {}
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] _value   initial value for UID.
+          */
          RFPI(uint8_t _value[5]):ByteArray <RFPI, 5, RFPI_UID>(_value)
          {}
 
@@ -310,6 +372,9 @@ namespace HF
        */
       struct IPUI:public ByteArray <IPUI, 5, IPUI_UID>
       {
+         //! Number of bytes in a IPUI UID.
+         constexpr static uint8_t SIZE = 5;
+
          IPUI():ByteArray <IPUI, 5, IPUI_UID>()
          {}
 
@@ -331,6 +396,9 @@ namespace HF
        */
       struct MAC:public ByteArray <MAC, 6, MAC_UID>
       {
+         //! Number of bytes in a MAC UID.
+         constexpr static uint8_t SIZE = 6;
+
          MAC():ByteArray <MAC, 6, MAC_UID>()
          {}
 
@@ -361,19 +429,17 @@ namespace HF
             value (value)
          {}
 
-         //! \see HF::Serializable::size.
          size_t size () const
          {
-            return UID_T::size () + value.size ();
+            return Abstract <URI_UID>::size () + value.size ();
          }
 
-         //! \see HF::Serializable::pack.
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
             size_t size  = value.size ();
 
-            offset += UID_T::pack (array, offset);
+            offset += Abstract <URI_UID>::pack (array, offset);
 
             offset += array.write (offset, (uint8_t) size);
 
@@ -385,13 +451,12 @@ namespace HF
             return offset - start;
          }
 
-         //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t size;
             size_t  start = offset;
 
-            offset += UID_T::unpack (array, offset);
+            offset += Abstract <URI_UID>::unpack (array, offset);
 
             offset += array.read (offset, size);
 
@@ -422,10 +487,15 @@ namespace HF
 
          int compare (const UID_T &other) const
          {
-            int res = UID_T::compare (other);
+            int res = Abstract <URI_UID>::compare (other);
             return (res == 0 ? value.compare (((URI *) &other)->value) : res);
          }
 
+         /*!
+          * Return the string value associated with this URI.
+          *
+          * @return  the string associated with this URI.
+          */
          std::string str () const
          {
             return value;
@@ -439,30 +509,50 @@ namespace HF
        * or wrap a pointer to an object that was created based on an existing object. In this
        * case the clone object is owned by this class instance.
        *
-       * The destructor of this class will \c delete the object it owns.
+       * The destructor of this class will @c delete the object it owns.
        */
       class UID:public HF::Common::Serializable
       {
+         //!< Underling UID_T pointer.
          UID_T *_raw;
 
-         bool  owner;
+         //! Indicate if the wrapped pointer should be deleted when this object is deleted.
+         bool owner;
 
          public:
 
          UID():_raw (new NONE ()), owner (true)
          {}
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] _uid    pointer to the UID being wrapped.
+          * @param [in] _owner  take ownership of the pointer being wrapped.
+          */
          UID(UID_T *_uid, bool _owner = false):
             _raw (_uid), owner (_owner)
          {
             assert (_uid != nullptr);
          }
 
+         /*!
+          * Move constructor.
+          *
+          * @param [in] other    UID to move from.
+          */
          UID(UID &&other):_raw (other._raw), owner (other.owner)
          {
             other.owner = false;
          }
 
+         /*!
+          * Copy constructor.
+          *
+          * The underling UID_T is cloned and this object takes ownership of it.
+          *
+          * @param [in] other    UID to copy from.
+          */
          UID(const UID &other):_raw (other._raw->clone ()), owner (true)
          {}
 
@@ -478,7 +568,7 @@ namespace HF
          // API
          // =============================================================================
 
-         //! \see UID_T::type
+         //! @copydoc HF::UID::UID_T::type
          uint8_t type () const
          {
             return _raw->type ();
@@ -510,48 +600,57 @@ namespace HF
          // Utils
          // =============================================================================
 
-         // Copy
+         /*!
+          * Copy assignment operator.
+          *
+          * @param [in] other    UID to copy from.
+          *
+          * @return  a reference to this object.
+          */
          UID &operator =(const UID &other)
          {
+            // Ship if same object.
             if (this == &other)
             {
                return *this;
             }
 
+            // Delete current wrapped object if owner.
             if (this->owner)
             {
                delete this->_raw;
             }
 
+            // Clone wrapped UID_T and take ownership of the clone.
             this->_raw  = other._raw->clone ();
             this->owner = true;
 
             return *this;
          }
 
-         // Move
+         /*!
+          * Move assignment operator.
+          *
+          * @param [in] other    UID to move from.
+          *
+          * @return  a reference to this object.
+          */
          UID &operator =(UID &&other)
          {
-            UID_T *temp;
-            temp       = this->_raw;
-            this->_raw = other._raw;
-            other._raw = temp;
-
-            bool btemp = this->owner;
-            this->owner = other.owner;
-            other.owner = btemp;
+            std::swap (this->_raw, other._raw);
+            std::swap (this->owner, other.owner);
 
             return *this;
          }
 
          /*!
-          * Use the given pointer \c as the pointer of the underlining UID to wrap around
+          * Use the given pointer @c as the pointer of the underlining UID to wrap around
           * of.
           *
-          * In this case the class takes ownership of the pointer and will delete the
+          * @warning the class takes ownership of the pointer and will delete the
           * associated object when it is destructed.
           *
-          * @param _uid    pointer the UID_T object instance to manage.
+          * @param _uid    pointer to the UID_T object instance to manage.
           *
           * @return  reference to self.
           */
@@ -568,27 +667,37 @@ namespace HF
             return *this;
          }
 
+         //! @copydoc HF::UID::UID_T::compare
          int compare (const UID &other) const
          {
             return _raw->compare (*(other._raw));
          }
 
+         //! @copydoc HF::UID::UID_T::compare
          int compare (const UID_T &other) const
          {
             return _raw->compare (other);
          }
 
+         /*!
+          * Get the underling wrapped UID_T pointer.
+          *
+          * @return the underling wrapped UID_T pointer.
+          */
          UID_T const *raw () const
          {
             return _raw;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const UID &other) const
          {
             UNUSED (other);
             return 0.0;
          }
       };
+
+      /*! @} */
 
    }  // namespace UID
 
@@ -598,6 +707,10 @@ namespace HF
 // Helper Functions
 // =============================================================================
 
+/*!
+ * @addtogroup uid_t
+ * @{
+ */
 inline bool operator ==(const HF::UID::UID &lhs, const HF::UID::UID_T &rhs)
 {
    return (lhs.compare (rhs) == 0);
@@ -617,5 +730,7 @@ inline bool operator !=(const HF::UID::UID_T &lhs, const HF::UID::UID &rhs)
 {
    return !(lhs == rhs);
 }
+
+/*! @} */
 
 #endif /* HF_UIDS_H */

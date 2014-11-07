@@ -17,6 +17,10 @@
 #include "hanfun/common.h"
 #include "hanfun/interface.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Protocol;
 using namespace HF::Interfaces;
@@ -43,8 +47,8 @@ using namespace HF::Interfaces;
  * @retval Common::Result::FAIL_UNKNOWN  otherwise.
  */
 // =============================================================================
-static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::ByteArray &payload, size_t &offset,
-                                        bool nop = false)
+static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::ByteArray &payload,
+                                        size_t &offset, bool nop = false)
 {
    Common::Result result            = Common::Result::FAIL_UNKNOWN;
 
@@ -121,7 +125,8 @@ static SetAttributePack::Response *update_attributes (Interface &itf, Common::By
          result->results.push_back (attr_res);
       }
 
-      if (attr_res.code == Common::Result::FAIL_SUPPORT || attr_res.code == Common::Result::FAIL_UNKNOWN)
+      if (attr_res.code == Common::Result::FAIL_SUPPORT ||
+          attr_res.code == Common::Result::FAIL_UNKNOWN)
       {
          break;
       }
@@ -145,8 +150,8 @@ static SetAttributePack::Response *update_attributes (Interface &itf, Common::By
  * @return  pointer to a HF::Response instance if a response is necessary, \c nullptr otherwise.
  */
 // =============================================================================
-static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &payload, size_t &offset,
-                                           bool resp)
+static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &payload,
+                                           size_t &offset, bool resp)
 {
    size_t start                         = offset;
 
@@ -214,14 +219,14 @@ Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &pay
    {
       return handle_command (packet, payload, offset);
    }
-   else if (packet.message.type >= Message::GET_ATTR_REQ && packet.message.type <= Message::ATOMIC_SET_ATTR_PACK_RES)
+   else if (packet.message.type >= Message::GET_ATTR_REQ &&
+            packet.message.type <= Message::ATOMIC_SET_ATTR_PACK_RES)
    {
       return handle_attribute (packet, payload, offset);
    }
 
    return Common::Result::FAIL_UNKNOWN;
 }
-
 
 // =============================================================================
 // AbstractInterface::check_message
@@ -280,7 +285,8 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::check_payload_size (Message &message, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::check_payload_size (Message &message, Common::ByteArray &payload,
+                                                      size_t offset)
 {
    size_t _payload_size = payload_size (message.itf);
 
@@ -315,7 +321,8 @@ size_t AbstractInterface::payload_size (Message &message) const
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteArray &payload,
+                                                  size_t offset)
 {
    UNUSED (packet);
    UNUSED (payload);
@@ -332,7 +339,8 @@ Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteAr
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::ByteArray &payload,
+                                                    size_t offset)
 {
    Common::Result result = Common::Result::OK;
 
@@ -340,8 +348,9 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
    {
       case Message::GET_ATTR_REQ:
       {
-         HF::Attributes::Response *attr_res = new HF::Attributes::Response (attribute (packet.message.itf.member));
-         attr_res->code = (attr_res->attribute != nullptr ? Common::Result::OK : Common::Result::FAIL_SUPPORT);
+         auto *attr_res = new HF::Attributes::Response (attribute (packet.message.itf.member));
+         attr_res->code = (attr_res->attribute != nullptr ? Common::Result::OK :
+                           Common::Result::FAIL_SUPPORT);
 
          Message response (packet.message, attr_res->size ());
 

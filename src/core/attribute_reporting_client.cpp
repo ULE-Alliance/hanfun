@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/attribute_reporting_client.cpp
+ * @file       src/core/attribute_reporting_client.cpp
  *
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Client role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,13 +17,13 @@
 
 #include "hanfun/core/attribute_reporting.h"
 
-using namespace HF;
-using namespace HF::Core;
-using namespace HF::Core::AttributeReporting;
-
 // =============================================================================
 // API
 // =============================================================================
+
+using namespace HF;
+using namespace HF::Core;
+using namespace HF::Core::AttributeReporting;
 
 // =============================================================================
 // Client::payload_size

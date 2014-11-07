@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # =============================================================================
 #
-#   \file scripts/formatCode.sh
+#   @file scripts/formatCode.sh
 #
 #   This is a helper script to format the code present in HAN-FUN source
 #   repository using the library's configuration for uncrustify.
 #
-#   \version    1.1.1
+#   @version    1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #

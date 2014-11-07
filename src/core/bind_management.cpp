@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/bind_management.cpp
+ * @file       src/core/bind_management.cpp
  *
  * This file contains the implementation of the common functionality for the
  * Bind Management core interface.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -15,11 +15,14 @@
  */
 // =============================================================================
 
-#include "hanfun/core/bind_management.h"
+#include <set>
 
 #include "hanfun/interface.h"
+#include "hanfun/core/bind_management.h"
 
-#include <set>
+// =============================================================================
+// API
+// =============================================================================
 
 using namespace HF;
 using namespace HF::Core;

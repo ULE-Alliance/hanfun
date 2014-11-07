@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/test_common.cpp
+ * @file       tests/test_common.cpp
  *
  * This file contains the implementation of the unit tests for the common
  * functions and classes for the HAN-FUN library.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */

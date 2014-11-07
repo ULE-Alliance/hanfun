@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/test_interfaces.cpp
+ * @file       tests/test_interfaces.cpp
  *
  * This file contains the implementation of the tests for the common functionality
  * of the interfaces.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -52,7 +52,7 @@ TEST_GROUP (AbstractInterface)
 };
 
 /*!
- * \test Should handle request message coming from the same interface and
+ * @test Should handle request message coming from the same interface and
  *       from the same role.
  */
 TEST (AbstractInterface, Handle_Request)
@@ -72,7 +72,7 @@ TEST (AbstractInterface, Handle_Request)
 }
 
 /*!
- * \test Should handle request message coming from the same interface and
+ * @test Should handle request message coming from the same interface and
  *       from the same role.
  */
 TEST (AbstractInterface, Handle_RequestResp)
@@ -99,7 +99,7 @@ TEST (AbstractInterface, Handle_RequestResp)
 // AbstractInterface::GetAttribute
 // =============================================================================
 
-//! \test Should handle valid get attribute requests.
+//! @test Should handle valid get attribute requests.
 TEST (AbstractInterface, Handle_GetAttribute_Valid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_REQ;
@@ -131,7 +131,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Valid)
    LONGS_EQUAL (itf->uid (), attr_res.attribute->interface ());
 }
 
-//! \test Should handle invalid get attribute requests.
+//! @test Should handle invalid get attribute requests.
 TEST (AbstractInterface, Handle_GetAttribute_Invalid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_REQ;
@@ -159,7 +159,7 @@ TEST (AbstractInterface, Handle_GetAttribute_Invalid)
 // =============================================================================
 // AbstractInterface::SetAttribute
 // =============================================================================
-//! \test Should handle valid set attribute requests.
+//! @test Should handle valid set attribute requests.
 TEST (AbstractInterface, Handle_SetAttribute_Valid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
@@ -181,7 +181,7 @@ TEST (AbstractInterface, Handle_SetAttribute_Valid)
    LONGS_EQUAL (0x5AAA, itf->attr3);
 }
 
-//! \test Should handle invalid set attribute requests.
+//! @test Should handle invalid set attribute requests.
 TEST (AbstractInterface, Handle_SetAttribute_Invalid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
@@ -203,7 +203,7 @@ TEST (AbstractInterface, Handle_SetAttribute_Invalid)
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
 
-//! \test Should handle invalid set attribute requests.
+//! @test Should handle invalid set attribute requests.
 TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
@@ -225,7 +225,7 @@ TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
 
-//! \test Should handle valid set response required attribute requests.
+//! @test Should handle valid set response required attribute requests.
 TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
@@ -247,7 +247,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
    LONGS_EQUAL (0x5AAA, itf->attr3);
 }
 
-//! \test Should handle invalid set response required attribute requests.
+//! @test Should handle invalid set response required attribute requests.
 TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
@@ -278,7 +278,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
    LONGS_EQUAL (0x5A51, itf->attr1);
 }
 
-//! \test Should handle invalid set response required attribute requests.
+//! @test Should handle invalid set response required attribute requests.
 TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
@@ -313,7 +313,7 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 // AbstractInterface::GetHF::Attributes::Pack
 // =============================================================================
 
-//! \test Should handle valid get attribute pack requests for mandatory attributes.
+//! @test Should handle valid get attribute pack requests for mandatory attributes.
 TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
@@ -352,7 +352,7 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
    CHECK_TRUE (attr != nullptr);
 }
 
-//! \test Should handle valid get attribute pack requests for all attributes.
+//! @test Should handle valid get attribute pack requests for all attributes.
 TEST (AbstractInterface, Handle_GeAttributesPack_All)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
@@ -391,7 +391,7 @@ TEST (AbstractInterface, Handle_GeAttributesPack_All)
    CHECK_TRUE (attr != nullptr);
 }
 
-//! \test Should handle valid get attribute pack requests.
+//! @test Should handle valid get attribute pack requests.
 TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
@@ -434,7 +434,7 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
    CHECK_TRUE (attr != nullptr);
 }
 
-//! \test Should handle invalid get attribute requests.
+//! @test Should handle invalid get attribute requests.
 TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
@@ -483,7 +483,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 // AbstractInterface::SetAttributePack
 // =============================================================================
 
-//! \test Should handle set attribute pack requests.
+//! @test Should handle set attribute pack requests.
 TEST (AbstractInterface, Handle_SetAttributePack)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_REQ;
@@ -513,7 +513,7 @@ TEST (AbstractInterface, Handle_SetAttributePack)
    LONGS_EQUAL (0xCCCC, itf->attr3);
 }
 
-//! \test Should handle valid set response pack response required attribute requests.
+//! @test Should handle valid set response pack response required attribute requests.
 TEST (AbstractInterface, Handle_SetAttributePackResponse)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
@@ -560,7 +560,7 @@ TEST (AbstractInterface, Handle_SetAttributePackResponse)
    LONGS_EQUAL (Result::FAIL_SUPPORT, response.results[3].code);
 }
 
-//! \test Should fast fail on set response pack requests.
+//! @test Should fast fail on set response pack requests.
 TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
@@ -605,7 +605,7 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
 // AbstractInterface::AtomicSetAttributePack
 // =============================================================================
 
-//! \test Should handle atomic set attribute pack requests.
+//! @test Should handle atomic set attribute pack requests.
 TEST (AbstractInterface, Handle_AtomicSetAttributePack)
 {
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
@@ -630,7 +630,7 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack)
    LONGS_EQUAL (0xCCCC, itf->attr3);
 }
 
-//! \test Should handle atomic set attribute pack requests.
+//! @test Should handle atomic set attribute pack requests.
 TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
 {
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
@@ -656,7 +656,7 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
    LONGS_EQUAL (0x5A53, itf->attr3);
 }
 
-//! \test Should handle atomic set attribute pack requests.
+//! @test Should handle atomic set attribute pack requests.
 TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
 {
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;

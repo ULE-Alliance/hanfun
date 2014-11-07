@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/test_helper.h
+ * @file       tests/test_helper.h
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -203,7 +203,7 @@ namespace HF
             return create_attribute (this, uid);
          }
 
-         //! \see AbstractInterface::attributes
+         //! @see AbstractInterface::attributes
          HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
             HF::Attributes::UIDS result;

@@ -187,7 +187,8 @@ void Concentrator::AbstractBase::disconnected (HF::Transport::Link *link)
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload,
+                                          size_t offset)
 {
    if (packet.destination.device == Protocol::BROADCAST_ADDR)
    {
@@ -247,8 +248,8 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet,
-                                               Common::ByteArray &payload, size_t offset)
+void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
+                                               size_t offset)
 {
    // Find bind entries for device.
    auto &entries = unit0 ()->bind_management ()->entries ();

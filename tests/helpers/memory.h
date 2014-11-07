@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/helpers/memory.h
+ * @file       tests/helpers/memory.h
  *
  * This file is used to make the used STL classes work with CppUTest memory leak
  * functionality.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */

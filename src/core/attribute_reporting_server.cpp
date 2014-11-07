@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/attribute_reporting_server.cpp
+ * @file       src/core/attribute_reporting_server.cpp
  *
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Server role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -18,14 +18,17 @@
 
 #include "hanfun/core/attribute_reporting.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::AttributeReporting;
 
 // =============================================================================
-// API
+// find_available_id
 // =============================================================================
-
 /*!
  * Find an available report id.
  *
@@ -37,6 +40,7 @@ using namespace HF::Core::AttributeReporting;
  *
  * @return  a new report identifier.
  */
+// =============================================================================
 template<typename _Rule, typename Iterator>
 static uint8_t find_available_id (Iterator begin, Iterator end)
 {
@@ -236,7 +240,8 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
       return Common::Result::FAIL_RESOURCES;
    }
 
-   uint8_t report_id = find_available_id <Periodic::Rule>(periodic_rules.begin (), periodic_rules.end ());
+   uint8_t report_id = find_available_id <Periodic::Rule>(periodic_rules.begin (),
+                                                          periodic_rules.end ());
 
    if (report_id == ALL_ADDR)
    {
@@ -520,7 +525,8 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
       {
          for (uint16_t i = 0; i < count; ++i, ++itf)
          {
-            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id, entry.uids);
+            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id,
+                                                                   entry.uids);
             report->add (*_entry);
 
             delete _entry;
@@ -529,7 +535,8 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
    }
    else
    {
-      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id, entry.uids);
+      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id,
+                                                             entry.uids);
       report->add (*_entry);
 
       delete _entry;
@@ -563,8 +570,7 @@ void Server::periodic (uint32_t time)
       message->itf.member = PERIODIC_REPORT_CMD;
 
       Report::Periodic * report = new Report::Periodic();
-      std::for_each(rule.cbegin(), rule.cend(),
-                    [this, report](const Periodic::Entry &entry)
+      std::for_each(rule.cbegin(), rule.cend(), [this, report](const Periodic::Entry &entry)
       {
          Units::IUnit * _unit = this->unit().device().unit(entry.unit);
          assert (_unit != nullptr);

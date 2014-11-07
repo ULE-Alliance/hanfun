@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/core/bind_management_server.cpp
+ * @file       src/core/bind_management_server.cpp
  *
  * This file contains the implementation of the Bind Management : Server Role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -18,10 +18,13 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/devices.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::BindManagement;
-
 
 // =============================================================================
 // BindManagement::IServer
@@ -46,8 +49,8 @@ HF::Devices::Concentrator::IUnit0 &IServer::unit0 () const
  *
  */
 // =============================================================================
-Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                               size_t offset)
+Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
+                                               Common::ByteArray &payload, size_t offset)
 {
    Common::Result res      = Common::Result::FAIL_UNKNOWN;
 
@@ -100,8 +103,7 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common:
  */
 // =============================================================================
 Common::Result AbstractServer::add (const Protocol::Address &source,
-                                    const Protocol::Address &destination,
-                                    const Common::Interface &itf)
+                                    const Protocol::Address &destination, const Common::Interface &itf)
 {
    auto entry = this->entries ().find (source, itf, destination);
 
@@ -192,8 +194,7 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
  */
 // =============================================================================
 Common::Result AbstractServer::remove (const Protocol::Address &source,
-                                       const Protocol::Address &destination,
-                                       const Common::Interface &itf)
+                                       const Protocol::Address &destination, const Common::Interface &itf)
 {
    auto entry = this->entries ().find (source, itf, destination);
 

@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/units.h
+ * @file       inc/hanfun/units.h
  *
- * This file contains the definitions for the units implementation.
+ * This file contains the definitions for the HAN-FUN unit implementation.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -24,25 +24,42 @@
 namespace HF
 {
    /*!
-    * This is the top level namespace for the HAN-FUN units.
+    * This is the top-level namespace for the HAN-FUN units implementation.
     */
    namespace Units
    {
       /*!
-       * This class represents the interface implemented by all Units.
+       * @addtogroup units Units API
+       * @ingroup devices
+       *
+       * This module contains the classes that define and implement the %Units API.
+       * @{
+       */
+
+      /*!
+       * This class represents the interface implemented by all HAN-FUN units.
        */
       struct IUnit:public Profiles::IProfile
       {
          virtual ~IUnit() {}
 
-         //! Id number of this unit on the device.
+         /*!
+          * Get the id number of this unit on the device.
+          *
+          * @return id number of this unit on the device.
+          */
          virtual uint8_t id () const = 0;
 
-         //! The device this unit is associated with.
+         /*!
+          * Reference to the device this unit belongs to.
+          *
+          * @return  reference to the device this unit belongs to
+          */
          virtual IDevice &device () const = 0;
 
-         //! \see Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
+         //! @copydoc HF::Interface::handle
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                        size_t offset) = 0;
 
          /*!
           * Create and send a new packet with the given message to the given address.
@@ -64,24 +81,23 @@ namespace HF
       };
 
       /*!
-       * This is the parent class for all Units.
+       * This is the parent class for all HAN-FUN units.
        */
       class AbstractUnit:public IUnit
       {
+         //! Reference to the device this unit belongs to.
          IDevice &_device;
 
          public:
 
          virtual ~AbstractUnit() {}
 
-         //! Get the device associated with this unit.
          IDevice &device () const
          {
             return _device;
          }
 
-         void send (const Protocol::Address &addr, Protocol::Message &message,
-                    Transport::Link *link);
+         void send (const Protocol::Address &addr, Protocol::Message &message, Transport::Link *link);
 
          std::vector <Common::Interface> interfaces () const
          {
@@ -90,17 +106,31 @@ namespace HF
 
          protected:
 
+         //! Unit ID used to identify a given unit in a given HAN-FUN device.
+         uint8_t _id;
+
+         /*!
+          * Constructor
+          *
+          * @param [in] device   reference to the device that holds this unit.
+          */
          AbstractUnit(IDevice &device):_device (device)
          {
             device.add (this);
          }
 
+         /*!
+          * Notify the attribute reporting service that the given attribute has changed value.
+          *
+          * @param [in] old_value   reference to the previous value of the attribute.
+          * @param [in] new_value   reference to the current value of the attribute.
+          */
          void notify (const HF::Attributes::IAttribute &old_value,
                       const HF::Attributes::IAttribute &new_value) const;
       };
 
       /*!
-       * This the base template for all the Units.
+       * Helper template class to implement units.
        */
       template<class Profile, typename... ITF>
       class Unit:public HF::Units::AbstractUnit, public virtual Profile
@@ -109,27 +139,37 @@ namespace HF
 
          typedef std::tuple <HF::Interfaces::Proxy <ITF, Unit> ...> interfaces_t;
 
+         //! Tuple containing the optional implemented interfaces of this unit.
          interfaces_t _interfaces;
 
          public:
 
-         Unit(uint8_t index, IDevice &device):
-            Profile (), HF::Units::AbstractUnit (device), _id (index),
+         /*!
+          * Constructor
+          *
+          * @param [in] id       unit identifier.
+          * @param [in] device   device that contains this units.
+          */
+         Unit(uint8_t id, IDevice &device):
+            Profile (), HF::Units::AbstractUnit (device), _id (id),
             _interfaces (HF::Interfaces::Proxy <ITF, Unit>(*this) ...)
          {}
 
-         //! \see IUnit::id
+         //! @copydoc HF::Units::IUnit::id
          uint8_t id () const
          {
             return _id;
          }
 
+         //! @copydoc HF::Profiles::IProfile::uid
          uint16_t uid () const
          {
             return Profile::uid ();
          }
 
-         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         //! @copydoc HF::Interface::handle
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                size_t offset)
          {
             Common::Result result = Profile::handle (packet, payload, offset);
 
@@ -151,6 +191,7 @@ namespace HF
             return result;
          }
 
+         //! @copydoc HF::Profiles::IProfile::attributes
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
          {
@@ -163,58 +204,83 @@ namespace HF
 
          using HF::Units::AbstractUnit::send;
 
+         //! @copydoc HF::Interfaces::AbstractInterface::send
          void send (const Protocol::Address &addr, Protocol::Message &message)
          {
             AbstractUnit::send (addr, message, nullptr);
          }
 
+         //! @copydoc HF::Units::AbstractUnit::notify
          void notify (const HF::Attributes::IAttribute &old_value,
                       const HF::Attributes::IAttribute &new_value) const
          {
             AbstractUnit::notify (old_value, new_value);
          }
 
+         /*!
+          * Return the list of optional interfaces implemented by this unit.
+          *
+          * @return  a vector containing the UIDs for the optional interfaces
+          *          implemented by this unit.
+          */
          std::vector <Common::Interface> interfaces () const
          {
             std::vector <Common::Interface> result;
             result.reserve (sizeof ... (ITF));
 
             Common::Interface temp;
+            /* *INDENT-OFF* */
             for_each ([&result, &temp](HF::Interface &itf)
-                      {
-                         temp.id = itf.uid ();
-                         temp.role = itf.role ();
-                         result.push_back (temp);
-                      }
-                     );
+            {
+                temp.id = itf.uid ();
+                temp.role = itf.role ();
+                result.push_back (temp);
+            });
+            /* *INDENT-ON* */
 
             return result;
          }
 
+         //! @copydoc HF::Interface::periodic
          void periodic (uint32_t time)
          {
             Profile::periodic (time);
 
-            for_each ([time](HF::Interface &itf)
-                      {
-                         itf.periodic (time);
-                      }
-                     );
+            /* *INDENT-OFF* */
+            for_each ([time](HF::Interface &itf) { itf.periodic (time);});
+            /* *INDENT-ON* */
          }
 
          protected:
 
+         /*!
+          * Retrieve a pointer to the N optional interface implemented by this unit.
+          *
+          * @tparam N   index of the interface to retrieve the pointer to.
+          *
+          * @return  a pointer to the optional implemented interface.
+          */
          template<uint8_t N>
          const typename std::tuple_element <N, interfaces_t>::type::base * get () const
          {
             return &std::get <N>(_interfaces);
          }
 
+         /*!
+          * Call the given function for all the implemented optional interfaces.
+          *
+          * @param [in] func  function to call with each of the optional implemented interfaces.
+          */
          void for_each (std::function <void(HF::Interface &)> func) const
          {
             for_each <0, ITF...>(func);
          }
 
+         /*!
+          * Call the given function for all the implemented optional interfaces.
+          *
+          * @param [in] func  function to call with each of the optional implemented interfaces.
+          */
          void for_each (std::function <void(HF::Interface &)> func)
          {
             for_each <0, ITF...>(func);
@@ -222,6 +288,19 @@ namespace HF
 
          private:
 
+         /*!
+          * Find the implemented optional interface with the given UID.
+          *
+          * @param itf_uid    the interface UID to search for in the optional
+          *                   implemented interface.
+          *
+          * @tparam  N        index in the optional interfaces tuple to check if UID matches.
+          * @tparam  Head     class for the optional interface at the given index.
+          * @tparam  Tail     the classes associated with the remaining optional interfaces.
+          *
+          * @return           a pointer to the optional interface or @c nullptr if
+          *                   the interface is not present.
+          */
          template<uint8_t N, typename Head, typename... Tail>
          HF::Interface *find (uint16_t itf_uid) const
          {
@@ -240,6 +319,17 @@ namespace HF
             }
          }
 
+         /*!
+          * Final template instantiation that finds the implemented optional interface
+          * with the given UID.
+          *
+          * @param [in] itf_uid  the interface UID to search for in the optional
+          *                      implemented interface.
+          *
+          * @tparam  N  index in the optional interfaces tuple to check if UID matches.
+          *
+          * @return  @c nullptr, i.e. the interface is not present.
+          */
          template<uint8_t N>
          HF::Interface *find (uint16_t itf_uid) const
          {
@@ -247,6 +337,16 @@ namespace HF
             return nullptr;
          }
 
+         /*!
+          * Helper template function to implement the HF::Units::Unit::for_each functionality.
+          *
+          * @param [in] func  function to call with the reference for the optional implemented
+          *                   interface at index @c N.
+          *
+          * @tparam  N     index in the optional interfaces tuple to check if UID matches.
+          * @tparam  Head  class for the optional interface at the given index.
+          * @tparam  Tail  the classes associated with the remaining optional interfaces.
+          */
          template<uint8_t N, typename Head, typename... Tail>
          void for_each (std::function <void(HF::Interface &)> func) const
          {
@@ -257,15 +357,37 @@ namespace HF
             for_each <N + 1, Tail...>(func);
          }
 
+         /*!
+          * Helper template function to implement the HF::Units::Unit::for_each functionality.
+          *
+          * @param [in] func  function to call with the reference for the optional implemented
+          *                   interface at index @c N.
+          *
+          * @tparam  N     index in the optional interfaces tuple to check if UID matches.
+          */
          template<uint8_t N>
          void for_each (std::function <void(HF::Interface &)> func) const
          {
             UNUSED (func);
          }
 
+         /*!
+          * Helper function used to provide HF::Units::Unit::attributes functionality.
+          *
+          *
+          * @param [out] attrs      attribute list to append the attributes for the interface to.
+          * @param [in]  itf        interface to get the attributes for.
+          * @param [in]  pack_id    attributes pack id to use when retrieving the attributes.
+          * @param [in]  uids       list of attribute uids to get attributes for if @c pack_id is
+          *                         HF::Attributes::Pack::DYNAMIC.
+          *
+          * @tparam  N     index in the optional interfaces tuple to check if UID matches.
+          * @tparam  Head  class for the optional interface at the given index.
+          * @tparam  Tail  the classes associated with the remaining optional interfaces.
+          */
          template<uint8_t N, typename Head, typename... Tail>
-         void attributes_itf (HF::Attributes::List &attrs, Common::Interface itf, uint8_t pack_id,
-                              const HF::Attributes::UIDS &uids) const
+         void attributes_itf (HF::Attributes::List &attrs, Common::Interface itf,
+                              uint8_t pack_id, const HF::Attributes::UIDS &uids) const
          {
             const auto &head = std::get <N>(this->_interfaces);
 
@@ -280,9 +402,22 @@ namespace HF
             }
          }
 
+         /*!
+          * Helper function used to provide HF::Units::Unit::attributes functionality.
+          *
+          * Template expansion end.
+          *
+          * @param [out] attrs      attribute list to append the attributes for the interface to.
+          * @param [in]  itf        interface to get the attributes for.
+          * @param [in]  pack_id    attributes pack id to use when retrieving the attributes.
+          * @param [in]  uids       list of attribute uids to get attributes for if @c pack_id is
+          *                         HF::Attributes::Pack::DYNAMIC.
+          *
+          * @tparam N    index in the optional interfaces tuple to check if UID matches.
+          */
          template<uint8_t N>
-         void attributes_itf (HF::Attributes::List &attrs, Common::Interface itf, uint8_t pack_id,
-                              const HF::Attributes::UIDS &uids) const
+         void attributes_itf (HF::Attributes::List &attrs, Common::Interface itf,
+                              uint8_t pack_id, const HF::Attributes::UIDS &uids) const
          {
             UNUSED (attrs);
             UNUSED (itf);
@@ -290,6 +425,8 @@ namespace HF
             UNUSED (uids);
          }
       };
+
+      /*! @} */
 
    }  // namespace Units
 

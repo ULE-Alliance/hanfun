@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/profiles.h
+ * @file       inc/hanfun/profiles.h
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * \version    1.1.1
+ * @version    1.1.0
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -31,11 +31,23 @@
 namespace HF
 {
    /*!
-    * Namespace for profiles implementations.
+    * This is the top-level namespace for the Profiles implementation.
     */
    namespace Profiles
    {
-      //! Profiles UID's
+      /*!
+       * @defgroup profiles Profiles
+       *
+       * This module contains the classes that define and implement the %Profiles API.
+       *
+       * @addtogroup common_profile Common
+       * @ingroup profiles
+       *
+       * This module contains the common classes for the %Profiles API implementation.
+       * @{
+       */
+
+      //! %Profiles %UID's
       enum UID
       {
          // =============================================================================
@@ -63,7 +75,10 @@ namespace HF
          //!  This unit will be acting upon some physical AC switch.
          AC_OUTLET = 0x0106,
 
-         //! This unit will be acting upon some physical AC switch and provides measurements over electric quantities.
+         /*!
+          * This unit will be acting upon some physical AC switch and provides measurements
+          * over electric quantities.
+          */
          AC_OUTLET_WITH_POWER_METERING = 0x0107,
 
          //! This unit will be acting upon some physical Light switch.
@@ -153,24 +168,24 @@ namespace HF
 
       /*!
        * This function returns a pointer to a entry on a static const array,
-       * containing the interfaces the profile with the \c profile UID.
+       * containing the interfaces the profile with the @c profile UID.
        *
-       * The number of interfaces is given by \c count. You can get the addicional
+       * The number of interfaces is given by @c count. You can get the addicional
        * interfaces by incrementing the returned pointer.
        *
-       * \warning The returned pointer MUST NOT be used with free/delete.
+       * @warning The returned pointer MUST NOT be used with free/delete.
        *
        * @param [in]  profile  the profile UID to retrieve the interfaces for.
        * @param [out] count    the number of interfaces this profile has.
        *
        * @return  a pointer to structure containing the interface information for the
-       *          profile or \c nullptr if the profile is not known or does not use any
+       *          profile or @c nullptr if the profile is not known or does not use any
        *          of the official interfaces.
        */
       Common::Interface const *interfaces (uint16_t profile, uint16_t &count);
 
       /*!
-       * Top level class representing a HAN-FUN Profile.
+       * Top level class representing a HAN-FUN profile.
        *
        * This class is used provide a common interface to all profiles.
        */
@@ -181,7 +196,7 @@ namespace HF
          /*!
           * Return this profile HAN-FUN UID.
           *
-          * @return  the UID associated with this profile. \see IProfile::UID.
+          * @return  the UID associated with this profile. @see IProfile::UID.
           */
          virtual uint16_t uid () const = 0;
 
@@ -208,13 +223,11 @@ namespace HF
          virtual ~AbstractProfile()
          {}
 
-         //! \see IProfile::uid()
          uint16_t uid () const
          {
             return _uid;
          }
 
-         //! \see Interface::attributes
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
          {
@@ -225,7 +238,7 @@ namespace HF
             return HF::Attributes::List ();
          }
 
-         //! \see Interface::handle
+         //! @copydoc HF::Interface::handle
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
                                 size_t offset)
          {
@@ -278,8 +291,9 @@ namespace HF
          typedef HF::Interfaces::Proxy <Interface1, profile_t> first_itf_t;
          typedef HF::Interfaces::Proxy <Interface2, profile_t> second_itf_t;
 
-         //! \see Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         //! @copydoc HF::Interface::handle
+         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                        size_t offset)
          {
             Common::Result result = interfaces.first.handle (packet, payload, offset);
 
@@ -293,6 +307,7 @@ namespace HF
             }
          }
 
+         //! @copydoc HF::Interface::periodic
          virtual void periodic (uint32_t time)
          {
             first ()->periodic (time);
@@ -339,13 +354,14 @@ namespace HF
             return static_cast <const Interface2 *>(&(this->interfaces.second));
          }
 
-         //! \see AbstractInterface::send
+         //! @copydoc HF::Interfaces::AbstractInterface::send
          virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
 
-         //! \see AbstractInterface::notify
+         //! @copydoc HF::Interfaces::AbstractInterface::notify
          virtual void notify (const HF::Attributes::IAttribute &old_value,
                               const HF::Attributes::IAttribute &new_value) const = 0;
 
+         //! @copydoc HF::Profiles::IProfile::attributes
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
          {
@@ -368,6 +384,7 @@ namespace HF
          Profile2():interfaces (first_itf_t (*this), second_itf_t (*this))
          {}
 
+         //! Pair holding the two interface wrappers.
          std::pair <first_itf_t, second_itf_t> interfaces;
       };
 
@@ -389,7 +406,12 @@ namespace HF
          using AbstractProfile <_uid>::uid;
          using Interfaces::Alert::Server::handle;
 
-         //! \see Alert::Server::status()
+         /*!
+          * Send an alert command to the remote device given by the address in @c addr.
+          *
+          * @param [in] addr     device address to send the message to.
+          * @param [in] state    the state bitmask to be sent.
+          */
          void alert (Protocol::Address &addr, bool state)
          {
             Interfaces::Alert::Server::state (0, state);
@@ -398,6 +420,7 @@ namespace HF
 
          using Interfaces::Alert::Server::attributes;
 
+         //! @copydoc HF::Profiles::IProfile::attributes
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
          {
@@ -412,8 +435,15 @@ namespace HF
          }
       };
 
+      /*! @} */
       // =============================================================================
-      // Home Control Unit Types
+      /*!
+       * @addtogroup profile_home_ctl Home Control
+       * @ingroup profiles
+       *
+       * This module contains the classes that implement the home control profile types.
+       * @{
+       */
       // =============================================================================
 
       /*!
@@ -467,6 +497,7 @@ namespace HF
       {
          static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
+
          static_assert (std::is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
                         "LevelControl::Server MUST be of type Interfaces::LevelControl::Server !");
 
@@ -495,6 +526,7 @@ namespace HF
       {
          static_assert (std::is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
                         "OnOff::Client MUST be of type Interfaces::OnOff::Client !");
+
          static_assert (std::is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
                         "LevelControl::Client MUST be of type Interfaces::LevelControl::Client !");
          public:
@@ -532,6 +564,7 @@ namespace HF
       {
          static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
+
          static_assert (std::is_base_of <Interfaces::SimplePowerMeter::Server, SimplePowerMeterServer>::value,
                         "SimplePowerMeterServer MUST be of type Interfaces::SimplePowerMeter::Server !");
 
@@ -569,6 +602,7 @@ namespace HF
       {
          static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
+
          static_assert (std::is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
                         "LevelControl::Client MUST be of type Interfaces::LevelControl::Server !");
 
@@ -596,6 +630,7 @@ namespace HF
       {
          static_assert (std::is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
                         "OnOff::Server MUST be of type Interfaces::OnOff::Client !");
+
          static_assert (std::is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
                         "LevelControl::Server MUST be of type Interfaces::LevelControl::Client !");
 
@@ -645,7 +680,14 @@ namespace HF
       };
 
       // =============================================================================
-      // Security Unit Types
+      /*!
+       * @}
+       * @addtogroup profile_security  Security
+       * @ingroup profiles
+       *
+       * This module contains the classes that implement the security profile types.
+       * @{
+       */
       // =============================================================================
 
       /*!
@@ -749,7 +791,7 @@ namespace HF
       };
 
       /*!
-       * Alertable profile implementation.
+       * %Alertable profile implementation.
        */
       class Alertable:public Profile <ALERTABLE, Interfaces::Alert::Client>
       {
@@ -759,7 +801,14 @@ namespace HF
       };
 
       // =============================================================================
-      // Home care Unit Types
+      /*!
+       * @}
+       * @addtogroup profile_home_care  Home Care
+       * @ingroup profiles
+       *
+       * This module contains the classes that implement the home care profile types.
+       * @{
+       */
       // =============================================================================
 
       /*!
@@ -773,7 +822,15 @@ namespace HF
       };
 
       // =============================================================================
-      // Application Unit Types
+      /*!
+       * @}
+       * @addtogroup profile_other  Other Applications
+       * @ingroup profiles
+       *
+       * This module contains the classes that implement the other
+       * applications profile types.
+       * @{
+       */
       // =============================================================================
 
       /*!
@@ -785,7 +842,7 @@ namespace HF
 
          virtual ~UserInterface() {}
 
-         //! \see Interface::periodic
+         //! @copydoc HF::Interface::periodic
          virtual void periodic (uint32_t time)
          {
             UNUSED (time);
@@ -801,12 +858,13 @@ namespace HF
 
          virtual ~GenericApplicationLogic() {}
 
-         //! \see Interface::periodic
+         //! @copydoc HF::Interface::periodic
          virtual void periodic (uint32_t time)
          {
             UNUSED (time);
          }
       };
+      /*! @} @} */
 
    }  // namespace Profiles
 

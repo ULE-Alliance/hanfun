@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/common.h
+ * @file       inc/hanfun/common.h
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -29,15 +29,24 @@
 
 #include <assert.h>
 
+#include "hanfun/gcc.h"
 #include "hanfun/version.h"
 #include "hanfun/config.h"
 
-#include "gcc.h"
+/*!
+ * @addtogroup common  Common
+ * This module contains common helper classes, functions and definitions.
+ */
 
 // =============================================================================
 // Defines
 // =============================================================================
 
+/*!
+ * @ingroup common
+ *
+ * Helper macro to remove warning about unused function/method argument.
+ */
 #define UNUSED(x)   (void) x
 
 // =============================================================================
@@ -49,9 +58,16 @@
  */
 namespace HF
 {
-   constexpr uint8_t CORE_VERSION       = 1;
-   constexpr uint8_t PROFILES_VERSION   = 1;
-   constexpr uint8_t INTERFACES_VERSION = 1;
+   /*!
+    * @addtogroup common Common
+    * @{
+    */
+
+   constexpr uint8_t CORE_VERSION       = 1; //!< Core Service & Interfaces major version supported.
+   constexpr uint8_t PROFILES_VERSION   = 1; //!< Profiles major version supported.
+   constexpr uint8_t INTERFACES_VERSION = 1; //!< Interfaces major version supported.
+
+   /*! @} */
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -59,6 +75,10 @@ namespace HF
     */
    namespace Common
    {
+      /*!
+       * @addtogroup common
+       * @{
+       */
       // =============================================================================
       // Helper Classes.
       // =============================================================================
@@ -66,24 +86,24 @@ namespace HF
       /*!
        * These constants represent precisions that a measurement can be in.
        */
-      typedef enum
+      typedef enum _Precision
       {
-         BASE  = 0x00, //!< BASE
-         MILI  = 0x10, //!< MILI
-         MICRO = 0x11, //!< MICRO
-         NANO  = 0x12, //!< NANO
-         PICO  = 0x13, //!< PICO
-         KILO  = 0x20, //!< KILO
-         MEGA  = 0x21, //!< MEGA
-         GIGA  = 0x22, //!< GIGA
-         TERA  = 0x23, //!< TERA
+         BASE  = 0x00, //!< Base unit.
+         MILI  = 0x10, //!< Mili
+         MICRO = 0x11, //!< Micro
+         NANO  = 0x12, //!< Nano
+         PICO  = 0x13, //!< Pico
+         KILO  = 0x20, //!< Kilo
+         MEGA  = 0x21, //!< Mega
+         GIGA  = 0x22, //!< Giga
+         TERA  = 0x23, //!< Tera
       } Precision;
 
       /*!
        * This represents the type of time that is associated with a
        * time measurement.
        */
-      typedef enum
+      typedef enum _Time
       {
          UPTIME = 0x00, //!< Uptime.
          UTC    = 0x01, //!< UTC time.
@@ -100,22 +120,22 @@ namespace HF
          /*!
           * Create a byte array with the given initial size.
           *
-          * @param size the initial size of the byte array.
+          * @param [in] size the initial size of the byte array.
           */
          ByteArray(size_t size = 0);
 
          /*!
           * Create a byte array with the given initial data.
           *
-          * @param data    data to initialize the byte array with.
-          * @param size    size in bytes of the data.
+          * @param [in] data    data to initialize the byte array with.
+          * @param [in] size    size in bytes of the data.
           */
          ByteArray(const uint8_t data[], const size_t size);
 
          /*!
           * Create byte array from the values in the given list.
           *
-          * @param raw  values to add to the byte array.
+          * @param [in] raw  values to add to the byte array.
           */
          ByteArray(std::initializer_list <uint8_t> raw):vector (raw)
          {}
@@ -124,7 +144,7 @@ namespace HF
          virtual ~ByteArray() {}
 
          /*!
-          * Write a byte into the array at the given \c offset.
+          * Write a byte into the array at the given @c offset.
           *
           * @param [in] offset  offset to write the byte to.
           * @param [in] data    byte value to write to the array.
@@ -135,10 +155,7 @@ namespace HF
 
          /*!
           * Write a word in the big endian format into the
-          * array at the given \c offset.
-          *
-          * \warning If the host is NOT big-endian the value will
-          *          be converted before being written.
+          * array at the given @c offset.
           *
           * @param [in] offset  offset to write the word to.
           * @param [in] data    word value to write to the array.
@@ -149,10 +166,7 @@ namespace HF
 
          /*!
           * Write a double-word in big endian format into the
-          * array at the given \c offset.
-          *
-          * \warning If the host is NOT big-endian the value will
-          *          be converted before being written.
+          * array at the given @c offset.
           *
           * @param [in] offset  offset to write the double-word to.
           * @param [in] data    double-word value to write to the array.
@@ -161,14 +175,14 @@ namespace HF
           */
          size_t write (size_t offset, uint32_t data);
 
-         //! \see  ByteArray::write (size_t, uint8_t)
+         //! @copydoc ByteArray::write (size_t, uint8_t)
          size_t write (size_t offset, bool data)
          {
             return write (offset, static_cast <uint8_t>(data));
          }
 
          /*!
-          * Read the byte at \c offset into \c data.
+          * Read the byte at @c offset into @c data.
           *
           * @param [in]  offset  offset to read the byte from.
           * @param [out] data    reference to save the read value to.
@@ -178,10 +192,7 @@ namespace HF
          size_t read (size_t offset, uint8_t &data) const;
 
          /*!
-          * Read the word in big-endian format at \c offset into \c data.
-          *
-          * \warning If the host is NOT big-endian the value will
-          *          be converted to the host's Endianness.
+          * Read the word in big-endian format at @c offset into @c data.
           *
           * @param [in]  offset  offset to read the word from.
           * @param [out] data    reference to save the read value to.
@@ -191,10 +202,7 @@ namespace HF
          size_t read (size_t offset, uint16_t &data) const;
 
          /*!
-          * Read the double-word in big-endian format at \c offset into \c data.
-          *
-          * \warning If the host is NOT big-endian the value will
-          *          be converted to the host's Endianness.
+          * Read the double-word in big-endian format at @c offset into @c data.
           *
           * @param [in]  offset  offset to read the double-word from.
           * @param [out] data    reference to save the read value to.
@@ -203,7 +211,7 @@ namespace HF
           */
          size_t read (size_t offset, uint32_t &data) const;
 
-         //! \see  ByteArray::read (size_t, uint8_t)
+         //! @copydoc  ByteArray::read (size_t, uint8_t)
          size_t read (size_t offset, bool &data) const
          {
             uint8_t temp;
@@ -215,11 +223,11 @@ namespace HF
          }
 
          /*!
-          * Check if the array as at least \c expected bytes
-          * available from the given \c offset.
+          * Check if the array as at least @c expected bytes
+          * available from the given @c offset.
           *
-          * @param offset     the offset from where to start counting.
-          * @param expected   the number of byte required.
+          * @param [in] offset     the offset from where to start counting.
+          * @param [in] expected   the number of byte required.
           *
           * @retval  true if enough data is available,
           * @retval  false otherwise.
@@ -230,11 +238,11 @@ namespace HF
          }
 
          /*!
-          * Return the number of data bytes available from the given \c offset.
+          * Return the number of data bytes available from the given @c offset.
           *
-          * @param offset     the offset from where to start counting.
+          * @param [in] offset   the offset from where to start counting.
           *
-          * @return  number of data bytes available from the given \c offset.
+          * @return  number of data bytes available from the given @c offset.
           */
          size_t available (size_t offset) const
          {
@@ -272,10 +280,8 @@ namespace HF
       /*!
        * This represents the common interface for message serialization.
        */
-      class Serializable
+      struct Serializable
       {
-         public:
-
          //! Destructor
          virtual ~Serializable() {}
 
@@ -299,8 +305,8 @@ namespace HF
          /*!
           * Read a message from a ByteArray.
           *
-          * @param [inout] array   ByteArray reference to read the message from.
-          * @param [in]    offset  offset to start reading from.
+          * @param [in] array   ByteArray reference to read the message from.
+          * @param [in] offset  offset to start reading from.
           *
           * @return  the number of bytes read.
           */
@@ -506,7 +512,7 @@ namespace HF
       /*!
        * Commands result codes.
        */
-      typedef enum
+      typedef enum _Result
       {
          OK                = 0x00, //!< Request OK
          FAIL_AUTH         = 0x01, //!< Fail - Not Authorized
@@ -526,18 +532,25 @@ namespace HF
       struct Interface
       {
          uint16_t role : 1;         //!< Interface role : Server or Client.
-         uint16_t id   : 15;        //!< Identifier of the interface. \see Interface::UID.
+         uint16_t id   : 15;        //!< Identifier of the interface. @see Interface::UID.
 
-         Interface(uint16_t id = 0, uint16_t role = 0):
-            role (role), id (id) {}
+         /*!
+          * Constructor
+          *
+          * @param [in] id    interface UID.
+          * @param [in] role  interface role.
+          */
+         Interface(uint16_t id = 0, uint8_t role = 0):
+            role (role), id (id)
+         {}
 
-         //! \see HF::Serializable::size.
+         //! @copydoc HF::Common::Serializable::size
          size_t size () const;
 
-         //! \see HF::Serializable::pack.
+         //! @copydoc HF::Common::Serializable::pack
          size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-         //! \see HF::Serializable::unpack.
+         //! @copydoc HF::Common::Serializable::unpack
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
@@ -576,18 +589,45 @@ namespace HF
 
          public:
 
+         /*!
+          * Constructor
+          *
+          * @param [in] _pointer    pointer to wrap.
+          * @param [in] _owner      boolean indicating if the underling pointer should
+          *                         be deleted when this object is deleted.
+          */
          Pointer(T *_pointer = nullptr, bool _owner = false):
             pointer (_pointer), owner (_owner)
          {}
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] _pointer    pointer to wrap.
+          */
          Pointer(T &_pointer):
             pointer (&_pointer), owner (false)
          {}
 
+         /*!
+          * Move constructor.
+          *
+          * @param [in] other original object.
+          */
          Pointer(Pointer <T> &&other):pointer (nullptr), owner (false)
          {
             std::swap (this->pointer, other.pointer);
             std::swap (this->owner, other.owner);
+         }
+
+         /*!
+          * Copy constructor.
+          *
+          * @param [in] other original object.
+          */
+         Pointer(Pointer <T> &other):pointer (other.pointer), owner (other.owner)
+         {
+            other.owner = false;
          }
 
          ~Pointer()
@@ -638,6 +678,13 @@ namespace HF
             return pointer != &other;
          }
 
+         /*!
+          * Assignment move operator.
+          *
+          * @param [in] other object to move from.
+          *
+          * @return  reference to this object.
+          */
          Pointer <T> &operator =(Pointer <T> &&other)
          {
             if (this->owner)
@@ -672,32 +719,30 @@ namespace HF
          virtual size_t size () const = 0;
 
          /*!
-          * Store the given bind \c entry to persistent storage.
+          * Store the given bind @c entry to persistent storage.
           *
-          * @param [in] device   the bind entry to store.
+          * @param [in] entry the bind entry to store.
           *
           * @retval  Common::Result::OK if the bind entry was saved,
           * @retval  Common::Result::FAIL_UNKNOWN otherwise.
           */
-         virtual Result save (const T &) = 0;
+         virtual Result save (const T &entry) = 0;
 
          /*!
-          * Destroy the given \c entry in the persistent storage.
+          * Destroy the given @c entry in the persistent storage.
           *
           * @param [in] entry   reference to the bind entry to erase.
           *
           * @retval  Common::Result::OK, if the entry was destroyed.
           * @retval  Common::Result::FAIL_ARG otherwise.
           */
-         virtual Result destroy (const T &) = 0;
+         virtual Result destroy (const T &entry) = 0;
       };
 
+      /*! @} */
    }  // namespace Common
 
 }  // namespace HF
 
-// =============================================================================
-// Helper Functions
-// =============================================================================
 
 #endif /* HF_COMMON_H */

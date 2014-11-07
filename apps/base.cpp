@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/base.cpp
+ * @file       apps/base.cpp
  *
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -28,6 +28,11 @@
 #include "application.h"
 
 #include "json/json.h"
+
+/*!
+ * @addtogroup examples
+ * @{
+ */
 
 // =============================================================================
 // DeviceManagement
@@ -692,3 +697,5 @@ void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry)
    from_json (node["dst"], entry.destination);
    from_json (node["itf"], entry.itf);
 }
+
+/*! @} */

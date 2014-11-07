@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/node.cpp
+ * @file       apps/node.cpp
  *
  * This file contains the implementation of the Node class that represents the
  * HAN-FUN Node on the example application.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -29,6 +29,11 @@
 // =============================================================================
 // Node
 // =============================================================================
+
+/*!
+ * @addtogroup examples
+ * @{
+ */
 
 // =============================================================================
 // Node::receive
@@ -66,3 +71,5 @@ void SimpleLight::toggle ()
 {
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
 }
+
+/*! @} */

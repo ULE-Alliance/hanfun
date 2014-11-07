@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/core/test_device_management.cpp
+ * @file       tests/core/test_device_management.cpp
  *
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/core/session_manager.h
+ * @file       inc/hanfun/core/session_management.h
  *
  * This file contains the definitions for the session management functionality.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -26,14 +26,27 @@ namespace HF
 {
    namespace Core
    {
-      /*! Top level namespace for a the Session Management functionality. */
+      /*!
+       * This namespace contains the classes that implement the Session Management functionality.
+       */
       namespace SessionManagement
       {
+         /*!
+          * @addtogroup sessions Session Management
+          * @ingroup core
+          *
+          * This module contains the classes that implement the Session Management functionality.
+          * @{
+          */
+
+         /*!
+          * Available commands for session management.
+          */
          typedef enum _CMD
          {
             START,   //!< Start a new session for a device.
             GET,     //!< Retrieve information.
-            END,     //!> End the session for device.
+            END,     //!< End the session for device.
          } CMD;
 
          // =============================================================================
@@ -48,17 +61,20 @@ namespace HF
             uint16_t                count; //!< Number of device entries.
 
             constexpr static size_t min_size = Protocol::Response::min_size + sizeof(count);
+            /*!
+             * Constructor.
+             *
+             * @param [in] count number of entries available.
+             */
             StartResponse(uint16_t count = 0):
                count (count)
             {}
 
-            //! \see HF::Protocol::Response::size.
-            static size_t size ()
+            size_t size () const
             {
                return min_size;
             }
 
-            //! \see HF::Protocol::Response::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -69,7 +85,6 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Protocol::Response::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
@@ -95,13 +110,13 @@ namespace HF
                offset (offset), count (count)
             {}
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const
             {
                return min_size;
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -112,7 +127,7 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
@@ -129,21 +144,20 @@ namespace HF
          {
             std::vector <_Entry> entries;
 
-            //! \see HF::Protocol::Response::size.
             size_t size () const
             {
                size_t result = Protocol::Response::size () + sizeof(uint8_t);
 
+               /* *INDENT-OFF* */
                std::for_each (entries.begin (), entries.end (), [&result](const _Entry &entry)
-                              {
-                                 result += entry.size ();
-                              }
-                             );
+               {
+                  result += entry.size ();
+               });
+               /* *INDENT-ON* */
 
                return result;
             }
 
-            //! \see HF::Protocol::Response::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -156,15 +170,14 @@ namespace HF
                /* *INDENT-OFF* */
                std::for_each(entries.begin(), entries.end(),
                              [&offset, &array](const _Entry &entry)
-                             {
-                                offset += entry.pack (array, offset);
-                             });
+               {
+                  offset += entry.pack (array, offset);
+               });
                /* *INDENT-ON* */
 
                return offset - start;
             }
 
-            //! \see HF::Protocol::Response::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
@@ -196,14 +209,12 @@ namespace HF
             GetEntriesResponse():count (0)
             {}
 
-            //! \see HF::Protocol::Response::size.
             size_t size () const
             {
                size_t result = Protocol::Response::size () + sizeof(uint8_t);
                return result;
             }
 
-            //! \see HF::Protocol::Response::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -216,7 +227,6 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Protocol::Response::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
@@ -236,10 +246,13 @@ namespace HF
          // Server API
          // =============================================================================
 
+         /*!
+          * Session Management API : Server side.
+          */
          struct IServer
          {
             /*!
-             * Start a session for the device with the given \c address.
+             * Start a session for the device with the given @c address.
              *
              * Only one session is associated with any given device at any time.
              *
@@ -249,14 +262,14 @@ namespace HF
 
             /*!
              * Terminate the session associated with the device with the
-             * given \c address.
+             * given @c address.
              *
              * @param [in] address  device address to end the session for.
              */
             virtual void end_session (uint16_t address) = 0;
 
             /*!
-             * Check if a session for the device with the given \c address exists.
+             * Check if a session for the device with the given @c address exists.
              *
              * @param [in] address  device address to check is a session exists.
              *
@@ -266,7 +279,7 @@ namespace HF
             virtual bool exists (uint16_t address) const = 0;
 
             /*!
-             * Check if the session for the device with the given \c address is
+             * Check if the session for the device with the given @c address is
              * valid, i.e., the underling entries have not been modified since the
              * start of the session.
              *
@@ -279,17 +292,29 @@ namespace HF
          };
 
          /*!
-          * Top-level parent for session management functionality.
+          * Parent class for session management functionality - Server side.
           */
          class AbstractServer:public IServer
          {
             protected:
 
+            /*!
+             * Session database entry.
+             *
+             * A session entry is valid if no modifications where made to the
+             * underling entries database, since the start of the session.
+             */
             struct Session
             {
-               uint16_t address;
-               bool     valid;
+               uint16_t address;    //!< Device address for session.
+               bool     valid;      //!< Indicate if the session is still valid.
 
+               /*!
+                * Constructor.
+                *
+                * @param [in] _address    device address this session belongs to.
+                * @param [in] _valid      @c true if the session is valid, @c false otherwise.
+                */
                Session(uint16_t _address = HF::Protocol::BROADCAST_ADDR, bool _valid = false):
                   address (_address), valid (_valid)
                {}
@@ -308,6 +333,7 @@ namespace HF
 
             public:
 
+            //! Constructor.
             AbstractServer():sessions (Container ())
             {}
 
@@ -355,50 +381,137 @@ namespace HF
                return false;
             }
 
+            /*!
+             * Invalidate all sessions.
+             */
             void invalidate ()
             {
-               std::for_each (sessions.begin (), sessions.end (), [](Session &session) {
-                                 session.valid = false;
-                              }
-                             );
+               /* *INDENT-OFF* */
+               std::for_each (sessions.begin (), sessions.end (), [](Session &session)
+               {
+                  session.valid = false;
+               });
+               /* *INDENT-ON* */
             }
 
             protected:
 
-            Common::Result handle_command (CMD cmd, Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset = 0);
+            /*!
+             * @copydoc HF::Interfaces::AbstractInterface::handle_command.
+             *
+             * @param [in] cmd      the session operation to process.
+             * @param [in] packet   the packet receive from the network.
+             *
+             * @param [in] payload  the byte array containing the data received from the
+             *                      network.
+             *
+             * @param [in] offset   the offset the payload start at in the byte array.
+             *
+             * @return the result of the message processing.
+             */
+            Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
+                                           Common::ByteArray &payload, size_t offset = 0);
 
+            /*!
+             * Find the session associated with the given device @c address.
+             *
+             * @param [in] address  device address to search a session for.
+             *
+             * @return  an iterator to the session found or Container::end() otherwise.
+             */
             iterator find (uint16_t address)
             {
+               /* *INDENT-OFF* */
                return std::find_if (sessions.begin (), sessions.end (),
                                     [address](const Session &session)
-                                    {
-                                       return address == session.address;
-                                    }
-                                   );
+               {
+                  return address == session.address;
+               });
+               /* *INDENT-ON* */
             }
 
+            /*!
+             * Find the session associated with the given device @c address.
+             *
+             * @param [in] address  device address to search a session for.
+             *
+             * @return  a constant iterator to the session found or Container::end() otherwise.
+             */
             const_iterator find (uint16_t address) const
             {
+               /* *INDENT-OFF* */
                return std::find_if (sessions.cbegin (), sessions.cend (),
                                     [address](const Session &session)
-                                    {
-                                       return address == session.address;
-                                    }
-                                   );
+               {
+                  return address == session.address;
+               });
+               /* *INDENT-ON* */
             }
 
+            /*!
+             * Get the minimum number of bytes necessary to pack/unpack a message of the
+             * given command.
+             *
+             * @param [in] cmd   the command to get the number of bytes for.
+             *
+             * @return  number of bytes required.
+             */
             size_t payload_size (CMD cmd) const;
 
+            /*!
+             * Check if the given @c offset is valid and adjust the @c count value if
+             * necessary.
+             *
+             * @param [in]    offset   offset to start reading the entries from.
+             * @param [inout] count    number of entries to read.
+             * @param [in]    size     number of entries present in the underling container.
+             *
+             * @retval HF::Common::Result::OK         if entries can be read.
+             * @retval HF::Common::Result::FAIL_ARG   if the offset value is invalid.
+             */
             Common::Result check_offset (uint16_t offset, uint8_t &count, uint16_t size) const;
 
+            //! @copydoc HF::Interfaces::AbstractInterface::send
             virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
 
-            virtual uint16_t entries_size () const                                        = 0;
+            /*!
+             * Get the number of entries present in the container.
+             *
+             * @return  number of entries in the wrapped service.
+             */
+            virtual uint16_t entries_size () const = 0;
 
-            virtual Common::Result entries (uint16_t offset, uint8_t count,
-                                            Common::ByteArray &payload) = 0;
+            /*!
+             * Create a GetEntriesResponse message message with, @c count entries starting
+             * from the given @c offset and serialize the created message into the
+             * given byte array in @c payload.
+             *
+             * @remark  if <tt>offset + count > [number of entries]</tt>, the message will
+             *          truncated to the available entries starting from the given @c offset.
+             *
+             * @param [in]  offset   the offset to start reading the entries.
+             * @param [in]  count    number of entries to read.
+             * @param [out] payload  byte array to serialize the entries to.
+             *
+             * @retval  Common::Result::OK         message created successfully;
+             * @retval  Common::Result::FAIL_ARG   if @c offset is bigger than the
+             *                                     number of entries.
+             */
+            virtual Common::Result entries (uint16_t offset, uint8_t count, Common::ByteArray &payload) = 0;
 
+            /*!
+             * Check if a session for the given device @c address exists and if it is valid.
+             *
+             * In case a session does not exist or is invalid, place an GetEntriesEmptyResponse
+             * into the byte array given by @c payload to be sent to the remote device.
+             *
+             * @param [in] address     device address to check the session for.
+             * @param [out] payload    the byte array to place the response in case of error.
+             *
+             * @retval Common::Result::FAIL_READ_SESSION    if the session does not exist;
+             * @retval Common::Result::FAIL_FAIL_MODIFIED   if the session is not valid;
+             * @retval Common::Result::OK                   a session exists an is valid.
+             */
             Common::Result check_session (uint16_t address, Common::ByteArray &payload) const;
          };
 
@@ -415,10 +528,21 @@ namespace HF
 
             typedef typename Parent::value_type value_type;
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] _manager    session manager the entries are associated to.
+             */
             Entries(AbstractServer &_manager):Parent (),
                manager (_manager)
             {}
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] other       entries container to wrap.
+             * @param [in] _manager    session manager the entries are associated to.
+             */
             Entries(const Entries &other, AbstractServer &_manager):
                Parent (other), manager (_manager)
             {}
@@ -426,16 +550,18 @@ namespace HF
             virtual ~Entries()
             {}
 
-            Common::Result save (const value_type &value)
+            //! @copydoc HF::Common::IEntries::save
+            Common::Result save (const value_type &entry)
             {
-               auto res = Parent::save (value);
+               auto res = Parent::save (entry);
                manager.invalidate ();
                return res;
             }
 
-            Common::Result destroy (const value_type &value)
+            //! @copydoc HF::Common::IEntries::destroy
+            Common::Result destroy (const value_type &entry)
             {
-               auto res = Parent::destroy (value);
+               auto res = Parent::destroy (entry);
                manager.invalidate ();
                return res;
             }
@@ -443,13 +569,18 @@ namespace HF
 
          /*!
           * Helper template to inject session management functionality into
-          * services requiring it.
+          * services requiring it - Server side.
           */
          template<typename _Entries>
          struct Server:public AbstractServer
          {
             typedef Entries <_Entries> Container;
 
+            /*!
+             * Return the container for the service entries.
+             *
+             * @return  reference to the object containing the wrapped service entries.
+             */
             Container &entries () const
             {
                return const_cast <Container &>(_entries);
@@ -463,6 +594,13 @@ namespace HF
             virtual ~Server()
             {}
 
+            /*!
+             * Copy-Constructor.
+             *
+             * Make sure that the entries are copied mantain this object as the session manager.
+             *
+             * @param [in] other    reference to the object to copy from.
+             */
             Server(const Server &other):
                AbstractServer (other), _entries (other._entries, *this)
             {}
@@ -470,6 +608,7 @@ namespace HF
             // =============================================================================
             // API
             // =============================================================================
+
             uint16_t entries_size () const
             {
                return static_cast <uint16_t>(_entries.size ());
@@ -477,8 +616,7 @@ namespace HF
 
             typedef typename _Entries::value_type value_type;
 
-            Common::Result entries (uint16_t offset, uint8_t count,
-                                    Common::ByteArray &payload)
+            Common::Result entries (uint16_t offset, uint8_t count, Common::ByteArray &payload)
             {
                GetEntriesResponse <value_type> response;
 
@@ -503,6 +641,7 @@ namespace HF
 
             private:
 
+            //! Wrap container for the entries of the wrapped container.
             Container _entries;
          };
 
@@ -511,14 +650,14 @@ namespace HF
          // =============================================================================
 
          /*!
-          *
+          * Parent class for session management functionality - Client side.
           */
          class AbstractClient
          {
             // ======================================================================
             // Commands
             // ======================================================================
-            //! \name Commands
+            //! @name Commands
             //! @{
 
             /*!
@@ -532,7 +671,7 @@ namespace HF
             virtual void end_session () const = 0;
 
             /*!
-             * Send a message to get \c count entries starting at \c offset.
+             * Send a message to get @c count entries starting at @c offset.
              *
              * @param [in] offset   the index to start the entries from.
              * @param [in] count    the number of entries to retrieve.
@@ -544,7 +683,7 @@ namespace HF
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
@@ -575,15 +714,12 @@ namespace HF
             protected:
 
             /*!
-             * \see AbstractInterface::handle_command.
+             * @copydoc HF::Interfaces::AbstractInterface::handle_command.
              *
              * @param [in] cmd      the session operation to process.
-             *
              * @param [in] packet   the packet receive from the network.
-             *
              * @param [in] payload  the byte array containing the data received from the
              *                      network.
-             *
              * @param [in] offset   the offset the payload start at in the byte array.
              *
              * @return  the result of the message processing.
@@ -592,13 +728,22 @@ namespace HF
                                            Common::ByteArray &payload, size_t offset = 0);
 
             /*!
+             * Get the minimum number of bytes necessary to pack/unpack a message of the
+             * given command.
              *
-             * @param [in] cmd
+             * @param [in] cmd   the command to get the number of bytes for.
              *
-             * @return
+             * @return  number of bytes required.
              */
             size_t payload_size (CMD cmd) const;
 
+            /*!
+             * Helper method to send a message to read, @c count entries starting at
+             * @c offset from the server.
+             *
+             * @param [in] offset   index to start reading the entries from.
+             * @param [in] count    number of entries to read.
+             */
             template<uint8_t _role, uint16_t _uid, uint8_t _member>
             void get_entries (uint16_t offset, uint8_t count = 0) const
             {
@@ -618,6 +763,14 @@ namespace HF
                this->send (addr, message);
             }
 
+            /*!
+             * Helper method to create a session management request.
+             *
+             * @tparam  _role    role to use in the created message.
+             * @tparam  _uid     interface UID to use in the message.
+             * @tparam  _member  interface member ID to use.
+             *
+             */
             template<uint8_t _role, uint16_t _uid, uint8_t _member>
             void request () const
             {
@@ -635,7 +788,8 @@ namespace HF
          };
 
          /*!
-          *
+          * Helper template to inject session management functionality into
+          * services requiring it - Client side.
           */
          template<typename _Entry>
          struct Client:public AbstractClient
@@ -643,15 +797,15 @@ namespace HF
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
              * This event is called when a response to a get entries is received.
              *
-             * @param entries
+             * @param [in] response the response received.
              */
-            virtual void entries (GetEntriesResponse <_Entry> &response)
+            virtual void entries (const GetEntriesResponse <_Entry> &response)
             {
                UNUSED (response);
             }
@@ -679,6 +833,8 @@ namespace HF
          };
 
       }  // namespace SessionManagement
+
+      /*! @} */
 
    }  // namespace Core
 

@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/device.h
+ * @file       inc/hanfun/device.h
  *
  * This file contains the declaration of the API for a HAN-FUN device.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -24,7 +24,7 @@
 
 namespace HF
 {
-   // Forward declaration of the devices namespace.
+   // Forward declaration of the core namespace.
    namespace Core
    {
       namespace DeviceInformation
@@ -59,7 +59,12 @@ namespace HF
    }  // namespace Protocol
 
    /*!
-    * This class represents the interface that all devices MUST implement.
+    * @addtogroup dev_common
+    * @{
+    */
+
+   /*!
+    * This class represents the interface common to all HAN-FUN devices.
     */
    struct IDevice:public Transport::Endpoint
    {
@@ -74,23 +79,46 @@ namespace HF
          }
       };
 
+      /*!
+       * HAN-FUN device Unit 0 common API.
+       */
       struct IUnit0
       {
-         virtual Core::DeviceInformation::Server  *device_info () const         = 0;
+         /*!
+          * Return a pointer to unit 0 device information service.
+          *
+          * @return  pointer to unit 0 device information service.
+          */
+         virtual Core::DeviceInformation::Server *device_info () const = 0;
 
-         virtual Core::DeviceInformation::Server  *device_info ()               = 0;
+         /*!
+          * Return a pointer to unit 0 device information service.
+          *
+          * @return  pointer to unit 0 device information service.
+          */
+         virtual Core::DeviceInformation::Server *device_info () = 0;
 
+         /*!
+          * Return a pointer to unit 0 attribute reporting service.
+          *
+          * @return  pointer to unit 0 attribute reporting service.
+          */
          virtual Core::AttributeReporting::Server *attribute_reporting () const = 0;
 
-         virtual Core::AttributeReporting::Server *attribute_reporting ()       = 0;
+         /*!
+          * Return a pointer to unit 0 attribute reporting service.
+          *
+          * @return  pointer to unit 0 attribute reporting service.
+          */
+         virtual Core::AttributeReporting::Server *attribute_reporting () = 0;
       };
 
       /*!
        * Return the device address on the HAN-FUN network, when the device is registered,
-       * or \c HF_BROADCAST_ADDR otherwise.
+       * or @c HF_BROADCAST_ADDR otherwise.
        *
        * @return  the device address on the HAN-FUN network,
-       *          \c HF_BROADCAST_ADDR otherwise.
+       *          @c HF_BROADCAST_ADDR otherwise.
        */
       virtual uint16_t address () const = 0;
 
@@ -112,12 +140,9 @@ namespace HF
       virtual Units::IUnit *unit (uint8_t id) const = 0;
 
       /*!
-       * Return pointer to the unit with the given id.
+       * Return pointer to the unit 0 for this device.
        *
-       * @param [in] id    unit identifier.
-       *
-       * @return  pointer to the unit with the given id,
-       *          nullptr otherwise.
+       * @return  pointer to the unit 0 for this device.
        */
       virtual IUnit0 *unit0 () const = 0;
 
@@ -136,12 +161,14 @@ namespace HF
       virtual void remove (Units::IUnit *unit) = 0;
 
       /*!
-       * Send given \c packet into the HAN-FUN network.
+       * Send given @c packet into the HAN-FUN network.
        *
        * @param packet  reference to the packet to send to the network.
        */
       virtual void send (Protocol::Packet &packet) = 0;
    };
+
+   /*! @} */
 
 }  // namespace HF
 

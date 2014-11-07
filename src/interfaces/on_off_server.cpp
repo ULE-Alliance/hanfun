@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/on_off_client.cpp
+ * @file       src/interfaces/on_off_client.cpp
  *
  * This file contains the implementation of the On-Off interface : Server role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -16,26 +16,32 @@
 
 #include "hanfun/interfaces/on_off.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Interfaces;
+using namespace HF::Interfaces::OnOff;
 
 // =============================================================================
 // On-Off Interface : Server Role
 // =============================================================================
 
 // =============================================================================
-// OnOff::Server::handle_command
+// Server::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result OnOff::Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
 {
    UNUSED (payload);
    UNUSED (offset);
 
-   OnOff::CMD cmd = static_cast <OnOff::CMD>(packet.message.itf.member);
+   CMD cmd = static_cast <CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
@@ -56,49 +62,49 @@ Common::Result OnOff::Server::handle_command (Protocol::Packet &packet, Common::
 }
 
 // =============================================================================
-// OnOff::Server::on
+// Server::on
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOff::Server::on ()
+void Server::on ()
 {
    state (true);
 }
 
 // =============================================================================
-// OnOff::Server::off
+// Server::off
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOff::Server::off ()
+void Server::off ()
 {
    state (false);
 }
 
 // =============================================================================
-// OnOff::Server::toggle
+// Server::toggle
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOff::Server::toggle ()
+void Server::toggle ()
 {
    state (!state ());
 }
 
 // =============================================================================
-// OnOff::Server::state
+// Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void OnOff::Server::state (bool state)
+void Server::state (bool state)
 {
    bool old = this->_state;
 
@@ -111,13 +117,13 @@ void OnOff::Server::state (bool state)
 }
 
 // =============================================================================
-// OnOff::Server::state
+// Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool OnOff::Server::state ()
+bool Server::state ()
 {
    return _state;
 }

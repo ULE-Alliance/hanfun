@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core.cpp
+ * @file       src/core.cpp
  *
  * This file contains the implementation of common functionality in the core
  * services and interfaces of the HAN-FUN protocol.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

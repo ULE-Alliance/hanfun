@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/alert_server.cpp
+ * @file       src/interfaces/alert_server.cpp
  *
  * This file contains the implementation of the Alert interface : Server role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -16,45 +16,56 @@
 
 #include "hanfun/interfaces/alert.h"
 
+// =============================================================================
+// Defines
+// =============================================================================
+
+//! Number of bits present in the alert state.
+#define STATE_SIZE_BITS   (sizeof(uint32_t) * 8)
+
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
-using namespace HF::Protocol;
 using namespace HF::Interfaces;
+using namespace HF::Interfaces::Alert;
 
 // =============================================================================
 // Alert Interface : Server Role
 // =============================================================================
 
 //! Constructor
-Alert::Server::Server()
+Server::Server()
 {
    _state   = 0x0;
    _enabled = UINT32_MAX;
 }
 
 //! Destructor
-Alert::Server::~Server()
+Server::~Server()
 {}
 
 // =============================================================================
-// Alert::Server::state
+// Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint32_t Alert::Server::state ()
+uint32_t Server::state ()
 {
    return this->_state;
 }
 
 // =============================================================================
-// Alert::Server::state
+// Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool Alert::Server::state (uint8_t index, bool state)
+bool Server::state (uint8_t index, bool state)
 {
    if (index >= STATE_SIZE_BITS)
    {
@@ -88,13 +99,13 @@ bool Alert::Server::state (uint8_t index, bool state)
 }
 
 // =============================================================================
-// Alert::Server::state
+// Server::state
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool Alert::Server::state (uint8_t index)
+bool Server::state (uint8_t index)
 {
    if (index >= STATE_SIZE_BITS)
    {
@@ -105,13 +116,13 @@ bool Alert::Server::state (uint8_t index)
 }
 
 // =============================================================================
-// Alert::Server::clear
+// Server::clear
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Alert::Server::clear ()
+void Server::clear ()
 {
    uint32_t old = this->_state;
 
@@ -124,13 +135,13 @@ void Alert::Server::clear ()
 }
 
 // =============================================================================
-// Alert::Server::enable
+// Server::enable
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Alert::Server::enable (uint8_t index)
+void Server::enable (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -148,13 +159,13 @@ void Alert::Server::enable (uint8_t index)
 }
 
 // =============================================================================
-// Alert::Server::enableAll
+// Server::enableAll
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Alert::Server::enableAll ()
+void Server::enableAll ()
 {
    uint32_t old = this->_enabled;
 
@@ -167,25 +178,25 @@ void Alert::Server::enableAll ()
 }
 
 // =============================================================================
-// Alert::Server::enabled
+// Server::enabled
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint32_t Alert::Server::enabled ()
+uint32_t Server::enabled ()
 {
    return this->_enabled;
 }
 
 // =============================================================================
-// Alert::Server::enabled
+// Server::enabled
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool Alert::Server::enabled (uint8_t index)
+bool Server::enabled (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -196,13 +207,13 @@ bool Alert::Server::enabled (uint8_t index)
 }
 
 // =============================================================================
-// Alert::Server::disable
+// Server::disable
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Alert::Server::disable (uint8_t index)
+void Server::disable (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -220,13 +231,13 @@ void Alert::Server::disable (uint8_t index)
 }
 
 // =============================================================================
-// Alert::Server::disableAll
+// Server::disableAll
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Alert::Server::disableAll ()
+void Server::disableAll ()
 {
    uint32_t old = this->_enabled;
 
@@ -239,13 +250,13 @@ void Alert::Server::disableAll ()
 }
 
 // =============================================================================
-// Alert::Server::disabled
+// Server::disabled
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool Alert::Server::disabled (uint8_t index)
+bool Server::disabled (uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -256,32 +267,32 @@ bool Alert::Server::disabled (uint8_t index)
 }
 
 // =============================================================================
-// Alert::Server::status_cmd
+// Server::status_cmd
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Alert::Message *Alert::Server::create_status (uint16_t profile_uid)
+Alert::Message *Server::create_status (uint16_t profile_uid)
 {
-   return new Alert::Message (profile_uid, this->_state);
+   return new Message (profile_uid, this->_state);
 }
 
 // =============================================================================
-// Alert::Server::status
+// Server::status
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Alert::Server::status (Protocol::Address &addr, uint16_t profile_uid)
+void Server::status (Protocol::Address &addr, uint16_t profile_uid)
 {
-   Alert::Message alert_msg (profile_uid, this->_state);
+   Message alert_msg (profile_uid, this->_state);
 
    Protocol::Message message (alert_msg.size ());
 
    message.itf.role   = CLIENT_ROLE;
-   message.itf.id     = Alert::Server::uid ();
+   message.itf.id     = Server::uid ();
    message.itf.member = STATUS_CMD;
 
    alert_msg.pack (message.payload);

@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/session_manangement_server.cpp
+ * @file       src/core/session_manangement_server.cpp
  *
  * This file contains the implementation of the session management functionality
  * for the server side.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,20 +17,16 @@
 
 #include "hanfun/core/session_management.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Common;
 using namespace HF::Core::SessionManagement;
 
 // =============================================================================
-// Defines
-// =============================================================================
-
-// =============================================================================
-// API
-// =============================================================================
-
-// =============================================================================
-// AbstractServer::handle
+// AbstractServer::handle_command
 // =============================================================================
 /*!
  *

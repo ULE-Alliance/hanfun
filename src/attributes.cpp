@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/attributes.cpp
+ * @file       src/attributes.cpp
  *
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -36,12 +36,18 @@ using namespace HF::Core;
 // Attribute Factories
 // =============================================================================
 
+/*!
+ * Interface / Attribute Factory database entry.
+ */
 struct Entry
 {
-   uint16_t            id;
-   Attributes::Factory factory;
+   uint16_t            id;       //!< Interface UID.
+   Attributes::Factory factory;  //!< Attribute's factory.
 };
 
+/*!
+ * Interface / Attribute Factory database.
+ */
 static const Entry factories[] =
 {
    /* Core Services */
@@ -301,8 +307,8 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          if (server != nullptr)
          {
 #if HF_ITF_SPM_POWER_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server, server->_power,
-                                                                   writabble);
+            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
+                                                                   server->_power, writabble);
 
 #else
             return nullptr;

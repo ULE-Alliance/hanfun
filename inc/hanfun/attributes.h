@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/attributes.h
+ * @file       inc/hanfun/attributes.h
  *
- * This file contains the API definitions for the Attributes.
+ * This file contains the definitions for the attribute handling API in HAN-FUN.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -28,13 +28,22 @@ namespace HF
    struct Interface;
 
    /*!
-    * This is the top-level namespace for the classes needed to implement
-    * the interface's attributes manipulation.
+    * This is the top-level namespace for the classes that implement
+    * the interface's attribute manipulation functionality.
     */
    namespace Attributes
    {
       /*!
-       * Interface/Service Attribute's API.
+       * @addtogroup attributes  Attributes
+       * @ingroup protocol
+       *
+       * This module contains the classes that define and implement the common API for
+       * handling attributes.
+       * @{
+       */
+
+      /*!
+       * %Interface/%Service %Attribute API.
        */
       struct IAttribute:public Common::Serializable, public Common::Cloneable <IAttribute>
       {
@@ -71,40 +80,36 @@ namespace HF
          virtual HF::Interface const *owner () const = 0;
 
          /*!
-          * \see Serializable::size
+          * @copydoc HF::Common::Serializable::size
           *
           * @param [in] with_uid    include uid() size in the calculation.
           */
          virtual size_t size (bool with_uid) const = 0;
 
-         //! \see Serializable::size
+         //! @copydoc HF::Common::Serializable::size
          virtual size_t size () const = 0;
 
          /*!
-          * \see Serializable::pack
+          * @copydoc HF::Common::Serializable::pack
           *
-          * @param [in] array       reference to a ByteArray to pack the attribute to.
-          * @param [in] offset      offset to start the packing.
-          * @param [in] with_uid    include uid() size in the calculation.
+          * @param [in] with_uid    include uid() in the serialization.
           */
          virtual size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const = 0;
 
-         //! \see Serializable::pack
+         //! @copydoc HF::Common::Serializable::pack
          virtual size_t pack (Common::ByteArray &array, size_t offset) const = 0;
 
          /*!
-          * \see Serializable::unpack
+          * @copydoc HF::Common::Serializable::unpack
           *
-          * \warning If \c with_uid == \c true, then if the value read from the
+          * @warning If @c with_uid == @c true, then if the value read from the
           *          array does not match the attribute's UID, no more data will be read.
           *
-          * @param [in] array       reference to a ByteArray to pack the attribute to.
-          * @param [in] offset      offset to start the packing.
           * @param [in] with_uid    include uid() size in the calculation.
           */
          virtual size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid) = 0;
 
-         //! \see Serializable::unpack
+         //! @copydoc HF::Common::Serializable::unpack
          virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
 
          virtual bool operator ==(const IAttribute &other) const               = 0;
@@ -113,7 +118,29 @@ namespace HF
 
          virtual bool operator >(const IAttribute &other) const                = 0;
 
-         virtual float changed (const IAttribute &other) const                 = 0;
+         /*!
+          * This method is used to get the percentage of change that the
+          * attribute has in relation to the value present in @c other.
+          *
+          * @param [in] other attribute holding a previous value.
+          *
+          * @return  float indicating the percentage of change.
+          */
+         virtual float changed (const IAttribute &other) const = 0;
+
+         /*!
+          * Compare this attribute with the given attribute in @c other.
+          *
+          * This method should return < 0 if this attribute is less that,
+          * 0 if it is equal and > 0 if greater that the @c other attribute.
+          *
+          * @param [in] other attribute to compare to.
+          *
+          * @retval  <0 if attribute less than @c other;
+          * @retval  0  if attribute equal to @c other;
+          * @retval  >0 if attribute greater than @c other.
+          */
+         virtual int compare (const IAttribute &other) const = 0;
       };
 
       //! Attribute factory function type.
@@ -129,36 +156,53 @@ namespace HF
        * Return the attribute factory associated with the given
        * interface identifier.
        *
-       * \warning This function only returns the factories for the
+       * @warning This function only returns the factories for the
        *          build in interfaces.
        *
        * @param itf  interface identifier.
        *
        * @return  the factory associated with the interface, or
-       *          \c nullptr if the interface is unknown.
+       *          @c nullptr if the interface is unknown.
        */
       Factory get_factory (Common::Interface itf);
 
+      /*!
+       * List of attributes UIDs.
+       */
       struct UIDS:public std::vector <uint8_t>
       {
          UIDS():std::vector <uint8_t>()
          {}
 
+         /*!
+          * Constructor
+          *
+          * @param [in] uids attributes UIDs list.
+          */
          UIDS(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
          {}
 
+         /*!
+          * Number of elements in the list.
+          *
+          * @note this is used as an alias to the underling method,
+          * @c std::vector<uint8_t>::size, as the size method signature
+          * is used to provide a Serializable type interface.
+          *
+          * @return  number of elements.
+          */
          vector <uint8_t>::size_type length () const
          {
             return vector <uint8_t>::size ();
          }
 
-         //! \see Serializable::size
+         //! @copydoc HF::Common::Serializable::size
          size_t size () const
          {
             return sizeof(uint8_t) + sizeof(uint8_t) * vector <uint8_t>::size ();
          }
 
-         //! \see Serializable::pack
+         //! @copydoc HF::Common::Serializable::pack
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t  start = offset;
@@ -167,7 +211,8 @@ namespace HF
             offset += array.write (offset, count);
 
             /* *INDENT-OFF* */
-            for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(), [&offset,&array](uint8_t uid)
+            std::for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(),
+                           [&offset,&array](uint8_t uid)
             {
                offset += array.write (offset, uid);
             });
@@ -176,7 +221,7 @@ namespace HF
             return offset - start;
          }
 
-         //! \see Serializable::unpack
+         //! @copydoc HF::Common::Serializable::unpack
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             uint8_t count = 0;
@@ -184,10 +229,10 @@ namespace HF
          }
 
          /*!
-          * \see Serializable::unpack
+          * @copydoc HF::Common::Serializable::unpack
           *
-          * @param [out] count   reference to a variable that will hold the count value read from the
-          *                      array.
+          * @param [out] count   reference to a variable that will hold
+          *                      the count value read from the array.
           */
          size_t unpack (const Common::ByteArray &array, size_t offset, uint8_t &count)
          {
@@ -207,37 +252,61 @@ namespace HF
 
       };
 
+      /*!
+       * Parent class for Attribute API implementation.
+       */
       class AbstractAttribute:public IAttribute
       {
          protected:
 
-         const uint16_t _itf_uid;      //! Interface this attribute belongs to.
-         const uint8_t  _uid;          //! Attribute unique identifier.
-         const bool _writable;         //! Attribute access mode.
-         const HF::Interface *_owner;  //! Owner interface.
+         const uint16_t _itf_uid;      //!< Interface this attribute belongs to.
+         const uint8_t  _uid;          //!< Attribute unique identifier.
+         const bool _writable;         //!< Attribute access mode.
+         const HF::Interface *_owner;  //!< Owner interface.
 
-         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const HF::Interface *owner,
-                           const bool writable = false):
+         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid,
+                           const HF::Interface *owner, const bool writable = false):
             _itf_uid (itf_uid), _uid (uid), _writable (writable), _owner (owner)
          {}
 
          public:
 
+         /*!
+          * Return attribute's UID.
+          *
+          * @return  attribute's UID.
+          */
          uint8_t uid () const
          {
             return _uid;
          }
 
+         /*!
+          * Indicate if the attribute is writable or not.
+          *
+          * @retval  true  the attribute is writable;
+          * @retval  false otherwise.
+          */
          bool isWritable () const
          {
             return _writable;
          }
 
+         /*!
+          * Return the Interface UID this attribute belongs to.
+          *
+          * @return the Interface UID this attribute belongs to.
+          */
          uint16_t interface () const
          {
             return _itf_uid;
          }
 
+         /*!
+          * Return the Interface instance this attribute belongs to.
+          *
+          * @return  pointer to the Interface instance this attribute belongs to.
+          */
          HF::Interface const *owner () const
          {
             return _owner;
@@ -273,9 +342,7 @@ namespace HF
             return this->compare (other) > 0;
          }
 
-         protected:
-
-         virtual int compare (const IAttribute &other) const
+         int compare (const IAttribute &other) const
          {
             int res = this->interface () - other.interface ();
 
@@ -288,14 +355,36 @@ namespace HF
          }
       };
 
+      /*!
+       * Helper template class to declare an attribute with the given @c T type.
+       *
+       * @tparam T underling data type for the attribute.
+       */
       template<typename T, typename = void>
       struct Attribute:public AbstractAttribute
       {
-         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner, T data,
-                   bool writable = false):
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] interface   attribute's interface UID.
+          * @param [in] uid         attribute's UID.
+          * @param [in] owner       pointer to attribute's interface owner object.
+          * @param [in] data        attribute's value.
+          * @param [in] writable    attribute's writable information.
+          */
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner,
+                   T data, bool writable = false):
             AbstractAttribute (interface, uid, owner, writable), helper (data)
          {}
 
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] interface   attribute's interface UID.
+          * @param [in] uid         attribute's UID.
+          * @param [in] owner       pointer to attribute's interface owner object.
+          * @param [in] writable    attribute's writable information.
+          */
          Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner,
                    bool writable = false):
             AbstractAttribute (interface, uid, owner, writable)
@@ -381,9 +470,6 @@ namespace HF
                                                      this->helper.data, this->_writable);
          }
 
-         protected:
-
-         Common::SerializableHelper <T> helper;
 
          int compare (const IAttribute &other) const
          {
@@ -411,17 +497,21 @@ namespace HF
             return 0.0;
          }
 
+         protected:
+
+         Common::SerializableHelper <T> helper;
          private:
 
+         // Don't allow copy.
          Attribute(const Attribute &other) = delete;
       };
 
       /*!
-       * This class has the same behavior has a \c list, however
-       * the \c list element access methods where overwritten to
+       * This class has the same behavior has a @c list, however
+       * the @c list element access methods where overwritten to
        * allow using the attribute UIDs as indexes.
        *
-       * The difference between the \c list indexes and the \c Attribute
+       * The difference between the @c list indexes and the @c Attribute
        * indexes is that the former start at 0 and the latter at 1.
        */
       struct List:public std::list <IAttribute *>
@@ -448,21 +538,26 @@ namespace HF
       {
          IAttribute *attribute;
 
-         Response(IAttribute *attribute = nullptr):
-            attribute (attribute) {}
+         /*!
+          * Constructor.
+          *
+          * @param [in] _attribute   pointer to the attribute value to send
+          *                          in the response.
+          */
+         Response(IAttribute *_attribute = nullptr):
+            attribute (_attribute)
+         {}
 
          virtual ~Response()
          {
             delete attribute;
          }
 
-         //! \see HF::Serializable::size.
          size_t size () const
          {
             return Protocol::Response::size () + (attribute != nullptr ? attribute->size () : 0);
          }
 
-         //! \see HF::Serializable::pack.
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
          {
             size_t start = offset;
@@ -474,7 +569,6 @@ namespace HF
             return offset - start;
          }
 
-         //! \see HF::Serializable::unpack.
          size_t unpack (const Common::ByteArray &array, size_t offset = 0)
          {
             size_t start = offset;
@@ -487,12 +581,24 @@ namespace HF
       };
 
       /*!
+       * @}
+       * @addtogroup attr_packs Packs
+       * @ingroup attributes
+       *
+       * This module contains the classes used to implement the attribute pack functionality.
+       *
+       * An attribute pack is an identifier that can be use to get/set a number of attributes
+       * in block.
+       * @{
+       */
+
+      /*!
        * Attribute Pack Special IDs.
        *
        * These IDs when received on a HF::Message::GET_ATTR_PACK_REQ, allow the return of all
        * mandatory/optional attributes, without the need to indicate all the attribute UIDs.
        */
-      typedef enum Pack
+      typedef enum _Pack
       {
          MANDATORY = 0x00, //!< Return all mandatory attributes for the interface.
          ALL       = 0xFE, //!< Return all mandatory and optional attributes for the interface.
@@ -505,17 +611,23 @@ namespace HF
        *
        * @param [in] itf      reference to the interface to retrieve the attributes for.
        * @param [in] pack_id  pack id used to get attributes UIDs for. If HF::Attributes::DYNAMIC,
-       *                      use uids present in \c uids.
+       *                      use uids present in @c uids.
        * @param [in] uids     array containing the attribute UID's if pack id equals HF::Attributes::DYNAMIC.
        *
        * @return  list containing the attributes.
        */
       List get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids);
 
+      /*! @} */
    }  // namespace Attributes
 
    namespace Protocol
    {
+      /*!
+       * @addtogroup attr_packs Packs
+       * @{
+       */
+
       /*!
        * This namespace contains the classes that implement the HF::Message::GET_ATTR_PACK_REQ
        * messages.
@@ -533,7 +645,7 @@ namespace HF
             /*!
              * Unpack attribute count.
              *
-             * \warning This value will not be used as the number of attributes, when
+             * @warning This value will not be used as the number of attributes, when
              *          packing the request.
              */
             uint8_t count;
@@ -544,19 +656,19 @@ namespace HF
                attributes (attributes), count (0)
             {}
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const
             {
                return attributes.size ();
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                return attributes.pack (array, offset);
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                return attributes.unpack (array, offset, count);
@@ -579,18 +691,32 @@ namespace HF
             /*!
              * Unpack attribute count.
              *
-             * \warning This value will not be used as the number of attributes, when
+             * @warning This value will not be used as the number of attributes, when
              *          packing the request.
              */
             uint8_t count;
 
+            /*!
+             * Constructor.
+             */
             Response():attribute_factory (nullptr)
             {}
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] attributes  list of attributes to send.
+             */
             Response(HF::Attributes::List &attributes):
                attribute_factory (nullptr), attributes (attributes)
             {}
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] factory  attribute factory to use when reading the
+             *                      incoming attributes.
+             */
             Response(HF::Attributes::Factory factory):
                attribute_factory (factory)
             {}
@@ -598,14 +724,14 @@ namespace HF
             virtual ~Response()
             {
                /* *INDENT-OFF* */
-               for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
+               std::for_each (attributes.begin (), attributes.end (),
+                               [](HF::Attributes::IAttribute *attr)
                {
                   delete attr;
                });
                /* *INDENT-ON* */
             }
 
-            //! \see HF::Serializable::size.
             size_t size () const
             {
                size_t result = Protocol::Response::size ();
@@ -613,7 +739,8 @@ namespace HF
                result += sizeof(uint8_t);
 
                /* *INDENT-OFF* */
-               for_each (attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute *attr)
+               std::for_each (attributes.begin(), attributes.end(),
+                              [&result](HF::Attributes::IAttribute *attr)
                {
                   result += attr->size(true);
                });
@@ -622,7 +749,6 @@ namespace HF
                return result;
             }
 
-            //! \see HF::Serializable::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -632,7 +758,8 @@ namespace HF
                offset += array.write (offset, (uint8_t) attributes.size ());
 
                /* *INDENT-OFF* */
-               for_each (attributes.begin(), attributes.end(), [&array, &offset] (HF::Attributes::IAttribute * attr)
+               std::for_each (attributes.begin(), attributes.end(),
+                              [&array, &offset] (HF::Attributes::IAttribute * attr)
                {
                   offset += attr->pack(array, offset, true);
                });
@@ -641,7 +768,6 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Serializable::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
@@ -664,7 +790,7 @@ namespace HF
             /*!
              * Unpack attribute count.
              *
-             * \warning This value will not be used as the number of attributes, when
+             * @warning This value will not be used as the number of attributes, when
              *          packing the request.
              */
             uint8_t count;
@@ -672,20 +798,22 @@ namespace HF
             virtual ~Request()
             {
                /* *INDENT-OFF* */
-               for_each (attributes.begin (), attributes.end (), [](HF::Attributes::IAttribute *attr)
+               std::for_each (attributes.begin (), attributes.end (),
+                              [](HF::Attributes::IAttribute *attr)
                {
                   delete attr;
                });
                /* *INDENT-ON* */
             }
 
-            //! \see Serializable::size
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const
             {
                size_t result = sizeof(uint8_t);
 
                /* *INDENT-OFF* */
-               for_each ( attributes.begin(), attributes.end(), [&result](HF::Attributes::IAttribute * attr)
+               std::for_each ( attributes.begin(), attributes.end(),
+                               [&result](HF::Attributes::IAttribute * attr)
                {
                   result += attr->size(true);
                });
@@ -694,7 +822,7 @@ namespace HF
                return result;
             }
 
-            //! \see Serializable::pack
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -702,7 +830,8 @@ namespace HF
                offset += array.write (offset, (uint8_t) attributes.size ());
 
                /* *INDENT-OFF* */
-               for_each (attributes.begin (), attributes.end (), [&array,&offset](HF::Attributes::IAttribute * attr)
+               std::for_each (attributes.begin (), attributes.end (),
+                              [&array,&offset](HF::Attributes::IAttribute * attr)
                {
                   offset += attr->pack (array, offset, true);
                });
@@ -711,7 +840,7 @@ namespace HF
                return offset - start;
             }
 
-            //! \see Serializable::unpack
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
@@ -737,20 +866,26 @@ namespace HF
 
                Result() {}
 
+               /*!
+                * Constructor.
+                *
+                * @param [in] uid   attribute's UID.
+                * @param [in] code  operation result code.
+                */
                Result(uint8_t uid, Common::Result code):
                   uid (uid), code (code)
                {}
 
-               //! \see Serializable::size
-               static constexpr size_t Size = sizeof(uint8_t) + sizeof(uint8_t);
+               //! @see HF::Common::Serializable::size
+               static constexpr size_t min_size = sizeof(uint8_t) + sizeof(uint8_t);
 
-               //! \see Serializable::size
+               //! @copydoc HF::Common::Serializable::size
                size_t size () const
                {
-                  return Result::Size;
+                  return Result::min_size;
                }
 
-               //! \see Serializable::pack
+               //! @copydoc HF::Common::Serializable::pack
                size_t pack (Common::ByteArray &array, size_t offset = 0) const
                {
                   size_t start = offset;
@@ -761,7 +896,7 @@ namespace HF
                   return offset - start;
                }
 
-               //! \see Serializable::unpack
+               //! @copydoc HF::Common::Serializable::unpack
                size_t unpack (const Common::ByteArray &array, size_t offset = 0)
                {
                   size_t  start = offset;
@@ -779,17 +914,17 @@ namespace HF
 
             typedef std::vector <Result> results_t;
 
-            results_t results;
+            results_t results;   //!< Response results.
 
             /*!
              * Unpack the results count.
              *
-             * \warning This value will not be used as the number of results, when
+             * @warning This value will not be used as the number of results, when
              *          packing the response.
              */
             uint8_t count;
 
-            //! \see Serializable::size
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const
             {
                size_t result = sizeof(uint8_t); // Number of attribute results.
@@ -799,7 +934,7 @@ namespace HF
                return result;
             }
 
-            //! \see Serializable::pack
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -807,7 +942,7 @@ namespace HF
                offset += array.write (offset, (uint8_t) results.size ());
 
                /* *INDENT-OFF* */
-               for_each (results.begin (), results.end (), [&array,&offset](Result result)
+               std::for_each (results.begin (), results.end (), [&array,&offset](Result result)
                {
                   offset += result.pack (array, offset);
                });
@@ -816,7 +951,7 @@ namespace HF
                return offset - start;
             }
 
-            //! \see Serializable::unpack
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t start = offset;
@@ -825,7 +960,7 @@ namespace HF
 
                for (int i = 0; i < count; i++)
                {
-                  if (!array.available (offset, Result::Size))
+                  if (!array.available (offset, Result::min_size))
                   {
                      break;
                   }
@@ -841,6 +976,7 @@ namespace HF
          };
 
       } // namespace SetAttributePack
+        /*! @} */
 
    }  // namespace Protocol
 

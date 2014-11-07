@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/level_control_client.cpp
+ * @file       src/interfaces/level_control_client.cpp
  *
  * This file contains the implementation of the Level Control interface : Client role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -16,21 +16,26 @@
 
 #include "hanfun/interfaces/level_control.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Interfaces;
+using namespace HF::Interfaces::LevelControl;
 
 // =============================================================================
 // Level Control Interface : Client Role
 // =============================================================================
 
 // =============================================================================
-// LevelControl::level
+// Client::level
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void LevelControl::Client::level (Protocol::Address &addr, uint8_t new_level)
+void Client::level (Protocol::Address &addr, uint8_t new_level)
 {
    Level *level_attr          = new Level (new_level, this);
 

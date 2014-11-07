@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file CMakeLists.txt
+#   @file CMakeLists.txt
 #
 #   HAN-FUN Library Top CMakeList
 #
-#   \version    1.1.1
+#   @version    1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #

@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/interfaces/test_simple_power_meter.cpp
+ * @file       tests/interfaces/test_simple_power_meter.cpp
  *
  * This file contains the implementation of the tests for the Simple Metering
  * Interface.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -35,7 +35,7 @@ TEST_GROUP (SimplePowerMeter)
    TestSimplePowerMeter interface;
 };
 
-//! \test SimplePowerMeter::uid should return \c Interface::SIMPLE_POWER_METER.
+//! @test SimplePowerMeter::uid should return @c Interface::SIMPLE_POWER_METER.
 TEST (SimplePowerMeter, UID)
 {
    CHECK_EQUAL (HF::Interface::SIMPLE_POWER_METER, interface.uid ());
@@ -63,13 +63,13 @@ TEST_GROUP (SimplePowerMeter_Measurement)
    }
 };
 
-//! \test Should report correct size.
+//! @test Should report correct size.
 TEST (SimplePowerMeter_Measurement, Size)
 {
    LONGS_EQUAL (5, measurement.size ());
 }
 
-//! \test Should pack the measurement correctly.
+//! @test Should pack the measurement correctly.
 TEST (SimplePowerMeter_Measurement, Pack)
 {
    measurement.unit  = Precision::MICRO;
@@ -84,7 +84,7 @@ TEST (SimplePowerMeter_Measurement, Pack)
    CHECK_EQUAL (expected, array);
 }
 
-//! \test Should unpack the measurement correctly.
+//! @test Should unpack the measurement correctly.
 TEST (SimplePowerMeter_Measurement, Unpack)
 {
    LONGS_EQUAL (Precision::BASE, measurement.unit);
@@ -113,7 +113,7 @@ TEST_GROUP (SimplePowerMeter_Report)
    }
 };
 
-//! \test Should report correct size.
+//! @test Should report correct size.
 TEST (SimplePowerMeter_Report, Size)
 {
    size_t expected = 0;
@@ -267,7 +267,7 @@ static const uint8_t pack_data[] =
 
 // =============================================================================
 
-//! \test Should pack the measurement correctly.
+//! @test Should pack the measurement correctly.
 TEST (SimplePowerMeter_Report, Pack)
 {
    ByteArray expected (pack_data, sizeof(pack_data));
@@ -371,7 +371,7 @@ static const uint8_t unpack_data[] =
 };
 /* *INDENT-ON* */
 
-//! \test Should unpack the report correctly.
+//! @test Should unpack the report correctly.
 TEST (SimplePowerMeter_Report, Unpack)
 {
    ByteArray array (unpack_data, sizeof(unpack_data));
@@ -644,7 +644,7 @@ TEST (SimplePowerMeterServer, report_interval)
 // SimplePowerMeterServer : API
 // =============================================================================
 
-//! \test Should create a report with the correct values.
+//! @test Should create a report with the correct values.
 TEST (SimplePowerMeterServer, report)
 {
    SimplePowerMeter::Measurement energy;
@@ -731,7 +731,7 @@ TEST (SimplePowerMeterServer, report)
    delete report;
 }
 
-//! \test Should send message on periodic event.
+//! @test Should send message on periodic event.
 TEST (SimplePowerMeterServer, periodic)
 {
    uint16_t time = 1234;
@@ -766,7 +766,7 @@ TEST (SimplePowerMeterServer, periodic)
    mock ("Interface").checkExpectations ();
 }
 
-//! \test Should not send message on periodic event disabled.
+//! @test Should not send message on periodic event disabled.
 TEST (SimplePowerMeterServer, periodic_disabled)
 {
    uint16_t time = 1234;
@@ -783,7 +783,7 @@ TEST (SimplePowerMeterServer, periodic_disabled)
    LONGS_EQUAL (0, server->sendMsg.payload.size ());
 }
 
-//! \test Should return attribute.
+//! @test Should return attribute.
 TEST (SimplePowerMeterServer, Attribute)
 {
    HF::Attributes::IAttribute *attr = server->attribute (SimplePowerMeter::__LAST_ATTR__ + 1);
@@ -856,7 +856,7 @@ TEST_GROUP (SimplePowerMeterClient)
    }
 };
 
-//! \test Should handle valid message.
+//! @test Should handle valid message.
 TEST (SimplePowerMeterClient, Handle_Valid_Message)
 {
    mock ("SimplePowerMeterClient").expectOneCall ("report");
@@ -867,7 +867,7 @@ TEST (SimplePowerMeterClient, Handle_Valid_Message)
    mock ("SimplePowerMeterClient").checkExpectations ();
 }
 
-//! \test Should not handle message from invalid role.
+//! @test Should not handle message from invalid role.
 TEST (SimplePowerMeterClient, Handle_Invalid_Role)
 {
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
@@ -875,7 +875,7 @@ TEST (SimplePowerMeterClient, Handle_Invalid_Role)
    CHECK_EQUAL (Result::FAIL_SUPPORT, client.handle (packet, expected, 3));
 }
 
-//! \test Should not handle message from invalid interface UID.
+//! @test Should not handle message from invalid interface UID.
 TEST (SimplePowerMeterClient, Handle_Invalid_UID)
 {
    packet.message.itf.id = client.uid () + 1;
@@ -883,7 +883,7 @@ TEST (SimplePowerMeterClient, Handle_Invalid_UID)
    CHECK_EQUAL (Result::FAIL_ID, client.handle (packet, expected, 3));
 }
 
-//! \test FIXME Should not handle message with invalid payload size.
+//! @test FIXME Should not handle message with invalid payload size.
 IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload_Size)
 {
    SimplePowerMeter::Report report;
@@ -892,7 +892,7 @@ IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload_Size)
    CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
 }
 
-//! \test FIXME Should not handle message with not enough payload.
+//! @test FIXME Should not handle message with not enough payload.
 IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload)
 {
    CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 10));

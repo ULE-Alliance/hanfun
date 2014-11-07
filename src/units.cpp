@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/units.cpp
+ * @file       src/units.cpp
  *
  * This file contains the implementation of the common functionality for
  * the HAN-FUN Units.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -19,14 +19,20 @@
 #include "hanfun/devices.h"
 
 // =============================================================================
-// HF::Units::AbstractUnit::send
+// API
+// =============================================================================
+
+using namespace HF::Units;
+
+// =============================================================================
+// AbstractUnit::send
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void HF::Units::AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &message,
-                                    Transport::Link *link)
+void AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &message,
+                         Transport::Link *link)
 {
    Protocol::Packet *packet = new Protocol::Packet (message);
 
@@ -43,14 +49,14 @@ void HF::Units::AbstractUnit::send (const Protocol::Address &addr, Protocol::Mes
 }
 
 // =============================================================================
-// HF::Units::AbstractUnit::notify
+// AbstractUnit::notify
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void HF::Units::AbstractUnit::notify (const HF::Attributes::IAttribute &old_value,
-                                      const HF::Attributes::IAttribute &new_value) const
+void AbstractUnit::notify (const HF::Attributes::IAttribute &old_value,
+                           const HF::Attributes::IAttribute &new_value) const
 {
    device ().unit0 ()->attribute_reporting ()->notify (this->id (), old_value, new_value);
 }

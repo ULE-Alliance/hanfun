@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/core/test_attribute_reporting.cpp
+ * @file       tests/core/test_attribute_reporting.cpp
  *
  * This file contains the implementation of the unit tests for the Attribute
  * Reporting core service in HAN-FUN.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

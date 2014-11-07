@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/core/device_information_server.cpp
+ * @file       src/core/device_information_server.cpp
  *
  * This file contains the implementation of the Device Information : Server Role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -18,10 +18,6 @@
 
 using namespace HF;
 using namespace HF::Core;
-
-// =============================================================================
-// Defines
-// =============================================================================
 
 // =============================================================================
 // API
@@ -75,9 +71,9 @@ Protocol::Message *DeviceInformation::all ()
 // =============================================================================
 Protocol::Message *DeviceInformation::get (HF::Attributes::UIDS &uids)
 {
-   HF::Protocol::GetAttributePack::Request *req = new HF::Protocol::GetAttributePack::Request (uids);
+   auto *req                 = new HF::Protocol::GetAttributePack::Request (uids);
 
-   Protocol::Message *result                    = new Protocol::Message ();
+   Protocol::Message *result = new Protocol::Message ();
 
    result->type       = Protocol::Message::GET_ATTR_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
@@ -111,7 +107,7 @@ Protocol::Message *DeviceInformation::get (uint8_t uid)
 }
 
 // =============================================================================
-// Server::attributes
+// DeviceInformation::Server::attributes
 // =============================================================================
 /*!
  *

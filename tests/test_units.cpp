@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/test_units.cpp
+ * @file       tests/test_units.cpp
  *
  * This file contains the implementation of the tests for the unit implementation.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */

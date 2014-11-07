@@ -1,19 +1,24 @@
 // =============================================================================
 /*!
- * \file       src/core/bind_management_client.cpp
+ * @file       src/core/bind_management_client.cpp
  *
  * This file contains the implementation of the Bind Management : Client Role.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
+
 #include "hanfun/core/bind_management.h"
+
+// =============================================================================
+// API
+// =============================================================================
 
 using namespace HF;
 using namespace HF::Core;
@@ -122,8 +127,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
-                                                       Common::ByteArray &payload,
-                                                       size_t offset)
+                                                       Common::ByteArray &payload, size_t offset)
 {
    Common::Result result   = Common::Result::FAIL_UNKNOWN;
 
@@ -164,7 +168,8 @@ Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
  *
  */
 // =============================================================================
-void BindManagement::Client::response (const BindManagement::CMD cmd, const Protocol::Response &response)
+void BindManagement::Client::response (const BindManagement::CMD cmd,
+                                       const Protocol::Response &response)
 {
    UNUSED (cmd);
    UNUSED (response);
