@@ -396,13 +396,14 @@ static void handle_message (HF::Application::Link *link, msg_t &msg)
 // on_connect
 // =============================================================================
 /*!
+ * @fn on_connect
+ *
  * This is the callback for when connection is established.
  *
  * @param [in] server   the libuv stream associated with the connection.
  * @param [in] status   error code for the operation.
  */
 // =============================================================================
-static void on_connect (uv_stream_t *server, int status);
 
 #ifdef HF_BASE_APP
 

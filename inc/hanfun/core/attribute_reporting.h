@@ -1431,10 +1431,6 @@ namespace HF
             {
                return Server::uid () == uid;
             }
-
-            void process_event (Report::Event::Entry &entry, const Event::Field &field,
-                                const HF::Attributes::IAttribute &old_value,
-                                const HF::Attributes::IAttribute &new_value) const;
          };
 
          /*! @} */
