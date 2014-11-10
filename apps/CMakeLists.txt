@@ -126,3 +126,7 @@ target_link_libraries(example_02 hanfun)
 add_executable(example_03 EXCLUDE_FROM_ALL example_03.cpp)
 target_link_libraries(example_03 hanfun)
 
+## On-Off interface example
+add_executable(example_04 EXCLUDE_FROM_ALL example_04.cpp)
+target_link_libraries(example_04 hanfun)
+
