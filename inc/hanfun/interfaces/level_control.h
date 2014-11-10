@@ -115,7 +115,7 @@ namespace HF
              *
              * @param [in] value    reference to the value to check and fix.
              */
-            void check_and_fix(float &value)
+            void check_and_fix (float &value)
             {
                if (value < 0)
                {

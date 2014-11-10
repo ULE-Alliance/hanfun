@@ -130,3 +130,6 @@ target_link_libraries(example_03 hanfun)
 add_executable(example_04 EXCLUDE_FROM_ALL example_04.cpp)
 target_link_libraries(example_04 hanfun)
 
+## Level Control interface example
+add_executable(example_05 EXCLUDE_FROM_ALL example_05.cpp)
+target_link_libraries(example_05 hanfun)
