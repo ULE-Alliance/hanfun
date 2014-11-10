@@ -458,11 +458,11 @@ namespace HF
          SerializableHelper()
          {}
 
-         SerializableHelper(Common::ByteArray data):data (data) {}
+         SerializableHelper(Common::ByteArray _data):data (_data) {}
 
          size_t size () const
          {
-            return data.size ();
+            return sizeof(uint8_t) + data.size ();
          }
 
          size_t pack (Common::ByteArray &array, size_t offset = 0) const
@@ -475,6 +475,8 @@ namespace HF
             std::advance (it, offset);
 
             std::copy (data.begin (), data.end (), it);
+
+            offset += data.size ();
 
             return offset - start;
          }
@@ -491,7 +493,90 @@ namespace HF
 
             std::copy_n (it, _size, data.begin ());
 
+            offset += _size;
+
             return offset - start;
+         }
+
+         int compare (const SerializableHelper <Common::ByteArray> &other) const
+         {
+            int res = data.size () - other.size ();
+
+            if (res == 0)
+            {
+               return memcmp (data.data (), other.data.data (), data.size ());
+            }
+
+            return res;
+         }
+
+         float changed (const SerializableHelper <Common::ByteArray> &other) const
+         {
+            UNUSED (other);
+            return 0.0;
+         }
+      };
+
+      template<>
+      struct SerializableHelper <std::string> :
+         public Common::Serializable
+      {
+         std::string data;
+
+         SerializableHelper()
+         {}
+
+         SerializableHelper(std::string _data):data (_data) {}
+
+         size_t size () const
+         {
+            return sizeof(uint8_t) + data.size ();
+         }
+
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         {
+            size_t start = offset;
+
+            offset += array.write (offset, (uint8_t) data.size ());
+
+            auto it = array.begin ();
+            std::advance (it, offset);
+
+            std::copy (data.begin (), data.end (), it);
+
+            offset += data.size ();
+
+            return offset - start;
+         }
+
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         {
+            size_t  start = offset;
+
+            uint8_t _size = 0;
+            offset += array.read (offset, _size);
+
+            auto it = array.begin ();
+            std::advance (it, offset);
+
+            data.resize (_size);
+
+            std::copy_n (it, _size, data.begin ());
+
+            offset += _size;
+
+            return offset - start;
+         }
+
+         int compare (const SerializableHelper <std::string> &other) const
+         {
+            return strcmp (data.data (), other.data.data ());
+         }
+
+         float changed (const SerializableHelper <std::string> &other) const
+         {
+            UNUSED (other);
+            return 0.0;
          }
       };
 
