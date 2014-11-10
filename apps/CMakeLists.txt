@@ -122,3 +122,7 @@ target_link_libraries(example_01 hanfun)
 add_executable(example_02 EXCLUDE_FROM_ALL example_02.cpp)
 target_link_libraries(example_02 hanfun)
 
+## Alert interface example
+add_executable(example_03 EXCLUDE_FROM_ALL example_03.cpp)
+target_link_libraries(example_03 hanfun)
+
