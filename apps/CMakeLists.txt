@@ -133,3 +133,7 @@ target_link_libraries(example_04 hanfun)
 ## Level Control interface example
 add_executable(example_05 EXCLUDE_FROM_ALL example_05.cpp)
 target_link_libraries(example_05 hanfun)
+
+## Device Information service example
+add_executable(example_06 EXCLUDE_FROM_ALL example_06.cpp)
+target_link_libraries(example_06 hanfun)
