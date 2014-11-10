@@ -153,8 +153,8 @@ namespace HF
           */
          struct Measurement
          {
-            uint8_t  unit;               //!< Measurement precision/type.
-            uint32_t value;              //!< Measurement value.
+            uint8_t  unit;               //!< %Measurement precision/type.
+            uint32_t value;              //!< %Measurement value.
 
             //! @copydoc HF::Common::Serializable::size
             size_t size () const
@@ -189,18 +189,24 @@ namespace HF
                return offset - start;
             }
 
-            //! @copydoc HF::Attributes::IAttribute::compare
+            /*!
+             * @copydoc HF::Attributes::IAttribute::compare
+             *
+             * @todo Take unit into consideration.
+             */
             int compare (const Measurement &other) const
             {
-               // FIXME Take unit into consideration.
                int res = value - other.value;
                return res;
             }
 
-            //! @copydoc HF::Attributes::IAttribute::changed
+            /*!
+             * @copydoc HF::Attributes::IAttribute::changed
+             *
+             * @todo Take unit into consideration.
+             */
             float changed (const Measurement &other) const
             {
-               // FIXME Take unit into consideration.
                return (((float) (value - other.value)) / other.value);
             }
          };
@@ -208,7 +214,7 @@ namespace HF
          /*!
           * Simple Meter report.
           *
-          * TODO This needs a way to dynamically add only the attributes
+          * @todo This needs a way to dynamically add only the attributes
           *       that are needed to the report.
           */
          struct Report

@@ -108,7 +108,7 @@ namespace HF
          {};
 
          /*!
-          * On-Off Interface : Server side implementation.
+          * On-Off %Interface : %Server side implementation.
           *
           * This class provides the server side of the On-Off interface.
           */
@@ -202,7 +202,7 @@ namespace HF
          };
 
          /*!
-          * On-Off Interface : Client side implementation.
+          * On-Off %Interface : %Client side implementation.
           *
           * This class provides the client side of the On-Off interface.
           */

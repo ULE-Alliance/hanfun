@@ -278,13 +278,11 @@ Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Comm
 // AbstractServer::deregister
 // =============================================================================
 /*!
- *
+ * @todo Remove group information.
  */
 // =============================================================================
 Common::Result AbstractServer::deregister (DevicePtr &device)
 {
-   // TODO Remove group information.
-
    unit0 ().bind_management ()->entries ().destroy (device->address);
 
    // Destroy MAY invalidate _device_, create a copy to send to *deregistered* event.

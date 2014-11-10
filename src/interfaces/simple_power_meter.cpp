@@ -237,7 +237,7 @@ size_t Report::unpack (const Common::ByteArray &array, size_t offset)
 
    uint8_t attr_count = 0;
 
-   offset += array.read (offset, attr_count);  // TODO Should check attribute count.
+   offset += array.read (offset, attr_count);  //! @todo Should check attribute count.
 
    for (uint8_t i = 0; i < attr_count; i++)
    {

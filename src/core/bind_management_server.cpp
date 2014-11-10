@@ -99,7 +99,7 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
 // BindManagement::Server::add
 // =============================================================================
 /*!
- *
+ * @todo Add support for group binding.
  */
 // =============================================================================
 Common::Result AbstractServer::add (const Protocol::Address &source,

@@ -356,6 +356,8 @@ namespace HF
             }
          };
 
+         typedef Abstract <> Node;
+
          /*!
           * Parent class for transport layer implementations on a HAN-FUN Node.
           */
@@ -655,6 +657,8 @@ namespace HF
             Abstract():AbstractBase (), _unit0 (*this)
             {}
          };
+
+         typedef Abstract <> Concentrator;
 
          /*!
           * Parent class for transport layer implementations on a HAN-FUN

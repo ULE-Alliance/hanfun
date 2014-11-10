@@ -112,9 +112,17 @@ namespace HF
          };
 
          /*!
-          * Level Control Interface : Server side implementation.
+          * %Level Control %Interface : %Server side implementation.
           *
-          * This class provides the server side of the Level Control interface.
+          * This class provides the server side of the %Level Control interface.
+          *
+          * @remarks
+          *
+          * The @c _level attribute represents the level value in percentage in
+          * the [0,255] range, i.e., the <tt>0 == 0%</tt> and the <tt>255 == 100%</tt>.
+          *
+          * Use the overloaded level functions with float attributes to send the values
+          * in the [0,100] range and have them converted into the proper range.
           */
          class Server:public InterfaceRole <LevelControl::Base, Interface::SERVER_ROLE>
          {
@@ -142,7 +150,7 @@ namespace HF
             /*!
              * Setter for the server level.
              *
-             * @param new_level  the new level value to use.
+             * @param [in] new_level  the new level value to use.
              */
             void level (uint8_t new_level);
 
@@ -153,7 +161,10 @@ namespace HF
             //! @{
 
             /*!
-             * Callback for a @c SET_LEVEL_CMD message.
+             * Callback for a @c SET_ATTR_REQ message, when the level value is changed.
+             *
+             * @remark When this method is called the attribute has already been updated to
+             * the new value.
              *
              * @param [in] new_level    the new level value to use.
              */
@@ -188,9 +199,9 @@ namespace HF
          };
 
          /*!
-          * Level Control Interface : Client side implementation.
+          * %Level Control %Interface : %Client side implementation.
           *
-          * This class provides the client side of the Level Control interface.
+          * This class provides the client side of the %Level Control interface.
           */
          class Client:public InterfaceRole <LevelControl::Base, Interface::CLIENT_ROLE>
          {

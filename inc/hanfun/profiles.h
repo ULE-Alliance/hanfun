@@ -410,7 +410,7 @@ namespace HF
           * Send an alert command to the remote device given by the address in @c addr.
           *
           * @param [in] addr     device address to send the message to.
-          * @param [in] state    the state bitmask to be sent.
+          * @param [in] state    alert state to send.
           */
          void alert (Protocol::Address &addr, bool state)
          {
