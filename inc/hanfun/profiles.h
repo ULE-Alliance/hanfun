@@ -418,6 +418,17 @@ namespace HF
             Interfaces::Alert::Server::status (addr, Detector::uid ());
          }
 
+         /*!
+          * Send an alert command to the broadcast address.
+          *
+          * @param [in] state    alert state to send.
+          */
+         void alert (bool state)
+         {
+            Protocol::Address addr;
+            this->alert (addr, state);
+         }
+
          using Interfaces::Alert::Server::attributes;
 
          //! @copydoc HF::Profiles::IProfile::attributes
