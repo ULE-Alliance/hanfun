@@ -68,7 +68,7 @@ TEST (LevelControlClient, Level)
 {
    mock ("Interface").expectOneCall ("send");
 
-   client.level (addr, 0x42);
+   client.level (addr, (uint8_t) 0x42);
 
    mock ("Interface").checkExpectations ();
 
@@ -134,7 +134,7 @@ TEST (LevelControlServer, Level)
 {
    CHECK_EQUAL (0, server.level ());
    mock ("Interface").expectOneCall ("notify");
-   server.level (42);
+   server.level ((uint8_t) 42);
    mock ("Interface").checkExpectations ();
    CHECK_EQUAL (42, server.level ());
 }

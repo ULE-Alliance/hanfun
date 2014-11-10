@@ -109,6 +109,23 @@ namespace HF
                UNUSED (itf);
                return payload_size_helper <Level>();
             }
+
+            /*!
+             * Make sure level percentage values is in range [0,100].
+             *
+             * @param [in] value    reference to the value to check and fix.
+             */
+            void check_and_fix(float &value)
+            {
+               if (value < 0)
+               {
+                  value = 0;
+               }
+               else if (value > 100)
+               {
+                  value = 100;
+               }
+            }
          };
 
          /*!
@@ -153,6 +170,16 @@ namespace HF
              * @param [in] new_level  the new level value to use.
              */
             void level (uint8_t new_level);
+
+            /*!
+             * Setter for the server level (unsigned float).
+             *
+             * @remark This method converts the given @c new_level percentage value in the
+             * range of [0,100] to the range used by the interface [0-255].
+             *
+             * @param [in] new_level  the new level value to use.
+             */
+            void level (float new_level);
 
             // =============================================================================
             // Events
@@ -229,6 +256,23 @@ namespace HF
              * @param [in] new_level    level value to send in the message.
              */
             void level (uint8_t new_level)
+            {
+               Protocol::Address addr;
+               level (addr, new_level);
+            }
+
+            /*!
+             * @copydoc Client::level(Protocol::Address &,unsigned float)
+             *
+             * @remark This method converts the given @c new_level percentage value in the
+             * range of [0,100] to the range used by the interface [0-255].
+             */
+            void level (Protocol::Address &addr, float new_level);
+
+            /*!
+             * @copydoc Client::level(unsigned float)
+             */
+            void level (float new_level)
             {
                Protocol::Address addr;
                level (addr, new_level);

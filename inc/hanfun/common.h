@@ -21,6 +21,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <cstring>
+#include <cmath>
 
 #include <string>
 #include <vector>
@@ -738,6 +739,36 @@ namespace HF
           */
          virtual Result destroy (const T &entry) = 0;
       };
+
+      /*!
+       * Convert a percentage value into the [0,std::numeric_limits<T>::max()] range.
+       *
+       * @param [in] value    the percentage value to convert.
+       * @tparam T   integer type to convert to.
+       *
+       * @return  the value equivalent to the percentage in the
+       *          [0,std::numeric_limits<T>::max()] range.
+       */
+      template<typename T, typename P = float>
+      T from_percent (P value)
+      {
+         return static_cast <T>(round ((static_cast <float>(value) * std::numeric_limits <T>::max ()) / 100.0));
+      }
+
+      /*!
+       * Convert a value in the [0,std::numeric_limits<T>::max()] range into a
+       * percentage.
+       *
+       * @param [in] value    the value to convert to the percentage.
+       * @tparam T   integer type to convert from.
+       *
+       * @return  the percentage value.
+       */
+      template<typename T, typename P = float>
+      P to_percent (T value)
+      {
+         return static_cast <P>(round ((static_cast <float>(value) * 100.0) / std::numeric_limits <T>::max ()));
+      }
 
       /*! @} */
    }  // namespace Common

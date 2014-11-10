@@ -54,3 +54,17 @@ void Client::level (Protocol::Address &addr, uint8_t new_level)
    delete level_attr;
    delete message;
 }
+
+// =============================================================================
+// Client::level
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::level (Protocol::Address &addr, float new_level)
+{
+   check_and_fix(new_level);
+   uint8_t value = HF::Common::from_percent <uint8_t>(new_level);
+   level (addr, value);
+}
