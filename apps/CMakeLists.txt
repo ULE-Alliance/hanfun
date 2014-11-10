@@ -118,3 +118,7 @@ set (HF_TARGETS ${HF_TARGETS} PARENT_SCOPE)
 ## Registration examples
 add_executable(example_01 EXCLUDE_FROM_ALL example_01.cpp)
 target_link_libraries(example_01 hanfun)
+
+add_executable(example_02 EXCLUDE_FROM_ALL example_02.cpp)
+target_link_libraries(example_02 hanfun)
+
