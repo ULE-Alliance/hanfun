@@ -193,9 +193,10 @@ namespace HF
              * @remark When this method is called the attribute has already been updated to
              * the new value.
              *
+             * @param [in] old_level    the old level value to used.
              * @param [in] new_level    the new level value to use.
              */
-            virtual void level_change (uint8_t new_level);
+            virtual void level_change (uint8_t old_level, uint8_t new_level);
 
             //! @}
             // =============================================================================

@@ -84,11 +84,13 @@ void Server::level (float new_level)
 Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
                                          size_t offset)
 {
+   uint8_t old_level     = level ();
+
    Common::Result result = AbstractInterface::handle_attribute (packet, payload, offset);
 
    if (result == Common::Result::OK && packet.message.type == Protocol::Message::SET_ATTR_REQ)
    {
-      level_change (level ());
+      level_change (old_level, level ());
    }
 
    return result;
@@ -101,7 +103,8 @@ Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteA
  *
  */
 // =============================================================================
-void Server::level_change (uint8_t new_level)
+void Server::level_change (uint8_t old_level, uint8_t new_level)
 {
-   level (new_level);
+   UNUSED (old_level);
+   UNUSED (new_level);
 }

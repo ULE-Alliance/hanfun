@@ -37,10 +37,10 @@ namespace
    {
       public:
 
-      void level_change (uint8_t new_level)
+      void level_change (uint8_t old_level, uint8_t new_level)
       {
          mock ("LevelControl").actualCall ("level_change");
-         HF::Interfaces::LevelControl::Server::level_change (new_level);
+         HF::Interfaces::LevelControl::Server::level_change (old_level, new_level);
       }
    };
 
