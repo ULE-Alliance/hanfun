@@ -493,9 +493,9 @@ static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
                                                      uint8_t pack_id,
                                                      const HF::Attributes::UIDS &uids)
 {
-   Report::Periodic::Entry *result = new Report::Periodic::Entry ();
+   auto result = new Report::Periodic::Entry (unit->id (), itf);
 
-   auto attrs                      = unit->attributes (itf, pack_id, uids);
+   auto attrs  = unit->attributes (itf, pack_id, uids);
    /* *INDENT-OFF* */
    std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
    {
@@ -574,7 +574,8 @@ void Server::periodic (uint32_t time)
       message->itf.id = HF::Interface::ATTRIBUTE_REPORTING;
       message->itf.member = PERIODIC_REPORT_CMD;
 
-      Report::Periodic * report = new Report::Periodic();
+      Report::Periodic * report = new Report::Periodic(rule.report.id);
+
       std::for_each(rule.cbegin(), rule.cend(), [this, report](const Periodic::Entry &entry)
       {
          Units::IUnit * _unit = this->unit().device().unit(entry.unit);
@@ -624,10 +625,7 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
       if (std::any_of (entries.begin(), entries.end(),
                        [](const Report::Event::Entry * entry) { return entry != nullptr; }))
       {
-         Report::Event * report = new Report::Event ();
-
-         report->id   = rule.report.id;
-         report->type = rule.report.type;
+         Report::Event * report = new Report::Event (rule.report.id);
 
          std::for_each (entries.begin(), entries.end(), [report](Report::Event::Entry * entry)
          {

@@ -1578,7 +1578,7 @@ Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::E
                     [](const Event::Field *field) {return field != nullptr;}
                    ))
    {
-      result = new Report::Event::Entry ();
+      result = new Report::Event::Entry (entry.unit, entry.itf);
 
       /* *INDENT-OFF* */
       std::for_each (fields.begin (), fields.end (), [result](Event::Field *field)

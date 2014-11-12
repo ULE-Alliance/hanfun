@@ -533,7 +533,17 @@ namespace HF
              * Parent call for all notification.
              */
             struct Abstract:public AttributeReporting::Reference
-            {};
+            {
+               /*!
+                * Constructor.
+                *
+                * @param [in] type report type, @c PERIODIC or @c EVENT.
+                * @param [in] id   report id.
+                */
+               Abstract(uint8_t type = 0, uint8_t id = 0):
+                  AttributeReporting::Reference(type, id)
+               {}
+            };
 
             /*!
              * Parent class for all notification entries.
@@ -543,13 +553,13 @@ namespace HF
                uint8_t           unit; //!< Unit id that originated this notification.
                Common::Interface itf;  //!< Interface UID this notification relates to.
 
-               Entry():unit (0) {}
+               Entry():unit (0), itf(0,0) {}
 
                /*!
                 * Constructor.
                 *
                 * @param [in] _unit    unit id for this notification.
-                * @param [in] _itf     interface uid for this notification.
+                * @param [in] _itf     interface %UID for this notification.
                 */
                Entry(uint8_t _unit, Common::Interface _itf):
                   unit (_unit), itf (_itf)
@@ -705,6 +715,18 @@ namespace HF
                {
                   std::vector <Report::Attribute> attributes;
 
+                  Entry() {}
+
+                  /*!
+                   * Constructor.
+                   *
+                   * @param [in] unit    unit id for this notification.
+                   * @param [in] itf     interface %UID for this notification.
+                   */
+                  Entry(uint8_t unit, Common::Interface itf):
+                     Report::Entry (unit, itf)
+                  {}
+
                   size_t size () const;
 
                   size_t pack (Common::ByteArray &array, size_t offset = 0) const;
@@ -731,6 +753,14 @@ namespace HF
 
                //! Entries associated with this notification.
                std::forward_list <Entry> entries;
+
+               /*!
+                * Constructor.
+                *
+                * @param [in] id    report reference ID.
+                */
+               Periodic(uint8_t id = 0): Abstract(PERIODIC, id)
+               {}
 
                size_t size () const;
 
@@ -900,6 +930,18 @@ namespace HF
                   //! Vector containing the fields for the event entry.
                   std::vector <Field> fields;
 
+                  Entry() {}
+
+                  /*!
+                   * Constructor.
+                   *
+                   * @param [in] unit    unit id for this notification.
+                   * @param [in] itf     interface %UID for this notification.
+                   */
+                  Entry(uint8_t unit, Common::Interface itf):
+                     Report::Entry (unit, itf)
+                  {}
+
                   size_t size () const;
 
                   size_t pack (Common::ByteArray &array, size_t offset = 0) const;
@@ -929,6 +971,14 @@ namespace HF
 
                //! Entries for the event notification.
                std::forward_list <Entry> entries;
+
+               /*!
+                * Constructor.
+                *
+                * @param [in] id    report reference ID.
+                */
+               Event(uint8_t id = 0): Abstract(EVENT, id)
+               {}
 
                //! @copydoc HF::Common::Serializable::size
                size_t size () const;
