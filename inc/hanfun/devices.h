@@ -79,6 +79,8 @@ namespace HF
 
          void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
+         void periodic (uint32_t time);
+
          protected:
 
          //! Last reference number used to send a packet.

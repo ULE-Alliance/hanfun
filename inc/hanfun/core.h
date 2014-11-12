@@ -206,6 +206,7 @@ namespace HF
          {
             return _role;
          }
+
          protected:
 
          /*!
@@ -364,6 +365,12 @@ namespace HF
          return HF::Attributes::List ();
       }
 
+      void periodic (uint32_t time)
+      {
+         Base::periodic (time);
+         periodic <0, ITF...>(time);
+      }
+
       // =============================================================================
 
       private:
@@ -398,6 +405,21 @@ namespace HF
       {
          UNUSED (itf_uid);
          return nullptr;
+      }
+
+      template<uint8_t N, typename Head, typename... Tail>
+      void periodic (uint32_t time)
+      {
+         Head &head = std::get <N>(interfaces);
+         head.periodic (time);
+
+         periodic <N + 1, Tail...>(time);
+      }
+
+      template<uint8_t N>
+      void periodic (uint32_t time)
+      {
+         UNUSED (time);
       }
    };
 

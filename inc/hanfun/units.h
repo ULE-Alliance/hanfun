@@ -78,6 +78,9 @@ namespace HF
           * @return  vector containing the list of extra interfaces.
           */
          virtual std::vector <Common::Interface> interfaces () const = 0;
+
+         //! @copydoc HF::Interface::periodic
+         virtual void periodic (uint32_t time) = 0;
       };
 
       /*!
@@ -102,6 +105,11 @@ namespace HF
          std::vector <Common::Interface> interfaces () const
          {
             return std::vector <Common::Interface>();
+         }
+
+         void periodic (uint32_t time)
+         {
+            UNUSED (time);
          }
 
          protected:
@@ -254,7 +262,6 @@ namespace HF
             return result;
          }
 
-         //! @copydoc HF::Interface::periodic
          void periodic (uint32_t time)
          {
             Profile::periodic (time);

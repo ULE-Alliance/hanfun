@@ -169,6 +169,9 @@ namespace HF
        * @param packet  reference to the packet to send to the network.
        */
       virtual void send (Protocol::Packet &packet) = 0;
+
+      //! @copydoc HF::Interface::periodic
+      virtual void periodic (uint32_t time) = 0;
    };
 
    /*! @} */
