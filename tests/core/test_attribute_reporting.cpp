@@ -1948,12 +1948,12 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
 
          offset += Report::AddEntryMessage::pack (array, offset);
 
-         std::for_each (entries.begin (), entries.end (),
-                        [&array, &offset](uint8_t value)
-                        {
-                           offset += array.write (offset, value);
-                        }
-                       );
+         /* *INDENT-OFF* */
+         std::for_each (entries.begin (), entries.end (), [&array, &offset](uint8_t value)
+         {
+            offset += array.write (offset, value);
+         });
+         /* *INDENT-ON* */
 
          return offset - start;
       }
@@ -2852,4 +2852,103 @@ TEST (AttributeReporting_Server, Event_Upper)
    server->notify (1, old_attr, new_attr);
 
    LONGS_EQUAL (1, base->packets.size ());
+}
+
+TEST (AttributeReporting_Server, Handle_Create_Periodic)
+{
+   Protocol::Address dst;
+
+   dst.mod    = Protocol::Address::DEVICE;
+   dst.device = 0x5A5A;
+   dst.unit   = 0xDD;
+
+   Protocol::Message *message = AttributeReporting::create (dst, 0x12345678);
+
+   CHECK_FALSE (message == nullptr);
+
+   Protocol::Packet packet (*message);
+
+   packet.message.length = packet.message.payload.size ();
+
+   delete message;
+
+   // Create a rule entry.
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (1, server->count (AttributeReporting::PERIODIC));
+   LONGS_EQUAL (1, base->packets.size ());
+
+   auto resp_pkt = base->packets.back ();
+
+   AttributeReporting::Response resp;
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::PERIODIC, resp.report.type);
+   LONGS_EQUAL (1, resp.report.id);
+
+   // Create another rule.
+
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (2, server->count (AttributeReporting::PERIODIC));
+   LONGS_EQUAL (2, base->packets.size ());
+
+   resp_pkt = base->packets.back ();
+
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::PERIODIC, resp.report.type);
+   LONGS_EQUAL (2, resp.report.id);
+}
+
+
+TEST (AttributeReporting_Server, Handle_Create_Event)
+{
+   Protocol::Address dst;
+
+   dst.mod    = Protocol::Address::DEVICE;
+   dst.device = 0x5A5A;
+   dst.unit   = 0xDD;
+
+   Protocol::Message *message = AttributeReporting::create (dst);
+
+   CHECK_FALSE (message == nullptr);
+
+   Protocol::Packet packet (*message);
+
+   packet.message.length = packet.message.payload.size ();
+
+   delete message;
+
+   // Create a rule entry.
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (1, server->count (AttributeReporting::EVENT));
+   LONGS_EQUAL (1, base->packets.size ());
+
+   auto resp_pkt = base->packets.back ();
+
+   AttributeReporting::Response resp;
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::EVENT, resp.report.type);
+   LONGS_EQUAL (1, resp.report.id);
+
+   // Create another rule.
+
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (2, server->count (AttributeReporting::EVENT));
+   LONGS_EQUAL (2, base->packets.size ());
+
+   resp_pkt = base->packets.back ();
+
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::EVENT, resp.report.type);
+   LONGS_EQUAL (2, resp.report.id);
 }

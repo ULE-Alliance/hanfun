@@ -148,6 +148,11 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
          Reference report;
 
+         if (result == Common::Result::OK)
+         {
+            report = periodic_rules.begin ()->report;
+         }
+
          response (packet, report, result);
 
          delete message;
@@ -179,6 +184,11 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
          result = this->handle (*message);
 
          Reference report;
+
+         if (result == Common::Result::OK)
+         {
+            report = event_rules.begin ()->report;
+         }
 
          response (packet, report, result);
 
@@ -319,7 +329,7 @@ Common::Result Server::handle (const Report::Event::CreateMessage &message)
 
    rule->destination = message.destination;
 
-   rule->report.type = PERIODIC;
+   rule->report.type = EVENT;
    rule->report.id   = report_id;
 
    event_rules.push_front (*rule);
