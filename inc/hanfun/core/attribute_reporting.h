@@ -1329,6 +1329,96 @@ namespace HF
          };
 
          /*!
+          * Helper class for using the Attribute Reporting service.
+          */
+         struct AbstractClient:public Client
+         {
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            //! \name Commands
+            //! @{
+
+            /*!
+             * Create a new attribute reporting event rule on the device with the
+             * given @c destination address, for the device/unit that contains this interface.
+             *
+             * @param [in] destination   device address the rule should be sent to.
+             */
+            void create (Protocol::Address &destination);
+
+            /*!
+             * Create a new attribute reporting periodic rule on the device with the
+             * given @c destination address and the given @c interval, for the device/unit
+             * that contains this interface.
+             *
+             * @param [in] destination   device address the rule should be sent to.
+             * @param [in] interval      time interval in seconds for the periodic rule.
+             */
+            void create (Protocol::Address &destination, uint32_t interval);
+
+            /*!
+             * Remove the rule with the given @c type and the given @c report_id,
+             * on the device with the given @c destination address.
+             *
+             * @param [in] destination    device address the rule should be sent to.
+             * @param [in] type           report type (HF::Core::AttributeReporting::Type)
+             * @param [in] report_id      report ID.
+             */
+            void destroy (Protocol::Address &destination, Type type, uint8_t report_id);
+
+            /*!
+             * Remove the rule for the given @c report reference, on the device with the
+             * given @c destination address.
+             *
+             * @param [in] destination    device address the rule should be sent to.
+             * @param [in] report         report reference to remove the rule for.
+             */
+            void destroy (Protocol::Address &destination, Reference report);
+
+            /*!
+             * Add the periodic entries from @c start to @c end into the rule with
+             * the given @c report reference, on the device with the given @c destination address.
+             *
+             * @param [in] destination    device address the rule should be sent to.
+             * @param [in] report         report reference
+             * @param [in] begin          iterator to the start of the periodic entries to add.
+             * @param [in] end            iterator to the end of the periodic entries to add.
+             */
+            void add (Protocol::Address &destination, Reference report,
+                      periodic_iterator begin, periodic_iterator end);
+
+            /*!
+             * Add the event entries from @c start to @c end into the rule with
+             * the given @c report reference, on the device with the given @c destination
+             * address.
+             *
+             * @param [in] destination    device address the rule should be sent to.
+             * @param [in] report         report reference
+             * @param [in] begin          iterator to the start of the event entries to add.
+             * @param [in] end            iterator to the end of the event entries to add.
+             */
+            void add (Protocol::Address &destination, Reference report,
+                      event_iterator begin, event_iterator end);
+
+            //! @}
+            // ======================================================================
+
+            protected:
+
+            /*!
+             * Get the unit that contains this interface.
+             *
+             * @return  reference to unit that contains this interface.
+             */
+            virtual HF::Units::IUnit &unit () const = 0;
+         };
+
+         /*!
           * %Attribute Reporting - %Server %Role.
           */
          struct Server:public AbstractService

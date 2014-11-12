@@ -151,3 +151,117 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
 
    return Common::Result::FAIL_SUPPORT;
 }
+
+// =============================================================================
+// AbstractClient
+// =============================================================================
+
+// =============================================================================
+// AbstractClient::create
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::create (Protocol::Address &destination)
+{
+   HF::Protocol::Address rule_destination;
+   rule_destination.device = unit ().device ().address ();
+   rule_destination.unit   = unit ().id ();
+
+   auto msg = HF::Core::AttributeReporting::create (rule_destination);
+
+   destination.unit = 0;
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::create
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::create (Protocol::Address &destination, uint32_t interval)
+{
+   HF::Protocol::Address rule_destination;
+   rule_destination.device = unit ().device ().address ();
+   rule_destination.unit   = unit ().id ();
+
+   auto msg = AttributeReporting::create (rule_destination, interval);
+
+   destination.unit = 0;
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::destroy (Protocol::Address &destination, Type type, uint8_t report_id)
+{
+   auto msg = AttributeReporting::destroy (type, report_id);
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::destroy (Protocol::Address &destination, Reference report)
+{
+   auto msg = AttributeReporting::destroy (report);
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::add (Protocol::Address &destination, Reference report,
+                          periodic_iterator begin, periodic_iterator end)
+{
+   auto msg = AttributeReporting::add (report, begin, end);
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::add (Protocol::Address &destination, Reference report,
+                          event_iterator begin, event_iterator end)
+{
+   auto msg = AttributeReporting::add (report, begin, end);
+
+   send (destination, *msg);
+
+   delete msg;
+}
