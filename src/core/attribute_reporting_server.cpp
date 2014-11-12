@@ -260,8 +260,6 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
    }
 
    rule->destination = message.destination;
-
-   rule->report.type = PERIODIC;
    rule->report.id   = report_id;
 
    periodic_rules.push_front (*rule);
@@ -328,8 +326,6 @@ Common::Result Server::handle (const Report::Event::CreateMessage &message)
    }
 
    rule->destination = message.destination;
-
-   rule->report.type = EVENT;
    rule->report.id   = report_id;
 
    event_rules.push_front (*rule);
@@ -566,8 +562,7 @@ void Server::periodic (uint32_t time)
    std::for_each(periodic_rules.begin (), periodic_rules.end (),
                  [this, time](Periodic::Rule &rule)
    {
-      uint32_t interval = rule.interval ();
-      if ((time/interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < interval)
+      if ((time/rule.interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < rule.interval)
       {
          return;
       }

@@ -261,7 +261,7 @@ size_t Periodic::Entry::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 size_t Periodic::Rule::size () const
 {
-   size_t result = AttributeReporting::Rule::size () + sizeof(_interval);
+   size_t result = AttributeReporting::Rule::size () + sizeof(interval);
 
    result += sizeof(uint8_t);  // Number of entries.
 
@@ -288,7 +288,7 @@ size_t Periodic::Rule::pack (Common::ByteArray &array, size_t offset) const
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
-   offset += array.write (offset, _interval);
+   offset += array.write (offset, interval);
 
    uint8_t _size = std::distance (entries.begin (), entries.end ());
 
@@ -324,7 +324,7 @@ size_t Periodic::Rule::unpack (const Common::ByteArray &array, size_t offset)
       goto end;
    }
 
-   offset += array.read (offset, _interval);
+   offset += array.read (offset, interval);
 
    clear ();
 

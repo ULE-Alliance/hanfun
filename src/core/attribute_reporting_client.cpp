@@ -133,13 +133,13 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
       {
          case PERIODIC_REPORT_CMD:
          {
-            report (PERIODIC, payload, offset);
+            report (PERIODIC, packet.source, payload, offset);
             break;
          }
 
          case EVENT_REPORT_CMD:
          {
-            report (EVENT, payload, offset);
+            report (EVENT, packet.source, payload, offset);
             break;
          }
          default:

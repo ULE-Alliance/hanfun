@@ -109,6 +109,12 @@ namespace HF
             uint8_t type : 1; //!< Report type : PERIODIC or EVENT
             uint8_t id   : 7; //!< Report ID.
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] _type report type, @c PERIODIC or @c EVENT.
+             * @param [in] _id   report id.
+             */
             Reference(uint8_t _type = 0, uint8_t _id = 0):
                type (_type), id (_id)
             {}
@@ -150,6 +156,15 @@ namespace HF
          {
             //! Report reference this rule generates.
             Reference report;
+
+            Rule() {}
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] type Report reference type of this rule.
+             */
+            Rule(Type type):report(type) {}
 
             //! Device/unit that will receive the report.
             Protocol::Address destination;
@@ -206,11 +221,19 @@ namespace HF
 
                typedef Container::const_iterator const_iterator;
 
+               //! Attribute indicating the time interval rule needs to be activated.
+               uint32_t interval;
+
                //! Attribute indicating the last time rule was activated.
                uint32_t last_time;
 
-               Rule(uint32_t __interval = 0):
-                  last_time (0), _interval (__interval)
+               /*!
+                * Constructor.
+                *
+                * @param [in] _interval   periodic rule interval value.
+                */
+               Rule(uint32_t _interval = 0):
+                  AttributeReporting::Rule(PERIODIC), interval (_interval), last_time (0)
                {}
 
                size_t size () const;
@@ -247,15 +270,6 @@ namespace HF
                   return std::distance (entries.begin (), entries.end ());
                }
 
-               /*!
-                * Time interval to generate a report based on this rule.
-                *
-                * @return  time interval in seconds to generate a report.
-                */
-               uint32_t interval ()
-               {
-                  return _interval;
-               }
 
                /*!
                 * Get an iterator to the start of the entries in this rule.
@@ -298,9 +312,6 @@ namespace HF
                }
 
                protected:
-
-               //! Attribute indicating the time interval rule needs to be activated.
-               uint32_t _interval;
 
                //! Container for the entries of the periodic rule.
                Container entries;
@@ -410,6 +421,9 @@ namespace HF
                typedef Container::iterator iterator;
 
                typedef Container::const_iterator const_iterator;
+
+               Rule():AttributeReporting::Rule(EVENT)
+               {}
 
                size_t size () const;
 
@@ -1198,13 +1212,16 @@ namespace HF
              * Event indicating a @c PERIODIC_REPORT_CMD or a @c EVENT_REPORT_CMD.
              *
              * @param [in] type     type of report.
+             * @param [in] address  device address that originated the event.
              * @param [in] payload  data in the report.
              * @param [in] offset   offset from which to start reading the data of the
              *                      the report in the @c payload.
              */
-            virtual void report (Type type, Common::ByteArray &payload, size_t offset)
+            virtual void report (Type type, const Protocol::Address &address,
+                                 const Common::ByteArray &payload, size_t offset)
             {
                UNUSED (type);
+               UNUSED (address);
                UNUSED (payload);
                UNUSED (offset);
             }

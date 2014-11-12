@@ -454,7 +454,7 @@ TEST (AttrReport_Periodic_Rule, Unpack)
    LONGS_EQUAL (0x05A5, rule.destination.device);
    LONGS_EQUAL (0xAA, rule.destination.unit);
 
-   LONGS_EQUAL (0xAABBCCDD, rule.interval ());
+   LONGS_EQUAL (0xAABBCCDD, rule.interval);
 
    expected[3] = 0x8A;
 
@@ -2516,11 +2516,14 @@ TEST_GROUP (AttributeReporting_Client)
          InterfaceHelper <AttributeReporting::Client>()
       {}
 
-      void report (Type type, Common::ByteArray &payload, size_t offset)
+      void report (Type type, const Protocol::Address &address,
+                   const Common::ByteArray &payload, size_t offset)
       {
          UNUSED (type);
+         UNUSED (address);
          UNUSED (payload);
          UNUSED (offset);
+
          mock ("AttributeReporting::Client").actualCall ("report").withParameter ("type", type);
       }
 
@@ -2902,7 +2905,6 @@ TEST (AttributeReporting_Server, Handle_Create_Periodic)
    LONGS_EQUAL (AttributeReporting::PERIODIC, resp.report.type);
    LONGS_EQUAL (2, resp.report.id);
 }
-
 
 TEST (AttributeReporting_Server, Handle_Create_Event)
 {
