@@ -409,7 +409,7 @@ namespace HF
             proxy.notify (old_value, new_value);
          }
 
-         private:
+         protected:
 
          //! Referent to the class providing the required functionality.
          _Proxy &proxy;

@@ -137,7 +137,20 @@ namespace HF
       {
          uint8_t _id;
 
-         typedef std::tuple <HF::Interfaces::Proxy <ITF, Unit> ...> interfaces_t;
+         template<typename _Interface, typename _Proxy>
+         struct Proxy:public HF::Interfaces::Proxy <_Interface, _Proxy>
+         {
+            Proxy(_Proxy &_proxy):
+               HF::Interfaces::Proxy <_Interface, _Proxy>(_proxy)
+            {}
+
+            _Proxy &unit () const
+            {
+               return HF::Interfaces::Proxy <_Interface, _Proxy>::proxy;
+            }
+         };
+
+         typedef std::tuple <Proxy <ITF, Unit> ...> interfaces_t;
 
          //! Tuple containing the optional implemented interfaces of this unit.
          interfaces_t _interfaces;
@@ -152,7 +165,7 @@ namespace HF
           */
          Unit(uint8_t id, IDevice &device):
             Profile (), HF::Units::AbstractUnit (device), _id (id),
-            _interfaces (HF::Interfaces::Proxy <ITF, Unit>(*this) ...)
+            _interfaces (Proxy <ITF, Unit>(*this) ...)
          {}
 
          //! @copydoc HF::Units::IUnit::id
