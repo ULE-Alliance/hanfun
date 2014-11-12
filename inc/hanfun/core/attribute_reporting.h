@@ -1130,9 +1130,9 @@ namespace HF
           * Add the periodic entries from @c start to @c end into the rule with
           * the given @c report reference.
           *
-          * @param report     report reference
-          * @param begin      iterator to the start of the periodic entries to add.
-          * @param end        iterator to the end of the periodic entries to add.
+          * @param [in] report     report reference
+          * @param [in] begin      iterator to the start of the periodic entries to add.
+          * @param [in] end        iterator to the end of the periodic entries to add.
           *
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
@@ -1143,9 +1143,9 @@ namespace HF
           * Add the event entries from @c start to @c end into the rule with
           * the given @c report reference.
           *
-          * @param report     report reference
-          * @param begin      iterator to the start of the event entries to add.
-          * @param end        iterator to the end of the event entries to add.
+          * @param [in] report     report reference
+          * @param [in] begin      iterator to the start of the event entries to add.
+          * @param [in] end        iterator to the end of the event entries to add.
           *
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
