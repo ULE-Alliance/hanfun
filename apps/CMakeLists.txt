@@ -137,3 +137,7 @@ target_link_libraries(example_05 hanfun)
 ## Device Information service example
 add_executable(example_06 EXCLUDE_FROM_ALL example_06.cpp)
 target_link_libraries(example_06 hanfun)
+
+## Attribute reporting service example
+add_executable(example_07 EXCLUDE_FROM_ALL example_07.cpp)
+target_link_libraries(example_07 hanfun)
