@@ -1,11 +1,26 @@
 # HAN-FUN
 
-This project aims at providing an implementation of the HAN-FUN application specification.
+This project aims at providing an implementation of the ULE Alliance's HAN-FUN application specification.
 
 ## Overview
 
-A HAN-FUN network is a star network, it consists of a concentrator (base) and several nodes that
-connect to the concentrator to send/receive messages to/from the network.
+A HAN-FUN network is composed by a concentrator (base) and one or more nodes, in a star configuration,
+all the nodes connect to the concentrator that serves a router between all the nodes in the network.
+
+A HAN-FUN device, either concentrator or node, is composed of one or more units. Each unit implements
+a profile, i.e. a predefined configuration of interfaces and any number of optional interfaces.
+
+HAN-FUN interfaces have two roles, _Client_ and _Server_ and define what attributes are present in each
+role. They also define the commands supported between each role.
+
+In each device there is a special unit, unit 0, that provides core infrastructure services, for
+example, the __Device Management__ service, the __Device Information__ service and the
+__Attribute Reporting__ service.
+
+In order to access the HAN-FUN network, a node must first register it self with the base to obtain
+it's HAN-FUN address, by using the commands available in the Device Management service.
+
+This address will then be used to send/receive packets from the network.
 
 ## Project Setup
 
@@ -38,7 +53,7 @@ To build the unit tests present in the source code, issue the following commands
     $ git submodule update
     $ mkdir build
     $ cd build
-    $ cmake -DHAN-FUN_BUILD_TESTS=ON ..
+    $ CMake -DHAN-FUN_BUILD_TESTS=ON ..
     $ make
 
 The unit tests will be run at the end of the compilation if not cross-compiling.
@@ -52,10 +67,11 @@ To re-run the tests, issue:
 The folder _apps/_ contains two example applications, one for the concentrator (base) side and one
 for the node side.
 
+The _apps/example_XX.cpp_ files contain standalone applications that demo API usage.
+Use __make example_XX__ to build each application or __make examples__ to build all of them.
+
 The applications communicate over TCP/IP.
-
 The support for this transport layer is based on the [libuv](https://github.com/joyent/libuv).
-
 This is downloaded and build automatically when building the example applications is requested.
 
 To build the example applications, issue the following commands (on the root of the project):
@@ -115,24 +131,9 @@ toggle command was received.
 
 Please see the help in the applications for further features.
 
-## TODO
-
-  * Core :
-
-   - Device Information :
-
-     * Add API for GET/SET of optional attributes.
-
-   - Group Management (Optional)
-   - Identify (Optional)
-   - Tamper Alert (Optional)
-   - Time (Optional)
-   - Power (Optional)
-   - Keep Alive (Optional)
-
 ## Author
 
- * Filipe Alves <<filipe.alves@bithium.com>>
+ * Initial development by [Bithium S.A.](http://www.bithium.com)
 
 ## License
 
