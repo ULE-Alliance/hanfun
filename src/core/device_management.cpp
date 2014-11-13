@@ -158,18 +158,16 @@ bool Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
          }
       }
    }
-   else  // Search the optional interfaces.
-   {
-      /* *INDENT-OFF* */
-      return std::any_of (interfaces.begin (), interfaces.end (),
-                           [&temp](const Common::Interface &itf)
-                           {
-                              return temp == itf;
-                           });
-      /* *INDENT-ON* */
-   }
 
-   return false;
+   // Search the optional interfaces.
+
+   /* *INDENT-OFF* */
+   return std::any_of (interfaces.begin (), interfaces.end (),
+                       [&temp](const Common::Interface &itf)
+   {
+      return temp == itf;
+   });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
