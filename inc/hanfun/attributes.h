@@ -271,32 +271,16 @@ namespace HF
 
          public:
 
-         /*!
-          * Return attribute's UID.
-          *
-          * @return  attribute's UID.
-          */
          uint8_t uid () const
          {
             return _uid;
          }
 
-         /*!
-          * Indicate if the attribute is writable or not.
-          *
-          * @retval  true  the attribute is writable;
-          * @retval  false otherwise.
-          */
          bool isWritable () const
          {
             return _writable;
          }
 
-         /*!
-          * Return the Interface UID this attribute belongs to.
-          *
-          * @return the Interface UID this attribute belongs to.
-          */
          uint16_t interface () const
          {
             return _itf_uid;

@@ -564,7 +564,6 @@ TEST (Attributes, Serialize_Unpack)
    TestInterface itf;
    HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, &itf, attr);
 
-
    size_t r_size = attr_wrapper.unpack (expected, 3);
    LONGS_EQUAL (sizeof(attr), r_size);
 

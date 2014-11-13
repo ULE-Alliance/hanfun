@@ -164,7 +164,7 @@ namespace HF
              *
              * @param [in] type Report reference type of this rule.
              */
-            Rule(Type type):report(type) {}
+            Rule(Type type):report (type) {}
 
             //! Device/unit that will receive the report.
             Protocol::Address destination;
@@ -232,8 +232,7 @@ namespace HF
                 *
                 * @param [in] _interval   periodic rule interval value.
                 */
-               Rule(uint32_t _interval = 0):
-                  AttributeReporting::Rule(PERIODIC), interval (_interval), last_time (0)
+               Rule(uint32_t _interval = 0):AttributeReporting::Rule(PERIODIC), interval (_interval), last_time (0)
                {}
 
                size_t size () const;
@@ -541,7 +540,7 @@ namespace HF
                 * @param [in] id   report id.
                 */
                Abstract(uint8_t type = 0, uint8_t id = 0):
-                  AttributeReporting::Reference(type, id)
+                  AttributeReporting::Reference (type, id)
                {}
             };
 
@@ -553,7 +552,7 @@ namespace HF
                uint8_t           unit; //!< Unit id that originated this notification.
                Common::Interface itf;  //!< Interface UID this notification relates to.
 
-               Entry():unit (0), itf(0,0) {}
+               Entry():unit (0), itf (0, 0) {}
 
                /*!
                 * Constructor.
@@ -723,8 +722,7 @@ namespace HF
                    * @param [in] unit    unit id for this notification.
                    * @param [in] itf     interface %UID for this notification.
                    */
-                  Entry(uint8_t unit, Common::Interface itf):
-                     Report::Entry (unit, itf)
+                  Entry(uint8_t unit, Common::Interface itf):Report::Entry(unit, itf)
                   {}
 
                   size_t size () const;
@@ -759,7 +757,7 @@ namespace HF
                 *
                 * @param [in] id    report reference ID.
                 */
-               Periodic(uint8_t id = 0): Abstract(PERIODIC, id)
+               Periodic(uint8_t id = 0):Abstract (PERIODIC, id)
                {}
 
                size_t size () const;
@@ -938,8 +936,7 @@ namespace HF
                    * @param [in] unit    unit id for this notification.
                    * @param [in] itf     interface %UID for this notification.
                    */
-                  Entry(uint8_t unit, Common::Interface itf):
-                     Report::Entry (unit, itf)
+                  Entry(uint8_t unit, Common::Interface itf):Report::Entry(unit, itf)
                   {}
 
                   size_t size () const;
@@ -977,7 +974,7 @@ namespace HF
                 *
                 * @param [in] id    report reference ID.
                 */
-               Event(uint8_t id = 0): Abstract(EVENT, id)
+               Event(uint8_t id = 0):Abstract (EVENT, id)
                {}
 
                //! @copydoc HF::Common::Serializable::size

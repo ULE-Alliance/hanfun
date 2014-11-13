@@ -75,7 +75,7 @@ namespace HF
             static constexpr bool    WRITABBLE = true;
 
             Level(uint8_t level = 0, HF::Interface *owner = nullptr):
-               Attribute <uint8_t>(Interface::ALERT, ID, owner, level, WRITABBLE)
+               Attribute <uint8_t>(Interface::LEVEL_CONTROL, ID, owner, level, WRITABBLE)
             {}
          };
 

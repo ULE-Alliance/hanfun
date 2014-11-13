@@ -159,8 +159,7 @@ static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &pa
 
    Common::Result result                = Common::Result::OK;
 
-   for (SetAttributePack::Response::results_t::iterator it = attr_res->results.begin ();
-        it != attr_res->results.end (); ++it)
+   for (auto it = attr_res->results.begin (); it != attr_res->results.end (); ++it)
    {
       result = it->code;
 

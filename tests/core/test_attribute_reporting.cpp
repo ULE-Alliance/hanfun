@@ -2739,21 +2739,21 @@ TEST_GROUP (AttributeReporting_Server)
 
    void check_event_report (const char *file, int line)
    {
-      auto packet = base->packets.front();
+      auto packet = base->packets.front ();
 
       Report::Event report;
-      report.unpack(HF::Testing::FactoryGetter, packet->message.payload, 0);
+      report.unpack (HF::Testing::FactoryGetter, packet->message.payload, 0);
 
-      LONGS_EQUAL_LOCATION ( 0x5A, report.id, file, line);
-      LONGS_EQUAL_LOCATION ( EVENT, report.type, file, line);
-      LONGS_EQUAL_LOCATION ( 1, std::distance(report.entries.begin(), report.entries.end()), file, line)
+      LONGS_EQUAL_LOCATION (0x5A, report.id, file, line);
+      LONGS_EQUAL_LOCATION (EVENT, report.type, file, line);
+      LONGS_EQUAL_LOCATION (1, std::distance (report.entries.begin (), report.entries.end ()), file, line)
 
-      auto &entry2 = *report.entries.begin();
+      auto &entry2 = *report.entries.begin ();
 
       LONGS_EQUAL_LOCATION (1, entry2.unit, file, line);
       CHECK_EQUAL_LOCATION (0x7ABC, entry2.itf.id, file, line);
 
-      LONGS_EQUAL_LOCATION (1, entry2.fields.size(), file, line);
+      LONGS_EQUAL_LOCATION (1, entry2.fields.size (), file, line);
    }
 };
 
@@ -2762,9 +2762,9 @@ TEST (AttributeReporting_Server, Periodic)
    Periodic::Rule  rule (50);
    Periodic::Entry entry;
 
-   entry.itf.id  = HF::Interface::ALERT;
-   entry.pack_id = HF::Attributes::MANDATORY;
-   entry.unit    = 1;
+   entry.itf.id   = HF::Interface::ALERT;
+   entry.pack_id  = HF::Attributes::MANDATORY;
+   entry.unit     = 1;
 
    rule.report.id = 0x5A;
    rule.add (entry);
@@ -2784,16 +2784,16 @@ TEST (AttributeReporting_Server, Periodic)
    LONGS_EQUAL (1, base->packets.size ());
 
    // Check report.
-   auto packet = base->packets.front();
+   auto packet = base->packets.front ();
 
    Report::Periodic report;
-   report.unpack(HF::Attributes::get_factory, packet->message.payload, 0);
+   report.unpack (HF::Attributes::get_factory, packet->message.payload, 0);
 
-   LONGS_EQUAL ( 0x5A, report.id);
-   LONGS_EQUAL ( PERIODIC, report.type);
-   LONGS_EQUAL ( 1, std::distance(report.entries.begin(), report.entries.end()))
+   LONGS_EQUAL (0x5A, report.id);
+   LONGS_EQUAL (PERIODIC, report.type);
+   LONGS_EQUAL (1, std::distance (report.entries.begin (), report.entries.end ()))
 
-   auto &entry2 = *report.entries.begin();
+   auto &entry2 = *report.entries.begin ();
 
    LONGS_EQUAL (entry.unit, entry2.unit);
    CHECK_EQUAL (entry.itf, entry2.itf);
@@ -2803,11 +2803,11 @@ TEST (AttributeReporting_Server, Periodic)
    LONGS_EQUAL (1, base->packets.size ());
 }
 
-#define CHECK_EVENT_REPORT()   check_event_report(__FILE__, __LINE__)
+#define CHECK_EVENT_REPORT()   check_event_report (__FILE__, __LINE__)
 
 TEST (AttributeReporting_Server, Event_Equal)
 {
-   setup_event_rule(Event::EQ);
+   setup_event_rule (Event::EQ);
 
    uint32_t old_value = 0x12345679;
    uint32_t new_value = 0x1234567A;
@@ -2826,12 +2826,12 @@ TEST (AttributeReporting_Server, Event_Equal)
    LONGS_EQUAL (1, base->packets.size ());
 
    // Check report.
-   CHECK_EVENT_REPORT();
+   CHECK_EVENT_REPORT ();
 }
 
 TEST (AttributeReporting_Server, Event_Lower)
 {
-   setup_event_rule(Event::LT);
+   setup_event_rule (Event::LT);
 
    uint32_t old_value = 0x12345679;
    uint32_t new_value = 0x1234567A;
@@ -2850,12 +2850,12 @@ TEST (AttributeReporting_Server, Event_Lower)
    LONGS_EQUAL (1, base->packets.size ());
 
    // Check report.
-   CHECK_EVENT_REPORT();
+   CHECK_EVENT_REPORT ();
 }
 
 TEST (AttributeReporting_Server, Event_Upper)
 {
-   setup_event_rule(Event::HT);
+   setup_event_rule (Event::HT);
 
    uint32_t old_value = 0x12345670;
    uint32_t new_value = 0x12345675;
@@ -2874,7 +2874,7 @@ TEST (AttributeReporting_Server, Event_Upper)
    LONGS_EQUAL (1, base->packets.size ());
 
    // Check report.
-   CHECK_EVENT_REPORT();
+   CHECK_EVENT_REPORT ();
 }
 
 TEST (AttributeReporting_Server, Handle_Create_Periodic)

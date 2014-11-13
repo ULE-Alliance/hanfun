@@ -114,8 +114,8 @@ namespace HF
             static constexpr uint8_t ID        = STATE_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABBLE = false;      //!< Attribute Read/Write
 
-            State(uint32_t data = 0, const HF::Interface *itf = nullptr):
-               Attribute <uint32_t>(Interface::ALERT, ID, itf, data, WRITABBLE)
+            State(uint32_t data = 0, const HF::Interface *owner = nullptr):
+               Attribute <uint32_t>(Interface::ALERT, ID, owner, data, WRITABBLE)
             {}
          };
 
@@ -127,8 +127,8 @@ namespace HF
             static constexpr uint8_t ID        = ENABLE_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABBLE = true;        //!< Attribute Read/Write
 
-            Enable(uint32_t data = 0, const HF::Interface *itf = nullptr):
-               Attribute <uint32_t>(Interface::ALERT, ID, itf, data, WRITABBLE)
+            Enable(uint32_t data = 0, const HF::Interface *owner = nullptr):
+               Attribute <uint32_t>(Interface::ALERT, ID, owner, data, WRITABBLE)
             {}
          };
 
