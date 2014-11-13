@@ -33,7 +33,7 @@ using namespace HF::Interfaces::SimplePowerMeter;
 // Client::handle_command
 // =============================================================================
 /*!
- * TODO This needs more validation when reading a report received.
+ * @todo This needs more validation when reading a report received.
  */
 // =============================================================================
 Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
@@ -48,7 +48,7 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
 
    offset += report.unpack (payload, offset);
 
-   this->report (report);
+   this->report (packet.source, report);
 
    return Common::Result::OK;
 }

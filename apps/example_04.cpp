@@ -47,21 +47,21 @@ namespace
       SimpleSwitchable(uint8_t id, HF::IDevice &device):_Parent (id, device)
       {}
 
-      void on ()
+      void on (HF::Protocol::Address &source)
       {
-         _Parent::on ();
+         _Parent::on (source);
          LOG (INFO) << "Command ON received ..." << NL;
       }
 
-      void off ()
+      void off (HF::Protocol::Address &source)
       {
-         _Parent::off ();
+         _Parent::off (source);
          LOG (INFO) << "Command OFF received ..." << NL;
       }
 
-      void toggle ()
+      void toggle (HF::Protocol::Address &source)
       {
-         _Parent::toggle ();
+         _Parent::toggle (source);
          LOG (INFO) << "Command TOGGLE received ..." << NL;
       }
    };

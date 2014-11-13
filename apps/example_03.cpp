@@ -44,9 +44,10 @@ namespace
          HF::Units::Unit <HF::Profiles::Alertable>(id, device)
       {}
 
-      void status (HF::Interfaces::Alert::Message &message)
+      void status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
       {
-         UNUSED (message);
+         HF::Units::Unit <HF::Profiles::Alertable>::status (source, message);
+
          LOG (INFO) << "Alert received " << std::hex << std::showbase
                     << message.state << " !" << NL;
       }

@@ -47,7 +47,7 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
 
    alert_msg.unpack (payload, offset);
 
-   status (alert_msg);
+   status (packet.source, alert_msg);
 
    return Common::Result::OK;
 }

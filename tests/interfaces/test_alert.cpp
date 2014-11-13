@@ -356,9 +356,12 @@ TEST_GROUP (AlertClient)
 
       TestAlertClient():profile_uid (0), state (0) {}
 
-      void status (Alert::Message &message)
+      void status (HF::Protocol::Address &source, Alert::Message &message)
       {
          mock ("AlertClient").actualCall ("status");
+
+         Testing::InterfaceHelper <Alert::Client>::status (source, message);
+
          profile_uid = message.type;
          state       = message.state;
       }

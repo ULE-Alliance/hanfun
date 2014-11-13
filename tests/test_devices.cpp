@@ -167,10 +167,12 @@ namespace
          HF::Units::Unit <HF::Profiles::Alertable>(index, device)
       {}
 
-      void status (HF::Interfaces::Alert::Message &message)
+      void status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
       {
+         UNUSED (source);
          UNUSED (message);
          mock ("Alertable").actualCall ("status").onObject (this);
+         HF::Units::Unit <HF::Profiles::Alertable>::status (source, message);
       }
    };
 

@@ -49,9 +49,9 @@ namespace
          _Parent (id, device)
       {}
 
-      void level_change (uint8_t old_level, uint8_t new_level)
+      void level_change (HF::Protocol::Address &source, uint8_t old_level, uint8_t new_level)
       {
-         _Parent::level_change (old_level, new_level);
+         _Parent::level_change (source, old_level, new_level);
          LOG (INFO) << "Level Change : "
                     << (int) HF::Common::to_percent (old_level)
                     << "\% -> "

@@ -121,30 +121,26 @@ TEST_GROUP (OnOffServer)
 
    class TestOnOffServer:public InterfaceHelper <OnOff::Server>
    {
-      /*!
-       * Callback that is called when a @c ON_CMD message is received.
-       */
-      void on ()
+      void on (HF::Protocol::Address &source)
       {
+         UNUSED (source);
          mock ("OnOffServer").actualCall ("on");
+         InterfaceHelper <OnOff::Server>::on (source);
       }
 
-      /*!
-       * Callback that is called when a @c OFF_CMD message is received.
-       */
-      virtual void off ()
+      void off (HF::Protocol::Address &source)
       {
+         UNUSED (source);
          mock ("OnOffServer").actualCall ("off");
+         InterfaceHelper <OnOff::Server>::off (source);
       }
 
-      /*!
-       * Callback that is called when a @c TOGGLE_CMD message is received.
-       */
-      virtual void toggle ()
+      void toggle (HF::Protocol::Address &source)
       {
+         UNUSED (source);
          mock ("OnOffServer").actualCall ("toggle");
+         InterfaceHelper <OnOff::Server>::toggle (source);
       }
-
    };
 
    TestOnOffServer   server;
@@ -188,16 +184,18 @@ TEST (OnOffServer, DefaultCallbacks)
 
    CHECK_FALSE (server.state ());
 
-   server.on ();
+   HF::Protocol::Address source;
+
+   server.on (source);
    CHECK_TRUE (server.state ());
 
-   server.off ();
+   server.off (source);
    CHECK_FALSE (server.state ());
 
-   server.toggle ();
+   server.toggle (source);
    CHECK_TRUE (server.state ());
 
-   server.toggle ();
+   server.toggle (source);
    CHECK_FALSE (server.state ());
 }
 

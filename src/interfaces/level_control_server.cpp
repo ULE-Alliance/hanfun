@@ -90,10 +90,24 @@ Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteA
 
    if (result == Common::Result::OK && packet.message.type == Protocol::Message::SET_ATTR_REQ)
    {
-      level_change (old_level, level ());
+      level_change (packet.source, old_level, level ());
    }
 
    return result;
+}
+
+// =============================================================================
+// Server::level_change
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level)
+{
+   UNUSED (source);
+   UNUSED (old_level);
+   UNUSED (new_level);
 }
 
 // =============================================================================

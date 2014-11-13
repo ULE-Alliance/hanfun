@@ -51,11 +51,11 @@ struct SimpleLight:public HF::Units::Unit <HF::Profiles::SimpleLight>
       HF::Units::Unit <HF::Profiles::SimpleLight>(index, device)
    {}
 
-   void on ();
+   void on (HF::Protocol::Address &source);
 
-   void off ();
+   void off (HF::Protocol::Address &source);
 
-   void toggle ();
+   void toggle (HF::Protocol::Address &source);
 };
 
 /*!

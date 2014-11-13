@@ -639,9 +639,23 @@ namespace HF
              * Receive a report message from a server.
              *
              * @param [in] report   the report received from the server.
+             *
+             * @deprecated Please use HF::Interfaces::SimplePowerMeter::Client::report(Protocol::Address &, Report &)
              */
-            virtual void report (Report &report)
+            virtual void report (Report &report) __attribute_deprecated__
             {
+               UNUSED (report);
+            }
+
+            /*!
+             * Receive a report message from a server.
+             *
+             * @param [in] source   device address that sent the report.
+             * @param [in] report   the report received from the server.
+             */
+            virtual void report (Protocol::Address &source, Report &report)
+            {
+               UNUSED (source);
                UNUSED (report);
             }
 

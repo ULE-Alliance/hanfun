@@ -829,10 +829,10 @@ TEST_GROUP (SimplePowerMeterClient)
    {
       public:
 
-      void report (SimplePowerMeter::Report &report)
+      void report (HF::Protocol::Address &source, SimplePowerMeter::Report &report)
       {
-         UNUSED (report);
          mock ("SimplePowerMeterClient").actualCall ("report");
+         InterfaceHelper <SimplePowerMeter::Client>::report (source, report);
       }
    };
 

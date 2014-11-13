@@ -57,18 +57,21 @@ void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 // Simple Light
 // =============================================================================
 
-void SimpleLight::on ()
+void SimpleLight::on (HF::Protocol::Address &source)
 {
+   HF::Units::Unit <HF::Profiles::SimpleLight>::on(source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << NL;
 }
 
-void SimpleLight::off ()
+void SimpleLight::off (HF::Protocol::Address &source)
 {
+   HF::Units::Unit <HF::Profiles::SimpleLight>::off(source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << NL;
 }
 
-void SimpleLight::toggle ()
+void SimpleLight::toggle (HF::Protocol::Address &source)
 {
+   HF::Units::Unit <HF::Profiles::SimpleLight>::toggle(source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
 }
 

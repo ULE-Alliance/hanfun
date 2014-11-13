@@ -193,10 +193,21 @@ namespace HF
              * @remark When this method is called the attribute has already been updated to
              * the new value.
              *
+             * @param [in] source       device address the change was received from.
              * @param [in] old_level    the old level value to used.
              * @param [in] new_level    the new level value to use.
              */
-            virtual void level_change (uint8_t old_level, uint8_t new_level);
+            virtual void level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level);
+
+            /*!
+             * Callback for a @c SET_ATTR_REQ message, when the level value is changed.
+             *
+             * @deprecated Please use HF::Interfaces::LevelControl::Server::level_change(Protocol::Address &, uint8_t, uint8_t)
+             *
+             * @param [in] old_level    the old level value to used.
+             * @param [in] new_level    the new level value to use.
+             */
+            virtual void level_change (uint8_t old_level, uint8_t new_level) __attribute_deprecated__;
 
             //! @}
             // =============================================================================
@@ -263,7 +274,7 @@ namespace HF
             }
 
             /*!
-             * @copydoc Client::level(Protocol::Address &,unsigned float)
+             * @copydoc Client::level(Protocol::Address &,uint8_t)
              *
              * @remark This method converts the given @c new_level percentage value in the
              * range of [0,100] to the range used by the interface [0-255].
@@ -271,7 +282,7 @@ namespace HF
             void level (Protocol::Address &addr, float new_level);
 
             /*!
-             * @copydoc Client::level(unsigned float)
+             * @copydoc Client::level(uint8_t)
              */
             void level (float new_level)
             {
