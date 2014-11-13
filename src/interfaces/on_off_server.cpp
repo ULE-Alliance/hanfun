@@ -110,8 +110,8 @@ void Server::state (bool state)
 
    this->_state = state;
 
-   State old_attr (old);
-   State new_attr (this->_state);
+   State old_attr (old, this);
+   State new_attr (this->_state, this);
 
    notify (old_attr, new_attr);
 }

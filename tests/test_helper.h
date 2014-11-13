@@ -234,7 +234,7 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
                   }
                   else
                   {
@@ -248,7 +248,7 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
                   }
                   else
                   {
@@ -261,7 +261,7 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, true);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, 0, true);
                   }
                   else
                   {

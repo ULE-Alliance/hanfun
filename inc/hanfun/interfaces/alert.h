@@ -194,6 +194,13 @@ namespace HF
             uint32_t state ();
 
             /*!
+             * Set the state bitmask to the given @c value.
+             *
+             * @param [in] value    bitmask value to set the alert states.
+             */
+            void set_state (uint32_t value);
+
+            /*!
              * Set the alert given by @c index to @c value.
              *
              * The alert entry @b MUST be enabled in order for the state to be set.
@@ -253,6 +260,13 @@ namespace HF
              * @return  the bitmask of the enable state of the alerts.
              */
             uint32_t enabled ();
+
+            /*!
+             * Set the bitmask of the enable state of the alerts.
+             *
+             * @param [in] value the bitmask of the enable state of the alerts to set.
+             */
+            void set_enabled (uint32_t value);
 
             /*!
              * Disable the alert at @c index.

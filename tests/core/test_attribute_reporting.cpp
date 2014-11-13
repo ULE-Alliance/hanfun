@@ -2812,8 +2812,8 @@ TEST (AttributeReporting_Server, Event_Equal)
    uint32_t old_value = 0x12345679;
    uint32_t new_value = 0x1234567A;
 
-   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, nullptr, old_value);
-   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, nullptr, new_value);
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, new_value);
 
    server->notify (1, old_attr, new_attr);
 
@@ -2836,8 +2836,8 @@ TEST (AttributeReporting_Server, Event_Lower)
    uint32_t old_value = 0x12345679;
    uint32_t new_value = 0x1234567A;
 
-   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, nullptr, old_value);
-   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, nullptr, new_value);
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, new_value);
 
    server->notify (1, old_attr, new_attr);
 
@@ -2860,8 +2860,8 @@ TEST (AttributeReporting_Server, Event_Upper)
    uint32_t old_value = 0x12345670;
    uint32_t new_value = 0x12345675;
 
-   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, nullptr, old_value);
-   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, nullptr, new_value);
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, new_value);
 
    server->notify (1, old_attr, new_attr);
 

@@ -54,8 +54,8 @@ void Server::level (uint8_t __level)
 
    this->_level = __level;
 
-   Level old_attr (old);
-   Level new_attr (this->_level);
+   Level old_attr (old, this);
+   Level new_attr (this->_level, this);
 
    notify (old_attr, new_attr);
 }

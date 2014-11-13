@@ -262,11 +262,9 @@ namespace HF
          const uint16_t _itf_uid;      //!< Interface this attribute belongs to.
          const uint8_t  _uid;          //!< Attribute unique identifier.
          const bool _writable;         //!< Attribute access mode.
-         const HF::Interface *_owner;  //!< Owner interface.
 
-         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid,
-                           const HF::Interface *owner, const bool writable = false):
-            _itf_uid (itf_uid), _uid (uid), _writable (writable), _owner (owner)
+         AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const bool writable = false):
+            _itf_uid (itf_uid), _uid (uid), _writable (writable)
          {}
 
          public:
@@ -284,16 +282,6 @@ namespace HF
          uint16_t interface () const
          {
             return _itf_uid;
-         }
-
-         /*!
-          * Return the Interface instance this attribute belongs to.
-          *
-          * @return  pointer to the Interface instance this attribute belongs to.
-          */
-         HF::Interface const *owner () const
-         {
-            return _owner;
          }
 
          bool operator ==(const IAttribute &other) const
@@ -344,7 +332,7 @@ namespace HF
        *
        * @tparam T underling data type for the attribute.
        */
-      template<typename T, typename = void>
+      template<typename T, typename _Owner = void, typename = void>
       struct Attribute:public AbstractAttribute
       {
          /*!
@@ -352,13 +340,13 @@ namespace HF
           *
           * @param [in] interface   attribute's interface UID.
           * @param [in] uid         attribute's UID.
-          * @param [in] owner       pointer to attribute's interface owner object.
           * @param [in] data        attribute's value.
+          * @param [in] __owner     pointer to attribute's interface owner object.
           * @param [in] writable    attribute's writable information.
           */
-         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner,
-                   T data, bool writable = false):
-            AbstractAttribute (interface, uid, owner, writable), helper (data)
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *__owner, T data,
+                   bool writable = false):
+            AbstractAttribute (interface, uid, writable), helper (data), _owner (__owner)
          {}
 
          /*!
@@ -366,12 +354,22 @@ namespace HF
           *
           * @param [in] interface   attribute's interface UID.
           * @param [in] uid         attribute's UID.
-          * @param [in] owner       pointer to attribute's interface owner object.
           * @param [in] writable    attribute's writable information.
           */
-         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *owner,
-                   bool writable = false):
-            AbstractAttribute (interface, uid, owner, writable)
+         Attribute(const uint16_t interface, const uint8_t uid, bool writable = false):
+            AbstractAttribute (interface, uid, writable), _owner (nullptr)
+         {}
+
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] interface   attribute's interface UID.
+          * @param [in] uid         attribute's UID.
+          * @param [in] data        attribute's value.
+          * @param [in] writable    attribute's writable information.
+          */
+         Attribute(const uint16_t interface, const uint8_t uid, T data, bool writable = false):
+            AbstractAttribute (interface, uid, writable), helper (data), _owner (nullptr)
          {}
 
          typedef typename std::remove_reference <T>::type value_type;
@@ -380,7 +378,7 @@ namespace HF
          // API
          // =============================================================================
 
-         void set (value_type value)
+         virtual void set (value_type value)
          {
             helper.data = value;
          }
@@ -395,6 +393,11 @@ namespace HF
             return helper.data;
          }
 
+         HF::Interface const *owner () const
+         {
+            return _owner;
+         }
+
          size_t size (bool with_uid) const
          {
             return size () + (with_uid ? sizeof(uint8_t) : 0);
@@ -404,6 +407,7 @@ namespace HF
          {
             return helper.size ();
          }
+
          size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const
          {
             size_t start = offset;
@@ -422,6 +426,7 @@ namespace HF
          {
             return helper.pack (array, offset);
          }
+
          size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
          {
             size_t start = offset;
@@ -454,7 +459,6 @@ namespace HF
                                                      this->helper.data, this->_writable);
          }
 
-
          int compare (const IAttribute &other) const
          {
             int res = AbstractAttribute::compare (other);
@@ -484,6 +488,174 @@ namespace HF
          protected:
 
          Common::SerializableHelper <T> helper;
+
+         const HF::Interface            *_owner;
+
+         private:
+
+         // Don't allow copy.
+         Attribute(const Attribute &other) = delete;
+      };
+
+      /*!
+       * Helper template class to declare an attribute with the given @c T type.
+       *
+       * @tparam T underling data type for the attribute.
+       */
+      template<typename T, typename _Owner>
+      struct Attribute <T, _Owner, typename std::enable_if <std::is_base_of <HF::Interface, _Owner>::value>::type> :
+         public AbstractAttribute
+      {
+         typedef typename std::remove_reference <T>::type value_type;
+
+         typedef typename std::function <value_type (_Owner &)> getter_t;
+         typedef typename std::function <void (_Owner &, T)> setter_t;
+
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] __owner   reference to attribute's interface owner object.
+          * @param [in] uid       attribute's UID.
+          * @param [in] _getter   owner's member function to get the value of the attribute.
+          * @param [in] _setter   owner's member function to set the value of the attribute.
+          * @param [in] writable  attribute's writable information.
+          */
+         Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, setter_t _setter, bool writable = false):
+            AbstractAttribute (__owner.uid (), uid, writable), _owner (__owner), getter (_getter), setter (_setter)
+         {}
+
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         virtual void set (value_type value)
+         {
+            setter (_owner, value);
+         }
+
+         value_type get () const
+         {
+            return value ();
+         }
+
+         value_type value () const
+         {
+            return getter (_owner);
+         }
+
+         HF::Interface const *owner () const
+         {
+            return &_owner;
+         }
+
+         size_t size (bool with_uid) const
+         {
+            return size () + (with_uid ? sizeof(uint8_t) : 0);
+         }
+
+         size_t size () const
+         {
+            return helper.size ();
+         }
+
+         size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const
+         {
+            size_t start = offset;
+
+            if (with_uid)
+            {
+               offset += array.write (offset, uid ());
+            }
+
+            const_cast <decltype(helper) &>(helper).data = getter (_owner);
+
+            offset                                      += helper.pack (array, offset);
+
+            return offset - start;
+         }
+
+         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         {
+            const_cast <decltype(helper) &>(helper).data = getter (_owner);
+
+            return helper.pack (array, offset);
+         }
+
+         size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
+         {
+            size_t start = offset;
+
+            if (with_uid)
+            {
+               uint8_t temp;
+               offset += array.read (offset, temp);
+
+               if (temp != uid ())
+               {
+                  goto _end;
+               }
+            }
+
+            offset += helper.unpack (array, offset);
+
+            setter (_owner, helper.data);
+
+            _end:
+            return offset - start;
+         }
+
+         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         {
+            size_t result = helper.unpack (array, offset);
+            setter (_owner, helper.data);
+            return result;
+         }
+
+         IAttribute *clone () const
+         {
+            return new HF::Attributes::Attribute <T, _Owner>(this->_owner, this->uid (),
+                                                             this->getter, this->setter,
+                                                             this->isWritable ());
+         }
+
+         int compare (const IAttribute &other) const
+         {
+            int res = AbstractAttribute::compare (other);
+
+            if (res == 0)
+            {
+               const_cast <decltype(helper) &>(helper).data = getter (_owner);
+
+               Attribute <T, _Owner> *temp = (Attribute <T, _Owner> *) & other;
+               res = helper.compare (temp->helper);
+            }
+
+            return res;
+         }
+
+         float changed (const IAttribute &other) const
+         {
+            int res = AbstractAttribute::compare (other);
+
+            if (res == 0)
+            {
+               const_cast <decltype(helper) &>(helper).data = getter (_owner);
+
+               Attribute <T, _Owner> *temp = (Attribute <T, _Owner> *) & other;
+               return helper.changed (temp->helper);
+            }
+
+            return 0.0;
+         }
+
+         protected:
+
+         _Owner                                  &_owner;
+         getter_t                                getter;
+         setter_t                                setter;
+
+         Common::SerializableHelper <value_type> helper;
+
          private:
 
          // Don't allow copy.
