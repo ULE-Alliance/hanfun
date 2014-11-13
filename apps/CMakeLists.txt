@@ -141,3 +141,12 @@ target_link_libraries(example_06 hanfun)
 ## Attribute reporting service example
 add_executable(example_07 EXCLUDE_FROM_ALL example_07.cpp)
 target_link_libraries(example_07 hanfun)
+
+## Bind service example
+add_executable(example_08 EXCLUDE_FROM_ALL example_08.cpp)
+target_link_libraries(example_08 hanfun)
+
+## Build all examples
+add_custom_target(examples DEPENDS example_01 example_02 example_03
+                                   example_04 example_05 example_06
+                                   example_07 example_08)
