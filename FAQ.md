@@ -25,3 +25,15 @@ warning if the method signature you are using has been deprecated.
 
            // ...
         };
+
+__Q2 : Can the HAN-FUN library be linked into a shared library ?__
+
+Yes, however you must pass the __HF_SHARED_SUPPORT__ option when configuring the library.
+This option will remove the flag '-fno-rtti' and add the '-fPIC' flag from the compilations flags.
+
+The building instructions become :
+
+      $ mkdir build/
+      $ cd build/
+      $ cmake -DHF_SHARED_SUPPORT=ON ..
+      $ make

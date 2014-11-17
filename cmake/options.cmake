@@ -21,6 +21,7 @@
 # =============================================================================
 
 option(HF_BUILD_TESTS "Build project's unit tests.")
+option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
 
 #
 # Package configuration options.
