@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/attributes.cpp
+ * @file       src/attributes.cpp
  *
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -36,12 +36,18 @@ using namespace HF::Core;
 // Attribute Factories
 // =============================================================================
 
+/*!
+ * Interface / Attribute Factory database entry.
+ */
 struct Entry
 {
-   uint16_t            id;
-   Attributes::Factory factory;
+   uint16_t            id;       //!< Interface UID.
+   Attributes::Factory factory;  //!< Attribute's factory.
 };
 
+/*!
+ * Interface / Attribute Factory database.
+ */
 static const Entry factories[] =
 {
    /* Core Services */
@@ -116,37 +122,45 @@ Attributes::Factory Attributes::get_factory (Common::Interface itf)
 // =============================================================================
 IAttribute *Interfaces::create_attribute (Alert::Server *server, uint8_t uid)
 {
+   using namespace HF::Interfaces::Alert;
+
    Alert::Attributes attr = static_cast <Alert::Attributes>(uid);
 
    uint16_t itf_uid       = Interface::ALERT;
 
    switch (attr)
    {
-      case Alert::STATE_ATTR:
+      case STATE_ATTR:
       {
-         bool writabble = Alert::State::WRITABBLE;
+         bool writabble = State::WRITABBLE;
 
          if (server != nullptr)
          {
-            return new Attribute <uint32_t &>(itf_uid, attr, server, server->_state, writabble);
+            auto getter = (uint32_t (Server::*) (void)) & Server::state;
+            auto setter = (void (Server::*) (uint32_t)) & Server::set_state;
+
+            return new Attribute <uint32_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new Attribute <uint32_t>(itf_uid, attr, server, writabble);
+            return new Attribute <uint32_t>(itf_uid, attr, writabble);
          }
       }
 
-      case Alert::ENABLE_ATTR:
+      case ENABLE_ATTR:
       {
-         bool writabble = Alert::Enable::WRITABBLE;
+         bool writabble = Enable::WRITABBLE;
 
          if (server != nullptr)
          {
-            return new Attribute <uint32_t &>(itf_uid, attr, server, server->_enabled, writabble);
+            auto getter = (uint32_t (Server::*) (void)) & Server::enabled;
+            auto setter = (void (Server::*) (uint32_t)) & Server::set_enabled;
+
+            return new Attribute <uint32_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new Attribute <uint32_t>(itf_uid, attr, server, writabble);
+            return new Attribute <uint32_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -164,23 +178,28 @@ IAttribute *Interfaces::create_attribute (Alert::Server *server, uint8_t uid)
 // =============================================================================
 IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t uid)
 {
+   using namespace HF::Interfaces::LevelControl;
+
    LevelControl::Attributes attr = static_cast <LevelControl::Attributes>(uid);
 
    uint16_t itf_uid              = Interface::LEVEL_CONTROL;
 
    switch (attr)
    {
-      case LevelControl::LEVEL_ATTR:
+      case LEVEL_ATTR:
       {
-         bool writabble = LevelControl::Level::WRITABBLE;
+         bool writabble = Level::WRITABBLE;
 
          if (server != nullptr)
          {
-            return new Attribute <uint8_t &>(itf_uid, attr, server, server->_level, writabble);
+            auto getter = (uint8_t (Server::*) (void)) & Server::level;
+            auto setter = (void (Server::*) (uint8_t)) & Server::level;
+
+            return new Attribute <uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new Attribute <uint8_t>(itf_uid, attr, server, writabble);
+            return new Attribute <uint8_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -198,23 +217,28 @@ IAttribute *Interfaces::create_attribute (LevelControl::Server *server, uint8_t 
 // =============================================================================
 IAttribute *Interfaces::create_attribute (OnOff::Server *server, uint8_t uid)
 {
+   using  namespace HF::Interfaces::OnOff;
+
    OnOff::Attributes attr = static_cast <OnOff::Attributes>(uid);
 
    uint16_t itf_uid       = Interface::ON_OFF;
 
    switch (attr)
    {
-      case OnOff::STATE_ATTR:
+      case STATE_ATTR:
       {
-         bool writabble = OnOff::State::WRITABBLE;
+         bool writabble = State::WRITABBLE;
 
          if (server != nullptr)
          {
-            return new Attribute <bool &>(itf_uid, attr, server, server->_state, writabble);
+            auto getter = (bool (Server::*) (void)) & Server::state;
+            auto setter = (void (Server::*) (bool)) & Server::state;
+
+            return new Attribute <bool, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new Attribute <bool>(itf_uid, attr, server, false, writabble);
+            return new Attribute <bool>(itf_uid, attr, false, writabble);
          }
       }
 
@@ -232,6 +256,8 @@ IAttribute *Interfaces::create_attribute (OnOff::Server *server, uint8_t uid)
 // =============================================================================
 IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint8_t uid)
 {
+   using namespace HF::Interfaces::SimplePowerMeter;
+
    SimplePowerMeter::Attributes attr = static_cast <SimplePowerMeter::Attributes>(uid);
 
    uint16_t itf_uid                  = Interface::SIMPLE_POWER_METER;
@@ -239,13 +265,15 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
 
    switch (attr)
    {
-      case SimplePowerMeter::ENERGY_ATTR:
+      case ENERGY_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_ENERGY_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_energy, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::energy;
+            auto setter = (void (Server::*) (Measurement &)) & Server::energy;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -254,17 +282,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::ENERGY_AT_RESET_ATTR:
+      case ENERGY_AT_RESET_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_last_energy, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::last_energy;
+            auto setter = (void (Server::*) (Measurement &)) & Server::last_energy;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -273,17 +303,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::TIME_AT_RESET_ATTR:
+      case TIME_AT_RESET_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_last_time, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::last_time;
+            auto setter = (void (Server::*) (Measurement &)) & Server::last_time;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -292,17 +324,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::POWER_ATTR:
+      case POWER_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_POWER_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server, server->_power,
-                                                                   writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::power;
+            auto setter = (void (Server::*) (Measurement &)) & Server::power;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -311,17 +345,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::AVG_POWER_ATTR:
+      case AVG_POWER_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_AVG_POWER_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_avg_power, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::avg_power;
+            auto setter = (void (Server::*) (Measurement &)) & Server::avg_power;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -330,19 +366,21 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::AVG_POWER_INTERVAL_ATTR:
+      case AVG_POWER_INTERVAL_ATTR:
       {
          writabble = true;
 
          if (server != nullptr)
          {
 #if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
-            return new Attribute <uint16_t &>(itf_uid, attr, server,
-                                              server->_avg_power_interval, writabble);
+            auto getter = (uint16_t (Server::*) (void)) & Server::avg_power_interval;
+            auto setter = (void (Server::*) (uint16_t)) & Server::avg_power_interval;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -352,17 +390,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <uint16_t>(itf_uid, attr, server, writabble);
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::VOLTAGE_ATTR:
+      case VOLTAGE_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_VOLTAGE_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_voltage, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::voltage;
+            auto setter = (void (Server::*) (Measurement &)) & Server::voltage;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -371,17 +411,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::CURRENT_ATTR:
+      case CURRENT_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_CURRENT_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_current, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::current;
+            auto setter = (void (Server::*) (Measurement &)) & Server::current;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -390,17 +432,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::FREQUENCY_ATTR:
+      case FREQUENCY_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_FREQUENCY_ATTR
-            return new Attribute <SimplePowerMeter::Measurement &>(itf_uid, attr, server,
-                                                                   server->_frequency, writabble);
+            auto getter = (Measurement (Server::*) (void)) & Server::frequency;
+            auto setter = (void (Server::*) (Measurement &)) & Server::frequency;
+
+            return new Attribute <Measurement &, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -409,16 +453,19 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <SimplePowerMeter::Measurement>(itf_uid, attr, server, writabble);
+            return new Attribute <Measurement>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::POWER_FACTOR_ATTR:
+      case POWER_FACTOR_ATTR:
       {
          if (server != nullptr)
          {
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
-            return new Attribute <uint8_t &>(itf_uid, attr, server, server->_power_factor, writabble);
+            auto getter = (uint8_t (Server::*) (void)) & Server::power_factor;
+            auto setter = (void (Server::*) (uint8_t)) & Server::power_factor;
+
+            return new Attribute <uint8_t, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -427,18 +474,21 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <uint8_t>(itf_uid, attr, server, writabble);
+            return new Attribute <uint8_t>(itf_uid, attr, writabble);
          }
       }
 
-      case SimplePowerMeter::REPORT_INTERVAL_ATTR:
+      case REPORT_INTERVAL_ATTR:
       {
          writabble = true;
 
          if (server != nullptr)
          {
 #if HF_ITF_SPM_REPORT_INTERVAL_ATTR
-            return new Attribute <uint16_t &>(itf_uid, attr, server, server->_report_interval, writabble);
+            auto getter = (uint16_t (Server::*) (void)) & Server::report_interval;
+            auto setter = (void (Server::*) (uint16_t)) & Server::report_interval;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, setter, writabble);
 
 #else
             return nullptr;
@@ -447,7 +497,7 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
          }
          else
          {
-            return new Attribute <uint16_t>(itf_uid, attr, server, writabble);
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
          }
       }
 

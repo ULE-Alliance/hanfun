@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/interfaces/test_level_control.cpp
+ * @file       tests/interfaces/test_level_control.cpp
  *
  * This is file contains the unit tests for the Level Control Interface implementation.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -63,12 +63,12 @@ TEST_GROUP (LevelControlClient)
    }
 };
 
-//! \test Should send an LevelControl::SET_LEVEL_CMD message.
+//! @test Should send an LevelControl::SET_LEVEL_CMD message.
 TEST (LevelControlClient, Level)
 {
    mock ("Interface").expectOneCall ("send");
 
-   client.level (addr, 0x42);
+   client.level (addr, (uint8_t) 0x42);
 
    mock ("Interface").checkExpectations ();
 
@@ -94,10 +94,10 @@ TEST_GROUP (LevelControlServer)
    {
       public:
 
-      void level_change (uint8_t new_level)
+      void level_change (HF::Protocol::Address &source, uint8_t old_level, uint8_t new_level)
       {
          mock ("LevelControlServer").actualCall ("level_change");
-         LevelControl::Server::level_change (new_level);
+         LevelControl::Server::level_change (source, old_level, new_level);
       }
    };
 
@@ -134,12 +134,12 @@ TEST (LevelControlServer, Level)
 {
    CHECK_EQUAL (0, server.level ());
    mock ("Interface").expectOneCall ("notify");
-   server.level (42);
+   server.level ((uint8_t) 42);
    mock ("Interface").checkExpectations ();
    CHECK_EQUAL (42, server.level ());
 }
 
-//! \test Should handle valid message.
+//! @test Should handle valid message.
 TEST (LevelControlServer, Handle_Valid_Message)
 {
    mock ("LevelControlServer").expectOneCall ("level_change");
@@ -152,7 +152,7 @@ TEST (LevelControlServer, Handle_Valid_Message)
    mock ("LevelControlServer").checkExpectations ();
 }
 
-//! \test Should not handle message from invalid role.
+//! @test Should not handle message from invalid role.
 TEST (LevelControlServer, Handle_Invalid_Role)
 {
    packet.message.itf.role = HF::Interface::CLIENT_ROLE;
@@ -160,7 +160,7 @@ TEST (LevelControlServer, Handle_Invalid_Role)
    CHECK_EQUAL (Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
 }
 
-//! \test Should not handle message from invalid interface UID.
+//! @test Should not handle message from invalid interface UID.
 TEST (LevelControlServer, Handle_Invalid_UID)
 {
    packet.message.itf.id = server.uid () + 1;
@@ -168,7 +168,7 @@ TEST (LevelControlServer, Handle_Invalid_UID)
    CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
 }
 
-//! \test Should not handle message with invalid payload size.
+//! @test Should not handle message with invalid payload size.
 TEST (LevelControlServer, Handle_Invalid_Payload_Size)
 {
    LevelControl::Level level_attr;
@@ -177,13 +177,13 @@ TEST (LevelControlServer, Handle_Invalid_Payload_Size)
    CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 3));
 }
 
-//! \test Should not handle message with not enough payload / offset.
+//! @test Should not handle message with not enough payload / offset.
 TEST (LevelControlServer, Handle_Invalid_Payload)
 {
    CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 10));
 }
 
-//! \test Should return attribute.
+//! @test Should return attribute.
 TEST (LevelControlServer, Attribute)
 {
    HF::Attributes::IAttribute *attr = server.attribute (LevelControl::__LAST_ATTR__ + 1);

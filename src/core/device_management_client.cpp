@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/core/device_management_client.cpp
+ * @file       src/core/device_management_client.cpp
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -21,21 +21,26 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Core;
+using namespace HF::Core::DeviceManagement;
 
 // =============================================================================
 // DeviceManagementClient
 // =============================================================================
 
 // =============================================================================
-// DeviceManagementClient::register_device
+// Client::register_device
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void DeviceManagement::Client::register_device ()
+void Client::register_device ()
 {
    Protocol::Address addr (0, 0);
 
@@ -61,7 +66,7 @@ void DeviceManagement::Client::register_device ()
    Protocol::Message message (payload->size ());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = DeviceManagement::Client::uid ();
+   message.itf.id     = Client::uid ();
    message.itf.member = REGISTER_CMD;
 
    payload->pack (message.payload);
@@ -72,13 +77,13 @@ void DeviceManagement::Client::register_device ()
 }
 
 // =============================================================================
-// DeviceManagement::Client::deregister
+// Client::deregister
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void DeviceManagement::Client::deregister (uint16_t address)
+void Client::deregister (uint16_t address)
 {
    DeregisterMessage payload (address);
 
@@ -86,7 +91,7 @@ void DeviceManagement::Client::deregister (uint16_t address)
    Protocol::Message message (payload.size ());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = DeviceManagement::Client::uid ();
+   message.itf.id     = Client::uid ();
    message.itf.member = DEREGISTER_CMD;
 
    payload.pack (message.payload);
@@ -95,13 +100,13 @@ void DeviceManagement::Client::deregister (uint16_t address)
 }
 
 // =============================================================================
-// DeviceManagement::Client::payload_size
+// Client::payload_size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf) const
+size_t Client::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -126,15 +131,14 @@ size_t DeviceManagement::Client::payload_size (Protocol::Message::Interface &itf
 }
 
 // =============================================================================
-// DeviceManagement::Client::handle_command
+// Client::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packet,
-                                                         Common::ByteArray &payload,
-                                                         size_t offset)
+Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
 {
    switch (packet.message.itf.member)
    {
@@ -174,13 +178,13 @@ Common::Result DeviceManagement::Client::handle_command (Protocol::Packet &packe
 }
 
 // =============================================================================
-// DeviceManagement::Client::registered
+// Client::registered
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void DeviceManagement::Client::registered (RegisterResponse &response)
+void Client::registered (RegisterResponse &response)
 {
    if (response.code == Common::Result::OK)
    {
@@ -188,7 +192,14 @@ void DeviceManagement::Client::registered (RegisterResponse &response)
    }
 }
 
-void DeviceManagement::Client::deregistered (DeregisterResponse &response)
+// =============================================================================
+// Client::deregistered
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::deregistered (DeregisterResponse &response)
 {
    if (response.code == Common::Result::OK)
    {

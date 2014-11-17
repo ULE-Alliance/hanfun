@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/device_management.cpp
+ * @file       src/core/device_management.cpp
  *
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,8 +17,13 @@
 
 #include "hanfun/core/device_management.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Core;
+using namespace HF::Core::DeviceManagement;
 
 // =============================================================================
 // DeviceManagement::create_attribute
@@ -37,13 +42,13 @@ HF::Attributes::IAttribute *DeviceManagement::create_attribute (uint8_t uid)
 // =============================================================================
 
 // =============================================================================
-// DeviceManagement::Unit::size
+// Unit::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Unit::size () const
+size_t Unit::size () const
 {
    size_t result = sizeof(uint8_t) +   // Unit entry size.
                    sizeof(uint8_t) +   // Unit ID.
@@ -60,13 +65,13 @@ size_t DeviceManagement::Unit::size () const
 }
 
 // =============================================================================
-// DeviceManagement::Unit::pack
+// Unit::pack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) const
+size_t Unit::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -94,13 +99,13 @@ size_t DeviceManagement::Unit::pack (Common::ByteArray &array, size_t offset) co
 }
 
 // =============================================================================
-// DeviceManagement::Unit::unpack
+// Unit::unpack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t offset)
+size_t Unit::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t  start = offset;
 
@@ -128,7 +133,14 @@ size_t DeviceManagement::Unit::unpack (const Common::ByteArray &array, size_t of
    return offset - start;
 }
 
-bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
+// =============================================================================
+// Unit::has_interface
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
 {
    // Search the official interfaces.
    uint16_t count;
@@ -146,18 +158,16 @@ bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Rol
          }
       }
    }
-   else  // Search the optional interfaces.
-   {
-      /* *INDENT-OFF* */
-      return std::any_of (interfaces.begin (), interfaces.end (),
-                           [&temp](const Common::Interface &itf)
-                           {
-                              return temp == itf;
-                           });
-      /* *INDENT-ON* */
-   }
 
-   return false;
+   // Search the optional interfaces.
+
+   /* *INDENT-OFF* */
+   return std::any_of (interfaces.begin (), interfaces.end (),
+                       [&temp](const Common::Interface &itf)
+   {
+      return temp == itf;
+   });
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -165,13 +175,13 @@ bool DeviceManagement::Unit::has_interface (uint16_t itf_uid, HF::Interface::Rol
 // =============================================================================
 
 // =============================================================================
-// DeviceManagement::Device::size
+// Device::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Device::size () const
+size_t Device::size () const
 {
    size_t result = sizeof(uint16_t) +  // Device Address.
                    sizeof(uint8_t);    // Number of units.
@@ -187,13 +197,13 @@ size_t DeviceManagement::Device::size () const
 }
 
 // =============================================================================
-// DeviceManagement::Device::pack
+// Device::pack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Device::pack (Common::ByteArray &array, size_t offset) const
+size_t Device::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -212,13 +222,13 @@ size_t DeviceManagement::Device::pack (Common::ByteArray &array, size_t offset) 
 }
 
 // =============================================================================
-// DeviceManagement::Device::unpack
+// Device::unpack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::Device::unpack (const Common::ByteArray &array, size_t offset)
+size_t Device::unpack (const Common::ByteArray &array, size_t offset)
 {
    size_t start = offset;
 
@@ -241,19 +251,19 @@ size_t DeviceManagement::Device::unpack (const Common::ByteArray &array, size_t 
 // Register Command Messages
 // =============================================================================
 
-DeviceManagement::RegisterMessage::~RegisterMessage()
+RegisterMessage::~RegisterMessage()
 {
    units.clear ();
 }
 
 // =============================================================================
-// DeviceManagement::RegisterMessage::size
+// RegisterMessage::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterMessage::size () const
+size_t RegisterMessage::size () const
 {
    size_t result = uid.size ();  // UID Size.
 
@@ -275,13 +285,13 @@ size_t DeviceManagement::RegisterMessage::size () const
 }
 
 // =============================================================================
-// DeviceManagement::RegisterMessage::pack
+// RegisterMessage::pack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
+size_t RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -307,13 +317,14 @@ size_t DeviceManagement::RegisterMessage::pack (Common::ByteArray &array, size_t
 }
 
 // =============================================================================
-// DeviceManagement::RegisterMessage::unpack
+// RegisterMessage::unpack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterMessage::unpack (const Common::ByteArray &array, size_t offset)
+size_t RegisterMessage::unpack (const Common::ByteArray &array,
+                                size_t offset)
 {
    size_t start = offset;
 
@@ -338,13 +349,13 @@ size_t DeviceManagement::RegisterMessage::unpack (const Common::ByteArray &array
 }
 
 // =============================================================================
-// DeviceManagement::RegisterResponse::size
+// RegisterResponse::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterResponse::size () const
+size_t RegisterResponse::size () const
 {
    return Response::size () +                       // Parent Size.
           sizeof(uint16_t) +                        // Device Address.
@@ -352,13 +363,13 @@ size_t DeviceManagement::RegisterResponse::size () const
 }
 
 // =============================================================================
-// DeviceManagement::RegisterResponse::pack
+// RegisterResponse::pack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterResponse::pack (Common::ByteArray &array, size_t offset) const
+size_t RegisterResponse::pack (Common::ByteArray &array, size_t offset) const
 {
    size_t start = offset;
 
@@ -382,13 +393,14 @@ size_t DeviceManagement::RegisterResponse::pack (Common::ByteArray &array, size_
 }
 
 // =============================================================================
-// DeviceManagement::RegisterResponse::unpack
+// RegisterResponse::unpack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::RegisterResponse::unpack (const Common::ByteArray &array, size_t offset)
+size_t RegisterResponse::unpack (const Common::ByteArray &array,
+                                 size_t offset)
 {
    size_t start = offset;
 
@@ -412,25 +424,26 @@ size_t DeviceManagement::RegisterResponse::unpack (const Common::ByteArray &arra
 // =============================================================================
 
 // =============================================================================
-// DeviceManagement::DeregisterMessage::size
+// DeregisterMessage::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterMessage::size () const
+size_t DeregisterMessage::size () const
 {
    return sizeof(uint16_t);
 }
 
 // =============================================================================
-// DeviceManagement::DeregisterMessage::pack
+// DeregisterMessage::pack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterMessage::pack (Common::ByteArray &array, size_t offset) const
+size_t DeregisterMessage::pack (Common::ByteArray &array,
+                                size_t offset) const
 {
    size_t start = offset;
 
@@ -440,13 +453,14 @@ size_t DeviceManagement::DeregisterMessage::pack (Common::ByteArray &array, size
 }
 
 // =============================================================================
-// DeviceManagement::DeregisterMessage::unpack
+// DeregisterMessage::unpack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterMessage::unpack (const Common::ByteArray &array, size_t offset)
+size_t DeregisterMessage::unpack (const Common::ByteArray &array,
+                                  size_t offset)
 {
    size_t start = offset;
 
@@ -457,25 +471,26 @@ size_t DeviceManagement::DeregisterMessage::unpack (const Common::ByteArray &arr
 
 
 // =============================================================================
-// DeviceManagement::DeregisterResponse::size
+// DeregisterResponse::size
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterResponse::size () const
+size_t DeregisterResponse::size () const
 {
    return Protocol::Response::size () + sizeof(address);
 }
 
 // =============================================================================
-// DeviceManagement::DeregisterResponse::pack
+// DeregisterResponse::pack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterResponse::pack (Common::ByteArray &array, size_t offset) const
+size_t DeregisterResponse::pack (Common::ByteArray &array,
+                                 size_t offset) const
 {
    size_t start = offset;
 
@@ -487,13 +502,14 @@ size_t DeviceManagement::DeregisterResponse::pack (Common::ByteArray &array, siz
 }
 
 // =============================================================================
-// DeviceManagement::DeregisterResponse::unpack
+// DeregisterResponse::unpack
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-size_t DeviceManagement::DeregisterResponse::unpack (const Common::ByteArray &array, size_t offset)
+size_t DeregisterResponse::unpack (const Common::ByteArray &array,
+                                   size_t offset)
 {
    size_t start = offset;
 
@@ -517,7 +533,7 @@ size_t DeviceManagement::DeregisterResponse::unpack (const Common::ByteArray &ar
  *
  */
 // =============================================================================
-DeviceManagement::DevicePtr DeviceManagement::Entries::find (uint16_t address) const
+DevicePtr Entries::find (uint16_t address) const
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(db.begin(), db.end(), [address](const Device &device)
@@ -528,11 +544,11 @@ DeviceManagement::DevicePtr DeviceManagement::Entries::find (uint16_t address) c
 
    if (it == db.end ())
    {
-      return std::move (DeviceManagement::DevicePtr ());
+      return std::move (DevicePtr ());
    }
    else
    {
-      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
+      return std::move (DevicePtr (*(it.base ())));
    }
 }
 
@@ -543,7 +559,7 @@ DeviceManagement::DevicePtr DeviceManagement::Entries::find (uint16_t address) c
  *
  */
 // =============================================================================
-DeviceManagement::DevicePtr DeviceManagement::Entries::find (const HF::UID::UID &uid) const
+DevicePtr Entries::find (const HF::UID::UID &uid) const
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(db.begin(), db.end(), [&uid](const Device &device)
@@ -554,11 +570,11 @@ DeviceManagement::DevicePtr DeviceManagement::Entries::find (const HF::UID::UID 
 
    if (it == db.end ())
    {
-      return std::move (DeviceManagement::DevicePtr ());
+      return std::move (DevicePtr ());
    }
    else
    {
-      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
+      return std::move (DevicePtr (*(it.base ())));
    }
 }
 
@@ -569,9 +585,9 @@ DeviceManagement::DevicePtr DeviceManagement::Entries::find (const HF::UID::UID 
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Entries::save (const Device &device)
+Common::Result Entries::save (const Device &entry)
 {
-   if (device.address == HF::Protocol::BROADCAST_ADDR)
+   if (entry.address == HF::Protocol::BROADCAST_ADDR)
    {
       return Common::Result::FAIL_UNKNOWN;
    }
@@ -579,9 +595,9 @@ Common::Result DeviceManagement::Entries::save (const Device &device)
    // Add new entry into the database.
 
    /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
+   auto it = std::find_if(db.begin(), db.end(), [&entry](const Device &other)
    {
-      return device.address == other.address;
+      return entry.address == other.address;
    });
    /* *INDENT-ON* */
 
@@ -590,7 +606,7 @@ Common::Result DeviceManagement::Entries::save (const Device &device)
       db.erase (it);
    }
 
-   db.push_back (device);
+   db.push_back (entry);
 
    return Common::Result::OK;
 }
@@ -602,12 +618,12 @@ Common::Result DeviceManagement::Entries::save (const Device &device)
  *
  */
 // =============================================================================
-Common::Result DeviceManagement::Entries::destroy (const Device &device)
+Common::Result Entries::destroy (const Device &entry)
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&device](const Device &other)
+   auto it = std::find_if(db.begin(), db.end(), [&entry](const Device &other)
    {
-      return device.address == other.address;
+      return entry.address == other.address;
    });
    /* *INDENT-ON* */
 
@@ -630,11 +646,11 @@ Common::Result DeviceManagement::Entries::destroy (const Device &device)
  *
  */
 // =============================================================================
-uint16_t DeviceManagement::Entries::next_address () const
+uint16_t Entries::next_address () const
 {
-   uint16_t address    = DeviceManagement::START_ADDR;
+   uint16_t address    = START_ADDR;
 
-   auto address_equals = [&address](const DeviceManagement::Device &device)
+   auto address_equals = [&address](const Device &device)
                          {
                             return device.address == address;
                          };

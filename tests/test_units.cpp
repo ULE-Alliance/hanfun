@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/test_units.cpp
+ * @file       tests/test_units.cpp
  *
  * This file contains the implementation of the tests for the unit implementation.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -37,10 +37,10 @@ namespace
    {
       public:
 
-      void level_change (uint8_t new_level)
+      void level_change (HF::Protocol::Address &source, uint8_t old_level, uint8_t new_level)
       {
          mock ("LevelControl").actualCall ("level_change");
-         HF::Interfaces::LevelControl::Server::level_change (new_level);
+         HF::Interfaces::LevelControl::Server::level_change (source, old_level, new_level);
       }
    };
 
@@ -143,4 +143,17 @@ TEST (Unit, Handle_LevelControl)
    LONGS_EQUAL (0x55, unit->level_control ()->level ());
 
    mock ("LevelControl").checkExpectations ();
+}
+
+TEST (Unit, CreateDestroy)
+{
+   Testing::Device device;
+   LONGS_EQUAL (1, device.units().size());
+
+   TestUnit * unit = new TestUnit (1, device);
+   LONGS_EQUAL (2, device.units().size());
+
+   delete unit;
+
+   LONGS_EQUAL (1, device.units().size());
 }

@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/core/device_management_server.cpp
+ * @file       src/core/device_management_server.cpp
  *
  * This file contains the implementation of the Device Management : Server Role.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,6 +17,10 @@
 
 #include "hanfun/core/device_management.h"
 #include "hanfun/devices.h"
+
+// =============================================================================
+// API
+// =============================================================================
 
 using namespace HF;
 using namespace HF::Core;
@@ -160,7 +164,8 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
 
    uint16_t address = Protocol::BROADCAST_ADDR;
 
-   auto _entry      = entry (packet.link->uid ());
+   // FIXME Check incoming UID with link UID.
+   auto _entry = entry (packet.link->uid ());
 
    Device device;
 
@@ -203,6 +208,9 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
    send (res_addr, response, packet.link);
 
    delete reg_res;
+
+   DevicePtr temp (&device);
+   this->registered (temp);
 
    return result;
 }
@@ -270,13 +278,11 @@ Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Comm
 // AbstractServer::deregister
 // =============================================================================
 /*!
- *
+ * @todo Remove group information.
  */
 // =============================================================================
 Common::Result AbstractServer::deregister (DevicePtr &device)
 {
-   // TODO Remove group information.
-
    unit0 ().bind_management ()->entries ().destroy (device->address);
 
    // Destroy MAY invalidate _device_, create a copy to send to *deregistered* event.

@@ -1,14 +1,14 @@
 # =============================================================================
 #
-#   \file cmake/options.cmake
+#   @file cmake/options.cmake
 #
 #   HAN-FUN Library Options.
 #
 #   This file contains the configuration options for the HAN-FUN library.
 #
-#   \version    1.1.0
+#   @version    1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #
@@ -21,6 +21,7 @@
 # =============================================================================
 
 option(HF_BUILD_TESTS "Build project's unit tests.")
+option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
 
 #
 # Package configuration options.

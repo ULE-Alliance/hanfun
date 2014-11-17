@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file tests/CMakeLists.txt
+#   @file tests/CMakeLists.txt
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \version 1.1.0
+#   @version 1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #

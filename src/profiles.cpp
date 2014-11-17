@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality related with HAN-FUN
  * Profiles.
  *
- * \version    1.1.0
+ * \version    1.1.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -41,6 +41,9 @@ struct Profile
 // Global Variables
 // =============================================================================
 
+/*!
+ * Interface UID + Interface Role for profile.
+ */
 static const HF::Common::Interface profiles_interfaces[] =
 {
    // 00 - HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
@@ -127,8 +130,12 @@ static const HF::Common::Interface profiles_interfaces[] =
    {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
 };
 
+/*!
+ * Profile to interface mapping.
+ */
 static const Profile profiles[] =
 {
+   // Profile UID,                                      Index,  Count.
    {HF::Profiles::SIMPLE_ONOFF_SWITCHABLE,              0x0000, 1},      // 0
    {HF::Profiles::SIMPLE_ONOFF_SWITCH,                  0x0001, 1},      // 1
    {HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE,            0x0002, 1},      // 2

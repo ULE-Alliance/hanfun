@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/debug.cpp
+ * @file       src/debug.cpp
  *
  * This file contains the implementation of the debug helper functions.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -27,6 +27,13 @@
 // Stream Helpers
 // =============================================================================
 
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &array)
 {
    if (stream == std::cout || stream == std::cerr)
@@ -61,6 +68,13 @@ std::ostream & operator <<(std::ostream &stream, const HF::Common::ByteArray &ar
    return stream;
 }
 
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
 {
    std::ios_base::fmtflags ff = stream.flags ();
@@ -132,6 +146,13 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
    return stream;
 }
 
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet)
 {
    std::ios_base::fmtflags ff;
