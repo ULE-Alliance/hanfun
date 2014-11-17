@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/interfaces/alert.h
+ * @file       inc/hanfun/interfaces/alert.h
  *
  * This file contains the definitions for the Alert interface.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -22,12 +22,6 @@
 #include "hanfun/interface.h"
 
 // =============================================================================
-// Defines
-// =============================================================================
-
-#define STATE_SIZE_BITS   (sizeof(uint32_t) * 8)
-
-// =============================================================================
 // API
 // =============================================================================
 
@@ -38,81 +32,122 @@ namespace HF
       // Forward declaration.
       namespace Alert
       {
-         // Forward declaration.
          class Server;
 
       }  // namespace Alert
 
-      HF::Attributes::IAttribute *create_attribute (Alert::Server *server, uint8_t uid);
+      /*!
+       * @ingroup alert_itf
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @retval  pointer to an attribute object
+       * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+       */
+      HF::Attributes::IAttribute *create_attribute (HF::Interfaces::Alert::Server *server,
+                                                    uint8_t uid);
 
       /*!
-       * This namespace contains the implementation of the Alert interface.
+       * This namespace contains the implementation of the %Alert interface.
        */
       namespace Alert
       {
+         /*!
+          * @addtogroup alert_itf  Alert Interface
+          * @ingroup interfaces
+          *
+          * This module contains the classes that define and implement the %Alert interface API.
+          * @{
+          */
          //! Command IDs.
-         typedef enum
+         typedef enum _CMD
          {
-            STATUS_CMD = 0x01     //!< Alert Status Command ID.
+            STATUS_CMD   = 0x01,         //!< Alert Status Command ID.
+            __LAST_CMD__ = STATUS_CMD
          } CMD;
 
          //! Attributes
-         typedef enum
+         typedef enum _Attributes
          {
-            STATE_ATTR    = 0x01, //!< State attribute UID.
-            ENABLE_ATTR   = 0x02, //!< Enable attribute UID.
+            STATE_ATTR    = 0x01, //!< %State attribute %UID.
+            ENABLE_ATTR   = 0x02, //!< %Enable attribute %UID.
             __LAST_ATTR__ = ENABLE_ATTR,
          } Attributes;
 
+         /*!
+          * Payload for the %Status command.
+          */
          struct Message
          {
             uint16_t type;        //!< Unit Type that generated the message.
             uint32_t state;       //!< Current state of the server.
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] type     unit that generated this message.
+             * @param [in] state    state to sent to the client.
+             */
             Message(uint16_t type = 0, uint32_t state = 0);
 
-            //! \see HF::Protocol::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
-          * Helper class to handle the State attribute for the Alert interface.
+          * Helper class to handle the %State attribute for the %Alert interface.
           */
          struct State:public HF::Attributes::Attribute <uint32_t>
          {
-            static constexpr uint8_t ID        = STATE_ATTR;
-            static constexpr bool    WRITABBLE = false;
+            static constexpr uint8_t ID        = STATE_ATTR; //!< Attribute %UID.
+            static constexpr bool    WRITABBLE = false;      //!< Attribute Read/Write
 
-            State(uint32_t data = 0, const HF::Interface *itf = nullptr):
-               Attribute <uint32_t>(Interface::ALERT, ID, itf, data, WRITABBLE)
+            State(uint32_t data = 0, const HF::Interface *owner = nullptr):
+               Attribute <uint32_t>(Interface::ALERT, ID, owner, data, WRITABBLE)
             {}
          };
 
          /*!
-          * Helper class to handle the Enabled attribute for the Alert interface.
+          * Helper class to handle the Enabled attribute for the %Alert interface.
           */
          struct Enable:public HF::Attributes::Attribute <uint32_t>
          {
-            static constexpr uint8_t ID        = ENABLE_ATTR;
-            static constexpr bool    WRITABBLE = true;
+            static constexpr uint8_t ID        = ENABLE_ATTR; //!< Attribute %UID.
+            static constexpr bool    WRITABBLE = true;        //!< Attribute Read/Write
 
-            Enable(uint32_t data = 0, const HF::Interface *itf = nullptr):
-               Attribute <uint32_t>(Interface::ALERT, ID, itf, data, WRITABBLE)
+            Enable(uint32_t data = 0, const HF::Interface *owner = nullptr):
+               Attribute <uint32_t>(Interface::ALERT, ID, owner, data, WRITABBLE)
             {}
          };
 
+         /*!
+          * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::Alert::Server *,uint8_t)
+          *
+          * @see HF::Interfaces::create_attribute (HF::Interfaces::Alert::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
-          * Alert Interface : Parent.
+          * %Alert %Interface : Parent.
           *
-          * This is the parent class for the Alert interface implementation.
+          * This is the parent class for the %Alert interface implementation.
           */
          struct Base:public Interfaces::Base <Interface::ALERT>
          {
@@ -128,16 +163,16 @@ namespace HF
          };
 
          /*!
-          * Alert Interface : Server side implementation.
+          * %Alert %Interface : %Server side implementation.
           *
-          * This class provides the server side of the Alert interface.
+          * This class provides the server side of the %Alert interface.
           */
          class Server:public InterfaceRole <Alert::Base, Interface::SERVER_ROLE>
          {
             protected:
 
-            uint32_t _state;     //!< Alerts state
-            uint32_t _enabled;   //!< Alerts enable state
+            uint32_t _state;     //!< Alert's state
+            uint32_t _enabled;   //!< Alert's enable state
 
             public:
 
@@ -159,21 +194,28 @@ namespace HF
             uint32_t state ();
 
             /*!
-             * Set the alert given by \c index to \c value.
+             * Set the state bitmask to the given @c value.
              *
-             * The alert entry \b MUST be enabled in order for the state to be set.
+             * @param [in] value    bitmask value to set the alert states.
+             */
+            void set_state (uint32_t value);
+
+            /*!
+             * Set the alert given by @c index to @c value.
+             *
+             * The alert entry @b MUST be enabled in order for the state to be set.
              *
              * @param [in] index   index of the alert to set : <tt>[0,31]</tt>.
              * @param [in] value   state to set the index to.
              *
-             * @return  \c true if the alert state was set or \c false otherwise.
+             * @return  @c true if the alert state was set or @c false otherwise.
              */
             bool state (uint8_t index, bool value);
 
             /*!
-             * Get the state of the alert given by \c index.
+             * Get the state of the alert given by @c index.
              *
-             * \note This will return \c false if \c index is greater than 31.
+             * @note This will return @c false if @c index is greater than 31.
              *
              * @param [in] index   index of the alert to get the state from : [0,31].
              *
@@ -191,7 +233,7 @@ namespace HF
             // ======================================================================
 
             /*!
-             * Enable alert at \c index.
+             * Enable alert at @c index.
              *
              * @param [in] index   index to enable the alert : [0,31].
              */
@@ -203,12 +245,12 @@ namespace HF
             void enableAll ();
 
             /*!
-             * Check if alert at \c index is enabled.
+             * Check if alert at @c index is enabled.
              *
              * @param [in] index   index of the alert to get the enabled state : [0,31].
              *
-             * @retval  \c true if the alert at \c index is enabled,
-             * @retval  \c false otherwise.
+             * @retval  <tt>true</tt> if the alert at @c index is enabled,
+             * @retval  <tt>false</tt> otherwise.
              */
             bool enabled (uint8_t index);
 
@@ -220,19 +262,26 @@ namespace HF
             uint32_t enabled ();
 
             /*!
-             * Disable the alert at \c index.
+             * Set the bitmask of the enable state of the alerts.
+             *
+             * @param [in] value the bitmask of the enable state of the alerts to set.
+             */
+            void set_enabled (uint32_t value);
+
+            /*!
+             * Disable the alert at @c index.
              *
              * @param [in] index   index of the alert to disable : [0,31].
              */
             void disable (uint8_t index);
 
             /*!
-             * Check if alert at \c index is disabled.
+             * Check if alert at @c index is disabled.
              *
              * @param [in] index   index of the alert to get the enable state : [0,31].
              *
-             * @retval  \c true if the alert at \c index is disabled
-             * @retval  \c false otherwise
+             * @retval  <tt>true</tt> if the alert at @c index is disabled
+             * @retval  <tt>false</tt> otherwise
              */
             bool disabled (uint8_t index);
 
@@ -245,7 +294,6 @@ namespace HF
             // Attributes API
             // =============================================================================
 
-            //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid)
             {
                return Interfaces::create_attribute (this, uid);
@@ -256,23 +304,23 @@ namespace HF
             // ======================================================================
             // Commands
             // ======================================================================
-            //! \name Commands
+            //! @name Commands
             //! @{
 
             /*!
-             * Send a HAN-FUN message containing a \c Alert::STATUS_CMD, to the given
+             * Send a HAN-FUN message containing a @c Alert::STATUS_CMD, to the given
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
-             * @param [in] unit_type  the unit type ( \see hf_profile_uid_t ) sending the message.
+             * @param [in] unit_type  the unit type ( @see hf_profile_uid_t ) sending the message.
              */
             void status (Protocol::Address &addr, uint16_t unit_type);
 
             /*!
-             * Send a HAN-FUN message containing a \c Alert::STATUS_CMD, to the broadcast
+             * Send a HAN-FUN message containing a @c Alert::STATUS_CMD, to the broadcast
              * network address.
              *
-             * @param [in] unit_type  the unit type ( \see HF::Profile::UID ) sending the message.
+             * @param [in] unit_type  the unit type ( @see HF::Profile::UID ) sending the message.
              */
             void status (uint16_t unit_type)
             {
@@ -283,47 +331,64 @@ namespace HF
             //! @}
             // ======================================================================
 
-            protected:
-
-            /*!
-             * Create a HAN-FUN message containing a \c Alert::STATUS_CMD, to be sent to the
-             * network.
-             *
-             * @param unit_type     unit type (i.e. profile) source for the alert status message.
-             *
-             * @return              a pointer to a \c Alert::Message, or \c nullptr if the message can't
-             *                      be allocated.
-             */
-            Alert::Message *create_status (uint16_t unit_type);
-
-            //! \see AbstractInterface::attributes
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes (uint8_t pack_id =
+                                                HF::Attributes::Pack::MANDATORY) const
             {
                UNUSED (pack_id);
                /* *INDENT-OFF* */
                return HF::Attributes::UIDS ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
+            protected:
+
+            /*!
+             * Create a HAN-FUN message containing a @c Alert::STATUS_CMD, to be sent to the
+             * network.
+             *
+             * @param unit_type     unit type (i.e. profile) source for the alert status message.
+             *
+             * @return              a pointer to a @c Alert::Message, or @c nullptr if the message can't
+             *                      be allocated.
+             */
+            Alert::Message *create_status (uint16_t unit_type);
+
          };
 
          /*!
-          * Alert Interface : Client side implementation.
+          * %Alert %Interface : %Client side implementation.
           *
-          * This class provides the client side of the Alert interface.
+          * This class provides the client side of the %Alert interface.
           */
          struct Client:public InterfaceRole <Alert::Base, Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
              * Callback function called when a status update message is received
-             * from an Alert server.
+             * from an %Alert server.
+             *
+             * @param [in] source   device address the message was received from.
+             * @param [in] message  message received
              */
-            virtual void status (Message &message)
+            virtual void status (Protocol::Address &source, Message &message)
+            {
+               UNUSED (source);
+               UNUSED (message);
+            }
+
+            /*!
+             * Callback function called when a status update message is received
+             * from an %Alert server.
+             *
+             * @deprecated Please use HF::Interfaces::Alert::Client::status(Protocol::Address &,Message &)
+             *
+             * @param [in] message  message received
+             */
+            virtual void status (Message &message) __attribute_deprecated__
             {
                UNUSED (message);
             }
@@ -333,8 +398,11 @@ namespace HF
 
             protected:
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
          };
+
+         /*! @} */
 
       }  // namespace Alert
 
@@ -342,6 +410,5 @@ namespace HF
 
 }  // namespace HF
 
-/*! @} */
 
 #endif /* HF_ITF_ALERT_H */

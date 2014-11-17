@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       apps/base_app.cpp
+ * @file       apps/base_app.cpp
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -34,59 +34,76 @@
 
 #include "json/json.h"
 
+/*!
+ * @addtogroup examples
+ * @{
+ */
+
 // =============================================================================
 // Defines
 // =============================================================================
 
 #ifndef HF_APP_CONFIG_FILE
-   #define HF_APP_CONFIG_FILE   "./hanfun.json"
+   #define HF_APP_CONFIG_FILE   "./hanfun.json"    //!< JSON database file.
 #endif
 
 // =============================================================================
 // Global Variables
 // =============================================================================
 
+//! Concentrator instance.
 static Base base;
 
 // =============================================================================
 // Commands
 // =============================================================================
 
+/*!
+ * ListRegs List registrations command.
+ */
 COMMAND (ListRegs, "lr", "lr:list registrations.")
 {
    UNUSED (args);
 
-   auto devices = base.unit0 ()->device_management ()->entries ();
+   auto &devices = base.unit0 ()->device_management ()->entries ();
 
    LOG (APP) << std::setfill (' ');
    LOG (APP) << "HAN-FUN" << "  Registered Devices (" << (int) devices.size () << "):" << NL;
 
    /* *INDENT-OFF* */
-   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device *device)
+   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device &device)
    {
-      LOG (APP) << std::setw (9) << (base.link (device->address) != nullptr ? "+ " : "- ");
-      LOG (APP) << std::setw (5) << device->address << " | ";
-      LOG (APP) << device->uid << NL;
+      LOG (APP) << (base.link (device.address) != nullptr ? "+ " : "- ");
+      LOG (APP) << std::setw (5) << device.address << " | ";
+      LOG (APP) << device.uid << NL;
    });
    /* *INDENT-ON* */
 }
 
+/*!
+ * List binds command.
+ */
 COMMAND (ListBinds, "lb", "lb:list binds.")
 {
    UNUSED (args);
 
-   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries;
+   HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries ();
 
    LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
-   std::for_each (entries.begin (), entries.end (), [](const HF::Core::BindManagement::Entry &entry)
-                  {
-                     LOG (APP) << "       - "
-                               << entry.source.device << ":" << (int) entry.source.unit << " -> "
-                               << entry.destination.device << ":" << (int) entry.destination.unit << NL;
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (),
+                  [](const HF::Core::BindManagement::Entry &entry)
+   {
+      LOG (APP) << "       - "
+      << entry.source.device << ":" << (int) entry.source.unit << " -> "
+      << entry.destination.device << ":" << (int) entry.destination.unit << NL;
+   });
+   /* *INDENT-ON* */
 }
 
+/*!
+ * Setup registration command.
+ */
 COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
 {
    if (args.size () > 0 && args[0] == "0") //!< Disable Registration
@@ -139,6 +156,9 @@ COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
    LOG (APP) << "r 1 x    : Enable Registration Mode (Register Device x)." << NL;
 }
 
+/*!
+ * De-register device command.
+ */
 COMMAND (Deregister, "d", "d x:de-register device x.")
 {
    if (args.size () < 1)
@@ -160,6 +180,9 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
               << (res ? "SUCCESS" : "FAIL") << " !" << NL;
 }
 
+/*!
+ * Create bind command.
+ */
 COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
 {
    if (args.size () < 2)
@@ -206,6 +229,9 @@ COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
    }
 }
 
+/*!
+ * Destroy bind command.
+ */
 COMMAND (Unbind, "u", "u x y:unbind device x with y.")
 {
    UNUSED (args);
@@ -306,3 +332,5 @@ void HF::Application::Restore ()
 
    Restored ();
 }
+
+/*! @} */

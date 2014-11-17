@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/core/test_attribute_reporting.cpp
+ * @file       tests/core/test_attribute_reporting.cpp
  *
  * This file contains the implementation of the unit tests for the Attribute
  * Reporting core service in HAN-FUN.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -330,7 +330,7 @@ TEST (AttrReport_Periodic_Entry, Unpack)
                0x03, 0xA1, 0xA2,0xA3,         // Attributes UID's
                0xFF, 0xFF, 0xFF};
 
-   LONGS_EQUAL (entry.size (), entry.unpack (expected, 3));
+   LONGS_EQUAL (1 + 2 + 1 + 1 + 3, entry.unpack (expected, 3));
 
    LONGS_EQUAL (0x5A, entry.unit);
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, entry.itf.role);
@@ -443,7 +443,9 @@ TEST (AttrReport_Periodic_Rule, Pack)
 
 TEST (AttrReport_Periodic_Rule, Unpack)
 {
-   LONGS_EQUAL (rule.size (), rule.unpack (expected, 3));
+   Periodic::Entry entry;
+   LONGS_EQUAL (1 + 1 + 2 + 1 + 4 + 1 + (1 + 2 + 1) + (1 + 2 + 1) + (1 + 2 + 1 + 4),
+                rule.unpack (expected, 3));
 
    LONGS_EQUAL (PERIODIC, rule.report.type);
    LONGS_EQUAL (0x0A, rule.report.id);
@@ -452,7 +454,7 @@ TEST (AttrReport_Periodic_Rule, Unpack)
    LONGS_EQUAL (0x05A5, rule.destination.device);
    LONGS_EQUAL (0xAA, rule.destination.unit);
 
-   LONGS_EQUAL (0xAABBCCDD, rule.interval ());
+   LONGS_EQUAL (0xAABBCCDD, rule.interval);
 
    expected[3] = 0x8A;
 
@@ -562,7 +564,7 @@ TEST (AttrReport_Event_Field, Pack2)
 
 TEST (AttrReport_Event_Field, Unpack)
 {
-   LONGS_EQUAL (field.size (true), field.unpack (expected, 3, true));
+   LONGS_EQUAL (1 + 1 + 1 + 4, field.unpack (expected, 3, true));
 
    LONGS_EQUAL (Event::EQ, field.type);
    LONGS_EQUAL (0x5A, field.attr_uid);
@@ -1085,7 +1087,7 @@ TEST (AttrReport_Report_Periodic_Entry, Pack)
 TEST (AttrReport_Report_Periodic_Entry, Unpack)
 {
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
-   LONGS_EQUAL (entry.size (), entry.unpack (get_factory, expected, 3));
+   LONGS_EQUAL (1 + 2 + 1 + 3 * (1 + 2), entry.unpack (get_factory, expected, 3));
 
    LONGS_EQUAL (0x55, entry.unit);
    LONGS_EQUAL (0x05A5, entry.itf.id);
@@ -1502,7 +1504,7 @@ TEST (AttrReport_Report_Event_Entry, Pack)
 TEST (AttrReport_Report_Event_Entry, Unpack)
 {
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
-   LONGS_EQUAL (entry.size (), entry.unpack (get_factory, expected, 3));
+   LONGS_EQUAL (1 + 2 + 1 + 3 * (1 + 1 + 2), entry.unpack (get_factory, expected, 3));
 
    LONGS_EQUAL (0x55, entry.unit);
    LONGS_EQUAL (0x05A5, entry.itf.id);
@@ -1946,12 +1948,12 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
 
          offset += Report::AddEntryMessage::pack (array, offset);
 
-         std::for_each (entries.begin (), entries.end (),
-                        [&array, &offset](uint8_t value)
-                        {
-                           offset += array.write (offset, value);
-                        }
-                       );
+         /* *INDENT-OFF* */
+         std::for_each (entries.begin (), entries.end (), [&array, &offset](uint8_t value)
+         {
+            offset += array.write (offset, value);
+         });
+         /* *INDENT-ON* */
 
          return offset - start;
       }
@@ -2114,7 +2116,8 @@ TEST (AttrReport_Report_Periodic_AddEntryMessage, Pack)
 
 TEST (AttrReport_Report_Periodic_AddEntryMessage, Unpack)
 {
-   LONGS_EQUAL (message.size (), message.unpack (expected, 3));
+   LONGS_EQUAL (1 + 1 + (1 + 2 + 1) + (1 + 2 + 1) + (1 + 2 + 1 + 1 + 4),
+                message.unpack (expected, 3));
 
    LONGS_EQUAL (PERIODIC, message.report.type);
    LONGS_EQUAL (0x0A, message.report.id);
@@ -2513,11 +2516,14 @@ TEST_GROUP (AttributeReporting_Client)
          InterfaceHelper <AttributeReporting::Client>()
       {}
 
-      void report (Type type, Common::ByteArray &payload, size_t offset)
+      void report (Type type, const Protocol::Address &address,
+                   const Common::ByteArray &payload, size_t offset)
       {
          UNUSED (type);
+         UNUSED (address);
          UNUSED (payload);
          UNUSED (offset);
+
          mock ("AttributeReporting::Client").actualCall ("report").withParameter ("type", type);
       }
 
@@ -2694,7 +2700,7 @@ TEST_GROUP (AttributeReporting_Server)
       base   = new Testing::Concentrator ();
       server = new AttributeReporting::Server (*base->unit0 ());
 
-      base->unit0 ()->attr_reporting = server;
+      base->unit0 ()->attribute_reporting (server);
 
       unit = new Testing::Unit (1, *base);
 
@@ -2704,10 +2710,50 @@ TEST_GROUP (AttributeReporting_Server)
    TEST_TEARDOWN ()
    {
       delete unit;
-      delete server;
       delete base;
 
       mock ().clear ();
+   }
+
+   void setup_event_rule (Event::Type type)
+   {
+      Event::Field field;
+      Event::Rule  rule;
+      Event::Entry entry;
+
+      field.attr_uid = TestInterface::ATTR1;
+      field.type     = type;
+      field.value    = {0x12, 0x34, 0x56, 0x78};
+
+      entry.itf.id   = 0x7ABC;
+      entry.pack_id  = HF::Attributes::DYNAMIC;
+      entry.unit     = 1;
+
+      entry.fields.push_back (field);
+
+      rule.report.id = 0x5A;
+      rule.add (entry);
+
+      server->event_rules.push_front (rule);
+   }
+
+   void check_event_report (const char *file, int line)
+   {
+      auto packet = base->packets.front ();
+
+      Report::Event report;
+      report.unpack (HF::Testing::FactoryGetter, packet->message.payload, 0);
+
+      LONGS_EQUAL_LOCATION (0x5A, report.id, file, line);
+      LONGS_EQUAL_LOCATION (EVENT, report.type, file, line);
+      LONGS_EQUAL_LOCATION (1, std::distance (report.entries.begin (), report.entries.end ()), file, line)
+
+      auto &entry2 = *report.entries.begin ();
+
+      LONGS_EQUAL_LOCATION (1, entry2.unit, file, line);
+      CHECK_EQUAL_LOCATION (0x7ABC, entry2.itf.id, file, line);
+
+      LONGS_EQUAL_LOCATION (1, entry2.fields.size (), file, line);
    }
 };
 
@@ -2716,10 +2762,11 @@ TEST (AttributeReporting_Server, Periodic)
    Periodic::Rule  rule (50);
    Periodic::Entry entry;
 
-   entry.itf.id  = HF::Interface::ALERT;
-   entry.pack_id = HF::Attributes::MANDATORY;
-   entry.unit    = 1;
+   entry.itf.id   = HF::Interface::ALERT;
+   entry.pack_id  = HF::Attributes::MANDATORY;
+   entry.unit     = 1;
 
+   rule.report.id = 0x5A;
    rule.add (entry);
 
    unit->attr3 = 0x1234;
@@ -2736,36 +2783,37 @@ TEST (AttributeReporting_Server, Periodic)
 
    LONGS_EQUAL (1, base->packets.size ());
 
+   // Check report.
+   auto packet = base->packets.front ();
+
+   Report::Periodic report;
+   report.unpack (HF::Attributes::get_factory, packet->message.payload, 0);
+
+   LONGS_EQUAL (0x5A, report.id);
+   LONGS_EQUAL (PERIODIC, report.type);
+   LONGS_EQUAL (1, std::distance (report.entries.begin (), report.entries.end ()))
+
+   auto &entry2 = *report.entries.begin ();
+
+   LONGS_EQUAL (entry.unit, entry2.unit);
+   CHECK_EQUAL (entry.itf, entry2.itf);
+
    server->periodic (80);
 
    LONGS_EQUAL (1, base->packets.size ());
 }
 
+#define CHECK_EVENT_REPORT()   check_event_report (__FILE__, __LINE__)
+
 TEST (AttributeReporting_Server, Event_Equal)
 {
-   Event::Field field;
-   Event::Rule  rule;
-   Event::Entry entry;
-
-   field.attr_uid = 0x5A;
-   field.type     = Event::EQ;
-   field.value    = {0x12, 0x34, 0x56, 0x78};
-
-   entry.itf.id   = 0x7ABC;
-   entry.pack_id  = HF::Attributes::DYNAMIC;
-   entry.unit     = 1;
-
-   entry.fields.push_back (field);
-
-   rule.add (entry);
-
-   server->event_rules.push_front (rule);
+   setup_event_rule (Event::EQ);
 
    uint32_t old_value = 0x12345679;
    uint32_t new_value = 0x1234567A;
 
-   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, 0x5A, nullptr, old_value);
-   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, 0x5A, nullptr, new_value);
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, new_value);
 
    server->notify (1, old_attr, new_attr);
 
@@ -2776,33 +2824,20 @@ TEST (AttributeReporting_Server, Event_Equal)
    server->notify (1, old_attr, new_attr);
 
    LONGS_EQUAL (1, base->packets.size ());
+
+   // Check report.
+   CHECK_EVENT_REPORT ();
 }
 
 TEST (AttributeReporting_Server, Event_Lower)
 {
-   Event::Field field;
-   Event::Rule  rule;
-   Event::Entry entry;
-
-   field.attr_uid = 0x5A;
-   field.type     = Event::LT;
-   field.value    = {0x12, 0x34, 0x56, 0x78};
-
-   entry.itf.id   = 0x7ABC;
-   entry.pack_id  = HF::Attributes::DYNAMIC;
-   entry.unit     = 1;
-
-   entry.fields.push_back (field);
-
-   rule.add (entry);
-
-   server->event_rules.push_front (rule);
+   setup_event_rule (Event::LT);
 
    uint32_t old_value = 0x12345679;
    uint32_t new_value = 0x1234567A;
 
-   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, 0x5A, nullptr, old_value);
-   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, 0x5A, nullptr, new_value);
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, new_value);
 
    server->notify (1, old_attr, new_attr);
 
@@ -2813,33 +2848,20 @@ TEST (AttributeReporting_Server, Event_Lower)
    server->notify (1, old_attr, new_attr);
 
    LONGS_EQUAL (1, base->packets.size ());
+
+   // Check report.
+   CHECK_EVENT_REPORT ();
 }
 
 TEST (AttributeReporting_Server, Event_Upper)
 {
-   Event::Field field;
-   Event::Rule  rule;
-   Event::Entry entry;
-
-   field.attr_uid = 0x5A;
-   field.type     = Event::HT;
-   field.value    = {0x12, 0x34, 0x56, 0x78};
-
-   entry.itf.id   = 0x7ABC;
-   entry.pack_id  = HF::Attributes::DYNAMIC;
-   entry.unit     = 1;
-
-   entry.fields.push_back (field);
-
-   rule.add (entry);
-
-   server->event_rules.push_front (rule);
+   setup_event_rule (Event::HT);
 
    uint32_t old_value = 0x12345670;
    uint32_t new_value = 0x12345675;
 
-   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, 0x5A, nullptr, old_value);
-   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, 0x5A, nullptr, new_value);
+   HF::Attributes::Attribute <uint32_t &> old_attr (0x7ABC, TestInterface::ATTR1, old_value);
+   HF::Attributes::Attribute <uint32_t &> new_attr (0x7ABC, TestInterface::ATTR1, new_value);
 
    server->notify (1, old_attr, new_attr);
 
@@ -2850,4 +2872,105 @@ TEST (AttributeReporting_Server, Event_Upper)
    server->notify (1, old_attr, new_attr);
 
    LONGS_EQUAL (1, base->packets.size ());
+
+   // Check report.
+   CHECK_EVENT_REPORT ();
+}
+
+TEST (AttributeReporting_Server, Handle_Create_Periodic)
+{
+   Protocol::Address dst;
+
+   dst.mod    = Protocol::Address::DEVICE;
+   dst.device = 0x5A5A;
+   dst.unit   = 0xDD;
+
+   Protocol::Message *message = AttributeReporting::create (dst, 0x12345678);
+
+   CHECK_FALSE (message == nullptr);
+
+   Protocol::Packet packet (*message);
+
+   packet.message.length = packet.message.payload.size ();
+
+   delete message;
+
+   // Create a rule entry.
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (1, server->count (AttributeReporting::PERIODIC));
+   LONGS_EQUAL (1, base->packets.size ());
+
+   auto resp_pkt = base->packets.back ();
+
+   AttributeReporting::Response resp;
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::PERIODIC, resp.report.type);
+   LONGS_EQUAL (1, resp.report.id);
+
+   // Create another rule.
+
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (2, server->count (AttributeReporting::PERIODIC));
+   LONGS_EQUAL (2, base->packets.size ());
+
+   resp_pkt = base->packets.back ();
+
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::PERIODIC, resp.report.type);
+   LONGS_EQUAL (2, resp.report.id);
+}
+
+TEST (AttributeReporting_Server, Handle_Create_Event)
+{
+   Protocol::Address dst;
+
+   dst.mod    = Protocol::Address::DEVICE;
+   dst.device = 0x5A5A;
+   dst.unit   = 0xDD;
+
+   Protocol::Message *message = AttributeReporting::create (dst);
+
+   CHECK_FALSE (message == nullptr);
+
+   Protocol::Packet packet (*message);
+
+   packet.message.length = packet.message.payload.size ();
+
+   delete message;
+
+   // Create a rule entry.
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (1, server->count (AttributeReporting::EVENT));
+   LONGS_EQUAL (1, base->packets.size ());
+
+   auto resp_pkt = base->packets.back ();
+
+   AttributeReporting::Response resp;
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::EVENT, resp.report.type);
+   LONGS_EQUAL (1, resp.report.id);
+
+   // Create another rule.
+
+   LONGS_EQUAL (Result::OK, server->handle (packet, packet.message.payload, 0));
+
+   LONGS_EQUAL (2, server->count (AttributeReporting::EVENT));
+   LONGS_EQUAL (2, base->packets.size ());
+
+   resp_pkt = base->packets.back ();
+
+   resp.unpack (resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (AttributeReporting::EVENT, resp.report.type);
+   LONGS_EQUAL (2, resp.report.id);
 }

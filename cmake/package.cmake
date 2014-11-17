@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file cmake/package.cmake
+#   @file cmake/package.cmake
 #
 #   HAN-FUN Library package export helpers.
 #
-#   \version    0.3.2
+#   @version    1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #

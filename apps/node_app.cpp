@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/node_app.cpp
+ * @file       apps/node_app.cpp
  *
  * This file contains the implementation of the example application for a
  * HAN-FUN Node.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -30,20 +30,31 @@
 
 #include "application.h"
 
+/*!
+ * @addtogroup examples
+ * @{
+ */
+
 // =============================================================================
 // Global Variables.
 // =============================================================================
 
+//! HAN-FUN Node instance.
 static Node node;
 
-static SimpleLight *simple_light   = nullptr;
+//! Simple Light unit.
+static SimpleLight *simple_light = nullptr;
 
+//! Simple Switch unit.
 static SimpleSwitch *simple_switch = nullptr;
 
 // =============================================================================
 // Commands
 // =============================================================================
 
+/*!
+ * Register node command.
+ */
 COMMAND (Register, "r", "r:register device")
 {
    UNUSED (args);
@@ -52,6 +63,9 @@ COMMAND (Register, "r", "r:register device")
    node.unit0 ()->device_management ()->register_device ();
 }
 
+/*!
+ * Print node address command.
+ */
 COMMAND (Address, "a", "a:device address")
 {
    UNUSED (args);
@@ -60,6 +74,9 @@ COMMAND (Address, "a", "a:device address")
    LOG (APP) << "Device Address : " << node.address () << NL;
 }
 
+/*!
+ * Change device to a simple light.
+ */
 COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
 {
    UNUSED (args);
@@ -78,6 +95,9 @@ COMMAND (SimpleLight, "sl", "sl:set device as a simple light")
    LOG (APP) << "Device is now a Simple Light !" << NL;
 }
 
+/*!
+ * Change device to a simple switch.
+ */
 COMMAND (SimpleSwitch, "ss", "ss:set device as a simple switch")
 {
    UNUSED (args);
@@ -96,6 +116,9 @@ COMMAND (SimpleSwitch, "ss", "ss:set device as a simple switch")
    LOG (APP) << "Device is now a Simple Switch !" << NL;
 }
 
+/*!
+ * Send an on command from the simple switch.
+ */
 COMMAND (On, "on", "on:On Command")
 {
    UNUSED (args);
@@ -111,6 +134,9 @@ COMMAND (On, "on", "on:On Command")
    }
 }
 
+/*!
+ * Send an off command from the simple switch.
+ */
 COMMAND (Off, "off", "off:Off Command")
 {
    UNUSED (args);
@@ -126,6 +152,9 @@ COMMAND (Off, "off", "off:Off Command")
    }
 }
 
+/*!
+ * Send a toggle command from the simple switch.
+ */
 COMMAND (Toggle, "toggle", "toggle:Toggle Command")
 {
    UNUSED (args);
@@ -194,3 +223,5 @@ void HF::Application::Restore ()
 {
    Restored ();
 }
+
+/*! @} */

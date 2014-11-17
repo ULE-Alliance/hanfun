@@ -4,7 +4,7 @@
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * \version    1.0.0
+ * \version    1.1.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -72,13 +72,5 @@
 // =============================================================================
 
 #include "hanfun/devices.h"
-
-// =============================================================================
-// ULE Support
-// =============================================================================
-
-#ifdef HF_ULE_SUPPORT
-   #include "hanfun/ule.h"
-#endif
 
 #endif /* HANFUN_H */

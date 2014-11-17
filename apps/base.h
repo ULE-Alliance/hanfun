@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/base.h
+ * @file       apps/base.h
  *
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -24,100 +24,179 @@
 #include "json/json.h"
 
 // =============================================================================
-// Defines
-// =============================================================================
-
-// =============================================================================
 // Base
 // =============================================================================
 
 /*!
- * Custom Device Management class.
- *
- * This class allows for the application to select the address to
- * be given to next device that registers.
+ * @addtogroup examples
+ * @{
  */
-struct DeviceManagement:public HF::Core::DeviceManagement::DefaultServer
+
+namespace DeviceManagement
 {
-   DeviceManagement(HF::Core::Unit0 &unit):
-      HF::Core::DeviceManagement::DefaultServer (unit), loaded (false),
-      _next_address (HF::Protocol::BROADCAST_ADDR)
-   {}
-
-   virtual ~DeviceManagement() {}
-
-   uint16_t next_address (uint16_t addr)
+   /*!
+    * Custom Device Management Entries class.
+    *
+    * This class saves the application configuration every time an entry
+    * is save or destroyed.
+    */
+   struct Entries:public HF::Core::DeviceManagement::Entries
    {
-      _next_address = addr;
-      return _next_address;
-   }
+      typedef HF::Core::DeviceManagement::Device Device;
+      typedef HF::Core::DeviceManagement::DevicePtr DevicePtr;
 
-   bool available (uint16_t address);
+      HF::Common::Result save (const Device &device);
 
-   bool deregister (uint16_t address);
+      HF::Common::Result destroy (const Device &device);
 
-   using HF::Core::DeviceManagement::DefaultServer::deregister;
+      /*!
+       * Insert a device management entry into the database.
+       *
+       * This is used to add the entries when reading the configuration from the JSON database.
+       *
+       * @param [in] device   device entry to add.
+       */
+      void insert (const Device &device);
+   };
 
-   void clear ();
+   /*!
+    * Custom Device Management class.
+    *
+    * This class allows for the application to select the address to
+    * be given to next device that registers.
+    */
+   struct Server:public HF::Core::DeviceManagement::Server <Entries>
+   {
+      Server(HF::Core::Unit0 &unit):
+         HF::Core::DeviceManagement::Server <Entries>(unit),
+         _next_address (HF::Protocol::BROADCAST_ADDR)
+      {}
 
-   HF::Common::Result save (HF::Core::DeviceManagement::Device *device);
+      virtual ~Server() {}
 
-   void save (Json::Value &root);
+      /*!
+       * Set the device address for the next registration message.
+       *
+       * @param [in] addr  address to use in the next registration.
+       *
+       * @return  the address that was set.
+       */
+      uint16_t next_address (uint16_t addr)
+      {
+         _next_address = addr;
+         return _next_address;
+      }
 
-   void restore (Json::Value root);
+      /*!
+       * Check if the given @c address is available for registration.
+       *
+       * @param [in] address  device address to check.
+       *
+       * @retval  <tt>true</tt> if no device is registered with the given @c address;
+       * @retval  <tt>false</tt> otherwise.
+       */
+      bool available (uint16_t address);
 
-   protected:
+      /*!
+       * De-register the device with the given @c address.
+       *
+       * @param [in] address  address for the device to de-register.
+       *
+       * @retval  <tt>true</tt> if the device was de-registered;
+       * @retval  <tt>false</tt> otherwise.
+       */
+      bool deregister (uint16_t address);
 
-   bool     loaded;
+      /*!
+       * Save the device entries into the JSON database.
+       *
+       * @param [in] root  database root to start saving the entries.
+       */
+      void save (Json::Value &root);
 
-   uint16_t _next_address;
+      /*!
+       * Restore the device entries from the JSON database.
+       *
+       * @param [in] root  database root to start reading the entries.
+       */
+      void restore (Json::Value root);
 
-   uint16_t next_address ();
-};
+      protected:
+
+      using HF::Core::DeviceManagement::Server <Entries>::deregister;
+
+      //! The address the next registering device will be assigned.
+      uint16_t _next_address;
+
+      uint16_t next_address ();
+   };
+
+}     // namespace DeviceManagement
+
+namespace BindManagement
+{
+   /*!
+    * Custom Bind Management Entries class.
+    *
+    * This class saves the application configuration every time an entry
+    * is save or destroyed.
+    */
+   struct Entries:public HF::Core::BindManagement::Entries
+   {
+      typedef HF::Core::BindManagement::Entry Entry;
+      typedef HF::Core::BindManagement::EntryPtr EntryPtr;
+
+      HF::Common::Result save (const Entry &entry);
+
+      HF::Common::Result destroy (const Entry &entry);
+
+      /*!
+       * Insert a bind management entry into the database.
+       *
+       * This is used to add the entries when reading the configuration from the JSON database.
+       *
+       * @param [in] entry   device entry to add.
+       */
+      void insert (Entry &entry);
+   };
+
+   /*!
+    * Custom Bind Management class.
+    *
+    * This class allows for the application to save and restore bindings from a file.
+    */
+   struct Server:public HF::Core::BindManagement::Server <Entries>
+   {
+      Server(HF::Devices::Concentrator::IUnit0 &unit):
+         HF::Core::BindManagement::Server <Entries>(unit)
+      {}
+
+      /*!
+       * Save the bind entries into the JSON database.
+       *
+       * @param [in] root  database root to start saving the entries.
+       */
+      void save (Json::Value &root);
+
+      /*!
+       * Restore the bind entries from the JSON database.
+       *
+       * @param [in] root  database root to start reading the entries.
+       */
+      void restore (Json::Value root);
+   };
+
+}  // namespace BindManagement
+
+//! Custom Unit0 declaration
+typedef HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
+                                             ::DeviceManagement::Server,
+                                          HF::Core::AttributeReporting::Server,
+                                             ::BindManagement::Server> Unit0;
 
 /*!
- * Custom Bind Management class.
- *
- * This class allows for the application to save and restore bindings from a file.
+ * This class represents a HAN-FUN Concentrator.
  */
-struct BindManagement:public HF::Core::BindManagement::Server
-{
-   BindManagement(HF::Devices::Concentrator::IUnit0 &unit):
-      HF::Core::BindManagement::Server (unit), loaded (false)
-   {}
-
-   std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> add (
-      const HF::Protocol::Address &source,
-      const HF::Protocol::Address &destination,
-      const HF::Common::Interface &itf);
-
-   HF::Common::Result remove (const HF::Protocol::Address &source,
-                              const HF::Protocol::Address &destination,
-                              const HF::Common::Interface &itf);
-
-
-   void save (Json::Value &root);
-
-   void restore (Json::Value root);
-
-   protected:
-
-   bool loaded;
-};
-
-/*!
- * Custom Unit0 class to make use of the previous DeviceManagment class.
- */
-struct Unit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server, DeviceManagement,
-                                                      HF::Core::AttributeReporting::Server, BindManagement>
-{
-   Unit0(HF::IDevice &device):HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                                DeviceManagement,
-                                                                HF::Core::AttributeReporting::Server,
-                                                                BindManagement>(device)
-   {}
-};
-
 struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {
    Base():HF::Devices::Concentrator::Abstract <Unit0>()
@@ -257,7 +336,7 @@ void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node);
 // from_json
 // =============================================================================
 /*!
- * Fill a HF::Common::Interface from the given \c Json::Value object.
+ * Fill a HF::Common::Interface from the given @c Json::Value object.
  *
  * @param [in] node        reference to the Json::Value containing the fields for the
  *                         HF::Common::Interface.
@@ -271,7 +350,7 @@ void from_json (Json::Value &node, HF::Common::Interface &interface);
 // from_json
 // =============================================================================
 /*!
- * Create a new HF::UID::UID based on the fields present in the given \c Json::Value
+ * Create a new HF::UID::UID based on the fields present in the given @c Json::Value
  * object.
  *
  * @param [in] node   reference to the Json::Value containing the fields for the
@@ -287,7 +366,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid);
 // from_json
 // =============================================================================
 /*!
- * Fill a HF::Core::DeviceManagement::Unit from the given \c Json::Value object.
+ * Fill a HF::Core::DeviceManagement::Unit from the given @c Json::Value object.
  *
  * @param [in] node     reference to the Json::Value containing the fields for the
  *                      HF::Core::DeviceManagement::Unit.
@@ -301,7 +380,7 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit);
 // from_json
 // =============================================================================
 /*!
- * Fill a HF::Core::DeviceManagement::Device from the given \c Json::Value object.
+ * Fill a HF::Core::DeviceManagement::Device from the given @c Json::Value object.
  *
  * @param [in] node     reference to the Json::Value containing the fields for the
  *                      HF::Core::DeviceManagement::Device.
@@ -316,7 +395,7 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &device);
 // from_json
 // =============================================================================
 /*!
- * Fill a HF::Protocol::Address from the given \c Json::Value object.
+ * Fill a HF::Protocol::Address from the given @c Json::Value object.
  *
  * @param [in] node      reference to the Json::Value containing the fields for the
  *                         HF::Protocol::Address.
@@ -330,7 +409,7 @@ void from_json (Json::Value &node, HF::Protocol::Address &address);
 // from_json
 // =============================================================================
 /*!
- * Fill a HF::Core::BindManagement::Entry from the given \c Json::Value object.
+ * Fill a HF::Core::BindManagement::Entry from the given @c Json::Value object.
  *
  * @param [in] node     reference to the Json::Value containing the fields for the
  *                      HF::Core::BindManagement::Entry.
@@ -340,5 +419,7 @@ void from_json (Json::Value &node, HF::Protocol::Address &address);
  */
 // =============================================================================
 void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry);
+
+/*! @} */
 
 #endif /* HF_APP_BASE_H */

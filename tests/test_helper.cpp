@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/test_helper.cpp
+ * @file       tests/test_helper.cpp
  *
  * This file contains helper functions used the tests.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */

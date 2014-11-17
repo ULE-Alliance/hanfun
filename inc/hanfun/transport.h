@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/transport.h
+ * @file       inc/hanfun/transport.h
  *
- * This file contains the definition of the common transport layer API for
- * the HAN-FUN protocol.
+ * This file contains the definition of the transport layer API for the HAN-FUN
+ * common implementation.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -18,24 +18,36 @@
 #define HF_TRANSPORT_H
 
 #include <algorithm>
+#include <forward_list>
 
 #include "hanfun/common.h"
-
 #include "hanfun/uids.h"
-
-#include "hanfun/device.h"
+#include "hanfun/protocol.h"
 
 namespace HF
 {
    /*!
-    * This namespace contains the API for the transport layer.
+    * This is the top-level namespace for the transport layer API.
     */
    namespace Transport
    {
       // Forward declaration.
       struct Layer;
       /*!
-       * This interface represents a bidirectional link on the transport layer.
+       * @addtogroup transport Transport Layer API
+       * @ingroup devices
+       *
+       * This module contains the classes that define and implement the common functionality
+       * of the %Transport API.
+       *
+       * This API is used by HAN-FUN devices in an application to send/receive packets in an
+       * independent way from the actual transport mechanism being used.
+       * @{
+       */
+
+      /*!
+       * This interface represents a link on the transport layer, used to send data
+       * to the remote end-point.
        */
       struct Link
       {
@@ -56,7 +68,7 @@ namespace HF
          virtual void address (uint16_t addr) = 0;
 
          /*!
-          * Send the data in the given \c ByteArray using the link to the remote end-point.
+          * Send the data in the given @c ByteArray using the link to the remote end-point.
           *
           * @param [in] array   reference to the ByteArray containing the data to send.
           */
@@ -68,27 +80,25 @@ namespace HF
           * For example, for a ULE transport layer this would return the
           * RFPI/IPUI of the remote device.
           *
-          * \warning This MUST not return \c nullptr.
-          *
           * @return  the UID of the remote device of this link.
           */
          virtual const HF::UID::UID uid () const = 0;
       };
 
       /*!
-       * This interface represents the API that a device using a HAN-FUN
-       * transport layer MUST implement.
+       * This is the interface used by the transport layer to signal events comming in from
+       * the network.
        */
       struct Endpoint
       {
          // ======================================================================
          // Events
          // ======================================================================
-         //! \name Events
+         //! @name Events
          //! @{
 
          /*!
-          * Callback to report that a new transport \c link was been created to a
+          * Callback to report that a new transport @c link was been created to a
           * remote device.
           *
           * This link can then be used by the local end-point to send messages to
@@ -99,8 +109,8 @@ namespace HF
          virtual void connected (Link *link) = 0;
 
          /*!
-          * Callback to the report that the given transport \c link no longer is
-          * valid and MUST not be used to send messages to the remote end-point.
+          * Callback to the report that the given transport @c link no longer is
+          * valid and MUST not be used to send messages to the corresponding end-point.
           *
           * At the time of this method call the link MUST not be used to send any
           * further messages to the remote end-point.
@@ -114,24 +124,25 @@ namespace HF
           *
           * @param [in] packet   reference to the received packet.
           * @param [in] payload  reference a ByteArray containing the received data.
-          * @param [in] offset   offset from where the received data starts on the \c payload
+          * @param [in] offset   offset from where the received data starts on the @c payload
           *                      byte array buffer.
           */
-         virtual void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
+         virtual void receive (Protocol::Packet &packet, Common::ByteArray &payload,
+                               size_t offset) = 0;
 
          //! @}
          // ======================================================================
       };
 
       /*!
-       * This class defines common API for all transport layers.
+       * This class defines the API for the transport layer.
        */
       struct Layer
       {
          // ======================================================================
          // Commands
          // ======================================================================
-         //! \name Commands
+         //! @name Commands
          //! @{
 
          /*!
@@ -142,7 +153,7 @@ namespace HF
          virtual void initialize () = 0;
 
          /*!
-          * Register the given \c Endpoint to receive events.
+          * Register the given @c Endpoint to receive events.
           *
           * This should be possible to register multiple end-points, to the transport
           * layer.
@@ -152,10 +163,10 @@ namespace HF
          virtual void add (Endpoint *ep) = 0;
 
          /*!
-          * Free the system resources associated with the given \c Endpoint,
+          * Free the system resources associated with the given @c Endpoint,
           * and remove it from receiving any further events.
           *
-          * If \c ep is\c  nullptr then all end-points should be removed.
+          * If @c ep is @c  nullptr then all end-points should be removed.
           *
           * When all end-points are removed all remaining system resources,
           * associated with this transport layer should be freed.
@@ -183,14 +194,16 @@ namespace HF
       };
 
       /*!
-       * Top-level parent for all HF::Transport::Link implementations.
+       * Parent class for all HF::Transport::Link implementations.
        */
       class AbstractLink:public Link
       {
          protected:
 
+         //! UID associated with this link.
          HF::UID::UID_T *_uid;
 
+         //! HAN-FUN address associated with the remote end-point.
          uint16_t _address;
 
          public:
@@ -224,14 +237,16 @@ namespace HF
       };
 
       /*!
-       * Top-level class for all HF::Transport::Layer implementations.
+       * Parent class for all HF::Transport::Layer implementations.
        */
       class AbstractLayer:public Layer
       {
          protected:
 
+         //! List of registered end-points for this layer.
          std::forward_list <HF::Transport::Endpoint *> endpoints;
 
+         //! UID associated with the local transport layer.
          HF::UID::UID_T *_uid;
 
          public:
@@ -244,6 +259,10 @@ namespace HF
             delete _uid;
          }
 
+         void initialize () {}
+
+         void destroy () {}
+
          /*!
           * Add an entry to the list of end-points connected to the transport layer.
           *
@@ -251,16 +270,17 @@ namespace HF
           */
          void add (HF::Transport::Endpoint *ep)
          {
+            assert (ep != nullptr);
             endpoints.push_front (ep);
          }
 
          /*!
-          * Remove the entry in \c ep, from the list of end-points connected to the
+          * Remove the entry in @c ep, from the list of end-points connected to the
           * transport layer.
           *
-          * If \c ep is equal to \c nullptr then all end-points are removed.
+          * If @c ep is equal to @c nullptr then all end-points are removed.
           *
-          * @param [in] ep pointer to the end-point entry to remove or \c nullptr to
+          * @param [in] ep pointer to the end-point entry to remove or @c nullptr to
           *             remove all entries.
           */
          void remove (HF::Transport::Endpoint *ep = nullptr)
@@ -275,8 +295,16 @@ namespace HF
             }
          }
 
+         /*!
+          * Receive the data in @c payload, coming in in the given @c link and
+          * deliver the decoded packet to all registered end-points.
+          *
+          * @param [in] link     pointer to the link the incoming data was received.
+          * @param [in] payload  reference to the ByteArray containing the data received.
+          */
          void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
          {
+            assert (link != nullptr);
             Protocol::Packet *packet = new Protocol::Packet ();
             packet->link = link;
 
@@ -298,16 +326,21 @@ namespace HF
             return HF::UID::UID(_uid);
          }
 
+         /*!
+          * Set the UID to the given value.
+          *
+          * @param [in] _uid  pointer to the UID to use.
+          */
          void uid (HF::UID::UID_T *_uid)
          {
             this->_uid = _uid;
          }
 
          /*!
-          * Call the \c connected method for all the registered end-points
-          * with the given \c link as argument.
+          * Call the @c connected method for all the registered end-points
+          * with the given @c link as argument.
           *
-          * @param [in] link  pointer to the link to call the \c connected method with.
+          * @param [in] link  pointer to the link to call the @c connected method with.
           */
          void connected (HF::Transport::Link *link)
          {
@@ -323,10 +356,10 @@ namespace HF
          }
 
          /*!
-          * Call the \c disconnected method for all the registered end-points
-          * with the given \c link as argument.
+          * Call the @c disconnected method for all the registered end-points
+          * with the given @c link as argument.
           *
-          * @param [in] link  pointer to the link to call the \c disconnected method with.
+          * @param [in] link  pointer to the link to call the @c disconnected method with.
           */
          void disconnected (HF::Transport::Link *link)
          {
@@ -341,6 +374,8 @@ namespace HF
             /* *INDENT-ON* */
          }
       };
+
+      /*! @} */
 
    }  // namespace Transport
 

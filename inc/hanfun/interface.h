@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/interface.h
+ * @file       inc/hanfun/interface.h
  *
  * This file contains the definitions common to all interfaces.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -24,6 +24,20 @@
 namespace HF
 {
    /*!
+    * @defgroup interfaces Interfaces
+    *
+    * This module contains the classes that define and implement the %Interfaces API.
+    */
+
+   /*!
+    * @addtogroup common_itf Common
+    * @ingroup interfaces
+    *
+    * This module contains the common classes for the %Interfaces API implementation.
+    * @{
+    */
+
+   /*!
     * Common interface for all Interfaces.
     */
    struct Interface
@@ -31,7 +45,7 @@ namespace HF
       /*!
        * Interface roles.
        */
-      typedef enum
+      typedef enum _Role
       {
          CLIENT_ROLE = 0,   //!< Client Role.
          SERVER_ROLE = 1,   //!< Server Role.
@@ -40,7 +54,7 @@ namespace HF
       /*!
        * Interfaces Unique Identifiers (UID).
        */
-      typedef enum
+      typedef enum _UID
       {
          /* Core Services */
          DEVICE_MANAGEMENT   = 0x0001,   //!< Device Management Interface UID.
@@ -59,10 +73,10 @@ namespace HF
          MAX_UID  = 0x7FFF            //!< Max interface UID value.
       } UID;
 
-      enum Commands
-      {
-         MAX_CMD_ID = 0xFF,           //!< Maximum value for command IDs.
-      };
+      //! Maximum value for command IDs in interfaces.
+      static constexpr uint8_t MAX_CMD_ID = 0xFF;
+
+      virtual ~Interface() {}
 
       // =============================================================================
       // API
@@ -74,7 +88,7 @@ namespace HF
        * Subclasses MUST override this method to provide a valid value
        * for the interface being implemented.
        *
-       * This method returns a \c uint16_t and not a Interface::UID,
+       * This method returns a @c uint16_t and not a Interface::UID,
        * to provide support for proprietary interfaces.
        *
        * @return  the UID for the interface.
@@ -100,7 +114,8 @@ namespace HF
        *
        * @return        the result of the message processing.
        */
-      virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset) = 0;
+      virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                     size_t offset) = 0;
 
       /*!
        * Handle periodic processing.
@@ -110,12 +125,12 @@ namespace HF
       virtual void periodic (uint32_t time) = 0;
 
       /*!
-       * Return a pointer to the interface attribute with the given \c uid.
+       * Return a pointer to the interface attribute with the given @c uid.
        *
        * @param [in] uid   identifier of the attribute in the interface.
        *
        * @return     a pointer to the attribute if it exists,
-       *             \c nullptr otherwise.
+       *             @c nullptr otherwise.
        */
       virtual HF::Attributes::IAttribute *attribute (uint8_t uid) = 0;
 
@@ -126,37 +141,48 @@ namespace HF
        *
        * @return  vector containing the attributes UIDs.
        */
-      virtual HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const = 0;
+      virtual HF::Attributes::UIDS attributes (
+         uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const = 0;
    };
 
+   /*! @} */
+
    /*!
-    * This is the top-level namespace for all the Interfaces implemented.
+    * This is the top-level namespace for the implemented %Interfaces.
     */
    namespace Interfaces
    {
       /*!
-       * Common implementation of Interface functionality.
+       * @addtogroup common_itf
+       * @{
+       */
+
+      /*!
+       * Top-level parent class for all implemented interfaces.
+       *
+       * This class provides the implementation of the common functionality present in
+       * all interfaces implementations.
        */
       struct AbstractInterface:virtual public Interface
       {
-         //! \see Interface::handle
-         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         virtual ~AbstractInterface() {}
 
-         //! \see Interface::periodic
+         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                                size_t offset);
+
          void periodic (uint32_t time)
          {
             UNUSED (time);
          }
 
-         //! \see Interface::attribute
          HF::Attributes::IAttribute *attribute (uint8_t uid)
          {
             UNUSED (uid);
             return nullptr;
          }
 
-         //! \see HF::Interface::attributes
-         virtual HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         virtual HF::Attributes::UIDS attributes (
+            uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
             UNUSED (pack_id);
             return HF::Attributes::UIDS ();
@@ -175,7 +201,7 @@ namespace HF
          protected:
 
          /*!
-          * Send message \c msg to the network address given by \c addr.
+          * Send message @c msg to the network address given by @c addr.
           *
           * @param [in] addr        HF network address.
           * @param [in] message     pointer to the message to be sent to the network.
@@ -202,14 +228,29 @@ namespace HF
           * - Interface UID;
           * - Interface Role;
           *
-          * \see Interface::handle.
+          * @see HF::Interface::handle
+          *
+          * @param [in] message  incoming message.
+          * @param [in] payload  message payload.
+          * @param [in] offset   offset in payload array to start reading.
+          *
+          * @retval Common::Result::OK       if message is for this interface;
+          * @retval Common::Result::FAIL_ARG otherwise.
           */
-         Common::Result check (Protocol::Message &message, Common::ByteArray &payload, size_t offset);
+         Common::Result check (Protocol::Message &message, Common::ByteArray &payload,
+                               size_t offset);
 
          /*!
-          * Check if \c payload data size if sufficient for processing the \c message.
+          * Check if @c payload data size if sufficient for processing the @c message.
           *
-          * \see Interface::handle.
+          * @see HF::Interface::handle
+          *
+          * @param [in] message  incoming message.
+          * @param [in] payload  message payload.
+          * @param [in] offset   offset in payload array to start reading.
+          *
+          * @retval Common::Result::OK       if message is for this interface;
+          * @retval Common::Result::FAIL_ARG otherwise.
           */
          Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload,
                                             size_t offset);
@@ -238,25 +279,35 @@ namespace HF
             return 0;
          }
 
-         template<typename _Message_T>
+         /*!
+          * Helper function template to retrieve minimum size required for
+          * serializing/deserializing the class given.
+          *
+          * @tparam _Message  message class to get the minimum size to of.
+          *
+          * @return  the minimum size required to serializing/deserializing given class.
+          */
+         template<typename _Message>
          size_t payload_size_helper () const
          {
-            _Message_T message;
+            _Message message;
             return message.size ();
          }
 
          /*!
+          * @copydoc HF::Interface::handle
+          *
           * Handle command request/response messages, i.e. :
           *  - Protocol::Message:Type::COMMAND_REQ;
           *  - Protocol::Message:Type::COMMAND_RESP_REQ;
           *  - Protocol::Message:Type::COMMAND_RES;
-          *
-          * \see Interface::handle
           */
          virtual Common::Result handle_command (Protocol::Packet &packet,
                                                 Common::ByteArray &payload, size_t offset);
 
          /*!
+          * @copydoc HF::Interface::handle
+          *
           * Handle attributes request/response messages, i.e. :
           *  - Protocol::Message:Type::GET_ATTR_REQ;
           *  - Protocol::Message:Type::SET_ATTR_REQ;
@@ -264,8 +315,6 @@ namespace HF
           *  - Protocol::Message:Type::GET_ATTR_PACK_REQ;
           *  - Protocol::Message:Type::SET_ATTR_PACK_REQ;
           *  - Protocol::Message:Type::SET_ATTR_PACK_RESP_REQ;
-          *
-          * \see Interface::handle
           */
          virtual Common::Result handle_attribute (Protocol::Packet &packet,
                                                   Common::ByteArray &payload, size_t offset);
@@ -283,12 +332,14 @@ namespace HF
 
 
       /*!
-       * Class template for all interfaces implementations.
+       * Helper class template for parent class implementation of the interfaces.
+       *
+       * @tparam _uid   interface UID to be used by the interface.
        */
       template<Interface::UID _uid>
       struct Base:public AbstractInterface
       {
-         //! \see Interface::uid
+         //! @copydoc HF::Interface::uid
          uint16_t uid () const
          {
             return _uid;
@@ -296,6 +347,14 @@ namespace HF
 
          protected:
 
+         /*!
+          * Check if the given @c uid value matches the interface's @c %UID value.
+          *
+          * @param [in] uid   %UID value to check against.
+          *
+          * @retval  true     if the values match.
+          * @retval  false    otherwise.
+          */
          bool check_uid (uint16_t uid) const
          {
             return Base::uid () == uid;
@@ -303,19 +362,64 @@ namespace HF
       };
 
       /*!
-       * Class template for all interfaces role implementations.
+       * Helper class template for implementing a given interface role.
+       *
+       * @tparam Itf    parent interface class.
+       * @tparam _role  interface role implemented.
        */
       template<typename Itf, Interface::Role _role>
       struct InterfaceRole:public Itf
       {
-         //! \see Interface::role
+         //! @copydoc Interface::role
          Interface::Role role () const
          {
             return _role;
          }
       };
 
+      /*!
+       * Helper template class to allow interfaces implementation to be
+       * added as fields to other classes.
+       *
+       * @tparam  _Interface  base parent interface class.
+       * @tparam  _Proxy      class providing the required methods for proper interface
+       *                      usage.
+       */
+      template<typename _Interface, typename _Proxy>
+      struct Proxy:public _Interface
+      {
+         static_assert (std::is_base_of <Interfaces::AbstractInterface, _Interface>::value,
+                        "Interface MUST be of type HF::Interfaces::AbstractInterface !");
+
+         typedef _Interface base;
+
+         Proxy(_Proxy &_proxy):proxy (_proxy)
+         {}
+
+         //! @copydoc HF::Interfaces::AbstractInterface::send
+         void send (const Protocol::Address &addr, Protocol::Message &message)
+         {
+            proxy.send (addr, message);
+         }
+
+         //! @copydoc HF::Interfaces::AbstractInterface::notify
+         void notify (const HF::Attributes::IAttribute &old_value,
+                      const HF::Attributes::IAttribute &new_value) const
+         {
+            proxy.notify (old_value, new_value);
+         }
+
+         protected:
+
+         //! Referent to the class providing the required functionality.
+         _Proxy &proxy;
+      };
+
+      /*! @} */
+
    }  // namespace Interfaces
+
+   /*! @} */
 
 }  // namespace HF
 

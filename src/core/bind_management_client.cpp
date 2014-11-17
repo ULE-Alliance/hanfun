@@ -1,37 +1,42 @@
 // =============================================================================
 /*!
- * \file       src/core/bind_management_client.cpp
+ * @file       src/core/bind_management_client.cpp
  *
  * This file contains the implementation of the Bind Management : Client Role.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
+
 #include "hanfun/core/bind_management.h"
+
+// =============================================================================
+// API
+// =============================================================================
 
 using namespace HF;
 using namespace HF::Core;
+using namespace HF::Core::BindManagement;
 
 // =============================================================================
 // BindManagement::Client.
 // =============================================================================
 
 // =============================================================================
-// BindManagement::Client::add
+// Client::add
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::Client::add (const Protocol::Address &source,
-                                  const Protocol::Address &destination,
-                                  const Common::Interface &itf)
+void Client::add (const Protocol::Address &source, const Protocol::Address &destination,
+                  const Common::Interface &itf)
 {
    Protocol::Address addr (0, 0);
 
@@ -55,15 +60,14 @@ void BindManagement::Client::add (const Protocol::Address &source,
 }
 
 // =============================================================================
-// BindManagement::Client::remove
+// Client::remove
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::Client::remove (const Protocol::Address &source,
-                                     const Protocol::Address &destination,
-                                     const Common::Interface &itf)
+void Client::remove (const Protocol::Address &source, const Protocol::Address &destination,
+                     const Common::Interface &itf)
 {
    Protocol::Address addr (0, 0);
 
@@ -86,6 +90,34 @@ void BindManagement::Client::remove (const Protocol::Address &source,
    delete payload;
 }
 
+// =============================================================================
+// Client::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+size_t Client::payload_size (Protocol::Message::Interface &itf) const
+{
+   switch (itf.member)
+   {
+      case ADD_BIND_CMD:
+      case REMOVE_BIND_CMD:
+         return Protocol::Response::min_size;
+
+      case START_SESSION_CMD:
+         return SessionMgr::payload_size (SessionManagement::START);
+
+      case GET_ENTRIES_CMD:
+         return SessionMgr::payload_size (SessionManagement::GET);
+
+      case END_SESSION_CMD:
+         return SessionMgr::payload_size (SessionManagement::END);
+
+      default:
+         return 0;
+   }
+}
 
 // =============================================================================
 // BindManagement::Client::handle_command
@@ -94,7 +126,8 @@ void BindManagement::Client::remove (const Protocol::Address &source,
  *
  */
 // =============================================================================
-Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
+                                                       Common::ByteArray &payload, size_t offset)
 {
    Common::Result result   = Common::Result::FAIL_UNKNOWN;
 
@@ -112,6 +145,15 @@ Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
          result = Common::Result::OK;
          break;
       }
+      case START_SESSION_CMD:
+         return SessionMgr::handle_command (SessionManagement::START, packet, payload, offset);
+
+      case GET_ENTRIES_CMD:
+         return SessionMgr::handle_command (SessionManagement::GET, packet, payload, offset);
+
+      case END_SESSION_CMD:
+         return SessionMgr::handle_command (SessionManagement::END, packet, payload, offset);
+
       default:
          break;
    }
@@ -126,7 +168,8 @@ Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
  *
  */
 // =============================================================================
-void BindManagement::Client::response (const BindManagement::CMD cmd, const Protocol::Response &response)
+void BindManagement::Client::response (const BindManagement::CMD cmd,
+                                       const Protocol::Response &response)
 {
    UNUSED (cmd);
    UNUSED (response);

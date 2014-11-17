@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file tests/CMakeLists.txt
+#   @file tests/CMakeLists.txt
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \version 1.0.0
+#   @version 1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #
@@ -60,9 +60,12 @@ set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
                          "core/test_bind_management.cpp"
                          "core/test_device_information.cpp"
-                         "core/test_attribute_reporting.cpp")
+                         "core/test_attribute_reporting.cpp"
+                         "core/test_session_management.cpp")
 
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
+
+set(TESTS_UNITS_SRCS     "test_units.cpp")
 
 add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_PROTOCOL_SRCS}
@@ -70,7 +73,8 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_PROFILES_SRCS}
                             ${TESTS_DEVICES_SRCS}
                             ${TESTS_CORE_SRCS}
-                            ${TESTS_TRANSPORT_SRCS} )
+                            ${TESTS_TRANSPORT_SRCS}
+                            ${TESTS_UNITS_SRCS} )
 
 target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
 

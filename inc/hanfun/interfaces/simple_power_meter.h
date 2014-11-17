@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/interfaces/simple_power_meter.h
+ * @file       inc/hanfun/interfaces/simple_power_meter.h
  *
  * This file contains the definitions for the Simple Power Meter interface.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -58,6 +58,7 @@
 // Define
 // =============================================================================
 
+//! Helper macro used to support attribute reporting.
 #define ATTR_SETTER(__type, __arg, __uid)                                              \
    {                                                                                   \
       __type old = __arg;                                                              \
@@ -85,20 +86,44 @@ namespace HF
 {
    namespace Interfaces
    {
+      // Forward declaration
       namespace SimplePowerMeter
       {
          class Server;
       }
 
-      HF::Attributes::IAttribute *create_attribute (SimplePowerMeter::Server *server, uint8_t uid);
+      /*!
+       * @ingroup spm_itf
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       *          exist.
+       */
+      HF::Attributes::IAttribute *create_attribute (HF::Interfaces::SimplePowerMeter::Server *server,
+                                                    uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Power Meter interface.
        */
       namespace SimplePowerMeter
       {
+         /*!
+          * @addtogroup spm_itf  Simple Power Meter Interface
+          * @ingroup interfaces
+          *
+          * This module contains the classes that define and implement the Simple Power Meter
+          * interface API.
+          * @{
+          */
          //! Commands IDs.
-         typedef enum
+         typedef enum _CMD
          {
             REPORT_CMD            = 0x01,          //!< Report command ID.
             MEASUREMENT_RESET_CMD = 0x01           //!< Measurement Reset command ID.
@@ -107,7 +132,7 @@ namespace HF
          /*!
           * Attributes IDs.
           */
-         typedef enum
+         typedef enum _Attributes
          {
             ENERGY_ATTR             = 0x01,          //!< Energy Attribute ID.
             ENERGY_AT_RESET_ATTR    = 0x02,          //!< Energy at Last Reset Attribute ID.
@@ -128,17 +153,17 @@ namespace HF
           */
          struct Measurement
          {
-            uint8_t  unit;               //!< Measurement precision/type.
-            uint32_t value;              //!< Measurement value.
+            uint8_t  unit;               //!< %Measurement precision/type.
+            uint32_t value;              //!< %Measurement value.
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const
             {
                return sizeof(uint8_t) +  // Precision size.
                       sizeof(uint32_t);  // Value size.
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const
             {
                size_t start = offset;
@@ -149,7 +174,7 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0)
             {
                size_t  start = offset;
@@ -164,16 +189,24 @@ namespace HF
                return offset - start;
             }
 
+            /*!
+             * @copydoc HF::Attributes::IAttribute::compare
+             *
+             * @todo Take unit into consideration.
+             */
             int compare (const Measurement &other) const
             {
-               // FIXME Take unit into consideration.
                int res = value - other.value;
                return res;
             }
 
+            /*!
+             * @copydoc HF::Attributes::IAttribute::changed
+             *
+             * @todo Take unit into consideration.
+             */
             float changed (const Measurement &other) const
             {
-               // FIXME Take unit into consideration.
                return (((float) (value - other.value)) / other.value);
             }
          };
@@ -181,7 +214,7 @@ namespace HF
          /*!
           * Simple Meter report.
           *
-          * TODO This needs a way to dynamically add only the attributes
+          * @todo This needs a way to dynamically add only the attributes
           *       that are needed to the report.
           */
          struct Report
@@ -210,16 +243,26 @@ namespace HF
 
             Report();
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
+         /*!
+          * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::SimplePowerMeter::Server *,uint8_t)
+          *
+          * @see HF::Interfaces::create_attribute (HF::Interfaces::SimplePowerMeter::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
@@ -307,13 +350,12 @@ namespace HF
             // API
             // =============================================================================
 
-            //! \see Interface::periodic
             void periodic (uint32_t time);
 
             // ======================================================================
             // Getters & Setters
             // ======================================================================
-            //! \name Getters & Setters
+            //! @name Getters & Setters
             //! @{
 
 #if HF_ITF_SPM_ENERGY_ATTR
@@ -564,10 +606,8 @@ namespace HF
             // Attribute API
             // =============================================================================
 
-            //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid);
 
-            //! \see AbstractInterface::attributes
             HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
 
             friend HF::Attributes::IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *, uint8_t);
@@ -577,7 +617,7 @@ namespace HF
             /*!
              * Create a report message.
              *
-             * @return  message to send or \c nullptr if the message cannot be created.
+             * @return  message to send or @c nullptr if the message cannot be created.
              */
             virtual Report *report ();
          };
@@ -592,23 +632,43 @@ namespace HF
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
              * Receive a report message from a server.
              *
              * @param [in] report   the report received from the server.
+             *
+             * @deprecated Please use HF::Interfaces::SimplePowerMeter::Client::report(Protocol::Address &, Report &)
              */
-            virtual void report (Report &report) = 0;
+            virtual void report (Report &report) __attribute_deprecated__
+            {
+               UNUSED (report);
+            }
+
+            /*!
+             * Receive a report message from a server.
+             *
+             * @param [in] source   device address that sent the report.
+             * @param [in] report   the report received from the server.
+             */
+            virtual void report (Protocol::Address &source, Report &report)
+            {
+               UNUSED (source);
+               UNUSED (report);
+            }
 
             //! @}
             // =============================================================================
 
             protected:
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
          };
+
+         /*! @} */
 
       }  // namespace SimplePowerMeter
 

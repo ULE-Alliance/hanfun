@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/core/test_bind_management.cpp
+ * @file       tests/core/test_bind_management.cpp
  *
  * This file contains the implementation of the tests for Bind Management Interface.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -38,7 +38,7 @@ TEST (BindManagement, EntryPack)
    /* *INDENT-OFF* */
    Common::ByteArray expected { 0x00, 0x00, 0x00,
                                 0xF5,
-                                0xA5, 0xAA,    // Source Address.
+                                0xA5, 0xAA,          // Source Address.
                                 0x83, 0x33,          // interface.
                                 0xDA, 0x5A, 0xBB,    // Destination Address.
                                 0x00, 0x00, 0x00
@@ -72,7 +72,7 @@ TEST (BindManagement, EntryUnpack)
    /* *INDENT-OFF* */
    Common::ByteArray data { 0x00, 0x00, 0x00,
                             0xF5,
-                            0xA5, 0xAA,    // Source Address.
+                            0xA5, 0xAA,          // Source Address.
                             0x83, 0x33,          // interface.
                             0xDA, 0x5A, 0xBB,    // Destination Address.
                             0x00, 0x00, 0x00 };
@@ -154,10 +154,10 @@ TEST_GROUP (BindManagementClient)
 
    TEST_SETUP ()
    {
-      device = new Testing::Device ();
-      client = new TestBindManagementClient (*device->unit0 ());
+      mock ().ignoreOtherCalls ();
 
-      device->unit0 ()->dev_mgt = new HF::Core::DeviceManagement::Client (*device->unit0 ());
+      device                  = new Testing::Device ();
+      client                  = new TestBindManagementClient (*device->unit0 ());
 
       packet                  = Protocol::Packet ();
 
@@ -168,7 +168,6 @@ TEST_GROUP (BindManagementClient)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->dev_mgt;
       delete client;
       delete device;
 
@@ -322,13 +321,7 @@ TEST (BindManagementClient, ResponseFAIL)
 
 TEST_GROUP (BindManagementEntries)
 {
-   struct TestEntries:public BindManagement::Entries
-   {
-      using BindManagement::Entries::create;
-      using BindManagement::Entries::destroy;
-   };
-
-   TestEntries entries;
+   BindManagement::Entries entries;
 
    Protocol::Address src;
    Protocol::Address dst;
@@ -353,17 +346,12 @@ TEST_GROUP (BindManagementEntries)
    {
       size_t size = entries.size ();
 
-      auto   res  = entries.create (src, itf, dst);
+      auto   res  = entries.save (BindManagement::Entry (src, itf, dst));
 
       LONGS_EQUAL_LOCATION (size + 1, entries.size (), file, line);
       size = entries.size ();
 
-      LONGS_EQUAL_LOCATION (Common::Result::OK, res.first, file, line);
-
-      if (res.second == nullptr)
-      {
-         FAIL_LOCATION ("Pointer SHOULD NOT be nullptr", file, line);
-      }
+      LONGS_EQUAL_LOCATION (Common::Result::OK, res, file, line);
    }
 
    void should_not_create (Protocol::Address src, Protocol::Address dst, Common::Interface itf,
@@ -371,11 +359,10 @@ TEST_GROUP (BindManagementEntries)
    {
       size_t size = entries.size ();
 
-      auto   res  = entries.create (src, itf, dst);
+      auto   res  = entries.save (BindManagement::Entry (src, itf, dst));
 
       LONGS_EQUAL_LOCATION (size, entries.size (), file, line);
-      LONGS_EQUAL_LOCATION (Common::Result::FAIL_ARG, res.first, file, line);
-      POINTERS_EQUAL_LOCATION (nullptr, res.second, file, line);
+      LONGS_EQUAL_LOCATION (Common::Result::FAIL_ARG, res, file, line);
    }
 
 };
@@ -457,7 +444,7 @@ TEST (BindManagementEntries, DestroyOK)
    // Should have one element.
    LONGS_EQUAL (1, entries.size ());
 
-   BindManagement::Entries::Iterator it = entries.begin ();
+   BindManagement::Entries::iterator it = entries.begin ();
 
    HF::Common::Result res               = entries.destroy (*it);
 
@@ -562,7 +549,7 @@ void create_entries (T &entries, std::set <HF::Common::Interface> &db_itf,
          for_each (db_addr.begin (), db_addr.end (),
                    [&entries, &db_itf, &db_addr, &src, &itf](HF::Protocol::Address const &dst)
          {
-            entries.create (src, itf, dst);
+            entries.save (BindManagement::Entry (src, itf, dst));
          });
       });
    });
@@ -603,13 +590,10 @@ TEST (BindManagementEntries, Find)
 
    LONGS_EQUAL (0, entries.size ());
 
-   auto res = entries.create (src, itf, dst);
+   auto res = entries.save (BindManagement::Entry (src, itf, dst));
 
+   LONGS_EQUAL (Common::Result::OK, res);
    LONGS_EQUAL (1, entries.size ());
-
-   const BindManagement::Entry *entry = entries.find (src, itf, dst);
-
-   POINTERS_EQUAL (res.second, entry);
 }
 
 TEST (BindManagementEntries, DestroyPredicate)
@@ -621,19 +605,20 @@ TEST (BindManagementEntries, DestroyPredicate)
 
    LONGS_EQUAL (18 * 6 * 18, entries.size ());
 
-   uint16_t addr      = db_addr.begin ()->device;
+   uint16_t addr  = db_addr.begin ()->device;
 
-   uint16_t count     = 0;
+   uint16_t count = 0;
 
-   Common::Result res = this->entries.destroy ([addr, &count](BindManagement::Entry const &entry) {
-                                                  if (entry.source.device == addr)
-                                                  {
-                                                     count++;
-                                                  }
-
-                                                  return entry.source.device == addr;
-                                               }
-                                              );
+   /* *INDENT-OFF* */
+   Common::Result res = this->entries.destroy([addr, &count](BindManagement::Entry const &entry)
+   {
+      if (entry.source.device == addr)
+      {
+         count++;
+      }
+      return entry.source.device == addr;
+   });
+   /* *INDENT-ON* */
 
    LONGS_EQUAL (Common::Result::OK, res);
 
@@ -665,10 +650,10 @@ TEST (BindManagementEntries, DestroyAddress)
 
 TEST_GROUP (BindManagementServer)
 {
-   struct TestBindManagementServer:public HF::Core::BindManagement::Server
+   struct TestBindManagementServer:public HF::Core::BindManagement::DefaultServer
    {
       TestBindManagementServer(HF::Devices::Concentrator::IUnit0 &unit):
-         HF::Core::BindManagement::Server (unit)
+         HF::Core::BindManagement::DefaultServer (unit)
       {}
 
       virtual ~TestBindManagementServer()
@@ -688,19 +673,18 @@ TEST_GROUP (BindManagementServer)
 
       // =============================================================================
 
-      std::pair <Result, const BindManagement::Entry *> add (const Protocol::Address &source,
-                                                             const Protocol::Address &destination,
-                                                             const Common::Interface &itf)
+      Common::Result add (const Protocol::Address &source, const Protocol::Address &destination,
+                          const Common::Interface &itf)
       {
          MockActualCall &call = mock_fn ("add");
 
          if (call.hasReturnValue ())
          {
-            return *((std::pair <Result, BindManagement::Entry *> *)call.returnValue ().getPointerValue ());
+            return (Common::Result) call.returnValue ().getIntValue ();
          }
          else
          {
-            return HF::Core::BindManagement::Server::add (source, destination, itf);
+            return HF::Core::BindManagement::DefaultServer::add (source, destination, itf);
          }
       }
 
@@ -715,7 +699,7 @@ TEST_GROUP (BindManagementServer)
          }
          else
          {
-            return HF::Core::BindManagement::Server::remove (source, destination, itf);
+            return HF::Core::BindManagement::DefaultServer::remove (source, destination, itf);
          }
       }
    };
@@ -727,10 +711,8 @@ TEST_GROUP (BindManagementServer)
 
    TEST_SETUP ()
    {
-      device = new Testing::Concentrator ();
-      server = new TestBindManagementServer (*device->unit0 ());
-
-      device->unit0 ()->dev_mgt = new HF::Core::DeviceManagement::DefaultServer (*device->unit0 ());
+      device                  = new Testing::Concentrator ();
+      server                  = new TestBindManagementServer (*device->unit0 ());
 
       packet                  = Protocol::Packet ();
 
@@ -743,7 +725,6 @@ TEST_GROUP (BindManagementServer)
 
    TEST_TEARDOWN ()
    {
-      delete device->unit0 ()->dev_mgt;
       delete server;
       delete device;
 
@@ -768,7 +749,8 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0 ()->device_management ()->save (dev);
+      device->unit0 ()->device_management ()->entries ().save (*dev);
+      delete dev;
 
       dev          = new DeviceManagement::Device ();
 
@@ -779,7 +761,8 @@ TEST_GROUP (BindManagementServer)
       dev->units.push_back (unit);
       dev->emc     = 0xabcd;
 
-      device->unit0 ()->device_management ()->save (dev);
+      device->unit0 ()->device_management ()->entries ().save (*dev);
+      delete dev;
 
       entry.source.device      = 0x1111;
       entry.source.unit        = 0x22;
@@ -812,9 +795,7 @@ TEST (BindManagementServer, HandleAdd)
 
    entry.pack (packet.message.payload, 3);
 
-   std::pair <Common::Result, BindManagement::Entry *> result = std::make_pair (Common::Result::OK, nullptr);
-
-   mock_s ().expectOneCall ("add").andReturnValue (&result);
+   mock_s ().expectOneCall ("add").andReturnValue (Common::Result::OK);
 
    Common::Result res = server->handle (packet, packet.message.payload, 3);
    LONGS_EQUAL (Common::Result::OK, res);
@@ -903,7 +884,7 @@ TEST (BindManagementServer, AddMatch)
    BindManagement::Entry entry;
    CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
 
-   LONGS_EQUAL (0, server->entries.size ());
+   LONGS_EQUAL (0, server->entries ().size ());
 
    mock_s ().expectOneCall ("add");
 
@@ -911,13 +892,9 @@ TEST (BindManagementServer, AddMatch)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (Common::Result::OK, res);
 
-   CHECK_TRUE (res.second != nullptr);
-
-   LONGS_EQUAL (1, server->entries.size ());
-
-   const BindManagement::Entry *p_entry = res.second;
+   LONGS_EQUAL (1, server->entries ().size ());
 
    // Should not add if entry already present.
 
@@ -927,13 +904,69 @@ TEST (BindManagementServer, AddMatch)
 
    mock ().checkExpectations ();
 
-   LONGS_EQUAL (Common::Result::OK, res.first);
+   LONGS_EQUAL (Common::Result::OK, res);
 
-   CHECK_TRUE (res.second != nullptr);
+   LONGS_EQUAL (1, server->entries ().size ());
+}
 
-   LONGS_EQUAL (1, server->entries.size ());
+TEST (BindManagementServer, AddMatchFromConcentrator)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
 
-   POINTERS_EQUAL (p_entry, res.second);
+   HF::Units::Unit <HF::Profiles::SimpleOnOffSwitch> unit (1, *device);
+
+   LONGS_EQUAL (0, server->entries ().size ());
+
+   entry.source.device      = 0x0;
+   entry.source.unit        = 0x1;
+   entry.destination.device = 0x3333;
+   entry.destination.unit   = 0x44;
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (Common::Result::OK, res);
+   LONGS_EQUAL (1, server->entries ().size ());
+}
+
+TEST (BindManagementServer, AddMatchToConcentrator)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   HF::Units::Unit <HF::Profiles::SimpleLight> sl_unit (2, *device);
+
+   LONGS_EQUAL (0, server->entries ().size ());
+
+   entry.source.device      = 0x1111;
+   entry.source.unit        = 0x22;
+   entry.destination.device = 0x0;
+   entry.destination.unit   = 0x2;
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (Common::Result::OK, res);
+   LONGS_EQUAL (1, server->entries ().size ());
+}
+
+TEST (BindManagementServer, AddMatchCatchAll)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_ONOFF_SWITCHABLE);
+
+   entry.source.device = HF::Protocol::BROADCAST_ADDR;
+   entry.source.unit   = HF::Protocol::BROADCAST_UNIT;
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+
+   mock ().checkExpectations ();
+
+   LONGS_EQUAL (Common::Result::OK, res);
+   LONGS_EQUAL (1, server->entries ().size ());
 }
 
 TEST (BindManagementServer, AddNoMatch)
@@ -944,8 +977,7 @@ TEST (BindManagementServer, AddNoMatch)
    mock_s ().expectOneCall ("add");
 
    auto res = server->add (entry.source, entry.destination, entry.itf);
-   LONGS_EQUAL (Common::Result::FAIL_ARG, res.first);
-   POINTERS_EQUAL (nullptr, res.second);
+   LONGS_EQUAL (Common::Result::FAIL_ARG, res);
 
    mock ().checkExpectations ();
 }
@@ -958,8 +990,7 @@ TEST (BindManagementServer, RemoveMatch)
 
    // Create the entry.
    auto temp = server->add (entry.source, entry.destination, entry.itf);
-   LONGS_EQUAL (Common::Result::OK, temp.first);
-   CHECK_TRUE (nullptr != temp.second);
+   LONGS_EQUAL (Common::Result::OK, temp);
 
    // Try to remove entry.
    mock_s ().expectOneCall ("remove");
@@ -983,4 +1014,37 @@ TEST (BindManagementServer, RemoveNoMatch)
    LONGS_EQUAL (Common::Result::FAIL_ARG, res);
 
    mock ().checkExpectations ();
+}
+
+TEST (BindManagementServer, EntriesSession)
+{
+   // Create entry.
+   BindManagement::Entry entry;
+
+   for (uint8_t i = 0; i < 20; i++)
+   {
+      entry.source.device      = 0x1111 + i;
+      entry.source.unit        = 0x22 + i;
+      entry.destination.device = 0x1111 + i;
+      entry.destination.unit   = 0x44 + i;
+      server->entries ().save (entry);
+   }
+
+   LONGS_EQUAL (20, server->entries ().size ());
+
+   server->sessions ().start_session (0x1234);
+
+   entry.destination.device++;
+   server->entries ().save (entry);
+
+   LONGS_EQUAL (21, server->entries ().size ());
+   CHECK_FALSE (server->sessions ().is_valid (0x1234));
+
+   server->sessions ().start_session (0x1234);
+   CHECK_TRUE (server->sessions ().is_valid (0x1234));
+
+   server->entries ().destroy (entry);
+
+   LONGS_EQUAL (20, server->entries ().size ());
+   CHECK_FALSE (server->sessions ().is_valid (0x1234));
 }

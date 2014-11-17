@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/attribute_reporting.cpp
+ * @file       src/core/attribute_reporting.cpp
  *
  * This file contains the implementation of the common functionality for the
  * Attribute Reporting service interface.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,13 +17,25 @@
 
 #include "hanfun/core/attribute_reporting.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::AttributeReporting;
 
 // =============================================================================
-// API
+// DeviceManagement::create_attribute
 // =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *AttributeReporting::create_attribute (uint8_t uid)
+{
+   return Core::create_attribute ((AttributeReporting::Server *) nullptr, uid);
+}
 
 // =============================================================================
 // Identifier::size
@@ -249,7 +261,7 @@ size_t Periodic::Entry::unpack (const Common::ByteArray &array, size_t offset)
 // =============================================================================
 size_t Periodic::Rule::size () const
 {
-   size_t result = AttributeReporting::Rule::size () + sizeof(_interval);
+   size_t result = AttributeReporting::Rule::size () + sizeof(interval);
 
    result += sizeof(uint8_t);  // Number of entries.
 
@@ -276,7 +288,7 @@ size_t Periodic::Rule::pack (Common::ByteArray &array, size_t offset) const
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
-   offset += array.write (offset, _interval);
+   offset += array.write (offset, interval);
 
    uint8_t _size = std::distance (entries.begin (), entries.end ());
 
@@ -312,7 +324,7 @@ size_t Periodic::Rule::unpack (const Common::ByteArray &array, size_t offset)
       goto end;
    }
 
-   offset += array.read (offset, _interval);
+   offset += array.read (offset, interval);
 
    clear ();
 
@@ -668,8 +680,7 @@ size_t Report::Entry::pack (Common::ByteArray &array, size_t offset) const
  */
 // =============================================================================
 size_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
-                              const Common::ByteArray &array,
-                              size_t offset)
+                              const Common::ByteArray &array, size_t offset)
 {
    HF::Attributes::Factory factory = nullptr;
    uint8_t next                    = 0;
@@ -900,7 +911,7 @@ void Report::Periodic::add (Report::Periodic::Entry &entry)
 // =============================================================================
 size_t Report::Event::Field::size () const
 {
-   assert (attribute != nullptr);
+   assert (nullptr != attribute);
    return sizeof(uint8_t) + attribute->size (true);
 }
 
@@ -917,7 +928,7 @@ size_t Report::Event::Field::pack (Common::ByteArray &array, size_t offset) cons
 
    offset += array.write (offset, (uint8_t) type);
 
-   assert (attribute != nullptr);
+   assert (nullptr != attribute);
    offset += attribute->pack (array, offset, true);
 
    return offset - start;
@@ -1015,7 +1026,7 @@ size_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
    Field  field;
    size_t result = field.unpack (factory, array, offset);
 
-   if (field.attribute != nullptr)
+   if (nullptr != field.attribute)
    {
       add (field);
    }
@@ -1348,7 +1359,8 @@ size_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, size_t
  *
  */
 // =============================================================================
-size_t Report::Periodic::AddEntryMessage::unpack_entry (const Common::ByteArray &array, size_t offset)
+size_t Report::Periodic::AddEntryMessage::unpack_entry (const Common::ByteArray &array,
+                                                        size_t offset)
 {
    size_t start = offset;
 
@@ -1428,15 +1440,18 @@ size_t Report::Event::AddEntryMessage::unpack_entry (const Common::ByteArray &ar
 }
 
 // =============================================================================
-// process
+// process_field
 // =============================================================================
 /*!
+ * This function receives an Event::Field, the old and new values for an
+ * attribute and checks if a Report::Event::Field needs to be created.
  *
- * @param field
- * @param old_value
- * @param new_value
+ * @param [in] field       Event::Field associated with the attribute being processed.
+ * @param [in] old_value   old value for the attribute.
+ * @param [in] new_value   new value for the attribute.
  *
- * @return
+ * @return  a pointer to Report::Event::Field object if the condition in @c filed was met,
+ *          @c nullptr otherwise.
  */
 // =============================================================================
 static Report::Event::Field *process_field (const AttributeReporting::Event::Field &field,
@@ -1563,17 +1578,18 @@ Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::E
                     [](const Event::Field *field) {return field != nullptr;}
                    ))
    {
-      result = new Report::Event::Entry ();
+      result = new Report::Event::Entry (entry.unit, entry.itf);
 
+      /* *INDENT-OFF* */
       std::for_each (fields.begin (), fields.end (), [result](Event::Field *field)
-                     {
-                        if (field != nullptr)
-                        {
-                           result->add (*field);
-                           delete field;
-                        }
-                     }
-                    );
+      {
+         if (field != nullptr)
+         {
+            result->add (*field);
+            delete field;
+         }
+      });
+      /* *INDENT-ON* */
    }
 
    return result;
@@ -1630,10 +1646,6 @@ size_t Response::unpack (const Common::ByteArray &array, size_t offset)
 
    return offset - start;
 }
-
-// =============================================================================
-// API
-// =============================================================================
 
 // =============================================================================
 // AttributeReporting::create

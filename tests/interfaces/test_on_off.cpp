@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/interfaces/test_on_off.cpp
+ * @file       tests/interfaces/test_on_off.cpp
  *
  * This is file contains the unit tests for the On-Off Interface implementation.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -34,7 +34,7 @@ TEST_GROUP (OnOff)
    TestOnOff interface;
 };
 
-//! \test OnOff::uid should return \c Interface::ON_OFF.
+//! @test OnOff::uid should return @c Interface::ON_OFF.
 TEST (OnOff, UID)
 {
    CHECK_EQUAL (Interface::ON_OFF, interface.uid ());
@@ -64,7 +64,7 @@ TEST_GROUP (OnOffClient)
    }
 };
 
-//! \test Should send an ON_CMD message.
+//! @test Should send an ON_CMD message.
 TEST (OnOffClient, On)
 {
    mock ("Interface").expectOneCall ("send");
@@ -79,7 +79,7 @@ TEST (OnOffClient, On)
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
 
-//! \test Should send an OFF_CMD message.
+//! @test Should send an OFF_CMD message.
 TEST (OnOffClient, Off)
 {
    mock ("Interface").expectOneCall ("send");
@@ -94,7 +94,7 @@ TEST (OnOffClient, Off)
    LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 }
 
-//! \test Should send an TOGGLE_CMD message.
+//! @test Should send an TOGGLE_CMD message.
 TEST (OnOffClient, Toggle)
 {
    mock ("Interface").expectOneCall ("send");
@@ -121,30 +121,26 @@ TEST_GROUP (OnOffServer)
 
    class TestOnOffServer:public InterfaceHelper <OnOff::Server>
    {
-      /*!
-       * Callback that is called when a \c ON_CMD message is received.
-       */
-      void on ()
+      void on (HF::Protocol::Address &source)
       {
+         UNUSED (source);
          mock ("OnOffServer").actualCall ("on");
+         InterfaceHelper <OnOff::Server>::on (source);
       }
 
-      /*!
-       * Callback that is called when a \c OFF_CMD message is received.
-       */
-      virtual void off ()
+      void off (HF::Protocol::Address &source)
       {
+         UNUSED (source);
          mock ("OnOffServer").actualCall ("off");
+         InterfaceHelper <OnOff::Server>::off (source);
       }
 
-      /*!
-       * Callback that is called when a \c TOGGLE_CMD message is received.
-       */
-      virtual void toggle ()
+      void toggle (HF::Protocol::Address &source)
       {
+         UNUSED (source);
          mock ("OnOffServer").actualCall ("toggle");
+         InterfaceHelper <OnOff::Server>::toggle (source);
       }
-
    };
 
    TestOnOffServer   server;
@@ -188,20 +184,22 @@ TEST (OnOffServer, DefaultCallbacks)
 
    CHECK_FALSE (server.state ());
 
-   server.on ();
+   HF::Protocol::Address source;
+
+   server.on (source);
    CHECK_TRUE (server.state ());
 
-   server.off ();
+   server.off (source);
    CHECK_FALSE (server.state ());
 
-   server.toggle ();
+   server.toggle (source);
    CHECK_TRUE (server.state ());
 
-   server.toggle ();
+   server.toggle (source);
    CHECK_FALSE (server.state ());
 }
 
-//! \test Should handle valid \c OnOff::ON_CMD message.
+//! @test Should handle valid @c OnOff::ON_CMD message.
 TEST (OnOffServer, Handle_Valid_On_Message)
 {
    mock ("OnOffServer").expectOneCall ("on");
@@ -214,7 +212,7 @@ TEST (OnOffServer, Handle_Valid_On_Message)
    mock ("OnOffServer").checkExpectations ();
 }
 
-//! \test Should handle valid \c OnOff::OFF_CMD message.
+//! @test Should handle valid @c OnOff::OFF_CMD message.
 TEST (OnOffServer, Handle_Valid_Off_Message)
 {
    mock ("OnOffServer").expectOneCall ("off");
@@ -227,7 +225,7 @@ TEST (OnOffServer, Handle_Valid_Off_Message)
    mock ("OnOffServer").checkExpectations ();
 }
 
-//! \test Should handle valid \c OnOff::TOGGLE_CMD message.
+//! @test Should handle valid @c OnOff::TOGGLE_CMD message.
 TEST (OnOffServer, Handle_Valid_Toggle_Message)
 {
    mock ("OnOffServer").expectOneCall ("toggle");
@@ -240,7 +238,7 @@ TEST (OnOffServer, Handle_Valid_Toggle_Message)
    mock ("OnOffServer").checkExpectations ();
 }
 
-//! \test Should not handle message from invalid role.
+//! @test Should not handle message from invalid role.
 TEST (OnOffServer, Handle_Invalid_Role)
 {
    packet.message.itf.role = Interface::SERVER_ROLE;
@@ -248,7 +246,7 @@ TEST (OnOffServer, Handle_Invalid_Role)
    CHECK_EQUAL (Common::Result::FAIL_SUPPORT, server.handle (packet, expected, 3));
 }
 
-//! \test Should not handle message from invalid interface UID.
+//! @test Should not handle message from invalid interface UID.
 TEST (OnOffServer, Handle_Invalid_UID)
 {
    packet.message.itf.id = server.uid () + 1;
@@ -256,7 +254,7 @@ TEST (OnOffServer, Handle_Invalid_UID)
    CHECK_EQUAL (Common::Result::FAIL_ID, server.handle (packet, expected, 3));
 }
 
-//! \test Should return attribute.
+//! @test Should return attribute.
 TEST (OnOffServer, Attribute)
 {
    HF::Attributes::IAttribute *attr = server.attribute (OnOff::__LAST_ATTR__ + 1);

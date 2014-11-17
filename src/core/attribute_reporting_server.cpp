@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/attribute_reporting_server.cpp
+ * @file       src/core/attribute_reporting_server.cpp
  *
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Server role.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -18,14 +18,17 @@
 
 #include "hanfun/core/attribute_reporting.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::AttributeReporting;
 
 // =============================================================================
-// API
+// find_available_id
 // =============================================================================
-
 /*!
  * Find an available report id.
  *
@@ -37,6 +40,7 @@ using namespace HF::Core::AttributeReporting;
  *
  * @return  a new report identifier.
  */
+// =============================================================================
 template<typename _Rule, typename Iterator>
 static uint8_t find_available_id (Iterator begin, Iterator end)
 {
@@ -144,6 +148,11 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
          Reference report;
 
+         if (result == Common::Result::OK)
+         {
+            report = periodic_rules.begin ()->report;
+         }
+
          response (packet, report, result);
 
          delete message;
@@ -175,6 +184,11 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
          result = this->handle (*message);
 
          Reference report;
+
+         if (result == Common::Result::OK)
+         {
+            report = event_rules.begin ()->report;
+         }
 
          response (packet, report, result);
 
@@ -236,7 +250,8 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
       return Common::Result::FAIL_RESOURCES;
    }
 
-   uint8_t report_id = find_available_id <Periodic::Rule>(periodic_rules.begin (), periodic_rules.end ());
+   uint8_t report_id = find_available_id <Periodic::Rule>(periodic_rules.begin (),
+                                                          periodic_rules.end ());
 
    if (report_id == ALL_ADDR)
    {
@@ -245,8 +260,6 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
    }
 
    rule->destination = message.destination;
-
-   rule->report.type = PERIODIC;
    rule->report.id   = report_id;
 
    periodic_rules.push_front (*rule);
@@ -313,8 +326,6 @@ Common::Result Server::handle (const Report::Event::CreateMessage &message)
    }
 
    rule->destination = message.destination;
-
-   rule->report.type = PERIODIC;
    rule->report.id   = report_id;
 
    event_rules.push_front (*rule);
@@ -461,7 +472,7 @@ void Server::response (Protocol::Packet &packet, Reference &report, Common::Resu
 
    delete resp;
 
-   unit ().send (packet.source, *resp_msg);
+   unit ().send (packet.source, *resp_msg, packet.link);
 
    delete resp_msg;
 }
@@ -482,9 +493,9 @@ static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
                                                      uint8_t pack_id,
                                                      const HF::Attributes::UIDS &uids)
 {
-   Report::Periodic::Entry *result = new Report::Periodic::Entry ();
+   auto result = new Report::Periodic::Entry (unit->id (), itf);
 
-   auto attrs                      = unit->attributes (itf, pack_id, uids);
+   auto attrs  = unit->attributes (itf, pack_id, uids);
    /* *INDENT-OFF* */
    std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
    {
@@ -520,7 +531,8 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
       {
          for (uint16_t i = 0; i < count; ++i, ++itf)
          {
-            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id, entry.uids);
+            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id,
+                                                                   entry.uids);
             report->add (*_entry);
 
             delete _entry;
@@ -529,7 +541,8 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
    }
    else
    {
-      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id, entry.uids);
+      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id,
+                                                             entry.uids);
       report->add (*_entry);
 
       delete _entry;
@@ -549,8 +562,7 @@ void Server::periodic (uint32_t time)
    std::for_each(periodic_rules.begin (), periodic_rules.end (),
                  [this, time](Periodic::Rule &rule)
    {
-      uint32_t interval = rule.interval ();
-      if ((time/interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < interval)
+      if ((time/rule.interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < rule.interval)
       {
          return;
       }
@@ -562,11 +574,11 @@ void Server::periodic (uint32_t time)
       message->itf.id = HF::Interface::ATTRIBUTE_REPORTING;
       message->itf.member = PERIODIC_REPORT_CMD;
 
-      Report::Periodic * report = new Report::Periodic();
-      std::for_each(rule.cbegin(), rule.cend(),
-                    [this, report](const Periodic::Entry &entry)
+      Report::Periodic * report = new Report::Periodic(rule.report.id);
+
+      std::for_each(rule.cbegin(), rule.cend(), [this, report](const Periodic::Entry &entry)
       {
-         Units::IUnit * _unit = unit().device().unit(entry.unit);
+         Units::IUnit * _unit = this->unit().device().unit(entry.unit);
          assert (_unit != nullptr);
          if (_unit != nullptr)
          {
@@ -578,7 +590,7 @@ void Server::periodic (uint32_t time)
 
       report->pack(message->payload);
 
-      send (rule.destination, *message);
+      this->send (rule.destination, *message);
 
       delete report;
       delete message;
@@ -613,10 +625,7 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
       if (std::any_of (entries.begin(), entries.end(),
                        [](const Report::Event::Entry * entry) { return entry != nullptr; }))
       {
-         Report::Event * report = new Report::Event ();
-
-         report->id   = rule.report.id;
-         report->type = rule.report.type;
+         Report::Event * report = new Report::Event (rule.report.id);
 
          std::for_each (entries.begin(), entries.end(), [report](Report::Event::Entry * entry)
          {
@@ -637,7 +646,7 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
 
          report->pack(message->payload);
 
-         send (rule.destination, *message);
+         this->send (rule.destination, *message);
 
          delete report;
          delete message;
@@ -648,75 +657,23 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
 }
 
 // =============================================================================
-// Server::process_event
+// Server::entries_count
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::process_event (Report::Event::Entry &entry, const Event::Field &field,
-                            const HF::Attributes::IAttribute &old_value,
-                            const HF::Attributes::IAttribute &new_value) const
+size_t Server::count (Type type) const
 {
-   bool generate = false;
-
-   if (field.type == Event::COV)
+   switch (type)
    {
-      if (field.value[0] == 0x00)
-      {
-         generate = true;
-      }
-      else
-      {
-         float expected = (float) field.value[0] / 0xFF;
-         float actual   = new_value.changed (old_value);
+      case PERIODIC:
+         return std::distance (periodic_rules.begin (), periodic_rules.end ());
 
-         if (expected < actual)
-         {
-            generate = true;
-         }
-      }
-   }
-   else
-   {
-      if (new_value.size (false) > field.value.size ())
-      {
-         return;
-      }
+      case EVENT:
+         return std::distance (event_rules.begin (), event_rules.end ());
 
-      HF::Attributes::IAttribute *attr = old_value.clone ();
-      attr->unpack (field.value, 0);
-
-      switch (field.type)
-      {
-         case Event::HT:
-         {
-            generate = new_value > *attr;
-            break;
-         }
-         case Event::LT:
-         {
-            generate = new_value < *attr;
-            break;
-         }
-         case Event::EQ:
-         {
-            generate = new_value == *attr;
-            break;
-         }
-         default:
-            break;
-      }
-
-      delete attr;
-   }
-
-   if (generate)
-   {
-      Report::Event::Field *_field = new Report::Event::Field ();
-      _field->set_attribute (new_value.clone ());
-      entry.add (*_field);
-
-      delete _field;
+      default:
+         return 0;
    }
 }

@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/node.cpp
+ * @file       apps/node.cpp
  *
  * This file contains the implementation of the Node class that represents the
  * HAN-FUN Node on the example application.
  *
- * \version    1.0.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -29,6 +29,11 @@
 // =============================================================================
 // Node
 // =============================================================================
+
+/*!
+ * @addtogroup examples
+ * @{
+ */
 
 // =============================================================================
 // Node::receive
@@ -52,17 +57,22 @@ void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 // Simple Light
 // =============================================================================
 
-void SimpleLight::on ()
+void SimpleLight::on (HF::Protocol::Address &source)
 {
+   HF::Units::Unit <HF::Profiles::SimpleLight>::on(source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << NL;
 }
 
-void SimpleLight::off ()
+void SimpleLight::off (HF::Protocol::Address &source)
 {
+   HF::Units::Unit <HF::Profiles::SimpleLight>::off(source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << NL;
 }
 
-void SimpleLight::toggle ()
+void SimpleLight::toggle (HF::Protocol::Address &source)
 {
+   HF::Units::Unit <HF::Profiles::SimpleLight>::toggle(source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
 }
+
+/*! @} */
