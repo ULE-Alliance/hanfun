@@ -144,3 +144,16 @@ TEST (Unit, Handle_LevelControl)
 
    mock ("LevelControl").checkExpectations ();
 }
+
+TEST (Unit, CreateDestroy)
+{
+   Testing::Device device;
+   LONGS_EQUAL (1, device.units().size());
+
+   TestUnit * unit = new TestUnit (1, device);
+   LONGS_EQUAL (2, device.units().size());
+
+   delete unit;
+
+   LONGS_EQUAL (1, device.units().size());
+}

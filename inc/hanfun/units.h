@@ -93,7 +93,10 @@ namespace HF
 
          public:
 
-         virtual ~AbstractUnit() {}
+         virtual ~AbstractUnit()
+         {
+            device ().remove(this);
+         }
 
          IDevice &device () const
          {
