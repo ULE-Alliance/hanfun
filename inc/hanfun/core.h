@@ -269,10 +269,7 @@ namespace HF
        */
       Unit0(HF::IDevice &device):
          Base (device), interfaces (ITF (*this) ...)
-      {
-         // Add this unit to the device units list.
-         device.add (this);
-      }
+      {}
 
       // =============================================================================
 
