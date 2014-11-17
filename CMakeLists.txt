@@ -99,3 +99,11 @@ add_subdirectory(doc EXCLUDE_FROM_ALL)
 # ==============================================================================
 
 include("cmake/package.cmake")
+
+# ==============================================================================
+# Release
+# ==============================================================================
+
+add_custom_target(dist scripts/make_release.sh DEPENDS doc
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  COMMENT "Create distribution tarballs ...")
