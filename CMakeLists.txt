@@ -37,11 +37,11 @@ include_directories(
 include("cmake/compiler.cmake")
 
 # The version number.
-set(PROJECT_MAJOR_VERSION 1)
-set(PROJECT_MINOR_VERSION 1)
-set(PROJECT_PATCH_VERSION 1)
+set(HF_MAJOR_VERSION 1)
+set(HF_MINOR_VERSION 1)
+set(HF_PATCH_VERSION 1)
 
-set(PROJECT_VERSION "${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION}")
+set(HF_VERSION "${HF_MAJOR_VERSION}.${HF_MINOR_VERSION}.${HF_PATCH_VERSION}")
 
 configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
                 ${CMAKE_BINARY_DIR}/hanfun/version.h )
