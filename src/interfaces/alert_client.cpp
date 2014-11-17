@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/alert_client.cpp
+ * @file       src/interfaces/alert_client.cpp
  *
  * This file contains the implementation of the Alert interface : Client role.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -16,23 +16,29 @@
 
 #include "hanfun/interfaces/alert.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Interfaces;
+using namespace HF::Interfaces::Alert;
 
 // =============================================================================
 // Alert Interface : Client Role
 // =============================================================================
 
 // =============================================================================
-// AlertClient::handle_commands
+// Client::handle_commands
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Alert::Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
 {
-   if (packet.message.itf.member != Alert::STATUS_CMD)
+   if (packet.message.itf.member != STATUS_CMD)
    {
       return Common::Result::FAIL_SUPPORT;
    }
@@ -41,7 +47,7 @@ Common::Result Alert::Client::handle_command (Protocol::Packet &packet, Common::
 
    alert_msg.unpack (payload, offset);
 
-   status (alert_msg);
+   status (packet.source, alert_msg);
 
    return Common::Result::OK;
 }

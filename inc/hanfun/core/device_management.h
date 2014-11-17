@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/core/device_management.h
+ * @file       inc/hanfun/core/device_management.h
  *
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -18,7 +18,6 @@
 #define HF_DEVICE_MANGEMENT_H
 
 #include <algorithm>
-#include <map>
 #include <vector>
 
 #include "hanfun/common.h"
@@ -30,11 +29,11 @@
 #include "hanfun/device.h"
 #include "hanfun/units.h"
 
+#include "hanfun/core/session_management.h"
+
 namespace HF
 {
-   // =============================================================================
    // Forward declarations
-   // =============================================================================
 
    namespace Devices
    {
@@ -46,9 +45,6 @@ namespace HF
 
    }  // namespace Devices
 
-   // =============================================================================
-   // API
-   // =============================================================================
    namespace Core
    {
       // Forward declaration.
@@ -57,27 +53,51 @@ namespace HF
          struct IServer;
       }  // namespace DeviceManagement
 
-      HF::Attributes::IAttribute *create_attribute (DeviceManagement::IServer *server, uint8_t uid);
+      /*!
+       * @ingroup dev_mgt
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       *          exist.
+       */
+      HF::Attributes::IAttribute *create_attribute (HF::Core::DeviceManagement::IServer *server,
+                                                    uint8_t uid);
 
       /*!
        * This namespace contains the classes that implement the Device Management service.
        */
       namespace DeviceManagement
       {
+         /*!
+          * @addtogroup dev_mgt  Device Management
+          * @ingroup core
+          *
+          * This module contains the classes that implement the %Device Management service.
+          * @{
+          */
          //! Commands.
          typedef enum _CMD
          {
             REGISTER_CMD      = 0x01, //!< Register device command.
             DEREGISTER_CMD    = 0x02, //!< De-register device command.
-            START_SESSION_CMD = 0x03, //!< TODO Start Session Read Registration Info.
-            END_SESSION_CMD   = 0x04, //!< TODO End Session Read Registration Info.
-            GET_ENTRIES_CMD   = 0x05, //!< TODO Get Entries Command.
+            START_SESSION_CMD = 0x03, //!< Start Session Read Registration Info.
+            END_SESSION_CMD   = 0x04, //!< End Session Read Registration Info.
+            GET_ENTRIES_CMD   = 0x05, //!< Get Entries Command.
+            __LAST_CMD__      = GET_ENTRIES_CMD
          } CMD;
 
          //! Attributes.
          typedef enum _Attributes
          {
             NUMBER_OF_ENTRIES_ATTR = 0x01, //!< Number of entries attribute.
+            __LAST_ATTR__          = NUMBER_OF_ENTRIES_ATTR
          } Attributes;
 
          constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN Address.
@@ -90,27 +110,38 @@ namespace HF
           */
          struct Unit
          {
-            uint8_t  id;                             //!< Unit Id.
-            uint16_t profile;                        //!< Unit UID. \see IProfile::UID.
+            uint8_t  id;        //!< Unit Id.
+            uint16_t profile;   //!< Unit UID. @see IProfile::UID.
 
             //! Optional interfaces.
             std::vector <Common::Interface> interfaces;
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] id       unit id.
+             * @param [in] profile  unit UID / Profile UID.
+             */
             Unit(uint8_t id = 0, uint16_t profile = 0):
                id (id), profile (profile)
             {}
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to a HF::Units::IUnit.
+             */
             Unit(const HF::Units::IUnit &unit):
                id (unit.id ()), profile (unit.uid ()), interfaces (unit.interfaces ())
             {}
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
             /*!
@@ -151,19 +182,20 @@ namespace HF
             // Serializable API
             // =============================================================================
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
             // =============================================================================
             // Operators
             // =============================================================================
 
+            //! Equals operator.
             bool operator ==(Device &other)
             {
                if (this->address != other.address || this->uid != other.uid)
@@ -176,6 +208,7 @@ namespace HF
                }
             }
 
+            //! Not equals operator.
             bool operator !=(Device &other)
             {
                return !(*this == other);
@@ -198,19 +231,25 @@ namespace HF
 
             HF::UID::UID       uid;   //! Device UID.
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] emc   device EMC (Electronic Manufacture Code)
+             * @param [in] _uid  device UID. @see HF::UID::UID_T
+             */
             RegisterMessage(uint16_t emc = 0x0000, HF::UID::UID _uid = HF::UID::UID ()):
                emc (emc), uid (_uid)
             {}
 
             virtual ~RegisterMessage();
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
@@ -226,13 +265,10 @@ namespace HF
                address (address & Protocol::BROADCAST_ADDR), emc (emc)
             {}
 
-            //! \see HF::Protocol::Response::size.
             size_t size () const;
 
-            //! \see HF::Protocol::Response::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Protocol::Response::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
@@ -247,117 +283,55 @@ namespace HF
          {
             uint16_t address; //!< Address of the device to de-register.
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] address  device address to de-register.
+             */
             DeregisterMessage(uint16_t address = 0):
                address (address)
             {}
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
-          * Register command response.
+          * De-register command response.
           */
          struct DeregisterResponse:public Protocol::Response
          {
             uint16_t address; //!< Address for the device.
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] code     operation result code.
+             * @param [in] address  device address the operation relates to.
+             */
             DeregisterResponse(Common::Result code = Common::FAIL_UNKNOWN,
                                uint16_t address = Protocol::BROADCAST_ADDR):
                Protocol::Response (code), address (address & Protocol::BROADCAST_ADDR)
             {}
 
-            //! \see HF::Protocol::Response::size.
             size_t size () const;
 
-            //! \see HF::Protocol::Response::pack.
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         // =============================================================================
-         // Read Session Messages
-         // =============================================================================
-
-         /*!
-          * Start Read Session Command Message.
-          */
-         struct StartSessionResponse:public Protocol::Response
-         {
-            uint16_t count; //!< Number of device entries.
-
-            StartSessionResponse(uint16_t count = 0):
-               count (count)
-            {}
-
-            //! \see HF::Protocol::Response::size.
-            size_t size () const;
-
-            //! \see HF::Protocol::Response::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Protocol::Response::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         /*!
-          * Get Entries Command Message.
-          */
-         struct GetEntriesMessage
-         {
-            uint16_t offset; //! Start index for the first entry to be provided.
-            uint8_t  count;  //! Number of entries to be sent in the response.
-
-            GetEntriesMessage(uint16_t offset = 0, uint8_t count = 0):
-               offset (offset), count (count)
-            {}
-
-            //! \see HF::Serializable::size.
-            size_t size () const;
-
-            //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
-
-         struct GetEntriesResponse:public Protocol::Response
-         {
-            std::vector <Device> entries;
-
-            //! \see HF::Protocol::Response::size.
-            size_t size () const;
-
-            //! \see HF::Protocol::Response::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
-
-            //! \see HF::Protocol::Response::unpack.
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
          /*!
           * Device Management - Persistent Storage API.
           */
-         struct IEntries
+         struct IEntries:public Common::IEntries <Device>
          {
-            virtual ~IEntries() {}
-
-            /*!
-             * Return the number of available entries.
-             *
-             * @return  number of device entries.
-             */
-            virtual size_t size () const = 0;
-
             /*!
              * Return the Device entry for the given address.
              *
@@ -379,24 +353,6 @@ namespace HF
             virtual DevicePtr find (const HF::UID::UID &uid) const = 0;
 
             /*!
-             * Store the given \c device entry to persistent storage.
-             *
-             * @param [in] device   the device entry to store.
-             *
-             * @return     if the device entry was saved.
-             */
-            virtual Common::Result save (Device &device) = 0;
-
-            /*!
-             * Remove the given \c device entry from persistent storage.
-             *
-             * @param [in] device   the device entry to remove.
-             *
-             * @return     if the device entry was removed.
-             */
-            virtual std::pair <Common::Result, DevicePtr> destroy (DevicePtr &device) = 0;
-
-            /*!
              * Return next available address for registering a device.
              *
              * @return  the address to use in the next registration.
@@ -404,17 +360,30 @@ namespace HF
             virtual uint16_t next_address () const = 0;
          };
 
+         /*!
+          * @copybrief HF::Core::create_attribute (HF::Core::DeviceManagement::Server *,uint8_t)
+          *
+          * @see HF::Core::create_attribute (HF::Core::DeviceManagement::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
           * Parent class for the Device Management interface implementation.
           */
-         struct Abstract:public Service <HF::Interface::DEVICE_MANAGEMENT>
+         class Abstract:public Service <HF::Interface::DEVICE_MANAGEMENT>
          {
-            static constexpr uint16_t START_ADDR = 0x0001;
-
             protected:
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
             Abstract(Unit0 &unit):
                Service (unit)
             {}
@@ -423,14 +392,24 @@ namespace HF
          /*!
           * Device Management interface : Client side.
           */
-         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>
+         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>,
+            protected SessionManagement::Client <Device>
          {
+            typedef ServiceRole <Abstract, HF::Interface::CLIENT_ROLE> Service;
+
             protected:
 
             uint16_t _address; //! Device HAN-FUN Address.
 
             public:
 
+            typedef SessionManagement::Client <Device> SessionMgr;
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
             Client(Unit0 &unit):
                ServiceRole (unit), _address (Protocol::BROADCAST_ADDR)
             {}
@@ -447,10 +426,21 @@ namespace HF
                return _address;
             }
 
+            /*!
+             * Reference to the session management API.
+             *
+             * @return  reference to the object implementing the session management API for
+             *          this device management client.
+             */
+            SessionMgr &session ()
+            {
+               return *this;
+            }
+
             // ======================================================================
             // Commands
             // ======================================================================
-            //! \name Commands
+            //! @name Commands
             //! @{
 
             /*!
@@ -459,15 +449,52 @@ namespace HF
             void register_device ();
 
             /*!
-             * Send a de-register message for the given \c address.
+             * Send a de-register message for the given @c address.
              *
              * @param [in] address    the address of the device to de-register.
              */
             void deregister (uint16_t address);
 
+            /*!
+             * Send a de-register message for current address.
+             */
             void deregister ()
             {
                deregister (_address);
+            }
+
+            // ======================================================================
+            // Session Management
+            // ======================================================================
+
+            /*!
+             * Start read entries session.
+             */
+            void start_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    START_SESSION_CMD>();
+            }
+
+            /*!
+             * Read entries.
+             *
+             * @param [in] offset   start read at offset.
+             * @param [in] count    number of entries to read.
+             */
+            void get_entries (uint16_t offset, uint8_t count = 0) const
+            {
+               SessionMgr::get_entries <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                        GET_ENTRIES_CMD>(offset, count);
+            }
+
+            /*!
+             * End read entries session.
+             */
+            void end_session () const
+            {
+               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                    END_SESSION_CMD>();
             }
 
             //! @}
@@ -476,7 +503,7 @@ namespace HF
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
@@ -498,15 +525,22 @@ namespace HF
             //! @}
             // ======================================================================
 
+            using Service::send;
+
+            //! @copydoc SessionManagement::AbstractClient::send
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               Service::send (addr, message);
+            }
+
             protected:
 
             using ServiceRole::payload_size;
 
-            //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
-            //! \see AbstractInterface::handle_command
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
          };
 
          /*!
@@ -561,17 +595,23 @@ namespace HF
              */
             virtual IEntries &entries () const = 0;
 
+            /*!
+             * Reference to the session management API.
+             *
+             * @return  reference to the object implementing the session management API for
+             *          this device management server.
+             */
+            virtual SessionManagement::IServer &sessions () = 0;
+
             // =============================================================================
             // Interface Attribute API.
             // =============================================================================
 
-            //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid)
             {
                return Core::create_attribute (this, uid);
             }
 
-            //! \see AbstractInterface::attributes
             HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
             {
                UNUSED (pack_id);
@@ -591,7 +631,7 @@ namespace HF
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
@@ -621,6 +661,11 @@ namespace HF
 
             protected:
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
             IServer(Unit0 &unit):ServiceRole (unit)
             {}
          };
@@ -638,27 +683,28 @@ namespace HF
 
             protected:
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
             AbstractServer(Unit0 &unit):IServer (unit)
             {}
 
             // ======================================================================
             // Events
             // ======================================================================
-            //! \name Events
+            //! @name Events
             //! @{
 
             /*!
              * This method is called when a registration message is received.
-             *
-             * \see DeviceManagementServer::handle
              */
             virtual Common::Result register_device (Protocol::Packet &packet,
                                                     Common::ByteArray &payload, size_t offset);
 
             /*!
-             * This method is called when a deregistration message is received.
-             *
-             * \see DeviceManagementServer::handle
+             * This method is called when a de-registration message is received.
              */
             virtual Common::Result deregister_device (Protocol::Packet &packet,
                                                       Common::ByteArray &payload, size_t offset);
@@ -669,12 +715,12 @@ namespace HF
             // ======================================================================
             // Commands
             // ======================================================================
-            //! \name Commands
+            //! @name Commands
             //! @{
 
             /*!
-             * This method serves to indicate if a given \c member of the interface
-             * can be used by the \c source device affecting the \c destination
+             * This method serves to indicate if a given @c member of the interface
+             * can be used by the @c source device affecting the @c destination
              * device configuration on the system.
              *
              * @param [in] member       interface member UID.
@@ -689,7 +735,7 @@ namespace HF
             /*!
              * De-register the device that corresponds to the given Device entry.
              *
-             * \warning this method by-passes the authorization scheme.
+             * @warning this method by-passes the authorization scheme.
              *
              * @param [in] device   pointer to the device entry to de-register.
              *
@@ -702,14 +748,15 @@ namespace HF
 
             using ServiceRole <Abstract, HF::Interface::SERVER_ROLE>::payload_size;
 
-            //! \see AbstractInterface::payload_size
             size_t payload_size (Protocol::Message::Interface &itf) const;
 
-            //! \see AbstractInterface::handle_command
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
                                            size_t offset);
          };
 
+         /*!
+          * Default implementation of the persistence API.
+          */
          struct Entries:public IEntries
          {
             typedef std::vector <Device> Container;
@@ -717,66 +764,156 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            Entries()          = default;
-
-            virtual ~Entries() = default;
-
             size_t size () const
             {
-               return _entries.size ();
+               return db.size ();
             }
+
+            Common::Result save (const Device &entry);
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             *
+             */
+            Common::Result destroy (const Device &entry);
 
             DevicePtr find (uint16_t address) const;
 
             DevicePtr find (const HF::UID::UID &uid) const;
 
-            Common::Result save (Device &device);
-
-            std::pair <Common::Result, DevicePtr> destroy (DevicePtr &device);
-
             uint16_t next_address () const;
 
+            /*!
+             * Get an iterator to the start of the entries in this container.
+             *
+             * @return  iterator to the start of the entries present in this container.
+             */
             iterator begin ()
             {
-               return _entries.begin ();
+               return db.begin ();
             }
 
+            /*!
+             * Get an iterator to the end of the entries in this container.
+             *
+             * @return  iterator to the end of the entries present in this container.
+             */
             iterator end ()
             {
-               return _entries.end ();
+               return db.end ();
             }
 
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
             const_iterator begin () const
             {
-               return _entries.cbegin ();
+               return db.cbegin ();
             }
 
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
             const_iterator end () const
             {
-               return _entries.cend ();
+               return db.cend ();
             }
 
             protected:
 
-            Container _entries;
+            //! Actual container for the entries.
+            Container db;
          };
 
+         /*!
+          * Helper class used to implement custom functionality to the device management
+          * server side.
+          */
          template<typename _Entries = Entries>
-         class Server:public AbstractServer
+         struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
          {
-            _Entries _entries;
+            typedef SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionMgr::Container Container;
 
-            public:
-
-            Server(Unit0 &unit):AbstractServer (unit)
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
+            Server(Unit0 &unit):
+               AbstractServer (unit), SessionManagement::Server <_Entries>()
             {}
 
-            virtual ~Server() {}
+            virtual ~Server()
+            {}
 
-            _Entries &entries () const
+            Container &entries () const
             {
-               return const_cast <_Entries &>(_entries);
+               return SessionMgr::entries ();
             }
+
+            SessionMgr &sessions ()
+            {
+               return *this;
+            }
+
+            using AbstractServer::send;
+
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               AbstractServer::send (addr, message);
+            }
+
+            protected:
+
+            size_t payload_size (Protocol::Message::Interface &itf) const
+            {
+               switch (itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::START);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::payload_size (SessionManagement::GET);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::payload_size (SessionManagement::END);
+
+                  default:
+                     return AbstractService::payload_size (itf);
+               }
+            }
+
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset)
+            {
+               switch (packet.message.itf.member)
+               {
+                  case START_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::START, packet, payload,
+                                                        offset);
+
+                  case GET_ENTRIES_CMD:
+                     return SessionMgr::handle_command (SessionManagement::GET, packet, payload,
+                                                        offset);
+
+                  case END_SESSION_CMD:
+                     return SessionMgr::handle_command (SessionManagement::END, packet, payload,
+                                                        offset);
+
+                  default:
+                     return AbstractServer::handle_command (packet, payload, offset);
+               }
+            }
+
+            using SessionMgr::entries;
          };
 
          // =========================================================================
@@ -849,6 +986,8 @@ namespace HF
          {
             return !(lhs == rhs);
          }
+
+         /*! @} */
 
       } // namespace DeviceManagement
 

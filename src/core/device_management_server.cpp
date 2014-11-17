@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/core/device_management_server.cpp
+ * @file       src/core/device_management_server.cpp
  *
  * This file contains the implementation of the Device Management : Server Role.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,6 +17,10 @@
 
 #include "hanfun/core/device_management.h"
 #include "hanfun/devices.h"
+
+// =============================================================================
+// API
+// =============================================================================
 
 using namespace HF;
 using namespace HF::Core;
@@ -55,10 +59,9 @@ DevicePtr IServer::entry (uint16_t address) const
       device->address = address;
       device->emc     = HF::Core::DeviceInformation::EMC;
 
-      // FIXME Retrive device UID.
-      // auto attr = this->unit0().device_info()->attribute(HF::Core::DeviceInformation::UID_ATTR);
-      // device->uid = static_cast<HF::Attributes::Attribute<HF::UID::UID> *>(attr)->get();
-      // delete attr;
+      auto attr = this->unit0 ().device_info ()->attribute (HF::Core::DeviceInformation::UID_ATTR);
+      device->uid = static_cast <HF::Attributes::Attribute <HF::UID::UID> *>(attr)->get ();
+      delete attr;
 
       auto &units = unit ().device ().units ();
 
@@ -161,7 +164,8 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
 
    uint16_t address = Protocol::BROADCAST_ADDR;
 
-   auto _entry      = entry (packet.link->uid ());
+   // FIXME Check incoming UID with link UID.
+   auto _entry = entry (packet.link->uid ());
 
    Device device;
 
@@ -204,6 +208,9 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
    send (res_addr, response, packet.link);
 
    delete reg_res;
+
+   DevicePtr temp (&device);
+   this->registered (temp);
 
    return result;
 }
@@ -271,23 +278,24 @@ Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Comm
 // AbstractServer::deregister
 // =============================================================================
 /*!
- *
+ * @todo Remove group information.
  */
 // =============================================================================
 Common::Result AbstractServer::deregister (DevicePtr &device)
 {
-   // TODO Remove group information.
+   unit0 ().bind_management ()->entries ().destroy (device->address);
 
-   unit0 ().bind_management ()->entries.destroy (device->address);
+   // Destroy MAY invalidate _device_, create a copy to send to *deregistered* event.
+   DevicePtr temp (new Device (*device), true);
 
-   auto res = entries ().destroy (device);
+   auto res = entries ().destroy (*device);
 
-   if (res.first == Common::Result::OK)
+   if (res == Common::Result::OK)
    {
-      this->deregistered (res.second);
+      this->deregistered (temp);
    }
 
-   return res.first;
+   return res;
 }
 
 // =============================================================================
@@ -312,148 +320,4 @@ bool AbstractServer::authorized (uint8_t member, DeviceManagement::DevicePtr &so
    {
       return true;
    }
-}
-
-// =============================================================================
-// IEntries API - Default Implementation
-// =============================================================================
-
-// =============================================================================
-// Entries::find
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-DevicePtr Entries::find (uint16_t address) const
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [address](const Device &device)
-   {
-      return device.address == address;
-   });
-   /* *INDENT-ON* */
-
-   if (it == _entries.end ())
-   {
-      return std::move (DeviceManagement::DevicePtr ());
-   }
-   else
-   {
-      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
-   }
-}
-
-// =============================================================================
-// Entries::find
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-DevicePtr Entries::find (const HF::UID::UID &uid) const
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&uid](const Device &device)
-   {
-      return device.uid == uid;
-   });
-   /* *INDENT-ON* */
-
-   if (it == _entries.end ())
-   {
-      return std::move (DeviceManagement::DevicePtr ());
-   }
-   else
-   {
-      return std::move (DeviceManagement::DevicePtr (*(it.base ())));
-   }
-}
-
-// =============================================================================
-// Entries::save
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-Common::Result Entries::save (Device &device)
-{
-   if (device.address == HF::Protocol::BROADCAST_ADDR)
-   {
-      return Common::Result::FAIL_UNKNOWN;
-   }
-
-   // Add new entry into the database.
-
-   /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&device](const Device &other)
-   {
-      return device.address == other.address;
-   });
-   /* *INDENT-ON* */
-
-   if (it != _entries.end ()) // Update existing entry.
-   {
-      _entries.erase (it);
-   }
-
-   _entries.push_back (device);
-
-   return Common::Result::OK;
-}
-
-// =============================================================================
-// Entries::destroy
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::pair <Common::Result, DevicePtr> Entries::destroy (DevicePtr &device)
-{
-   /* *INDENT-OFF* */
-   auto it = std::find_if(_entries.begin(), _entries.end(), [&device](const Device &other)
-   {
-      return device->address == other.address;
-   });
-   /* *INDENT-ON* */
-
-   if (it == _entries.end ())
-   {
-      return std::make_pair (Common::Result::FAIL_ARG, DevicePtr ());
-   }
-
-   auto res = std::make_pair (Common::Result::OK, DevicePtr (new Device (*it), true));
-
-   _entries.erase (it);
-
-   return res;
-}
-
-// =============================================================================
-// DefaultServer::next_address
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint16_t Entries::next_address () const
-{
-   uint16_t address    = DeviceManagement::START_ADDR;
-
-   auto address_equals = [&address](const Device &device)
-                         {
-                            return device.address == address;
-                         };
-
-   while (std::any_of (_entries.begin (), _entries.end (), address_equals))
-   {
-      if (++address == Protocol::BROADCAST_ADDR)
-      {
-         break;
-      }
-   }
-
-   return address;
 }

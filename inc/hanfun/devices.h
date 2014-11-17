@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/devices.h
+ * @file       inc/hanfun/devices.h
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -38,8 +38,19 @@ namespace HF
     */
    namespace Devices
    {
+      /*! @defgroup devices Devices
+       *
+       * This module contains the classes that define and implement the %Devices API.
+       *
+       * @addtogroup dev_common Common
+       * @ingroup devices
+       *
+       * This module contains the common classes for the implementation of the %Devices API.
+       * @{
+       */
+
       /*!
-       * This class provides the basic implementation for the Device API.
+       * This class provides the basic implementation for the Device's interface.
        */
       struct AbstractDevice:public IDevice
       {
@@ -47,26 +58,16 @@ namespace HF
          // IDevice API
          // =============================================================================
 
-         const units_t &units () const
+         const IUnits &units () const
          {
             return _units;
          }
 
-         /*!
-          * Add unit to devices unit lists.
-          *
-          * @param unit    pointer to the unit to add to the list.
-          */
          void add (Units::IUnit *unit)
          {
             _units.push_front (unit);
          }
 
-         /*!
-          * Remove unit from device's unit list.
-          *
-          * @param unit    pointer to the unit to remove from the list.
-          */
          void remove (Units::IUnit *unit)
          {
             _units.remove (unit);
@@ -78,18 +79,20 @@ namespace HF
 
          void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
 
+         void periodic (uint32_t time);
+
          protected:
 
          //! Last reference number used to send a packet.
          uint8_t next_reference;
 
          //! List containing pointers to the units present in the device.
-         units_t _units;
+         IUnits _units;
 
          //! Support for filtering duplicated message from the network.
          Protocol::Filters::Repeated repeated_filter;
 
-         //! Support for generating missing responses.
+         //! Support for generating missing responses for messages.
          Protocol::Filters::ResponseRequired response_filter;
 
          AbstractDevice():
@@ -105,7 +108,7 @@ namespace HF
           * @param [in] addr    the address of the device to send the packet to.
           *
           * @return             a pointer to the link that can be used to send the packet,
-          *                     \c nullptr otherwise;
+          *                     @c nullptr otherwise;
           */
          virtual Transport::Link *link (uint16_t addr) const = 0;
 
@@ -121,30 +124,64 @@ namespace HF
             return packet.destination.device == address ();
          }
 
+         /*!
+          * Check if the device has a valid, i.e. not HF::Protocol::BROADCAST_ADDR.
+          *
+          * @return  if the device address is different from HF::Protocol::BROADCAST_ADDR.
+          */
          bool is_registered ()
          {
             return this->address () != Protocol::BROADCAST_ADDR;
          }
       };
 
+      /*! @} */
+
       /*!
-       * This is the namespace for the implementation of the HAN-FUN nodes.
+       * This is the namespace for the implementation of the HAN-FUN %Node devices.
        */
       namespace Node
       {
+         /*!
+          * @addtogroup node  Node device API.
+          * @ingroup devices
+          *
+          * This module contains the classes that define and implement the %Device API on the
+          * node side.
+          * @{
+          */
+
+         /*!
+          * Interface of Unit 0 for Node devices.
+          */
          struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
+            /*!
+             * Constructor
+             *
+             * @param device  reference to the device this unit 0 belongs to.
+             */
             IUnit0(HF::IDevice &device):
                HF::Core::Unit0 (device)
             {}
 
-            virtual HF::Core::DeviceManagement::Client *device_management ()       = 0;
+            /*!
+             * Get the pointer to the node's Device Management service.
+             *
+             * @return pointer to the node's Device Management service.
+             */
+            virtual HF::Core::DeviceManagement::Client *device_management () = 0;
 
+            /*!
+             * Get the pointer to the node's Device Management service.
+             *
+             * @return pointer to the node's Device Management service.
+             */
             virtual HF::Core::DeviceManagement::Client *device_management () const = 0;
          };
 
          /*!
-          * Template to create Unit0 for HAN-FUN devices.
+          * Template to create Unit 0 for HAN-FUN node devices.
           */
          template<typename... ITF>
          struct Unit0:public HF::Unit0 <IUnit0, ITF...>
@@ -153,36 +190,88 @@ namespace HF
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
                            "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
+            typedef typename HF::Unit0 <IUnit0, ITF...> _Parent;
+
+            typedef typename _Parent::DeviceInfo DeviceInfo;
+            typedef typename _Parent::DeviceMgt DeviceMgt;
+            typedef typename _Parent::AttrReporting AttrReporting;
+
+            /*!
+             * Constructor
+             *
+             * @param device  reference to the device this unit 0 belongs to.
+             */
             Unit0(IDevice &device):
                HF::Unit0 <IUnit0, ITF...>(device)
             {}
 
-            Core::DeviceInformation::Server *device_info () const
+            /*!
+             * Get the pointer to the node's Device Information service.
+             *
+             * @return pointer to the node's Device Information service.
+             */
+            DeviceInfo *device_info () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
-            Core::DeviceInformation::Server *device_info ()
+            /*!
+             * Get the pointer to the node's Device Information service.
+             *
+             * @return pointer to the node's Device Information service.
+             */
+            DeviceInfo *device_info ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
-            Core::AttributeReporting::Server *attribute_reporting () const
+            /*!
+             * Get the pointer to the node's Attribute Reporting service.
+             *
+             * @return pointer to the node's Attribute Reporting service.
+             */
+            AttrReporting *attribute_reporting () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
             }
 
-            Core::AttributeReporting::Server *attribute_reporting ()
+            /*!
+             * Get the pointer to the node's Attribute Reporting service.
+             *
+             * @return pointer to the node's Attribute Reporting service.
+             */
+            AttrReporting *attribute_reporting ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
+            }
+
+            /*!
+             * Get the pointer to the node's Device Management service.
+             *
+             * @return pointer to the node's Device Management service.
+             */
+            DeviceMgt *device_management ()
+            {
+               return &std::get <_Parent::DEV_MGT>(_Parent::interfaces);
+            }
+
+            /*!
+             * Get the pointer to the node's Device Management service.
+             *
+             * @return pointer to the node's Device Management service.
+             */
+            DeviceMgt *device_management () const
+            {
+               return const_cast <DeviceMgt *>(&std::get <_Parent::DEV_MGT>(_Parent::interfaces));
             }
          };
 
          /*!
-          * Unit0 using default classes to provide the core services.
+          * Unit0 using default classes to provide the core services for node devices.
           */
          struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server,
-                                           HF::Core::DeviceManagement::Client, HF::Core::AttributeReporting::Server>
+                                           HF::Core::DeviceManagement::Client,
+                                           HF::Core::AttributeReporting::Server>
          {
             DefaultUnit0(IDevice &device):
                Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client,
@@ -191,32 +280,23 @@ namespace HF
          };
 
          /*!
-          * Template for HAN-FUN devices.
+          * Template for declaring HAN-FUN node devices.
           */
-         template<typename CoreServices>
+         template<typename CoreServices = DefaultUnit0>
          class Abstract:public AbstractDevice
          {
             public:
 
             // =============================================================================
-            // IDevice API.
-            // =============================================================================
-
-            uint16_t address () const
-            {
-               return unit0 ()->device_management ()->address ();
-            }
-
-            // =============================================================================
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected (Transport::Link *link)
+            void connected (HF::Transport::Link *link)
             {
                _link = link;
             }
 
-            void disconnected (Transport::Link *link)
+            void disconnected (HF::Transport::Link *link)
             {
                if (_link == link)
                {
@@ -229,6 +309,15 @@ namespace HF
                AbstractDevice::receive (packet, payload, offset);
             }
 
+            // =============================================================================
+            // IDevice API.
+            // =============================================================================
+
+            uint16_t address () const
+            {
+               return unit0 ()->device_management ()->address ();
+            }
+
             CoreServices *unit0 () const
             {
                return const_cast <CoreServices *>(&_unit0);
@@ -236,22 +325,31 @@ namespace HF
 
             protected:
 
-            Transport::Link *_link;
+            //! Link to the be used when sending packets to the network.
+            HF::Transport::Link *_link;
 
-            CoreServices    _unit0;
+            //! Unit 0 implementation this device will use.
+            CoreServices _unit0;
 
             Abstract():_link (nullptr), _unit0 (*this)
             {}
 
             // =============================================================================
 
-            //! \see AbstractDevice::link.
-            Transport::Link *link (uint16_t addr) const
+            HF::Transport::Link *link (uint16_t addr) const
             {
                UNUSED (addr);
                return _link;
             }
 
+            /*!
+             * Check if an incoming packet is for the node.
+             *
+             * @param [in] packet reference to the incoming packet.
+             *
+             * @retval  true  if the packet if for the node;
+             * @retval  false otherwise.
+             */
             bool is_local (Protocol::Packet &packet)
             {
                return AbstractDevice::is_local (packet) ||
@@ -260,13 +358,16 @@ namespace HF
             }
          };
 
+         typedef Abstract <> Node;
+
          /*!
-          * Top-level parent for transport layer implementations on a HAN-FUN Concentrator.
+          * Parent class for transport layer implementations on a HAN-FUN Node.
           */
          class Transport:public HF::Transport::AbstractLayer
          {
             protected:
 
+            //! Pointer to the link used to send packets to the network.
             HF::Transport::Link *link;
 
             public:
@@ -280,7 +381,6 @@ namespace HF
                remove ((HF::Transport::Link *) nullptr);
             }
 
-            //! \see HF::Transport::AbstractLayer::add
             void add (HF::Transport::Endpoint *ep)
             {
                HF::Transport::AbstractLayer::add (ep);
@@ -306,10 +406,10 @@ namespace HF
             }
 
             /*!
-             * Call the \c disconnected method for all registered end-points with the
-             * given \c _link and remove it from list of known links.
+             * Call the @c disconnected method for all registered end-points with the
+             * given @c _link and remove it from list of known links.
              *
-             * If \c _link is \c nullptr, then remove all known links.
+             * If @c _link is @c nullptr, then remove all known links.
              *
              * @param [in] _link  pointer to the link to remove.
              */
@@ -327,12 +427,14 @@ namespace HF
 
             /*!
              * Find the link used to send messages to the HAN-FUN device with
-             * the given \c address.
+             * the given @c address.
+             *
+             * @note in the nodes there is only one link as all messages are sent to the base.
              *
              * @param [in] address  the HAN-FUN address to find the link for.
              *
              * @return  a pointer to the link for the given address or
-             *          \c nullptr if no link exists for the given address.
+             *          @c nullptr if no link exists for the given address.
              */
             HF::Transport::Link *find (uint16_t address)
             {
@@ -341,26 +443,65 @@ namespace HF
             }
          };
 
+         /*! @} */
+
       } // namespace Node
 
       /*!
-       * This is the namespace for the implementation of HAN-FUN concentrators.
+       * This is the namespace for the implementation of HAN-FUN %Concentrator devices.
        */
       namespace Concentrator
       {
+         /*!
+          * @addtogroup concentrator  Concentrator device API.
+          * @ingroup devices
+          *
+          * This module contains the classes that define and implement the %Device API on the
+          * concentrator side.
+          * @{
+          */
+
+         /*!
+          * Unit 0 interface API for HAN-FUN Concentrators.
+          */
          struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
+            /*!
+             * Constructor
+             *
+             * @param device  reference to the device this unit 0 belongs to.
+             */
             IUnit0(HF::IDevice &device):
                HF::Core::Unit0 (device)
             {}
 
-            virtual HF::Core::DeviceManagement::IServer *device_management ()       = 0;
+            /*!
+             * Return a pointer to unit 0 device management service.
+             *
+             * @return  pointer to unit 0 device management service.
+             */
+            virtual HF::Core::DeviceManagement::IServer *device_management () = 0;
 
+            /*!
+             * Return a pointer to unit 0 device management service.
+             *
+             * @return  pointer to unit 0 device management service.
+             */
             virtual HF::Core::DeviceManagement::IServer *device_management () const = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management ()            = 0;
+            /*!
+             * Return a pointer to unit 0 bind management service.
+             *
+             * @return  pointer to unit 0 bind management service.
+             */
+            virtual HF::Core::BindManagement::IServer *bind_management () = 0;
 
-            virtual HF::Core::BindManagement::Server *bind_management () const      = 0;
+            /*!
+             * Return a pointer to unit 0 bind management service.
+             *
+             * @return  pointer to unit 0 bind management service.
+             */
+            virtual HF::Core::BindManagement::IServer *bind_management () const = 0;
          };
 
          /*!
@@ -371,45 +512,56 @@ namespace HF
          {
             static_assert (std::is_base_of <HF::Core::DeviceManagement::IServer,
                                             typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceManagement::Server");
+                           "DeviceMgt must be of type HF::Core::DeviceManagement::IServer");
 
-            typedef typename std::tuple_element <3, decltype (HF::Unit0 <IUnit0, ITF...>::interfaces)>::type BindMgt;
+            typedef typename HF::Unit0 <IUnit0, ITF...> _Parent;
 
-            static_assert (std::is_base_of <HF::Core::BindManagement::Server, BindMgt>::value,
-                           "BindMgt must be of type HF::Core::BindManagement::Server");
+            typedef typename _Parent::DeviceInfo DeviceInfo;
+            typedef typename _Parent::DeviceMgt DeviceMgt;
+            typedef typename _Parent::AttrReporting AttrReporting;
 
+            typedef typename std::tuple_element <3, decltype (_Parent::interfaces)>::type BindMgt;
+
+            static_assert (std::is_base_of <HF::Core::BindManagement::IServer, BindMgt>::value,
+                           "BindMgt must be of type HF::Core::BindManagement::IServer");
+
+            /*!
+             * Constructor
+             *
+             * @param device  reference to the device this unit 0 belongs to.
+             */
             Unit0(HF::IDevice &device):
                HF::Unit0 <IUnit0, ITF...>(device)
             {}
 
             BindMgt *bind_management () const
             {
-               return const_cast <BindMgt *>(&std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces));
+               return const_cast <BindMgt *>(&std::get <3>(_Parent::interfaces));
             }
 
             BindMgt *bind_management ()
             {
-               return &std::get <3>(HF::Unit0 <IUnit0, ITF...>::interfaces);
+               return &std::get <3>(_Parent::interfaces);
             }
 
-            Core::DeviceInformation::Server *device_info () const
+            DeviceInfo *device_info () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
-            Core::DeviceInformation::Server *device_info ()
+            DeviceInfo *device_info ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::device_info ();
+               return _Parent::device_info ();
             }
 
-            Core::AttributeReporting::Server *attribute_reporting () const
+            AttrReporting *attribute_reporting () const
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
             }
 
-            Core::AttributeReporting::Server *attribute_reporting ()
+            AttrReporting *attribute_reporting ()
             {
-               return HF::Unit0 <IUnit0, ITF...>::attribute_reporting ();
+               return _Parent::attribute_reporting ();
             }
          };
 
@@ -419,15 +571,21 @@ namespace HF
          struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
                                            Core::DeviceManagement::DefaultServer,
                                            Core::AttributeReporting::Server,
-                                           Core::BindManagement::Server>
+                                           Core::BindManagement::DefaultServer>
          {
+            /*!
+             * Constructor
+             *
+             * @param device  reference to the device this unit 0 belongs to.
+             */
             DefaultUnit0(IDevice &device):
                Unit0 (device)
             {}
          };
 
          /*!
-          *
+          * This is the parent class for the HAN-FUN Concentrator devices
+          * implementation.
           */
          class AbstractBase:public AbstractDevice
          {
@@ -456,12 +614,11 @@ namespace HF
 
             protected:
 
-            //! List of link present in this Concentrator.
+            //! List of links present in this concentrator.
             std::forward_list <Transport::Link *> _links;
 
             // =============================================================================
 
-            //! \see AbstractDevice::link
             HF::Transport::Link *link (uint16_t addr) const;
 
             /*!
@@ -474,13 +631,18 @@ namespace HF
             virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
                                        size_t offset);
 
+            /*!
+             * Get the unit 0 used by this concentrator device.
+             *
+             * @return pointer to the unit 0 used by this concentrator device.
+             */
             virtual Concentrator::IUnit0 *unit0 () const = 0;
          };
 
          /*!
           * Template for HAN-FUN concentrator devices.
           */
-         template<typename CoreServices>
+         template<typename CoreServices = DefaultUnit0>
          class Abstract:public AbstractBase
          {
             public:
@@ -498,13 +660,17 @@ namespace HF
             {}
          };
 
+         typedef Abstract <> Concentrator;
+
          /*!
-          * Top-level parent for transport layer implementations on a HAN-FUN Concentrator.
+          * Parent class for transport layer implementations on a HAN-FUN
+          * Concentrator device.
           */
          class Transport:public HF::Transport::AbstractLayer
          {
             protected:
 
+            //! List of links present in the transport layer.
             std::forward_list <HF::Transport::Link *> links;
 
             public:
@@ -514,10 +680,8 @@ namespace HF
                destroy ();
             }
 
-            //! \see HF::Transport:Layer::destroy
             void destroy ();
 
-            //! \see HF::Transport::AbstractLayer::add
             void add (HF::Transport::Endpoint *ep)
             {
                HF::Transport::AbstractLayer::add (ep);
@@ -544,10 +708,10 @@ namespace HF
             }
 
             /*!
-             * Call the \c disconnected method for all registered end-points with the
-             * given \c link and remove it from list of known links.
+             * Call the @c disconnected method for all registered end-points with the
+             * given @c link and remove it from list of known links.
              *
-             * If \c link is \c nullptr, then remove all known links.
+             * If @c link is @c nullptr, then remove all known links.
              *
              * @param [in] link  pointer to the link to remove.
              */
@@ -557,15 +721,17 @@ namespace HF
 
             /*!
              * Find the link used to send messages to the HAN-FUN device with
-             * the given \c address.
+             * the given @c address.
              *
              * @param [in] address  the HAN-FUN address to find the link for.
              *
              * @return  a pointer to the link for the given address or
-             *          \c nullptr if no link exists for the given address.
+             *          @c nullptr if no link exists for the given address.
              */
             HF::Transport::Link *find (uint16_t address);
          };
+
+         /*! @} */
 
       } // namespace Concentrator
 

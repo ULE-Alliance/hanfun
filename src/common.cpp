@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/common.cpp
+ * @file       src/common.cpp
  *
  * This file contains the implementation of the common classes and functions
  * of the HAN-FUN library.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/interface/test_alert.cpp
+ * @file       tests/interface/test_alert.cpp
  *
  * This is file contains the unit tests for the Alert Interface implementation.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -34,7 +34,7 @@ TEST_GROUP (Alert)
    TestAlert interface;
 };
 
-//! \test Alert::uid should return \c HF::Interface::ALERT.
+//! @test Alert::uid should return @c HF::Interface::ALERT.
 TEST (Alert, UID)
 {
    CHECK_EQUAL (HF::Interface::ALERT, interface.uid ());
@@ -68,7 +68,7 @@ TEST_GROUP (AlertMessage)
 
 };
 
-//! \test Alert::Message::size should return the correct value.
+//! @test Alert::Message::size should return the correct value.
 TEST (AlertMessage, Size)
 {
    LONGS_EQUAL (6, message->size ());
@@ -77,7 +77,7 @@ TEST (AlertMessage, Size)
    LONGS_EQUAL (0, message->state);
 }
 
-//! \test Alert::Message::pack should write the correct values to the ByteArray.
+//! @test Alert::Message::pack should write the correct values to the ByteArray.
 TEST (AlertMessage, Pack)
 {
    message->type  = 0x5AA5;
@@ -92,7 +92,7 @@ TEST (AlertMessage, Pack)
    CHECK_EQUAL (expected, array);
 }
 
-//! \test Alert::Message::unpack should read the correct values from the ByteArray.
+//! @test Alert::Message::unpack should read the correct values from the ByteArray.
 TEST (AlertMessage, Unpack)
 {
    size_t rsize = message->unpack (expected, 3);
@@ -133,7 +133,7 @@ TEST_GROUP (AlertServer)
 #define CHECK_ALARM(_expected, _state, _index) \
    check_index <bool>(_expected, _state, _index, "Alarm", __FILE__, __LINE__)
 
-//! \test Should disable all alarms.
+//! @test Should disable all alarms.
 TEST (AlertServer, DisableAll)
 {
    mock ("Interface").expectOneCall ("notify");
@@ -143,7 +143,7 @@ TEST (AlertServer, DisableAll)
    mock ("Interface").checkExpectations ();
 }
 
-//! \test Should enable all alarms.
+//! @test Should enable all alarms.
 TEST (AlertServer, EnableAll)
 {
    mock ("Interface").expectNCalls (2, "notify");
@@ -153,7 +153,7 @@ TEST (AlertServer, EnableAll)
    mock ("Interface").checkExpectations ();
 }
 
-//! \test Should enable only the selected alarm.
+//! @test Should enable only the selected alarm.
 TEST (AlertServer, Enable)
 {
    mock ("Interface").expectOneCall ("notify");
@@ -185,7 +185,7 @@ TEST (AlertServer, Enable)
    mock ("Interface").checkExpectations ();
 }
 
-//! \test Should disable only the selected alarm.
+//! @test Should disable only the selected alarm.
 TEST (AlertServer, Disable)
 {
    mock ("Interface").expectOneCall ("notify");
@@ -217,7 +217,7 @@ TEST (AlertServer, Disable)
    mock ("Interface").checkExpectations ();
 }
 
-//! \test Should change the alarm state correctly.
+//! @test Should change the alarm state correctly.
 TEST (AlertServer, State)
 {
    CHECK_FALSE (server->state (42, true));
@@ -264,7 +264,7 @@ TEST (AlertServer, State)
    mock ("Interface").checkExpectations ();
 }
 
-//! \test Should create the correct Alert::Message.
+//! @test Should create the correct Alert::Message.
 TEST (AlertServer, Status)
 {
    server->disableAll ();
@@ -283,7 +283,7 @@ TEST (AlertServer, Status)
    delete msg;
 }
 
-//! \test Should send the a Alert::Message.
+//! @test Should send the a Alert::Message.
 TEST (AlertServer, Status2)
 {
    server->disableAll ();
@@ -312,7 +312,7 @@ TEST (AlertServer, Status2)
    LONGS_EQUAL (0x00000008, alert_msg.state);
 }
 
-//! \test Should return attribute.
+//! @test Should return attribute.
 TEST (AlertServer, Attribute)
 {
    HF::Attributes::IAttribute *attr = server->attribute (Alert::__LAST_ATTR__ + 1);
@@ -356,9 +356,12 @@ TEST_GROUP (AlertClient)
 
       TestAlertClient():profile_uid (0), state (0) {}
 
-      void status (Alert::Message &message)
+      void status (HF::Protocol::Address &source, Alert::Message &message)
       {
          mock ("AlertClient").actualCall ("status");
+
+         Testing::InterfaceHelper <Alert::Client>::status (source, message);
+
          profile_uid = message.type;
          state       = message.state;
       }
@@ -394,7 +397,7 @@ TEST_GROUP (AlertClient)
    }
 };
 
-//! \test Should handle valid message.
+//! @test Should handle valid message.
 TEST (AlertClient, Handle_Valid_Message)
 {
    mock ("AlertClient").expectOneCall ("status");
@@ -408,7 +411,7 @@ TEST (AlertClient, Handle_Valid_Message)
    mock ("AlertClient").checkExpectations ();
 }
 
-//! \test Should not handle message from invalid role.
+//! @test Should not handle message from invalid role.
 TEST (AlertClient, Handle_Invalid_Role)
 {
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
@@ -416,7 +419,7 @@ TEST (AlertClient, Handle_Invalid_Role)
    CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (packet, expected, 3));
 }
 
-//! \test Should not handle message from invalid interface UID.
+//! @test Should not handle message from invalid interface UID.
 TEST (AlertClient, Handle_Invalid_UID)
 {
    packet.message.itf.id = client->uid () + 1;
@@ -424,7 +427,7 @@ TEST (AlertClient, Handle_Invalid_UID)
    CHECK_EQUAL (Result::FAIL_ID, client->handle (packet, expected, 3));
 }
 
-//! \test Should not handle message with invalid payload size.
+//! @test Should not handle message with invalid payload size.
 TEST (AlertClient, Handle_Invalid_Payload_Size)
 {
    Alert::Message alert_msg;
@@ -433,7 +436,7 @@ TEST (AlertClient, Handle_Invalid_Payload_Size)
    CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 3));
 }
 
-//! \test Should not handle message with not enough payload.
+//! @test Should not handle message with not enough payload.
 TEST (AlertClient, Handle_Invalid_Payload)
 {
    CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 10));

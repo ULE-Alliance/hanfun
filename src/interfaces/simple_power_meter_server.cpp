@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/interfaces/simple_power_meter_server.cpp
+ * @file       src/interfaces/simple_power_meter_server.cpp
  *
  * This file contains the implementation of the Simple Power Meter interface :
  * Server role.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -20,15 +20,19 @@
 
 #include "hanfun/interfaces/simple_power_meter.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 using namespace HF;
 using namespace HF::Interfaces;
 using namespace HF::Interfaces::SimplePowerMeter;
 
 // =============================================================================
-// SimplePowerMeter::Server
+// SimplePowerMeter / Server
 // =============================================================================
 
-SimplePowerMeter::Server::Server()
+Server::Server()
 {
 #if HF_IFT_SPM_ENERGY_ATTR
    memset (&_energy, 0, sizeof(Measurement));          // Energy measurement.
@@ -77,67 +81,67 @@ SimplePowerMeter::Server::Server()
 }
 
 // =============================================================================
-// SimplePowerMeter::Server::report
+// Server::report
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-SimplePowerMeter::Report *SimplePowerMeter::Server::report ()
+Report *Server::report ()
 {
-   SimplePowerMeter::Report *report = new SimplePowerMeter::Report ();
+   Report *report = new Report ();
 
    if (report != nullptr)
    {
 #if HF_ITF_SPM_ENERGY_ATTR
-      report->energy                                 = this->energy (); // Energy.
-      report->enabled[SimplePowerMeter::ENERGY_ATTR] = true;
+      report->energy               = this->energy (); // Energy.
+      report->enabled[ENERGY_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_ENERGY_AT_RESET_ATTR
-      report->last_energy                                     = this->last_energy (); // Energy at Last Reset.
-      report->enabled[SimplePowerMeter::ENERGY_AT_RESET_ATTR] = true;
+      report->last_energy                   = this->last_energy (); // Energy at Last Reset.
+      report->enabled[ENERGY_AT_RESET_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_TIME_AT_RESET_ATTR
-      report->last_time                                     = this->last_time (); // Time at Last Reset.
-      report->enabled[SimplePowerMeter::TIME_AT_RESET_ATTR] = true;
+      report->last_time                   = this->last_time (); // Time at Last Reset.
+      report->enabled[TIME_AT_RESET_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_POWER_ATTR
-      report->power                                 = this->power (); // Instantaneous Power.
-      report->enabled[SimplePowerMeter::POWER_ATTR] = true;
+      report->power               = this->power (); // Instantaneous Power.
+      report->enabled[POWER_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_AVG_POWER_ATTR
-      report->avg_power                                 = this->avg_power (); // Average Power.
-      report->enabled[SimplePowerMeter::AVG_POWER_ATTR] = true;
+      report->avg_power               = this->avg_power (); // Average Power.
+      report->enabled[AVG_POWER_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
       // Average Power Interval.
-      report->avg_power_interval                                 = this->avg_power_interval ();
-      report->enabled[SimplePowerMeter::AVG_POWER_INTERVAL_ATTR] = true;
+      report->avg_power_interval               = this->avg_power_interval ();
+      report->enabled[AVG_POWER_INTERVAL_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_VOLTAGE_ATTR
-      report->voltage                                 = this->voltage (); // Voltage.
-      report->enabled[SimplePowerMeter::VOLTAGE_ATTR] = true;
+      report->voltage               = this->voltage (); // Voltage.
+      report->enabled[VOLTAGE_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_CURRENT_ATTR
-      report->current                                 = this->current (); // Current.
-      report->enabled[SimplePowerMeter::CURRENT_ATTR] = true;
+      report->current               = this->current (); // Current.
+      report->enabled[CURRENT_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_FREQUENCY_ATTR
-      report->frequency                                 = this->frequency (); // Frequency.
-      report->enabled[SimplePowerMeter::FREQUENCY_ATTR] = true;
+      report->frequency               = this->frequency (); // Frequency.
+      report->enabled[FREQUENCY_ATTR] = true;
 #endif
 
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
-      report->power_factor                                 = this->power_factor (); // Power Factor.
-      report->enabled[SimplePowerMeter::POWER_FACTOR_ATTR] = true;
+      report->power_factor               = this->power_factor (); // Power Factor.
+      report->enabled[POWER_FACTOR_ATTR] = true;
 #endif
    }
 
@@ -145,13 +149,13 @@ SimplePowerMeter::Report *SimplePowerMeter::Server::report ()
 }
 
 // =============================================================================
-// SimplePowerMeter::Server::periodic
+// Server::periodic
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void SimplePowerMeter::Server::periodic (uint32_t time)
+void Server::periodic (uint32_t time)
 {
    UNUSED (time);
 
@@ -166,7 +170,7 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
       Protocol::Message message (report->size ());
 
       message.itf.role   = CLIENT_ROLE;
-      message.itf.id     = SimplePowerMeter::Server::uid ();
+      message.itf.id     = Server::uid ();
       message.itf.member = REPORT_CMD;
 
       report->pack (message.payload);
@@ -182,13 +186,13 @@ void SimplePowerMeter::Server::periodic (uint32_t time)
 }
 
 // =============================================================================
-// SimplePowerMeter::Server::attribute
+// Server::attribute
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *SimplePowerMeter::Server::attribute (uint8_t uid)
+HF::Attributes::IAttribute *Server::attribute (uint8_t uid)
 {
    Attributes attr = static_cast <Attributes>(uid);
 
@@ -276,38 +280,38 @@ HF::Attributes::IAttribute *SimplePowerMeter::Server::attribute (uint8_t uid)
 }
 
 // =============================================================================
-// SimplePowerMeter::Server::attribute_uids
+// Server::attribute_uids
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS Server::attributes (uint8_t pack_id) const
 {
    HF::Attributes::UIDS result;
 
    if (pack_id == HF::Attributes::Pack::ALL)
    {
 #if HF_ITF_SPM_POWER_ATTR
-      result.push_back (SimplePowerMeter::POWER_ATTR);
+      result.push_back (POWER_ATTR);
 #endif
 #if HF_ITF_SPM_AVG_POWER_ATTR
-      result.push_back (SimplePowerMeter::AVG_POWER_ATTR);
+      result.push_back (AVG_POWER_ATTR);
 #endif
 #if HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR
-      result.push_back (SimplePowerMeter::AVG_POWER_INTERVAL_ATTR);
+      result.push_back (AVG_POWER_INTERVAL_ATTR);
 #endif
 #if HF_ITF_SPM_VOLTAGE_ATTR
-      result.push_back (SimplePowerMeter::VOLTAGE_ATTR);
+      result.push_back (VOLTAGE_ATTR);
 #endif
 #if HF_ITF_SPM_CURRENT_ATTR
-      result.push_back (SimplePowerMeter::CURRENT_ATTR);
+      result.push_back (CURRENT_ATTR);
 #endif
 #if HF_ITF_SPM_FREQUENCY_ATTR
-      result.push_back (SimplePowerMeter::FREQUENCY_ATTR);
+      result.push_back (FREQUENCY_ATTR);
 #endif
 #if HF_ITF_SPM_POWER_FACTOR_ATTR
-      result.push_back (SimplePowerMeter::POWER_FACTOR_ATTR);
+      result.push_back (POWER_FACTOR_ATTR);
 #endif
    }
 
@@ -317,7 +321,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
    if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
-      result.push_back (SimplePowerMeter::ENERGY_ATTR);
+      result.push_back (ENERGY_ATTR);
    }
 
 #endif
@@ -328,7 +332,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
    if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
-      result.push_back (SimplePowerMeter::ENERGY_AT_RESET_ATTR);
+      result.push_back (ENERGY_AT_RESET_ATTR);
    }
 
 #endif
@@ -339,7 +343,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
    if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
-      result.push_back (SimplePowerMeter::TIME_AT_RESET_ATTR);
+      result.push_back (TIME_AT_RESET_ATTR);
    }
 
 #endif
@@ -350,7 +354,7 @@ HF::Attributes::UIDS SimplePowerMeter::Server::attributes (uint8_t pack_id) cons
    if (pack_id == HF::Attributes::Pack::ALL)
    #endif
    {
-      result.push_back (SimplePowerMeter::REPORT_INTERVAL_ATTR);
+      result.push_back (REPORT_INTERVAL_ATTR);
    }
 
 #endif

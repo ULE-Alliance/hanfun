@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/core/attribute_reporting_client.cpp
+ * @file       src/core/attribute_reporting_client.cpp
  *
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Client role.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -17,13 +17,13 @@
 
 #include "hanfun/core/attribute_reporting.h"
 
-using namespace HF;
-using namespace HF::Core;
-using namespace HF::Core::AttributeReporting;
-
 // =============================================================================
 // API
 // =============================================================================
+
+using namespace HF;
+using namespace HF::Core;
+using namespace HF::Core::AttributeReporting;
 
 // =============================================================================
 // Client::payload_size
@@ -133,13 +133,13 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
       {
          case PERIODIC_REPORT_CMD:
          {
-            report (PERIODIC, payload, offset);
+            report (PERIODIC, packet.source, payload, offset);
             break;
          }
 
          case EVENT_REPORT_CMD:
          {
-            report (EVENT, payload, offset);
+            report (EVENT, packet.source, payload, offset);
             break;
          }
          default:
@@ -150,4 +150,118 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
    }
 
    return Common::Result::FAIL_SUPPORT;
+}
+
+// =============================================================================
+// AbstractClient
+// =============================================================================
+
+// =============================================================================
+// AbstractClient::create
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::create (Protocol::Address &destination)
+{
+   HF::Protocol::Address rule_destination;
+   rule_destination.device = unit ().device ().address ();
+   rule_destination.unit   = unit ().id ();
+
+   auto msg = HF::Core::AttributeReporting::create (rule_destination);
+
+   destination.unit = 0;
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::create
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::create (Protocol::Address &destination, uint32_t interval)
+{
+   HF::Protocol::Address rule_destination;
+   rule_destination.device = unit ().device ().address ();
+   rule_destination.unit   = unit ().id ();
+
+   auto msg = AttributeReporting::create (rule_destination, interval);
+
+   destination.unit = 0;
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::destroy (Protocol::Address &destination, Type type, uint8_t report_id)
+{
+   auto msg = AttributeReporting::destroy (type, report_id);
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::destroy (Protocol::Address &destination, Reference report)
+{
+   auto msg = AttributeReporting::destroy (report);
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::add (Protocol::Address &destination, Reference report,
+                          periodic_iterator begin, periodic_iterator end)
+{
+   auto msg = AttributeReporting::add (report, begin, end);
+
+   send (destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::add (Protocol::Address &destination, Reference report,
+                          event_iterator begin, event_iterator end)
+{
+   auto msg = AttributeReporting::add (report, begin, end);
+
+   send (destination, *msg);
+
+   delete msg;
 }

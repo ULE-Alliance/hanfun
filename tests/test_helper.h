@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/test_helper.h
+ * @file       tests/test_helper.h
  *
  * This file contains the definition of helper classes used for testing.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -203,7 +203,7 @@ namespace HF
             return create_attribute (this, uid);
          }
 
-         //! \see AbstractInterface::attributes
+         //! @see AbstractInterface::attributes
          HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
             HF::Attributes::UIDS result;
@@ -234,7 +234,7 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
                   }
                   else
                   {
@@ -248,7 +248,7 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
                   }
                   else
                   {
@@ -261,7 +261,7 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, true);
+                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, 0, true);
                   }
                   else
                   {
@@ -320,6 +320,8 @@ namespace HF
             return _uid;
          }
 
+         using TestInterface::attributes;
+
          HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
                                           const HF::Attributes::UIDS &uids) const
          {
@@ -375,7 +377,7 @@ namespace HF
 
          std::vector <Protocol::Packet *> packets;
 
-         Link link;
+         Link                             link;
 
          AbstractDevice():
             _address (Protocol::BROADCAST_ADDR)
@@ -414,7 +416,7 @@ namespace HF
                packet.link = &link;
             }
 
-            Parent::send(packet);
+            Parent::send (packet);
 
             Protocol::Packet *temp = new Protocol::Packet (packet);
 
@@ -541,7 +543,7 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
-         HF::Core::BindManagement::Server    *bind_mgt;
+         HF::Core::BindManagement::IServer   *bind_mgt;
 
          public:
 
@@ -622,22 +624,22 @@ namespace HF
             return attr_reporting;
          }
 
-         void bind_management (HF::Core::BindManagement::Server *_bind_mgt)
+         void bind_management (HF::Core::BindManagement::IServer *_bind_mgt)
          {
             SET_SERVICE (bind_mgt, _bind_mgt);
          }
 
-         HF::Core::BindManagement::Server *bind_management ()
+         HF::Core::BindManagement::IServer *bind_management ()
          {
             if (bind_mgt == nullptr)
             {
-               bind_management (new HF::Core::BindManagement::Server (*this));
+               bind_management (new HF::Core::BindManagement::DefaultServer (*this));
             }
 
             return bind_mgt;
          }
 
-         HF::Core::BindManagement::Server *bind_management () const
+         HF::Core::BindManagement::IServer *bind_management () const
          {
             return bind_mgt;
          }
@@ -648,19 +650,19 @@ namespace HF
             {
                case HF::Interface::DEVICE_INFORMATION:
                {
-                  return device_info()->handle(packet, payload, offset);
+                  return device_info ()->handle (packet, payload, offset);
                }
                case HF::Interface::ATTRIBUTE_REPORTING:
                {
-                  return attribute_reporting()->handle(packet, payload, offset);
+                  return attribute_reporting ()->handle (packet, payload, offset);
                }
                case HF::Interface::DEVICE_MANAGEMENT:
                {
-                  return device_management()->handle(packet, payload, offset);
+                  return device_management ()->handle (packet, payload, offset);
                }
                case HF::Interface::BIND_MANAGEMENT:
                {
-                  return bind_management()->handle(packet, payload, offset);
+                  return bind_management ()->handle (packet, payload, offset);
                }
                default:
                   return Common::Result::FAIL_UNKNOWN;

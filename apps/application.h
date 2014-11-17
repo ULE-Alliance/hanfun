@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       apps/application.h
+ * @file       apps/application.h
  *
  * This file contains the definitions for the HAN-FUN example applications.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -27,6 +27,13 @@
 
 namespace HF
 {
+   /*!
+    * @addtogroup examples Examples
+    *
+    * This module contains the classes for the provided example applications.
+    * @{
+    */
+
    /*!
     * This namespace contains the declaration of the functions that implement the
     * HAN-FUN example applications.
@@ -93,6 +100,8 @@ namespace HF
 #endif
 
    }  // namespace Application
+
+   /*! @} */
 
 }  // namespace HF
 

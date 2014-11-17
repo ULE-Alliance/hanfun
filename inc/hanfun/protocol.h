@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/protocol.h
+ * @file       inc/hanfun/protocol.h
  *
  * This file contains the definitions for the HAN-FUN protocol messages.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -33,10 +33,16 @@ namespace HF
    }
 
    /*!
-    * HAN-FUN Protocol implementation.
+    * HAN-FUN %Protocol implementation.
     */
    namespace Protocol
    {
+      /*!
+       * @addtogroup protocol Protocol
+       *
+       * This module contains the classes that define and implement the %Protocol API.
+       * @{
+       */
       //! HAN-FUN Broadcast - device address.
       constexpr uint16_t BROADCAST_ADDR = 0x7FFF;
 
@@ -58,7 +64,7 @@ namespace HF
          /*!
           * Message types.
           */
-         typedef enum
+         typedef enum _Type
          {
             COMMAND_REQ                   = 0x01, //!< Command request
             COMMAND_RESP_REQ              = 0x02, //!< Command request with response required.
@@ -90,15 +96,23 @@ namespace HF
          {
             uint8_t member;            //!< Interface destination member.
 
-            Interface(uint16_t uid = 0, uint16_t role = 0, uint8_t member = 0):Common::Interface(uid, role), member (member) {}
+            /*!
+             * Constructor.
+             *
+             * @param [in] uid      interface %UID.
+             * @param [in] role     interface role.
+             * @param [in] member   interface member.
+             */
+            Interface(uint16_t uid = 0, uint8_t role = 0, uint8_t member = 0):Common::Interface(uid, role), member (member)
+            {}
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             size_t size () const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
          };
 
@@ -107,7 +121,7 @@ namespace HF
          // =============================================================================
 
          uint8_t   reference;          //!< Application reference.
-         Type      type;               //!< Message type. \see Message::Type
+         Type      type;               //!< Message type. @see Message::Type
 
          Interface itf;                //!< Interface Address.
 
@@ -119,19 +133,33 @@ namespace HF
          //! The payload length value read when unpacking the message.
          uint16_t length;
 
+         /*!
+          * Constructor
+          *
+          * @param [in] size     message payload size.
+          * @param [in] _type    message type.
+          */
          Message(size_t size = 0, Type _type = COMMAND_REQ):
             reference (0), type (_type), payload (Common::ByteArray (size)), length (0)
          {}
 
+         /*!
+          * Create a new message that is a response to the given message in @c parent.
+          *
+          * @note If @c parent is already a response then the new message has the same type.
+          *
+          * @param [in] parent   reference to the message to create a response for.
+          * @param [in] size     size of the payload buffer.
+          */
          Message(const Message &parent, size_t size);
 
-         //! \see HF::Serializable::size.
+         //! @copydoc HF::Common::Serializable::size
          size_t size () const;
 
-         //! \see HF::Serializable::pack.
+         //! @copydoc HF::Common::Serializable::pack
          size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-         //! \see HF::Serializable::unpack.
+         //! @copydoc HF::Common::Serializable::unpack
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
@@ -148,7 +176,7 @@ namespace HF
          /*!
           * HAN-FUN Network Destination Address Types.
           */
-         typedef enum
+         typedef enum _Type
          {
             DEVICE = 0,   //!< Destination address is for single device.
             GROUP  = 1,   //!< Destination address is for a group of devices.
@@ -157,22 +185,22 @@ namespace HF
          /*!
           * Create a new message address.
           *
-          * @param _dev    device address. Default \c HF_BROADCAST_ADDR.
-          * @param _unit   unit address. Default \c HF_BROADCAST_UNIT.
-          * @param _mod    address modifier. Default \c DEVICE_ADDR.
+          * @param [in] _dev    device address. Default @c HF_BROADCAST_ADDR.
+          * @param [in] _unit   unit address. Default @c HF_BROADCAST_UNIT.
+          * @param [in] _mod    address modifier. Default @c DEVICE_ADDR.
           */
          Address(uint16_t _dev = BROADCAST_ADDR, uint8_t _unit = BROADCAST_UNIT,
                  Type _mod = DEVICE)
             :mod (_mod), device (_dev), unit (_unit)
          {}
 
-         //! \see HF::Serializable::size.
+         //! @copydoc HF::Common::Serializable::size
          size_t size () const;
 
-         //! \see HF::Serializable::pack.
+         //! @copydoc HF::Common::Serializable::pack
          size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-         //! \see HF::Serializable::unpack.
+         //! @copydoc HF::Common::Serializable::unpack
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
 
          /*!
@@ -188,7 +216,7 @@ namespace HF
          }
 
          /*!
-          * Checks if the given device \c address is equal to the device address
+          * Checks if the given device @c address is equal to the device address
           * present in this Protocol::Address object.
           *
           * @param [in] address  network address to match.
@@ -213,14 +241,27 @@ namespace HF
          /*!
           * Packet message payload;
           */
-         Message         message;
+         Message message;
 
-         Transport::Link *link;     //! Link where this packet originated from.
+         //! Link where this packet originated from.
+         Transport::Link *link;
 
          Packet():link (nullptr) {}
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] message  message this packet holds.
+          */
          Packet(Message &message):message (message), link (nullptr) {}
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] dst_addr    destination device address.
+          * @param [in] message     message to be sent.
+          * @param [in] unit        destination unit for this packet.
+          */
          Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
             destination (dst_addr), message (message), link (nullptr)
          {
@@ -229,22 +270,29 @@ namespace HF
             source.unit   = unit;
          }
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] src_addr    source device address for packet.
+          * @param [in] dst_addr    destination device address for packet.
+          * @param [in] message     message payload.
+          */
          Packet(Address &src_addr, Address &dst_addr, Message &message):
             source (src_addr), destination (dst_addr), message (message), link (nullptr)
          {}
 
-         //! \see HF::Serializable::size.
+         //! @copydoc HF::Common::Serializable::size
          size_t size () const;
 
-         //! \see HF::Serializable::pack.
+         //! @copydoc HF::Common::Serializable::pack
          size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-         //! \see HF::Serializable::unpack.
+         //! @copydoc HF::Common::Serializable::unpack
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
 
       /*!
-       * HAN-FUN Response message.
+       * Parent class for the response messages.
        */
       struct Response
       {
@@ -252,19 +300,24 @@ namespace HF
          // API
          // =============================================================================
 
-         Common::Result code;
+         //! Minimum number of bytes required by this message.
+         constexpr static size_t min_size = sizeof(uint8_t);
+
+         Common::Result          code;
 
          Response(Common::Result code = Common::Result::OK):code (code) {}
 
-         //! \see HF::Serializable::size.
+         //! @copydoc HF::Common::Serializable::size
          size_t size () const;
 
-         //! \see HF::Serializable::pack.
+         //! @copydoc HF::Common::Serializable::pack
          size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
-         //! \see HF::Serializable::unpack.
+         //! @copydoc HF::Common::Serializable::unpack
          size_t unpack (const Common::ByteArray &array, size_t offset = 0);
       };
+
+      /*! @} */
 
       // =============================================================================
       // Filter classes
@@ -272,9 +325,20 @@ namespace HF
 
       /*!
        * This namespace contains the different packet filters.
+       *
+       * Filters are used in processing the incoming packets from the network in order
+       * to provide the required functionality of the HAN-FUN protocol.
        */
       namespace Filters
       {
+         /*!
+          * @addtogroup tsp_filters Filters
+          * @ingroup protocol
+          *
+          * This module contains the filters used in the %Protocol API implementation.
+          * @{
+          */
+
          /*!
           * This class provides support for detecting repeated messages received from the
           * network.
@@ -314,10 +378,10 @@ namespace HF
             static constexpr size_t max_size = HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE;
 
             /*!
-             * Checks if the given \c packet, is a retransmission according to
+             * Checks if the given @c packet, is a retransmission according to
              * the filters database data.
              *
-             * The given \c packet and \c payload are used to update the filters database.
+             * The given @c packet and @c payload are used to update the filters database.
              *
              * @param [in] packet     reference to the incoming packet.
              * @param [in] payload    reference to the packet's payload.
@@ -341,20 +405,21 @@ namespace HF
             protected:
 
             /*!
-             * Create a checksum of the data that is contained in the buffer \c data.
+             * Create a checksum of the data that is contained in the buffer @c data.
              *
              * This method implements the Fletcher-32 checksum algorithm.
              *
              * @param data    pointer to the data to calculate the checksum for.
-             * @param words   number of words in the \c data to calculate the checksum from.
+             * @param words   number of words in the @c data to calculate the checksum from.
              *
-             * @return
+             * @return  message checksum value.
              */
             uint32_t checksum (uint16_t const *data, size_t words);
          };
 
          /*!
-          *
+          * This class provides support for generating a response when a response is
+          * required from an incoming message received, but no response was generated.
           */
          class ResponseRequired
          {
@@ -382,13 +447,12 @@ namespace HF
             public:
 
             /*!
-             * Checks if the given \c packet, is a retransmission according to
+             * Checks if the given @c packet, is a retransmission according to
              * the filters database data.
              *
-             * The given \c packet and \c payload are used to update the filters database.
+             * The given @c packet and @c payload are used to update the filters database.
              *
              * @param [in] packet     reference to the incoming packet.
-             * @param [in] payload    reference to the packet's payload.
              *
              * @retval  true     the packet is a retransmission.
              * @retval  false    the packet is a not retransmission.
@@ -406,8 +470,14 @@ namespace HF
             }
          };
 
+         /*! @} */
+
       }  // namespace Filters
 
+      /*!
+       * @addtogroup protocol
+       * @{
+       */
       // =============================================================================
       // Operators
       // =============================================================================
@@ -436,7 +506,7 @@ namespace HF
       /*!
        * Check if message type is a request.
        *
-       * If \c response is \c false then return true for all requests, otherwise
+       * If @c response is @c false then return true for all requests, otherwise
        * only for those that require a response.
        *
        * @param [in] type        message type to check if it is a request.
@@ -470,6 +540,8 @@ namespace HF
        * @retval false  otherwise.
        */
       bool matches (Message::Type lhs, Message::Type rhs);
+
+      /*! @} */
 
    }  // namespace Protocol
 

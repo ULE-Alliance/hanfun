@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/main.cpp
+ * @file       apps/main.cpp
  *
  * This file contains the implementation of the main entry point for the
  * HAN-FUN example applications.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -23,6 +23,11 @@
 
 #include "application.h"
 #include "transport.h"
+
+/*!
+ * @addtogroup examples
+ * @{
+ */
 
 // =============================================================================
 // Global Variables.
@@ -103,6 +108,8 @@ void HF::Application::Restored ()
 {
    LOG (INFO) << "Application configuration restored !" << NL;
 }
+
+/*! @} */
 
 // =============================================================================
 // Main

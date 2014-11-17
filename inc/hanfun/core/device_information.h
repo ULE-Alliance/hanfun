@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/core/device_information.h
+ * @file       inc/hanfun/core/device_information.h
  *
  * This file contains the definition for the core Device Information interface
  * of the HAN-FUN protocol.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -55,10 +55,35 @@ namespace HF
          struct Server;
       }  // namespace DeviceInformation
 
-      HF::Attributes::IAttribute *create_attribute (DeviceInformation::Server *server, uint8_t uid);
+      /*!
+       * @ingroup dev_info
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       *          exist.
+       */
+      HF::Attributes::IAttribute *create_attribute (HF::Core::DeviceInformation::Server *server,
+                                                    uint8_t uid);
 
+      /*!
+       * This namespace contains the classes that implement the Device Information service.
+       */
       namespace DeviceInformation
       {
+         /*!
+          * @addtogroup dev_info Device Information
+          * @ingroup core
+          *
+          * This module contains the classes that implement the %Device Information service.
+          * @{
+          */
          constexpr static uint8_t  CORE_VERSION      = HF::CORE_VERSION;       //!< HAN-FUN Core version.
          constexpr static uint8_t  PROFILE_VERSION   = HF::PROFILES_VERSION;   //!< HAN-FUN Profile version.
          constexpr static uint8_t  INTERFACE_VERSION = HF::INTERFACES_VERSION; //!< HAN-FUN Interface version.
@@ -69,7 +94,7 @@ namespace HF
          static const std::string  MANUFACTURER;       //!< Manufacturer Name.
 
          //! Attributes.
-         typedef enum
+         typedef enum _Attributes
          {
             CORE_VERSION_ATTR      = 0x01,   //!< HF Core version attribute.              (M)
             PROFILE_VERSION_ATTR   = 0x02,   //!< HF Profile version attribute.           (M)
@@ -86,24 +111,33 @@ namespace HF
             LOCATION_ATTR          = 0x0D,   //!< Location attribute.                     (O)
             ENABLED_ATTR           = 0x0E,   //!< Device enabled attribute.               (O)
             FRIENDLY_NAME_ATTR     = 0x0F,   //!< Device friendly name attribute.         (O)
+            __LAST_ATTR__          = FRIENDLY_NAME_ATTR
          } Attributes;
 
+         /*!
+          * @copybrief HF::Core::create_attribute (HF::Core::DeviceInformation::Server *,uint8_t)
+          *
+          * @see HF::Core::create_attribute (HF::Core::DeviceInformation::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
           * Parent class for the Device Information interface implementation.
           */
-         struct Abstract:public Service <HF::Interface::DEVICE_INFORMATION>
+         class Abstract:public Service <HF::Interface::DEVICE_INFORMATION>
          {
-            // =============================================================================
-            // API
-            // =============================================================================
-
-
-            // =============================================================================
-
             protected:
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
             Abstract(Unit0 &unit):
                Service (unit)
             {}
@@ -114,8 +148,13 @@ namespace HF
           */
          struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
          {
-            HF::UID::UID device_uid;
+            HF::UID::UID device_uid;   //! Device UID.
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
             Server(HF::Core::Unit0 &unit):
                ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit)
             {}
@@ -126,15 +165,11 @@ namespace HF
             // Interface Attribute API.
             // =============================================================================
 
-            //! \see Interface::attribute
             HF::Attributes::IAttribute *attribute (uint8_t uid)
             {
                return Core::create_attribute (this, uid);
             }
 
-            protected:
-
-            //! \see AbstractInterface::attributes
             HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
          };
 
@@ -155,7 +190,7 @@ namespace HF
          Protocol::Message *all ();
 
          /*!
-          * Create a message that can be used to retrieve the attributes with the given \c uids of the
+          * Create a message that can be used to retrieve the attributes with the given @c uids of the
           * device information interface on a remote device.
           *
           * @param [in] uids array containing the attribute uids to retrive from the remote device.
@@ -165,13 +200,15 @@ namespace HF
          Protocol::Message *get (HF::Attributes::UIDS &uids);
 
          /*!
-          * Create a message that can be used to retrieve the attribute with the given \c uid.
+          * Create a message that can be used to retrieve the attribute with the given @c uid.
           *
           * @param [in] uid  attribute's uid to retrieve.
           *
           * @return    pointer to a message to retrieve the attribute with the given uid.
           */
          Protocol::Message *get (uint8_t uid);
+
+         /*! @} */
 
       }  // namespace DeviceInformation
 

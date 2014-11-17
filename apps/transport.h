@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       apps/transport.h
+ * @file       apps/transport.h
  *
  * This file contains the declarations of the transport layer over libuv.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -24,29 +24,25 @@
 #include "hanfun.h"
 
 // =============================================================================
-// Defines
-// =============================================================================
-
-#define CHECK_STATUS()                                  \
-   if (status != 0)                                     \
-   {                                                    \
-      print_error (uv_last_error (uv_default_loop ())); \
-      exit (-1);                                        \
-   }
-
-// =============================================================================
 // API
 // =============================================================================
 
 namespace HF
 {
+   /*!
+    * @addtogroup examples
+    */
+
    namespace Application
    {
+      /*!
+       * Transport Layer implementation over TCP/IP using libuv.
+       */
       class Transport:public HF::Devices::Concentrator::Transport
       {
          protected:
 
-         uv_tcp_t socket;
+         uv_tcp_t socket;  //!< libuv tcp/ip socket.
 
          public:
 
@@ -57,16 +53,25 @@ namespace HF
          void destroy ();
       };
 
+      /*!
+       * Transport Layer link implementation over TCP/IP using libuv.
+       */
       class Link:public HF::Transport::AbstractLink
       {
          protected:
 
-         Transport *tsp;
+         Transport *tsp;   //!< Transport layer for this link.
 
-         uv_stream_s *stream;
+         uv_stream_s *stream; //!< libuv stream to send/receive messages.
 
          public:
 
+         /*!
+          * Constructor.
+          *
+          * @param _tsp    pointer to the transport layer.
+          * @param stream  pointer to the libuv stream.
+          */
          Link(Transport *_tsp, uv_stream_s *stream):
             HF::Transport::AbstractLink (), tsp (_tsp), stream (stream)
          {
@@ -85,6 +90,8 @@ namespace HF
       };
 
    }  // namespace Application
+
+   /*! @} */
 
 }  // namespace HF
 

@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/gcc.h
+ * @file       inc/hanfun/gcc.h
  *
  * This file contains workarounds for the implementation on C++11 in older versions
  * of GCC.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -44,13 +44,13 @@ const class nullptr_t
    }
 
    template<typename T>
-   bool operator==(const T &other) const
+   bool operator ==(const T &other) const
    {
       return *this == other;
    }
 
    template<typename T>
-   bool operator!=(const T &other) const
+   bool operator !=(const T &other) const
    {
       return *this != other;
    }
@@ -62,7 +62,6 @@ const class nullptr_t
 
 }
 nullptr = {};
-
 
 #endif
 

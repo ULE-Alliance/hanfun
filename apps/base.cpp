@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/base.cpp
+ * @file       apps/base.cpp
  *
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * \version    1.0.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -29,6 +29,11 @@
 
 #include "json/json.h"
 
+/*!
+ * @addtogroup examples
+ * @{
+ */
+
 // =============================================================================
 // DeviceManagement
 // =============================================================================
@@ -40,7 +45,7 @@
  *
  */
 // =============================================================================
-HF::Common::Result DeviceManagement::Entries::save (Device &device)
+HF::Common::Result DeviceManagement::Entries::save (const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::save (device);
    HF::Application::Save ();
@@ -54,7 +59,7 @@ HF::Common::Result DeviceManagement::Entries::save (Device &device)
  *
  */
 // =============================================================================
-void DeviceManagement::Entries::insert (Device &device)
+void DeviceManagement::Entries::insert (const Device &device)
 {
    HF::Core::DeviceManagement::Entries::save (device);
 }
@@ -66,7 +71,7 @@ void DeviceManagement::Entries::insert (Device &device)
  *
  */
 // =============================================================================
-DeviceManagement::Entries::DestroyRes DeviceManagement::Entries::destroy (DevicePtr &device)
+HF::Common::Result DeviceManagement::Entries::destroy (const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::destroy (device);
    HF::Application::Save ();
@@ -179,10 +184,11 @@ void DeviceManagement::Server::restore (Json::Value root)
    LOG (INFO) << "Restoring registration entries ..." << NL;
 
    HF::Core::DeviceManagement::Device device;
+
    for (unsigned i = 0; i < root.size (); i++)
    {
       from_json (root[i], device);
-      HF::Core::DeviceManagement::Server<Entries>::entries ().insert (device);
+      HF::Core::DeviceManagement::Server <Entries>::entries ().insert (device);
    }
 }
 
@@ -191,69 +197,76 @@ void DeviceManagement::Server::restore (Json::Value root)
 // =============================================================================
 
 // =============================================================================
-// BindManagement::add
+// BindManagement::Entries::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-std::pair <HF::Common::Result, const HF::Core::BindManagement::Entry *> BindManagement::add (
-   const HF::Protocol::Address &source,
-   const HF::Protocol::Address &destination,
-   const HF::Common::Interface &itf)
+HF::Common::Result BindManagement::Entries::save (const Entry &entry)
 {
-   auto result = HF::Core::BindManagement::Server::add (source, destination, itf);
+   auto res = HF::Core::BindManagement::Entries::save (entry);
    HF::Application::Save ();
-   return result;
+   return res;
 }
 
 // =============================================================================
-// BindManagement::remove
+// BindManagement::Entries::save
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Common::Result BindManagement::remove (const HF::Protocol::Address &source,
-                                           const HF::Protocol::Address &destination,
-                                           const HF::Common::Interface &itf)
+void BindManagement::Entries::insert (Entry &entry)
 {
-   HF::Common::Result result = HF::Core::BindManagement::Server::remove (source, destination, itf);
-   HF::Application::Save ();
-   return result;
+   HF::Core::BindManagement::Entries::save (entry);
 }
 
 // =============================================================================
-// BindManagement::save
+// DeviceManagement::Entries::destroy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::save (Json::Value &root)
+HF::Common::Result BindManagement::Entries::destroy (const Entry &entry)
+{
+   auto res = HF::Core::BindManagement::Entries::destroy (entry);
+   HF::Application::Save ();
+   return res;
+}
+
+// =============================================================================
+// BindManagement::Server::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void BindManagement::Server::save (Json::Value &root)
 {
    LOG (INFO) << "Saving binding entries ..." << NL;
 
    unsigned i = 0;
 
    /* *INDENT-OFF* */
-   for_each(entries.begin(), entries.end(),
-         [&root, &i](const HF::Core::BindManagement::Entry &entry)
-         {
-            to_json (entry, root[i]);
-            i++;
-         });
+   for_each(entries().begin(), entries().end(),
+            [&root, &i](const HF::Core::BindManagement::Entry &entry)
+            {
+               to_json (entry, root[i]);
+               i++;
+            });
    /* *INDENT-ON* */
 }
 
 // =============================================================================
-// BindManagement::restore
+// BindManagement::Server::restore
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void BindManagement::restore (Json::Value root)
+void BindManagement::Server::restore (Json::Value root)
 {
    LOG (INFO) << "Restoring binding entries ..." << NL;
 
@@ -261,8 +274,9 @@ void BindManagement::restore (Json::Value root)
    {
       HF::Core::BindManagement::Entry entry;
       from_json (root[i], entry);
-      auto res = this->add (entry.source, entry.destination, entry.itf);
-      LOG (TRACE) << "Bind Add : " << res.first << NL;
+      entries ().insert (entry);
+      LOG (TRACE) << "Bind Add : " << entry.source.device
+                  << " -> " << entry.destination.device << NL;
    }
 }
 
@@ -301,7 +315,7 @@ bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
    HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
    HF::Protocol::Address destination (dev_addr_2, 1);
 
-   return _unit0.bind_management ()->entries.find (source, itf, destination) != nullptr;
+   return _unit0.bind_management ()->entries ().find (source, itf, destination) != nullptr;
 }
 
 // =============================================================================
@@ -324,7 +338,7 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
 
    auto res = _unit0.bind_management ()->add (source, destination, itf);
 
-   if (res.first == HF::Common::OK)
+   if (res == HF::Common::OK)
    {
       return 0;
    }
@@ -683,3 +697,5 @@ void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry)
    from_json (node["dst"], entry.destination);
    from_json (node["itf"], entry.itf);
 }
+
+/*! @} */

@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file apps/CMakeLists.txt
+#   @file apps/CMakeLists.txt
 #
 #   HAN-FUN Library Examples CMakeList
 #
-#   \version    1.0.1
+#   @version    1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #
@@ -110,3 +110,43 @@ if (HF_NODE_APP)
 endif()
 
 set (HF_TARGETS ${HF_TARGETS} PARENT_SCOPE)
+
+# ==============================================================================
+# Examples
+# ==============================================================================
+
+## Registration examples
+add_executable(example_01 EXCLUDE_FROM_ALL example_01.cpp)
+target_link_libraries(example_01 hanfun)
+
+add_executable(example_02 EXCLUDE_FROM_ALL example_02.cpp)
+target_link_libraries(example_02 hanfun)
+
+## Alert interface example
+add_executable(example_03 EXCLUDE_FROM_ALL example_03.cpp)
+target_link_libraries(example_03 hanfun)
+
+## On-Off interface example
+add_executable(example_04 EXCLUDE_FROM_ALL example_04.cpp)
+target_link_libraries(example_04 hanfun)
+
+## Level Control interface example
+add_executable(example_05 EXCLUDE_FROM_ALL example_05.cpp)
+target_link_libraries(example_05 hanfun)
+
+## Device Information service example
+add_executable(example_06 EXCLUDE_FROM_ALL example_06.cpp)
+target_link_libraries(example_06 hanfun)
+
+## Attribute reporting service example
+add_executable(example_07 EXCLUDE_FROM_ALL example_07.cpp)
+target_link_libraries(example_07 hanfun)
+
+## Bind service example
+add_executable(example_08 EXCLUDE_FROM_ALL example_08.cpp)
+target_link_libraries(example_08 hanfun)
+
+## Build all examples
+add_custom_target(examples DEPENDS example_01 example_02 example_03
+                                   example_04 example_05 example_06
+                                   example_07 example_08)

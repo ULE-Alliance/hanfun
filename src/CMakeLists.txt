@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file src/CMakeLists.txt
+#   @file src/CMakeLists.txt
 #
 #   HAN-FUN Library CMakeList.
 #
-#   \version 1.0.1
+#   @version 1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #
@@ -39,8 +39,7 @@ set(HF_INTERFACES_SRCS interfaces.cpp
                        interfaces/simple_power_meter_server.cpp
                        interfaces/simple_power_meter_client.cpp )
 
-set(HF_CORE_SRCS       core.cpp
-                       core/device_management.cpp
+set(HF_CORE_SRCS       core/device_management.cpp
                        core/device_management_client.cpp
                        core/device_management_server.cpp
                        core/bind_management.cpp
@@ -49,7 +48,9 @@ set(HF_CORE_SRCS       core.cpp
                        core/device_information.cpp
                        core/attribute_reporting.cpp
                        core/attribute_reporting_server.cpp
-                       core/attribute_reporting_client.cpp)
+                       core/attribute_reporting_client.cpp
+                       core/session_management_server.cpp
+                       core/session_management_client.cpp)
 
 set(HF_UNITS_SRCS units.cpp)
 

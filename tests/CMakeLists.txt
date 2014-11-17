@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file tests/CMakeLists.txt
+#   @file tests/CMakeLists.txt
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   \version 1.0.1
+#   @version 1.1.1
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #
@@ -60,7 +60,8 @@ set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
                          "core/test_bind_management.cpp"
                          "core/test_device_information.cpp"
-                         "core/test_attribute_reporting.cpp")
+                         "core/test_attribute_reporting.cpp"
+                         "core/test_session_management.cpp")
 
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
 
