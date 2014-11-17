@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/core/test_session_manager.cpp
+ * @file       tests/core/test_session_manager.cpp
  *
  * This file contains the implementation of the tests for the session management
  * functionality.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -215,7 +215,8 @@ TEST_GROUP (SessionManagementServer)
          call.withParameter ("addr_dev", addr.device);
          call.withParameter ("addr_unit", addr.unit);
 
-         mock ("SessionManagementServer").setData ("response", new Protocol::Message (message));
+         mock ("SessionManagementServer").setData ("response",
+                                                   new Protocol::Message (message));
       }
 
       using AbstractServer::check_offset;
@@ -582,7 +583,7 @@ TEST_GROUP (SessionManagementClient)
 
    struct TestClient:public Client <TestType>
    {
-      void send (const Protocol::Address &addr, Protocol::Message &message) const
+      void send (const Protocol::Address &addr, Protocol::Message &message)
       {
          auto &call = mock ("SessionManagementClient").actualCall ("send");
          call.withParameter ("addr_dev", addr.device);
@@ -600,7 +601,8 @@ TEST_GROUP (SessionManagementClient)
 
       void get_entries (uint16_t offset, uint8_t count = 0) const
       {
-         Client <TestType>::get_entries <HF::Interface::SERVER_ROLE, 0x1234, 0x92>(offset, count);
+         Client <TestType>::get_entries <HF::Interface::SERVER_ROLE, 0x1234, 0x92>(offset,
+                                                                                   count);
       }
 
       void end_session () const
@@ -608,7 +610,7 @@ TEST_GROUP (SessionManagementClient)
          Client <TestType>::request <HF::Interface::SERVER_ROLE, 0x1234, 0x93>();
       }
 
-      void entries (GetEntriesResponse <TestType> &response)
+      void entries (const GetEntriesResponse <TestType> &response)
       {
          auto &call = mock ("SessionManagementClient").actualCall ("entries");
          call.withParameter ("code", response.code);

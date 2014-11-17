@@ -5,7 +5,7 @@
  * This file contains the implementation of the classes for the protocol layer
  * in the HAN-FUN specification.
  *
- * \version    1.1.0
+ * \version    1.1.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -185,7 +185,7 @@ size_t Message::size () const
 {
    return sizeof(uint8_t) +    // Application Reference.
           sizeof(uint8_t) +    // Message Type.
-          itf.size () +        // Interface Addr.
+          itf.size () +        // Interface UID + Member.
           sizeof(uint16_t) +   // Payload Length Value.
           payload.size ();     // Payload Length.
 }
@@ -475,7 +475,8 @@ uint32_t Filters::Repeated::checksum (uint16_t const *data, size_t words)
  *
  */
 // =============================================================================
-bool Filters::Repeated::operator ()(const HF::Protocol::Packet &packet, const HF::Common::ByteArray &payload)
+bool Filters::Repeated::operator ()(const HF::Protocol::Packet &packet,
+                                    const HF::Common::ByteArray &payload)
 {
 #define MAX_TTL   std::numeric_limits <uint8_t>::max ()
 
@@ -513,11 +514,13 @@ bool Filters::Repeated::operator ()(const HF::Protocol::Packet &packet, const HF
       if (db.size () == max_size)
       {
          // Find the oldest entry, i.e., the one with the lowest ttl value.
-         auto oldest = std::min_element (db.begin (), db.end (), [](const Entry &lhs, const Entry &rhs) {
-                                            return lhs.ttl < rhs.ttl;
-                                         }
-                                        );
-
+         /* *INDENT-OFF* */
+         auto oldest = std::min_element(db.begin(), db.end(),
+                                        [](const Entry &lhs, const Entry &rhs)
+                                        {
+                                           return lhs.ttl < rhs.ttl;
+                                        });
+         /* *INDENT-ON* */
          db.erase (oldest);
       }
 

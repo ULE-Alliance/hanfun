@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/transport.cpp
+ * @file       apps/transport.cpp
  *
  * This file contains the implementation of the a HAN-FUN transport layer over the
  * libuv library.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -31,14 +31,22 @@
 
 #include "common.h"
 
+/*!
+ * @addtogroup examples
+ * @{
+ */
+
 // =============================================================================
 // Defines
 // =============================================================================
 
-#define NONE_MSG    0xFFFF
-#define HELLO_MSG   0x0101
-#define DATA_MSG    0x0201
+#define NONE_MSG    0xFFFF    //!< No message primitive id.
+#define HELLO_MSG   0x0101    //!< Hello message primitive id.
+#define DATA_MSG    0x0201    //!< Data message primitive id.
 
+/*!
+ * Helper macro the check libuv command status.
+ */
 #define CHECK_STATUS()                                  \
    if (status != 0)                                     \
    {                                                    \
@@ -46,25 +54,41 @@
       exit (-1);                                        \
    }
 
+/*!
+ * Message sent between the concentrator and the nodes.
+ */
 struct msg_t
 {
-   uint16_t              nbytes;
-   uint16_t              primitive;
-   HF::Common::ByteArray data;
+   uint16_t              nbytes;       //!< Number of bytes in the message.
+   uint16_t              primitive;    //!< Message type.
+   HF::Common::ByteArray data;         //!< Message payload.
 
+   /*!
+    * Constructor.
+    *
+    * @param [in] primitive   message type.
+    */
    msg_t(uint16_t primitive = NONE_MSG):
       primitive (primitive)
    {}
 
+   /*!
+    * Constructor.
+    *
+    * @param [in] primitive   message type.
+    * @param [in] data        message payload.
+    */
    msg_t(uint16_t primitive, HF::Common::ByteArray &data):
       primitive (primitive), data (data)
    {}
 
+   //! @copydoc HF::Common::Serializable::size
    size_t size () const
    {
       return sizeof(nbytes) + sizeof(primitive) + data.size ();
    }
 
+   //! @copydoc HF::Common::Serializable::pack
    size_t pack (HF::Common::ByteArray &array, size_t offset = 0) const
    {
       size_t start  = offset;
@@ -80,6 +104,7 @@ struct msg_t
       return offset - start;
    }
 
+   //! @copydoc HF::Common::Serializable::unpack
    size_t unpack (HF::Common::ByteArray &array, size_t offset = 0)
    {
       size_t start = offset;
@@ -104,23 +129,28 @@ struct msg_t
    }
 };
 
+/*!
+ * Hello message payload.
+ */
 struct hello_msg_t
 {
-   uint8_t      core;
-   uint8_t      profiles;
-   uint8_t      interfaces;
+   uint8_t      core;         //!< HAN-FUN Core Services & Interfaces version.
+   uint8_t      profiles;     //!< HAN-FUN Profiles version.
+   uint8_t      interfaces;   //!< HAN-FUN Interfaces version.
 
-   HF::UID::UID uid;
+   HF::UID::UID uid; //!< Remote device UID.
 
    hello_msg_t():
       core (HF::CORE_VERSION), profiles (HF::PROFILES_VERSION), interfaces (HF::INTERFACES_VERSION)
    {}
 
+   //! @copydoc HF::Common::Serializable::size
    size_t size () const
    {
       return 3 * sizeof(uint8_t) + uid.size ();
    }
 
+   //! @copydoc HF::Common::Serializable::pack
    size_t pack (HF::Common::ByteArray &array, size_t offset = 0) const
    {
       size_t start = offset;
@@ -134,6 +164,7 @@ struct hello_msg_t
       return offset - start;
    }
 
+   //! @copydoc HF::Common::Serializable::unpack
    size_t unpack (HF::Common::ByteArray &array, size_t offset = 0)
    {
       size_t start = offset;
@@ -174,8 +205,9 @@ uv_buf_t alloc_buffer (uv_handle_t *handle, size_t suggested_size)
 // print_error
 // =============================================================================
 /*!
+ * Print a user friendly string for given @c status code.
  *
- * @param status
+ * @param [in] status   status code to print.
  */
 // =============================================================================
 void print_error (uv_err_t status)
@@ -272,6 +304,16 @@ static void on_write (uv_write_t *req, int status)
    free (req);
 }
 
+// =============================================================================
+// send_message
+// =============================================================================
+/*!
+ * Send the given message @c msg using the given @c stream.
+ *
+ * @param [in] stream   stream to send the message to.
+ * @param [in] msg      message to be sent.
+ */
+// =============================================================================
 static void send_message (uv_stream_t *stream, msg_t &msg)
 {
    HF::Common::ByteArray payload (msg.size ());
@@ -285,6 +327,16 @@ static void send_message (uv_stream_t *stream, msg_t &msg)
    uv_write (req, (uv_stream_t *) stream, &buf, 1 /*nbufs*/, on_write);
 }
 
+// =============================================================================
+// send_hello
+// =============================================================================
+/*!
+ * Send a hello message to the given @c stream, using the UID in the given transport layer.
+ *
+ * @param [in] stream   stream to send the hello message to.
+ * @param [in] tsp      pointer to the transport layer to get the device UID from.
+ */
+// =============================================================================
 static void send_hello (uv_stream_t *stream, HF::Application::Transport *tsp)
 {
    hello_msg_t hello;
@@ -300,6 +352,16 @@ static void send_hello (uv_stream_t *stream, HF::Application::Transport *tsp)
    send_message (stream, msg);
 }
 
+// =============================================================================
+// handle_message
+// =============================================================================
+/*!
+ * Handle an incoming message @c msg on the given @c link.
+ *
+ * @param [in] link  the link for the incoming message.
+ * @param [in] msg   the incoming message.
+ */
+// =============================================================================
 static void handle_message (HF::Application::Link *link, msg_t &msg)
 {
    HF::Application::Transport *tsp = link->transport ();
@@ -330,8 +392,28 @@ static void handle_message (HF::Application::Link *link, msg_t &msg)
    }
 }
 
+// =============================================================================
+// on_connect
+// =============================================================================
+/*!
+ * @fn on_connect
+ *
+ * This is the callback for when connection is established.
+ *
+ * @param [in] server   the libuv stream associated with the connection.
+ * @param [in] status   error code for the operation.
+ */
+// =============================================================================
+
 #ifdef HF_BASE_APP
 
+// =============================================================================
+// on_connect
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 static void on_connect (uv_stream_t *server, int status)
 {
    CHECK_STATUS ();
@@ -404,6 +486,13 @@ void HF::Application::Transport::initialize ()
 
 #ifdef HF_NODE_APP
 
+// =============================================================================
+// on_connect
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 static void on_connect (uv_connect_t *conn, int status)
 {
    CHECK_STATUS ();
@@ -492,3 +581,5 @@ void HF::Application::Link::send (HF::Common::ByteArray &array)
 
    send_message ((uv_stream_t *) stream, msg);
 }
+
+/*! @} */

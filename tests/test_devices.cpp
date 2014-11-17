@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/test_devices.cpp
+ * @file       tests/test_devices.cpp
  *
  * This file contains the implementation of the tests for the Device API.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -167,10 +167,12 @@ namespace
          HF::Units::Unit <HF::Profiles::Alertable>(index, device)
       {}
 
-      void status (HF::Interfaces::Alert::Message &message)
+      void status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
       {
+         UNUSED (source);
          UNUSED (message);
          mock ("Alertable").actualCall ("status").onObject (this);
+         HF::Units::Unit <HF::Profiles::Alertable>::status (source, message);
       }
    };
 

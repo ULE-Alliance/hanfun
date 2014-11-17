@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun/debug.h
+ * @file       inc/hanfun/debug.h
  *
  * This file contains the prototypes of the debug functionality in HAN-FUN.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -19,19 +19,27 @@
 
 #include <iostream>
 
+/*!
+ * @addtogroup debug Debug
+ *
+ * This module contains the helper functions to aid in debugging HAN-FUN applications.
+ * @{
+ */
 // =============================================================================
 // Defines
 // =============================================================================
 
+//! Helper define for new-line and stream clear.
 #define NL                   std::endl;std::cout.clear ();std::cerr.clear ()
 
-#define HF_LOG_LEVEL_NONE    0
-#define HF_LOG_LEVEL_ERROR   1
-#define HF_LOG_LEVEL_WARN    2
-#define HF_LOG_LEVEL_INFO    3
-#define HF_LOG_LEVEL_DEBUG   4
-#define HF_LOG_LEVEL_TRACE   5
+#define HF_LOG_LEVEL_NONE    0   //!<  No debug messages will be displayed.
+#define HF_LOG_LEVEL_ERROR   1   //!<  Only error messages will be displayed.
+#define HF_LOG_LEVEL_WARN    2   //!<  Display warning and error messages.
+#define HF_LOG_LEVEL_INFO    3   //!<  Display information, warning and error messages.
+#define HF_LOG_LEVEL_DEBUG   4   //!<  Display debug, information, warning and error messages.
+#define HF_LOG_LEVEL_TRACE   5   //!<  Display all messages.
 
+// Set default log level to HF_LOG_LEVEL_INFO.
 #ifndef HF_LOG_LEVEL
    #define HF_LOG_LEVEL      HF_LOG_LEVEL_INFO
 #endif
@@ -68,8 +76,10 @@
 
 #define APP                  std::cout.clear ();std::cout
 
+//! Log messages with the level given by @c X
 #define LOG(X)   X
 
+/*! @} */
 // =============================================================================
 // Stream Helpers
 // =============================================================================
@@ -97,10 +107,41 @@ namespace HF
 
 }  // namespace HF
 
+/*!
+ * @addtogroup debug
+ * @{
+ */
+
+/*!
+ * Convert the given @c packet into a string and write it to the given @c stream if
+ * <tt>stream == std::cout || stream == std::cerr</tt>. Otherwise send bytes to stream.
+ *
+ * @param [in] stream   out stream to write the string/bytes to.
+ * @param [in] array    byte array to convert to a string/sent to the stream.
+ *
+ * @return   <tt>stream</tt>
+ */
 std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
 
+/*!
+ * Convert the given @c uid into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] uid      device %UID to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
 std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
 
+/*!
+ * Convert the given @c packet into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] packet   HAN-FUN packet to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
 std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
+/*! @} */
 
 #endif /* HF_DEBUG_H */

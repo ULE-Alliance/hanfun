@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       tests/core/test_bind_management.cpp
+ * @file       tests/core/test_bind_management.cpp
  *
  * This file contains the implementation of the tests for Bind Management Interface.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

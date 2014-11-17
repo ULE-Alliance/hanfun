@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       tests/test_common.cpp
+ * @file       tests/test_common.cpp
  *
  * This file contains the implementation of the unit tests for the common
  * functions and classes for the HAN-FUN library.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
+ * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  */
@@ -563,7 +563,6 @@ TEST (Attributes, Serialize_Unpack)
 
    TestInterface itf;
    HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, &itf, attr);
-
 
    size_t r_size = attr_wrapper.unpack (expected, 3);
    LONGS_EQUAL (sizeof(attr), r_size);

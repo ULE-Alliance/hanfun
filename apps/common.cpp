@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       apps/common.cpp
+ * @file       apps/common.cpp
  *
  * This file contains the implementation of the common functionality for the
  * HAN-FUN example application.
  *
- * \version    1.1.0
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -27,24 +27,21 @@
 #include "common.h"
 #include "application.h"
 
-// =============================================================================
-// Defines
-// =============================================================================
+/*!
+ * @addtogroup examples
+ */
 
 // =============================================================================
 // Commands API
 // =============================================================================
 
-//! Command registry.
 std::map <std::string, ICommand *> ICommand::registry;
 
 // =============================================================================
 // ICommand::add
 // =============================================================================
 /*!
- * Add a command to the registry.
  *
- * @param [in] command  pointer to the command to add to the registry.
  */
 // =============================================================================
 void ICommand::add (ICommand *command)
@@ -52,14 +49,11 @@ void ICommand::add (ICommand *command)
    registry.insert (std::pair <std::string, ICommand *>(command->key (), command));
 }
 
-
 // =============================================================================
 // ICommand::remove
 // =============================================================================
 /*!
- * Remove a command form the registry.
  *
- * @param [in] command  pointer to the command to remove from the registry.
  */
 // =============================================================================
 void ICommand::remove (ICommand *command)
@@ -71,11 +65,7 @@ void ICommand::remove (ICommand *command)
 // ICommand::help
 // =============================================================================
 /*!
- * Generate the help screen, based on the commands in the registry.
  *
- * @param [in] stream   reference to the stream to print the help screen.
- *
- * @return  reference to the stream.
  */
 // =============================================================================
 std::ostream &ICommand::help (std::ostream &stream)
@@ -139,10 +129,12 @@ std::ostream &ICommand::help (std::ostream &stream)
    stream << "HAN-FUN Example Application" << std::endl << std::endl;
 
    stream << std::setfill (' ');
-   std::for_each (entries.begin (), entries.end (), [&stream, size](entry &e) {
-                     stream << std::left << std::setw (size) << e.cmd << "\t: " << e.help << std::endl;
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (entries.begin (), entries.end (), [&stream, size](entry &e)
+   {
+      stream << std::left << std::setw (size) << e.cmd << "\t: " << e.help << std::endl;
+   });
+   /* *INDENT-ON* */
 
    stream << std::left << std::setw (size) << "h/?" << "\t: " << "this help menu."
           << std::endl << std::endl;
@@ -155,10 +147,7 @@ std::ostream &ICommand::help (std::ostream &stream)
 // ICommand::run
 // =============================================================================
 /*!
- * Run the command with the given \c key, using the arguments in \c args.
  *
- * @param [in] cmd   the key for the command to be run.
- * @param [in] args  vector containing the arguments to call the command with.
  */
 // =============================================================================
 void ICommand::run (std::string &key, std::vector <std::string> &args)
@@ -230,3 +219,5 @@ bool HF::Application::Handle (std::string command)
 
    return false;
 }
+
+/*! @} */

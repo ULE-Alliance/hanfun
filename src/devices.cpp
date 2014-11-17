@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * \version    1.1.0
+ * \version    1.1.1
  *
  * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -137,6 +137,23 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 }
 
 // =============================================================================
+// AbstractDevice::periodic
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractDevice::periodic (uint32_t time)
+{
+   /* *INDENT-OFF* */
+   std::for_each(units().begin(), units().end(), [time](Units::IUnit *unit)
+   {
+      unit->periodic(time);
+   });
+   /* *INDENT-ON* */
+}
+
+// =============================================================================
 // HF::Devices::Node
 // =============================================================================
 
@@ -187,7 +204,8 @@ void Concentrator::AbstractBase::disconnected (HF::Transport::Link *link)
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload,
+                                          size_t offset)
 {
    if (packet.destination.device == Protocol::BROADCAST_ADDR)
    {
@@ -247,8 +265,8 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet,
-                                               Common::ByteArray &payload, size_t offset)
+void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
+                                               size_t offset)
 {
    // Find bind entries for device.
    auto &entries = unit0 ()->bind_management ()->entries ();
