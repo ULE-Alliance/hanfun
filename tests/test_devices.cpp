@@ -127,6 +127,8 @@ TEST (Devices, ResponseRequired)
    packet.source.device      = device.address ();
    packet.source.unit        = 0x23;
 
+   packet.message.reference  = 0x5A;
+
    std::vector <Protocol::Message::Type> types {
       Protocol::Message::COMMAND_RESP_REQ,
       Protocol::Message::SET_ATTR_RESP_REQ,
@@ -142,6 +144,14 @@ TEST (Devices, ResponseRequired)
    {
       packet.message.type = type;
       device.receive (packet, payload, 0);
+
+      Protocol::Packet resp_packet;
+      size_t offset = resp_packet.unpack(link.data, 0);
+      LONGS_EQUAL (packet.message.reference, resp_packet.message.reference);
+
+      Protocol::Response resp;
+      offset += resp.unpack(link.data, offset);
+      LONGS_EQUAL (Common::Result::FAIL_UNKNOWN, resp.code);
    });
    /* *INDENT-ON* */
 

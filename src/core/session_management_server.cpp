@@ -43,7 +43,7 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
 
    Result result = Result::OK;
 
-   Protocol::Message resp_msg (packet.message);
+   Protocol::Message resp_msg (packet.message, 0);
 
    switch (cmd)
    {

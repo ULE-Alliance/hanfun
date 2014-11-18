@@ -76,8 +76,8 @@ void AbstractDevice::send (Protocol::Packet &packet)
 
    Transport::Link *tsp_link = packet.link;
 
-   // Update message reference.
-   if (packet.source.device == address ())
+   // Update message reference if it is a request.
+   if (packet.source.device == address () && Protocol::request(packet.message.type, false))
    {
       packet.message.reference = this->next_reference++;
    }
@@ -123,12 +123,16 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
    // Send missing response.
    if (response_filter (packet))
    {
-      Protocol::Packet *resp_packet = new Protocol::Packet (packet.message);
+      Protocol::Message *message = new Protocol::Message (packet.message, 0);
+      Protocol::Response resp (result);
+      message->payload = Common::ByteArray (resp.size ());
+
+      resp.pack (message->payload);
+
+      Protocol::Packet *resp_packet = new Protocol::Packet (*message);
       resp_packet->link = packet.link;
 
-      Protocol::Response resp (result);
-      resp_packet->message.payload = Common::ByteArray (resp.size ());
-      resp.pack (resp_packet->message.payload);
+      delete message;
 
       send (*resp_packet);
 
