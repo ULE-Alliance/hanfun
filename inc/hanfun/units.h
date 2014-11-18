@@ -198,7 +198,7 @@ namespace HF
             Common::Result result = Profile::handle (packet, payload, offset);
 
             // Message not handled by base profile, then try extra interfaces.
-            if (result == Common::Result::FAIL_ID)
+            if (result == Common::Result::FAIL_ARG)
             {
                Interface *itf = find <0, ITF...>(packet.message.itf.id);
 

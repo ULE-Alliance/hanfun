@@ -246,7 +246,7 @@ namespace HF
             UNUSED (payload);
             UNUSED (offset);
 
-            return Common::Result::FAIL_ID;
+            return Common::Result::FAIL_ARG;
          }
       };
 

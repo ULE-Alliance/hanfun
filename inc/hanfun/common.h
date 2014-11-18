@@ -607,7 +607,6 @@ namespace HF
          FAIL_RO_ATTR      = 0x04, //!< Fail - Read only attribute.
          FAIL_READ_SESSION = 0x20, //!< Fail - Read Session not established
          FAIL_MODIFIED     = 0x21, //!< Fail - Entries table modified
-         FAIL_ID           = 0x23, //!< Fail - ID Not Found
          FAIL_RESOURCES    = 0xFE, //!< Fail - Not enough resources
          FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
       } Result;

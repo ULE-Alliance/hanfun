@@ -68,7 +68,7 @@ TEST (AbstractInterface, Handle_Request)
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
    packet.message.itf.id   = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
+   CHECK_EQUAL (Result::FAIL_ARG, itf->handle (packet, payload, 0));
 }
 
 /*!
@@ -88,7 +88,7 @@ TEST (AbstractInterface, Handle_RequestResp)
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
    packet.message.itf.id   = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
+   CHECK_EQUAL (Result::FAIL_ARG, itf->handle (packet, payload, 0));
 }
 
 // =============================================================================

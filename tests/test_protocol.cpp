@@ -393,7 +393,7 @@ TEST_GROUP (Response)
    {
       /* *INDENT-OFF* */
       expected = ByteArray { 0x00, 0x00, 0x00,
-                              Result::FAIL_ID,
+                              Result::FAIL_ARG,
                               0x00, 0x00, 0x00 };
       /* *INDENT-ON* */
 
@@ -413,7 +413,7 @@ TEST (Response, Size)
 
 TEST (Response, Pack)
 {
-   response->code = Result::FAIL_ID;
+   response->code = Result::FAIL_ARG;
 
    size_t size = response->size ();
 
@@ -430,7 +430,7 @@ TEST (Response, Unpack)
    size_t rsize = response->unpack (expected, 3);
    LONGS_EQUAL (1, rsize);  // Response code.
 
-   LONGS_EQUAL (Result::FAIL_ID, response->code);
+   LONGS_EQUAL (Result::FAIL_ARG, response->code);
 }
 
 // =============================================================================

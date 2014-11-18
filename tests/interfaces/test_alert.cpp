@@ -424,7 +424,7 @@ TEST (AlertClient, Handle_Invalid_UID)
 {
    packet.message.itf.id = client->uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, client->handle (packet, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 3));
 }
 
 //! @test Should not handle message with invalid payload size.

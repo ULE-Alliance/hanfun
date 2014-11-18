@@ -800,13 +800,13 @@ TEST (SessionManagementClient, Handle_End)
    packet.source.unit   = 0x0;
 
    Protocol::Response resp;
-   resp.code = Result::FAIL_ID;
+   resp.code = Result::FAIL_ARG;
 
    Common::ByteArray payload = Common::ByteArray (resp.size ());
    resp.pack (payload);
 
    auto &call = mock ("SessionManagementClient").expectOneCall ("session_ended");
-   call.withParameter ("code", Result::FAIL_ID);
+   call.withParameter ("code", Result::FAIL_ARG);
 
    LONGS_EQUAL (Result::OK, client.handle_command (END, packet, payload));
 

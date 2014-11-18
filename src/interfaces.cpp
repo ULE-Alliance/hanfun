@@ -241,7 +241,7 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
 
    if (!check_uid (message.itf.id))
    {
-      return Common::Result::FAIL_ID;
+      return Common::Result::FAIL_ARG;
    }
 
    switch (message.type)
