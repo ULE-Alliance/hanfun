@@ -114,7 +114,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
          return payload_size_helper <RegisterResponse>();
 
       case DEREGISTER_CMD:
-         return payload_size_helper <DeregisterResponse>();
+         return payload_size_helper <Protocol::Response>();
 
       case START_SESSION_CMD:
          return SessionMgr::payload_size (SessionManagement::START);
@@ -152,7 +152,7 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
       }
       case DEREGISTER_CMD:
       {
-         DeregisterResponse response;
+         Protocol::Response response;
          response.unpack (payload, offset);
          deregistered (response);
 
@@ -199,7 +199,7 @@ void Client::registered (RegisterResponse &response)
  *
  */
 // =============================================================================
-void Client::deregistered (DeregisterResponse &response)
+void Client::deregistered (Protocol::Response &response)
 {
    if (response.code == Common::Result::OK)
    {

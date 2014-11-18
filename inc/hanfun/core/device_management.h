@@ -304,6 +304,8 @@ namespace HF
 
          /*!
           * De-register command response.
+          *
+          * @deprecated This message was reverted back to a normal Protocol::Response.
           */
          struct DeregisterResponse:public Protocol::Response
          {
@@ -325,7 +327,7 @@ namespace HF
             size_t pack (Common::ByteArray &array, size_t offset = 0) const;
 
             size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
+         } __attribute_deprecated__;
 
          /*!
           * Device Management - Persistent Storage API.
@@ -520,7 +522,7 @@ namespace HF
              *
              * @param [in] response    the response received.
              */
-            virtual void deregistered (DeregisterResponse &response);
+            virtual void deregistered (Protocol::Response &response);
 
             //! @}
             // ======================================================================

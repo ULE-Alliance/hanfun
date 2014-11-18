@@ -257,7 +257,7 @@ Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Comm
 
    result = deregister (destination);
 
-   DeregisterResponse res (result, incomming.address);
+   Protocol::Response res (result);
 
    Protocol::Message  response (packet.message, res.size ());
 
