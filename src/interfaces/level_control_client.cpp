@@ -37,22 +37,18 @@ using namespace HF::Interfaces::LevelControl;
 // =============================================================================
 void Client::level (Protocol::Address &addr, uint8_t new_level)
 {
-   Level *level_attr          = new Level (new_level, this);
+   Message level_msg (new_level);
 
-   Protocol::Message *message = new Protocol::Message (level_attr->size ());
+   Protocol::Message message (level_msg.size ());
 
-   message->itf.role   = SERVER_ROLE;
-   message->itf.id     = LevelControl::Client::uid ();
-   message->itf.member = Level::ID;
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = LevelControl::Client::uid ();
+   message.itf.member = SET_LEVEL_CMD;
 
-   message->type       = Protocol::Message::SET_ATTR_REQ;
 
-   level_attr->pack (message->payload);
+   level_msg.pack (message.payload);
 
-   send (addr, *message);
-
-   delete level_attr;
-   delete message;
+   send (addr, message);
 }
 
 // =============================================================================

@@ -97,6 +97,33 @@ Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteA
 }
 
 // =============================================================================
+// Server::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       size_t offset)
+{
+   Message level_msg;
+
+   if (packet.message.itf.member != LevelControl::SET_LEVEL_CMD)
+   {
+      return Common::Result::FAIL_SUPPORT;
+   }
+
+   level_msg.unpack (payload, offset);
+
+   uint8_t old_value = level ();
+   level (level_msg.level);
+
+   level_change (packet.source, old_value, level_msg.level);
+
+   return Common::Result::OK;
+}
+
+// =============================================================================
 // Server::level_change
 // =============================================================================
 /*!

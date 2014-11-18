@@ -74,8 +74,8 @@ TEST (LevelControlClient, Level)
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
-   LONGS_EQUAL (LevelControl::LEVEL_ATTR, client.sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::SET_ATTR_REQ, client.sendMsg.type);
+   LONGS_EQUAL (LevelControl::SET_LEVEL_CMD, client.sendMsg.itf.member);
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 
    LevelControl::Level level;
 

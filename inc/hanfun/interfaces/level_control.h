@@ -59,12 +59,53 @@ namespace HF
           * interface API.
           * @{
           */
+
+         //! Command IDs.
+         typedef enum _CMD
+         {
+            SET_LEVEL_CMD = 0x01,      //!< Set Level Command ID.
+            __LAST_CMD__  = SET_LEVEL_CMD
+         } CMD;
+
          //! Attributes
          typedef enum _Attributes
          {
             LEVEL_ATTR    = 0x01,      //!< State attribute UID.
             __LAST_ATTR__ = LEVEL_ATTR,
          } Attributes;
+
+         struct Message
+         {
+            uint8_t level;
+
+            Message(uint8_t level = 0):level (level) {}
+
+            //! \see HF::Serializable::size.
+            size_t size () const
+            {
+               return sizeof(level);
+            }
+
+            //! \see HF::Serializable::pack.
+            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            {
+               size_t start = offset;
+
+               offset += array.write (offset, level);
+
+               return offset - start;
+            }
+
+            //! \see HF::Serializable::unpack.
+            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            {
+               size_t start = offset;
+
+               offset += array.read (offset, level);
+
+               return offset - start;
+            }
+         };
 
          /*!
           * Helper class to handle the %Level attribute for the Level Control interface.
@@ -188,7 +229,8 @@ namespace HF
             //! @{
 
             /*!
-             * Callback for a @c SET_ATTR_REQ message, when the level value is changed.
+             * Callback for a @c SET_ATTR_REQ or @c SET_LEVEL_CMD message,
+             * when the level value is changed.
              *
              * @remark When this method is called the attribute has already been updated to
              * the new value.
@@ -235,6 +277,9 @@ namespace HF
 
             Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
                                              size_t offset);
+
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           size_t offset);
          };
 
          /*!
@@ -253,7 +298,7 @@ namespace HF
             //! @{
 
             /*!
-             * Send a @c SET_ATTR_REQ to the given address to set the level
+             * Send a @c SET_LEVEL_CMD to the given address to set the level
              * at @c new_level.
              *
              * @param [in] addr        network address to send the message to.
@@ -262,7 +307,7 @@ namespace HF
             void level (Protocol::Address &addr, uint8_t new_level);
 
             /*!
-             * Send a @c SET_ATTR_REQ to broadcast network address to set the level
+             * Send a @c SET_LEVEL_CMD to broadcast network address to set the level
              * at @c new_level.
              *
              * @param [in] new_level    level value to send in the message.
