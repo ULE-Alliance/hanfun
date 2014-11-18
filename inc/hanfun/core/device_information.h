@@ -27,19 +27,9 @@
 // Defines
 // =============================================================================
 
-#ifndef HF_DEVICE_SW_VERSION
-//! Device Application Version
-   #define HF_DEVICE_SW_VERSION          "0.0.0"
-#endif
-
 #ifndef HF_DEVICE_MANUFACTURER_CODE
 //! Device Electronic Manufacturer Code
    #define HF_DEVICE_MANUFACTURER_CODE   0x0000
-#endif
-
-#ifndef HF_DEVICE_MANUFACTURER_NAME
-//! Device Manufacturer Name
-   #define HF_DEVICE_MANUFACTURER_NAME   "None"
 #endif
 
 // =============================================================================
@@ -90,28 +80,26 @@ namespace HF
 
          constexpr static uint16_t EMC               = HF_DEVICE_MANUFACTURER_CODE; //!< Electronic Manufacture Code.
 
-         static const std::string  SW_VERSION;         //!< Application Version.
-         static const std::string  MANUFACTURER;       //!< Manufacturer Name.
-
          //! Attributes.
          typedef enum _Attributes
          {
             CORE_VERSION_ATTR      = 0x01,   //!< HF Core version attribute.              (M)
             PROFILE_VERSION_ATTR   = 0x02,   //!< HF Profile version attribute.           (M)
             INTERFACE_VERSION_ATTR = 0x03,   //!< HF Interface version attribute.         (M)
-            UID_ATTR               = 0x04,   //!< Device UID attribute.                   (M)
-            APP_VERSION_ATTR       = 0x05,   //!< Hardware version attribute.             (O)
-            HW_VERSION_ATTR        = 0x06,   //!< Hardware version attribute.             (O)
-            EMC_ATTR               = 0x07,   //!< Electronic Manufacture Code attribute.  (O)
-            EXTRA_CAP_ATTR         = 0x08,   //!< Extra capabilities attribute.           (O)
-            MIN_SLEEP_TIME_ATTR    = 0x09,   //!< Minimum sleep time attribute.           (O)
-            ACTUAL_RESP_TIME_ATTR  = 0x0A,   //!< Actual response time attribute.         (O)
+            EXTRA_CAP_ATTR         = 0x04,   //!< Extra capabilities attribute.           (M)
+            MIN_SLEEP_TIME_ATTR    = 0x05,   //!< Minimum sleep time attribute.           (O)
+            ACTUAL_RESP_TIME_ATTR  = 0x06,   //!< Actual response time attribute.         (O)
+            APP_VERSION_ATTR       = 0x07,   //!< Hardware version attribute.             (O)
+            HW_VERSION_ATTR        = 0x08,   //!< Hardware version attribute.             (O)
+            EMC_ATTR               = 0x09,   //!< Electronic Manufacture Code attribute.  (O)
+            DECT_ID_ATTR           = 0x0A,   //!< RFPI / IPUI                             (0)
             MANUFACTURE_NAME_ATTR  = 0x0B,   //!< Manufacture's name attribute.           (O)
-            SERIAL_NUMBER_ATTR     = 0x0C,   //!< Serial number attribute.                (O)
-            LOCATION_ATTR          = 0x0D,   //!< Location attribute.                     (O)
-            ENABLED_ATTR           = 0x0E,   //!< Device enabled attribute.               (O)
-            FRIENDLY_NAME_ATTR     = 0x0F,   //!< Device friendly name attribute.         (O)
-            __LAST_ATTR__          = FRIENDLY_NAME_ATTR
+            LOCATION_ATTR          = 0x0C,   //!< Location attribute.                     (O)
+            ENABLED_ATTR           = 0x0D,   //!< Device enabled attribute.               (O)
+            FRIENDLY_NAME_ATTR     = 0x0E,   //!< Device friendly name attribute.         (O)
+            UID_ATTR               = 0x0F,   //!< Device UID attribute.                   (O)
+            SERIAL_NUMBER_ATTR     = 0x10,   //!< Serial number attribute.                (O)
+            __LAST_ATTR__          = SERIAL_NUMBER_ATTR,
          } Attributes;
 
          /*!
@@ -156,7 +144,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Server(HF::Core::Unit0 &unit):
-               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit)
+               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit), _capabilities(0)
             {}
 
             virtual ~Server() {}
@@ -171,6 +159,54 @@ namespace HF
             }
 
             HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+
+            /*!
+             * Set extra capabilities attribute paging bit to given @c value.
+             *
+             * @param [in] value    paging bit value to place in extra capabilities attribute.
+             */
+            void paging (bool value);
+
+            /*!
+             * Get extra capabilities attribute paging bit.
+             *
+             * @retval  true the broadcast bit is 1.
+             * @retval  false the broadcast bit is 0.
+             */
+            bool has_paging ()  const;
+
+            /*!
+             * Set extra capabilities attribute broadcast bit to given @c value.
+             *
+             * @param [in] value    broadcast bit value to place in extra capabilities attribute.
+             */
+            void broadcast (bool value);
+
+            /*!
+             * Get extra capabilities attribute broadcast bit.
+             *
+             * @retval  true the broadcast bit is 1.
+             * @retval  false the broadcast bit is 0.
+             */
+            bool has_broadcast () const;
+
+            /*!
+             * Setter for the extra capabilities attribute.
+             *
+             * @param [in] value    bitmask value for the extra capabilities attribute.
+             */
+            void capabilities (uint8_t value);
+
+            /*!
+             * Getter for the extra capabilities attribute bitmask.
+             *
+             * @return  the bitmask value of the extra capabilities attribute.
+             */
+            uint8_t capabilities ();
+
+            protected:
+
+            uint8_t _capabilities;
          };
 
          /*!

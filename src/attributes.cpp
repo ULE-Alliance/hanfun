@@ -519,26 +519,42 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
 // =============================================================================
 IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t uid)
 {
+   using namespace HF::Core::DeviceInformation;
+
    DeviceInformation::Attributes attr = static_cast <DeviceInformation::Attributes>(uid);
 
    switch (attr)
    {
-      case DeviceInformation::CORE_VERSION_ATTR:
+      case CORE_VERSION_ATTR:
       {
-         uint8_t value = (server != nullptr ? DeviceInformation::CORE_VERSION : 0xFF);
+         uint8_t value = (server != nullptr ? CORE_VERSION : 0xFF);
          return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
-      case DeviceInformation::PROFILE_VERSION_ATTR:
+      case PROFILE_VERSION_ATTR:
       {
-         uint8_t value = (server != nullptr ? DeviceInformation::PROFILE_VERSION : 0xFF);
+         uint8_t value = (server != nullptr ? PROFILE_VERSION : 0xFF);
          return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
-      case DeviceInformation::INTERFACE_VERSION_ATTR:
+      case INTERFACE_VERSION_ATTR:
       {
-         uint8_t value = (server != nullptr ? DeviceInformation::INTERFACE_VERSION : 0xFF);
+         uint8_t value = (server != nullptr ? INTERFACE_VERSION : 0xFF);
          return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
-      case DeviceInformation::UID_ATTR:
+      case EXTRA_CAP_ATTR:
+      {
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*) (void)) & Server::capabilities;
+            auto setter = (void (Server::*) (uint8_t)) & Server::capabilities;
+
+            return new Attribute <uint8_t, Server>(*server, attr, getter, setter);
+         }
+         else
+         {
+            return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr);
+         }
+      }
+      case UID_ATTR:
       {
          HF::UID::UID value;
 
@@ -548,6 +564,11 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
          }
 
          return new Attribute <HF::UID::UID>(Interface::DEVICE_INFORMATION, attr, server, value);
+      }
+      case EMC_ATTR:
+      {
+         uint16_t value = (server != nullptr ? EMC : 0x0000);
+         return new Attribute <uint16_t>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
       default:
          return nullptr;

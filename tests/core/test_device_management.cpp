@@ -663,7 +663,7 @@ TEST (DeviceManagementClient, RegisterMessage_EMC)
    DeviceManagement::RegisterMessage payload;
    payload.unpack (packet->message.payload);
 
-   LONGS_EQUAL (0x1234, payload.emc);
+   LONGS_EQUAL (HF_DEVICE_MANUFACTURER_CODE, payload.emc);
 }
 
 TEST (DeviceManagementClient, RegisterResponse_OK)

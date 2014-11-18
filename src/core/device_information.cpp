@@ -121,13 +121,12 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) con
    {
       case HF::Attributes::Pack::ALL:
       {
-         result.push_back (ENABLED_ATTR);
-         result.push_back (MANUFACTURE_NAME_ATTR);
+         result.push_back (UID_ATTR);
          result.push_back (EMC_ATTR);
       }
       case HF::Attributes::Pack::MANDATORY:
       {
-         result.push_back (UID_ATTR);
+         result.push_back (EXTRA_CAP_ATTR);
          result.push_back (INTERFACE_VERSION_ATTR);
          result.push_back (PROFILE_VERSION_ATTR);
          result.push_back (CORE_VERSION_ATTR);
@@ -150,4 +149,100 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) con
 HF::Attributes::IAttribute *DeviceInformation::create_attribute (uint8_t uid)
 {
    return Core::create_attribute ((DeviceInformation::Server *) nullptr, uid);
+}
+
+// =============================================================================
+// DeviceInformation::Server::paging
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void DeviceInformation::Server::paging (bool value)
+{
+   if (value)
+   {
+      capabilities (capabilities () | (value << 0));
+   }
+   else
+   {
+      capabilities (capabilities () & (~(1 << 0)));
+   }
+}
+
+// =============================================================================
+// DeviceInformation::Server::has_paging
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool DeviceInformation::Server::has_paging () const
+{
+   return (_capabilities & (1 << 0)) != 0;
+}
+
+// =============================================================================
+// DeviceInformation::Server::broadcast
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void DeviceInformation::Server::broadcast (bool value)
+{
+   if (value)
+   {
+      capabilities (capabilities () | (value << 1));
+   }
+   else
+   {
+      capabilities (capabilities () & (~(1 << 1)));
+   }
+}
+
+// =============================================================================
+// DeviceInformation::Server::has_broadcast
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool DeviceInformation::Server::has_broadcast () const
+{
+   return (_capabilities & (1 << 1)) != 0;
+}
+
+// =============================================================================
+// DeviceInformation::Server::capabilities
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void DeviceInformation::Server::capabilities (uint8_t value)
+{
+   auto old_value = new HF::Attributes::Attribute <uint8_t>(HF::Interface::DEVICE_INFORMATION,
+                                                            EXTRA_CAP_ATTR, this, _capabilities);
+
+   this->_capabilities = value;
+
+   auto new_value = create_attribute (EXTRA_CAP_ATTR);
+
+   notify (*old_value, *new_value);
+
+   delete old_value;
+   delete new_value;
+}
+
+// =============================================================================
+// DeviceInformation::Server::capabilities
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint8_t DeviceInformation::Server::capabilities ()
+{
+   return _capabilities;
 }
