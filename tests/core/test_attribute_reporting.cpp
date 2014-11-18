@@ -483,8 +483,8 @@ TEST_GROUP (AttrReport_Event_Field)
       field    = Event::Field ();
 
       expected = ByteArray {0x00, 0x00, 0x00,
-                            Event::EQ,                // Event Type.
                             0x5A,                     // Attribute UID.
+                            Event::EQ,                // Event Type.
                             0x04,                     // Field size.
                             0xA1, 0xA2, 0xA3, 0xA4,   // Field value.
                             0x00, 0x00, 0x00};
@@ -578,7 +578,7 @@ TEST (AttrReport_Event_Field, Unpack)
 
 TEST (AttrReport_Event_Field, Unpack2)
 {
-   expected[3] = Event::COV;
+   expected[4] = Event::COV;
    expected[5] = 0xAA;
 
    LONGS_EQUAL (field.size (true), field.unpack (expected, 3, true));
@@ -611,20 +611,20 @@ TEST_GROUP (AttrReport_Event_Entry)
                             HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                             0x04,                          // Number of fields.
                                                            // Field 1.
-                            Event::COV,                    // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::COV,                    // Event Type.
                             0x33,                          // Event Value.
                                                            // Field 2.
-                            Event::HT,                     // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::HT,                     // Event Type.
                             0x01, 0xAA,                    // Event Value.
                                                            // Field 3.
-                            Event::LT,                     // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::LT,                     // Event Type.
                             0x01, 0x55,                    // Event Value.
                                                            // Field 4.
-                            Event::EQ,                     // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::EQ,                     // Event Type.
                             0x01, 0x42,                    // Event Value.
                             0x00, 0x00, 0x00};
    }
@@ -782,8 +782,8 @@ TEST_GROUP (AttrReport_Event_Rule)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x01,                          // Number of fields.
                                                  // Entry 1 - Field 1.
-                  Event::COV,                    // Event Type.
                   0x10,                          // Attribute UID.
+                  Event::COV,                    // Event Type.
                   0x33,                          // Event Value.
                                                  // Entry 2
                   0x5A,                          // Unit ID.
@@ -791,12 +791,12 @@ TEST_GROUP (AttrReport_Event_Rule)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x02,                          // Number of fields.
                                                  // Field 1.
-                  Event::HT,                     // Event Type.
                   0x11,                          // Attribute UID.
+                  Event::HT,                     // Event Type.
                   0x01, 0xAA,                    // Event Value.
                                                  // Field 2.
-                  Event::LT,                     // Event Type.
                   0x12,                          // Attribute UID.
+                  Event::LT,                     // Event Type.
                   0x01, 0x55,                    // Event Value.
                                                  // Entry 3
                   0x5A,                          // Unit ID.
@@ -1328,8 +1328,8 @@ TEST_GROUP (AttrReport_Report_Event_Field)
       field    = Report::Event::Field ();
 
       expected = {0x00,                           0x00, 0x00,
-                  AttributeReporting::Event::COV,
                   TestInterface::ATTR1,
+                  AttributeReporting::Event::COV,
                   0x12,                           0x34,
                   0x00,                           0x00, 0x00};
    }
@@ -1407,14 +1407,14 @@ TEST_GROUP (AttrReport_Report_Event_Entry)
                   0x55,                                 // Unit ID.
                   0x85,                           0xA5, // Interface UID.
                   0x03,                                 // Number of attributes.
-                  AttributeReporting::Event::COV,
                   TestInterface::ATTR1,
+                  AttributeReporting::Event::COV,
                   0x12,                           0x34,
-                  AttributeReporting::Event::EQ,
                   TestInterface::ATTR2,
+                  AttributeReporting::Event::EQ,
                   0x56,                           0x78,
-                  AttributeReporting::Event::HT,
                   TestInterface::ATTR3,
+                  AttributeReporting::Event::HT,
                   0x9A,                           0xBC,
                   0x00,                           0x00, 0x00};
    }
@@ -1531,40 +1531,40 @@ TEST_GROUP (AttrReport_Report_Event)
                   0x55,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of Fields.
-                  Event::COV,
                   TestInterface::ATTR1,
+                  Event::COV,
                   0xAA,                 0xBB,
-                  Event::HT,
                   TestInterface::ATTR2,
+                  Event::HT,
                   0xCC,                 0xDD,
-                  Event::LT,
                   TestInterface::ATTR3,
+                  Event::LT,
                   0xEE,                 0xFF,
                                               // Entry 2
                   0x56,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of fields.
-                  Event::COV,
                   TestInterface::ATTR1,
+                  Event::COV,
                   0x12,                 0x34,
-                  Event::HT,
                   TestInterface::ATTR2,
+                  Event::HT,
                   0x56,                 0x78,
-                  Event::LT,
                   TestInterface::ATTR3,
+                  Event::LT,
                   0x9A,                 0xBC,
                                               // Entry 2
                   0x57,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of fields.
-                  Event::COV,
                   TestInterface::ATTR1,
+                  Event::COV,
                   0x43,                 0x21,
-                  Event::HT,
                   TestInterface::ATTR2,
+                  Event::HT,
                   0x87,                 0x65,
-                  Event::LT,
                   TestInterface::ATTR3,
+                  Event::LT,
                   0xCB,                 0xA9,
                   0x00,                 0x00, 0x00};
    }
@@ -2144,8 +2144,8 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x01,                          // Number of fields.
                                                  // Entry 1 - Field 1.
-                  Event::COV,                    // Event Type.
                   0x10,                          // Attribute UID.
+                  Event::COV,                    // Event Type.
                   0x33,                          // Event Value.
                                                  // Entry 2
                   0x5A,                          // Unit ID.
@@ -2153,12 +2153,12 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x02,                          // Number of fields.
                                                  // Field 1.
-                  Event::HT,                     // Event Type.
                   0x11,                          // Attribute UID.
+                  Event::HT,                     // Event Type.
                   0x01, 0xAA,                    // Event Value.
                                                  // Field 2.
-                  Event::LT,                     // Event Type.
                   0x12,                          // Attribute UID.
+                  Event::LT,                     // Event Type.
                   0x01, 0x55,                    // Event Value.
                                                  // Entry 3
                   0x5A,                          // Unit ID.

@@ -383,12 +383,12 @@ size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool with_ui
 {
    size_t start = offset;
 
-   offset += array.write (offset, (uint8_t) type);
-
    if (with_uid)
    {
       offset += array.write (offset, attr_uid);
    }
+
+   offset += array.write (offset, (uint8_t) type);
 
    if (type == Event::COV)
    {
@@ -421,15 +421,15 @@ size_t Event::Field::unpack (const Common::ByteArray &array, size_t offset, bool
 {
    size_t  start = offset;
 
-   uint8_t temp  = 0;
-   offset += array.read (offset, temp);
-
-   type    = static_cast <Event::Type>(temp);
-
    if (with_uid)
    {
       offset += array.read (offset, attr_uid);
    }
+
+   uint8_t temp  = 0;
+   offset += array.read (offset, temp);
+
+   type    = static_cast <Event::Type>(temp);
 
    if (type == Event::COV)
    {
@@ -926,10 +926,12 @@ size_t Report::Event::Field::pack (Common::ByteArray &array, size_t offset) cons
 {
    size_t start = offset;
 
+   assert (nullptr != attribute);
+
+   offset += array.write (offset, (uint8_t) attribute->uid());
    offset += array.write (offset, (uint8_t) type);
 
-   assert (nullptr != attribute);
-   offset += attribute->pack (array, offset, true);
+   offset += attribute->pack (array, offset);
 
    return offset - start;
 }
@@ -950,16 +952,16 @@ size_t Report::Event::Field::unpack (HF::Attributes::Factory factory,
 
    offset += array.read (offset, temp);
 
-   type    = (AttributeReporting::Event::Type) temp;
-
-   array.read (offset, temp);
    auto attr = factory (temp);
+
+   offset += array.read (offset, temp);
+   type    = static_cast<AttributeReporting::Event::Type> (temp);
 
    if (attr != nullptr)
    {
-      size_t _size = attr->unpack (array, offset, true);
+      size_t _size = attr->unpack (array, offset);
 
-      if (_size == attr->size (true))
+      if (_size == attr->size ())
       {
          set_attribute (attr);
          offset += _size;
