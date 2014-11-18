@@ -210,22 +210,22 @@ TEST (UID, NONE)
    LONGS_EQUAL (size, rsize);
 }
 
-TEST (UID, IPUI)
+TEST (UID, DECT)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
-   LONGS_EQUAL (UID::IPUI_UID, ipui.type ());
+   LONGS_EQUAL (UID::DECT_UID, ipui.type ());
 
-   LONGS_EQUAL (5, UID::IPUI::length ());
+   LONGS_EQUAL (5, UID::DECT::length ());
 
    size_t size = ipui.size ();
 
    LONGS_EQUAL (1 + 1 + 5, size);
 
    ByteArray expected {0x00, 0x00, 0x00,
-                       UID::IPUI_UID,                // UID type.
+                       UID::DECT_UID,                // UID type.
                        0x05,                         // UID size.
-                       0x00, 0x73, 0x70, 0x5A, 0xA5, // IPUI value.
+                       0x00, 0x73, 0x70, 0x5A, 0xA5, // DECT value.
                        0x00, 0x00, 0x00};
 
    ByteArray array (size + 6);
@@ -256,7 +256,7 @@ TEST (UID, IPUI)
    std::stringstream ss;
    ss << uid;
 
-   STRCMP_EQUAL (std::string ("ipui: 0073705AA5").c_str (), ss.str ().c_str ());
+   STRCMP_EQUAL (std::string ("dect: 0073705AA5").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, MAC)
@@ -357,8 +357,8 @@ TEST (UID, Equals)
 {
    UID::UID_T *temp;
 
-   UID::IPUI  ipui;
-   UID::IPUI  ipui2;
+   UID::DECT  ipui;
+   UID::DECT  ipui2;
 
    ipui[0] = 0x00;
    ipui[1] = 0x73;
@@ -400,8 +400,8 @@ TEST (UID, Equals)
 
 TEST (UID, NotEquals)
 {
-   UID::IPUI ipui;
-   UID::IPUI ipui2;
+   UID::DECT ipui;
+   UID::DECT ipui2;
 
    ipui[0]  = 0x00;
    ipui[1]  = 0x73;

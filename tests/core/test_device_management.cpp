@@ -248,7 +248,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
    DeviceManagement::Unit unit;
 
    ByteArray expected;
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    TEST_SETUP ()
    {
@@ -279,7 +279,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
 TEST (DeviceManagement_RegisterMessage, No_EMC)
 {
    expected = ByteArray {0x00, 0x00, 0x00,
-                         0x02,                          // Discriminator Type.
+                         UID::DECT_UID,                 // Discriminator Type.
                          0x05,                          // Size of UID.
                          0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
                          0x03,                          // Number of units.
@@ -350,7 +350,7 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 TEST (DeviceManagement_RegisterMessage, EMC)
 {
    expected = ByteArray {0x00, 0x00, 0x00,
-                         0x82,                          // Discriminator Type.
+                         0x80 | UID::DECT_UID,          // Discriminator Type.
                          0x05,                          // Size of UID.
                          0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
                          0x42, 0x43,                    // EMC.
@@ -867,7 +867,7 @@ TEST_GROUP (DeviceManagementServer)
 TEST (DeviceManagementServer, Handle_Register)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                         // Discriminator Type.
+                         UID::DECT_UID,                // Discriminator Type.
                          0x05,                         // Size of UID.
                          0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                          0x03,                         // Number of units.
@@ -944,7 +944,7 @@ TEST (DeviceManagementServer, Handle_Register)
 TEST (DeviceManagementServer, Handle_Register2)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                         // Discriminator Type.
+                         UID::DECT_UID,                // Discriminator Type.
                          0x05,                         // Size of UID.
                          0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                          0x03,                         // Number of units.
@@ -972,7 +972,7 @@ TEST (DeviceManagementServer, Handle_Register2)
 TEST (DeviceManagementServer, Handle_RegisterWithSession)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                         // Discriminator Type.
+                         UID::DECT_UID,                // Discriminator Type.
                          0x05,                         // Size of UID.
                          0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                          0x03,                         // Number of units.
@@ -1150,7 +1150,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
 TEST (DeviceManagementServer, Entries)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1163,7 +1163,7 @@ TEST (DeviceManagementServer, Entries)
       DeviceManagement::Device dev;
       dev.address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev.uid     = temp;
@@ -1178,7 +1178,7 @@ TEST (DeviceManagementServer, Entries)
 
 TEST (DeviceManagementServer, FindEntry)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1191,7 +1191,7 @@ TEST (DeviceManagementServer, FindEntry)
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev->uid    = temp;
@@ -1214,7 +1214,7 @@ TEST (DeviceManagementServer, FindEntry)
 
 TEST (DeviceManagementServer, FindEntrySelf)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1227,7 +1227,7 @@ TEST (DeviceManagementServer, FindEntrySelf)
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev->uid    = temp;
@@ -1237,7 +1237,7 @@ TEST (DeviceManagementServer, FindEntrySelf)
       delete dev;
    }
 
-   UID::RFPI rfpi;
+   UID::DECT rfpi;
    rfpi[0] = 0x12;
    rfpi[1] = 0x34;
    rfpi[2] = 0x56;
@@ -1261,7 +1261,7 @@ TEST (DeviceManagementServer, FindEntrySelf)
 
 TEST (DeviceManagementServer, EntriesSession)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1274,7 +1274,7 @@ TEST (DeviceManagementServer, EntriesSession)
       DeviceManagement::Device dev;
       dev.address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev.uid     = temp;
@@ -1287,7 +1287,7 @@ TEST (DeviceManagementServer, EntriesSession)
    DeviceManagement::Device dev;
    dev.address = 0xAAAA;
 
-   UID::IPUI *temp = new UID::IPUI (ipui);
+   UID::DECT *temp = new UID::DECT (ipui);
    (*temp)[4] += 0xFF;
 
    dev.uid     = temp;

@@ -56,12 +56,12 @@ size_t UID::unpack (const Common::ByteArray &array, size_t offset)
          _raw = new HF::UID::NONE ();
          break;
 
-      case HF::UID::IPUI_UID:
-         _raw = new HF::UID::IPUI ();
+      case HF::UID::DECT_UID:
+         _raw = new HF::UID::DECT ();
          break;
 
-      case HF::UID::RFPI_UID:
-         _raw = new HF::UID::RFPI ();
+      case HF::UID::MAC_UID:
+         _raw = new HF::UID::MAC ();
          break;
 
       case HF::UID::URI_UID:
