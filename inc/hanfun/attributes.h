@@ -105,7 +105,7 @@ namespace HF
           * @warning If @c with_uid == @c true, then if the value read from the
           *          array does not match the attribute's UID, no more data will be read.
           *
-          * @param [in] with_uid    include uid() size in the calculation.
+          * @param [in] with_uid    attribute %UID is included in the serialization.
           */
          virtual size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid) = 0;
 

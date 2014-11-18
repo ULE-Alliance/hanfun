@@ -1787,7 +1787,7 @@ TEST_GROUP (AttrReport_Report_CreateMessage)
 
       expected = {0x00, 0x00, 0x00,
                   0x8A, 0x5A, // Device Address.
-                  0xBB,       // Deveie unit.
+                  0xBB,       // Device unit.
                   0x00, 0x00, 0x00};
    }
 };
@@ -1837,7 +1837,7 @@ TEST_GROUP (AttrReport_Report_Periodic_CreateMessage)
 
       expected = {0x00, 0x00, 0x00,
                   0x8A, 0x5A, // Device Address.
-                  0xBB,       // Deveie unit.
+                  0xBB,       // Device unit.
                   0xAA, 0xBB, 0xCC,0xDD,
                   0x00, 0x00, 0x00};
    }
