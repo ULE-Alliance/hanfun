@@ -272,6 +272,13 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
 void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
                                                size_t offset)
 {
+   // Only route messages that are commands.
+   if (!(packet.message.type == Protocol::Message::COMMAND_REQ ||
+         packet.message.type == Protocol::Message::COMMAND_RESP_REQ))
+   {
+      return;
+   }
+
    // Find bind entries for device.
    auto &entries = unit0 ()->bind_management ()->entries ();
 
