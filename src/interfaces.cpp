@@ -287,7 +287,7 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
 Common::Result AbstractInterface::check_payload_size (Message &message, Common::ByteArray &payload,
                                                       size_t offset)
 {
-   size_t _payload_size = payload_size (message.itf);
+   size_t _payload_size = payload_size (message);
 
    if (_payload_size != 0)
    {
