@@ -240,7 +240,7 @@ namespace HF
 
          //! @copydoc HF::Interface::handle
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                size_t offset)
+                                uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -293,7 +293,7 @@ namespace HF
 
          //! @copydoc HF::Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                        size_t offset)
+                                        uint16_t offset)
          {
             Common::Result result = interfaces.first.handle (packet, payload, offset);
 

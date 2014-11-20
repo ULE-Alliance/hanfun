@@ -89,21 +89,21 @@ namespace HF
    {
       struct Payload
       {
-         size_t fake_size;
+         uint16_t fake_size;
 
-         Payload(size_t fake_size = 0):
+         Payload(uint16_t fake_size = 0):
             fake_size (fake_size & Protocol::MAX_PAYLOAD)
          {}
 
          virtual ~Payload()
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return fake_size;
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
             array.extend (fake_size);
 
@@ -114,7 +114,7 @@ namespace HF
             return fake_size;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
             UNUSED (array);
             UNUSED (offset);
@@ -278,7 +278,7 @@ namespace HF
 
          protected:
 
-         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -423,7 +423,7 @@ namespace HF
             packets.push_back (temp);
          }
 
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             mock ("AbstractDevice").actualCall ("receive");
             Parent::receive (packet, payload, offset);
@@ -520,7 +520,7 @@ namespace HF
             return attr_reporting;
          }
 
-         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -644,7 +644,7 @@ namespace HF
             return bind_mgt;
          }
 
-         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             switch (packet.message.itf.id)
             {

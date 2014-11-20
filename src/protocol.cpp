@@ -33,7 +33,7 @@ using namespace HF::Protocol;
  *
  */
 // =============================================================================
-size_t Address::size () const
+uint16_t Address::size () const
 {
    return sizeof(uint16_t) + // Device Address + Flag.
           sizeof(uint8_t);   // Unit Address.
@@ -46,11 +46,11 @@ size_t Address::size () const
  *
  */
 // =============================================================================
-size_t Address::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Address::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
-   uint16_t dev = ((this->mod & 0x01) << 15) | (this->device & BROADCAST_ADDR);
+   uint16_t dev   = ((this->mod & 0x01) << 15) | (this->device & BROADCAST_ADDR);
 
    offset += array.write (offset, dev);
    offset += array.write (offset, unit);
@@ -65,10 +65,10 @@ size_t Address::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Address::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Address::unpack (const Common::ByteArray &array, uint16_t offset)
 {
    uint16_t dev;
-   size_t   start = offset;
+   uint16_t start = offset;
 
    offset      += array.read (offset, dev);
 
@@ -91,7 +91,7 @@ size_t Address::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Message::Interface::size () const
+uint16_t Message::Interface::size () const
 {
    return Common::Interface::size () + // Interface UID.
           sizeof(uint8_t);             // Interface Member.
@@ -104,9 +104,9 @@ size_t Message::Interface::size () const
  *
  */
 // =============================================================================
-size_t Message::Interface::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Message::Interface::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Common::Interface::pack (array, offset);
    offset += array.write (offset, this->member);
@@ -121,9 +121,9 @@ size_t Message::Interface::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Message::Interface::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Common::Interface::unpack (array, offset);
    offset += array.read (offset, this->member);
@@ -135,7 +135,7 @@ size_t Message::Interface::unpack (const Common::ByteArray &array, size_t offset
 // Message
 // =============================================================================
 
-Message::Message(const Message &parent, size_t size):reference (parent.reference),
+Message::Message(const Message &parent, uint16_t size):reference (parent.reference),
    itf (parent.itf), payload (Common::ByteArray (size)), length (0)
 {
    switch (parent.type)
@@ -181,7 +181,7 @@ Message::Message(const Message &parent, size_t size):reference (parent.reference
  *
  */
 // =============================================================================
-size_t Message::size () const
+uint16_t Message::size () const
 {
    return sizeof(uint8_t) +    // Application Reference.
           sizeof(uint8_t) +    // Message Type.
@@ -197,9 +197,9 @@ size_t Message::size () const
  *
  */
 // =============================================================================
-size_t Message::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Message::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    // Application Reference.
    offset += array.write (offset, this->reference);
@@ -231,9 +231,9 @@ size_t Message::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Message::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Message::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    // Application Reference.
    offset += array.read (offset, this->reference);
@@ -264,7 +264,7 @@ size_t Message::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Response::size () const
+uint16_t Response::size () const
 {
    return min_size;
 }
@@ -276,9 +276,9 @@ size_t Response::size () const
  *
  */
 // =============================================================================
-size_t Response::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Response::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.write (offset, static_cast <uint8_t>(this->code));
 
@@ -292,11 +292,11 @@ size_t Response::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Response::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Response::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t code  = 0;
+   uint8_t  code  = 0;
    offset    += array.read (offset, code);
 
    this->code = static_cast <Common::Result>(code);
@@ -315,7 +315,7 @@ size_t Response::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Packet::size () const
+uint16_t Packet::size () const
 {
    return source.size () +       // Source Address.
           destination.size () +  // Destination Address.
@@ -330,10 +330,10 @@ size_t Packet::size () const
  *
  */
 // =============================================================================
-size_t Packet::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Packet::pack (Common::ByteArray &array, uint16_t offset) const
 {
    uint16_t transport = 0;
-   size_t   start     = offset;
+   uint16_t start     = offset;
 
    offset += source.pack (array, offset);
    offset += destination.pack (array, offset);
@@ -352,10 +352,10 @@ size_t Packet::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Packet::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Packet::unpack (const Common::ByteArray &array, uint16_t offset)
 {
    uint16_t transport = 0;
-   size_t   start     = offset;
+   uint16_t start     = offset;
 
    offset += source.unpack (array, offset);
    offset += destination.unpack (array, offset);
@@ -382,9 +382,9 @@ size_t Packet::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t GetAttributePack::Response::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t GetAttributePack::Response::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Protocol::Response::unpack (array, offset);
 
@@ -444,7 +444,7 @@ size_t GetAttributePack::Response::unpack (const Common::ByteArray &array, size_
  *
  */
 // =============================================================================
-uint32_t Filters::Repeated::checksum (uint16_t const *data, size_t words)
+uint32_t Filters::Repeated::checksum (uint16_t const *data, uint16_t words)
 {
    uint32_t sum1 = 0xFFFF, sum2 = 0xFFFF;
 

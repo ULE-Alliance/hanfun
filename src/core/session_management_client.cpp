@@ -33,7 +33,7 @@ using namespace HF::Core::SessionManagement;
  */
 // =============================================================================
 Common::Result AbstractClient::handle_command (CMD cmd, Protocol::Packet &packet,
-                                               Common::ByteArray &payload, size_t offset)
+                                               Common::ByteArray &payload, uint16_t offset)
 {
    UNUSED (packet);
 
@@ -69,7 +69,7 @@ Common::Result AbstractClient::handle_command (CMD cmd, Protocol::Packet &packet
  *
  */
 // =============================================================================
-size_t AbstractClient::payload_size (CMD cmd) const
+uint16_t AbstractClient::payload_size (CMD cmd) const
 {
    switch (cmd)
    {

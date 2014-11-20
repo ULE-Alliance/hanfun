@@ -77,7 +77,7 @@ TEST (SimplePowerMeter_Measurement, Pack)
 
    ByteArray array (measurement.size () + 6);
 
-   size_t    wsize = measurement.pack (array, 3);
+   uint16_t  wsize = measurement.pack (array, 3);
 
    LONGS_EQUAL (measurement.size (), wsize);
 
@@ -90,7 +90,7 @@ TEST (SimplePowerMeter_Measurement, Unpack)
    LONGS_EQUAL (Precision::BASE, measurement.unit);
    LONGS_EQUAL (0, measurement.value);
 
-   size_t rsize = measurement.unpack (expected, 3);
+   uint16_t rsize = measurement.unpack (expected, 3);
 
    LONGS_EQUAL (measurement.size (), rsize);
 
@@ -116,8 +116,8 @@ TEST_GROUP (SimplePowerMeter_Report)
 //! @test Should report correct size.
 TEST (SimplePowerMeter_Report, Size)
 {
-   size_t expected = 0;
-   size_t delta    = 1;
+   uint16_t expected = 0;
+   uint16_t delta    = 1;
 
    LONGS_EQUAL (expected + delta, report.size ());
 
@@ -314,7 +314,7 @@ TEST (SimplePowerMeter_Report, Pack)
 
    ByteArray array (report.size () + 6);
 
-   size_t    wsize = report.pack (array, 3);
+   uint16_t  wsize = report.pack (array, 3);
 
    LONGS_EQUAL (report.size (), wsize);
 
@@ -376,7 +376,7 @@ TEST (SimplePowerMeter_Report, Unpack)
 {
    ByteArray array (unpack_data, sizeof(unpack_data));
 
-   size_t    rsize = report.unpack (array, 3);
+   uint16_t  rsize = report.unpack (array, 3);
 
    LONGS_EQUAL (report.size (), rsize);
 

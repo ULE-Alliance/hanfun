@@ -97,7 +97,7 @@ void Client::remove (const Protocol::Address &source, const Protocol::Address &d
  *
  */
 // =============================================================================
-size_t Client::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -127,7 +127,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
-                                                       Common::ByteArray &payload, size_t offset)
+                                                       Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result   = Common::Result::FAIL_UNKNOWN;
 

@@ -152,7 +152,7 @@ TEST_GROUP (SessionManagementServer)
 
    struct TestEntries:public Common::IEntries <TestType>, public TestContainer
    {
-      size_t size () const
+      uint16_t size () const
       {
          return TestContainer::size ();
       }
@@ -204,7 +204,7 @@ TEST_GROUP (SessionManagementServer)
 
    struct TestServer:public Server <TestEntries>
    {
-      size_t count () const
+      uint16_t count () const
       {
          return sessions.size ();
       }

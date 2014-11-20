@@ -31,9 +31,9 @@ using namespace HF::UID;
  *
  */
 // =============================================================================
-size_t UID::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t UID::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    if (owner)
    {

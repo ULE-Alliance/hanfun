@@ -45,7 +45,7 @@ Alert::Message::Message(uint16_t type, uint32_t state):
  *
  */
 // =============================================================================
-size_t Alert::Message::size () const
+uint16_t Alert::Message::size () const
 {
    return sizeof(uint16_t) + // Profile UID.
           sizeof(uint32_t);  // State.
@@ -58,9 +58,9 @@ size_t Alert::Message::size () const
  *
  */
 // =============================================================================
-size_t Alert::Message::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Alert::Message::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.write (offset, this->type);
    offset += array.write (offset, this->state);
@@ -75,9 +75,9 @@ size_t Alert::Message::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Alert::Message::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Alert::Message::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.read (offset, this->type);
    offset += array.read (offset, this->state);

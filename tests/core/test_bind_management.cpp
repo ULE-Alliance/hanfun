@@ -60,7 +60,7 @@ TEST (BindManagement, EntryPack)
 
    Common::ByteArray data (entry.size () + 6);
 
-   size_t size = entry.pack (data, 3);
+   uint16_t size = entry.pack (data, 3);
 
    LONGS_EQUAL (entry.size (), size);
 
@@ -80,7 +80,7 @@ TEST (BindManagement, EntryUnpack)
 
    BindManagement::Entry entry;
 
-   size_t size = entry.unpack (data, 3);
+   uint16_t size = entry.unpack (data, 3);
 
    LONGS_EQUAL (entry.size (), size);
 
@@ -344,9 +344,9 @@ TEST_GROUP (BindManagementEntries)
    void should_create (Protocol::Address src, Protocol::Address dst, Common::Interface itf,
                        const char *file, int line)
    {
-      size_t size = entries.size ();
+      uint16_t size = entries.size ();
 
-      auto   res  = entries.save (BindManagement::Entry (src, itf, dst));
+      auto res      = entries.save (BindManagement::Entry (src, itf, dst));
 
       LONGS_EQUAL_LOCATION (size + 1, entries.size (), file, line);
       size = entries.size ();
@@ -357,9 +357,9 @@ TEST_GROUP (BindManagementEntries)
    void should_not_create (Protocol::Address src, Protocol::Address dst, Common::Interface itf,
                            const char *file, int line)
    {
-      size_t size = entries.size ();
+      uint16_t size = entries.size ();
 
-      auto   res  = entries.save (BindManagement::Entry (src, itf, dst));
+      auto res      = entries.save (BindManagement::Entry (src, itf, dst));
 
       LONGS_EQUAL_LOCATION (size, entries.size (), file, line);
       LONGS_EQUAL_LOCATION (Common::Result::FAIL_ARG, res, file, line);

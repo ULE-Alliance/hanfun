@@ -123,7 +123,7 @@ namespace HF
           *
           * @param [in] size the initial size of the byte array.
           */
-         ByteArray(size_t size = 0);
+         ByteArray(uint16_t size = 0);
 
          /*!
           * Create a byte array with the given initial data.
@@ -131,7 +131,7 @@ namespace HF
           * @param [in] data    data to initialize the byte array with.
           * @param [in] size    size in bytes of the data.
           */
-         ByteArray(const uint8_t data[], const size_t size);
+         ByteArray(const uint8_t data[], const uint16_t size);
 
          /*!
           * Create byte array from the values in the given list.
@@ -152,7 +152,7 @@ namespace HF
           *
           * @return  number of bytes written (1).
           */
-         size_t write (size_t offset, uint8_t data);
+         uint16_t write (uint16_t offset, uint8_t data);
 
          /*!
           * Write a word in the big endian format into the
@@ -163,7 +163,7 @@ namespace HF
           *
           * @return  number of bytes written (2).
           */
-         size_t write (size_t offset, uint16_t data);
+         uint16_t write (uint16_t offset, uint16_t data);
 
          /*!
           * Write a double-word in big endian format into the
@@ -174,10 +174,10 @@ namespace HF
           *
           * @return  number of bytes written (4).
           */
-         size_t write (size_t offset, uint32_t data);
+         uint16_t write (uint16_t offset, uint32_t data);
 
-         //! @copydoc ByteArray::write (size_t, uint8_t)
-         size_t write (size_t offset, bool data)
+         //! @copydoc ByteArray::write (uint16_t, uint8_t)
+         uint16_t write (uint16_t offset, bool data)
          {
             return write (offset, static_cast <uint8_t>(data));
          }
@@ -190,7 +190,7 @@ namespace HF
           *
           * @return  number of bytes read (1).
           */
-         size_t read (size_t offset, uint8_t &data) const;
+         uint16_t read (uint16_t offset, uint8_t &data) const;
 
          /*!
           * Read the word in big-endian format at @c offset into @c data.
@@ -200,7 +200,7 @@ namespace HF
           *
           * @return  number of bytes read (2).
           */
-         size_t read (size_t offset, uint16_t &data) const;
+         uint16_t read (uint16_t offset, uint16_t &data) const;
 
          /*!
           * Read the double-word in big-endian format at @c offset into @c data.
@@ -210,13 +210,13 @@ namespace HF
           *
           * @return  number of bytes read (4).
           */
-         size_t read (size_t offset, uint32_t &data) const;
+         uint16_t read (uint16_t offset, uint32_t &data) const;
 
-         //! @copydoc  ByteArray::read (size_t, uint8_t)
-         size_t read (size_t offset, bool &data) const
+         //! @copydoc  ByteArray::read (uint16_t, uint8_t)
+         uint16_t read (uint16_t offset, bool &data) const
          {
-            uint8_t temp;
-            size_t  result = read (offset, temp);
+            uint8_t  temp;
+            uint16_t result = read (offset, temp);
 
             data = (temp & 0x01) != 0;
 
@@ -233,7 +233,7 @@ namespace HF
           * @retval  true if enough data is available,
           * @retval  false otherwise.
           */
-         bool available (size_t offset, size_t expected) const
+         bool available (uint16_t offset, uint16_t expected) const
          {
             return expected <= available (offset);
          }
@@ -245,7 +245,7 @@ namespace HF
           *
           * @return  number of data bytes available from the given @c offset.
           */
-         size_t available (size_t offset) const
+         uint16_t available (uint16_t offset) const
          {
             return (size () >= offset ? size () - offset : 0);
          }
@@ -268,7 +268,7 @@ namespace HF
           *
           * @param [in] _size number of bytes to extent the array by.
           */
-         void extend (size_t _size)
+         void extend (uint16_t _size)
          {
             vector <uint8_t>::reserve (size () + _size);
          }
@@ -291,7 +291,7 @@ namespace HF
           *
           * @return  number of bytes the message requires to be serialized.
           */
-         virtual size_t size () const = 0;
+         virtual uint16_t size () const = 0;
 
          /*!
           * Write the object on to a ByteArray so it can be sent over the network.
@@ -301,7 +301,7 @@ namespace HF
           *
           * @return  the number of bytes written.
           */
-         virtual size_t pack (ByteArray &array, size_t offset = 0) const = 0;
+         virtual uint16_t pack (ByteArray &array, uint16_t offset = 0) const = 0;
 
          /*!
           * Read a message from a ByteArray.
@@ -311,7 +311,7 @@ namespace HF
           *
           * @return  the number of bytes read.
           */
-         virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
+         virtual uint16_t unpack (const ByteArray &array, uint16_t offset = 0) = 0;
       };
 
       /*!
@@ -330,17 +330,17 @@ namespace HF
          SerializableHelper(T data):data (data)
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return data.size ();
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         uint16_t pack (ByteArray &array, uint16_t offset = 0) const
          {
             return data.pack (array, offset);
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const ByteArray &array, uint16_t offset = 0)
          {
             return data.unpack (array, offset);
          }
@@ -373,17 +373,17 @@ namespace HF
          SerializableHelper(T data):data (data)
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return data->size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
             return data->pack (array, offset);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
             return data->unpack (array, offset);
          }
@@ -415,23 +415,23 @@ namespace HF
 
          SerializableHelper(T data):data (data) {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return sizeof(T);
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += array.write (offset, data);
 
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += array.read (offset, data);
 
@@ -460,14 +460,14 @@ namespace HF
 
          SerializableHelper(Common::ByteArray _data):data (_data) {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return sizeof(uint8_t) + data.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += array.write (offset, (uint8_t) data.size ());
 
@@ -481,11 +481,11 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t  start = offset;
+            uint16_t start = offset;
 
-            uint8_t _size = 0;
+            uint8_t  _size = 0;
             offset += array.read (offset, _size);
 
             auto it = array.begin ();
@@ -528,14 +528,14 @@ namespace HF
 
          SerializableHelper(std::string _data):data (_data) {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return sizeof(uint8_t) + data.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += array.write (offset, (uint8_t) data.size ());
 
@@ -549,11 +549,11 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t  start = offset;
+            uint16_t start = offset;
 
-            uint8_t _size = 0;
+            uint8_t  _size = 0;
             offset += array.read (offset, _size);
 
             auto it = array.begin ();
@@ -630,13 +630,13 @@ namespace HF
          {}
 
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const;
+         uint16_t size () const;
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       // =============================================================================
@@ -801,7 +801,7 @@ namespace HF
           *
           * @return  the number of entries in the container.
           */
-         virtual size_t size () const = 0;
+         virtual uint16_t size () const = 0;
 
          /*!
           * Store the given bind @c entry to persistent storage.

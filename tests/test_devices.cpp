@@ -146,7 +146,7 @@ TEST (Devices, ResponseRequired)
       device.receive (packet, payload, 0);
 
       Protocol::Packet resp_packet;
-      size_t offset = resp_packet.unpack(link.data, 0);
+      uint16_t offset = resp_packet.unpack(link.data, 0);
       LONGS_EQUAL (packet.message.reference, resp_packet.message.reference);
 
       Protocol::Response resp;

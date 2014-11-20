@@ -291,7 +291,7 @@ void BindManagement::Server::restore (Json::Value root)
  *
  */
 // =============================================================================
-void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
+void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
 {
    LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
 

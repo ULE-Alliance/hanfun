@@ -50,7 +50,7 @@ HF::Devices::Concentrator::IUnit0 &IServer::unit0 () const
  */
 // =============================================================================
 Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
-                                               Common::ByteArray &payload, size_t offset)
+                                               Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result res      = Common::Result::FAIL_UNKNOWN;
 

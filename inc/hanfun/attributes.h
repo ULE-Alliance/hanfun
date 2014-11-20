@@ -84,20 +84,20 @@ namespace HF
           *
           * @param [in] with_uid    include uid() size in the calculation.
           */
-         virtual size_t size (bool with_uid) const = 0;
+         virtual uint16_t size (bool with_uid) const = 0;
 
          //! @copydoc HF::Common::Serializable::size
-         virtual size_t size () const = 0;
+         virtual uint16_t size () const = 0;
 
          /*!
           * @copydoc HF::Common::Serializable::pack
           *
           * @param [in] with_uid    include uid() in the serialization.
           */
-         virtual size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const = 0;
+         virtual uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const = 0;
 
          //! @copydoc HF::Common::Serializable::pack
-         virtual size_t pack (Common::ByteArray &array, size_t offset) const = 0;
+         virtual uint16_t pack (Common::ByteArray &array, uint16_t offset) const = 0;
 
          /*!
           * @copydoc HF::Common::Serializable::unpack
@@ -107,16 +107,16 @@ namespace HF
           *
           * @param [in] with_uid    attribute %UID is included in the serialization.
           */
-         virtual size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid) = 0;
+         virtual uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid) = 0;
 
          //! @copydoc HF::Common::Serializable::unpack
-         virtual size_t unpack (const Common::ByteArray &array, size_t offset) = 0;
+         virtual uint16_t unpack (const Common::ByteArray &array, uint16_t offset) = 0;
 
-         virtual bool operator ==(const IAttribute &other) const               = 0;
+         virtual bool operator ==(const IAttribute &other) const                   = 0;
 
-         virtual bool operator <(const IAttribute &other) const                = 0;
+         virtual bool operator <(const IAttribute &other) const                    = 0;
 
-         virtual bool operator >(const IAttribute &other) const                = 0;
+         virtual bool operator >(const IAttribute &other) const                    = 0;
 
          /*!
           * This method is used to get the percentage of change that the
@@ -197,17 +197,17 @@ namespace HF
          }
 
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const
+         uint16_t size () const
          {
             return sizeof(uint8_t) + sizeof(uint8_t) * vector <uint8_t>::size ();
          }
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t  start = offset;
+            uint16_t start = offset;
 
-            uint8_t count = length ();
+            uint8_t  count = length ();
             offset += array.write (offset, count);
 
             /* *INDENT-OFF* */
@@ -222,7 +222,7 @@ namespace HF
          }
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint8_t count = 0;
             return unpack (array, offset, count);
@@ -234,9 +234,9 @@ namespace HF
           * @param [out] count   reference to a variable that will hold
           *                      the count value read from the array.
           */
-         size_t unpack (const Common::ByteArray &array, size_t offset, uint8_t &count)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset, uint8_t &count)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += array.read (offset, count);
 
@@ -398,19 +398,19 @@ namespace HF
             return _owner;
          }
 
-         size_t size (bool with_uid) const
+         uint16_t size (bool with_uid) const
          {
             return size () + (with_uid ? sizeof(uint8_t) : 0);
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return helper.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             if (with_uid)
             {
@@ -422,14 +422,14 @@ namespace HF
             return offset - start;
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
             return helper.pack (array, offset);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             if (with_uid)
             {
@@ -448,7 +448,7 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
             return helper.unpack (array, offset);
          }
@@ -548,19 +548,19 @@ namespace HF
             return &_owner;
          }
 
-         size_t size (bool with_uid) const
+         uint16_t size (bool with_uid) const
          {
             return size () + (with_uid ? sizeof(uint8_t) : 0);
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return helper.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset, bool with_uid) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             if (with_uid)
             {
@@ -574,16 +574,16 @@ namespace HF
             return offset - start;
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
             const_cast <decltype(helper) &>(helper).data = getter (_owner);
 
             return helper.pack (array, offset);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             if (with_uid)
             {
@@ -604,9 +604,9 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t result = helper.unpack (array, offset);
+            uint16_t result = helper.unpack (array, offset);
             setter (_owner, helper.data);
             return result;
          }
@@ -709,14 +709,14 @@ namespace HF
             delete attribute;
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return Protocol::Response::size () + (attribute != nullptr ? attribute->size () : 0);
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += Protocol::Response::pack (array, offset);
 
@@ -725,9 +725,9 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += Protocol::Response::unpack (array, offset);
             offset += (attribute != nullptr ? attribute->unpack (array, offset) : 0);
@@ -813,19 +813,19 @@ namespace HF
             {}
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const
+            uint16_t size () const
             {
                return attributes.size ();
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
                return attributes.pack (array, offset);
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
                return attributes.unpack (array, offset, count);
             }
@@ -888,9 +888,9 @@ namespace HF
                /* *INDENT-ON* */
             }
 
-            size_t size () const
+            uint16_t size () const
             {
-               size_t result = Protocol::Response::size ();
+               uint16_t result = Protocol::Response::size ();
 
                result += sizeof(uint8_t);
 
@@ -905,9 +905,9 @@ namespace HF
                return result;
             }
 
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::pack (array, offset);
 
@@ -924,7 +924,7 @@ namespace HF
                return offset - start;
             }
 
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
       } // namespace GetAttributePack
@@ -963,9 +963,9 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const
+            uint16_t size () const
             {
-               size_t result = sizeof(uint8_t);
+               uint16_t result = sizeof(uint8_t);
 
                /* *INDENT-OFF* */
                std::for_each ( attributes.begin(), attributes.end(),
@@ -979,9 +979,9 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.write (offset, (uint8_t) attributes.size ());
 
@@ -997,9 +997,9 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.read (offset, count);
 
@@ -1033,18 +1033,18 @@ namespace HF
                {}
 
                //! @see HF::Common::Serializable::size
-               static constexpr size_t min_size = sizeof(uint8_t) + sizeof(uint8_t);
+               static constexpr uint16_t min_size = sizeof(uint8_t) + sizeof(uint8_t);
 
                //! @copydoc HF::Common::Serializable::size
-               size_t size () const
+               uint16_t size () const
                {
                   return Result::min_size;
                }
 
                //! @copydoc HF::Common::Serializable::pack
-               size_t pack (Common::ByteArray &array, size_t offset = 0) const
+               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
                {
-                  size_t start = offset;
+                  uint16_t start = offset;
 
                   offset += array.write (offset, (uint8_t) uid);
                   offset += array.write (offset, (uint8_t) code);
@@ -1053,11 +1053,11 @@ namespace HF
                }
 
                //! @copydoc HF::Common::Serializable::unpack
-               size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
                {
-                  size_t  start = offset;
+                  uint16_t start = offset;
 
-                  uint8_t temp;
+                  uint8_t  temp;
                   offset += array.read (offset, temp);
                   uid     = temp;
 
@@ -1081,9 +1081,9 @@ namespace HF
             uint8_t count;
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const
+            uint16_t size () const
             {
-               size_t result = sizeof(uint8_t); // Number of attribute results.
+               uint16_t result = sizeof(uint8_t); // Number of attribute results.
 
                result += results.size () * (sizeof(uint8_t) + sizeof(uint8_t));
 
@@ -1091,9 +1091,9 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.write (offset, (uint8_t) results.size ());
 
@@ -1108,9 +1108,9 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.read (offset, count);
 

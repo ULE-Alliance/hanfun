@@ -78,7 +78,7 @@ static uint8_t find_available_id (Iterator begin, Iterator end)
  *
  */
 // =============================================================================
-size_t Server::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Server::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -110,7 +110,7 @@ size_t Server::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+                                       uint16_t offset)
 {
    Common::Result result = AbstractInterface::check (packet.message, payload, offset);
 
@@ -663,7 +663,7 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
  *
  */
 // =============================================================================
-size_t Server::count (Type type) const
+uint16_t Server::count (Type type) const
 {
    switch (type)
    {

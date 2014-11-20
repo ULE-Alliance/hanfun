@@ -205,7 +205,7 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
    virtual ~Base()
    {}
 
-   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
+   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset);
 
    using HF::Devices::Concentrator::Abstract <Unit0>::link;
 

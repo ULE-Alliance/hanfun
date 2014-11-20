@@ -83,15 +83,15 @@ struct msg_t
    {}
 
    //! @copydoc HF::Common::Serializable::size
-   size_t size () const
+   uint16_t size () const
    {
       return sizeof(nbytes) + sizeof(primitive) + data.size ();
    }
 
    //! @copydoc HF::Common::Serializable::pack
-   size_t pack (HF::Common::ByteArray &array, size_t offset = 0) const
+   uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const
    {
-      size_t start  = offset;
+      uint16_t start  = offset;
 
       uint16_t temp = (uint16_t) (sizeof(uint16_t) + data.size ());
 
@@ -105,15 +105,15 @@ struct msg_t
    }
 
    //! @copydoc HF::Common::Serializable::unpack
-   size_t unpack (HF::Common::ByteArray &array, size_t offset = 0)
+   uint16_t unpack (HF::Common::ByteArray &array, uint16_t offset = 0)
    {
-      size_t start = offset;
+      uint16_t start = offset;
 
       offset += array.read (offset, nbytes);
 
       offset += array.read (offset, primitive);
 
-      size_t data_size = nbytes - sizeof(primitive);
+      uint16_t data_size = nbytes - sizeof(primitive);
 
       data = HF::Common::ByteArray (data_size);
 
@@ -145,15 +145,15 @@ struct hello_msg_t
    {}
 
    //! @copydoc HF::Common::Serializable::size
-   size_t size () const
+   uint16_t size () const
    {
       return 3 * sizeof(uint8_t) + uid.size ();
    }
 
    //! @copydoc HF::Common::Serializable::pack
-   size_t pack (HF::Common::ByteArray &array, size_t offset = 0) const
+   uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const
    {
-      size_t start = offset;
+      uint16_t start = offset;
 
       offset += array.write (offset, core);
       offset += array.write (offset, profiles);
@@ -165,9 +165,9 @@ struct hello_msg_t
    }
 
    //! @copydoc HF::Common::Serializable::unpack
-   size_t unpack (HF::Common::ByteArray &array, size_t offset = 0)
+   uint16_t unpack (HF::Common::ByteArray &array, uint16_t offset = 0)
    {
-      size_t start = offset;
+      uint16_t start = offset;
 
       offset += array.read (offset, core);
       offset += array.read (offset, profiles);

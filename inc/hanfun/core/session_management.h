@@ -58,9 +58,9 @@ namespace HF
           */
          struct StartResponse:public Protocol::Response
          {
-            uint16_t                count; //!< Number of device entries.
+            uint16_t                  count; //!< Number of device entries.
 
-            constexpr static size_t min_size = Protocol::Response::min_size + sizeof(count);
+            constexpr static uint16_t min_size = Protocol::Response::min_size + sizeof(count);
             /*!
              * Constructor.
              *
@@ -70,14 +70,14 @@ namespace HF
                count (count)
             {}
 
-            size_t size () const
+            uint16_t size () const
             {
                return min_size;
             }
 
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::pack (array, offset);
                offset += array.write (offset, count);
@@ -85,9 +85,9 @@ namespace HF
                return offset - start;
             }
 
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::unpack (array, offset);
                offset += array.read (offset, count);
@@ -101,25 +101,25 @@ namespace HF
           */
          struct GetEntriesMessage
          {
-            uint16_t                offset; //!< Start index for the first entry to be provided.
-            uint8_t                 count;  //!< Number of entries to be sent in the response.
+            uint16_t                  offset; //!< Start index for the first entry to be provided.
+            uint8_t                   count;  //!< Number of entries to be sent in the response.
 
-            constexpr static size_t min_size = sizeof(offset) + sizeof(count);
+            constexpr static uint16_t min_size = sizeof(offset) + sizeof(count);
 
             GetEntriesMessage(uint16_t offset = 0, uint8_t count = 0):
                offset (offset), count (count)
             {}
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const
+            uint16_t size () const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.write (offset, this->offset);
                offset += array.write (offset, this->count);
@@ -128,9 +128,9 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.read (offset, this->offset);
                offset += array.read (offset, this->count);
@@ -144,9 +144,9 @@ namespace HF
          {
             std::vector <_Entry> entries;
 
-            size_t size () const
+            uint16_t size () const
             {
-               size_t result = Protocol::Response::size () + sizeof(uint8_t);
+               uint16_t result = Protocol::Response::size () + sizeof(uint8_t);
 
                /* *INDENT-OFF* */
                std::for_each (entries.begin (), entries.end (), [&result](const _Entry &entry)
@@ -158,9 +158,9 @@ namespace HF
                return result;
             }
 
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::pack (array, offset);
 
@@ -178,9 +178,9 @@ namespace HF
                return offset - start;
             }
 
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::unpack (array, offset);
 
@@ -209,15 +209,15 @@ namespace HF
             GetEntriesResponse():count (0)
             {}
 
-            size_t size () const
+            uint16_t size () const
             {
-               size_t result = Protocol::Response::size () + sizeof(uint8_t);
+               uint16_t result = Protocol::Response::size () + sizeof(uint8_t);
                return result;
             }
 
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::pack (array, offset);
 
@@ -227,9 +227,9 @@ namespace HF
                return offset - start;
             }
 
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += Protocol::Response::unpack (array, offset);
 
@@ -410,7 +410,7 @@ namespace HF
              * @return the result of the message processing.
              */
             Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
-                                           Common::ByteArray &payload, size_t offset = 0);
+                                           Common::ByteArray &payload, uint16_t offset = 0);
 
             /*!
              * Find the session associated with the given device @c address.
@@ -456,7 +456,7 @@ namespace HF
              *
              * @return  number of bytes required.
              */
-            size_t payload_size (CMD cmd) const;
+            uint16_t payload_size (CMD cmd) const;
 
             /*!
              * Check if the given @c offset is valid and adjust the @c count value if
@@ -725,7 +725,7 @@ namespace HF
              * @return  the result of the message processing.
              */
             Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
-                                           Common::ByteArray &payload, size_t offset = 0);
+                                           Common::ByteArray &payload, uint16_t offset = 0);
 
             /*!
              * Get the minimum number of bytes necessary to pack/unpack a message of the
@@ -735,7 +735,7 @@ namespace HF
              *
              * @return  number of bytes required.
              */
-            size_t payload_size (CMD cmd) const;
+            uint16_t payload_size (CMD cmd) const;
 
             /*!
              * Helper method to send a message to read, @c count entries starting at
@@ -817,7 +817,7 @@ namespace HF
             protected:
 
             Common::Result handle_command (CMD cmd, Protocol::Packet &packet,
-                                           Common::ByteArray &payload, size_t offset = 0)
+                                           Common::ByteArray &payload, uint16_t offset = 0)
             {
                if (cmd == GET)
                {

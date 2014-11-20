@@ -106,7 +106,7 @@ void Client::deregister (uint16_t address)
  *
  */
 // =============================================================================
-size_t Client::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -138,7 +138,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+                                       uint16_t offset)
 {
    switch (packet.message.itf.member)
    {

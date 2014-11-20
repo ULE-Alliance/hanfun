@@ -36,7 +36,7 @@ using namespace HF::Interfaces::Alert;
  */
 // =============================================================================
 Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+                                       uint16_t offset)
 {
    if (packet.message.itf.member != STATUS_CMD)
    {

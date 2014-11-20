@@ -128,7 +128,7 @@ namespace HF
           *                      byte array buffer.
           */
          virtual void receive (Protocol::Packet &packet, Common::ByteArray &payload,
-                               size_t offset) = 0;
+                               uint16_t offset) = 0;
 
          //! @}
          // ======================================================================
@@ -308,7 +308,7 @@ namespace HF
             Protocol::Packet *packet = new Protocol::Packet ();
             packet->link = link;
 
-            size_t offset = packet->unpack (payload);
+            uint16_t offset = packet->unpack (payload);
 
             /* *INDENT-OFF* */
             std::for_each (endpoints.begin (), endpoints.end (),

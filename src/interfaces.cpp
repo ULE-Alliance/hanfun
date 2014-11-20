@@ -48,7 +48,7 @@ using namespace HF::Interfaces;
  */
 // =============================================================================
 static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::ByteArray &payload,
-                                        size_t &offset, bool nop = false)
+                                        uint16_t &offset, bool nop = false)
 {
    Common::Result result            = Common::Result::FAIL_UNKNOWN;
 
@@ -104,7 +104,7 @@ static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::Byt
  */
 // =============================================================================
 static SetAttributePack::Response *update_attributes (Interface &itf, Common::ByteArray &payload,
-                                                      size_t &offset, bool resp, bool nop = false)
+                                                      uint16_t &offset, bool resp, bool nop = false)
 {
    SetAttributePack::Request request;
 
@@ -151,9 +151,9 @@ static SetAttributePack::Response *update_attributes (Interface &itf, Common::By
  */
 // =============================================================================
 static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &payload,
-                                           size_t &offset, bool resp)
+                                           uint16_t &offset, bool resp)
 {
-   size_t start                         = offset;
+   uint16_t start                       = offset;
 
    SetAttributePack::Response *attr_res = update_attributes (itf, payload, offset, true, true);
 
@@ -198,7 +198,7 @@ static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &pa
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result = check (packet.message, payload, offset);
 
@@ -234,7 +234,7 @@ Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &pay
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::check (Message &message, Common::ByteArray &payload, size_t offset)
+Common::Result AbstractInterface::check (Message &message, Common::ByteArray &payload, uint16_t offset)
 {
    UNUSED (payload);
    UNUSED (offset);
@@ -285,9 +285,9 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
  */
 // =============================================================================
 Common::Result AbstractInterface::check_payload_size (Message &message, Common::ByteArray &payload,
-                                                      size_t offset)
+                                                      uint16_t offset)
 {
-   size_t _payload_size = payload_size (message);
+   uint16_t _payload_size = payload_size (message);
 
    if (_payload_size != 0)
    {
@@ -308,7 +308,7 @@ Common::Result AbstractInterface::check_payload_size (Message &message, Common::
  *
  */
 // =============================================================================
-size_t AbstractInterface::payload_size (Message &message) const
+uint16_t AbstractInterface::payload_size (Message &message) const
 {
    return payload_size (message.itf);
 }
@@ -321,7 +321,7 @@ size_t AbstractInterface::payload_size (Message &message) const
  */
 // =============================================================================
 Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteArray &payload,
-                                                  size_t offset)
+                                                  uint16_t offset)
 {
    UNUSED (packet);
    UNUSED (payload);
@@ -339,7 +339,7 @@ Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteAr
  */
 // =============================================================================
 Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::ByteArray &payload,
-                                                    size_t offset)
+                                                    uint16_t offset)
 {
    Common::Result result = Common::Result::OK;
 

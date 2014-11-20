@@ -85,7 +85,7 @@ TEST (AlertMessage, Pack)
 
    ByteArray array (message->size () + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
 
    LONGS_EQUAL (message->size (), wsize);
 
@@ -95,7 +95,7 @@ TEST (AlertMessage, Pack)
 //! @test Alert::Message::unpack should read the correct values from the ByteArray.
 TEST (AlertMessage, Unpack)
 {
-   size_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack (expected, 3);
 
    LONGS_EQUAL (message->size (), rsize);
 

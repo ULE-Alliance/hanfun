@@ -180,7 +180,7 @@ TEST (UID, NONE)
 
    LONGS_EQUAL (UID::NONE_UID, uid.type ());
 
-   size_t size = uid.size ();
+   uint16_t size = uid.size ();
 
    LONGS_EQUAL (2, size);
 
@@ -201,12 +201,12 @@ TEST (UID, NONE)
       array[i] = 0xAA;
    }
 
-   size_t wsize = uid.pack (array, 3);
+   uint16_t wsize = uid.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   size_t rsize = uid.unpack (array, 3);
+   uint16_t rsize = uid.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 }
 
@@ -218,7 +218,7 @@ TEST (UID, DECT)
 
    LONGS_EQUAL (5, UID::DECT::length ());
 
-   size_t size = ipui.size ();
+   uint16_t size = ipui.size ();
 
    LONGS_EQUAL (1 + 1 + 5, size);
 
@@ -236,14 +236,14 @@ TEST (UID, DECT)
    ipui[3] = 0x5A;
    ipui[4] = 0xA5;
 
-   size_t wsize = ipui.pack (array, 3);
+   uint16_t wsize = ipui.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    ipui.fill (0xFF);
 
-   size_t rsize = ipui.unpack (array, 3);
+   uint16_t rsize = ipui.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
    BYTES_EQUAL (0x00, ipui[0]);
@@ -266,7 +266,7 @@ TEST (UID, MAC)
    LONGS_EQUAL (UID::MAC_UID, mac.type ());
    LONGS_EQUAL (6, UID::MAC::length ());
 
-   size_t size = mac.size ();
+   uint16_t size = mac.size ();
 
    LONGS_EQUAL (1 + 1 + 6, size);
 
@@ -285,14 +285,14 @@ TEST (UID, MAC)
    mac[4] = 0x9A;
    mac[5] = 0xBC;
 
-   size_t wsize = mac.pack (array, 3);
+   uint16_t wsize = mac.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    mac.fill (0xFF);
 
-   size_t rsize = mac.unpack (array, 3);
+   uint16_t rsize = mac.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
    BYTES_EQUAL (0x12, mac[0]);
@@ -316,7 +316,7 @@ TEST (UID, URI)
 
    LONGS_EQUAL (UID::URI_UID, uri.type ());
 
-   size_t size = uri.size ();
+   uint16_t size = uri.size ();
 
    LONGS_EQUAL (1 + 1 + str.length (), size);
 
@@ -340,14 +340,14 @@ TEST (UID, URI)
 
    ByteArray array (size + 6);
 
-   size_t    wsize = uri.pack (array, 3);
+   uint16_t  wsize = uri.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    uri = UID::URI ("");
 
-   size_t rsize = uri.unpack (array, 3);
+   uint16_t rsize = uri.unpack (array, 3);
    LONGS_EQUAL (size, rsize);
 
    STRCMP_EQUAL ("Hello World !", uri.str ().c_str ())
@@ -450,14 +450,14 @@ TEST_GROUP (Attributes)
       uint8_t  type;
       uint16_t value;
 
-      size_t size () const
+      uint16_t size () const
       {
          return sizeof(type) + sizeof(value);
       }
 
-      size_t pack (Common::ByteArray &array, size_t offset = 0) const
+      uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
       {
-         size_t start = offset;
+         uint16_t start = offset;
 
          offset += array.write (offset, type);
          offset += array.write (offset, value);
@@ -465,9 +465,9 @@ TEST_GROUP (Attributes)
          return offset - start;
       }
 
-      size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+      uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
       {
-         size_t start = offset;
+         uint16_t start = offset;
 
          offset += array.read (offset, type);
          offset += array.read (offset, value);
@@ -547,7 +547,7 @@ TEST (Attributes, Serialize_Pack)
 
    std::fill (result.begin (), result.end (), 0);
 
-   size_t w_size = attr_wrapper.pack (result, 3);
+   uint16_t w_size = attr_wrapper.pack (result, 3);
    LONGS_EQUAL (sizeof(attr), w_size);
 
    CHECK_EQUAL (expected, result);
@@ -564,7 +564,7 @@ TEST (Attributes, Serialize_Unpack)
    TestInterface itf;
    HF::Attributes::Attribute <uint16_t &> attr_wrapper (itf.uid (), 0x5B, &itf, attr);
 
-   size_t r_size = attr_wrapper.unpack (expected, 3);
+   uint16_t r_size = attr_wrapper.unpack (expected, 3);
    LONGS_EQUAL (sizeof(attr), r_size);
 
    CHECK_EQUAL (0x1234, attr);

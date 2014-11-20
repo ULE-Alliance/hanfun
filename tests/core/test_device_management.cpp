@@ -47,7 +47,7 @@ TEST (DeviceManagement, InterfaceServer)
 {
    Common::Interface itf;
 
-   size_t size = itf.size ();
+   uint16_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -59,14 +59,14 @@ TEST (DeviceManagement, InterfaceServer)
    itf.role = HF::Interface::SERVER_ROLE;
    itf.id   = 0x7AAA;
 
-   size_t wsize = itf.pack (array, 3);
+   uint16_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    memset (&itf, 0xDD, sizeof(itf));
 
-   size_t rsize = itf.unpack (expected, 3);
+   uint16_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf.role);
@@ -77,7 +77,7 @@ TEST (DeviceManagement, InterfaceClient)
 {
    Common::Interface itf;
 
-   size_t size = itf.size ();
+   uint16_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -89,14 +89,14 @@ TEST (DeviceManagement, InterfaceClient)
    itf.role = HF::Interface::CLIENT_ROLE;
    itf.id   = 0x7555;
 
-   size_t wsize = itf.pack (array, 3);
+   uint16_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    memset (&itf, 0xDD, sizeof(itf));
 
-   size_t rsize = itf.unpack (expected, 3);
+   uint16_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf.role);
@@ -112,7 +112,7 @@ TEST (DeviceManagement, Unit_No_Optional_Itf)
    DeviceManagement::Unit wunit (0x42, 0x5AA5);
    DeviceManagement::Unit runit;
 
-   size_t size = wunit.size ();
+   uint16_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2, size);
 
    ByteArray expected ({0x00, 0x00, 0x00,
@@ -123,12 +123,12 @@ TEST (DeviceManagement, Unit_No_Optional_Itf)
                       );
    ByteArray array (size + 6);
 
-   size_t    wsize = wunit.pack (array, 3);
+   uint16_t  wsize = wunit.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   size_t rsize = runit.unpack (expected, 3);
+   uint16_t rsize = runit.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (wunit.id, runit.id);
@@ -148,7 +148,7 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    wunit.interfaces.push_back (itf2);
    wunit.interfaces.push_back (itf3);
 
-   size_t size = wunit.size ();
+   uint16_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -163,12 +163,12 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
 
    ByteArray array (size + 6);
 
-   size_t    wsize = wunit.pack (array, 3);
+   uint16_t  wsize = wunit.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   size_t rsize = runit.unpack (expected, 3);
+   uint16_t rsize = runit.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (wunit.id, runit.id);
@@ -200,7 +200,7 @@ TEST (DeviceManagement, Device)
    device.units.push_back (unit);
    device.units.push_back (unit);
 
-   size_t size = device.size ();
+   uint16_t size = device.size ();
    LONGS_EQUAL (sizeof(uint16_t) + sizeof(uint8_t) + 3 * unit.size (), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -213,7 +213,7 @@ TEST (DeviceManagement, Device)
 
    ByteArray array (size + 6);
 
-   size_t    wsize = device.pack (array, 3);
+   uint16_t  wsize = device.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -223,7 +223,7 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (Protocol::BROADCAST_ADDR, device.address);
    LONGS_EQUAL (0, device.units.size ());
 
-   size_t rsize = device.unpack (expected, 3);
+   uint16_t rsize = device.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x3333, device.address);
@@ -288,12 +288,12 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
                          0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
                          0x00, 0x00, 0x00};
 
-   size_t size = message->size ();
+   uint16_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 5 + 1 + 3 * unit.size (), size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -302,7 +302,7 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    message = new DeviceManagement::RegisterMessage ();
 
-   size_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x0000, message->emc);
@@ -336,12 +336,12 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 
    message->uid = HF::UID::UID();
 
-   size_t size = message->size ();
+   uint16_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + 3 * unit.size (), size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -362,12 +362,12 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    message->emc = 0x4243;
 
-   size_t size = message->size ();
+   uint16_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 5 + 2 + 1 + 3 * unit.size (), size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -376,7 +376,7 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    message = new DeviceManagement::RegisterMessage ();
 
-   size_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x4243, message->emc);
@@ -413,19 +413,19 @@ TEST (DeviceManagement_RegisterResponse, No_EMC)
    response.code    = Result::FAIL_AUTH;
    response.address = 0x4243;
 
-   size_t size = response.size ();
+   uint16_t size = response.size ();
    LONGS_EQUAL (1 + 2, size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = response.pack (array, 3);
+   uint16_t  wsize = response.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    response = DeviceManagement::RegisterResponse ();
 
-   size_t rsize = response.unpack (expected, 3);
+   uint16_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (Result::FAIL_AUTH, response.code);
@@ -446,12 +446,12 @@ TEST (DeviceManagement_RegisterResponse, EMC)
    response.address = 0x4243;
    response.emc     = 0xAABB;
 
-   size_t size = response.size ();
+   uint16_t size = response.size ();
    LONGS_EQUAL (1 + 2 + 2, size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = response.pack (array, 3);
+   uint16_t  wsize = response.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -462,7 +462,7 @@ TEST (DeviceManagement_RegisterResponse, EMC)
    LONGS_EQUAL (0, response.address);
    LONGS_EQUAL (0, response.emc);
 
-   size_t rsize = response.unpack (expected, 3);
+   uint16_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (Result::FAIL_AUTH, response.code);
@@ -478,7 +478,7 @@ TEST (DeviceManagement, DeregisterMessage)
 {
    DeviceManagement::DeregisterMessage message;
 
-   size_t size = message.size ();
+   uint16_t size = message.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
    message.address = 0x4243;
@@ -489,14 +489,14 @@ TEST (DeviceManagement, DeregisterMessage)
                       );
    ByteArray array (size + 6);
 
-   size_t    wsize = message.pack (array, 3);
+   uint16_t  wsize = message.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    message.address = 0;
 
-   size_t rsize = message.unpack (expected, 3);
+   uint16_t rsize = message.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x4243, message.address);
@@ -798,13 +798,13 @@ TEST_GROUP (DeviceManagementServer)
          DeviceManagement::DefaultServer (unit)
       {}
 
-      Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      Result register_device (Protocol::Packet &packet, ByteArray &payload, uint16_t offset)
       {
          mock ("DeviceManagementServer").actualCall ("register_device");
          return DeviceManagement::DefaultServer::register_device (packet, payload, offset);
       }
 
-      Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      Result deregister_device (Protocol::Packet &packet, ByteArray &payload, uint16_t offset)
       {
          mock ("DeviceManagementServer").actualCall ("deregister_device");
          return DeviceManagement::DefaultServer::deregister_device (packet, payload, offset);
@@ -1008,7 +1008,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
       delete dev;
    }
 
-   size_t size = dev_mgt->entries ().size ();
+   uint16_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
@@ -1106,7 +1106,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    // == De-register the device.
 
-   size_t size = dev_mgt->entries ().size ();
+   uint16_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 

@@ -107,13 +107,13 @@ namespace HF
             {}
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          // =============================================================================
@@ -139,7 +139,7 @@ namespace HF
           * @param [in] size     message payload size.
           * @param [in] _type    message type.
           */
-         Message(size_t size = 0, Type _type = COMMAND_REQ):
+         Message(uint16_t size = 0, Type _type = COMMAND_REQ):
             reference (0), type (_type), payload (Common::ByteArray (size)), length (0)
          {}
 
@@ -151,16 +151,16 @@ namespace HF
           * @param [in] parent   reference to the message to create a response for.
           * @param [in] size     size of the payload buffer.
           */
-         Message(const Message &parent, size_t size);
+         Message(const Message &parent, uint16_t size);
 
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const;
+         uint16_t size () const;
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       /*!
@@ -195,13 +195,13 @@ namespace HF
          {}
 
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const;
+         uint16_t size () const;
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
 
          /*!
           * Checks if this address if for the Protocol::BROADCAST_ADDR and
@@ -282,13 +282,13 @@ namespace HF
          {}
 
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const;
+         uint16_t size () const;
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       /*!
@@ -301,20 +301,20 @@ namespace HF
          // =============================================================================
 
          //! Minimum number of bytes required by this message.
-         constexpr static size_t min_size = sizeof(uint8_t);
+         constexpr static uint16_t min_size = sizeof(uint8_t);
 
-         Common::Result          code;
+         Common::Result            code;
 
          Response(Common::Result code = Common::Result::OK):code (code) {}
 
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const;
+         uint16_t size () const;
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       /*! @} */
@@ -375,7 +375,7 @@ namespace HF
             public:
 
             //! Maximum number of entries that will be kept in the database.
-            static constexpr size_t max_size = HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE;
+            static constexpr uint16_t max_size = HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE;
 
             /*!
              * Checks if the given @c packet, is a retransmission according to
@@ -397,7 +397,7 @@ namespace HF
              *
              * @return  the number of entries in the filter's database.
              */
-            size_t size () const
+            uint16_t size () const
             {
                return db.size ();
             }
@@ -414,7 +414,7 @@ namespace HF
              *
              * @return  message checksum value.
              */
-            uint32_t checksum (uint16_t const *data, size_t words);
+            uint32_t checksum (uint16_t const *data, uint16_t words);
          };
 
          /*!
@@ -464,7 +464,7 @@ namespace HF
              *
              * @return  the number of entries in the filter's database.
              */
-            size_t size () const
+            uint16_t size () const
             {
                return db.size ();
             }

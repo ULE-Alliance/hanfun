@@ -33,7 +33,7 @@
  */
 struct Node:public HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>
 {
-   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
+   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset);
 };
 
 /*!

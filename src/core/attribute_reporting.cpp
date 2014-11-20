@@ -44,7 +44,7 @@ HF::Attributes::IAttribute *AttributeReporting::create_attribute (uint8_t uid)
  *
  */
 // =============================================================================
-size_t Reference::size () const
+uint16_t Reference::size () const
 {
    return sizeof(uint8_t);
 }
@@ -56,11 +56,11 @@ size_t Reference::size () const
  *
  */
 // =============================================================================
-size_t Reference::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Reference::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t temp  = ((type & 0x01) << 7) | (id & 0x7F);
+   uint8_t  temp  = ((type & 0x01) << 7) | (id & 0x7F);
 
    offset += array.write (offset, temp);
 
@@ -74,11 +74,11 @@ size_t Reference::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Reference::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Reference::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t temp  = 0;
+   uint8_t  temp  = 0;
    offset += array.read (offset, temp);
 
    type    = ((temp & 0x80) != 0);
@@ -94,7 +94,7 @@ size_t Reference::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Entry::size () const
+uint16_t Entry::size () const
 {
    return sizeof(unit) + itf.size () + sizeof(pack_id);
 }
@@ -106,9 +106,9 @@ size_t Entry::size () const
  *
  */
 // =============================================================================
-size_t Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.write (offset, this->unit);
 
@@ -126,9 +126,9 @@ size_t Entry::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.read (offset, this->unit);
 
@@ -146,7 +146,7 @@ size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Rule::size () const
+uint16_t Rule::size () const
 {
    return sizeof(uint8_t) + destination.size ();
 }
@@ -158,9 +158,9 @@ size_t Rule::size () const
  *
  */
 // =============================================================================
-size_t Rule::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Rule::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += report.pack (array, offset);
 
@@ -176,9 +176,9 @@ size_t Rule::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Rule::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += report.unpack (array, offset);
 
@@ -198,9 +198,9 @@ size_t Rule::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Periodic::Entry::size () const
+uint16_t Periodic::Entry::size () const
 {
-   size_t result = AttributeReporting::Entry::size ();
+   uint16_t result = AttributeReporting::Entry::size ();
 
    if (pack_id == HF::Attributes::Pack::DYNAMIC)
    {
@@ -217,9 +217,9 @@ size_t Periodic::Entry::size () const
  *
  */
 // =============================================================================
-size_t Periodic::Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Periodic::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += AttributeReporting::Entry::pack (array, offset);
 
@@ -238,9 +238,9 @@ size_t Periodic::Entry::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Periodic::Entry::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Periodic::Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += AttributeReporting::Entry::unpack (array, offset);
 
@@ -259,9 +259,9 @@ size_t Periodic::Entry::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Periodic::Rule::size () const
+uint16_t Periodic::Rule::size () const
 {
-   size_t result = AttributeReporting::Rule::size () + sizeof(interval);
+   uint16_t result = AttributeReporting::Rule::size () + sizeof(interval);
 
    result += sizeof(uint8_t);  // Number of entries.
 
@@ -282,9 +282,9 @@ size_t Periodic::Rule::size () const
  *
  */
 // =============================================================================
-size_t Periodic::Rule::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Periodic::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
@@ -312,10 +312,10 @@ size_t Periodic::Rule::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Periodic::Rule::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Periodic::Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start = offset;
-   uint8_t size  = 0;
+   uint16_t start = offset;
+   uint8_t  size  = 0;
 
    offset += AttributeReporting::Rule::unpack (array, offset);
 
@@ -352,10 +352,10 @@ size_t Periodic::Rule::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Event::Field::size (bool with_uid) const
+uint16_t Event::Field::size (bool with_uid) const
 {
    // Field type.
-   size_t result = sizeof(uint8_t);
+   uint16_t result = sizeof(uint8_t);
 
    // Size of value holder or COV value.
    result += sizeof(uint8_t);
@@ -379,9 +379,9 @@ size_t Event::Field::size (bool with_uid) const
  *
  */
 // =============================================================================
-size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool with_uid) const
+uint16_t Event::Field::pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    if (with_uid)
    {
@@ -417,16 +417,16 @@ size_t Event::Field::pack (Common::ByteArray &array, size_t offset, bool with_ui
  *
  */
 // =============================================================================
-size_t Event::Field::unpack (const Common::ByteArray &array, size_t offset, bool with_uid)
+uint16_t Event::Field::unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
    if (with_uid)
    {
       offset += array.read (offset, attr_uid);
    }
 
-   uint8_t temp  = 0;
+   uint8_t temp = 0;
    offset += array.read (offset, temp);
 
    type    = static_cast <Event::Type>(temp);
@@ -460,11 +460,11 @@ size_t Event::Field::unpack (const Common::ByteArray &array, size_t offset, bool
  *
  */
 // =============================================================================
-size_t Event::Entry::size () const
+uint16_t Event::Entry::size () const
 {
-   bool attr_uid = false;
+   bool attr_uid   = false;
 
-   size_t result = AttributeReporting::Entry::size ();
+   uint16_t result = AttributeReporting::Entry::size ();
 
    if (this->pack_id == HF::Attributes::Pack::DYNAMIC)
    {
@@ -494,11 +494,11 @@ size_t Event::Entry::size () const
  *
  */
 // =============================================================================
-size_t Event::Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Event::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start    = offset;
+   uint16_t start = offset;
 
-   bool   attr_uid = false;
+   bool attr_uid  = false;
 
    offset += AttributeReporting::Entry::pack (array, offset);
 
@@ -531,9 +531,9 @@ size_t Event::Entry::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Event::Entry::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Event::Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += AttributeReporting::Entry::unpack (array, offset);
 
@@ -566,9 +566,9 @@ size_t Event::Entry::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Event::Rule::size () const
+uint16_t Event::Rule::size () const
 {
-   size_t result = AttributeReporting::Rule::size ();
+   uint16_t result = AttributeReporting::Rule::size ();
 
    result += sizeof(uint8_t);
 
@@ -589,9 +589,9 @@ size_t Event::Rule::size () const
  *
  */
 // =============================================================================
-size_t Event::Rule::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Event::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
@@ -616,9 +616,9 @@ size_t Event::Rule::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Event::Rule::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Event::Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += AttributeReporting::Rule::unpack (array, offset);
 
@@ -647,7 +647,7 @@ size_t Event::Rule::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Report::Entry::size () const
+uint16_t Report::Entry::size () const
 {
    return sizeof(unit) + itf.size () + sizeof(uint8_t);
 }
@@ -659,9 +659,9 @@ size_t Report::Entry::size () const
  *
  */
 // =============================================================================
-size_t Report::Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.write (offset, unit);
 
@@ -679,13 +679,13 @@ size_t Report::Entry::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
-                              const Common::ByteArray &array, size_t offset)
+uint16_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
+                                const Common::ByteArray &array, uint16_t offset)
 {
    HF::Attributes::Factory factory = nullptr;
-   uint8_t next                    = 0;
+   uint8_t  next                   = 0;
 
-   size_t  start                   = offset;
+   uint16_t start                  = offset;
 
    offset += array.read (offset, unit);
 
@@ -730,9 +730,9 @@ size_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
  *
  */
 // =============================================================================
-size_t Report::Periodic::Entry::size () const
+uint16_t Report::Periodic::Entry::size () const
 {
-   size_t result = Report::Entry::size ();
+   uint16_t result = Report::Entry::size ();
 
    /* *INDENT-OFF* */
    std::for_each(attributes.begin(), attributes.end(), [&result](const Attribute &attr)
@@ -751,9 +751,9 @@ size_t Report::Periodic::Entry::size () const
  *
  */
 // =============================================================================
-size_t Report::Periodic::Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Periodic::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::Entry::pack (array, offset);
 
@@ -774,18 +774,18 @@ size_t Report::Periodic::Entry::pack (Common::ByteArray &array, size_t offset) c
  *
  */
 // =============================================================================
-size_t Report::Periodic::Entry::unpack (HF::Attributes::Factory factory,
-                                        const Common::ByteArray &array, size_t offset)
+uint16_t Report::Periodic::Entry::unpack (HF::Attributes::Factory factory,
+                                          const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t uid   = 0;
+   uint8_t  uid   = 0;
    array.read (offset, uid);
-   auto    attr  = factory (uid);
+   auto attr      = factory (uid);
 
    if (attr != nullptr)
    {
-      size_t _size = attr->unpack (array, offset, true);
+      uint16_t _size = attr->unpack (array, offset, true);
 
       if (_size == attr->size (true))
       {
@@ -816,10 +816,10 @@ void Report::Periodic::Entry::add (HF::Attributes::IAttribute * &attr)
  *
  */
 // =============================================================================
-size_t Report::Periodic::size () const
+uint16_t Report::Periodic::size () const
 {
-   size_t result = Reference::size () +
-                   sizeof(uint8_t);    // Number entries.
+   uint16_t result = Reference::size () +
+                     sizeof(uint8_t);  // Number entries.
 
    /* *INDENT-OFF* */
    std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
@@ -838,9 +838,9 @@ size_t Report::Periodic::size () const
  *
  */
 // =============================================================================
-size_t Report::Periodic::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Periodic::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::Abstract::pack (array, offset);
 
@@ -865,10 +865,10 @@ size_t Report::Periodic::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Report::Periodic::unpack (HF::Attributes::FactoryGetter get_factory,
-                                 const Common::ByteArray &array, size_t offset)
+uint16_t Report::Periodic::unpack (HF::Attributes::FactoryGetter get_factory,
+                                   const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::Abstract::unpack (array, offset);
 
@@ -909,7 +909,7 @@ void Report::Periodic::add (Report::Periodic::Entry &entry)
  *
  */
 // =============================================================================
-size_t Report::Event::Field::size () const
+uint16_t Report::Event::Field::size () const
 {
    assert (nullptr != attribute);
    return sizeof(uint8_t) + attribute->size (true);
@@ -922,13 +922,13 @@ size_t Report::Event::Field::size () const
  *
  */
 // =============================================================================
-size_t Report::Event::Field::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Event::Field::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    assert (nullptr != attribute);
 
-   offset += array.write (offset, (uint8_t) attribute->uid());
+   offset += array.write (offset, (uint8_t) attribute->uid ());
    offset += array.write (offset, (uint8_t) type);
 
    offset += attribute->pack (array, offset);
@@ -943,23 +943,23 @@ size_t Report::Event::Field::pack (Common::ByteArray &array, size_t offset) cons
  *
  */
 // =============================================================================
-size_t Report::Event::Field::unpack (HF::Attributes::Factory factory,
-                                     const Common::ByteArray &array, size_t offset)
+uint16_t Report::Event::Field::unpack (HF::Attributes::Factory factory,
+                                       const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t temp  = 0xFF;
+   uint8_t  temp  = 0xFF;
 
    offset += array.read (offset, temp);
 
    auto attr = factory (temp);
 
    offset += array.read (offset, temp);
-   type    = static_cast<AttributeReporting::Event::Type> (temp);
+   type    = static_cast <AttributeReporting::Event::Type>(temp);
 
    if (attr != nullptr)
    {
-      size_t _size = attr->unpack (array, offset);
+      uint16_t _size = attr->unpack (array, offset);
 
       if (_size == attr->size ())
       {
@@ -978,9 +978,9 @@ size_t Report::Event::Field::unpack (HF::Attributes::Factory factory,
  *
  */
 // =============================================================================
-size_t Report::Event::Entry::size () const
+uint16_t Report::Event::Entry::size () const
 {
-   size_t result = Report::Entry::size ();
+   uint16_t result = Report::Entry::size ();
 
    /* *INDENT-OFF* */
    std::for_each (fields.begin (), fields.end (), [&result](const Field &field)
@@ -999,9 +999,9 @@ size_t Report::Event::Entry::size () const
  *
  */
 // =============================================================================
-size_t Report::Event::Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Event::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::Entry::pack (array, offset);
 
@@ -1022,11 +1022,11 @@ size_t Report::Event::Entry::pack (Common::ByteArray &array, size_t offset) cons
  *
  */
 // =============================================================================
-size_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
-                                     const Common::ByteArray &array, size_t offset)
+uint16_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
+                                       const Common::ByteArray &array, uint16_t offset)
 {
-   Field  field;
-   size_t result = field.unpack (factory, array, offset);
+   Field field;
+   uint16_t result = field.unpack (factory, array, offset);
 
    if (nullptr != field.attribute)
    {
@@ -1043,10 +1043,10 @@ size_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
  *
  */
 // =============================================================================
-size_t Report::Event::size () const
+uint16_t Report::Event::size () const
 {
-   size_t result = Reference::size () +
-                   sizeof(uint8_t);    // Number entries.
+   uint16_t result = Reference::size () +
+                     sizeof(uint8_t);  // Number entries.
 
    /* *INDENT-OFF* */
    std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
@@ -1065,9 +1065,9 @@ size_t Report::Event::size () const
  *
  */
 // =============================================================================
-size_t Report::Event::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Event::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::Abstract::pack (array, offset);
 
@@ -1092,10 +1092,10 @@ size_t Report::Event::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
-                              const Common::ByteArray &array, size_t offset)
+uint16_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
+                                const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::Abstract::unpack (array, offset);
 
@@ -1124,7 +1124,7 @@ size_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
  *
  */
 // =============================================================================
-size_t Report::CreateMessage::size () const
+uint16_t Report::CreateMessage::size () const
 {
    return destination.size ();
 }
@@ -1136,9 +1136,9 @@ size_t Report::CreateMessage::size () const
  *
  */
 // =============================================================================
-size_t Report::CreateMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::CreateMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += destination.pack (array, offset);
 
@@ -1152,9 +1152,9 @@ size_t Report::CreateMessage::pack (Common::ByteArray &array, size_t offset) con
  *
  */
 // =============================================================================
-size_t Report::CreateMessage::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Report::CreateMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += destination.unpack (array, offset);
 
@@ -1168,7 +1168,7 @@ size_t Report::CreateMessage::unpack (const Common::ByteArray &array, size_t off
  *
  */
 // =============================================================================
-size_t Report::Periodic::CreateMessage::size () const
+uint16_t Report::Periodic::CreateMessage::size () const
 {
    return Report::CreateMessage::size () + sizeof(interval);
 }
@@ -1180,9 +1180,9 @@ size_t Report::Periodic::CreateMessage::size () const
  *
  */
 // =============================================================================
-size_t Report::Periodic::CreateMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Periodic::CreateMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::CreateMessage::pack (array, offset);
 
@@ -1198,9 +1198,9 @@ size_t Report::Periodic::CreateMessage::pack (Common::ByteArray &array, size_t o
  *
  */
 // =============================================================================
-size_t Report::Periodic::CreateMessage::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Report::Periodic::CreateMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::CreateMessage::unpack (array, offset);
 
@@ -1216,7 +1216,7 @@ size_t Report::Periodic::CreateMessage::unpack (const Common::ByteArray &array, 
  *
  */
 // =============================================================================
-size_t Report::DeleteMessage::size () const
+uint16_t Report::DeleteMessage::size () const
 {
    return report.size ();
 }
@@ -1228,9 +1228,9 @@ size_t Report::DeleteMessage::size () const
  *
  */
 // =============================================================================
-size_t Report::DeleteMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::DeleteMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += report.pack (array, offset);
 
@@ -1244,9 +1244,9 @@ size_t Report::DeleteMessage::pack (Common::ByteArray &array, size_t offset) con
  *
  */
 // =============================================================================
-size_t Report::DeleteMessage::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Report::DeleteMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += report.unpack (array, offset);
 
@@ -1260,7 +1260,7 @@ size_t Report::DeleteMessage::unpack (const Common::ByteArray &array, size_t off
  *
  */
 // =============================================================================
-size_t Report::AddEntryMessage::size () const
+uint16_t Report::AddEntryMessage::size () const
 {
    return report.size () + sizeof(uint8_t);
 }
@@ -1272,9 +1272,9 @@ size_t Report::AddEntryMessage::size () const
  *
  */
 // =============================================================================
-size_t Report::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += report.pack (array, offset);
 
@@ -1290,9 +1290,9 @@ size_t Report::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) c
  *
  */
 // =============================================================================
-size_t Report::AddEntryMessage::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Report::AddEntryMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += report.unpack (array, offset);
 
@@ -1315,9 +1315,9 @@ size_t Report::AddEntryMessage::unpack (const Common::ByteArray &array, size_t o
  *
  */
 // =============================================================================
-size_t Report::Periodic::AddEntryMessage::size () const
+uint16_t Report::Periodic::AddEntryMessage::size () const
 {
-   size_t result = Report::AddEntryMessage::size ();
+   uint16_t result = Report::AddEntryMessage::size ();
 
    /* *INDENT-OFF* */
    std::for_each (entries.begin(), entries.end(),
@@ -1337,9 +1337,9 @@ size_t Report::Periodic::AddEntryMessage::size () const
  *
  */
 // =============================================================================
-size_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::AddEntryMessage::pack (array, offset);
 
@@ -1361,10 +1361,10 @@ size_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, size_t
  *
  */
 // =============================================================================
-size_t Report::Periodic::AddEntryMessage::unpack_entry (const Common::ByteArray &array,
-                                                        size_t offset)
+uint16_t Report::Periodic::AddEntryMessage::unpack_entry (const Common::ByteArray &array,
+                                                          uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    AttributeReporting::Periodic::Entry entry;
 
@@ -1382,9 +1382,9 @@ size_t Report::Periodic::AddEntryMessage::unpack_entry (const Common::ByteArray 
  *
  */
 // =============================================================================
-size_t Report::Event::AddEntryMessage::size () const
+uint16_t Report::Event::AddEntryMessage::size () const
 {
-   size_t result = Report::AddEntryMessage::size ();
+   uint16_t result = Report::AddEntryMessage::size ();
 
    /* *INDENT-OFF* */
    std::for_each (entries.begin(), entries.end(),
@@ -1404,9 +1404,9 @@ size_t Report::Event::AddEntryMessage::size () const
  *
  */
 // =============================================================================
-size_t Report::Event::AddEntryMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::Event::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Report::AddEntryMessage::pack (array, offset);
 
@@ -1428,9 +1428,9 @@ size_t Report::Event::AddEntryMessage::pack (Common::ByteArray &array, size_t of
  *
  */
 // =============================================================================
-size_t Report::Event::AddEntryMessage::unpack_entry (const Common::ByteArray &array, size_t offset)
+uint16_t Report::Event::AddEntryMessage::unpack_entry (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    AttributeReporting::Event::Entry entry;
 
@@ -1608,7 +1608,7 @@ Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::E
  *
  */
 // =============================================================================
-size_t Response::size () const
+uint16_t Response::size () const
 {
    return HF::Protocol::Response::size () + report.size ();
 }
@@ -1620,9 +1620,9 @@ size_t Response::size () const
  *
  */
 // =============================================================================
-size_t Response::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Response::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += HF::Protocol::Response::pack (array, offset);
 
@@ -1638,9 +1638,9 @@ size_t Response::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Response::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Response::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += HF::Protocol::Response::unpack (array, offset);
 

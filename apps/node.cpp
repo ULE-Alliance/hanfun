@@ -42,7 +42,7 @@
  *
  */
 // =============================================================================
-void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
+void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
 {
    LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
 
@@ -59,19 +59,19 @@ void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 
 void SimpleLight::on (HF::Protocol::Address &source)
 {
-   HF::Units::Unit <HF::Profiles::SimpleLight>::on(source);
+   HF::Units::Unit <HF::Profiles::SimpleLight>::on (source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << NL;
 }
 
 void SimpleLight::off (HF::Protocol::Address &source)
 {
-   HF::Units::Unit <HF::Profiles::SimpleLight>::off(source);
+   HF::Units::Unit <HF::Profiles::SimpleLight>::off (source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << NL;
 }
 
 void SimpleLight::toggle (HF::Protocol::Address &source)
 {
-   HF::Units::Unit <HF::Profiles::SimpleLight>::toggle(source);
+   HF::Units::Unit <HF::Profiles::SimpleLight>::toggle (source);
    LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
 }
 

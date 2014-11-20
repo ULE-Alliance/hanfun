@@ -36,7 +36,7 @@ namespace
    struct AttributeReporting:public HF::Core::AttributeReporting::AbstractClient
    {
       void report (HF::Core::AttributeReporting::Type type, const HF::Protocol::Address &address,
-                   const HF::Common::ByteArray &payload, size_t offset)
+                   const HF::Common::ByteArray &payload, uint16_t offset)
       {
          UNUSED (payload);
          UNUSED (offset);

@@ -81,15 +81,15 @@ namespace HF
             Message(uint8_t level = 0):level (level) {}
 
             //! \see HF::Serializable::size.
-            size_t size () const
+            uint16_t size () const
             {
                return sizeof(level);
             }
 
             //! \see HF::Serializable::pack.
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.write (offset, level);
 
@@ -97,9 +97,9 @@ namespace HF
             }
 
             //! \see HF::Serializable::unpack.
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.read (offset, level);
 
@@ -145,7 +145,7 @@ namespace HF
 
             using Interfaces::Base <Interface::LEVEL_CONTROL>::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
                return payload_size_helper <Level>();
@@ -276,10 +276,10 @@ namespace HF
             protected:
 
             Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                             size_t offset);
+                                             uint16_t offset);
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*!

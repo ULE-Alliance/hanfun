@@ -28,7 +28,7 @@ SimpleString StringFrom (const std::vector <uint8_t> &array)
 {
    SimpleString result = "";
 
-   for (size_t i = 0; i < array.size (); i++)
+   for (uint16_t i = 0; i < array.size (); i++)
    {
       result += StringFromFormat ("%02X ", array[i]);
    }
@@ -42,7 +42,7 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
 
    Common::ByteArray array (data.size ());
 
-   size_t size = data.pack (array);
+   uint16_t size = data.pack (array);
 
    result += HexStringFrom ((long int) size);
    result += " : ";

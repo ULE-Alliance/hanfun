@@ -87,7 +87,7 @@ namespace
          HF::Devices::Concentrator::DefaultUnit0 (device)
       {}
 
-      HF::Common::Result handle (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
+      HF::Common::Result handle (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
       {
          auto res = HF::Devices::Concentrator::DefaultUnit0::handle (packet, payload, offset);
 

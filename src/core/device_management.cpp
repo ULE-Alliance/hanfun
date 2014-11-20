@@ -48,11 +48,11 @@ HF::Attributes::IAttribute *DeviceManagement::create_attribute (uint8_t uid)
  *
  */
 // =============================================================================
-size_t Unit::size () const
+uint16_t Unit::size () const
 {
-   size_t result = sizeof(uint8_t) +   // Unit entry size.
-                   sizeof(uint8_t) +   // Unit ID.
-                   sizeof(uint16_t);   // Unit's profile UID.
+   uint16_t result = sizeof(uint8_t) + // Unit entry size.
+                     sizeof(uint8_t) + // Unit ID.
+                     sizeof(uint16_t); // Unit's profile UID.
 
    if (!interfaces.empty ())
    {
@@ -71,11 +71,11 @@ size_t Unit::size () const
  *
  */
 // =============================================================================
-size_t Unit::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Unit::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
-   size_t size  = this->size () - sizeof(uint8_t);
+   uint16_t size  = this->size () - sizeof(uint8_t);
 
    offset += array.write (offset, (uint8_t) size); // Dummy write.
    offset += array.write (offset, this->id);       // Unit ID.
@@ -105,11 +105,11 @@ size_t Unit::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Unit::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Unit::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t size  = 0;
+   uint8_t  size  = 0;
    offset += array.read (offset, size);
 
    offset += array.read (offset, this->id);
@@ -181,10 +181,10 @@ bool Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
  *
  */
 // =============================================================================
-size_t Device::size () const
+uint16_t Device::size () const
 {
-   size_t result = sizeof(uint16_t) +  // Device Address.
-                   sizeof(uint8_t);    // Number of units.
+   uint16_t result = sizeof(uint16_t) + // Device Address.
+                     sizeof(uint8_t);   // Number of units.
 
    /* *INDENT-OFF* */
    std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
@@ -203,9 +203,9 @@ size_t Device::size () const
  *
  */
 // =============================================================================
-size_t Device::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Device::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.write (offset, address);
 
@@ -228,9 +228,9 @@ size_t Device::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Device::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Device::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.read (offset, address);
 
@@ -263,9 +263,9 @@ RegisterMessage::~RegisterMessage()
  *
  */
 // =============================================================================
-size_t RegisterMessage::size () const
+uint16_t RegisterMessage::size () const
 {
-   size_t result = uid.size ();  // UID Size.
+   uint16_t result = uid.size ();  // UID Size.
 
    if (emc != 0x0000)
    {
@@ -291,9 +291,9 @@ size_t RegisterMessage::size () const
  *
  */
 // =============================================================================
-size_t RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
+uint16_t RegisterMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += uid.pack (array, offset);
 
@@ -323,10 +323,10 @@ size_t RegisterMessage::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t RegisterMessage::unpack (const Common::ByteArray &array,
-                                size_t offset)
+uint16_t RegisterMessage::unpack (const Common::ByteArray &array,
+                                  uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += uid.unpack (array, offset);
 
@@ -355,7 +355,7 @@ size_t RegisterMessage::unpack (const Common::ByteArray &array,
  *
  */
 // =============================================================================
-size_t RegisterResponse::size () const
+uint16_t RegisterResponse::size () const
 {
    return Response::size () +                       // Parent Size.
           sizeof(uint16_t) +                        // Device Address.
@@ -369,9 +369,9 @@ size_t RegisterResponse::size () const
  *
  */
 // =============================================================================
-size_t RegisterResponse::pack (Common::ByteArray &array, size_t offset) const
+uint16_t RegisterResponse::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Response::pack (array, offset);
 
@@ -399,10 +399,10 @@ size_t RegisterResponse::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t RegisterResponse::unpack (const Common::ByteArray &array,
-                                 size_t offset)
+uint16_t RegisterResponse::unpack (const Common::ByteArray &array,
+                                   uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Response::unpack (array, offset);
 
@@ -430,7 +430,7 @@ size_t RegisterResponse::unpack (const Common::ByteArray &array,
  *
  */
 // =============================================================================
-size_t DeregisterMessage::size () const
+uint16_t DeregisterMessage::size () const
 {
    return sizeof(uint16_t);
 }
@@ -442,10 +442,10 @@ size_t DeregisterMessage::size () const
  *
  */
 // =============================================================================
-size_t DeregisterMessage::pack (Common::ByteArray &array,
-                                size_t offset) const
+uint16_t DeregisterMessage::pack (Common::ByteArray &array,
+                                  uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.write (offset, address);
 
@@ -459,10 +459,10 @@ size_t DeregisterMessage::pack (Common::ByteArray &array,
  *
  */
 // =============================================================================
-size_t DeregisterMessage::unpack (const Common::ByteArray &array,
-                                  size_t offset)
+uint16_t DeregisterMessage::unpack (const Common::ByteArray &array,
+                                    uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += array.read (offset, address);
 
@@ -477,7 +477,7 @@ size_t DeregisterMessage::unpack (const Common::ByteArray &array,
  *
  */
 // =============================================================================
-size_t DeregisterResponse::size () const
+uint16_t DeregisterResponse::size () const
 {
    return Protocol::Response::size () + sizeof(address);
 }
@@ -489,10 +489,10 @@ size_t DeregisterResponse::size () const
  *
  */
 // =============================================================================
-size_t DeregisterResponse::pack (Common::ByteArray &array,
-                                 size_t offset) const
+uint16_t DeregisterResponse::pack (Common::ByteArray &array,
+                                   uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += Protocol::Response::pack (array, offset);
 
@@ -508,10 +508,10 @@ size_t DeregisterResponse::pack (Common::ByteArray &array,
  *
  */
 // =============================================================================
-size_t DeregisterResponse::unpack (const Common::ByteArray &array,
-                                   size_t offset)
+uint16_t DeregisterResponse::unpack (const Common::ByteArray &array,
+                                     uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset  += Protocol::Response::unpack (array, offset);
 

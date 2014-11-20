@@ -82,7 +82,7 @@ void Server::level (float new_level)
  */
 // =============================================================================
 Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                         size_t offset)
+                                         uint16_t offset)
 {
    uint8_t old_level     = level ();
 
@@ -104,7 +104,7 @@ Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteA
  */
 // =============================================================================
 Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+                                       uint16_t offset)
 {
    Message level_msg;
 

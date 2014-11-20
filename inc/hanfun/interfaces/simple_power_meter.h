@@ -157,16 +157,16 @@ namespace HF
             uint32_t value;              //!< %Measurement value.
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const
+            uint16_t size () const
             {
                return sizeof(uint8_t) +  // Precision size.
                       sizeof(uint32_t);  // Value size.
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               size_t start = offset;
+               uint16_t start = offset;
 
                offset += array.write (offset, static_cast <uint8_t>(unit));
                offset += array.write (offset, value);
@@ -175,11 +175,11 @@ namespace HF
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               size_t  start = offset;
+               uint16_t start = offset;
 
-               uint8_t temp;
+               uint8_t  temp;
                offset += array.read (offset, temp);
 
                unit    = static_cast <Common::Precision>(temp);
@@ -244,13 +244,13 @@ namespace HF
             Report();
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -278,7 +278,7 @@ namespace HF
 
             using Interfaces::Base <Interface::SIMPLE_POWER_METER>::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
                return payload_size_helper <Report>();
@@ -665,7 +665,7 @@ namespace HF
             protected:
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*! @} */

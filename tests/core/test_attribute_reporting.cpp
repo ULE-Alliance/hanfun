@@ -819,7 +819,7 @@ TEST_GROUP (AttrReport_Event_Rule)
       return entry;
    }
 
-   size_t create_entry_1 ()
+   uint16_t create_entry_1 ()
    {
       Event::Entry entry = create ();
 
@@ -836,7 +836,7 @@ TEST_GROUP (AttrReport_Event_Rule)
       return entry.size ();
    }
 
-   size_t create_entry_2 ()
+   uint16_t create_entry_2 ()
    {
       Event::Entry entry = create ();
 
@@ -859,7 +859,7 @@ TEST_GROUP (AttrReport_Event_Rule)
       return entry.size ();
    }
 
-   size_t create_entry_3 ()
+   uint16_t create_entry_3 ()
    {
       Event::Entry entry = create ();
 
@@ -895,7 +895,7 @@ TEST_GROUP (AttrReport_Event_Rule)
 
 TEST (AttrReport_Event_Rule, Size)
 {
-   size_t size = 1 + 2 + 1 + 1;
+   uint16_t size = 1 + 2 + 1 + 1;
 
    LONGS_EQUAL (size, rule.size ());
 
@@ -937,7 +937,7 @@ TEST (AttrReport_Event_Rule, Unpack)
 {
    initialize ();
 
-   size_t size = rule.size ();
+   uint16_t size = rule.size ();
 
    rule = Event::Rule ();
 
@@ -1298,7 +1298,7 @@ TEST (AttrReport_Report_Periodic, Unpack)
    create_entry_2 ();
    create_entry_1 ();
 
-   size_t size = report.size ();
+   uint16_t size = report.size ();
 
    report = Report::Periodic ();
 
@@ -1756,7 +1756,7 @@ TEST (AttrReport_Report_Event, Unpack)
    create_entry_2 ();
    create_entry_1 ();
 
-   size_t size = report.size ();
+   uint16_t size = report.size ();
 
    report = Report::Event ();
 
@@ -1937,14 +1937,14 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
          return entries.size ();
       }
 
-      size_t size () const
+      uint16_t size () const
       {
          return Report::AddEntryMessage::size () + entries.size ();
       }
 
-      size_t pack (Common::ByteArray &array, size_t offset = 0)
+      uint16_t pack (Common::ByteArray &array, uint16_t offset = 0)
       {
-         size_t start = offset;
+         uint16_t start = offset;
 
          offset += Report::AddEntryMessage::pack (array, offset);
 
@@ -1958,10 +1958,10 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
          return offset - start;
       }
 
-      size_t unpack_entry (const Common::ByteArray &array, size_t offset = 0)
+      uint16_t unpack_entry (const Common::ByteArray &array, uint16_t offset = 0)
       {
          static uint8_t count = 0;
-         size_t start         = offset;
+         uint16_t start       = offset;
 
          offset += array.read (offset, entries[count++]);
 
@@ -2181,7 +2181,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
       return entry;
    }
 
-   size_t create_entry_1 ()
+   uint16_t create_entry_1 ()
    {
       Event::Entry entry = create ();
 
@@ -2198,7 +2198,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
       return entry.size ();
    }
 
-   size_t create_entry_2 ()
+   uint16_t create_entry_2 ()
    {
       Event::Entry entry = create ();
 
@@ -2221,7 +2221,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
       return entry.size ();
    }
 
-   size_t create_entry_3 ()
+   uint16_t create_entry_3 ()
    {
       Event::Entry entry = create ();
 
@@ -2252,7 +2252,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
 
 TEST (AttrReport_Report_Event_AddEntryMessage, Size)
 {
-   size_t size = 1 + 1;
+   uint16_t size = 1 + 1;
 
    LONGS_EQUAL (size, message.size ());
 
@@ -2294,7 +2294,7 @@ TEST (AttrReport_Report_Event_AddEntryMessage, Unpack)
 {
    initialize ();
 
-   size_t size = message.size ();
+   uint16_t size = message.size ();
 
    message = Report::Event::AddEntryMessage ();
 
@@ -2517,7 +2517,7 @@ TEST_GROUP (AttributeReporting_Client)
       {}
 
       void report (Type type, const Protocol::Address &address,
-                   const Common::ByteArray &payload, size_t offset)
+                   const Common::ByteArray &payload, uint16_t offset)
       {
          UNUSED (type);
          UNUSED (address);

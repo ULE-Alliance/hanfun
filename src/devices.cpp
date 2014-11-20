@@ -77,7 +77,7 @@ void AbstractDevice::send (Protocol::Packet &packet)
    Transport::Link *tsp_link = packet.link;
 
    // Update message reference if it is a request.
-   if (packet.source.device == address () && Protocol::request(packet.message.type, false))
+   if (packet.source.device == address () && Protocol::request (packet.message.type, false))
    {
       packet.message.reference = this->next_reference++;
    }
@@ -106,7 +106,7 @@ void AbstractDevice::send (Protocol::Packet &packet)
  *
  */
 // =============================================================================
-void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
@@ -123,7 +123,7 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
    // Send missing response.
    if (response_filter (packet))
    {
-      Protocol::Message *message = new Protocol::Message (packet.message, 0);
+      Protocol::Message  *message = new Protocol::Message (packet.message, 0);
       Protocol::Response resp (result);
       message->payload = Common::ByteArray (resp.size ());
 
@@ -209,7 +209,7 @@ void Concentrator::AbstractBase::disconnected (HF::Transport::Link *link)
  */
 // =============================================================================
 void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload,
-                                          size_t offset)
+                                          uint16_t offset)
 {
    if (packet.destination.device == Protocol::BROADCAST_ADDR)
    {
@@ -270,7 +270,7 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
  */
 // =============================================================================
 void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                               size_t offset)
+                                               uint16_t offset)
 {
    // Only route messages that are commands.
    if (!(packet.message.type == Protocol::Message::COMMAND_REQ ||

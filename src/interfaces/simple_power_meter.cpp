@@ -59,9 +59,9 @@ Report::Report()
  *
  */
 // =============================================================================
-size_t Report::size () const
+uint16_t Report::size () const
 {
-   size_t result = sizeof(uint8_t);           // Number of attributes.
+   uint16_t result = sizeof(uint8_t);           // Number of attributes.
 
    if (enabled[ENERGY_ATTR])
    {
@@ -123,11 +123,11 @@ size_t Report::size () const
  *
  */
 // =============================================================================
-size_t Report::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Report::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t  start = offset;
+   uint16_t start = offset;
 
-   uint8_t id    = 0;
+   uint8_t  id    = 0;
 
    // Number of attributes.
 
@@ -231,11 +231,11 @@ size_t Report::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Report::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Report::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t  start      = offset;
+   uint16_t start      = offset;
 
-   uint8_t attr_count = 0;
+   uint8_t  attr_count = 0;
 
    offset += array.read (offset, attr_count);  //! @todo Should check attribute count.
 

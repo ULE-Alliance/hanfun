@@ -213,7 +213,7 @@ namespace HF
             protected:
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*!

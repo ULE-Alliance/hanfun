@@ -97,13 +97,13 @@ namespace HF
             Message(uint16_t type = 0, uint32_t state = 0);
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -155,7 +155,7 @@ namespace HF
 
             using Interfaces::Base <Interface::ALERT>::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
                return payload_size_helper <Message>();
@@ -399,7 +399,7 @@ namespace HF
             protected:
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*! @} */

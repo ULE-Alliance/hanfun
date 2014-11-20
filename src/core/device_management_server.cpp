@@ -91,7 +91,7 @@ DevicePtr IServer::entry (uint16_t address) const
  *
  */
 // =============================================================================
-size_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
+uint16_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -114,7 +114,7 @@ size_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                               size_t offset)
+                                               uint16_t offset)
 {
    Common::Result result = AbstractInterface::check (packet.message, payload, offset);
 
@@ -149,7 +149,7 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common:
  */
 // =============================================================================
 Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                size_t offset)
+                                                uint16_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -223,7 +223,7 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
  */
 // =============================================================================
 Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                  size_t offset)
+                                                  uint16_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 

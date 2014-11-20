@@ -51,7 +51,7 @@ HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
  *
  */
 // =============================================================================
-size_t Entry::size () const
+uint16_t Entry::size () const
 {
    return source.size () + destination.size () + sizeof(uint16_t);
 }
@@ -63,9 +63,9 @@ size_t Entry::size () const
  *
  */
 // =============================================================================
-size_t Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += this->source.pack (array, offset);
 
@@ -83,9 +83,9 @@ size_t Entry::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   uint16_t start = offset;
 
    offset += this->source.unpack (array, offset);
 
@@ -107,7 +107,7 @@ size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Entries::size () const
+uint16_t Entries::size () const
 {
    return this->db.size ();
 }

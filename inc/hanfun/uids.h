@@ -90,24 +90,24 @@ namespace HF
             return (this->type () - other.type ());
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return sizeof(uint8_t) + // UID Type.
                    sizeof(uint8_t);  // Size of the UID.
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
             offset += array.write (offset, this->type ());
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t  start = offset;
+            uint16_t start = offset;
 
-            uint8_t type;
+            uint8_t  type;
             offset += array.read (offset, type);
 
             assert ((type & (~0x80)) == this->type ());
@@ -135,9 +135,9 @@ namespace HF
        */
       struct NONE:public Abstract <NONE_UID>
       {
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += UID_T::pack (array, offset);
             offset += array.write (offset, (uint8_t) 0);
@@ -145,9 +145,9 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += UID_T::unpack (array, offset);
 
@@ -193,14 +193,14 @@ namespace HF
             memcpy (value, _value, _size * sizeof(uint8_t));
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return UID_T::size () + sizeof(value);
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += Abstract <_type>::pack (array, offset);
 
@@ -214,9 +214,9 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            uint16_t start = offset;
 
             offset += Abstract <_type>::unpack (array, offset);
 
@@ -255,7 +255,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t const &operator [](size_t index) const
+         uint8_t const &operator [](uint16_t index) const
          {
             return value[index];
          }
@@ -267,7 +267,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t &operator [](size_t index)
+         uint8_t &operator [](uint16_t index)
          {
             return value[index];
          }
@@ -282,7 +282,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t const &at (size_t index) const
+         uint8_t const &at (uint16_t index) const
          {
             assert (index < _size);
             return value[index];
@@ -298,7 +298,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t &at (size_t index)
+         uint8_t &at (uint16_t index)
          {
             assert (index < _size);
             return value[index];
@@ -331,7 +331,7 @@ namespace HF
           *
           * @return  number of bytes in the underlining byte array.
           */
-         static size_t length ()
+         static uint16_t length ()
          {
             return _size;
          }
@@ -395,7 +395,8 @@ namespace HF
          {
             return new RFPI (*this);
          }
-      } __attribute_deprecated__;
+      }
+      __attribute_deprecated__;
 
       /*!
        * IPUI UID class.
@@ -421,7 +422,8 @@ namespace HF
          {
             return new IPUI (*this);
          }
-      } __attribute_deprecated__;
+      }
+      __attribute_deprecated__;
 
       /*!
        * IEEE MAC-48b UID class.
@@ -461,15 +463,15 @@ namespace HF
             value (value)
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return Abstract <URI_UID>::size () + value.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
-            size_t size  = value.size ();
+            uint16_t start = offset;
+            uint16_t size  = value.size ();
 
             offset += Abstract <URI_UID>::pack (array, offset);
 
@@ -483,10 +485,10 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint8_t size;
-            size_t  start = offset;
+            uint8_t  size;
+            uint16_t start = offset;
 
             offset += Abstract <URI_UID>::unpack (array, offset);
 
@@ -616,17 +618,17 @@ namespace HF
             return !(*this == other);
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return _raw->size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset) const
          {
             return _raw->pack (array, offset);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset);
 
          // =============================================================================
          // Utils
