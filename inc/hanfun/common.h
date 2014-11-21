@@ -272,6 +272,23 @@ namespace HF
          {
             vector <uint8_t>::reserve (size () + _size);
          }
+
+         /*!
+          * Ensure that the byte array can hold the number of bytes given
+          * in @c _size, from the given @c offset.
+          *
+          * @param [in] _offset  offset index to check from.
+          * @param [in] _size    number of bytes to ensure that exist.
+          */
+         void ensure(uint16_t _offset, uint16_t _size)
+         {
+            if (!available(_offset, _size))
+            {
+               _size = _size - available(_offset) + std::max<int16_t> ((int16_t)(_offset - size()), 0);
+               vector <uint8_t>::reserve (size () + _size);
+               std::fill_n(back_inserter(*this), _size, 0);
+            }
+         }
       };
 
       // =============================================================================
