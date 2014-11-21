@@ -354,11 +354,17 @@ namespace HF
 
          uint16_t pack (ByteArray &array, uint16_t offset = 0) const
          {
+            assert (array.available(offset, size()));
             return data.pack (array, offset);
          }
 
          uint16_t unpack (const ByteArray &array, uint16_t offset = 0)
          {
+            if (!array.available(offset, size()))
+            {
+               return 0;
+            }
+
             return data.unpack (array, offset);
          }
 
@@ -397,11 +403,17 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            assert (array.available(offset, size()));
             return data->pack (array, offset);
          }
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
+            if (!array.available(offset, size()))
+            {
+               return 0;
+            }
+
             return data->unpack (array, offset);
          }
 
@@ -423,6 +435,8 @@ namespace HF
       struct SerializableHelper <T, typename std::enable_if <std::is_integral <typename std::remove_reference <T>::type>::value>::type> :
          public Common::Serializable
       {
+         static constexpr uint16_t min_size = sizeof(T);
+
          T data;
 
          SerializableHelper()
@@ -434,25 +448,27 @@ namespace HF
 
          uint16_t size () const
          {
-            return sizeof(T);
+            return min_size;
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            uint16_t start = offset;
+            assert (array.available(offset, min_size));
+            array.write (offset, data);
 
-            offset += array.write (offset, data);
-
-            return offset - start;
+            return min_size;
          }
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint16_t start = offset;
+            if (!array.available(offset, min_size))
+            {
+               return 0;
+            }
 
-            offset += array.read (offset, data);
+            array.read (offset, data);
 
-            return offset - start;
+            return min_size;
          }
 
          int compare (const SerializableHelper <T> &other) const
@@ -470,6 +486,8 @@ namespace HF
       struct SerializableHelper <Common::ByteArray> :
          public Common::Serializable
       {
+         static constexpr uint16_t min_size = sizeof(uint8_t);
+
          Common::ByteArray data;
 
          SerializableHelper()
@@ -479,11 +497,13 @@ namespace HF
 
          uint16_t size () const
          {
-            return sizeof(uint8_t) + data.size ();
+            return min_size + data.size ();
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            assert (array.available(offset, size()));
+
             uint16_t start = offset;
 
             offset += array.write (offset, (uint8_t) data.size ());
@@ -500,10 +520,20 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
+            if (!array.available(offset, min_size))
+            {
+               return 0;
+            }
+
             uint16_t start = offset;
 
             uint8_t  _size = 0;
             offset += array.read (offset, _size);
+
+            if (!array.available(offset, _size))
+            {
+               return 0;
+            }
 
             auto it = array.begin ();
             std::advance (it, offset);
@@ -538,6 +568,8 @@ namespace HF
       struct SerializableHelper <std::string> :
          public Common::Serializable
       {
+         static constexpr uint16_t min_size = sizeof(uint8_t);
+
          std::string data;
 
          SerializableHelper()
@@ -547,11 +579,13 @@ namespace HF
 
          uint16_t size () const
          {
-            return sizeof(uint8_t) + data.size ();
+            return min_size + data.size ();
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            assert (array.available(offset, size()));
+
             uint16_t start = offset;
 
             offset += array.write (offset, (uint8_t) data.size ());
@@ -568,10 +602,20 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
+            if (!array.available(offset, min_size))
+            {
+               return 0;
+            }
+
             uint16_t start = offset;
 
             uint8_t  _size = 0;
             offset += array.read (offset, _size);
+
+            if (!array.available(offset, _size))
+            {
+               return 0;
+            }
 
             auto it = array.begin ();
             std::advance (it, offset);
