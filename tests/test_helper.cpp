@@ -12,7 +12,10 @@
  */
 // =============================================================================
 
+#include <execinfo.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "CppUTest/CommandLineTestRunner.h"
 
@@ -66,6 +69,28 @@ HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
    }
 
    return result;
+}
+
+// =============================================================================
+// Library Overrides
+// =============================================================================
+
+extern const char *__progname;
+
+void __assert_fail (const char *__assertion, const char *__file, unsigned int __line,
+                    const char *__function)
+{
+   fprintf (stderr, "%s: %s:%d: %s Assertion `%s' failed.\n", __progname, __file, __line, __function, __assertion);
+   // Backtrace.
+   int nptrs;
+#define SIZE   100
+   void *buffer[100];
+
+   nptrs = backtrace (buffer, SIZE);
+
+   backtrace_symbols_fd (buffer, nptrs, STDERR_FILENO);
+
+   abort ();
 }
 
 // =============================================================================
