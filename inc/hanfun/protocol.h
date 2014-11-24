@@ -159,7 +159,12 @@ namespace HF
          //! @copydoc HF::Common::Serializable::pack
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
-         //! @copydoc HF::Common::Serializable::unpack
+         /*!
+          * @copydoc HF::Common::Serializable::unpack
+          *
+          * @warning This __DOES NOT__ copy the payload portion from the given @array into
+          * the @c payload field in this object.
+          */
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
       };
 

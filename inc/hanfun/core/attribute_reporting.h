@@ -519,7 +519,7 @@ namespace HF
              * @ingroup attr_reporting
              *
              * This module contains the classes that implement the messages used in
-             * the Attribute Reporting service implementation.
+             * the %Attribute Reporting service implementation.
              * @{
              */
             // =============================================================================
@@ -529,7 +529,7 @@ namespace HF
             typedef std::shared_ptr <HF::Attributes::IAttribute> Attribute;
 
             /*!
-             * Parent call for all notification.
+             * Parent call for all reports.
              */
             struct Abstract:public AttributeReporting::Reference
             {

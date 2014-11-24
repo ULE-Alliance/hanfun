@@ -138,32 +138,32 @@ TEST (DeviceInformation, All)
 
 TEST (DeviceInformation, ExtraCapabilities)
 {
-   LONGS_EQUAL (0x00, dev_info->capabilities());
+   LONGS_EQUAL (0x00, dev_info->capabilities ());
 
-   dev_info->paging(true);
+   dev_info->paging (true);
 
-   LONGS_EQUAL (0x01, dev_info->capabilities());
+   LONGS_EQUAL (0x01, dev_info->capabilities ());
 
-   CHECK_TRUE (dev_info->has_paging());
+   CHECK_TRUE (dev_info->has_paging ());
 
-   dev_info->broadcast(true);
+   dev_info->broadcast (true);
 
-   LONGS_EQUAL (0x03, dev_info->capabilities());
+   LONGS_EQUAL (0x03, dev_info->capabilities ());
 
-   CHECK_TRUE (dev_info->has_broadcast());
+   CHECK_TRUE (dev_info->has_broadcast ());
 
-   dev_info->paging(false);
+   dev_info->paging (false);
 
-   LONGS_EQUAL (0x02, dev_info->capabilities());
+   LONGS_EQUAL (0x02, dev_info->capabilities ());
 
-   CHECK_FALSE (dev_info->has_paging());
-   CHECK_TRUE (dev_info->has_broadcast());
+   CHECK_FALSE (dev_info->has_paging ());
+   CHECK_TRUE (dev_info->has_broadcast ());
 
-   dev_info->paging(true);
-   dev_info->broadcast(false);
+   dev_info->paging (true);
+   dev_info->broadcast (false);
 
-   LONGS_EQUAL (0x01, dev_info->capabilities());
+   LONGS_EQUAL (0x01, dev_info->capabilities ());
 
-   CHECK_TRUE (dev_info->has_paging());
-   CHECK_FALSE (dev_info->has_broadcast());
+   CHECK_TRUE (dev_info->has_paging ());
+   CHECK_FALSE (dev_info->has_broadcast ());
 }

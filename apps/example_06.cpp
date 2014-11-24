@@ -45,7 +45,7 @@ namespace
       {
          if (uid == HF::Core::DeviceInformation::SERIAL_NUMBER_ATTR)
          {
-            LOG (INFO) << "On device " << unit().device().address()
+            LOG (INFO) << "On device " << unit ().device ().address ()
                        << " serial number attribute read." << NL;
 
             return new HF::Attributes::Attribute <std::string>(this->uid (),

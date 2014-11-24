@@ -144,7 +144,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Server(HF::Core::Unit0 &unit):
-               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit), _capabilities(0)
+               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit), _capabilities (0)
             {}
 
             virtual ~Server() {}

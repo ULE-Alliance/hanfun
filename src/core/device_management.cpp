@@ -323,8 +323,7 @@ uint16_t RegisterMessage::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t RegisterMessage::unpack (const Common::ByteArray &array,
-                                  uint16_t offset)
+uint16_t RegisterMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
    uint16_t start = offset;
 

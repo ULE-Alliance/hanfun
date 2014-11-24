@@ -280,13 +280,13 @@ namespace HF
           * @param [in] _offset  offset index to check from.
           * @param [in] _size    number of bytes to ensure that exist.
           */
-         void ensure(uint16_t _offset, uint16_t _size)
+         void ensure (uint16_t _offset, uint16_t _size)
          {
-            if (!available(_offset, _size))
+            if (!available (_offset, _size))
             {
-               _size = _size - available(_offset) + std::max<int16_t> ((int16_t)(_offset - size()), 0);
+               _size = _size - available (_offset) + std::max <int16_t>((int16_t) (_offset - size ()), 0);
                vector <uint8_t>::reserve (size () + _size);
-               std::fill_n(back_inserter(*this), _size, 0);
+               std::fill_n (back_inserter (*this), _size, 0);
             }
          }
       };
@@ -312,6 +312,14 @@ namespace HF
 
          /*!
           * Write the object on to a ByteArray so it can be sent over the network.
+          *
+          * The buffer passed in __MUST__ have enough size to hold the serialized object, e.g.,
+          *
+          * @code
+          * Serializable obj;
+          * ByteArray payload(obj.size());
+          * obj.pack(payload);
+          * @endcode
           *
           * @param [inout] array   ByteArray reference to write the object to.
           * @param [in]    offset  offset to start writing to.

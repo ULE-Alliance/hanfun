@@ -92,20 +92,20 @@ TEST (ByteArray, Write_DWord)
 
 TEST (ByteArray, Other)
 {
-   array->extend(10);
+   array->extend (10);
 
    LONGS_EQUAL (10, array->size ());
-   LONGS_EQUAL (20, array->capacity());
+   LONGS_EQUAL (20, array->capacity ());
 
    array->ensure (4, 5);
    LONGS_EQUAL (10, array->size ());
    array->ensure (7, 5);
    LONGS_EQUAL (12, array->size ());
-   LONGS_EQUAL (20, array->capacity());
+   LONGS_EQUAL (20, array->capacity ());
 
    array->ensure (15, 5);
    LONGS_EQUAL (20, array->size ());
-   LONGS_EQUAL (20, array->capacity());
+   LONGS_EQUAL (20, array->capacity ());
 }
 
 TEST_GROUP (ByteArray_Read)
