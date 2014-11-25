@@ -76,6 +76,7 @@ namespace HF
 
          struct Message
          {
+            //! Level value to set at the server side.
             uint8_t level;
 
             Message(uint8_t level = 0):level (level) {}

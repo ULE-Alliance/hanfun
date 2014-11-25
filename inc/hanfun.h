@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       inc/hanfun.h
+ * @file       inc/hanfun.h
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

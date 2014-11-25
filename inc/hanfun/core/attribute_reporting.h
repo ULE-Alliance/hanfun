@@ -970,7 +970,7 @@ namespace HF
                   //! @copydoc HF::Common::Serializable::pack
                   uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
-                  //! @copydoc Report::Entry::unpack(HF::Attributes::Factory, const Common::ByteArray &, size_t)
+                  //! @copydoc Report::Entry::unpack(HF::Attributes::Factory, const Common::ByteArray &, uint16_t)
                   uint16_t unpack (HF::Attributes::Factory factory, const Common::ByteArray &array,
                                    uint16_t offset = 0);
 

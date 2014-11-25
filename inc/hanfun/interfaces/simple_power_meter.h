@@ -239,8 +239,8 @@ namespace HF
             Measurement frequency;                    //!< Frequency measurement.
 
             /*!
-             * This array contains an indication of with attributes should packed or
-             * with were unpacked.
+             * This array contains an indication of with attributes should be packed or
+             * were unpacked.
              */
             std::array <bool, __LAST_ATTR__ + 1> enabled;
 

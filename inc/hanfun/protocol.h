@@ -174,7 +174,7 @@ namespace HF
          /*!
           * @copydoc HF::Common::Serializable::unpack
           *
-          * @warning This __DOES NOT__ copy the payload portion from the given @array into
+          * @warning This __DOES NOT__ copy the payload portion from the given @c array into
           * the @c payload field in this object.
           */
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);

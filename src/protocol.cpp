@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/protocol.cpp
+ * @file       src/protocol.cpp
  *
  * This file contains the implementation of the classes for the protocol layer
  * in the HAN-FUN specification.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *

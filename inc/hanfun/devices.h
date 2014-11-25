@@ -664,7 +664,7 @@ namespace HF
 
          /*!
           * Parent class for transport layer implementations on a HAN-FUN
-          * Concentrator device.
+          * %Concentrator device.
           */
          class Transport:public HF::Transport::AbstractLayer
          {

@@ -87,9 +87,9 @@ namespace HF
     * @{
     */
 
-   constexpr uint8_t CORE_VERSION       = 1; //!< Core Service & Interfaces major version supported.
-   constexpr uint8_t PROFILES_VERSION   = 1; //!< Profiles major version supported.
-   constexpr uint8_t INTERFACES_VERSION = 1; //!< Interfaces major version supported.
+   constexpr uint8_t CORE_VERSION       = 1; //!< %Core %Service & %Interfaces major version supported.
+   constexpr uint8_t PROFILES_VERSION   = 1; //!< %Profiles major version supported.
+   constexpr uint8_t INTERFACES_VERSION = 1; //!< %Interfaces major version supported.
 
    /*! @} */
 
@@ -364,10 +364,15 @@ namespace HF
 
       /*!
        * Wrapper for classes that implement the Serializable concept.
+       *
+       * @tparam T   data type to warp.
+       *
+       * @warning T should be POD (Plain Old Data)
        */
       template<typename T, typename = void>
       struct SerializableHelper:public Serializable
       {
+         //! Data type instance wrapped.
          T data;
 
          SerializableHelper()
@@ -395,11 +400,13 @@ namespace HF
             return data.unpack (array, offset);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <T> &other) const
          {
             return data.compare (other.data);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <T> &other) const
          {
             return data.changed (other.data);
@@ -408,11 +415,14 @@ namespace HF
 
       /*!
        * Wrapper to pointers for classes that implement the Serializable concept.
+       *
+       * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
       struct SerializableHelper <T, typename std::enable_if <std::is_pointer <T>::value>::type> :
          public Serializable
       {
+         //! Pointer to the wrapped instance.
          T data;
 
          SerializableHelper()
@@ -440,11 +450,13 @@ namespace HF
             return data->unpack (array, offset);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <T> &other) const
          {
             return data->compare (other.data);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <T> &other) const
          {
             return data->changed (other.data);
@@ -453,11 +465,14 @@ namespace HF
 
       /*!
        * Wrapper for base integer types implementing the  Serializable API.
+       *
+       * @tparam T   integral data type to warp.
        */
       template<typename T>
       struct SerializableHelper <T, typename std::enable_if <std::is_integral <typename std::remove_reference <T>::type>::value>::type> :
          public Common::Serializable
       {
+         //! Data type instance wrapped.
          T data;
 
          SerializableHelper()
@@ -493,17 +508,22 @@ namespace HF
             return min_size;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <T> &other) const
          {
             return data - other.data;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <T> &other) const
          {
             return (((float) (data - other.data)) / other.data);
          }
       };
 
+      /*!
+       * Wrapper for Common::ByteArray implementing the  Serializable API.
+       */
       template<>
       struct SerializableHelper <Common::ByteArray> :
          public Common::Serializable
@@ -562,6 +582,7 @@ namespace HF
             return offset - start;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <Common::ByteArray> &other) const
          {
             int res = data.size () - other.size ();
@@ -574,6 +595,7 @@ namespace HF
             return res;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <Common::ByteArray> &other) const
          {
             UNUSED (other);
@@ -581,6 +603,9 @@ namespace HF
          }
       };
 
+      /*!
+       * Wrapper for std::string implementing the Serializable API.
+       */
       template<>
       struct SerializableHelper <std::string> :
          public Common::Serializable
@@ -641,11 +666,13 @@ namespace HF
             return offset - start;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <std::string> &other) const
          {
             return strcmp (data.data (), other.data.data ());
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <std::string> &other) const
          {
             UNUSED (other);
@@ -689,8 +716,8 @@ namespace HF
        */
       struct Interface
       {
-         uint16_t role : 1;         //!< Interface role : Server or Client.
-         uint16_t id   : 15;        //!< Identifier of the interface. @see Interface::UID.
+         uint16_t role : 1;  //!< Interface role : Server or Client.
+         uint16_t id   : 15; //!< Identifier of the interface. @see Interface::UID.
 
          /*!
           * Constructor

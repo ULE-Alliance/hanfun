@@ -1,12 +1,12 @@
 // =============================================================================
 /*!
- * \file       src/interfaces.cpp
+ * @file       src/interfaces.cpp
  *
  * This file contains the implementation of the interfaces common code.
  *
- * \version    1.1.1
+ * @version    1.1.1
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -33,13 +33,13 @@ using namespace HF::Interfaces;
 // update_attribute
 // =============================================================================
 /*!
- * Update the attribute with the given \c uid at given interface.
+ * Update the attribute with the given @c uid at given interface.
  *
  * @param [in] itf      pointer to the interface to update the attribute at.
  * @param [in] uid      the UID of the attribute to update.
  * @param [in] payload  the Common::ByteArray containing the value to update the attribute.
  * @param [in] offset   the offset to read the payload from.
- * @param [in] nop      if \c true, do everything except change the attribute value.
+ * @param [in] nop      if @c true, do everything except change the attribute value.
  *
  * @retval Common::Result::OK            if the attribute was updated;
  * @retval Common::Result::FAIL_SUPPORT  if the attribute does not exist;
@@ -90,17 +90,17 @@ static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::Byt
 // update_attributes
 // =============================================================================
 /*!
- * Update the given interface (\c itf) attributes with the values present in the
- * Common::ByteArray \c payload.
+ * Update the given interface (@c itf) attributes with the values present in the
+ * Common::ByteArray @c payload.
  *
  * @param [in]    itf        the interface instance to update the attributes on.
  * @param [in]    payload    the Common::ByteArray containing the new values for the attributes.
  * @param [inout] offset     the offset at the Common::ByteArray to start reading the values from.
  * @param [in]    resp       boolean indicating if a response is necessary.
- * @param [in]    nop        if \c true, do everything except change the attribute value.
+ * @param [in]    nop        if @c true, do everything except change the attribute value.
  *
  * @return  pointer to a SetAttributePack::Response instance if a response
- *          is necessary, \c nullptr otherwise.
+ *          is necessary, @c nullptr otherwise.
  */
 // =============================================================================
 static SetAttributePack::Response *update_attributes (Interface &itf, Common::ByteArray &payload,
@@ -139,15 +139,15 @@ static SetAttributePack::Response *update_attributes (Interface &itf, Common::By
 // update_attributes_atomic
 // =============================================================================
 /*!
- * Update the given interface (\c itf) attributes with the values present in the
- * Common::ByteArray \c payload, if all values can be set.
+ * Update the given interface (@c itf) attributes with the values present in the
+ * Common::ByteArray @c payload, if all values can be set.
  *
  * @param [in]    itf        the interface instance to update the attributes on.
  * @param [in]    payload    the Common::ByteArray containing the new values for the attributes.
  * @param [inout] offset     the offset at the Common::ByteArray to start reading the values from.
  * @param [in]    resp       boolean indicating if a response is necessary.
  *
- * @return  pointer to a HF::Response instance if a response is necessary, \c nullptr otherwise.
+ * @return  pointer to a HF::Response instance if a response is necessary, @c nullptr otherwise.
  */
 // =============================================================================
 static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &payload,
