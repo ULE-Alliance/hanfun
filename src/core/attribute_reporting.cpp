@@ -46,7 +46,7 @@ HF::Attributes::IAttribute *AttributeReporting::create_attribute (uint8_t uid)
 // =============================================================================
 uint16_t Reference::size () const
 {
-   return sizeof(uint8_t);
+   return min_size;
 }
 
 // =============================================================================
@@ -58,13 +58,13 @@ uint16_t Reference::size () const
 // =============================================================================
 uint16_t Reference::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   uint8_t  temp  = ((type & 0x01) << 7) | (id & 0x7F);
+   uint8_t temp = ((type & 0x01) << 7) | (id & 0x7F);
 
-   offset += array.write (offset, temp);
+   array.write (offset, temp);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -76,15 +76,15 @@ uint16_t Reference::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Reference::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   uint8_t  temp  = 0;
-   offset += array.read (offset, temp);
+   uint8_t temp = 0;
+   array.read (offset, temp);
 
-   type    = ((temp & 0x80) != 0);
-   id      = temp & 0x7F;
+   type = ((temp & 0x80) != 0);
+   id   = temp & 0x7F;
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -96,7 +96,7 @@ uint16_t Reference::unpack (const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Entry::size () const
 {
-   return sizeof(unit) + itf.size () + sizeof(pack_id);
+   return min_size;
 }
 
 // =============================================================================
@@ -108,15 +108,15 @@ uint16_t Entry::size () const
 // =============================================================================
 uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.write (offset, this->unit);
 
    offset += itf.pack (array, offset);
 
-   offset += array.write (offset, this->pack_id);
+   array.write (offset, this->pack_id);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -128,15 +128,15 @@ uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.read (offset, this->unit);
 
    offset += itf.unpack (array, offset);
 
-   offset += array.read (offset, this->pack_id);
+   array.read (offset, this->pack_id);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -148,7 +148,7 @@ uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Rule::size () const
 {
-   return sizeof(uint8_t) + destination.size ();
+   return min_size;
 }
 
 // =============================================================================
@@ -160,13 +160,13 @@ uint16_t Rule::size () const
 // =============================================================================
 uint16_t Rule::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += report.pack (array, offset);
 
-   offset += destination.pack (array, offset);
+   destination.pack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -178,13 +178,13 @@ uint16_t Rule::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += report.unpack (array, offset);
 
-   offset += destination.unpack (array, offset);
+   destination.unpack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -219,6 +219,8 @@ uint16_t Periodic::Entry::size () const
 // =============================================================================
 uint16_t Periodic::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += AttributeReporting::Entry::pack (array, offset);
@@ -240,6 +242,8 @@ uint16_t Periodic::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Periodic::Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    offset += AttributeReporting::Entry::unpack (array, offset);
@@ -261,9 +265,7 @@ uint16_t Periodic::Entry::unpack (const Common::ByteArray &array, uint16_t offse
 // =============================================================================
 uint16_t Periodic::Rule::size () const
 {
-   uint16_t result = AttributeReporting::Rule::size () + sizeof(interval);
-
-   result += sizeof(uint8_t);  // Number of entries.
+   uint16_t result = min_size;
 
    /* *INDENT-OFF* */
    std::for_each (entries.begin(), entries.end(), [&result](const Entry &entry)
@@ -284,6 +286,8 @@ uint16_t Periodic::Rule::size () const
 // =============================================================================
 uint16_t Periodic::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += AttributeReporting::Rule::pack (array, offset);
@@ -314,30 +318,45 @@ uint16_t Periodic::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Periodic::Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
-   uint8_t  size  = 0;
 
    offset += AttributeReporting::Rule::unpack (array, offset);
 
+   assert (report.type == PERIODIC);
+
    if (report.type != PERIODIC)
    {
-      goto end;
+      return 0;
    }
 
    offset += array.read (offset, interval);
 
    clear ();
 
+   uint8_t size = 0;
    offset += array.read (offset, size);
+
+   SERIALIZABLE_CHECK (array, offset, (size * Entry::min_size));
+
+   Entry entry;
 
    for (uint8_t i = 0; i < size; i++)
    {
-      Entry entry;
-      offset += entry.unpack (array, offset);
-      add (entry);
+      uint16_t res = entry.unpack (array, offset);
+
+      if (res)
+      {
+         add (entry);
+         offset += res;
+      }
+      else
+      {
+         break;
+      }
    }
 
-   end:
    return offset - start;
 }
 
@@ -354,11 +373,7 @@ uint16_t Periodic::Rule::unpack (const Common::ByteArray &array, uint16_t offset
 // =============================================================================
 uint16_t Event::Field::size (bool with_uid) const
 {
-   // Field type.
-   uint16_t result = sizeof(uint8_t);
-
-   // Size of value holder or COV value.
-   result += sizeof(uint8_t);
+   uint16_t result = min_size;
 
    // Number of bytes in value.
    result += (type != Event::COV ? value.size () : 0);
@@ -366,7 +381,7 @@ uint16_t Event::Field::size (bool with_uid) const
    // Attribute UID for dynamic entries.
    if (with_uid)
    {
-      result += sizeof(attr_uid);
+      result += sizeof(uint8_t);
    }
 
    return result;
@@ -381,6 +396,8 @@ uint16_t Event::Field::size (bool with_uid) const
 // =============================================================================
 uint16_t Event::Field::pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
 {
+   SERIALIZABLE_CHECK (array, offset, size (with_uid));
+
    uint16_t start = offset;
 
    if (with_uid)
@@ -419,6 +436,8 @@ uint16_t Event::Field::pack (Common::ByteArray &array, uint16_t offset, bool wit
 // =============================================================================
 uint16_t Event::Field::unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
 {
+   SERIALIZABLE_CHECK (array, offset, size (with_uid));
+
    uint16_t start = offset;
 
    if (with_uid)
@@ -440,6 +459,8 @@ uint16_t Event::Field::unpack (const Common::ByteArray &array, uint16_t offset, 
       // Read value size.
       offset += array.read (offset, temp);
    }
+
+   SERIALIZABLE_CHECK (array, offset, temp);
 
    auto it = array.begin ();
    std::advance (it, offset);
@@ -496,6 +517,8 @@ uint16_t Event::Entry::size () const
 // =============================================================================
 uint16_t Event::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    bool attr_uid  = false;
@@ -533,6 +556,8 @@ uint16_t Event::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Event::Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    offset += AttributeReporting::Entry::unpack (array, offset);
@@ -542,18 +567,35 @@ uint16_t Event::Entry::unpack (const Common::ByteArray &array, uint16_t offset)
       uint8_t _size = 0;
       offset += array.read (offset, _size);
 
+      SERIALIZABLE_CHECK (array, offset, (_size * Event::Field::min_size));
+
+      Event::Field field;
+
       for (uint8_t i = 0; i < _size; i++)
       {
-         Event::Field field;
-         offset += field.unpack (array, offset, true);
-         fields.push_back (field);
+         uint16_t res = field.unpack (array, offset, true);
+
+         if (res)
+         {
+            fields.push_back (field);
+            offset += res;
+         }
+         else
+         {
+            break;
+         }
       }
    }
    else
    {
       Event::Field field;
-      offset += field.unpack (array, offset, false);
-      fields.push_back (field);
+      uint16_t res = field.unpack (array, offset, false);
+
+      if (res)
+      {
+         fields.push_back (field);
+         offset += res;
+      }
    }
 
    return offset - start;
@@ -568,9 +610,7 @@ uint16_t Event::Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Event::Rule::size () const
 {
-   uint16_t result = AttributeReporting::Rule::size ();
-
-   result += sizeof(uint8_t);
+   uint16_t result = min_size;
 
    /* *INDENT-OFF* */
    std::for_each (entries.begin(), entries.end(), [&result](const Entry &entry)
@@ -591,6 +631,8 @@ uint16_t Event::Rule::size () const
 // =============================================================================
 uint16_t Event::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += AttributeReporting::Rule::pack (array, offset);
@@ -618,19 +660,32 @@ uint16_t Event::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Event::Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    offset += AttributeReporting::Rule::unpack (array, offset);
 
    uint8_t _size = 0;
-
    offset += array.read (offset, _size);
+
+   SERIALIZABLE_CHECK (array, offset, (_size * Entry::min_size));
+
+   Entry entry;
 
    for (uint8_t i = 0; i < _size; i++)
    {
-      Entry entry;
-      offset += entry.unpack (array, offset);
-      entries.push_front (entry);
+      uint16_t res = entry.unpack (array, offset);
+
+      if (res)
+      {
+         entries.push_front (entry);
+         offset += res;
+      }
+      else
+      {
+         break;
+      }
    }
 
    return offset - start;
@@ -649,7 +704,7 @@ uint16_t Event::Rule::unpack (const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Report::Entry::size () const
 {
-   return sizeof(unit) + itf.size () + sizeof(uint8_t);
+   return min_size;
 }
 
 // =============================================================================
@@ -661,6 +716,8 @@ uint16_t Report::Entry::size () const
 // =============================================================================
 uint16_t Report::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += array.write (offset, unit);
@@ -682,10 +739,14 @@ uint16_t Report::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 uint16_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
                                 const Common::ByteArray &array, uint16_t offset)
 {
-   HF::Attributes::Factory factory = nullptr;
-   uint8_t  next                   = 0;
+   assert (get_factory != nullptr);
 
-   uint16_t start                  = offset;
+   if (!array.available (offset, min_size))
+   {
+      return 0;
+   }
+
+   uint16_t start = offset;
 
    offset += array.read (offset, unit);
 
@@ -694,29 +755,25 @@ uint16_t Report::Entry::unpack (HF::Attributes::FactoryGetter get_factory,
    uint8_t _count = 0;
    offset += array.read (offset, _count);
 
-   if (get_factory == nullptr)
-   {
-      goto end;
-   }
+   HF::Attributes::Factory factory = get_factory (itf);
 
-   factory = get_factory (itf);
+   assert (factory != nullptr);
 
    if (factory == nullptr)
    {
       goto end;
    }
 
-   next = count ();
-
-   for (uint8_t i = 0; i < _count; i++, next = count ())
+   for (uint8_t i = 0; i < _count; i++)
    {
-      offset += unpack (factory, array, offset);
+      uint16_t res = unpack (factory, array, offset);
 
-      // There was a problem reading entry field.
-      if (next == count ())
+      if (res == 0)
       {
          break;
       }
+
+      offset += res;
    }
 
    end:
@@ -753,6 +810,8 @@ uint16_t Report::Periodic::Entry::size () const
 // =============================================================================
 uint16_t Report::Periodic::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Report::Entry::pack (array, offset);
@@ -777,22 +836,41 @@ uint16_t Report::Periodic::Entry::pack (Common::ByteArray &array, uint16_t offse
 uint16_t Report::Periodic::Entry::unpack (HF::Attributes::Factory factory,
                                           const Common::ByteArray &array, uint16_t offset)
 {
+   if (!array.available (offset, sizeof(uint8_t)))
+   {
+      return 0;
+   }
+
    uint16_t start = offset;
 
    uint8_t  uid   = 0;
-   array.read (offset, uid);
-   auto attr      = factory (uid);
+   offset += array.read (offset, uid);
 
-   if (attr != nullptr)
+   auto attr = factory (uid);
+
+   assert (attr != nullptr);
+
+   if (attr == nullptr)
    {
-      uint16_t _size = attr->unpack (array, offset, true);
-
-      if (_size == attr->size (true))
-      {
-         add (attr);
-         offset += _size;
-      }
+      return 0;
    }
+
+   if (!array.available (offset, attr->size ()))
+   {
+      delete attr;
+      return 0;
+   }
+
+   uint16_t _size = attr->unpack (array, offset);
+
+   if (_size == 0)
+   {
+      delete attr;
+      return 0;
+   }
+
+   add (attr);
+   offset += _size;
 
    return offset - start;
 }
@@ -840,6 +918,8 @@ uint16_t Report::Periodic::size () const
 // =============================================================================
 uint16_t Report::Periodic::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Report::Abstract::pack (array, offset);
@@ -868,6 +948,11 @@ uint16_t Report::Periodic::pack (Common::ByteArray &array, uint16_t offset) cons
 uint16_t Report::Periodic::unpack (HF::Attributes::FactoryGetter get_factory,
                                    const Common::ByteArray &array, uint16_t offset)
 {
+   if (!array.available (offset, min_size))
+   {
+      return 0;
+   }
+
    uint16_t start = offset;
 
    offset += Report::Abstract::unpack (array, offset);
@@ -911,8 +996,7 @@ void Report::Periodic::add (Report::Periodic::Entry &entry)
 // =============================================================================
 uint16_t Report::Event::Field::size () const
 {
-   assert (nullptr != attribute);
-   return sizeof(uint8_t) + attribute->size (true);
+   return min_size + (nullptr != attribute ? attribute->size (false) : 0);
 }
 
 // =============================================================================
@@ -924,9 +1008,16 @@ uint16_t Report::Event::Field::size () const
 // =============================================================================
 uint16_t Report::Event::Field::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
-
    assert (nullptr != attribute);
+
+   if (attribute == nullptr)
+   {
+      return 0;
+   }
+
+   SERIALIZABLE_CHECK (array, offset, size ());
+
+   uint16_t start = offset;
 
    offset += array.write (offset, (uint8_t) attribute->uid ());
    offset += array.write (offset, (uint8_t) type);
@@ -946,27 +1037,52 @@ uint16_t Report::Event::Field::pack (Common::ByteArray &array, uint16_t offset) 
 uint16_t Report::Event::Field::unpack (HF::Attributes::Factory factory,
                                        const Common::ByteArray &array, uint16_t offset)
 {
+   if (!array.available (offset, min_size))
+   {
+      return 0;
+   }
+
    uint16_t start = offset;
 
    uint8_t  temp  = 0xFF;
-
-   offset += array.read (offset, temp);
+   offset += array.read (offset, temp);   // Read Attribute UID.
 
    auto attr = factory (temp);
 
-   offset += array.read (offset, temp);
+   assert (attr != nullptr);
+
+   if (attr == nullptr)
+   {
+      return 0;
+   }
+
+   offset += array.read (offset, temp);   // Read Field Type.
    type    = static_cast <AttributeReporting::Event::Type>(temp);
 
-   if (attr != nullptr)
-   {
-      uint16_t _size = attr->unpack (array, offset);
+   assert (type >= AttributeReporting::Event::COV && type <= AttributeReporting::Event::EQ);
 
-      if (_size == attr->size ())
-      {
-         set_attribute (attr);
-         offset += _size;
-      }
+   if (type < AttributeReporting::Event::COV || type > AttributeReporting::Event::EQ)
+   {
+      return 0;
    }
+
+   if (!array.available (offset, attr->size ()))
+   {
+      delete attr;
+      return 0;
+   }
+
+   set_attribute (attr);
+
+   uint16_t _size = attr->unpack (array, offset);
+
+   if (_size == 0)
+   {
+      set_attribute (nullptr);
+      return 0;
+   }
+
+   offset += _size;
 
    return offset - start;
 }
@@ -1001,6 +1117,8 @@ uint16_t Report::Event::Entry::size () const
 // =============================================================================
 uint16_t Report::Event::Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Report::Entry::pack (array, offset);
@@ -1028,7 +1146,7 @@ uint16_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
    Field field;
    uint16_t result = field.unpack (factory, array, offset);
 
-   if (nullptr != field.attribute)
+   if (result != 0)
    {
       add (field);
    }
@@ -1067,6 +1185,8 @@ uint16_t Report::Event::size () const
 // =============================================================================
 uint16_t Report::Event::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Report::Abstract::pack (array, offset);
@@ -1095,6 +1215,11 @@ uint16_t Report::Event::pack (Common::ByteArray &array, uint16_t offset) const
 uint16_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
                                 const Common::ByteArray &array, uint16_t offset)
 {
+   if (!array.available (offset, min_size))
+   {
+      return 0;
+   }
+
    uint16_t start = offset;
 
    offset += Report::Abstract::unpack (array, offset);
@@ -1126,7 +1251,7 @@ uint16_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
 // =============================================================================
 uint16_t Report::CreateMessage::size () const
 {
-   return destination.size ();
+   return min_size;
 }
 
 // =============================================================================
@@ -1138,11 +1263,11 @@ uint16_t Report::CreateMessage::size () const
 // =============================================================================
 uint16_t Report::CreateMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   offset += destination.pack (array, offset);
+   destination.pack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -1154,11 +1279,11 @@ uint16_t Report::CreateMessage::pack (Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Report::CreateMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   offset += destination.unpack (array, offset);
+   destination.unpack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -1218,7 +1343,7 @@ uint16_t Report::Periodic::CreateMessage::unpack (const Common::ByteArray &array
 // =============================================================================
 uint16_t Report::DeleteMessage::size () const
 {
-   return report.size ();
+   return min_size;
 }
 
 // =============================================================================
@@ -1230,11 +1355,11 @@ uint16_t Report::DeleteMessage::size () const
 // =============================================================================
 uint16_t Report::DeleteMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   offset += report.pack (array, offset);
+   report.pack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -1246,11 +1371,11 @@ uint16_t Report::DeleteMessage::pack (Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Report::DeleteMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   offset += report.unpack (array, offset);
+   report.unpack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -1262,7 +1387,7 @@ uint16_t Report::DeleteMessage::unpack (const Common::ByteArray &array, uint16_t
 // =============================================================================
 uint16_t Report::AddEntryMessage::size () const
 {
-   return report.size () + sizeof(uint8_t);
+   return min_size;
 }
 
 // =============================================================================
@@ -1274,13 +1399,13 @@ uint16_t Report::AddEntryMessage::size () const
 // =============================================================================
 uint16_t Report::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += report.pack (array, offset);
 
-   offset += array.write (offset, count ());
+   array.write (offset, count ());
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -1292,17 +1417,34 @@ uint16_t Report::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offse
 // =============================================================================
 uint16_t Report::AddEntryMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
+#ifndef NDEBUG
+   uint8_t type = report.type;
+#endif
+
    offset += report.unpack (array, offset);
+   assert (type == report.type);
 
    uint8_t _count = 0;
    offset += array.read (offset, _count);
 
+   SERIALIZABLE_CHECK (array, offset, (_count * entry_size ()));
+
    for (uint8_t i = 0; i < _count; i++)
    {
-      // TODO Add check if entry was read.
-      offset += unpack_entry (array, offset);
+      uint16_t res = unpack_entry (array, offset);
+
+      if (res)
+      {
+         offset += res;
+      }
+      else
+      {
+         break;
+      }
    }
 
    return offset - start;
@@ -1339,6 +1481,8 @@ uint16_t Report::Periodic::AddEntryMessage::size () const
 // =============================================================================
 uint16_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Report::AddEntryMessage::pack (array, offset);
@@ -1406,6 +1550,8 @@ uint16_t Report::Event::AddEntryMessage::size () const
 // =============================================================================
 uint16_t Report::Event::AddEntryMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Report::AddEntryMessage::pack (array, offset);

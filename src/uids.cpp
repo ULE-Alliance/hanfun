@@ -33,19 +33,18 @@ using namespace HF::UID;
 // =============================================================================
 uint16_t UID::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, sizeof(uint8_t));
+
+   uint8_t type = Type::NONE_UID;
+   array.read (offset, type);
 
    if (owner)
    {
       delete _raw;
    }
 
-   _raw  = nullptr;
    owner = true;
-
-   uint8_t type = Type::NONE_UID;
-
-   array.read (offset, type);
+   _raw  = nullptr;
 
    // Remove upper bit so it can be used for other purposes.
    type &= (~0x80);
@@ -69,7 +68,7 @@ uint16_t UID::unpack (const Common::ByteArray &array, uint16_t offset)
          break;
    }
 
-   offset += _raw->unpack (array, offset);
+   offset = _raw->unpack (array, offset);
 
-   return offset - start;
+   return offset;
 }

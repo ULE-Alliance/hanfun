@@ -142,6 +142,11 @@ namespace HF
                source (_source), destination (_destination), itf (_itf)
             {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Protocol::Address::min_size     // Source Address
+                                                 + Protocol::Address::min_size   // Destination Address
+                                                 + Common::Interface::min_size;  // Interface UID.
+
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
 

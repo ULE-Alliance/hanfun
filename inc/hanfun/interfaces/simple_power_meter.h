@@ -153,40 +153,43 @@ namespace HF
           */
          struct Measurement
          {
-            uint8_t  unit;               //!< %Measurement precision/type.
-            uint32_t value;              //!< %Measurement value.
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t)      // Precision size.
+                                                 + sizeof(uint32_t);  // Value size.
+
+            uint8_t  unit;  //!< %Measurement precision/type.
+            uint32_t value; //!< %Measurement value.
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const
             {
-               return sizeof(uint8_t) +  // Precision size.
-                      sizeof(uint32_t);  // Value size.
+               return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
             uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               uint16_t start = offset;
+               SERIALIZABLE_CHECK (array, offset, min_size);
 
                offset += array.write (offset, static_cast <uint8_t>(unit));
-               offset += array.write (offset, value);
+               array.write (offset, value);
 
-               return offset - start;
+               return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               uint16_t start = offset;
+               SERIALIZABLE_CHECK (array, offset, min_size);
 
-               uint8_t  temp;
+               uint8_t temp;
                offset += array.read (offset, temp);
 
                unit    = static_cast <Common::Precision>(temp);
 
                offset += array.read (offset, value);
 
-               return offset - start;
+               return min_size;
             }
 
             /*!
@@ -242,6 +245,9 @@ namespace HF
             std::array <bool, __LAST_ATTR__ + 1> enabled;
 
             Report();
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);  // Number of attributes.
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;

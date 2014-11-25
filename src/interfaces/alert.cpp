@@ -47,8 +47,7 @@ Alert::Message::Message(uint16_t type, uint32_t state):
 // =============================================================================
 uint16_t Alert::Message::size () const
 {
-   return sizeof(uint16_t) + // Profile UID.
-          sizeof(uint32_t);  // State.
+   return min_size;
 }
 
 // =============================================================================
@@ -60,12 +59,13 @@ uint16_t Alert::Message::size () const
 // =============================================================================
 uint16_t Alert::Message::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.write (offset, this->type);
-   offset += array.write (offset, this->state);
 
-   return offset - start;
+   array.write (offset, this->state);
+
+   return min_size;
 }
 
 // =============================================================================
@@ -77,12 +77,13 @@ uint16_t Alert::Message::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Alert::Message::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.read (offset, this->type);
-   offset += array.read (offset, this->state);
 
-   return offset - start;
+   array.read (offset, this->state);
+
+   return min_size;
 }
 
 // =============================================================================

@@ -94,6 +94,9 @@ TEST (AttrReport_Reference, Unpack)
 
 TEST_GROUP (AttrReport_Entry)
 {
+   struct Entry:public AttributeReporting::Entry
+   {};
+
    Entry entry;
 
    ByteArray expected;
@@ -152,6 +155,9 @@ TEST (AttrReport_Entry, Unpack)
 
 TEST_GROUP (AttrReport_Rule)
 {
+   struct Rule:public AttributeReporting::Rule
+   {};
+
    Rule rule;
 
    ByteArray expected;
@@ -455,13 +461,6 @@ TEST (AttrReport_Periodic_Rule, Unpack)
    LONGS_EQUAL (0xAA, rule.destination.unit);
 
    LONGS_EQUAL (0xAABBCCDD, rule.interval);
-
-   expected[3] = 0x8A;
-
-   rule.clear ();
-
-   LONGS_EQUAL (rule.size () - sizeof(uint32_t) - sizeof(uint8_t),
-                rule.unpack (expected, 3));
 }
 
 // =============================================================================
@@ -981,7 +980,7 @@ TEST (AttrReport_Report_Entry, Empty)
 {
    ByteArray temp (entry.size ());
    entry.pack (temp);
-   entry.unpack ((HF::Attributes::FactoryGetter) nullptr, temp);
+   entry.unpack (HF::Testing::FactoryGetter, temp);
 }
 
 TEST (AttrReport_Report_Entry, Pack)
@@ -999,7 +998,7 @@ TEST (AttrReport_Report_Entry, Pack)
 
 TEST (AttrReport_Report_Entry, Unpack)
 {
-   LONGS_EQUAL (entry.size (), entry.unpack ((HF::Attributes::FactoryGetter) nullptr, expected, 3));
+   LONGS_EQUAL (entry.size (), entry.unpack (HF::Testing::FactoryGetter, expected, 3));
 
    LONGS_EQUAL (0x55, entry.unit);
    LONGS_EQUAL (0x05A5, entry.itf.id);
@@ -2015,6 +2014,8 @@ TEST (AttrReport_Report_AddEntryMessage, Pack)
 
 TEST (AttrReport_Report_AddEntryMessage, Unpack)
 {
+   message.report.type = Type::EVENT;
+
    LONGS_EQUAL (message.size (), message.unpack (expected, 3));
 
    LONGS_EQUAL (Type::EVENT, message.report.type);
@@ -2762,7 +2763,8 @@ TEST (AttributeReporting_Server, Periodic)
    Periodic::Rule  rule (50);
    Periodic::Entry entry;
 
-   entry.itf.id   = HF::Interface::ALERT;
+   entry.itf.id   = 0x5A5A;
+   entry.itf.role = HF::Interface::SERVER_ROLE;
    entry.pack_id  = HF::Attributes::MANDATORY;
    entry.unit     = 1;
 
@@ -2787,7 +2789,7 @@ TEST (AttributeReporting_Server, Periodic)
    auto packet = base->packets.front ();
 
    Report::Periodic report;
-   report.unpack (HF::Attributes::get_factory, packet->message.payload, 0);
+   report.unpack (HF::Testing::FactoryGetter, packet->message.payload, 0);
 
    LONGS_EQUAL (0x5A, report.id);
    LONGS_EQUAL (PERIODIC, report.type);

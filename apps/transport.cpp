@@ -82,18 +82,23 @@ struct msg_t
       primitive (primitive), data (data)
    {}
 
+   //! Minimum pack/unpack required data size.
+   static constexpr uint16_t min_size = sizeof(nbytes) + sizeof(primitive);
+
    //! @copydoc HF::Common::Serializable::size
    uint16_t size () const
    {
-      return sizeof(nbytes) + sizeof(primitive) + data.size ();
+      return min_size + data.size ();
    }
 
    //! @copydoc HF::Common::Serializable::pack
    uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const
    {
-      uint16_t start  = offset;
+      SERIALIZABLE_CHECK (array, offset, size ());
 
-      uint16_t temp = (uint16_t) (sizeof(uint16_t) + data.size ());
+      uint16_t start = offset;
+
+      uint16_t temp  = (uint16_t) (sizeof(uint16_t) + data.size ());
 
       offset += array.write (offset, temp);
 
@@ -107,6 +112,8 @@ struct msg_t
    //! @copydoc HF::Common::Serializable::unpack
    uint16_t unpack (HF::Common::ByteArray &array, uint16_t offset = 0)
    {
+      SERIALIZABLE_CHECK (array, offset, min_size);
+
       uint16_t start = offset;
 
       offset += array.read (offset, nbytes);
@@ -144,15 +151,20 @@ struct hello_msg_t
       core (HF::CORE_VERSION), profiles (HF::PROFILES_VERSION), interfaces (HF::INTERFACES_VERSION)
    {}
 
+   //! Minimum pack/unpack required data size.
+   static constexpr uint16_t min_size = 3 * sizeof(uint8_t);
+
    //! @copydoc HF::Common::Serializable::size
    uint16_t size () const
    {
-      return 3 * sizeof(uint8_t) + uid.size ();
+      return min_size + uid.size ();
    }
 
    //! @copydoc HF::Common::Serializable::pack
    uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const
    {
+      SERIALIZABLE_CHECK (array, offset, size ());
+
       uint16_t start = offset;
 
       offset += array.write (offset, core);
@@ -167,6 +179,8 @@ struct hello_msg_t
    //! @copydoc HF::Common::Serializable::unpack
    uint16_t unpack (HF::Common::ByteArray &array, uint16_t offset = 0)
    {
+      SERIALIZABLE_CHECK (array, offset, min_size);
+
       uint16_t start = offset;
 
       offset += array.read (offset, core);

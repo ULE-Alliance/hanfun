@@ -50,15 +50,12 @@ HF::Attributes::IAttribute *DeviceManagement::create_attribute (uint8_t uid)
 // =============================================================================
 uint16_t Unit::size () const
 {
-   uint16_t result = sizeof(uint8_t) + // Unit entry size.
-                     sizeof(uint8_t) + // Unit ID.
-                     sizeof(uint16_t); // Unit's profile UID.
+   uint16_t result = min_size;
 
    if (!interfaces.empty ())
    {
-      Common::Interface temp;
       result += sizeof(uint8_t); // Number of optional units.
-      result += (temp.size () * interfaces.size ());
+      result += (Common::Interface::min_size * interfaces.size ());
    }
 
    return result;
@@ -73,11 +70,13 @@ uint16_t Unit::size () const
 // =============================================================================
 uint16_t Unit::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    uint16_t size  = this->size () - sizeof(uint8_t);
 
-   offset += array.write (offset, (uint8_t) size); // Dummy write.
+   offset += array.write (offset, (uint8_t) size); // Unit's size.
    offset += array.write (offset, this->id);       // Unit ID.
    offset += array.write (offset, this->profile);  // Unit's profile UID.
 
@@ -107,6 +106,8 @@ uint16_t Unit::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Unit::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    uint8_t  size  = 0;
@@ -183,8 +184,7 @@ bool Unit::has_interface (uint16_t itf_uid, HF::Interface::Role role) const
 // =============================================================================
 uint16_t Device::size () const
 {
-   uint16_t result = sizeof(uint16_t) + // Device Address.
-                     sizeof(uint8_t);   // Number of units.
+   uint16_t result = min_size;
 
    /* *INDENT-OFF* */
    std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
@@ -205,6 +205,8 @@ uint16_t Device::size () const
 // =============================================================================
 uint16_t Device::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += array.write (offset, address);
@@ -230,6 +232,8 @@ uint16_t Device::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Device::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    offset += array.read (offset, address);
@@ -240,8 +244,17 @@ uint16_t Device::unpack (const Common::ByteArray &array, uint16_t offset)
    for (uint8_t i = 0; i < count; i++)
    {
       Unit unit;
-      offset += unit.unpack (array, offset);
-      units.push_back (unit);
+      uint16_t res = unit.unpack (array, offset);
+
+      if (res)
+      {
+         units.push_back (unit);
+         offset += res;
+      }
+      else
+      {
+         break;
+      }
    }
 
    return offset - start;
@@ -293,6 +306,8 @@ uint16_t RegisterMessage::size () const
 // =============================================================================
 uint16_t RegisterMessage::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += uid.pack (array, offset);
@@ -303,8 +318,7 @@ uint16_t RegisterMessage::pack (Common::ByteArray &array, uint16_t offset) const
       offset       += array.write (offset, emc);
    }
 
-   uint8_t temp = units.size ();
-   offset += array.write (offset, temp);
+   offset += array.write (offset, (uint8_t) units.size ());
 
    /* *INDENT-OFF* */
    std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
@@ -325,24 +339,41 @@ uint16_t RegisterMessage::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t RegisterMessage::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    offset += uid.unpack (array, offset);
 
    if ((array[start] & 0x80) != 0)
    {
+      SERIALIZABLE_CHECK (array, offset, sizeof(this->emc));
       offset += array.read (offset, this->emc);
    }
 
    uint8_t count = 0;
    offset += array.read (offset, count);
 
-   for (uint8_t i = 0; i < count; i++)
+   SERIALIZABLE_CHECK (array, offset, (count * Unit::min_size));
+
+   Unit unit;
+
+   for (uint8_t i = 0; i < count; ++i)
    {
-      Unit unit;
-      offset += unit.unpack (array, offset);
-      units.push_back (unit);
+      uint16_t res = unit.unpack (array, offset);
+
+      if (res)
+      {
+         units.push_back (unit);
+         offset += res;
+      }
+      else
+      {
+         break;
+      }
    }
+
+   assert (count == units.size ());
 
    return offset - start;
 }
@@ -356,9 +387,16 @@ uint16_t RegisterMessage::unpack (const Common::ByteArray &array, uint16_t offse
 // =============================================================================
 uint16_t RegisterResponse::size () const
 {
-   return Response::size () +                       // Parent Size.
-          sizeof(uint16_t) +                        // Device Address.
-          ((emc != 0x0000) ? sizeof(uint16_t) : 0); // EMC.
+   uint16_t result = min_size;      // Parent Size.
+
+   if (code == Common::Result::OK)
+   {
+      result += sizeof(uint16_t);   // Device Address.
+
+      result += ((emc != 0x0000) ? sizeof(uint16_t) : 0);   // EMC
+   }
+
+   return result;
 }
 
 // =============================================================================
@@ -370,9 +408,16 @@ uint16_t RegisterResponse::size () const
 // =============================================================================
 uint16_t RegisterResponse::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    offset += Response::pack (array, offset);
+
+   if (this->code != Common::Result::OK)
+   {
+      return min_size;
+   }
 
    uint16_t temp = address;
 
@@ -401,9 +446,18 @@ uint16_t RegisterResponse::pack (Common::ByteArray &array, uint16_t offset) cons
 uint16_t RegisterResponse::unpack (const Common::ByteArray &array,
                                    uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start = offset;
 
    offset += Response::unpack (array, offset);
+
+   if (this->code != Common::Result::OK)
+   {
+      goto _end;
+   }
+
+   SERIALIZABLE_CHECK (array, offset, sizeof(uint16_t));
 
    uint16_t temp;
    offset += array.read (offset, temp);
@@ -412,9 +466,11 @@ uint16_t RegisterResponse::unpack (const Common::ByteArray &array,
 
    if ((temp & 0x8000) != 0)
    {
+      SERIALIZABLE_CHECK (array, offset, sizeof(uint16_t));
       offset += array.read (offset, emc);
    }
 
+   _end:
    return offset - start;
 }
 
@@ -431,7 +487,7 @@ uint16_t RegisterResponse::unpack (const Common::ByteArray &array,
 // =============================================================================
 uint16_t DeregisterMessage::size () const
 {
-   return sizeof(uint16_t);
+   return min_size;
 }
 
 // =============================================================================
@@ -444,11 +500,11 @@ uint16_t DeregisterMessage::size () const
 uint16_t DeregisterMessage::pack (Common::ByteArray &array,
                                   uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   offset += array.write (offset, address);
+   array.write (offset, address);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -461,11 +517,11 @@ uint16_t DeregisterMessage::pack (Common::ByteArray &array,
 uint16_t DeregisterMessage::unpack (const Common::ByteArray &array,
                                     uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   offset += array.read (offset, address);
+   array.read (offset, address);
 
-   return offset - start;
+   return min_size;
 }
 
 

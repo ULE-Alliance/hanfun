@@ -154,7 +154,7 @@ uint16_t ByteArray::read (uint16_t offset, uint32_t &data) const
 // =============================================================================
 uint16_t Common::Interface::size () const
 {
-   return sizeof(uint16_t);  // Interface UID.
+   return min_size;
 }
 
 // =============================================================================
@@ -166,13 +166,13 @@ uint16_t Common::Interface::size () const
 // =============================================================================
 uint16_t Common::Interface::pack (ByteArray &array, uint16_t offset) const
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   uint16_t uid   = ((this->role & 0x01) << 15) | (this->id & HF::Interface::MAX_UID);
+   uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::MAX_UID);
 
-   offset += array.write (offset, uid);
+   array.write (offset, uid);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -184,13 +184,13 @@ uint16_t Common::Interface::pack (ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Common::Interface::unpack (const ByteArray &array, uint16_t offset)
 {
-   uint16_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
-   uint16_t uid   = 0;
-   offset    += array.read (offset, uid);
+   uint16_t uid = 0;
+   array.read (offset, uid);
 
    this->role = (uid & ~HF::Interface::MAX_UID) >> 15;
    this->id   = uid & HF::Interface::MAX_UID;
 
-   return offset - start;
+   return min_size;
 }

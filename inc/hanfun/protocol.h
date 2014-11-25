@@ -94,6 +94,10 @@ namespace HF
           */
          struct Interface:public Common::Interface
          {
+            //! Minimum pack/unpack required data size.
+            static const uint16_t min_size = Common::Interface::min_size // Interface UID.
+                                             + sizeof(uint8_t);          // Interface Member.
+
             uint8_t member;            //!< Interface destination member.
 
             /*!
@@ -141,7 +145,9 @@ namespace HF
           */
          Message(uint16_t size = 0, Type _type = COMMAND_REQ):
             reference (0), type (_type), payload (Common::ByteArray (size)), length (0)
-         {}
+         {
+            assert (size <= MAX_PAYLOAD);
+         }
 
          /*!
           * Create a new message that is a response to the given message in @c parent.
@@ -152,6 +158,12 @@ namespace HF
           * @param [in] size     size of the payload buffer.
           */
          Message(const Message &parent, uint16_t size);
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t)       // Application Reference.
+                                              + sizeof(uint8_t)     // Message Type.
+                                              + Interface::min_size // Interface UID + Member.
+                                              + sizeof(uint16_t);   // Payload Length Value.
 
          //! @copydoc HF::Common::Serializable::size
          uint16_t size () const;
@@ -198,6 +210,10 @@ namespace HF
                  Type _mod = DEVICE)
             :mod (_mod), device (_dev), unit (_unit)
          {}
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint16_t)    // Device Address + Flag.
+                                              + sizeof(uint8_t);  // Unit Address.
 
          //! @copydoc HF::Common::Serializable::size
          uint16_t size () const;
@@ -285,6 +301,15 @@ namespace HF
          Packet(Address &src_addr, Address &dst_addr, Message &message):
             source (src_addr), destination (dst_addr), message (message), link (nullptr)
          {}
+
+         //! Minimum pack/unpack required header data size.
+         static constexpr uint16_t header_min_size = Address::min_size   // Source Address.
+                                                     + Address::min_size // Destination Address.
+                                                     + sizeof(uint16_t); // Transport Layer header.
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = header_min_size        // Network header size.
+                                              + Message::min_size;   // Message size.
 
          //! @copydoc HF::Common::Serializable::size
          uint16_t size () const;

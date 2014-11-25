@@ -404,13 +404,13 @@ TEST_GROUP (DeviceManagement_RegisterResponse)
 TEST (DeviceManagement_RegisterResponse, No_EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
-                                   Result::FAIL_AUTH,  // Response Code.
+                                   Result::OK,         // Response Code.
                                    0x42, 0x43,         // Device Address.
                                    0x00, 0x00, 0x00};
 
    DeviceManagement::RegisterResponse response;
 
-   response.code    = Result::FAIL_AUTH;
+   response.code    = Result::OK;
    response.address = 0x4243;
 
    uint16_t size = response.size ();
@@ -428,21 +428,21 @@ TEST (DeviceManagement_RegisterResponse, No_EMC)
    uint16_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL (Result::OK, response.code);
    LONGS_EQUAL (0x4243, response.address);
 }
 
 TEST (DeviceManagement_RegisterResponse, EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
-                                   Result::FAIL_AUTH,  // Responce Code.
-                                   0xC2, 0x43,         // Device Address.
-                                   0xAA, 0xBB,         // EMC
+                                   Result::OK,        // Response Code.
+                                   0xC2, 0x43,        // Device Address
+                                   0xAA, 0xBB,        // EMC
                                    0x00, 0x00, 0x00};
 
    DeviceManagement::RegisterResponse response;
 
-   response.code    = Result::FAIL_AUTH;
+   response.code    = Result::OK;
    response.address = 0x4243;
    response.emc     = 0xAABB;
 
@@ -459,13 +459,13 @@ TEST (DeviceManagement_RegisterResponse, EMC)
    response = DeviceManagement::RegisterResponse ();
 
    LONGS_EQUAL (0, response.code);
-   LONGS_EQUAL (0, response.address);
    LONGS_EQUAL (0, response.emc);
+   LONGS_EQUAL (Protocol::BROADCAST_ADDR, response.address);
 
    uint16_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL (Result::OK, response.code);
    LONGS_EQUAL (0x4243, response.address);
    LONGS_EQUAL (0xAABB, response.emc);
 }

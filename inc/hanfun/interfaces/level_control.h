@@ -80,30 +80,33 @@ namespace HF
 
             Message(uint8_t level = 0):level (level) {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);
+
             //! \see HF::Serializable::size.
             uint16_t size () const
             {
-               return sizeof(level);
+               return min_size;
             }
 
             //! \see HF::Serializable::pack.
             uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
             {
-               uint16_t start = offset;
+               SERIALIZABLE_CHECK (array, offset, min_size);
 
-               offset += array.write (offset, level);
+               array.write (offset, level);
 
-               return offset - start;
+               return min_size;
             }
 
             //! \see HF::Serializable::unpack.
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
             {
-               uint16_t start = offset;
+               SERIALIZABLE_CHECK (array, offset, min_size);
 
-               offset += array.read (offset, level);
+               array.read (offset, level);
 
-               return offset - start;
+               return min_size;
             }
          };
 

@@ -90,29 +90,37 @@ namespace HF
             return (this->type () - other.type ());
          }
 
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t)     // UID Type.
+                                              + sizeof(uint8_t);  // Size of the UID.
+
+         //! @copydoc HF::Common::Serializable::size
          uint16_t size () const
          {
-            return sizeof(uint8_t) + // UID Type.
-                   sizeof(uint8_t);  // Size of the UID.
+            return min_size;
          }
 
+         //! @copydoc HF::Common::Serializable::pack
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            uint16_t start = offset;
-            offset += array.write (offset, this->type ());
-            return offset - start;
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
+            array.write (offset, this->type ());
+
+            return sizeof(uint8_t);
          }
 
+         //! @copydoc HF::Common::Serializable::unpack
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint16_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            uint8_t  type;
-            offset += array.read (offset, type);
+            uint8_t type;
+            array.read (offset, type);
 
             assert ((type & (~0x80)) == this->type ());
 
-            return offset - start;
+            return sizeof(uint8_t);
          }
       };
 
@@ -137,26 +145,34 @@ namespace HF
       {
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            uint16_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             offset += UID_T::pack (array, offset);
-            offset += array.write (offset, (uint8_t) 0);
 
-            return offset - start;
+            array.write (offset, (uint8_t) 0);
+
+            return min_size;
          }
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint16_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            offset += UID_T::unpack (array, offset);
+            uint16_t res = UID_T::unpack (array, offset);
+
+            if (res == 0)
+            {
+               return 0;
+            }
+
+            offset += res;
 
             uint8_t size;
-            offset += array.read (offset, size);
+            array.read (offset, size);
 
             assert (size == 0);
 
-            return offset - start;
+            return min_size;
          }
 
          NONE *clone () const
@@ -193,14 +209,27 @@ namespace HF
             memcpy (value, _value, _size * sizeof(uint8_t));
          }
 
+         /*!
+          * Constructor.
+          *
+          * @param [in] _value   initial fill value for UID.
+          */
+         ByteArray(uint8_t _value):Abstract <_type>()
+         {
+            memset (value, _value, _size * sizeof(uint8_t));
+         }
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = UID_T::min_size + _size;
+
          uint16_t size () const
          {
-            return UID_T::size () + sizeof(value);
+            return min_size;
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            uint16_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             offset += Abstract <_type>::pack (array, offset);
 
@@ -211,12 +240,12 @@ namespace HF
                offset += array.write (offset, value[i]);
             }
 
-            return offset - start;
+            return min_size;
          }
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint16_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             offset += Abstract <_type>::unpack (array, offset);
 
@@ -225,12 +254,17 @@ namespace HF
 
             assert (size == sizeof(value));
 
+            if (size != sizeof(value))
+            {
+               return 0;
+            }
+
             for (uint8_t i = 0; i < size; i++)
             {
                offset += array.read (offset, value[i]);
             }
 
-            return offset - start;
+            return min_size;
          }
 
          // ===================================================================
@@ -345,7 +379,7 @@ namespace HF
          //! Number of bytes in a RFPI UID.
          constexpr static uint8_t SIZE = 5;
 
-         DECT():ByteArray <DECT, 5, DECT_UID>()
+         DECT():ByteArray <DECT, 5, DECT_UID>(0xFF)
          {}
 
          /*!
@@ -470,14 +504,16 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
             uint16_t start = offset;
-            uint16_t size  = value.size ();
 
             offset += Abstract <URI_UID>::pack (array, offset);
 
-            offset += array.write (offset, (uint8_t) size);
+            assert (value.size () <= 0xFF);
+            offset += array.write (offset, (uint8_t) value.size ());
 
-            for (uint8_t i = 0; i < (size & 0xFF); i++)
+            for (uint8_t i = 0; i < value.size (); i++)
             {
                offset += array.write (offset, (uint8_t) value[i]);
             }
@@ -487,14 +523,18 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint8_t  size;
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
             uint16_t start = offset;
 
             offset += Abstract <URI_UID>::unpack (array, offset);
 
+            uint8_t size;
             offset += array.read (offset, size);
 
-            value   = std::string (size, 0);
+            SERIALIZABLE_CHECK (array, offset, size);
+
+            value = std::string (size, 0);
 
             for (uint8_t i = 0; i < size; i++)
             {

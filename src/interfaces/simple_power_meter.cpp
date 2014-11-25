@@ -61,7 +61,7 @@ Report::Report()
 // =============================================================================
 uint16_t Report::size () const
 {
-   uint16_t result = sizeof(uint8_t);           // Number of attributes.
+   uint16_t result = min_size;
 
    if (enabled[ENERGY_ATTR])
    {
@@ -125,6 +125,8 @@ uint16_t Report::size () const
 // =============================================================================
 uint16_t Report::pack (Common::ByteArray &array, uint16_t offset) const
 {
+   SERIALIZABLE_CHECK (array, offset, size ());
+
    uint16_t start = offset;
 
    uint8_t  id    = 0;
@@ -233,19 +235,51 @@ uint16_t Report::pack (Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Report::unpack (const Common::ByteArray &array, uint16_t offset)
 {
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
    uint16_t start      = offset;
 
    uint8_t  attr_count = 0;
 
    offset += array.read (offset, attr_count);  //! @todo Should check attribute count.
+   assert (attr_count <= __LAST_ATTR__);
 
    for (uint8_t i = 0; i < attr_count; i++)
    {
-      uint8_t id = 0;
+      uint8_t  id    = 0;
+      uint16_t _size = sizeof(id);
+
+      assert (array.available (offset, _size));
+
+      if (!array.available (offset, _size))
+      {
+         break;
+      }
+
       offset += array.read (offset, id);
 
       if (id < ENERGY_ATTR || id > __LAST_ATTR__)
       {
+         break;
+      }
+
+      _size = Measurement::min_size;
+
+      if (id == AVG_POWER_INTERVAL_ATTR)
+      {
+         _size = sizeof(avg_power_interval);
+      }
+      else if (id == AVG_POWER_INTERVAL_ATTR)
+      {
+         _size = sizeof(power_factor);
+      }
+
+      // Not enough data to read attribute.
+      assert (array.available (offset, _size));
+
+      if (!array.available (offset, min_size))
+      {
+         offset -= sizeof(id);
          break;
       }
 

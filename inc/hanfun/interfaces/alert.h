@@ -85,6 +85,10 @@ namespace HF
           */
          struct Message
          {
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t)    // Profile UID.
+                                                 + sizeof(uint32_t); // State.
+
             uint16_t type;        //!< Unit Type that generated the message.
             uint32_t state;       //!< Current state of the server.
 
@@ -339,6 +343,7 @@ namespace HF
                return HF::Attributes::UIDS ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
+
             protected:
 
             /*!

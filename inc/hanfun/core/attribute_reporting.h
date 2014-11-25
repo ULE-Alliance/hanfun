@@ -119,6 +119,9 @@ namespace HF
                type (_type), id (_id)
             {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);
+
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
 
@@ -139,6 +142,11 @@ namespace HF
 
             uint8_t           pack_id; //!< Attribute's Pack ID.
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t)               // Unit ID.
+                                                 + Common::Interface::min_size // Interface
+                                                 + sizeof(uint8_t);            // Attribute Pack ID.
+
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
 
@@ -147,6 +155,10 @@ namespace HF
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+
+            protected:
+
+            Entry() {}
          };
 
          /*!
@@ -157,17 +169,12 @@ namespace HF
             //! Report reference this rule generates.
             Reference report;
 
-            Rule() {}
-
-            /*!
-             * Constructor.
-             *
-             * @param [in] type Report reference type of this rule.
-             */
-            Rule(Type type):report (type) {}
-
             //! Device/unit that will receive the report.
             Protocol::Address destination;
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Reference::min_size             // Report ID.
+                                                 + Protocol::Address ::min_size; // Destination Address.
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
@@ -177,6 +184,17 @@ namespace HF
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+
+            protected:
+
+            Rule() {}
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] type Report reference type of this rule.
+             */
+            Rule(Type type):report (type) {}
          };
 
          /*! @} */
@@ -232,8 +250,14 @@ namespace HF
                 *
                 * @param [in] _interval   periodic rule interval value.
                 */
-               Rule(uint32_t _interval = 0):AttributeReporting::Rule(PERIODIC), interval (_interval), last_time (0)
+               Rule(uint32_t _interval = 0):AttributeReporting::Rule(PERIODIC), interval (_interval),
+                  last_time (0)
                {}
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = AttributeReporting::Rule::min_size   // Parent Min. Size.
+                                                    + sizeof(uint32_t)                   // Interval Value.
+                                                    + sizeof(uint8_t);                   // Nr. Entries.
 
                uint16_t size () const;
 
@@ -369,6 +393,10 @@ namespace HF
                   type (_type), attr_uid (_attr_uid)
                {}
 
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = sizeof(uint8_t)    // Field type.
+                                                    + sizeof(uint8_t); // Size of value holder or COV value.
+
                /*!
                 * @copydoc HF::Common::Serializable::size
                 *
@@ -423,6 +451,10 @@ namespace HF
 
                Rule():AttributeReporting::Rule(EVENT)
                {}
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = AttributeReporting::Rule::min_size    // Parent Min. Size.
+                                                    + sizeof(uint8_t);                    // Nr. Entries.
 
                uint16_t size () const;
 
@@ -549,6 +581,10 @@ namespace HF
              */
             struct Entry
             {
+               static constexpr uint16_t min_size = sizeof(uint8_t)                // Unit index size.
+                                                    + Common::Interface::min_size  // Interface UID size.
+                                                    + sizeof(uint8_t);             // Number of attributes/fields.
+
                uint8_t           unit; //!< Unit id that originated this notification.
                Common::Interface itf;  //!< Interface UID this notification relates to.
 
@@ -624,6 +660,9 @@ namespace HF
                //! Device address to create the report rule for.
                Protocol::Address destination;
 
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = Protocol::Address::min_size; // Destination.
+
                //! @copydoc HF::Common::Serializable::size
                uint16_t size () const;
 
@@ -641,6 +680,9 @@ namespace HF
             {
                //! Identification of the rule to delete.
                Reference report;
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = Reference::min_size; // Report ID.
 
                //! @copydoc HF::Common::Serializable::size
                uint16_t size () const;
@@ -663,6 +705,10 @@ namespace HF
 
                virtual ~AddEntryMessage() {}
 
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = Reference::min_size // Destination.
+                                                    + sizeof(uint8_t);  // Nr. Entries.
+
                //! @copydoc HF::Common::Serializable::size
                uint16_t size () const;
 
@@ -673,6 +719,8 @@ namespace HF
                uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
 
                protected:
+
+               AddEntryMessage() {}
 
                /*!
                 * @copydoc HF::Common::Serializable::unpack
@@ -693,6 +741,16 @@ namespace HF
                 * @return number of entries in this message.
                 */
                virtual uint8_t count () const
+               {
+                  return 0;
+               }
+
+               /*!
+                * Get the minimum number of bytes required for unpacking an entry.
+                *
+                * @return minimum number of bytes required for unpacking an entry.
+                */
+               virtual uint16_t entry_size () const
                {
                   return 0;
                }
@@ -875,6 +933,11 @@ namespace HF
                   {
                      return std::distance (entries.begin (), entries.end ());
                   }
+
+                  uint16_t entry_size () const
+                  {
+                     return AttributeReporting::Periodic::Entry::min_size;
+                  }
                };
             };
 
@@ -892,6 +955,9 @@ namespace HF
                 */
                struct Field
                {
+                  static constexpr uint16_t min_size = sizeof(uint8_t)     // Event Type size.
+                                                       + sizeof(uint8_t);  // Attribute UID.
+
                   //! Event type.
                   AttributeReporting::Event::Type type;
 
@@ -1085,6 +1151,11 @@ namespace HF
                   uint8_t count () const
                   {
                      return std::distance (entries.begin (), entries.end ());
+                  }
+
+                  uint16_t entry_size () const
+                  {
+                     return AttributeReporting::Event::Entry::min_size;
                   }
                };
 

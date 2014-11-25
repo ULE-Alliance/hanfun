@@ -196,15 +196,20 @@ namespace HF
             return vector <uint8_t>::size ();
          }
 
+         //! Minimum pack/unpack required data size.
+         static constexpr uint8_t min_size = sizeof(uint8_t);
+
          //! @copydoc HF::Common::Serializable::size
          uint16_t size () const
          {
-            return sizeof(uint8_t) + sizeof(uint8_t) * vector <uint8_t>::size ();
+            return min_size + sizeof(uint8_t) * vector <uint8_t>::size ();
          }
 
          //! @copydoc HF::Common::Serializable::pack
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
             uint16_t start = offset;
 
             uint8_t  count = length ();
@@ -236,9 +241,15 @@ namespace HF
           */
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset, uint8_t &count)
          {
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
             uint16_t start = offset;
 
             offset += array.read (offset, count);
+
+            SERIALIZABLE_CHECK (array, offset, count);
+
+            vector <uint8_t>::reserve (count);
 
             for (uint8_t i = 0; i < count; i++)
             {
@@ -249,7 +260,6 @@ namespace HF
 
             return offset - start;
          }
-
       };
 
       /*!
@@ -410,6 +420,8 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
          {
+            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+
             uint16_t start = offset;
 
             if (with_uid)
@@ -429,6 +441,8 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
          {
+            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+
             uint16_t start = offset;
 
             if (with_uid)
@@ -438,13 +452,12 @@ namespace HF
 
                if (temp != uid ())
                {
-                  goto _end;
+                  return 0;
                }
             }
 
             offset += helper.unpack (array, offset);
 
-            _end:
             return offset - start;
          }
 
@@ -560,6 +573,8 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
          {
+            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+
             uint16_t start = offset;
 
             if (with_uid)
@@ -583,6 +598,8 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
          {
+            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+
             uint16_t start = offset;
 
             if (with_uid)
@@ -716,6 +733,8 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
             uint16_t start = offset;
 
             offset += Protocol::Response::pack (array, offset);
@@ -727,6 +746,8 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
             uint16_t start = offset;
 
             offset += Protocol::Response::unpack (array, offset);
@@ -888,42 +909,21 @@ namespace HF
                /* *INDENT-ON* */
             }
 
-            uint16_t size () const
-            {
-               uint16_t result = Protocol::Response::size ();
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Protocol::Response::min_size // General response.
+                                                 + sizeof(uint8_t);           // Number of attributes.
 
-               result += sizeof(uint8_t);
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const;
 
-               /* *INDENT-OFF* */
-               std::for_each (attributes.begin(), attributes.end(),
-                              [&result](HF::Attributes::IAttribute *attr)
-               {
-                  result += attr->size(true);
-               });
-               /* *INDENT-ON* */
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
-               return result;
-            }
-
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
-            {
-               uint16_t start = offset;
-
-               offset += Protocol::Response::pack (array, offset);
-
-               offset += array.write (offset, (uint8_t) attributes.size ());
-
-               /* *INDENT-OFF* */
-               std::for_each (attributes.begin(), attributes.end(),
-                              [&array, &offset] (HF::Attributes::IAttribute * attr)
-               {
-                  offset += attr->pack(array, offset, true);
-               });
-               /* *INDENT-ON* */
-
-               return offset - start;
-            }
-
+            /*!
+             * @copydoc HF::Common::Serializable::unpack
+             *
+             * @pre The attribute @c attribute_factory __MUST NOT__ be equal to @c nullptr.
+             */
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
@@ -951,60 +951,25 @@ namespace HF
              */
             uint8_t count;
 
-            virtual ~Request()
-            {
-               /* *INDENT-OFF* */
-               std::for_each (attributes.begin (), attributes.end (),
-                              [](HF::Attributes::IAttribute *attr)
-               {
-                  delete attr;
-               });
-               /* *INDENT-ON* */
-            }
+            virtual ~Request();
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);    // Number of attributes.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
-            {
-               uint16_t result = sizeof(uint8_t);
-
-               /* *INDENT-OFF* */
-               std::for_each ( attributes.begin(), attributes.end(),
-                               [&result](HF::Attributes::IAttribute * attr)
-               {
-                  result += attr->size(true);
-               });
-               /* *INDENT-ON* */
-
-               return result;
-            }
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
-            {
-               uint16_t start = offset;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
-               offset += array.write (offset, (uint8_t) attributes.size ());
-
-               /* *INDENT-OFF* */
-               std::for_each (attributes.begin (), attributes.end (),
-                              [&array,&offset](HF::Attributes::IAttribute * attr)
-               {
-                  offset += attr->pack (array, offset, true);
-               });
-               /* *INDENT-ON* */
-
-               return offset - start;
-            }
-
-            //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
-            {
-               uint16_t start = offset;
-
-               offset += array.read (offset, count);
-
-               return offset - start;
-            }
+            /*!
+             * @copydoc HF::Common::Serializable::unpack
+             *
+             * @warning This method read __ONLY__ the number of attribute values that
+             * are in the @c array and palces that value into @c count.
+             * Further processing __MUST__ be done to read the attribute values.
+             */
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -1032,39 +997,39 @@ namespace HF
                   uid (uid), code (code)
                {}
 
-               //! @see HF::Common::Serializable::size
+               //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = sizeof(uint8_t) + sizeof(uint8_t);
 
                //! @copydoc HF::Common::Serializable::size
                uint16_t size () const
                {
-                  return Result::min_size;
+                  return min_size;
                }
 
                //! @copydoc HF::Common::Serializable::pack
                uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
                {
-                  uint16_t start = offset;
+                  SERIALIZABLE_CHECK (array, offset, min_size);
 
                   offset += array.write (offset, (uint8_t) uid);
-                  offset += array.write (offset, (uint8_t) code);
 
-                  return offset - start;
+                  array.write (offset, (uint8_t) code);
+
+                  return min_size;
                }
 
                //! @copydoc HF::Common::Serializable::unpack
                uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
                {
-                  uint16_t start = offset;
+                  SERIALIZABLE_CHECK (array, offset, min_size);
 
-                  uint8_t  temp;
-                  offset += array.read (offset, temp);
-                  uid     = temp;
+                  offset += array.read (offset, uid);
 
-                  offset += array.read (offset, temp);
-                  code    = static_cast <Common::Result>(temp);
+                  uint8_t temp;
+                  array.read (offset, temp);
+                  code = static_cast <Common::Result>(temp);
 
-                  return offset - start;
+                  return min_size;
                }
             };
 
@@ -1080,55 +1045,24 @@ namespace HF
              */
             uint8_t count;
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t); // Number of attribute results.
+
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const
             {
-               uint16_t result = sizeof(uint8_t); // Number of attribute results.
+               uint16_t result = min_size;
 
-               result += results.size () * (sizeof(uint8_t) + sizeof(uint8_t));
+               result += results.size () * Result::min_size;
 
                return result;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
-            {
-               uint16_t start = offset;
-
-               offset += array.write (offset, (uint8_t) results.size ());
-
-               /* *INDENT-OFF* */
-               std::for_each (results.begin (), results.end (), [&array,&offset](Result result)
-               {
-                  offset += result.pack (array, offset);
-               });
-               /* *INDENT-ON* */
-
-               return offset - start;
-            }
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
-            {
-               uint16_t start = offset;
-
-               offset += array.read (offset, count);
-
-               for (int i = 0; i < count; i++)
-               {
-                  if (!array.available (offset, Result::min_size))
-                  {
-                     break;
-                  }
-
-                  Result result;
-                  offset += result.unpack (array, offset);
-
-                  results.push_back (result);
-               }
-
-               return offset - start;
-            }
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
       } // namespace SetAttributePack

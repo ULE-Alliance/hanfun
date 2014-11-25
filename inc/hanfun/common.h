@@ -50,6 +50,29 @@
  */
 #define UNUSED(x)   (void) x
 
+/*!
+ * @ingroup common
+ *
+ * Helper macro to check if the given @c __array has enough size so @c __size bytes
+ * can be written/read from the given @c __offset.
+ *
+ * @warning This macro issues a <tt>return 0;</tt> when there aren't enough resources, i.e.
+ * the @c __array size is not sufficient for reading/writing to.
+ *
+ * @param [in] __array     reference to the ByteArray containing the data.
+ * @param [in] __offset    offset index to check available data from.
+ * @param [in] __size      number of bytes required.
+ */
+#define SERIALIZABLE_CHECK(__array, __offset, __size) \
+   {                                                  \
+      assert (__array.available (__offset, __size));  \
+                                                      \
+      if (!__array.available (__offset, __size))      \
+      {                                               \
+         return 0;                                    \
+      }                                               \
+   }
+
 // =============================================================================
 // API
 // =============================================================================
@@ -362,17 +385,13 @@ namespace HF
 
          uint16_t pack (ByteArray &array, uint16_t offset = 0) const
          {
-            assert (array.available(offset, size()));
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data.pack (array, offset);
          }
 
          uint16_t unpack (const ByteArray &array, uint16_t offset = 0)
          {
-            if (!array.available(offset, size()))
-            {
-               return 0;
-            }
-
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data.unpack (array, offset);
          }
 
@@ -411,17 +430,13 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            assert (array.available(offset, size()));
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data->pack (array, offset);
          }
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            if (!array.available(offset, size()))
-            {
-               return 0;
-            }
-
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data->unpack (array, offset);
          }
 
@@ -443,8 +458,6 @@ namespace HF
       struct SerializableHelper <T, typename std::enable_if <std::is_integral <typename std::remove_reference <T>::type>::value>::type> :
          public Common::Serializable
       {
-         static constexpr uint16_t min_size = sizeof(T);
-
          T data;
 
          SerializableHelper()
@@ -454,6 +467,9 @@ namespace HF
 
          SerializableHelper(T data):data (data) {}
 
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(T);
+
          uint16_t size () const
          {
             return min_size;
@@ -461,7 +477,8 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            assert (array.available(offset, min_size));
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
             array.write (offset, data);
 
             return min_size;
@@ -469,10 +486,7 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            if (!array.available(offset, min_size))
-            {
-               return 0;
-            }
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             array.read (offset, data);
 
@@ -494,14 +508,15 @@ namespace HF
       struct SerializableHelper <Common::ByteArray> :
          public Common::Serializable
       {
-         static constexpr uint16_t min_size = sizeof(uint8_t);
-
          Common::ByteArray data;
 
          SerializableHelper()
          {}
 
          SerializableHelper(Common::ByteArray _data):data (_data) {}
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t);
 
          uint16_t size () const
          {
@@ -510,7 +525,7 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            assert (array.available(offset, size()));
+            SERIALIZABLE_CHECK (array, offset, size ());
 
             uint16_t start = offset;
 
@@ -528,20 +543,14 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            if (!array.available(offset, min_size))
-            {
-               return 0;
-            }
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             uint16_t start = offset;
 
             uint8_t  _size = 0;
             offset += array.read (offset, _size);
 
-            if (!array.available(offset, _size))
-            {
-               return 0;
-            }
+            SERIALIZABLE_CHECK (array, offset, _size);
 
             auto it = array.begin ();
             std::advance (it, offset);
@@ -576,14 +585,15 @@ namespace HF
       struct SerializableHelper <std::string> :
          public Common::Serializable
       {
-         static constexpr uint16_t min_size = sizeof(uint8_t);
-
          std::string data;
 
          SerializableHelper()
          {}
 
          SerializableHelper(std::string _data):data (_data) {}
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t);
 
          uint16_t size () const
          {
@@ -592,7 +602,7 @@ namespace HF
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            assert (array.available(offset, size()));
+            SERIALIZABLE_CHECK (array, offset, size ());
 
             uint16_t start = offset;
 
@@ -610,20 +620,14 @@ namespace HF
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            if (!array.available(offset, min_size))
-            {
-               return 0;
-            }
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             uint16_t start = offset;
 
             uint8_t  _size = 0;
             offset += array.read (offset, _size);
 
-            if (!array.available(offset, _size))
-            {
-               return 0;
-            }
+            SERIALIZABLE_CHECK (array, offset, _size);
 
             auto it = array.begin ();
             std::advance (it, offset);
@@ -697,6 +701,9 @@ namespace HF
          Interface(uint16_t id = 0, uint8_t role = 0):
             role (role), id (id)
          {}
+
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint16_t);   // Interface UID.
 
          //! @copydoc HF::Common::Serializable::size
          uint16_t size () const;

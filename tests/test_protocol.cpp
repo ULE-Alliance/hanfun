@@ -183,6 +183,8 @@ TEST_GROUP (Message)
 
    ByteArray   expected;
 
+   Testing::Payload payload;
+
    TEST_SETUP ()
    {
       expected = ByteArray {0x00, 0x00, 0x00,
@@ -191,6 +193,11 @@ TEST_GROUP (Message)
                             0xFA, 0xAA, 0x55,           // Interface Address.
                             0x01, 0xAA,                 // Payload length.
                             0x00, 0x00, 0x00};
+
+      payload = Testing::Payload (0x01AA);
+
+      expected.reserve (expected.size () + payload.size ());
+      expected.insert (expected.begin () + 10, payload.data.begin (), payload.data.end ());
    }
 
    TEST_TEARDOWN ()
@@ -202,9 +209,7 @@ TEST (Message, Size)
    LONGS_EQUAL (0, message.payload.size ());
    LONGS_EQUAL (7, message.size ());
 
-   Testing::Payload payload (42);
-
-   payload.pack (message.payload);
+   message.payload = ByteArray (42);
 
    LONGS_EQUAL (7 + 42, message.size ());
 }
@@ -218,15 +223,13 @@ TEST (Message, Pack)
    message.itf.id     = 0x7AAA;
    message.itf.member = 0x55;
 
-   uint16_t size = message.size ();
-
-   Testing::Payload payload (0xFFAA);
    payload.pack (message.payload);
 
+   uint16_t  size = message.size ();
    ByteArray array (size + 6);
 
    uint16_t  wsize = message.pack (array, 3);
-   LONGS_EQUAL (size + (0xFFAA & Protocol::MAX_PAYLOAD), wsize);
+   LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 }
@@ -244,6 +247,12 @@ TEST (Message, Unpack)
    LONGS_EQUAL (0x55, message.itf.member);
 
    LONGS_EQUAL (0x01AA, message.length);
+
+   Testing::Payload temp (payload.size ());
+
+   temp.unpack (expected, 3 + 7);
+
+   CHECK_EQUAL (payload.data, temp.data);
 }
 
 // =============================================================================

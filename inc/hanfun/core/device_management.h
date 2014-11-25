@@ -135,6 +135,11 @@ namespace HF
                id (unit.id ()), profile (unit.uid ()), interfaces (unit.interfaces ())
             {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t)     // Unit entry size.
+                                                 + sizeof(uint8_t)   // Unit ID.
+                                                 + sizeof(uint16_t); // Unit's profile UID.
+
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
 
@@ -181,6 +186,10 @@ namespace HF
             // =============================================================================
             // Serializable API
             // =============================================================================
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t)   // Device Address.
+                                                 + sizeof(uint8_t); // Number of units.
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
@@ -243,6 +252,10 @@ namespace HF
 
             virtual ~RegisterMessage();
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = UID::UID_T::min_size // UID.
+                                                 + sizeof(uint8_t);   // Number of units.
+
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
 
@@ -261,7 +274,7 @@ namespace HF
             uint16_t address; //!< Address for the device to use.
             uint16_t emc;     //!< HAN-FUN Concentrator EMC if applicable.
 
-            RegisterResponse(uint16_t address = 0, uint16_t emc = 0):
+            RegisterResponse(uint16_t address = Protocol::BROADCAST_ADDR, uint16_t emc = 0):
                address (address & Protocol::BROADCAST_ADDR), emc (emc)
             {}
 
@@ -291,6 +304,9 @@ namespace HF
             DeregisterMessage(uint16_t address = 0):
                address (address)
             {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t);   // Device Address.
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;

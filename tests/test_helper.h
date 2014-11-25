@@ -89,36 +89,49 @@ namespace HF
    {
       struct Payload
       {
-         uint16_t fake_size;
+         Common::ByteArray data;
 
-         Payload(uint16_t fake_size = 0):
-            fake_size (fake_size & Protocol::MAX_PAYLOAD)
-         {}
+         Payload(uint16_t _size = 0):
+            data (_size & Protocol::MAX_PAYLOAD)
+         {
+            std::random_device rd;
+            std::mt19937 mt (rd ());
+            std::uniform_int_distribution <uint8_t> dist;
+
+            auto gen = std::bind (dist, mt);
+
+            std::generate_n (data.begin (), data.size (), gen);
+         }
 
          virtual ~Payload()
          {}
 
          uint16_t size () const
          {
-            return fake_size;
+            return data.size ();
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            array.extend (fake_size);
+            array.extend (data.size ());
 
             auto start = array.begin () + offset;
 
-            array.insert (start, fake_size, 0x00);
+            array.insert (start, data.begin (), data.end ());
 
-            return fake_size;
+            return data.size ();
          }
 
          uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            UNUSED (array);
-            UNUSED (offset);
-            return fake_size;
+            assert (array.available (offset, data.size ()));
+
+            auto begin = array.begin () + offset;
+            auto end   = begin + data.size ();
+
+            std::copy (begin, end, data.begin ());
+
+            return data.size ();
          }
       };
 
