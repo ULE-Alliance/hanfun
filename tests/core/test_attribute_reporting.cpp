@@ -1106,7 +1106,6 @@ TEST_GROUP (AttrReport_Report_Periodic)
 
       expected = {0x00,                 0x00, 0x00,
                   0x0A,                       // Report ID.
-                  0x03,                       // Number of entries.
                                               // Entry 1
                   0x55,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
@@ -1251,19 +1250,19 @@ TEST_GROUP (AttrReport_Report_Periodic)
 
 TEST (AttrReport_Report_Periodic, Size)
 {
-   LONGS_EQUAL (1 + 1, report.size ());
+   LONGS_EQUAL (1, report.size ());
 
    create_entry_1 ();
 
-   LONGS_EQUAL (1 + 1 + (1 + 2) + 1 + 3 * (1 + 2), report.size ());
+   LONGS_EQUAL (1 + (1 + 2) + 1 + 3 * (1 + 2), report.size ());
 
    create_entry_2 ();
 
-   LONGS_EQUAL (1 + 1 + 2 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 2 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
 
    create_entry_3 ();
 
-   LONGS_EQUAL (1 + 1 + 3 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 3 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
 };
 
 TEST (AttrReport_Report_Periodic, Empty)
@@ -1311,6 +1310,67 @@ TEST (AttrReport_Report_Periodic, Unpack)
    {
       LONGS_EQUAL (0x03, entry.attributes.size ());
    }
+};
+
+/*!
+ * @test Test the attribute reporting event report unpack method,
+ * with enough data to match the expected report and keep adding more data
+ * to check parsing keeps working.
+ */
+TEST (AttrReport_Report_Periodic, Unpack2)
+{
+   expected.push_back (0x02);
+
+   create_entry_3 ();
+   create_entry_2 ();
+   create_entry_1 ();
+
+   uint16_t size = report.size ();
+
+   report = Report::Periodic ();
+
+   HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
+
+   size += Report::Entry::min_size;
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
+
+   report = Report::Periodic ();
+
+   // Add extra bytes : Attribute UID.
+   expected.push_back (TestInterface::ATTR2);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
+
+   report = Report::Periodic ();
+
+   // Add extra bytes : Attribute value incomplete.
+   expected.push_back (0xEE);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
+
+   report = Report::Periodic ();
+
+   // Add extra bytes : Attribute value complete.
+   expected.push_back (0xEE);
+
+   size += sizeof(uint8_t) + sizeof(uint16_t);
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x01, report.entries.front ().attributes.size ());
 };
 
 // =============================================================================
@@ -1525,7 +1585,6 @@ TEST_GROUP (AttrReport_Report_Event)
 
       expected = {0x00,                 0x00, 0x00,
                   0x8A,                       // Report ID.
-                  0x03,                       // Number of entries.
                                               // Entry 1
                   0x55,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
@@ -1552,7 +1611,7 @@ TEST_GROUP (AttrReport_Report_Event)
                   TestInterface::ATTR3,
                   Event::LT,
                   0x9A,                 0xBC,
-                                              // Entry 2
+                                              // Entry 3
                   0x57,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of fields.
@@ -1709,19 +1768,19 @@ TEST_GROUP (AttrReport_Report_Event)
 
 TEST (AttrReport_Report_Event, Size)
 {
-   LONGS_EQUAL (1 + 1, report.size ());
+   LONGS_EQUAL (1, report.size ());
 
    create_entry_1 ();
 
-   LONGS_EQUAL (1 + 1 + (1 + 2) + 1 + 3 * (1 + 1 + 2), report.size ());
+   LONGS_EQUAL (1 + (1 + 2) + 1 + 3 * (1 + 1 + 2), report.size ());
 
    create_entry_2 ();
 
-   LONGS_EQUAL (1 + 1 + 2 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 2 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
 
    create_entry_3 ();
 
-   LONGS_EQUAL (1 + 1 + 3 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 3 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
 };
 
 TEST (AttrReport_Report_Event, Empty)
@@ -1749,6 +1808,10 @@ TEST (AttrReport_Report_Event, Pack)
    CHECK_EQUAL (expected, result);
 };
 
+/*!
+ * @test Test the attribute reporting event report unpack method,
+ * with enough data to match the expected report.
+ */
 TEST (AttrReport_Report_Event, Unpack)
 {
    create_entry_3 ();
@@ -1769,6 +1832,77 @@ TEST (AttrReport_Report_Event, Unpack)
    {
       LONGS_EQUAL (0x03, entry.fields.size ());
    }
+};
+
+/*!
+ * @test Test the attribute reporting event report unpack method,
+ * with enough data to match the expected report and keep adding more data
+ * to check parsing keeps working.
+ */
+TEST (AttrReport_Report_Event, Unpack2)
+{
+   // Add extra byte.
+   expected.push_back (0x02);
+
+   create_entry_3 ();
+   create_entry_2 ();
+   create_entry_1 ();
+
+   uint16_t size = report.size ();
+
+   report = Report::Event ();
+
+   HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
+
+   LONGS_EQUAL (size + Report::Entry::min_size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   // Add extra bytes : Invalid field.
+   expected.push_back (TestInterface::ATTR2);
+
+   size += Report::Entry::min_size;
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   expected.push_back (Event::LT);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   expected.push_back (0xEE);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   expected.push_back (0xEE);
+
+   // Add field size and attribute value size to read size expected value.
+   size += Report::Event::Field::min_size + sizeof(uint16_t);
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x01, report.entries.front ().fields.size ());
 };
 
 // =============================================================================

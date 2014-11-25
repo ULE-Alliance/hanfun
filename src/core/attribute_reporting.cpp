@@ -896,8 +896,7 @@ void Report::Periodic::Entry::add (HF::Attributes::IAttribute * &attr)
 // =============================================================================
 uint16_t Report::Periodic::size () const
 {
-   uint16_t result = Reference::size () +
-                     sizeof(uint8_t);  // Number entries.
+   uint16_t result = Report::Abstract::size ();
 
    /* *INDENT-OFF* */
    std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
@@ -923,10 +922,6 @@ uint16_t Report::Periodic::pack (Common::ByteArray &array, uint16_t offset) cons
    uint16_t start = offset;
 
    offset += Report::Abstract::pack (array, offset);
-
-   uint8_t _count = std::distance (entries.begin (), entries.end ());
-
-   offset += array.write (offset, _count);
 
    /* *INDENT-OFF* */
    std::for_each(entries.begin(), entries.end(), [&offset, &array](const Entry &entry)
@@ -957,15 +952,19 @@ uint16_t Report::Periodic::unpack (HF::Attributes::FactoryGetter get_factory,
 
    offset += Report::Abstract::unpack (array, offset);
 
-   uint8_t count = 0;
-
-   offset += array.read (offset, count);
-
-   for (uint8_t i = 0; i < count; i++)
+   for (Entry entry; array.available (offset, Entry::min_size); entry = Entry ())
    {
-      Entry entry;
-      offset += entry.unpack (get_factory, array, offset);
-      add (entry);
+      uint16_t res = entry.unpack (get_factory, array, offset);
+
+      if (res != 0)
+      {
+         add (entry);
+         offset += res;
+      }
+      else
+      {
+         break;
+      }
    }
 
    return offset - start;
@@ -1163,8 +1162,7 @@ uint16_t Report::Event::Entry::unpack (HF::Attributes::Factory factory,
 // =============================================================================
 uint16_t Report::Event::size () const
 {
-   uint16_t result = Reference::size () +
-                     sizeof(uint8_t);  // Number entries.
+   uint16_t result = Reference::size ();
 
    /* *INDENT-OFF* */
    std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
@@ -1190,10 +1188,6 @@ uint16_t Report::Event::pack (Common::ByteArray &array, uint16_t offset) const
    uint16_t start = offset;
 
    offset += Report::Abstract::pack (array, offset);
-
-   uint8_t _count = std::distance (entries.begin (), entries.end ());
-
-   offset += array.write (offset, _count);
 
    /* *INDENT-OFF* */
    std::for_each(entries.begin(), entries.end(), [&offset, &array](const Entry &entry)
@@ -1224,15 +1218,15 @@ uint16_t Report::Event::unpack (HF::Attributes::FactoryGetter get_factory,
 
    offset += Report::Abstract::unpack (array, offset);
 
-   uint8_t count = 0;
-
-   offset += array.read (offset, count);
-
-   for (uint8_t i = 0; i < count; i++)
+   for (Entry entry; array.available (offset, Entry::min_size); entry = Entry ())
    {
-      Entry entry;
-      offset += entry.unpack (get_factory, array, offset);
-      add (entry);
+      uint16_t res = entry.unpack (get_factory, array, offset);
+
+      if (res != 0)
+      {
+         offset += res;
+         add (entry);
+      }
    }
 
    return offset - start;
