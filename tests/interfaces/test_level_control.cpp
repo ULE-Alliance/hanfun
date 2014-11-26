@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Level Control Interface implementation.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

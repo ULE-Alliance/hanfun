@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Top CMakeList
 #
-#   @version    1.1.1
+#   @version    1.2.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -38,8 +38,8 @@ include("cmake/compiler.cmake")
 
 # The version number.
 set(HF_MAJOR_VERSION 1)
-set(HF_MINOR_VERSION 1)
-set(HF_PATCH_VERSION 1)
+set(HF_MINOR_VERSION 2)
+set(HF_PATCH_VERSION 0)
 
 set(HF_VERSION "${HF_MAJOR_VERSION}.${HF_MINOR_VERSION}.${HF_PATCH_VERSION}")
 
