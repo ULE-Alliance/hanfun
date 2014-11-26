@@ -27,7 +27,7 @@ XZ_EXECUTABLE=$(which xz)
 git config --local --replace-all tar.tar.xz.command "${XZ_EXECUTABLE} -c"
 
 # Get release version string
-RELEASE=$(git describe HEAD)
+RELEASE=$(git describe --tags HEAD)
 RELEASE=${RELEASE//-/_}
 RELEASE=${RELEASE/v/hanfun-}
 
@@ -38,17 +38,15 @@ PROJECT_DIR="$(git rev-parse --show-toplevel)"
 pushd $PROJECT_DIR > release.log
 
 # Create source tarball
-echo -n "Creating source tarball ... "
+echo -n "Creating source tarball (${RELEASE}.tar.xz) ... "
 git archive --prefix "${RELEASE}/" --output "${RELEASE}.tar.xz" HEAD
 echo "done !"
 
 # Create documentation tarball.
-echo -n "Creating documentation tarball ... "
-pushd doc/ > release.log
 RELEASE=${RELEASE/-/_api-}
-cp -R html "${RELEASE}"
-tar cf - "${RELEASE}" | xz > ../"${RELEASE}".tar.xz
-rm -rf "${RELEASE}"
+echo -n "Creating documentation tarball (${RELEASE}.tar.xz) ... "
+pushd doc/ > release.log
+cp -R html "${RELEASE}" && tar cf - "${RELEASE}" | xz > "../${RELEASE}.tar.xz" && rm -rf "${RELEASE}"
 popd > release.log
 echo "done !"
 

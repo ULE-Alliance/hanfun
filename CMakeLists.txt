@@ -40,8 +40,9 @@ include("cmake/compiler.cmake")
 set(HF_MAJOR_VERSION 1)
 set(HF_MINOR_VERSION 2)
 set(HF_PATCH_VERSION 0)
+set(HF_OTHER_VERSION "-rc1")
 
-set(HF_VERSION "${HF_MAJOR_VERSION}.${HF_MINOR_VERSION}.${HF_PATCH_VERSION}")
+set(HF_VERSION "${HF_MAJOR_VERSION}.${HF_MINOR_VERSION}.${HF_PATCH_VERSION}${HF_OTHER_VERSION}")
 
 configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
                 ${CMAKE_BINARY_DIR}/hanfun/version.h )
