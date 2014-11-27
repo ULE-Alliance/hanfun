@@ -4,7 +4,7 @@
  *
  * This file contains an example demonstrating registration event handling.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -41,7 +41,7 @@ namespace
 
       void registered (HF::Core::DeviceManagement::RegisterResponse &response)
       {
-         HF::Core::DeviceManagement::Client::registered(response);
+         HF::Core::DeviceManagement::Client::registered (response);
 
          LOG (INFO) << ">>> Registration response <<<" << NL;
          LOG (INFO) << "   Code : " << (int) response.code << NL;
@@ -54,19 +54,19 @@ namespace
     * Custom Unit 0 for node with the custom Device Management service.
     */
    struct NodeUnit0:public HF::Devices::Node::Unit0 <HF::Core::DeviceInformation::Server,
-                                                       DeviceManagementClient,
-                                                       HF::Core::AttributeReporting::Server>
+                                                     DeviceManagementClient,
+                                                     HF::Core::AttributeReporting::Server>
    {
       NodeUnit0(HF::IDevice &device):
          HF::Devices::Node::Unit0 <HF::Core::DeviceInformation::Server, DeviceManagementClient,
-                                           HF::Core::AttributeReporting::Server>(device)
+                                   HF::Core::AttributeReporting::Server>(device)
       {}
    };
 
    /*
     * Example node.
     */
-   struct Node:public HF::Devices::Node::Abstract<NodeUnit0>
+   struct Node:public HF::Devices::Node::Abstract <NodeUnit0>
    {};
 
    //! [Node custom code]
@@ -95,9 +95,9 @@ namespace
     * Custom Unit 0 for concentrator with the custom Device Management service.
     */
    struct BaseUnit0:public HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                                         DeviceManagementServer,
-                                                         HF::Core::AttributeReporting::Server,
-                                                         HF::Core::BindManagement::DefaultServer>
+                                                             DeviceManagementServer,
+                                                             HF::Core::AttributeReporting::Server,
+                                                             HF::Core::BindManagement::DefaultServer>
    {
       BaseUnit0(HF::IDevice &device):
          HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,

@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/devices.cpp
+ * @file       src/devices.cpp
  *
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * \version    1.1.1
+ * @version    1.2.0
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -76,8 +76,8 @@ void AbstractDevice::send (Protocol::Packet &packet)
 
    Transport::Link *tsp_link = packet.link;
 
-   // Update message reference.
-   if (packet.source.device == address ())
+   // Update message reference if it is a request.
+   if (packet.source.device == address () && Protocol::request (packet.message.type, false))
    {
       packet.message.reference = this->next_reference++;
    }
@@ -106,7 +106,7 @@ void AbstractDevice::send (Protocol::Packet &packet)
  *
  */
 // =============================================================================
-void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
@@ -123,12 +123,16 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
    // Send missing response.
    if (response_filter (packet))
    {
-      Protocol::Packet *resp_packet = new Protocol::Packet (packet.message);
+      Protocol::Message  *message = new Protocol::Message (packet.message, 0);
+      Protocol::Response resp (result);
+      message->payload = Common::ByteArray (resp.size ());
+
+      resp.pack (message->payload);
+
+      Protocol::Packet *resp_packet = new Protocol::Packet (*message);
       resp_packet->link = packet.link;
 
-      Protocol::Response resp (result);
-      resp_packet->message.payload = Common::ByteArray (resp.size ());
-      resp.pack (resp_packet->message.payload);
+      delete message;
 
       send (*resp_packet);
 
@@ -205,7 +209,7 @@ void Concentrator::AbstractBase::disconnected (HF::Transport::Link *link)
  */
 // =============================================================================
 void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload,
-                                          size_t offset)
+                                          uint16_t offset)
 {
    if (packet.destination.device == Protocol::BROADCAST_ADDR)
    {
@@ -266,8 +270,15 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
  */
 // =============================================================================
 void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                               size_t offset)
+                                               uint16_t offset)
 {
+   // Only route messages that are commands.
+   if (!(packet.message.type == Protocol::Message::COMMAND_REQ ||
+         packet.message.type == Protocol::Message::COMMAND_RESP_REQ))
+   {
+      return;
+   }
+
    // Find bind entries for device.
    auto &entries = unit0 ()->bind_management ()->entries ();
 

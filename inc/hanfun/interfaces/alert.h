@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Alert interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -85,6 +85,10 @@ namespace HF
           */
          struct Message
          {
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t)    // Profile UID.
+                                                 + sizeof(uint32_t); // State.
+
             uint16_t type;        //!< Unit Type that generated the message.
             uint32_t state;       //!< Current state of the server.
 
@@ -97,13 +101,13 @@ namespace HF
             Message(uint16_t type = 0, uint32_t state = 0);
 
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -155,7 +159,7 @@ namespace HF
 
             using Interfaces::Base <Interface::ALERT>::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
                return payload_size_helper <Message>();
@@ -339,6 +343,7 @@ namespace HF
                return HF::Attributes::UIDS ({ Alert::STATE_ATTR, Alert::ENABLE_ATTR });
                /* *INDENT-ON* */
             }
+
             protected:
 
             /*!
@@ -399,7 +404,7 @@ namespace HF
             protected:
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*! @} */

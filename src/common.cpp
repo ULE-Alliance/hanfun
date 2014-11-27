@@ -5,7 +5,7 @@
  * This file contains the implementation of the common classes and functions
  * of the HAN-FUN library.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -44,10 +44,10 @@ using namespace HF::Common;
 // ByteArray
 // =============================================================================
 
-ByteArray::ByteArray(size_t size):std::vector <uint8_t>(size, 0)
+ByteArray::ByteArray(uint16_t size):std::vector <uint8_t>(size, 0)
 {}
 
-ByteArray::ByteArray(const uint8_t data[], const size_t size):vector (size, 0)
+ByteArray::ByteArray(const uint8_t data[], const uint16_t size):vector (size, 0)
 {
    memcpy (this->data (), data, size);
 }
@@ -59,7 +59,7 @@ ByteArray::ByteArray(const uint8_t data[], const size_t size):vector (size, 0)
  *
  */
 // =============================================================================
-size_t ByteArray::write (size_t offset, uint8_t data)
+uint16_t ByteArray::write (uint16_t offset, uint8_t data)
 {
    at (offset) = data;
    return sizeof(uint8_t);
@@ -72,7 +72,7 @@ size_t ByteArray::write (size_t offset, uint8_t data)
  *
  */
 // =============================================================================
-size_t ByteArray::write (size_t offset, uint16_t data)
+uint16_t ByteArray::write (uint16_t offset, uint16_t data)
 {
    at (offset)     = (data & BYTE_2_MASK) >> 8;
    at (offset + 1) = (data & BYTE_1_MASK);
@@ -87,7 +87,7 @@ size_t ByteArray::write (size_t offset, uint16_t data)
  *
  */
 // =============================================================================
-size_t ByteArray::write (size_t offset, uint32_t data)
+uint16_t ByteArray::write (uint16_t offset, uint32_t data)
 {
    at (offset)     = (data & BYTE_4_MASK) >> 24;
    at (offset + 1) = (data & BYTE_3_MASK) >> 16;
@@ -104,7 +104,7 @@ size_t ByteArray::write (size_t offset, uint32_t data)
  *
  */
 // =============================================================================
-size_t ByteArray::read (size_t offset, uint8_t &data) const
+uint16_t ByteArray::read (uint16_t offset, uint8_t &data) const
 {
    data = at (offset);
    return sizeof(uint8_t);
@@ -117,7 +117,7 @@ size_t ByteArray::read (size_t offset, uint8_t &data) const
  *
  */
 // =============================================================================
-size_t ByteArray::read (size_t offset, uint16_t &data) const
+uint16_t ByteArray::read (uint16_t offset, uint16_t &data) const
 {
    data = ((uint16_t) at (offset)) << 8 | at (offset + 1);
 
@@ -131,7 +131,7 @@ size_t ByteArray::read (size_t offset, uint16_t &data) const
  *
  */
 // =============================================================================
-size_t ByteArray::read (size_t offset, uint32_t &data) const
+uint16_t ByteArray::read (uint16_t offset, uint32_t &data) const
 {
    data  = ((uint32_t) at (offset)) << 24;
    data |= ((uint32_t) at (offset + 1)) << 16;
@@ -152,9 +152,9 @@ size_t ByteArray::read (size_t offset, uint32_t &data) const
  *
  */
 // =============================================================================
-size_t Common::Interface::size () const
+uint16_t Common::Interface::size () const
 {
-   return sizeof(uint16_t);  // Interface UID.
+   return min_size;
 }
 
 // =============================================================================
@@ -164,15 +164,15 @@ size_t Common::Interface::size () const
  *
  */
 // =============================================================================
-size_t Common::Interface::pack (ByteArray &array, size_t offset) const
+uint16_t Common::Interface::pack (ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::MAX_UID);
 
-   offset += array.write (offset, uid);
+   array.write (offset, uid);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -182,15 +182,15 @@ size_t Common::Interface::pack (ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Common::Interface::unpack (const ByteArray &array, size_t offset)
+uint16_t Common::Interface::unpack (const ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    uint16_t uid = 0;
-   offset    += array.read (offset, uid);
+   array.read (offset, uid);
 
    this->role = (uid & ~HF::Interface::MAX_UID) >> 15;
    this->id   = uid & HF::Interface::MAX_UID;
 
-   return offset - start;
+   return min_size;
 }

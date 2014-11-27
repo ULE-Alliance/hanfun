@@ -5,7 +5,7 @@
  * This file contains the definition of the Node class that represents the
  * HAN-FUN Node on the application.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -33,7 +33,7 @@
  */
 struct Node:public HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>
 {
-   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset);
+   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset);
 };
 
 /*!

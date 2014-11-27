@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the UIDs classes in HAN-FUN.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -31,21 +31,20 @@ using namespace HF::UID;
  *
  */
 // =============================================================================
-size_t UID::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t UID::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, sizeof(uint8_t));
+
+   uint8_t type = Type::NONE_UID;
+   array.read (offset, type);
 
    if (owner)
    {
       delete _raw;
    }
 
-   _raw  = nullptr;
    owner = true;
-
-   uint8_t type = Type::NONE_UID;
-
-   array.read (offset, type);
+   _raw  = nullptr;
 
    // Remove upper bit so it can be used for other purposes.
    type &= (~0x80);
@@ -56,12 +55,12 @@ size_t UID::unpack (const Common::ByteArray &array, size_t offset)
          _raw = new HF::UID::NONE ();
          break;
 
-      case HF::UID::IPUI_UID:
-         _raw = new HF::UID::IPUI ();
+      case HF::UID::DECT_UID:
+         _raw = new HF::UID::DECT ();
          break;
 
-      case HF::UID::RFPI_UID:
-         _raw = new HF::UID::RFPI ();
+      case HF::UID::MAC_UID:
+         _raw = new HF::UID::MAC ();
          break;
 
       case HF::UID::URI_UID:
@@ -69,7 +68,7 @@ size_t UID::unpack (const Common::ByteArray &array, size_t offset)
          break;
    }
 
-   offset += _raw->unpack (array, offset);
+   offset = _raw->unpack (array, offset);
 
-   return offset - start;
+   return offset;
 }

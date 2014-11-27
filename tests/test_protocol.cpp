@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the protocol
  * layer in the HAN-FUN specification.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -64,7 +64,7 @@ TEST (Message_Address, Pack)
 
    ByteArray array (addr.size () + 6);
 
-   size_t    wsize = addr.pack (array, 3);
+   uint16_t  wsize = addr.pack (array, 3);
    LONGS_EQUAL (addr.size (), wsize);
 
    CHECK_EQUAL (expected_1, array);
@@ -81,7 +81,7 @@ TEST (Message_Address, Pack)
 
 TEST (Message_Address, Unpack)
 {
-   size_t rsize = addr.unpack (expected_1, 3);
+   uint16_t rsize = addr.unpack (expected_1, 3);
    LONGS_EQUAL (addr.size (), rsize);
 
    LONGS_EQUAL (1, addr.mod);
@@ -136,7 +136,7 @@ TEST (Message_Interface, Pack)
 
    ByteArray array (addr.size () + 6);
 
-   size_t    wsize = addr.pack (array, 3);
+   uint16_t  wsize = addr.pack (array, 3);
    LONGS_EQUAL (addr.size (), wsize);
 
    CHECK_EQUAL (expected_1, array);
@@ -153,7 +153,7 @@ TEST (Message_Interface, Pack)
 
 TEST (Message_Interface, Unpack)
 {
-   size_t rsize = addr.unpack (expected_1, 3);
+   uint16_t rsize = addr.unpack (expected_1, 3);
    LONGS_EQUAL (addr.size (), rsize);
 
    LONGS_EQUAL (1, addr.role);
@@ -183,6 +183,8 @@ TEST_GROUP (Message)
 
    ByteArray   expected;
 
+   Testing::Payload payload;
+
    TEST_SETUP ()
    {
       expected = ByteArray {0x00, 0x00, 0x00,
@@ -191,6 +193,11 @@ TEST_GROUP (Message)
                             0xFA, 0xAA, 0x55,           // Interface Address.
                             0x01, 0xAA,                 // Payload length.
                             0x00, 0x00, 0x00};
+
+      payload = Testing::Payload (0x01AA);
+
+      expected.reserve (expected.size () + payload.size ());
+      expected.insert (expected.begin () + 10, payload.data.begin (), payload.data.end ());
    }
 
    TEST_TEARDOWN ()
@@ -202,9 +209,7 @@ TEST (Message, Size)
    LONGS_EQUAL (0, message.payload.size ());
    LONGS_EQUAL (7, message.size ());
 
-   Testing::Payload payload (42);
-
-   payload.pack (message.payload);
+   message.payload = ByteArray (42);
 
    LONGS_EQUAL (7 + 42, message.size ());
 }
@@ -218,22 +223,20 @@ TEST (Message, Pack)
    message.itf.id     = 0x7AAA;
    message.itf.member = 0x55;
 
-   size_t size = message.size ();
-
-   Testing::Payload payload (0xFFAA);
    payload.pack (message.payload);
 
+   uint16_t  size = message.size ();
    ByteArray array (size + 6);
 
-   size_t    wsize = message.pack (array, 3);
-   LONGS_EQUAL (size + (0xFFAA & Protocol::MAX_PAYLOAD), wsize);
+   uint16_t  wsize = message.pack (array, 3);
+   LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 }
 
 TEST (Message, Unpack)
 {
-   size_t rsize = message.unpack (expected, 3);
+   uint16_t rsize = message.unpack (expected, 3);
    LONGS_EQUAL (7, rsize);
 
    LONGS_EQUAL (0xAA, message.reference);
@@ -244,6 +247,12 @@ TEST (Message, Unpack)
    LONGS_EQUAL (0x55, message.itf.member);
 
    LONGS_EQUAL (0x01AA, message.length);
+
+   Testing::Payload temp (payload.size ());
+
+   temp.unpack (expected, 3 + 7);
+
+   CHECK_EQUAL (payload.data, temp.data);
 }
 
 // =============================================================================
@@ -258,14 +267,14 @@ TEST_GROUP (Packet)
 
       uint8_t data;
 
-      size_t size () const
+      uint16_t size () const
       {
          return sizeof(uint8_t);
       }
 
-      size_t pack (ByteArray &array, size_t offset = 0) const
+      uint16_t pack (ByteArray &array, uint16_t offset = 0) const
       {
-         size_t start = offset;
+         uint16_t start = offset;
 
          array.extend (size ());
          array.insert (array.begin () + offset, size (), 0);
@@ -275,9 +284,9 @@ TEST_GROUP (Packet)
          return offset - start;
       }
 
-      size_t unpack (const ByteArray &array, size_t offset = 0)
+      uint16_t unpack (const ByteArray &array, uint16_t offset = 0)
       {
-         size_t start = offset;
+         uint16_t start = offset;
 
          offset += array.read (offset, this->data);
 
@@ -320,9 +329,9 @@ TEST (Packet, Size)
 {
    Protocol::Address addr;
 
-   size_t size = 2 * addr.size () +       // Network address
-                 sizeof(uint16_t) +       // Transport header.
-                 packet->message.size (); // Payload size.
+   uint16_t size = 2 * addr.size () +       // Network address
+                   sizeof(uint16_t) +       // Transport header.
+                   packet->message.size (); // Payload size.
 
    LONGS_EQUAL (size, packet->size ());
 }
@@ -349,7 +358,7 @@ TEST (Packet, Pack)
 
    ByteArray array (packet->size () + 6);
 
-   size_t    wsize = packet->pack (array, 3);
+   uint16_t  wsize = packet->pack (array, 3);
    LONGS_EQUAL (6 + 2 + 7 + 1, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -357,7 +366,7 @@ TEST (Packet, Pack)
 
 TEST (Packet, Unpack)
 {
-   size_t rsize = packet->unpack (expected, 3);
+   uint16_t rsize = packet->unpack (expected, 3);
    LONGS_EQUAL (6 + 2 + 7, rsize);
 
    LONGS_EQUAL (Protocol::Address::DEVICE, packet->source.mod);
@@ -393,7 +402,7 @@ TEST_GROUP (Response)
    {
       /* *INDENT-OFF* */
       expected = ByteArray { 0x00, 0x00, 0x00,
-                              Result::FAIL_ID,
+                              Result::FAIL_ARG,
                               0x00, 0x00, 0x00 };
       /* *INDENT-ON* */
 
@@ -413,13 +422,13 @@ TEST (Response, Size)
 
 TEST (Response, Pack)
 {
-   response->code = Result::FAIL_ID;
+   response->code = Result::FAIL_ARG;
 
-   size_t size = response->size ();
+   uint16_t  size = response->size ();
 
    ByteArray array (response->size () + 6);
 
-   size_t    wsize = response->pack (array, 3);
+   uint16_t  wsize = response->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -427,10 +436,10 @@ TEST (Response, Pack)
 
 TEST (Response, Unpack)
 {
-   size_t rsize = response->unpack (expected, 3);
+   uint16_t rsize = response->unpack (expected, 3);
    LONGS_EQUAL (1, rsize);  // Response code.
 
-   LONGS_EQUAL (Result::FAIL_ID, response->code);
+   LONGS_EQUAL (Result::FAIL_ARG, response->code);
 }
 
 // =============================================================================
@@ -766,7 +775,7 @@ TEST_GROUP (FilterRepeated)
 
 TEST (FilterRepeated, Empty)
 {
-   size_t size = filter.size ();
+   uint16_t size = filter.size ();
 
    CHECK_FALSE (filter (packet, payload));
 
@@ -780,7 +789,7 @@ TEST (FilterRepeated, NoMatch)
 
    CHECK_FALSE (filter (packet, payload));
 
-   size_t size = filter.size ();
+   uint16_t size = filter.size ();
 
    packet.source.device     = 0x5ABC;
    packet.message.reference = 0x22;
@@ -799,7 +808,7 @@ TEST (FilterRepeated, MatchAddess)
 
    CHECK_FALSE (filter (packet, payload));
 
-   size_t size = filter.size ();
+   uint16_t size = filter.size ();
    packet.message.reference = 0x22;
 
    CHECK_FALSE (filter (packet, payload));
@@ -814,7 +823,7 @@ TEST (FilterRepeated, MatchAddessAndReference)
 
    CHECK_FALSE (filter (packet, payload));
 
-   size_t size = filter.size ();
+   uint16_t size = filter.size ();
    fill (payload);
 
    CHECK_FALSE (filter (packet, payload));
@@ -828,7 +837,7 @@ TEST (FilterRepeated, MatchAll)
 
    CHECK_FALSE (filter (packet, payload));
 
-   size_t size = filter.size ();
+   uint16_t size = filter.size ();
    CHECK_TRUE (filter (packet, payload));
    LONGS_EQUAL (size, filter.size ());
 }
@@ -843,7 +852,7 @@ TEST (FilterRepeated, Update)
    packet.source.device = 0x5A52;
    CHECK_FALSE (filter (packet, payload));
 
-   size_t size = filter.size ();
+   uint16_t size = filter.size ();
    packet.source.device = 0x5A51;
    CHECK_FALSE (filter (packet, payload));
 

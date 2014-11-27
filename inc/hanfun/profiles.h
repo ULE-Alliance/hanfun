@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * @version    1.1.0
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -240,13 +240,13 @@ namespace HF
 
          //! @copydoc HF::Interface::handle
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                size_t offset)
+                                uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
             UNUSED (offset);
 
-            return Common::Result::FAIL_ID;
+            return Common::Result::FAIL_ARG;
          }
       };
 
@@ -293,7 +293,7 @@ namespace HF
 
          //! @copydoc HF::Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                        size_t offset)
+                                        uint16_t offset)
          {
             Common::Result result = interfaces.first.handle (packet, payload, offset);
 

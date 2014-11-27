@@ -5,7 +5,7 @@
  * This file contains an example demonstrating how to read a custom attribute from
  * the device information service.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -45,7 +45,7 @@ namespace
       {
          if (uid == HF::Core::DeviceInformation::SERIAL_NUMBER_ATTR)
          {
-            LOG (INFO) << "On device " << unit().device().address()
+            LOG (INFO) << "On device " << unit ().device ().address ()
                        << " serial number attribute read." << NL;
 
             return new HF::Attributes::Attribute <std::string>(this->uid (),
@@ -87,7 +87,7 @@ namespace
          HF::Devices::Concentrator::DefaultUnit0 (device)
       {}
 
-      HF::Common::Result handle (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
+      HF::Common::Result handle (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
       {
          auto res = HF::Devices::Concentrator::DefaultUnit0::handle (packet, payload, offset);
 

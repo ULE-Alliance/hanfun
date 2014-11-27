@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Level Control interface : Server role.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -82,7 +82,7 @@ void Server::level (float new_level)
  */
 // =============================================================================
 Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                         size_t offset)
+                                         uint16_t offset)
 {
    uint8_t old_level     = level ();
 
@@ -94,6 +94,33 @@ Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteA
    }
 
    return result;
+}
+
+// =============================================================================
+// Server::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       uint16_t offset)
+{
+   Message level_msg;
+
+   if (packet.message.itf.member != LevelControl::SET_LEVEL_CMD)
+   {
+      return Common::Result::FAIL_SUPPORT;
+   }
+
+   level_msg.unpack (payload, offset);
+
+   uint8_t old_value = level ();
+   level (level_msg.level);
+
+   level_change (packet.source, old_value, level_msg.level);
+
+   return Common::Result::OK;
 }
 
 // =============================================================================

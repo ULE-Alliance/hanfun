@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the Attribute
  * Reporting core service in HAN-FUN.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -94,6 +94,9 @@ TEST (AttrReport_Reference, Unpack)
 
 TEST_GROUP (AttrReport_Entry)
 {
+   struct Entry:public AttributeReporting::Entry
+   {};
+
    Entry entry;
 
    ByteArray expected;
@@ -152,6 +155,9 @@ TEST (AttrReport_Entry, Unpack)
 
 TEST_GROUP (AttrReport_Rule)
 {
+   struct Rule:public AttributeReporting::Rule
+   {};
+
    Rule rule;
 
    ByteArray expected;
@@ -455,13 +461,6 @@ TEST (AttrReport_Periodic_Rule, Unpack)
    LONGS_EQUAL (0xAA, rule.destination.unit);
 
    LONGS_EQUAL (0xAABBCCDD, rule.interval);
-
-   expected[3] = 0x8A;
-
-   rule.clear ();
-
-   LONGS_EQUAL (rule.size () - sizeof(uint32_t) - sizeof(uint8_t),
-                rule.unpack (expected, 3));
 }
 
 // =============================================================================
@@ -483,8 +482,8 @@ TEST_GROUP (AttrReport_Event_Field)
       field    = Event::Field ();
 
       expected = ByteArray {0x00, 0x00, 0x00,
-                            Event::EQ,                // Event Type.
                             0x5A,                     // Attribute UID.
+                            Event::EQ,                // Event Type.
                             0x04,                     // Field size.
                             0xA1, 0xA2, 0xA3, 0xA4,   // Field value.
                             0x00, 0x00, 0x00};
@@ -578,7 +577,7 @@ TEST (AttrReport_Event_Field, Unpack)
 
 TEST (AttrReport_Event_Field, Unpack2)
 {
-   expected[3] = Event::COV;
+   expected[4] = Event::COV;
    expected[5] = 0xAA;
 
    LONGS_EQUAL (field.size (true), field.unpack (expected, 3, true));
@@ -611,20 +610,20 @@ TEST_GROUP (AttrReport_Event_Entry)
                             HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                             0x04,                          // Number of fields.
                                                            // Field 1.
-                            Event::COV,                    // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::COV,                    // Event Type.
                             0x33,                          // Event Value.
                                                            // Field 2.
-                            Event::HT,                     // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::HT,                     // Event Type.
                             0x01, 0xAA,                    // Event Value.
                                                            // Field 3.
-                            Event::LT,                     // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::LT,                     // Event Type.
                             0x01, 0x55,                    // Event Value.
                                                            // Field 4.
-                            Event::EQ,                     // Event Type.
                             0x5A,                          // Attribute UID.
+                            Event::EQ,                     // Event Type.
                             0x01, 0x42,                    // Event Value.
                             0x00, 0x00, 0x00};
    }
@@ -782,8 +781,8 @@ TEST_GROUP (AttrReport_Event_Rule)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x01,                          // Number of fields.
                                                  // Entry 1 - Field 1.
-                  Event::COV,                    // Event Type.
                   0x10,                          // Attribute UID.
+                  Event::COV,                    // Event Type.
                   0x33,                          // Event Value.
                                                  // Entry 2
                   0x5A,                          // Unit ID.
@@ -791,12 +790,12 @@ TEST_GROUP (AttrReport_Event_Rule)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x02,                          // Number of fields.
                                                  // Field 1.
-                  Event::HT,                     // Event Type.
                   0x11,                          // Attribute UID.
+                  Event::HT,                     // Event Type.
                   0x01, 0xAA,                    // Event Value.
                                                  // Field 2.
-                  Event::LT,                     // Event Type.
                   0x12,                          // Attribute UID.
+                  Event::LT,                     // Event Type.
                   0x01, 0x55,                    // Event Value.
                                                  // Entry 3
                   0x5A,                          // Unit ID.
@@ -819,7 +818,7 @@ TEST_GROUP (AttrReport_Event_Rule)
       return entry;
    }
 
-   size_t create_entry_1 ()
+   uint16_t create_entry_1 ()
    {
       Event::Entry entry = create ();
 
@@ -836,7 +835,7 @@ TEST_GROUP (AttrReport_Event_Rule)
       return entry.size ();
    }
 
-   size_t create_entry_2 ()
+   uint16_t create_entry_2 ()
    {
       Event::Entry entry = create ();
 
@@ -859,7 +858,7 @@ TEST_GROUP (AttrReport_Event_Rule)
       return entry.size ();
    }
 
-   size_t create_entry_3 ()
+   uint16_t create_entry_3 ()
    {
       Event::Entry entry = create ();
 
@@ -895,7 +894,7 @@ TEST_GROUP (AttrReport_Event_Rule)
 
 TEST (AttrReport_Event_Rule, Size)
 {
-   size_t size = 1 + 2 + 1 + 1;
+   uint16_t size = 1 + 2 + 1 + 1;
 
    LONGS_EQUAL (size, rule.size ());
 
@@ -937,7 +936,7 @@ TEST (AttrReport_Event_Rule, Unpack)
 {
    initialize ();
 
-   size_t size = rule.size ();
+   uint16_t size = rule.size ();
 
    rule = Event::Rule ();
 
@@ -981,7 +980,7 @@ TEST (AttrReport_Report_Entry, Empty)
 {
    ByteArray temp (entry.size ());
    entry.pack (temp);
-   entry.unpack ((HF::Attributes::FactoryGetter) nullptr, temp);
+   entry.unpack (HF::Testing::FactoryGetter, temp);
 }
 
 TEST (AttrReport_Report_Entry, Pack)
@@ -999,7 +998,7 @@ TEST (AttrReport_Report_Entry, Pack)
 
 TEST (AttrReport_Report_Entry, Unpack)
 {
-   LONGS_EQUAL (entry.size (), entry.unpack ((HF::Attributes::FactoryGetter) nullptr, expected, 3));
+   LONGS_EQUAL (entry.size (), entry.unpack (HF::Testing::FactoryGetter, expected, 3));
 
    LONGS_EQUAL (0x55, entry.unit);
    LONGS_EQUAL (0x05A5, entry.itf.id);
@@ -1107,7 +1106,6 @@ TEST_GROUP (AttrReport_Report_Periodic)
 
       expected = {0x00,                 0x00, 0x00,
                   0x0A,                       // Report ID.
-                  0x03,                       // Number of entries.
                                               // Entry 1
                   0x55,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
@@ -1252,19 +1250,19 @@ TEST_GROUP (AttrReport_Report_Periodic)
 
 TEST (AttrReport_Report_Periodic, Size)
 {
-   LONGS_EQUAL (1 + 1, report.size ());
+   LONGS_EQUAL (1, report.size ());
 
    create_entry_1 ();
 
-   LONGS_EQUAL (1 + 1 + (1 + 2) + 1 + 3 * (1 + 2), report.size ());
+   LONGS_EQUAL (1 + (1 + 2) + 1 + 3 * (1 + 2), report.size ());
 
    create_entry_2 ();
 
-   LONGS_EQUAL (1 + 1 + 2 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 2 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
 
    create_entry_3 ();
 
-   LONGS_EQUAL (1 + 1 + 3 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 3 * ((1 + 2) + 1 + 3 * (1 + 2)), report.size ());
 };
 
 TEST (AttrReport_Report_Periodic, Empty)
@@ -1298,7 +1296,7 @@ TEST (AttrReport_Report_Periodic, Unpack)
    create_entry_2 ();
    create_entry_1 ();
 
-   size_t size = report.size ();
+   uint16_t size = report.size ();
 
    report = Report::Periodic ();
 
@@ -1312,6 +1310,67 @@ TEST (AttrReport_Report_Periodic, Unpack)
    {
       LONGS_EQUAL (0x03, entry.attributes.size ());
    }
+};
+
+/*!
+ * @test Test the attribute reporting event report unpack method,
+ * with enough data to match the expected report and keep adding more data
+ * to check parsing keeps working.
+ */
+TEST (AttrReport_Report_Periodic, Unpack2)
+{
+   expected.push_back (0x02);
+
+   create_entry_3 ();
+   create_entry_2 ();
+   create_entry_1 ();
+
+   uint16_t size = report.size ();
+
+   report = Report::Periodic ();
+
+   HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
+
+   size += Report::Entry::min_size;
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
+
+   report = Report::Periodic ();
+
+   // Add extra bytes : Attribute UID.
+   expected.push_back (TestInterface::ATTR2);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
+
+   report = Report::Periodic ();
+
+   // Add extra bytes : Attribute value incomplete.
+   expected.push_back (0xEE);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
+
+   report = Report::Periodic ();
+
+   // Add extra bytes : Attribute value complete.
+   expected.push_back (0xEE);
+
+   size += sizeof(uint8_t) + sizeof(uint16_t);
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x01, report.entries.front ().attributes.size ());
 };
 
 // =============================================================================
@@ -1328,8 +1387,8 @@ TEST_GROUP (AttrReport_Report_Event_Field)
       field    = Report::Event::Field ();
 
       expected = {0x00,                           0x00, 0x00,
-                  AttributeReporting::Event::COV,
                   TestInterface::ATTR1,
+                  AttributeReporting::Event::COV,
                   0x12,                           0x34,
                   0x00,                           0x00, 0x00};
    }
@@ -1407,14 +1466,14 @@ TEST_GROUP (AttrReport_Report_Event_Entry)
                   0x55,                                 // Unit ID.
                   0x85,                           0xA5, // Interface UID.
                   0x03,                                 // Number of attributes.
-                  AttributeReporting::Event::COV,
                   TestInterface::ATTR1,
+                  AttributeReporting::Event::COV,
                   0x12,                           0x34,
-                  AttributeReporting::Event::EQ,
                   TestInterface::ATTR2,
+                  AttributeReporting::Event::EQ,
                   0x56,                           0x78,
-                  AttributeReporting::Event::HT,
                   TestInterface::ATTR3,
+                  AttributeReporting::Event::HT,
                   0x9A,                           0xBC,
                   0x00,                           0x00, 0x00};
    }
@@ -1526,45 +1585,44 @@ TEST_GROUP (AttrReport_Report_Event)
 
       expected = {0x00,                 0x00, 0x00,
                   0x8A,                       // Report ID.
-                  0x03,                       // Number of entries.
                                               // Entry 1
                   0x55,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of Fields.
-                  Event::COV,
                   TestInterface::ATTR1,
+                  Event::COV,
                   0xAA,                 0xBB,
-                  Event::HT,
                   TestInterface::ATTR2,
+                  Event::HT,
                   0xCC,                 0xDD,
-                  Event::LT,
                   TestInterface::ATTR3,
+                  Event::LT,
                   0xEE,                 0xFF,
                                               // Entry 2
                   0x56,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of fields.
-                  Event::COV,
                   TestInterface::ATTR1,
+                  Event::COV,
                   0x12,                 0x34,
-                  Event::HT,
                   TestInterface::ATTR2,
+                  Event::HT,
                   0x56,                 0x78,
-                  Event::LT,
                   TestInterface::ATTR3,
+                  Event::LT,
                   0x9A,                 0xBC,
-                                              // Entry 2
+                                              // Entry 3
                   0x57,                       // Unit ID.
                   0x85,                 0xA5, // Interface UID.
                   0x03,                       // Number of fields.
-                  Event::COV,
                   TestInterface::ATTR1,
+                  Event::COV,
                   0x43,                 0x21,
-                  Event::HT,
                   TestInterface::ATTR2,
+                  Event::HT,
                   0x87,                 0x65,
-                  Event::LT,
                   TestInterface::ATTR3,
+                  Event::LT,
                   0xCB,                 0xA9,
                   0x00,                 0x00, 0x00};
    }
@@ -1710,19 +1768,19 @@ TEST_GROUP (AttrReport_Report_Event)
 
 TEST (AttrReport_Report_Event, Size)
 {
-   LONGS_EQUAL (1 + 1, report.size ());
+   LONGS_EQUAL (1, report.size ());
 
    create_entry_1 ();
 
-   LONGS_EQUAL (1 + 1 + (1 + 2) + 1 + 3 * (1 + 1 + 2), report.size ());
+   LONGS_EQUAL (1 + (1 + 2) + 1 + 3 * (1 + 1 + 2), report.size ());
 
    create_entry_2 ();
 
-   LONGS_EQUAL (1 + 1 + 2 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 2 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
 
    create_entry_3 ();
 
-   LONGS_EQUAL (1 + 1 + 3 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
+   LONGS_EQUAL (1 + 3 * ((1 + 2) + 1 + 3 * (1 + 1 + 2)), report.size ());
 };
 
 TEST (AttrReport_Report_Event, Empty)
@@ -1750,13 +1808,17 @@ TEST (AttrReport_Report_Event, Pack)
    CHECK_EQUAL (expected, result);
 };
 
+/*!
+ * @test Test the attribute reporting event report unpack method,
+ * with enough data to match the expected report.
+ */
 TEST (AttrReport_Report_Event, Unpack)
 {
    create_entry_3 ();
    create_entry_2 ();
    create_entry_1 ();
 
-   size_t size = report.size ();
+   uint16_t size = report.size ();
 
    report = Report::Event ();
 
@@ -1770,6 +1832,77 @@ TEST (AttrReport_Report_Event, Unpack)
    {
       LONGS_EQUAL (0x03, entry.fields.size ());
    }
+};
+
+/*!
+ * @test Test the attribute reporting event report unpack method,
+ * with enough data to match the expected report and keep adding more data
+ * to check parsing keeps working.
+ */
+TEST (AttrReport_Report_Event, Unpack2)
+{
+   // Add extra byte.
+   expected.push_back (0x02);
+
+   create_entry_3 ();
+   create_entry_2 ();
+   create_entry_1 ();
+
+   uint16_t size = report.size ();
+
+   report = Report::Event ();
+
+   HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
+
+   LONGS_EQUAL (size + Report::Entry::min_size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   // Add extra bytes : Invalid field.
+   expected.push_back (TestInterface::ATTR2);
+
+   size += Report::Entry::min_size;
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   expected.push_back (Event::LT);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   expected.push_back (0xEE);
+
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
+
+   report = Report::Event ();
+
+   expected.push_back (0xEE);
+
+   // Add field size and attribute value size to read size expected value.
+   size += Report::Event::Field::min_size + sizeof(uint16_t);
+   LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
+
+   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+
+   LONGS_EQUAL (0x01, report.entries.front ().fields.size ());
 };
 
 // =============================================================================
@@ -1787,7 +1920,7 @@ TEST_GROUP (AttrReport_Report_CreateMessage)
 
       expected = {0x00, 0x00, 0x00,
                   0x8A, 0x5A, // Device Address.
-                  0xBB,       // Deveie unit.
+                  0xBB,       // Device unit.
                   0x00, 0x00, 0x00};
    }
 };
@@ -1837,7 +1970,7 @@ TEST_GROUP (AttrReport_Report_Periodic_CreateMessage)
 
       expected = {0x00, 0x00, 0x00,
                   0x8A, 0x5A, // Device Address.
-                  0xBB,       // Deveie unit.
+                  0xBB,       // Device unit.
                   0xAA, 0xBB, 0xCC,0xDD,
                   0x00, 0x00, 0x00};
    }
@@ -1937,14 +2070,14 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
          return entries.size ();
       }
 
-      size_t size () const
+      uint16_t size () const
       {
          return Report::AddEntryMessage::size () + entries.size ();
       }
 
-      size_t pack (Common::ByteArray &array, size_t offset = 0)
+      uint16_t pack (Common::ByteArray &array, uint16_t offset = 0)
       {
-         size_t start = offset;
+         uint16_t start = offset;
 
          offset += Report::AddEntryMessage::pack (array, offset);
 
@@ -1958,10 +2091,10 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
          return offset - start;
       }
 
-      size_t unpack_entry (const Common::ByteArray &array, size_t offset = 0)
+      uint16_t unpack_entry (const Common::ByteArray &array, uint16_t offset = 0)
       {
          static uint8_t count = 0;
-         size_t start         = offset;
+         uint16_t start       = offset;
 
          offset += array.read (offset, entries[count++]);
 
@@ -2015,6 +2148,8 @@ TEST (AttrReport_Report_AddEntryMessage, Pack)
 
 TEST (AttrReport_Report_AddEntryMessage, Unpack)
 {
+   message.report.type = Type::EVENT;
+
    LONGS_EQUAL (message.size (), message.unpack (expected, 3));
 
    LONGS_EQUAL (Type::EVENT, message.report.type);
@@ -2144,8 +2279,8 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x01,                          // Number of fields.
                                                  // Entry 1 - Field 1.
-                  Event::COV,                    // Event Type.
                   0x10,                          // Attribute UID.
+                  Event::COV,                    // Event Type.
                   0x33,                          // Event Value.
                                                  // Entry 2
                   0x5A,                          // Unit ID.
@@ -2153,12 +2288,12 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
                   HF::Attributes::Pack::DYNAMIC, // Attribute Pack ID.
                   0x02,                          // Number of fields.
                                                  // Field 1.
-                  Event::HT,                     // Event Type.
                   0x11,                          // Attribute UID.
+                  Event::HT,                     // Event Type.
                   0x01, 0xAA,                    // Event Value.
                                                  // Field 2.
-                  Event::LT,                     // Event Type.
                   0x12,                          // Attribute UID.
+                  Event::LT,                     // Event Type.
                   0x01, 0x55,                    // Event Value.
                                                  // Entry 3
                   0x5A,                          // Unit ID.
@@ -2181,7 +2316,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
       return entry;
    }
 
-   size_t create_entry_1 ()
+   uint16_t create_entry_1 ()
    {
       Event::Entry entry = create ();
 
@@ -2198,7 +2333,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
       return entry.size ();
    }
 
-   size_t create_entry_2 ()
+   uint16_t create_entry_2 ()
    {
       Event::Entry entry = create ();
 
@@ -2221,7 +2356,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
       return entry.size ();
    }
 
-   size_t create_entry_3 ()
+   uint16_t create_entry_3 ()
    {
       Event::Entry entry = create ();
 
@@ -2252,7 +2387,7 @@ TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
 
 TEST (AttrReport_Report_Event_AddEntryMessage, Size)
 {
-   size_t size = 1 + 1;
+   uint16_t size = 1 + 1;
 
    LONGS_EQUAL (size, message.size ());
 
@@ -2294,7 +2429,7 @@ TEST (AttrReport_Report_Event_AddEntryMessage, Unpack)
 {
    initialize ();
 
-   size_t size = message.size ();
+   uint16_t size = message.size ();
 
    message = Report::Event::AddEntryMessage ();
 
@@ -2517,7 +2652,7 @@ TEST_GROUP (AttributeReporting_Client)
       {}
 
       void report (Type type, const Protocol::Address &address,
-                   const Common::ByteArray &payload, size_t offset)
+                   const Common::ByteArray &payload, uint16_t offset)
       {
          UNUSED (type);
          UNUSED (address);
@@ -2762,7 +2897,8 @@ TEST (AttributeReporting_Server, Periodic)
    Periodic::Rule  rule (50);
    Periodic::Entry entry;
 
-   entry.itf.id   = HF::Interface::ALERT;
+   entry.itf.id   = 0x5A5A;
+   entry.itf.role = HF::Interface::SERVER_ROLE;
    entry.pack_id  = HF::Attributes::MANDATORY;
    entry.unit     = 1;
 
@@ -2787,7 +2923,7 @@ TEST (AttributeReporting_Server, Periodic)
    auto packet = base->packets.front ();
 
    Report::Periodic report;
-   report.unpack (HF::Attributes::get_factory, packet->message.payload, 0);
+   report.unpack (HF::Testing::FactoryGetter, packet->message.payload, 0);
 
    LONGS_EQUAL (0x5A, report.id);
    LONGS_EQUAL (PERIODIC, report.type);

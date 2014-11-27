@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Bind Management core interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -51,9 +51,9 @@ HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
  *
  */
 // =============================================================================
-size_t Entry::size () const
+uint16_t Entry::size () const
 {
-   return source.size () + destination.size () + sizeof(uint16_t);
+   return min_size;
 }
 
 // =============================================================================
@@ -63,17 +63,17 @@ size_t Entry::size () const
  *
  */
 // =============================================================================
-size_t Entry::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += this->source.pack (array, offset);
 
    offset += this->itf.pack (array, offset);
 
-   offset += this->destination.pack (array, offset);
+   this->destination.pack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -83,17 +83,17 @@ size_t Entry::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += this->source.unpack (array, offset);
 
    offset += this->itf.unpack (array, offset);
 
-   offset += this->destination.unpack (array, offset);
+   this->destination.unpack (array, offset);
 
-   return offset - start;
+   return min_size;
 }
 
 // =============================================================================
@@ -107,7 +107,7 @@ size_t Entry::unpack (const Common::ByteArray &array, size_t offset)
  *
  */
 // =============================================================================
-size_t Entries::size () const
+uint16_t Entries::size () const
 {
    return this->db.size ();
 }

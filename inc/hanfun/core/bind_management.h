@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Bind Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -142,14 +142,19 @@ namespace HF
                source (_source), destination (_destination), itf (_itf)
             {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Protocol::Address::min_size     // Source Address
+                                                 + Protocol::Address::min_size   // Destination Address
+                                                 + Common::Interface::min_size;  // Interface UID.
+
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          typedef HF::Common::Pointer <const Entry> EntryPtr;
@@ -387,10 +392,10 @@ namespace HF
 
             using ServiceRole::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size (Protocol::Message::Interface &itf) const;
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*!
@@ -522,7 +527,7 @@ namespace HF
             {}
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*!
@@ -535,7 +540,7 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            size_t size () const;
+            uint16_t size () const;
 
             Common::Result save (const Entry &entry);
 
@@ -674,7 +679,7 @@ namespace HF
 
             _Entries _entries; //!< Bind entries database.
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                switch (itf.member)
                {
@@ -693,7 +698,7 @@ namespace HF
             }
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset)
+                                           uint16_t offset)
             {
                switch (packet.message.itf.member)
                {

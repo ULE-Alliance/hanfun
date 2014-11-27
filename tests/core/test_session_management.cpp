@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the session management
  * functionality.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -152,7 +152,7 @@ TEST_GROUP (SessionManagementServer)
 
    struct TestEntries:public Common::IEntries <TestType>, public TestContainer
    {
-      size_t size () const
+      uint16_t size () const
       {
          return TestContainer::size ();
       }
@@ -204,7 +204,7 @@ TEST_GROUP (SessionManagementServer)
 
    struct TestServer:public Server <TestEntries>
    {
-      size_t count () const
+      uint16_t count () const
       {
          return sessions.size ();
       }
@@ -800,13 +800,13 @@ TEST (SessionManagementClient, Handle_End)
    packet.source.unit   = 0x0;
 
    Protocol::Response resp;
-   resp.code = Result::FAIL_ID;
+   resp.code = Result::FAIL_ARG;
 
    Common::ByteArray payload = Common::ByteArray (resp.size ());
    resp.pack (payload);
 
    auto &call = mock ("SessionManagementClient").expectOneCall ("session_ended");
-   call.withParameter ("code", Result::FAIL_ID);
+   call.withParameter ("code", Result::FAIL_ARG);
 
    LONGS_EQUAL (Result::OK, client.handle_command (END, packet, payload));
 

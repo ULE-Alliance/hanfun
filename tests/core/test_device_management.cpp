@@ -5,7 +5,7 @@
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -47,7 +47,7 @@ TEST (DeviceManagement, InterfaceServer)
 {
    Common::Interface itf;
 
-   size_t size = itf.size ();
+   uint16_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -59,14 +59,14 @@ TEST (DeviceManagement, InterfaceServer)
    itf.role = HF::Interface::SERVER_ROLE;
    itf.id   = 0x7AAA;
 
-   size_t wsize = itf.pack (array, 3);
+   uint16_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    memset (&itf, 0xDD, sizeof(itf));
 
-   size_t rsize = itf.unpack (expected, 3);
+   uint16_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf.role);
@@ -77,7 +77,7 @@ TEST (DeviceManagement, InterfaceClient)
 {
    Common::Interface itf;
 
-   size_t size = itf.size ();
+   uint16_t size = itf.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -89,14 +89,14 @@ TEST (DeviceManagement, InterfaceClient)
    itf.role = HF::Interface::CLIENT_ROLE;
    itf.id   = 0x7555;
 
-   size_t wsize = itf.pack (array, 3);
+   uint16_t wsize = itf.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    memset (&itf, 0xDD, sizeof(itf));
 
-   size_t rsize = itf.unpack (expected, 3);
+   uint16_t rsize = itf.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (HF::Interface::CLIENT_ROLE, itf.role);
@@ -112,7 +112,7 @@ TEST (DeviceManagement, Unit_No_Optional_Itf)
    DeviceManagement::Unit wunit (0x42, 0x5AA5);
    DeviceManagement::Unit runit;
 
-   size_t size = wunit.size ();
+   uint16_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2, size);
 
    ByteArray expected ({0x00, 0x00, 0x00,
@@ -123,12 +123,12 @@ TEST (DeviceManagement, Unit_No_Optional_Itf)
                       );
    ByteArray array (size + 6);
 
-   size_t    wsize = wunit.pack (array, 3);
+   uint16_t  wsize = wunit.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   size_t rsize = runit.unpack (expected, 3);
+   uint16_t rsize = runit.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (wunit.id, runit.id);
@@ -148,7 +148,7 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
    wunit.interfaces.push_back (itf2);
    wunit.interfaces.push_back (itf3);
 
-   size_t size = wunit.size ();
+   uint16_t size = wunit.size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + itf1.size () + itf2.size () + itf3.size (), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -163,12 +163,12 @@ TEST (DeviceManagement, Unit_With_Optional_Itf)
 
    ByteArray array (size + 6);
 
-   size_t    wsize = wunit.pack (array, 3);
+   uint16_t  wsize = wunit.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
-   size_t rsize = runit.unpack (expected, 3);
+   uint16_t rsize = runit.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (wunit.id, runit.id);
@@ -200,7 +200,7 @@ TEST (DeviceManagement, Device)
    device.units.push_back (unit);
    device.units.push_back (unit);
 
-   size_t size = device.size ();
+   uint16_t size = device.size ();
    LONGS_EQUAL (sizeof(uint16_t) + sizeof(uint8_t) + 3 * unit.size (), size);
 
    ByteArray expected {0x00, 0x00, 0x00,
@@ -213,7 +213,7 @@ TEST (DeviceManagement, Device)
 
    ByteArray array (size + 6);
 
-   size_t    wsize = device.pack (array, 3);
+   uint16_t  wsize = device.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -223,7 +223,7 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (Protocol::BROADCAST_ADDR, device.address);
    LONGS_EQUAL (0, device.units.size ());
 
-   size_t rsize = device.unpack (expected, 3);
+   uint16_t rsize = device.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x3333, device.address);
@@ -248,7 +248,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
    DeviceManagement::Unit unit;
 
    ByteArray expected;
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    TEST_SETUP ()
    {
@@ -279,7 +279,7 @@ TEST_GROUP (DeviceManagement_RegisterMessage)
 TEST (DeviceManagement_RegisterMessage, No_EMC)
 {
    expected = ByteArray {0x00, 0x00, 0x00,
-                         0x02,                          // Discriminator Type.
+                         UID::DECT_UID,                 // Discriminator Type.
                          0x05,                          // Size of UID.
                          0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
                          0x03,                          // Number of units.
@@ -288,12 +288,12 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
                          0x03, 0x42, 0x5A, 0xA5,        // Unit 3.
                          0x00, 0x00, 0x00};
 
-   size_t size = message->size ();
+   uint16_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 5 + 1 + 3 * unit.size (), size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -302,7 +302,7 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    message = new DeviceManagement::RegisterMessage ();
 
-   size_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x0000, message->emc);
@@ -336,12 +336,12 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 
    message->uid = HF::UID::UID();
 
-   size_t size = message->size ();
+   uint16_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 2 + 1 + 3 * unit.size (), size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -350,7 +350,7 @@ TEST (DeviceManagement_RegisterMessage, No_UID)
 TEST (DeviceManagement_RegisterMessage, EMC)
 {
    expected = ByteArray {0x00, 0x00, 0x00,
-                         0x82,                          // Discriminator Type.
+                         0x80 | UID::DECT_UID,          // Discriminator Type.
                          0x05,                          // Size of UID.
                          0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
                          0x42, 0x43,                    // EMC.
@@ -362,12 +362,12 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    message->emc = 0x4243;
 
-   size_t size = message->size ();
+   uint16_t size = message->size ();
    LONGS_EQUAL (1 + 1 + 5 + 2 + 1 + 3 * unit.size (), size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -376,7 +376,7 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    message = new DeviceManagement::RegisterMessage ();
 
-   size_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x4243, message->emc);
@@ -404,54 +404,54 @@ TEST_GROUP (DeviceManagement_RegisterResponse)
 TEST (DeviceManagement_RegisterResponse, No_EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
-                                   Result::FAIL_AUTH,  // Response Code.
+                                   Result::OK,         // Response Code.
                                    0x42, 0x43,         // Device Address.
                                    0x00, 0x00, 0x00};
 
    DeviceManagement::RegisterResponse response;
 
-   response.code    = Result::FAIL_AUTH;
+   response.code    = Result::OK;
    response.address = 0x4243;
 
-   size_t size = response.size ();
+   uint16_t size = response.size ();
    LONGS_EQUAL (1 + 2, size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = response.pack (array, 3);
+   uint16_t  wsize = response.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    response = DeviceManagement::RegisterResponse ();
 
-   size_t rsize = response.unpack (expected, 3);
+   uint16_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL (Result::OK, response.code);
    LONGS_EQUAL (0x4243, response.address);
 }
 
 TEST (DeviceManagement_RegisterResponse, EMC)
 {
    ByteArray expected = ByteArray {0x00, 0x00, 0x00,
-                                   Result::FAIL_AUTH,  // Responce Code.
-                                   0xC2, 0x43,         // Device Address.
-                                   0xAA, 0xBB,         // EMC
+                                   Result::OK,        // Response Code.
+                                   0xC2, 0x43,        // Device Address
+                                   0xAA, 0xBB,        // EMC
                                    0x00, 0x00, 0x00};
 
    DeviceManagement::RegisterResponse response;
 
-   response.code    = Result::FAIL_AUTH;
+   response.code    = Result::OK;
    response.address = 0x4243;
    response.emc     = 0xAABB;
 
-   size_t size = response.size ();
+   uint16_t size = response.size ();
    LONGS_EQUAL (1 + 2 + 2, size);
 
    ByteArray array (size + 6);
 
-   size_t    wsize = response.pack (array, 3);
+   uint16_t  wsize = response.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
@@ -459,13 +459,13 @@ TEST (DeviceManagement_RegisterResponse, EMC)
    response = DeviceManagement::RegisterResponse ();
 
    LONGS_EQUAL (0, response.code);
-   LONGS_EQUAL (0, response.address);
    LONGS_EQUAL (0, response.emc);
+   LONGS_EQUAL (Protocol::BROADCAST_ADDR, response.address);
 
-   size_t rsize = response.unpack (expected, 3);
+   uint16_t rsize = response.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
-   LONGS_EQUAL (Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL (Result::OK, response.code);
    LONGS_EQUAL (0x4243, response.address);
    LONGS_EQUAL (0xAABB, response.emc);
 }
@@ -478,7 +478,7 @@ TEST (DeviceManagement, DeregisterMessage)
 {
    DeviceManagement::DeregisterMessage message;
 
-   size_t size = message.size ();
+   uint16_t size = message.size ();
    LONGS_EQUAL (sizeof(uint16_t), size);
 
    message.address = 0x4243;
@@ -489,14 +489,14 @@ TEST (DeviceManagement, DeregisterMessage)
                       );
    ByteArray array (size + 6);
 
-   size_t    wsize = message.pack (array, 3);
+   uint16_t  wsize = message.pack (array, 3);
    LONGS_EQUAL (size, wsize);
 
    CHECK_EQUAL (expected, array);
 
    message.address = 0;
 
-   size_t rsize = message.unpack (expected, 3);
+   uint16_t rsize = message.unpack (expected, 3);
    LONGS_EQUAL (size, rsize);
 
    LONGS_EQUAL (0x4243, message.address);
@@ -525,7 +525,7 @@ TEST_GROUP (DeviceManagementClient)
          DeviceManagement::Client::registered (response);
       }
 
-      void deregistered (DeviceManagement::DeregisterResponse &response)
+      void deregistered (Protocol::Response &response)
       {
          mock ("DeviceManagementClient").actualCall ("deregistered");
          DeviceManagement::Client::deregistered (response);
@@ -663,7 +663,7 @@ TEST (DeviceManagementClient, RegisterMessage_EMC)
    DeviceManagement::RegisterMessage payload;
    payload.unpack (packet->message.payload);
 
-   LONGS_EQUAL (0x1234, payload.emc);
+   LONGS_EQUAL (HF_DEVICE_MANUFACTURER_CODE, payload.emc);
 }
 
 TEST (DeviceManagementClient, RegisterResponse_OK)
@@ -798,13 +798,13 @@ TEST_GROUP (DeviceManagementServer)
          DeviceManagement::DefaultServer (unit)
       {}
 
-      Result register_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      Result register_device (Protocol::Packet &packet, ByteArray &payload, uint16_t offset)
       {
          mock ("DeviceManagementServer").actualCall ("register_device");
          return DeviceManagement::DefaultServer::register_device (packet, payload, offset);
       }
 
-      Result deregister_device (Protocol::Packet &packet, ByteArray &payload, size_t offset)
+      Result deregister_device (Protocol::Packet &packet, ByteArray &payload, uint16_t offset)
       {
          mock ("DeviceManagementServer").actualCall ("deregister_device");
          return DeviceManagement::DefaultServer::deregister_device (packet, payload, offset);
@@ -867,7 +867,7 @@ TEST_GROUP (DeviceManagementServer)
 TEST (DeviceManagementServer, Handle_Register)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                         // Discriminator Type.
+                         UID::DECT_UID,                // Discriminator Type.
                          0x05,                         // Size of UID.
                          0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                          0x03,                         // Number of units.
@@ -944,7 +944,7 @@ TEST (DeviceManagementServer, Handle_Register)
 TEST (DeviceManagementServer, Handle_Register2)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                         // Discriminator Type.
+                         UID::DECT_UID,                // Discriminator Type.
                          0x05,                         // Size of UID.
                          0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                          0x03,                         // Number of units.
@@ -972,7 +972,7 @@ TEST (DeviceManagementServer, Handle_Register2)
 TEST (DeviceManagementServer, Handle_RegisterWithSession)
 {
    ByteArray expected = {0x00, 0x00, 0x00,
-                         0x02,                         // Discriminator Type.
+                         UID::DECT_UID,                // Discriminator Type.
                          0x05,                         // Size of UID.
                          0x00, 0x73, 0x70,0xAA,  0xBB, // IPUI.
                          0x03,                         // Number of units.
@@ -1008,7 +1008,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
       delete dev;
    }
 
-   size_t size = dev_mgt->entries ().size ();
+   uint16_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
@@ -1106,7 +1106,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
    // == De-register the device.
 
-   size_t size = dev_mgt->entries ().size ();
+   uint16_t size = dev_mgt->entries ().size ();
 
    packet.source.device = 0x5A51;
 
@@ -1150,7 +1150,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
 
 TEST (DeviceManagementServer, Entries)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1163,7 +1163,7 @@ TEST (DeviceManagementServer, Entries)
       DeviceManagement::Device dev;
       dev.address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev.uid     = temp;
@@ -1178,7 +1178,7 @@ TEST (DeviceManagementServer, Entries)
 
 TEST (DeviceManagementServer, FindEntry)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1191,7 +1191,7 @@ TEST (DeviceManagementServer, FindEntry)
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev->uid    = temp;
@@ -1214,7 +1214,7 @@ TEST (DeviceManagementServer, FindEntry)
 
 TEST (DeviceManagementServer, FindEntrySelf)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1227,7 +1227,7 @@ TEST (DeviceManagementServer, FindEntrySelf)
       DeviceManagement::Device *dev = new DeviceManagement::Device ();
       dev->address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev->uid    = temp;
@@ -1237,7 +1237,7 @@ TEST (DeviceManagementServer, FindEntrySelf)
       delete dev;
    }
 
-   UID::RFPI rfpi;
+   UID::DECT rfpi;
    rfpi[0] = 0x12;
    rfpi[1] = 0x34;
    rfpi[2] = 0x56;
@@ -1261,7 +1261,7 @@ TEST (DeviceManagementServer, FindEntrySelf)
 
 TEST (DeviceManagementServer, EntriesSession)
 {
-   UID::IPUI ipui;
+   UID::DECT ipui;
 
    ipui[0] = 0x12;
    ipui[1] = 0x34;
@@ -1274,7 +1274,7 @@ TEST (DeviceManagementServer, EntriesSession)
       DeviceManagement::Device dev;
       dev.address = i + 1;
 
-      UID::IPUI *temp = new UID::IPUI (ipui);
+      UID::DECT *temp = new UID::DECT (ipui);
       (*temp)[4] += i;
 
       dev.uid     = temp;
@@ -1287,7 +1287,7 @@ TEST (DeviceManagementServer, EntriesSession)
    DeviceManagement::Device dev;
    dev.address = 0xAAAA;
 
-   UID::IPUI *temp = new UID::IPUI (ipui);
+   UID::DECT *temp = new UID::DECT (ipui);
    (*temp)[4] += 0xFF;
 
    dev.uid     = temp;

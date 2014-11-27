@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Device Information Interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -108,4 +108,62 @@ TEST (DeviceInformation, Mandatory)
 
    LONGS_EQUAL (Result::OK, resp.code);
    LONGS_EQUAL (4, resp.attributes.size ())
+}
+
+TEST (DeviceInformation, All)
+{
+   Protocol::Message *msg = HF::Core::DeviceInformation::all ();
+
+   CHECK_FALSE (msg == nullptr);
+
+   Protocol::Packet packet (*msg);
+
+   delete msg;
+
+   mock ("AbstractDevice").expectOneCall ("send");
+
+   dev_info->handle (packet, packet.message.payload, 0);
+
+   mock ("AbstractDevice").checkExpectations ();
+
+   Protocol::Packet *packet_resp = device->packets.front ();
+
+   Protocol::GetAttributePack::Response resp (HF::Core::DeviceInformation::create_attribute);
+
+   resp.unpack (packet_resp->message.payload);
+
+   LONGS_EQUAL (Result::OK, resp.code);
+   LONGS_EQUAL (6, resp.attributes.size ())
+}
+
+TEST (DeviceInformation, ExtraCapabilities)
+{
+   LONGS_EQUAL (0x00, dev_info->capabilities ());
+
+   dev_info->paging (true);
+
+   LONGS_EQUAL (0x01, dev_info->capabilities ());
+
+   CHECK_TRUE (dev_info->has_paging ());
+
+   dev_info->broadcast (true);
+
+   LONGS_EQUAL (0x03, dev_info->capabilities ());
+
+   CHECK_TRUE (dev_info->has_broadcast ());
+
+   dev_info->paging (false);
+
+   LONGS_EQUAL (0x02, dev_info->capabilities ());
+
+   CHECK_FALSE (dev_info->has_paging ());
+   CHECK_TRUE (dev_info->has_broadcast ());
+
+   dev_info->paging (true);
+   dev_info->broadcast (false);
+
+   LONGS_EQUAL (0x01, dev_info->capabilities ());
+
+   CHECK_TRUE (dev_info->has_paging ());
+   CHECK_FALSE (dev_info->has_broadcast ());
 }

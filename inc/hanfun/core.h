@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -338,7 +338,7 @@ namespace HF
       // =============================================================================
 
       //! @copydoc HF::Interface::handle
-      Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+      Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
       {
          Core::IService *service = find <0, ITF...>(packet.message.itf.id);
 

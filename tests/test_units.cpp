@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the unit implementation.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -148,12 +148,12 @@ TEST (Unit, Handle_LevelControl)
 TEST (Unit, CreateDestroy)
 {
    Testing::Device device;
-   LONGS_EQUAL (1, device.units().size());
+   LONGS_EQUAL (1, device.units ().size ());
 
-   TestUnit * unit = new TestUnit (1, device);
-   LONGS_EQUAL (2, device.units().size());
+   TestUnit *unit = new TestUnit (1, device);
+   LONGS_EQUAL (2, device.units ().size ());
 
    delete unit;
 
-   LONGS_EQUAL (1, device.units().size());
+   LONGS_EQUAL (1, device.units ().size ());
 }
