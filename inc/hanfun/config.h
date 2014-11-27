@@ -5,8 +5,8 @@
 // Common
 // =============================================================================
 
-#define OFF	0
-#define ON	1
+#define OFF   0
+#define ON   1
 
 // =============================================================================
 // SimplePowerMeter Configuration
@@ -33,6 +33,6 @@
 
 // =============================================================================
 
-#define HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE    10
+#define HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE    5
 
 #endif  /* HF_CONFIG_H */
