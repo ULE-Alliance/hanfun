@@ -19,6 +19,7 @@
 #include <list>
 #include <type_traits>
 #include <algorithm>
+#include <functional>
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
