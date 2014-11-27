@@ -5,7 +5,7 @@
  * This file contains the implementation of the session management functionality
  * for the client side.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -33,7 +33,7 @@ using namespace HF::Core::SessionManagement;
  */
 // =============================================================================
 Common::Result AbstractClient::handle_command (CMD cmd, Protocol::Packet &packet,
-                                               Common::ByteArray &payload, size_t offset)
+                                               Common::ByteArray &payload, uint16_t offset)
 {
    UNUSED (packet);
 
@@ -69,7 +69,7 @@ Common::Result AbstractClient::handle_command (CMD cmd, Protocol::Packet &packet
  *
  */
 // =============================================================================
-size_t AbstractClient::payload_size (CMD cmd) const
+uint16_t AbstractClient::payload_size (CMD cmd) const
 {
    switch (cmd)
    {

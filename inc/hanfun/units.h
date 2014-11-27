@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN unit implementation.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -59,7 +59,7 @@ namespace HF
 
          //! @copydoc HF::Interface::handle
          virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                        size_t offset) = 0;
+                                        uint16_t offset) = 0;
 
          /*!
           * Create and send a new packet with the given message to the given address.
@@ -95,7 +95,7 @@ namespace HF
 
          virtual ~AbstractUnit()
          {
-            device ().remove(this);
+            device ().remove (this);
          }
 
          IDevice &device () const
@@ -193,12 +193,12 @@ namespace HF
 
          //! @copydoc HF::Interface::handle
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                size_t offset)
+                                uint16_t offset)
          {
             Common::Result result = Profile::handle (packet, payload, offset);
 
             // Message not handled by base profile, then try extra interfaces.
-            if (result == Common::Result::FAIL_ID)
+            if (result == Common::Result::FAIL_ARG)
             {
                Interface *itf = find <0, ITF...>(packet.message.itf.id);
 

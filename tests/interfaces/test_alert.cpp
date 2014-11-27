@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Alert Interface implementation.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -85,7 +85,7 @@ TEST (AlertMessage, Pack)
 
    ByteArray array (message->size () + 6);
 
-   size_t    wsize = message->pack (array, 3);
+   uint16_t  wsize = message->pack (array, 3);
 
    LONGS_EQUAL (message->size (), wsize);
 
@@ -95,7 +95,7 @@ TEST (AlertMessage, Pack)
 //! @test Alert::Message::unpack should read the correct values from the ByteArray.
 TEST (AlertMessage, Unpack)
 {
-   size_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack (expected, 3);
 
    LONGS_EQUAL (message->size (), rsize);
 
@@ -424,7 +424,7 @@ TEST (AlertClient, Handle_Invalid_UID)
 {
    packet.message.itf.id = client->uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, client->handle (packet, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 3));
 }
 
 //! @test Should not handle message with invalid payload size.

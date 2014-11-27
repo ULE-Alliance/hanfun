@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -77,7 +77,7 @@ namespace HF
 
          void send (Protocol::Packet &packet);
 
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset);
 
          void periodic (uint32_t time);
 
@@ -304,7 +304,7 @@ namespace HF
                }
             }
 
-            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
             {
                AbstractDevice::receive (packet, payload, offset);
             }
@@ -608,7 +608,7 @@ namespace HF
 
             void disconnected (HF::Transport::Link *link);
 
-            void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset);
+            void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset);
 
             virtual ~AbstractBase() {}
 
@@ -629,7 +629,7 @@ namespace HF
              * @param [in] offset  offset from where the packet data starts.
              */
             virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset);
+                                       uint16_t offset);
 
             /*!
              * Get the unit 0 used by this concentrator device.
@@ -664,7 +664,7 @@ namespace HF
 
          /*!
           * Parent class for transport layer implementations on a HAN-FUN
-          * Concentrator device.
+          * %Concentrator device.
           */
          class Transport:public HF::Transport::AbstractLayer
          {

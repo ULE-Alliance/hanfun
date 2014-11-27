@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Server Role.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -91,7 +91,7 @@ DevicePtr IServer::entry (uint16_t address) const
  *
  */
 // =============================================================================
-size_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
+uint16_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -114,7 +114,7 @@ size_t AbstractServer::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                               size_t offset)
+                                               uint16_t offset)
 {
    Common::Result result = AbstractInterface::check (packet.message, payload, offset);
 
@@ -149,7 +149,7 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet, Common:
  */
 // =============================================================================
 Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                size_t offset)
+                                                uint16_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -223,7 +223,7 @@ Common::Result AbstractServer::register_device (Protocol::Packet &packet, Common
  */
 // =============================================================================
 Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Common::ByteArray &payload,
-                                                  size_t offset)
+                                                  uint16_t offset)
 {
    Common::Result result = AbstractInterface::check_payload_size (packet.message, payload, offset);
 
@@ -257,7 +257,7 @@ Common::Result AbstractServer::deregister_device (Protocol::Packet &packet, Comm
 
    result = deregister (destination);
 
-   DeregisterResponse res (result, incomming.address);
+   Protocol::Response res (result);
 
    Protocol::Message  response (packet.message, res.size ());
 

@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -50,6 +50,29 @@
  */
 #define UNUSED(x)   (void) x
 
+/*!
+ * @ingroup common
+ *
+ * Helper macro to check if the given @c __array has enough size so @c __size bytes
+ * can be written/read from the given @c __offset.
+ *
+ * @warning This macro issues a <tt>return 0;</tt> when there aren't enough resources, i.e.
+ * the @c __array size is not sufficient for reading/writing to.
+ *
+ * @param [in] __array     reference to the ByteArray containing the data.
+ * @param [in] __offset    offset index to check available data from.
+ * @param [in] __size      number of bytes required.
+ */
+#define SERIALIZABLE_CHECK(__array, __offset, __size) \
+   {                                                  \
+      assert (__array.available (__offset, __size));  \
+                                                      \
+      if (!__array.available (__offset, __size))      \
+      {                                               \
+         return 0;                                    \
+      }                                               \
+   }
+
 // =============================================================================
 // API
 // =============================================================================
@@ -64,9 +87,9 @@ namespace HF
     * @{
     */
 
-   constexpr uint8_t CORE_VERSION       = 1; //!< Core Service & Interfaces major version supported.
-   constexpr uint8_t PROFILES_VERSION   = 1; //!< Profiles major version supported.
-   constexpr uint8_t INTERFACES_VERSION = 1; //!< Interfaces major version supported.
+   constexpr uint8_t CORE_VERSION       = 1; //!< %Core %Service & %Interfaces major version supported.
+   constexpr uint8_t PROFILES_VERSION   = 1; //!< %Profiles major version supported.
+   constexpr uint8_t INTERFACES_VERSION = 1; //!< %Interfaces major version supported.
 
    /*! @} */
 
@@ -123,7 +146,7 @@ namespace HF
           *
           * @param [in] size the initial size of the byte array.
           */
-         ByteArray(size_t size = 0);
+         ByteArray(uint16_t size = 0);
 
          /*!
           * Create a byte array with the given initial data.
@@ -131,7 +154,7 @@ namespace HF
           * @param [in] data    data to initialize the byte array with.
           * @param [in] size    size in bytes of the data.
           */
-         ByteArray(const uint8_t data[], const size_t size);
+         ByteArray(const uint8_t data[], const uint16_t size);
 
          /*!
           * Create byte array from the values in the given list.
@@ -152,7 +175,7 @@ namespace HF
           *
           * @return  number of bytes written (1).
           */
-         size_t write (size_t offset, uint8_t data);
+         uint16_t write (uint16_t offset, uint8_t data);
 
          /*!
           * Write a word in the big endian format into the
@@ -163,7 +186,7 @@ namespace HF
           *
           * @return  number of bytes written (2).
           */
-         size_t write (size_t offset, uint16_t data);
+         uint16_t write (uint16_t offset, uint16_t data);
 
          /*!
           * Write a double-word in big endian format into the
@@ -174,10 +197,10 @@ namespace HF
           *
           * @return  number of bytes written (4).
           */
-         size_t write (size_t offset, uint32_t data);
+         uint16_t write (uint16_t offset, uint32_t data);
 
-         //! @copydoc ByteArray::write (size_t, uint8_t)
-         size_t write (size_t offset, bool data)
+         //! @copydoc ByteArray::write (uint16_t, uint8_t)
+         uint16_t write (uint16_t offset, bool data)
          {
             return write (offset, static_cast <uint8_t>(data));
          }
@@ -190,7 +213,7 @@ namespace HF
           *
           * @return  number of bytes read (1).
           */
-         size_t read (size_t offset, uint8_t &data) const;
+         uint16_t read (uint16_t offset, uint8_t &data) const;
 
          /*!
           * Read the word in big-endian format at @c offset into @c data.
@@ -200,7 +223,7 @@ namespace HF
           *
           * @return  number of bytes read (2).
           */
-         size_t read (size_t offset, uint16_t &data) const;
+         uint16_t read (uint16_t offset, uint16_t &data) const;
 
          /*!
           * Read the double-word in big-endian format at @c offset into @c data.
@@ -210,13 +233,13 @@ namespace HF
           *
           * @return  number of bytes read (4).
           */
-         size_t read (size_t offset, uint32_t &data) const;
+         uint16_t read (uint16_t offset, uint32_t &data) const;
 
-         //! @copydoc  ByteArray::read (size_t, uint8_t)
-         size_t read (size_t offset, bool &data) const
+         //! @copydoc  ByteArray::read (uint16_t, uint8_t)
+         uint16_t read (uint16_t offset, bool &data) const
          {
-            uint8_t temp;
-            size_t  result = read (offset, temp);
+            uint8_t  temp;
+            uint16_t result = read (offset, temp);
 
             data = (temp & 0x01) != 0;
 
@@ -233,7 +256,7 @@ namespace HF
           * @retval  true if enough data is available,
           * @retval  false otherwise.
           */
-         bool available (size_t offset, size_t expected) const
+         bool available (uint16_t offset, uint16_t expected) const
          {
             return expected <= available (offset);
          }
@@ -245,7 +268,7 @@ namespace HF
           *
           * @return  number of data bytes available from the given @c offset.
           */
-         size_t available (size_t offset) const
+         uint16_t available (uint16_t offset) const
          {
             return (size () >= offset ? size () - offset : 0);
          }
@@ -268,9 +291,26 @@ namespace HF
           *
           * @param [in] _size number of bytes to extent the array by.
           */
-         void extend (size_t _size)
+         void extend (uint16_t _size)
          {
             vector <uint8_t>::reserve (size () + _size);
+         }
+
+         /*!
+          * Ensure that the byte array can hold the number of bytes given
+          * in @c _size, from the given @c offset.
+          *
+          * @param [in] _offset  offset index to check from.
+          * @param [in] _size    number of bytes to ensure that exist.
+          */
+         void ensure (uint16_t _offset, uint16_t _size)
+         {
+            if (!available (_offset, _size))
+            {
+               _size = _size - available (_offset) + std::max <int16_t>((int16_t) (_offset - size ()), 0);
+               vector <uint8_t>::reserve (size () + _size);
+               std::fill_n (back_inserter (*this), _size, 0);
+            }
          }
       };
 
@@ -291,17 +331,25 @@ namespace HF
           *
           * @return  number of bytes the message requires to be serialized.
           */
-         virtual size_t size () const = 0;
+         virtual uint16_t size () const = 0;
 
          /*!
           * Write the object on to a ByteArray so it can be sent over the network.
+          *
+          * The buffer passed in __MUST__ have enough size to hold the serialized object, e.g.,
+          *
+          * @code
+          * Serializable obj;
+          * ByteArray payload(obj.size());
+          * obj.pack(payload);
+          * @endcode
           *
           * @param [inout] array   ByteArray reference to write the object to.
           * @param [in]    offset  offset to start writing to.
           *
           * @return  the number of bytes written.
           */
-         virtual size_t pack (ByteArray &array, size_t offset = 0) const = 0;
+         virtual uint16_t pack (ByteArray &array, uint16_t offset = 0) const = 0;
 
          /*!
           * Read a message from a ByteArray.
@@ -311,15 +359,20 @@ namespace HF
           *
           * @return  the number of bytes read.
           */
-         virtual size_t unpack (const ByteArray &array, size_t offset = 0) = 0;
+         virtual uint16_t unpack (const ByteArray &array, uint16_t offset = 0) = 0;
       };
 
       /*!
        * Wrapper for classes that implement the Serializable concept.
+       *
+       * @tparam T   data type to warp.
+       *
+       * @warning T should be POD (Plain Old Data)
        */
       template<typename T, typename = void>
       struct SerializableHelper:public Serializable
       {
+         //! Data type instance wrapped.
          T data;
 
          SerializableHelper()
@@ -330,26 +383,30 @@ namespace HF
          SerializableHelper(T data):data (data)
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return data.size ();
          }
 
-         size_t pack (ByteArray &array, size_t offset = 0) const
+         uint16_t pack (ByteArray &array, uint16_t offset = 0) const
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data.pack (array, offset);
          }
 
-         size_t unpack (const ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const ByteArray &array, uint16_t offset = 0)
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data.unpack (array, offset);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <T> &other) const
          {
             return data.compare (other.data);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <T> &other) const
          {
             return data.changed (other.data);
@@ -358,11 +415,14 @@ namespace HF
 
       /*!
        * Wrapper to pointers for classes that implement the Serializable concept.
+       *
+       * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
       struct SerializableHelper <T, typename std::enable_if <std::is_pointer <T>::value>::type> :
          public Serializable
       {
+         //! Pointer to the wrapped instance.
          T data;
 
          SerializableHelper()
@@ -373,26 +433,30 @@ namespace HF
          SerializableHelper(T data):data (data)
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return data->size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data->pack (array, offset);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
+            SERIALIZABLE_CHECK (array, offset, size ());
             return data->unpack (array, offset);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <T> &other) const
          {
             return data->compare (other.data);
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <T> &other) const
          {
             return data->changed (other.data);
@@ -401,11 +465,14 @@ namespace HF
 
       /*!
        * Wrapper for base integer types implementing the  Serializable API.
+       *
+       * @tparam T   integral data type to warp.
        */
       template<typename T>
       struct SerializableHelper <T, typename std::enable_if <std::is_integral <typename std::remove_reference <T>::type>::value>::type> :
          public Common::Serializable
       {
+         //! Data type instance wrapped.
          T data;
 
          SerializableHelper()
@@ -415,40 +482,48 @@ namespace HF
 
          SerializableHelper(T data):data (data) {}
 
-         size_t size () const
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(T);
+
+         uint16_t size () const
          {
-            return sizeof(T);
+            return min_size;
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            offset += array.write (offset, data);
+            array.write (offset, data);
 
-            return offset - start;
+            return min_size;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            offset += array.read (offset, data);
+            array.read (offset, data);
 
-            return offset - start;
+            return min_size;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <T> &other) const
          {
             return data - other.data;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <T> &other) const
          {
             return (((float) (data - other.data)) / other.data);
          }
       };
 
+      /*!
+       * Wrapper for Common::ByteArray implementing the  Serializable API.
+       */
       template<>
       struct SerializableHelper <Common::ByteArray> :
          public Common::Serializable
@@ -460,14 +535,19 @@ namespace HF
 
          SerializableHelper(Common::ByteArray _data):data (_data) {}
 
-         size_t size () const
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t);
+
+         uint16_t size () const
          {
-            return sizeof(uint8_t) + data.size ();
+            return min_size + data.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
 
             offset += array.write (offset, (uint8_t) data.size ());
 
@@ -481,12 +561,16 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t  start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            uint8_t _size = 0;
+            uint16_t start = offset;
+
+            uint8_t  _size = 0;
             offset += array.read (offset, _size);
+
+            SERIALIZABLE_CHECK (array, offset, _size);
 
             auto it = array.begin ();
             std::advance (it, offset);
@@ -498,6 +582,7 @@ namespace HF
             return offset - start;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <Common::ByteArray> &other) const
          {
             int res = data.size () - other.size ();
@@ -510,6 +595,7 @@ namespace HF
             return res;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <Common::ByteArray> &other) const
          {
             UNUSED (other);
@@ -517,6 +603,9 @@ namespace HF
          }
       };
 
+      /*!
+       * Wrapper for std::string implementing the Serializable API.
+       */
       template<>
       struct SerializableHelper <std::string> :
          public Common::Serializable
@@ -528,14 +617,19 @@ namespace HF
 
          SerializableHelper(std::string _data):data (_data) {}
 
-         size_t size () const
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t);
+
+         uint16_t size () const
          {
-            return sizeof(uint8_t) + data.size ();
+            return min_size + data.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
 
             offset += array.write (offset, (uint8_t) data.size ());
 
@@ -549,12 +643,16 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t  start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            uint8_t _size = 0;
+            uint16_t start = offset;
+
+            uint8_t  _size = 0;
             offset += array.read (offset, _size);
+
+            SERIALIZABLE_CHECK (array, offset, _size);
 
             auto it = array.begin ();
             std::advance (it, offset);
@@ -568,11 +666,13 @@ namespace HF
             return offset - start;
          }
 
+         //! @copydoc HF::Attributes::IAttribute::compare
          int compare (const SerializableHelper <std::string> &other) const
          {
             return strcmp (data.data (), other.data.data ());
          }
 
+         //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <std::string> &other) const
          {
             UNUSED (other);
@@ -607,7 +707,6 @@ namespace HF
          FAIL_RO_ATTR      = 0x04, //!< Fail - Read only attribute.
          FAIL_READ_SESSION = 0x20, //!< Fail - Read Session not established
          FAIL_MODIFIED     = 0x21, //!< Fail - Entries table modified
-         FAIL_ID           = 0x23, //!< Fail - ID Not Found
          FAIL_RESOURCES    = 0xFE, //!< Fail - Not enough resources
          FAIL_UNKNOWN      = 0xFF, //!< Fail - Unknown reason
       } Result;
@@ -617,8 +716,8 @@ namespace HF
        */
       struct Interface
       {
-         uint16_t role : 1;         //!< Interface role : Server or Client.
-         uint16_t id   : 15;        //!< Identifier of the interface. @see Interface::UID.
+         uint16_t role : 1;  //!< Interface role : Server or Client.
+         uint16_t id   : 15; //!< Identifier of the interface. @see Interface::UID.
 
          /*!
           * Constructor
@@ -630,14 +729,17 @@ namespace HF
             role (role), id (id)
          {}
 
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint16_t);   // Interface UID.
+
          //! @copydoc HF::Common::Serializable::size
-         size_t size () const;
+         uint16_t size () const;
 
          //! @copydoc HF::Common::Serializable::pack
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       // =============================================================================
@@ -802,7 +904,7 @@ namespace HF
           *
           * @return  the number of entries in the container.
           */
-         virtual size_t size () const = 0;
+         virtual uint16_t size () const = 0;
 
          /*!
           * Store the given bind @c entry to persistent storage.

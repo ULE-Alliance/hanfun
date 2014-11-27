@@ -5,7 +5,7 @@
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -291,7 +291,7 @@ void BindManagement::Server::restore (Json::Value root)
  *
  */
 // =============================================================================
-void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, size_t offset)
+void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
 {
    LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
 
@@ -429,29 +429,15 @@ void to_json (const HF::UID::UID &uid, Json::Value &node)
          node["value"] = 0;
       }
 
-      case HF::UID::RFPI_UID: // RFPI
+      case HF::UID::DECT_UID: // RFPI
       {
-         node["type"] = "rfpi";
+         node["type"] = "dect";
 
-         const HF::UID::RFPI *rfpi = static_cast <const HF::UID::RFPI *>(uid.raw ());
+         const HF::UID::DECT *dect = static_cast <const HF::UID::DECT *>(uid.raw ());
 
-         for (uint8_t i = 0; i < HF::UID::RFPI::length (); i++)
+         for (uint8_t i = 0; i < HF::UID::DECT::length (); i++)
          {
-            node["value"][i] = (int) (*rfpi)[i];
-         }
-
-         break;
-      }
-
-      case HF::UID::IPUI_UID:
-      {
-         node["type"] = "ipui";
-
-         const HF::UID::IPUI *ipui = static_cast <const HF::UID::IPUI *>(uid.raw ());
-
-         for (uint8_t i = 0; i < HF::UID::IPUI::length (); i++)
-         {
-            node["value"][i] = (int) (*ipui)[i];
+            node["value"][i] = (int) (*dect)[i];
          }
 
          break;
@@ -587,27 +573,16 @@ void from_json (Json::Value &node, HF::UID::UID &uid)
       HF::UID::NONE *none = new HF::UID::NONE;
       uid = none;
    }
-   else if (uid_type == "rfpi")
+   else if (uid_type == "dect")
    {
-      HF::UID::RFPI *rfpi = new HF::UID::RFPI;
+      HF::UID::DECT *dect = new HF::UID::DECT;
 
       for (unsigned i = 0; i < node["value"].size (); ++i)
       {
-         (*rfpi)[i] = (uint8_t) node["value"][i].asUInt ();
+         (*dect)[i] = (uint8_t) node["value"][i].asUInt ();
       }
 
-      uid = rfpi;
-   }
-   else if (uid_type == "ipui")
-   {
-      HF::UID::IPUI *ipui = new HF::UID::IPUI;
-
-      for (unsigned i = 0; i < node["value"].size (); ++i)
-      {
-         (*ipui)[i] = (uint8_t) node["value"][i].asUInt ();
-      }
-
-      uid = ipui;
+      uid = dect;
    }
    else if (uid_type == "mac")
    {

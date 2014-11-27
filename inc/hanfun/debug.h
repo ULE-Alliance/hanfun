@@ -4,7 +4,7 @@
  *
  * This file contains the prototypes of the debug functionality in HAN-FUN.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

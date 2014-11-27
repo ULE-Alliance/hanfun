@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Level Control interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -59,12 +59,57 @@ namespace HF
           * interface API.
           * @{
           */
+
+         //! Command IDs.
+         typedef enum _CMD
+         {
+            SET_LEVEL_CMD = 0x01,      //!< Set Level Command ID.
+            __LAST_CMD__  = SET_LEVEL_CMD
+         } CMD;
+
          //! Attributes
          typedef enum _Attributes
          {
             LEVEL_ATTR    = 0x01,      //!< State attribute UID.
             __LAST_ATTR__ = LEVEL_ATTR,
          } Attributes;
+
+         struct Message
+         {
+            //! Level value to set at the server side.
+            uint8_t level;
+
+            Message(uint8_t level = 0):level (level) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);
+
+            //! \see HF::Serializable::size.
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               SERIALIZABLE_CHECK (array, offset, min_size);
+
+               array.write (offset, level);
+
+               return min_size;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               SERIALIZABLE_CHECK (array, offset, min_size);
+
+               array.read (offset, level);
+
+               return min_size;
+            }
+         };
 
          /*!
           * Helper class to handle the %Level attribute for the Level Control interface.
@@ -104,7 +149,7 @@ namespace HF
 
             using Interfaces::Base <Interface::LEVEL_CONTROL>::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                UNUSED (itf);
                return payload_size_helper <Level>();
@@ -188,7 +233,8 @@ namespace HF
             //! @{
 
             /*!
-             * Callback for a @c SET_ATTR_REQ message, when the level value is changed.
+             * Callback for a @c SET_ATTR_REQ or @c SET_LEVEL_CMD message,
+             * when the level value is changed.
              *
              * @remark When this method is called the attribute has already been updated to
              * the new value.
@@ -234,7 +280,10 @@ namespace HF
             protected:
 
             Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                             size_t offset);
+                                             uint16_t offset);
+
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           uint16_t offset);
          };
 
          /*!
@@ -253,7 +302,7 @@ namespace HF
             //! @{
 
             /*!
-             * Send a @c SET_ATTR_REQ to the given address to set the level
+             * Send a @c SET_LEVEL_CMD to the given address to set the level
              * at @c new_level.
              *
              * @param [in] addr        network address to send the message to.
@@ -262,7 +311,7 @@ namespace HF
             void level (Protocol::Address &addr, uint8_t new_level);
 
             /*!
-             * Send a @c SET_ATTR_REQ to broadcast network address to set the level
+             * Send a @c SET_LEVEL_CMD to broadcast network address to set the level
              * at @c new_level.
              *
              * @param [in] new_level    level value to send in the message.

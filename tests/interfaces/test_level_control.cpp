@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Level Control Interface implementation.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -74,8 +74,8 @@ TEST (LevelControlClient, Level)
 
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
-   LONGS_EQUAL (LevelControl::LEVEL_ATTR, client.sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::SET_ATTR_REQ, client.sendMsg.type);
+   LONGS_EQUAL (LevelControl::SET_LEVEL_CMD, client.sendMsg.itf.member);
+   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, client.sendMsg.type);
 
    LevelControl::Level level;
 
@@ -165,7 +165,7 @@ TEST (LevelControlServer, Handle_Invalid_UID)
 {
    packet.message.itf.id = server.uid () + 1;
 
-   CHECK_EQUAL (Result::FAIL_ID, server.handle (packet, expected, 3));
+   CHECK_EQUAL (Result::FAIL_ARG, server.handle (packet, expected, 3));
 }
 
 //! @test Should not handle message with invalid payload size.

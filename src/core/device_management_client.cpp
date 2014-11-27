@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -106,7 +106,7 @@ void Client::deregister (uint16_t address)
  *
  */
 // =============================================================================
-size_t Client::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -114,7 +114,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
          return payload_size_helper <RegisterResponse>();
 
       case DEREGISTER_CMD:
-         return payload_size_helper <DeregisterResponse>();
+         return payload_size_helper <Protocol::Response>();
 
       case START_SESSION_CMD:
          return SessionMgr::payload_size (SessionManagement::START);
@@ -138,7 +138,7 @@ size_t Client::payload_size (Protocol::Message::Interface &itf) const
  */
 // =============================================================================
 Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+                                       uint16_t offset)
 {
    switch (packet.message.itf.member)
    {
@@ -152,7 +152,7 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
       }
       case DEREGISTER_CMD:
       {
-         DeregisterResponse response;
+         Protocol::Response response;
          response.unpack (payload, offset);
          deregistered (response);
 
@@ -199,7 +199,7 @@ void Client::registered (RegisterResponse &response)
  *
  */
 // =============================================================================
-void Client::deregistered (DeregisterResponse &response)
+void Client::deregistered (Protocol::Response &response)
 {
    if (response.code == Common::Result::OK)
    {

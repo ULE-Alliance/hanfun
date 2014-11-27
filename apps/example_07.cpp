@@ -4,7 +4,7 @@
  *
  * This file contains an example usage of the Attribute reporting service.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -25,8 +25,58 @@
 #include "localloop.h"
 
 // =============================================================================
+// Defines
+// =============================================================================
+
+/* *INDENT-OFF* */
+#define TABLE_LOG(_X)      LOG (INFO) << std::right << std::setw (15) << _X << std::left << NL
+
+#define TABLE_STREAM(_X)   stream << "[INFO ] " << std::right << std::setw (15) << _X << std::left
+/* *INDENT-ON* */
+
+// =============================================================================
 // Implementation
 // =============================================================================
+
+using namespace HF::Core::AttributeReporting;
+
+std::ostream &operator <<(std::ostream &stream, const Report::Attribute &attr)
+{
+   stream << " (idx) " << attr->interface () << " (itf) " << (int) attr->uid () << " (uid)";
+   return stream;
+}
+
+std::ostream &operator <<(std::ostream &stream, const Report::Periodic::Entry &entry)
+{
+   TABLE_STREAM ("ITF : " << entry.itf.id << " (uid) " << entry.itf.role << " (role)") << NL;
+   TABLE_STREAM ("Unit : " << (int) entry.unit) << NL;
+
+   TABLE_STREAM ("Attributes : " << (int) entry.attributes.size () << " (#)");
+
+   return stream;
+}
+
+std::ostream &operator <<(std::ostream &stream, const Report::Event::Entry &entry)
+{
+   TABLE_STREAM ("ITF : " << entry.itf.id << " (uid) " << entry.itf.role << " (role)") << NL;
+   TABLE_STREAM ("Unit : " << (int) entry.unit) << NL;
+
+   TABLE_STREAM ("Fields : " << (int) entry.fields.size () << " (#)");
+
+   return stream;
+}
+
+std::ostream &operator <<(std::ostream &stream, const Report::Event::Field &field)
+{
+   stream << " (idx) " << field.type << " (type) ";
+   return stream;
+}
+
+std::ostream &operator <<(std::ostream &stream, const Report::Abstract &report)
+{
+   stream << (int) report.id << " (id) " << (int) report.type << " (type) ";
+   return stream;
+}
 
 namespace
 {
@@ -36,14 +86,12 @@ namespace
    struct AttributeReporting:public HF::Core::AttributeReporting::AbstractClient
    {
       void report (HF::Core::AttributeReporting::Type type, const HF::Protocol::Address &address,
-                   const HF::Common::ByteArray &payload, size_t offset)
+                   const HF::Common::ByteArray &payload, uint16_t offset)
       {
          UNUSED (payload);
          UNUSED (offset);
 
          using namespace HF::Core::AttributeReporting;
-
-#define TABLE_LOG(_X)   LOG (INFO) << std::right << std::setw (15) << _X << std::left << NL
 
          switch (type)
          {
@@ -56,43 +104,38 @@ namespace
 
                report.unpack (HF::Attributes::get_factory, payload, offset);
 
-               TABLE_LOG ("Report : " << (int) report.id << " (id) " << (int) report.type << " (type) ");
+               TABLE_LOG ("Report : " << report);
                TABLE_LOG ("Entries : " << std::distance (report.entries.begin (),
                                                          report.entries.end ()) << " (#)");
 
                uint8_t unit_count = 0;
+               /* *INDENT-OFF* */
                std::for_each (report.entries.begin (), report.entries.end (),
-                              [&unit_count](Report::Periodic::Entry &entry)
-                              {
-                                 TABLE_LOG ("Entry : " << (int) unit_count++);
-                                 TABLE_LOG ("ITF : " << entry.itf.id << " (uid) " << entry.itf.role << " (role)");
-                                 TABLE_LOG ("Unit : " << (int) entry.unit);
+                     [&unit_count](Report::Periodic::Entry &entry)
+               {
+                  TABLE_LOG ("Entry : " << (int) unit_count++ << std::endl << entry);
 
-                                 TABLE_LOG ("Attributes : " << (int) entry.attributes.size () << " (#)");
+                  uint8_t attr_count = 0;
+                  std::for_each (entry.attributes.begin (), entry.attributes.end (),
+                        [&attr_count](Report::Attribute attr)
+                  {
+                     TABLE_LOG (" Attribute : " << (int) attr_count++ << attr);
 
-                                 uint8_t attr_count = 0;
-                                 std::for_each (entry.attributes.begin (), entry.attributes.end (),
-                                                [&attr_count](Report::Attribute attr)
-                                                {
-                                                   TABLE_LOG (" Attribute : " << (int) attr_count++ << " (idx) "
-                                                              << attr->interface () << " (itf) "
-                                                              << (int) attr->uid () << " (uid)");
-
-                                                   if (attr->interface () == HF::Interface::LEVEL_CONTROL &&
-                                                       attr->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
-                                                   {
-                                                      HF::Interfaces::LevelControl::Level *level_attr =
-                                                         (HF::Interfaces::LevelControl::Level *) attr.get ();
-                                                      int precent = HF::Common::to_percent <uint8_t>(level_attr->get ());
-                                                      TABLE_LOG ("Attr Value : " << precent << "%");
-                                                   }
-                                                }
-                                               );
-                              }
-                             );
+                     if (attr->interface () == HF::Interface::LEVEL_CONTROL &&
+                           attr->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
+                     {
+                        HF::Interfaces::LevelControl::Level *level_attr =
+                        (HF::Interfaces::LevelControl::Level *) attr.get ();
+                        int precent = HF::Common::to_percent <uint8_t>(level_attr->get ());
+                        TABLE_LOG ("Attr Value : " << precent << "%");
+                     }
+                  });
+               });
+               /* *INDENT-ON* */
 
                break;
             }
+
             //! [Periodic event processing]
             //! [Event event processing]
             case EVENT:
@@ -103,41 +146,36 @@ namespace
 
                report.unpack (HF::Attributes::get_factory, payload, offset);
 
-               TABLE_LOG ("Report : " << (int) report.id << " (id) " << (int) report.type << " (type) ");
+               TABLE_LOG ("Report : " << report);
                TABLE_LOG ("Entries : " << std::distance (report.entries.begin (),
                                                          report.entries.end ()) << " (#)");
 
                uint8_t unit_count = 0;
+               /* *INDENT-OFF* */
                std::for_each (report.entries.begin (), report.entries.end (),
-                              [&unit_count](Report::Event::Entry &entry)
-                              {
-                                 TABLE_LOG ("Entry : " << (int) unit_count++);
-                                 TABLE_LOG ("ITF : " << entry.itf.id << " (uid) " << entry.itf.role << " (role)");
-                                 TABLE_LOG ("Unit : " << (int) entry.unit);
+                     [&unit_count](Report::Event::Entry &entry)
+               {
+                  TABLE_LOG ("Entry : " << (int) unit_count++ << std::endl << entry);
 
-                                 TABLE_LOG ("Fields : " << (int) entry.fields.size () << " (#)");
+                  uint8_t field_count = 0;
+                  std::for_each (entry.fields.begin (), entry.fields.end (),
+                        [&field_count](Report::Event::Field &field)
+                  {
+                     TABLE_LOG (" Field : " << (int) field_count++ << field);
+                     TABLE_LOG (" Attribute : " << field.attribute->interface () << " (itf) "
+                                                << (int) field.attribute->uid () << " (uid)");
 
-                                 uint8_t field_count = 0;
-                                 std::for_each (entry.fields.begin (), entry.fields.end (),
-                                                [&field_count](Report::Event::Field &field)
-                                                {
-                                                   TABLE_LOG (" Field : " << (int) field_count++ << " (idx) "
-                                                              << field.type << " (type) ");
-                                                   TABLE_LOG (" Attribute : " << field.attribute->interface () << " (itf) "
-                                                              << (int) field.attribute->uid () << " (uid)");
-
-                                                   if (field.attribute->interface () == HF::Interface::LEVEL_CONTROL &&
-                                                       field.attribute->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
-                                                   {
-                                                      HF::Interfaces::LevelControl::Level *level_attr =
-                                                         (HF::Interfaces::LevelControl::Level *) field.attribute.get ();
-                                                      int precent = HF::Common::to_percent <uint8_t>(level_attr->get ());
-                                                      TABLE_LOG ("Attr Value : " << precent << "%");
-                                                   }
-                                                }
-                                               );
-                              }
-                             );
+                     if (field.attribute->interface () == HF::Interface::LEVEL_CONTROL &&
+                           field.attribute->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
+                     {
+                        HF::Interfaces::LevelControl::Level *level_attr =
+                        (HF::Interfaces::LevelControl::Level *) field.attribute.get ();
+                        int precent = HF::Common::to_percent <uint8_t>(level_attr->get ());
+                        TABLE_LOG ("Attr Value : " << precent << "%");
+                     }
+                  });
+               });
+               /* *INDENT-ON* */
 
                break;
             }

@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the On-Off Interface implementation.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -251,7 +251,7 @@ TEST (OnOffServer, Handle_Invalid_UID)
 {
    packet.message.itf.id = server.uid () + 1;
 
-   CHECK_EQUAL (Common::Result::FAIL_ID, server.handle (packet, expected, 3));
+   CHECK_EQUAL (Common::Result::FAIL_ARG, server.handle (packet, expected, 3));
 }
 
 //! @test Should return attribute.

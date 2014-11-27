@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the debug helper functions.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -87,32 +87,18 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
          stream << "uid: NONE";
          break;
       }
-      case HF::UID::RFPI_UID:
+      case HF::UID::DECT_UID:
       {
-         HF::UID::RFPI *rfpi = (HF::UID::RFPI *) uid.raw ();
-         stream << "rfpi: " << std::uppercase << std::setw (2) << std::right << std::hex;
+         HF::UID::DECT *dect = (HF::UID::DECT *) uid.raw ();
+         stream << "dect: " << std::uppercase << std::setw (2) << std::right << std::hex;
 
          for (uint8_t i = 0; i < HF::UID::RFPI::length (); i++)
          {
-            stream << static_cast <int>((*rfpi)[i]);
+            stream << static_cast <int>((*dect)[i]);
          }
 
          break;
       }
-
-      case HF::UID::IPUI_UID:
-      {
-         HF::UID::IPUI *ipui = (HF::UID::IPUI *) uid.raw ();
-         stream << "ipui: " << std::uppercase << std::setw (2) << std::right << std::hex;
-
-         for (uint8_t i = 0; i < HF::UID::IPUI::length (); i++)
-         {
-            stream << static_cast <int>((*ipui)[i]);
-         }
-
-         break;
-      }
-
       case HF::UID::MAC_UID:
       {
          HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw ();

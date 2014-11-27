@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Alert interface : Client role.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -36,7 +36,7 @@ using namespace HF::Interfaces::Alert;
  */
 // =============================================================================
 Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       size_t offset)
+                                       uint16_t offset)
 {
    if (packet.message.itf.member != STATUS_CMD)
    {

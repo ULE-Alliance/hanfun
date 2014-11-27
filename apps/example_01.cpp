@@ -4,7 +4,7 @@
  *
  * This file contains an example demonstrating basic registration.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -89,36 +89,49 @@ namespace HF
    {
       struct Payload
       {
-         size_t fake_size;
+         Common::ByteArray data;
 
-         Payload(size_t fake_size = 0):
-            fake_size (fake_size & Protocol::MAX_PAYLOAD)
-         {}
+         Payload(uint16_t _size = 0):
+            data (_size & Protocol::MAX_PAYLOAD)
+         {
+            std::random_device rd;
+            std::mt19937 mt (rd ());
+            std::uniform_int_distribution <uint8_t> dist;
+
+            auto gen = std::bind (dist, mt);
+
+            std::generate_n (data.begin (), data.size (), gen);
+         }
 
          virtual ~Payload()
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
-            return fake_size;
+            return data.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            array.extend (fake_size);
+            array.extend (data.size ());
 
             auto start = array.begin () + offset;
 
-            array.insert (start, fake_size, 0x00);
+            array.insert (start, data.begin (), data.end ());
 
-            return fake_size;
+            return data.size ();
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            UNUSED (array);
-            UNUSED (offset);
-            return fake_size;
+            assert (array.available (offset, data.size ()));
+
+            auto begin = array.begin () + offset;
+            auto end   = begin + data.size ();
+
+            std::copy (begin, end, data.begin ());
+
+            return data.size ();
          }
       };
 
@@ -278,7 +291,7 @@ namespace HF
 
          protected:
 
-         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -423,7 +436,7 @@ namespace HF
             packets.push_back (temp);
          }
 
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             mock ("AbstractDevice").actualCall ("receive");
             Parent::receive (packet, payload, offset);
@@ -520,7 +533,7 @@ namespace HF
             return attr_reporting;
          }
 
-         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -644,7 +657,7 @@ namespace HF
             return bind_mgt;
          }
 
-         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             switch (packet.message.itf.id)
             {

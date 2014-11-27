@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Alert interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -45,10 +45,9 @@ Alert::Message::Message(uint16_t type, uint32_t state):
  *
  */
 // =============================================================================
-size_t Alert::Message::size () const
+uint16_t Alert::Message::size () const
 {
-   return sizeof(uint16_t) + // Profile UID.
-          sizeof(uint32_t);  // State.
+   return min_size;
 }
 
 // =============================================================================
@@ -58,14 +57,15 @@ size_t Alert::Message::size () const
  *
  */
 // =============================================================================
-size_t Alert::Message::pack (Common::ByteArray &array, size_t offset) const
+uint16_t Alert::Message::pack (Common::ByteArray &array, uint16_t offset) const
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.write (offset, this->type);
-   offset += array.write (offset, this->state);
 
-   return offset - start;
+   array.write (offset, this->state);
+
+   return min_size;
 }
 
 // =============================================================================
@@ -75,14 +75,15 @@ size_t Alert::Message::pack (Common::ByteArray &array, size_t offset) const
  *
  */
 // =============================================================================
-size_t Alert::Message::unpack (const Common::ByteArray &array, size_t offset)
+uint16_t Alert::Message::unpack (const Common::ByteArray &array, uint16_t offset)
 {
-   size_t start = offset;
+   SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.read (offset, this->type);
-   offset += array.read (offset, this->state);
 
-   return offset - start;
+   array.read (offset, this->state);
+
+   return min_size;
 }
 
 // =============================================================================

@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the transport API.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -43,7 +43,7 @@ namespace HF
             links.remove (link);
          }
 
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);
@@ -53,7 +53,7 @@ namespace HF
 
       struct Endpoint2:public Endpoint
       {
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, size_t offset)
+         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
             UNUSED (packet);
             UNUSED (payload);

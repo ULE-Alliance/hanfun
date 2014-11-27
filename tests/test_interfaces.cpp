@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the common functionality
  * of the interfaces.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -68,7 +68,7 @@ TEST (AbstractInterface, Handle_Request)
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
    packet.message.itf.id   = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
+   CHECK_EQUAL (Result::FAIL_ARG, itf->handle (packet, payload, 0));
 }
 
 /*!
@@ -88,7 +88,7 @@ TEST (AbstractInterface, Handle_RequestResp)
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
    packet.message.itf.id   = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ID, itf->handle (packet, payload, 0));
+   CHECK_EQUAL (Result::FAIL_ARG, itf->handle (packet, payload, 0));
 }
 
 // =============================================================================

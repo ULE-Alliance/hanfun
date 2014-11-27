@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -115,7 +115,7 @@ namespace HF
        * @return        the result of the message processing.
        */
       virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                     size_t offset) = 0;
+                                     uint16_t offset) = 0;
 
       /*!
        * Handle periodic processing.
@@ -168,7 +168,7 @@ namespace HF
          virtual ~AbstractInterface() {}
 
          Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                size_t offset);
+                                uint16_t offset);
 
          void periodic (uint32_t time)
          {
@@ -238,7 +238,7 @@ namespace HF
           * @retval Common::Result::FAIL_ARG otherwise.
           */
          Common::Result check (Protocol::Message &message, Common::ByteArray &payload,
-                               size_t offset);
+                               uint16_t offset);
 
          /*!
           * Check if @c payload data size if sufficient for processing the @c message.
@@ -253,7 +253,7 @@ namespace HF
           * @retval Common::Result::FAIL_ARG otherwise.
           */
          Common::Result check_payload_size (Protocol::Message &message, Common::ByteArray &payload,
-                                            size_t offset);
+                                            uint16_t offset);
 
          /*!
           * Return the minimal payload size that should be present for the given
@@ -263,7 +263,7 @@ namespace HF
           *
           * @return  the minimum size in bytes that the packet payload should hold.
           */
-         virtual size_t payload_size (Protocol::Message &message) const;
+         virtual uint16_t payload_size (Protocol::Message &message) const;
 
          /*!
           * Return the minimal payload size that a message should hold when
@@ -273,7 +273,7 @@ namespace HF
           *
           * @return  the minimum number of bytes for the message for the interface.
           */
-         virtual size_t payload_size (Protocol::Message::Interface &itf) const
+         virtual uint16_t payload_size (Protocol::Message::Interface &itf) const
          {
             UNUSED (itf);
             return 0;
@@ -288,7 +288,7 @@ namespace HF
           * @return  the minimum size required to serializing/deserializing given class.
           */
          template<typename _Message>
-         size_t payload_size_helper () const
+         uint16_t payload_size_helper () const
          {
             _Message message;
             return message.size ();
@@ -303,7 +303,7 @@ namespace HF
           *  - Protocol::Message:Type::COMMAND_RES;
           */
          virtual Common::Result handle_command (Protocol::Packet &packet,
-                                                Common::ByteArray &payload, size_t offset);
+                                                Common::ByteArray &payload, uint16_t offset);
 
          /*!
           * @copydoc HF::Interface::handle
@@ -317,7 +317,7 @@ namespace HF
           *  - Protocol::Message:Type::SET_ATTR_PACK_RESP_REQ;
           */
          virtual Common::Result handle_attribute (Protocol::Packet &packet,
-                                                  Common::ByteArray &payload, size_t offset);
+                                                  Common::ByteArray &payload, uint16_t offset);
 
          /*!
           * Check if the given UID matches the interface UID.

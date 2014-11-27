@@ -5,7 +5,7 @@
  * This file contains the implementation of the session management functionality
  * for the server side.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -33,7 +33,7 @@ using namespace HF::Core::SessionManagement;
  */
 // =============================================================================
 Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet,
-                                               Common::ByteArray &payload, size_t offset)
+                                               Common::ByteArray &payload, uint16_t offset)
 {
    // Don't process group address.
    if (packet.source.mod == HF::Protocol::Address::GROUP)
@@ -43,7 +43,7 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
 
    Result result = Result::OK;
 
-   Protocol::Message resp_msg (packet.message);
+   Protocol::Message resp_msg (packet.message, 0);
 
    switch (cmd)
    {
@@ -152,7 +152,7 @@ Common::Result AbstractServer::check_offset (uint16_t offset, uint8_t &count, ui
  *
  */
 // =============================================================================
-size_t AbstractServer::payload_size (CMD cmd) const
+uint16_t AbstractServer::payload_size (CMD cmd) const
 {
    switch (cmd)
    {

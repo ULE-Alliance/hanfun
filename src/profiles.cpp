@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * \file       src/profiles.cpp
+ * @file       src/profiles.cpp
  *
  * This file contains the implementation of the functionality related with HAN-FUN
  * Profiles.
  *
- * \version    1.1.1
+ * @version    1.2.0
  *
- * \copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -33,8 +33,8 @@
 struct Profile
 {
    uint16_t uid;     //!< Profile UID.
-   uint16_t index;   //!< Start index on \c profiles_interfaces table, for the profile.
-   uint8_t  count;   //!< Number of interface entries in \c profiles_interfaces table.
+   uint16_t index;   //!< Start index on @c profiles_interfaces table, for the profile.
+   uint8_t  count;   //!< Number of interface entries in @c profiles_interfaces table.
 };
 
 // =============================================================================

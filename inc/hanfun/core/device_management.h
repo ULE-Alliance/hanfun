@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -135,14 +135,19 @@ namespace HF
                id (unit.id ()), profile (unit.uid ()), interfaces (unit.interfaces ())
             {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t)     // Unit entry size.
+                                                 + sizeof(uint8_t)   // Unit ID.
+                                                 + sizeof(uint16_t); // Unit's profile UID.
+
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
 
             /*!
              * This method checks if the remote device unit implements the given interface.
@@ -182,14 +187,18 @@ namespace HF
             // Serializable API
             // =============================================================================
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t)   // Device Address.
+                                                 + sizeof(uint8_t); // Number of units.
+
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
 
             // =============================================================================
             // Operators
@@ -243,14 +252,18 @@ namespace HF
 
             virtual ~RegisterMessage();
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = UID::UID_T::min_size // UID.
+                                                 + sizeof(uint8_t);   // Number of units.
+
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -261,15 +274,15 @@ namespace HF
             uint16_t address; //!< Address for the device to use.
             uint16_t emc;     //!< HAN-FUN Concentrator EMC if applicable.
 
-            RegisterResponse(uint16_t address = 0, uint16_t emc = 0):
+            RegisterResponse(uint16_t address = Protocol::BROADCAST_ADDR, uint16_t emc = 0):
                address (address & Protocol::BROADCAST_ADDR), emc (emc)
             {}
 
-            size_t size () const;
+            uint16_t size () const;
 
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          // =============================================================================
@@ -292,18 +305,23 @@ namespace HF
                address (address)
             {}
 
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t);   // Device Address.
+
             //! @copydoc HF::Common::Serializable::size
-            size_t size () const;
+            uint16_t size () const;
 
             //! @copydoc HF::Common::Serializable::pack
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
           * De-register command response.
+          *
+          * @deprecated This message was reverted back to a normal Protocol::Response.
           */
          struct DeregisterResponse:public Protocol::Response
          {
@@ -320,12 +338,13 @@ namespace HF
                Protocol::Response (code), address (address & Protocol::BROADCAST_ADDR)
             {}
 
-            size_t size () const;
+            uint16_t size () const;
 
-            size_t pack (Common::ByteArray &array, size_t offset = 0) const;
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
 
-            size_t unpack (const Common::ByteArray &array, size_t offset = 0);
-         };
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         }
+         __attribute_deprecated__;
 
          /*!
           * Device Management - Persistent Storage API.
@@ -520,7 +539,7 @@ namespace HF
              *
              * @param [in] response    the response received.
              */
-            virtual void deregistered (DeregisterResponse &response);
+            virtual void deregistered (Protocol::Response &response);
 
             //! @}
             // ======================================================================
@@ -537,10 +556,10 @@ namespace HF
 
             using ServiceRole::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size (Protocol::Message::Interface &itf) const;
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*!
@@ -701,13 +720,13 @@ namespace HF
              * This method is called when a registration message is received.
              */
             virtual Common::Result register_device (Protocol::Packet &packet,
-                                                    Common::ByteArray &payload, size_t offset);
+                                                    Common::ByteArray &payload, uint16_t offset);
 
             /*!
              * This method is called when a de-registration message is received.
              */
             virtual Common::Result deregister_device (Protocol::Packet &packet,
-                                                      Common::ByteArray &payload, size_t offset);
+                                                      Common::ByteArray &payload, uint16_t offset);
 
             //! @}
             // ======================================================================
@@ -748,10 +767,10 @@ namespace HF
 
             using ServiceRole <Abstract, HF::Interface::SERVER_ROLE>::payload_size;
 
-            size_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size (Protocol::Message::Interface &itf) const;
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset);
+                                           uint16_t offset);
          };
 
          /*!
@@ -764,7 +783,7 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            size_t size () const
+            uint16_t size () const
             {
                return db.size ();
             }
@@ -873,7 +892,7 @@ namespace HF
 
             protected:
 
-            size_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size (Protocol::Message::Interface &itf) const
             {
                switch (itf.member)
                {
@@ -892,7 +911,7 @@ namespace HF
             }
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           size_t offset)
+                                           uint16_t offset)
             {
                switch (packet.message.itf.member)
                {

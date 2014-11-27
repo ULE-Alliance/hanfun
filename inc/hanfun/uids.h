@@ -5,7 +5,7 @@
  * This file contains the declaration of the classes that implement the HAN-FUN
  * UIDs.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -42,10 +42,9 @@ namespace HF
       typedef enum _Type
       {
          NONE_UID = 0x00,   //!< Empty UID.
-         RFPI_UID = 0x01,   //!< Radio Fixed Part Identifier.
-         IPUI_UID = 0x02,   //!< International Portable User Identifier.
-         MAC_UID  = 0x03,   //!< Media Access Control (IEEE-MAC-48)
-         URI_UID  = 0x04,   //!< Uniform Resource Identifier.
+         DECT_UID = 0x01,   //!< RFPI or IPUI.
+         MAC_UID  = 0x02,   //!< Media Access Control (IEEE-MAC-48)
+         URI_UID  = 0x03,   //!< Uniform Resource Identifier.
       } Type;
 
       /*!
@@ -91,29 +90,37 @@ namespace HF
             return (this->type () - other.type ());
          }
 
-         size_t size () const
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = sizeof(uint8_t)     // UID Type.
+                                              + sizeof(uint8_t);  // Size of the UID.
+
+         //! @copydoc HF::Common::Serializable::size
+         uint16_t size () const
          {
-            return sizeof(uint8_t) + // UID Type.
-                   sizeof(uint8_t);  // Size of the UID.
+            return min_size;
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         //! @copydoc HF::Common::Serializable::pack
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
-            offset += array.write (offset, this->type ());
-            return offset - start;
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
+            array.write (offset, this->type ());
+
+            return sizeof(uint8_t);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         //! @copydoc HF::Common::Serializable::unpack
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t  start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             uint8_t type;
-            offset += array.read (offset, type);
+            array.read (offset, type);
 
             assert ((type & (~0x80)) == this->type ());
 
-            return offset - start;
+            return sizeof(uint8_t);
          }
       };
 
@@ -136,28 +143,36 @@ namespace HF
        */
       struct NONE:public Abstract <NONE_UID>
       {
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             offset += UID_T::pack (array, offset);
-            offset += array.write (offset, (uint8_t) 0);
 
-            return offset - start;
+            array.write (offset, (uint8_t) 0);
+
+            return min_size;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
-            offset += UID_T::unpack (array, offset);
+            uint16_t res = UID_T::unpack (array, offset);
+
+            if (res == 0)
+            {
+               return 0;
+            }
+
+            offset += res;
 
             uint8_t size;
-            offset += array.read (offset, size);
+            array.read (offset, size);
 
             assert (size == 0);
 
-            return offset - start;
+            return min_size;
          }
 
          NONE *clone () const
@@ -194,14 +209,27 @@ namespace HF
             memcpy (value, _value, _size * sizeof(uint8_t));
          }
 
-         size_t size () const
+         /*!
+          * Constructor.
+          *
+          * @param [in] _value   initial fill value for UID.
+          */
+         ByteArray(uint8_t _value):Abstract <_type>()
          {
-            return UID_T::size () + sizeof(value);
+            memset (value, _value, _size * sizeof(uint8_t));
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         //! Minimum pack/unpack required data size.
+         static constexpr uint16_t min_size = UID_T::min_size + _size;
+
+         uint16_t size () const
          {
-            size_t start = offset;
+            return min_size;
+         }
+
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             offset += Abstract <_type>::pack (array, offset);
 
@@ -212,12 +240,12 @@ namespace HF
                offset += array.write (offset, value[i]);
             }
 
-            return offset - start;
+            return min_size;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            size_t start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
 
             offset += Abstract <_type>::unpack (array, offset);
 
@@ -226,12 +254,17 @@ namespace HF
 
             assert (size == sizeof(value));
 
+            if (size != sizeof(value))
+            {
+               return 0;
+            }
+
             for (uint8_t i = 0; i < size; i++)
             {
                offset += array.read (offset, value[i]);
             }
 
-            return offset - start;
+            return min_size;
          }
 
          // ===================================================================
@@ -256,7 +289,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t const &operator [](size_t index) const
+         uint8_t const &operator [](uint16_t index) const
          {
             return value[index];
          }
@@ -268,7 +301,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t &operator [](size_t index)
+         uint8_t &operator [](uint16_t index)
          {
             return value[index];
          }
@@ -283,7 +316,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t const &at (size_t index) const
+         uint8_t const &at (uint16_t index) const
          {
             assert (index < _size);
             return value[index];
@@ -299,7 +332,7 @@ namespace HF
           *
           * @return  the byte at the given index.
           */
-         uint8_t &at (size_t index)
+         uint8_t &at (uint16_t index)
          {
             assert (index < _size);
             return value[index];
@@ -332,21 +365,21 @@ namespace HF
           *
           * @return  number of bytes in the underlining byte array.
           */
-         static size_t length ()
+         static uint16_t length ()
          {
             return _size;
          }
       };
 
       /*!
-       * RFPI UID class.
+       * DECT UID class.
        */
-      struct RFPI:public ByteArray <RFPI, 5, RFPI_UID>
+      struct DECT:public ByteArray <DECT, 5, DECT_UID>
       {
          //! Number of bytes in a RFPI UID.
          constexpr static uint8_t SIZE = 5;
 
-         RFPI():ByteArray <RFPI, 5, RFPI_UID>()
+         DECT():ByteArray <DECT, 5, DECT_UID>(0xFF)
          {}
 
          /*!
@@ -354,7 +387,38 @@ namespace HF
           *
           * @param [in] _value   initial value for UID.
           */
-         RFPI(uint8_t _value[5]):ByteArray <RFPI, 5, RFPI_UID>(_value)
+         DECT(uint8_t _value[5]):ByteArray <DECT, 5, DECT_UID>(_value)
+         {}
+
+         // ===================================================================
+         // Cloneable
+         // ===================================================================
+
+         DECT *clone () const
+         {
+            return new DECT (*this);
+         }
+      };
+
+      /*!
+       * RFPI UID class.
+       *
+       * @deprecated Please use the HF::UID::DECT class.
+       */
+      struct RFPI:public ByteArray <RFPI, 5, DECT_UID>
+      {
+         //! Number of bytes in a RFPI UID.
+         constexpr static uint8_t SIZE = 5;
+
+         RFPI():ByteArray <RFPI, 5, DECT_UID>()
+         {}
+
+         /*!
+          * Constructor.
+          *
+          * @param [in] _value   initial value for UID.
+          */
+         RFPI(uint8_t _value[5]):ByteArray <RFPI, 5, DECT_UID>(_value)
          {}
 
          // ===================================================================
@@ -365,20 +429,23 @@ namespace HF
          {
             return new RFPI (*this);
          }
-      };
+      }
+      __attribute_deprecated__;
 
       /*!
        * IPUI UID class.
+       *
+       * @deprecated Please use the HF::UID::DECT class.
        */
-      struct IPUI:public ByteArray <IPUI, 5, IPUI_UID>
+      struct IPUI:public ByteArray <IPUI, 5, DECT_UID>
       {
          //! Number of bytes in a IPUI UID.
          constexpr static uint8_t SIZE = 5;
 
-         IPUI():ByteArray <IPUI, 5, IPUI_UID>()
+         IPUI():ByteArray <IPUI, 5, DECT_UID>()
          {}
 
-         IPUI(uint8_t _value[5]):ByteArray <IPUI, 5, IPUI_UID>(_value)
+         IPUI(uint8_t _value[5]):ByteArray <IPUI, 5, DECT_UID>(_value)
          {}
 
          // ===================================================================
@@ -389,7 +456,8 @@ namespace HF
          {
             return new IPUI (*this);
          }
-      };
+      }
+      __attribute_deprecated__;
 
       /*!
        * IEEE MAC-48b UID class.
@@ -429,21 +497,23 @@ namespace HF
             value (value)
          {}
 
-         size_t size () const
+         uint16_t size () const
          {
             return Abstract <URI_UID>::size () + value.size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset = 0) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
          {
-            size_t start = offset;
-            size_t size  = value.size ();
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
 
             offset += Abstract <URI_UID>::pack (array, offset);
 
-            offset += array.write (offset, (uint8_t) size);
+            assert (value.size () <= 0xFF);
+            offset += array.write (offset, (uint8_t) value.size ());
 
-            for (uint8_t i = 0; i < (size & 0xFF); i++)
+            for (uint8_t i = 0; i < value.size (); i++)
             {
                offset += array.write (offset, (uint8_t) value[i]);
             }
@@ -451,16 +521,20 @@ namespace HF
             return offset - start;
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint8_t size;
-            size_t  start = offset;
+            SERIALIZABLE_CHECK (array, offset, min_size);
+
+            uint16_t start = offset;
 
             offset += Abstract <URI_UID>::unpack (array, offset);
 
+            uint8_t size;
             offset += array.read (offset, size);
 
-            value   = std::string (size, 0);
+            SERIALIZABLE_CHECK (array, offset, size);
+
+            value = std::string (size, 0);
 
             for (uint8_t i = 0; i < size; i++)
             {
@@ -584,17 +658,17 @@ namespace HF
             return !(*this == other);
          }
 
-         size_t size () const
+         uint16_t size () const
          {
             return _raw->size ();
          }
 
-         size_t pack (Common::ByteArray &array, size_t offset) const
+         uint16_t pack (Common::ByteArray &array, uint16_t offset) const
          {
             return _raw->pack (array, offset);
          }
 
-         size_t unpack (const Common::ByteArray &array, size_t offset);
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset);
 
          // =============================================================================
          // Utils
