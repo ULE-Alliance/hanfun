@@ -136,16 +136,3 @@ void Server::level_change (Protocol::Address &source, uint8_t old_level, uint8_t
    UNUSED (old_level);
    UNUSED (new_level);
 }
-
-// =============================================================================
-// Server::level_change
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::level_change (uint8_t old_level, uint8_t new_level)
-{
-   UNUSED (old_level);
-   UNUSED (new_level);
-}

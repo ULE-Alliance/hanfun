@@ -319,34 +319,6 @@ namespace HF
          };
 
          /*!
-          * De-register command response.
-          *
-          * @deprecated This message was reverted back to a normal Protocol::Response.
-          */
-         struct DeregisterResponse:public Protocol::Response
-         {
-            uint16_t address; //!< Address for the device.
-
-            /*!
-             * Constructor.
-             *
-             * @param [in] code     operation result code.
-             * @param [in] address  device address the operation relates to.
-             */
-            DeregisterResponse(Common::Result code = Common::FAIL_UNKNOWN,
-                               uint16_t address = Protocol::BROADCAST_ADDR):
-               Protocol::Response (code), address (address & Protocol::BROADCAST_ADDR)
-            {}
-
-            uint16_t size () const;
-
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
-
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
-         }
-         __attribute_deprecated__;
-
-         /*!
           * Device Management - Persistent Storage API.
           */
          struct IEntries:public Common::IEntries <Device>

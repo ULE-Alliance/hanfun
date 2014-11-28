@@ -79,9 +79,6 @@ namespace HF
          }
       };
 
-      //! @deprecated Please use HF::IDevice::IUnits
-      typedef IUnits units_t __attribute_deprecated__;
-
       /*!
        * HAN-FUN device Unit 0 common API.
        */

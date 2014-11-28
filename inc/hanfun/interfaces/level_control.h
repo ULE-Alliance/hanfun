@@ -245,16 +245,6 @@ namespace HF
              */
             virtual void level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level);
 
-            /*!
-             * Callback for a @c SET_ATTR_REQ message, when the level value is changed.
-             *
-             * @deprecated Please use HF::Interfaces::LevelControl::Server::level_change(Protocol::Address &, uint8_t, uint8_t)
-             *
-             * @param [in] old_level    the old level value to used.
-             * @param [in] new_level    the new level value to use.
-             */
-            virtual void level_change (uint8_t old_level, uint8_t new_level) __attribute_deprecated__;
-
             //! @}
             // =============================================================================
 

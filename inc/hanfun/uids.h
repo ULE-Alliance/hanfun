@@ -401,65 +401,6 @@ namespace HF
       };
 
       /*!
-       * RFPI UID class.
-       *
-       * @deprecated Please use the HF::UID::DECT class.
-       */
-      struct RFPI:public ByteArray <RFPI, 5, DECT_UID>
-      {
-         //! Number of bytes in a RFPI UID.
-         constexpr static uint8_t SIZE = 5;
-
-         RFPI():ByteArray <RFPI, 5, DECT_UID>()
-         {}
-
-         /*!
-          * Constructor.
-          *
-          * @param [in] _value   initial value for UID.
-          */
-         RFPI(uint8_t _value[5]):ByteArray <RFPI, 5, DECT_UID>(_value)
-         {}
-
-         // ===================================================================
-         // Cloneable
-         // ===================================================================
-
-         RFPI *clone () const
-         {
-            return new RFPI (*this);
-         }
-      }
-      __attribute_deprecated__;
-
-      /*!
-       * IPUI UID class.
-       *
-       * @deprecated Please use the HF::UID::DECT class.
-       */
-      struct IPUI:public ByteArray <IPUI, 5, DECT_UID>
-      {
-         //! Number of bytes in a IPUI UID.
-         constexpr static uint8_t SIZE = 5;
-
-         IPUI():ByteArray <IPUI, 5, DECT_UID>()
-         {}
-
-         IPUI(uint8_t _value[5]):ByteArray <IPUI, 5, DECT_UID>(_value)
-         {}
-
-         // ===================================================================
-         // Cloneable
-         // ===================================================================
-
-         IPUI *clone () const
-         {
-            return new IPUI (*this);
-         }
-      }
-      __attribute_deprecated__;
-
-      /*!
        * IEEE MAC-48b UID class.
        */
       struct MAC:public ByteArray <MAC, 6, MAC_UID>

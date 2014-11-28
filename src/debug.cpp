@@ -92,7 +92,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
          HF::UID::DECT *dect = (HF::UID::DECT *) uid.raw ();
          stream << "dect: " << std::uppercase << std::setw (2) << std::right << std::hex;
 
-         for (uint8_t i = 0; i < HF::UID::RFPI::length (); i++)
+         for (uint8_t i = 0; i < HF::UID::DECT::length (); i++)
          {
             stream << static_cast <int>((*dect)[i]);
          }

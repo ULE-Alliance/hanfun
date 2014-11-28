@@ -385,19 +385,6 @@ namespace HF
                UNUSED (message);
             }
 
-            /*!
-             * Callback function called when a status update message is received
-             * from an %Alert server.
-             *
-             * @deprecated Please use HF::Interfaces::Alert::Client::status(Protocol::Address &,Message &)
-             *
-             * @param [in] message  message received
-             */
-            virtual void status (Message &message) __attribute_deprecated__
-            {
-               UNUSED (message);
-            }
-
             //! @}
             // ======================================================================
 
