@@ -300,6 +300,61 @@ COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events")
    res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
    assert (res == HF::Common::Result::OK);
 }
+
+/*!
+ * Send ON command.
+ */
+COMMAND (On, "on", "on d u:Send an ON command to device/unit pair")
+{
+   if (args.size () < 2)
+   {
+      LOG (APP) << usage () << NL;
+      return;
+   }
+
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
+
+   HF::Protocol::Address device (arg1, arg2);
+   base.commands.on_off ().on (device);
+}
+
+/*!
+ * Send OFF command.
+ */
+COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair")
+{
+   if (args.size () < 2)
+   {
+      LOG (APP) << usage () << NL;
+      return;
+   }
+
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
+
+   HF::Protocol::Address device (arg1, arg2);
+   base.commands.on_off ().off (device);
+}
+
+/*!
+ * Send TOGGLE command.
+ */
+COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair")
+{
+   if (args.size () < 2)
+   {
+      LOG (APP) << usage () << NL;
+      return;
+   }
+
+   uint16_t arg1 = STRTOL (args[0]);
+   uint16_t arg2 = STRTOL (args[1]);
+
+   HF::Protocol::Address device (arg1, arg2);
+   base.commands.on_off ().toggle (device);
+}
+
 // =============================================================================
 // HF::Application::Initialize
 // =============================================================================
@@ -322,6 +377,9 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    COMMAND_ADD (Bind);
    COMMAND_ADD (Unbind);
    COMMAND_ADD (GlobalBind);
+   COMMAND_ADD (On);
+   COMMAND_ADD (Off);
+   COMMAND_ADD (Toggle);
 
    Restore ();
 }
