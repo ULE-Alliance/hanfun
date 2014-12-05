@@ -389,6 +389,170 @@ void Events::SimplePowerMeter::report (HF::Protocol::Address &source,
 // Commands
 // =============================================================================
 
+static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t offset)
+{
+   HF::Protocol::GetAttributePack::Response response (HF::Core::DeviceInformation::create_attribute);
+
+   response.unpack (payload, offset);
+
+   using namespace HF::Core::DeviceInformation;
+   using namespace HF::Attributes;
+   using namespace HF::Debug;
+
+   uint8_t log_width = 20;
+
+   LOG (INFO) << "====== Device Information : Attributes ======" << std::endl
+              << std::right << std::setw (log_width) << std::setfill (' ');
+
+   /* *INDENT-OFF* */
+   std::for_each (response.attributes.begin (), response.attributes.end (),
+                  [log_width](const HF::Attributes::IAttribute *attr)
+   {
+      LOG (APP) << std::right << std::setw (log_width) << std::setfill (' ');
+
+      switch (attr->uid ())
+      {
+         case CORE_VERSION_ATTR:
+         {
+            auto *version = adapt <uint8_t>(attr);
+            LOG (APP) << "Core (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint8_t>(version->get ());
+            break;
+         }
+         case PROFILE_VERSION_ATTR:
+         {
+            auto *version = adapt <uint8_t>(attr);
+            LOG (APP) << "Profile (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint8_t>(version->get ());
+            break;
+         }
+         case INTERFACE_VERSION_ATTR:
+         {
+            auto *version = adapt <uint8_t>(attr);
+            LOG (APP) << "Interface (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << std::right << Hex <uint8_t>(version->get ());
+            break;
+         }
+         case EXTRA_CAP_ATTR:
+         {
+            auto *extra_cap = adapt <uint8_t>(attr);
+            LOG (APP) << "Extra Cap. (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint8_t>(extra_cap->get ());
+            break;
+         }
+         case MIN_SLEEP_TIME_ATTR:
+         {
+            auto *min_sleep = adapt <uint32_t>(attr);
+            LOG (APP) << "Min. Sleep (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint32_t>(min_sleep->get ());
+            break;
+         }
+         case ACTUAL_RESP_TIME_ATTR:
+         {
+            auto *actual_time = adapt <uint32_t>(attr);
+            LOG (APP) << "Actual Resp. Time (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint32_t>(actual_time->get ());
+            break;
+         }
+         case APP_VERSION_ATTR:
+         {
+            auto *version = adapt <std::string>(attr);
+            LOG (APP) << "APP Version (" << Hex <uint8_t>(attr->uid ()) << ") | "
+                      << version->get ();
+            break;
+         }
+         case HW_VERSION_ATTR:
+         {
+            auto *version = adapt <std::string>(attr);
+            LOG (APP) << "HW Version (" << Hex <uint8_t>(attr->uid ()) << ") | "
+                      << version->get ();
+            break;
+         }
+         case EMC_ATTR:
+         {
+            auto *emc = adapt <uint16_t>(attr);
+            LOG (APP) << "EMC (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint16_t>(emc->get ());
+            break;
+         }
+         case DECT_ID_ATTR:
+         {
+            auto *dect = adapt < std::vector < uint8_t >> (attr);
+            LOG (APP) << "DECT (" << Hex <uint8_t>(attr->uid ()) << ") | ";
+
+            auto value = dect->get ();
+
+            std::for_each(value.begin (), value.end (), [](uint8_t byte)
+            {
+               LOG (APP) << byte;
+            });
+
+            break;
+         }
+         case MANUFACTURE_NAME_ATTR:
+         {
+            auto *name = adapt <std::string>(attr);
+            LOG (APP) << "Manuf. Name (" << Hex <uint8_t>(attr->uid ()) << ") | "
+                      << name->get ();
+            break;
+         }
+         case LOCATION_ATTR:
+         {
+            auto *location = adapt <std::string>(attr);
+            LOG (APP) << "Location (" << Hex <uint8_t>(attr->uid ()) << ") | "
+                      << location->get ();
+            break;
+         }
+         case ENABLED_ATTR:
+         {
+            auto *enabled = adapt <uint8_t>(attr);
+            LOG (APP) << "Enable (" << Hex <uint8_t>(attr->uid ()) << ") | 0x"
+                      << Hex <uint8_t>(enabled->get ());
+            break;
+         }
+         case FRIENDLY_NAME_ATTR:
+         {
+            auto *names_attr = adapt <FriendlyName>(attr);
+            LOG (APP) << "Friendly Name (" << Hex <uint8_t>(attr->uid ()) << ") |";
+            auto const &names = names_attr->get ();
+
+            std::for_each (names.units.begin (), names.units.end (),
+                           [](const FriendlyName::Unit &unit)
+            {
+               LOG (APP) << " (" << (int) unit.id << ") " << unit.name;
+            });
+
+            break;
+         }
+         case UID_ATTR:
+         {
+            auto *uid = adapt <HF::UID::UID>(attr);
+            LOG (APP) << "UID (" << Hex <uint8_t>(attr->uid ()) << ") | "
+                      << uid->get ();
+            break;
+         }
+         case SERIAL_NUMBER_ATTR:
+         {
+            auto *serial = adapt <std::string>(attr);
+            LOG (APP) << "Serial Number (" << Hex <uint8_t>(attr->uid ()) << ") | "
+                      << serial->get ();
+            break;
+         }
+         default:
+         {
+            LOG (APP) << "Unknown | UID - " << attr->uid () << std::endl;
+            break;
+         }
+      }
+
+      LOG (APP) << std::endl;
+
+   });
+   /* *INDENT-ON* */
+
+   LOG (INFO) << "====== Device Information : Attributes ======" << NL;
+}
+
 // =============================================================================
 // Commands::Unit::handle
 // =============================================================================
@@ -403,6 +567,14 @@ HF::Common::Result Commands::Unit::handle (HF::Protocol::Packet &packet,
    UNUSED (payload);
    UNUSED (offset);
 
+   if (packet.message.type == HF::Protocol::Message::GET_ATTR_PACK_RES &&
+       packet.message.itf.id == HF::Interface::DEVICE_INFORMATION)
+   {
+      handle_device_infomation (payload, offset);
+      return HF::Common::Result::OK;
+   }
+
+   return HF::Common::Result::FAIL_ARG;
 }
 
 // =============================================================================
@@ -422,7 +594,7 @@ void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
 
    LOG (TRACE) << "Payload : " << payload << NL;
 
-   LOG (DEBUG) << packet << std::endl;
+   LOG (DEBUG) << std::endl << packet << NL;
 
    HF::Devices::Concentrator::Abstract <Unit0>::receive (packet, payload, offset);
 }

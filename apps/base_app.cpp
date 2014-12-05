@@ -376,6 +376,44 @@ COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the networ
    base.receive (packet, data, offset);
 }
 
+/*!
+ * Get Device information.
+ */
+COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes\n"
+                        "di a d:Get device information all attributes")
+{
+   if (args.size () < 2)
+   {
+      LOG (APP) << usage () << NL;
+      return;
+   }
+
+   uint16_t arg1 = STRTOL (args[1]);
+
+   HF::Protocol::Address device (arg1, 0);
+
+   HF::Protocol::Message *msg = nullptr;
+
+   if (args[0] == "m")
+   {
+      msg = HF::Core::DeviceInformation::mandatory ();
+   }
+   else if (args[0] == "a")
+   {
+      msg = HF::Core::DeviceInformation::all ();
+   }
+
+   if (msg != nullptr)
+   {
+      base.commands.send (device, *msg, nullptr);
+      delete msg;
+   }
+   else
+   {
+      LOG (APP) << usage () << NL;
+   }
+}
+
 // =============================================================================
 // HF::Application::Initialize
 // =============================================================================
@@ -402,6 +440,7 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    COMMAND_ADD (Off);
    COMMAND_ADD (Toggle);
    COMMAND_ADD (Raw);
+   COMMAND_ADD (DevInfo);
 
    Restore ();
 }
