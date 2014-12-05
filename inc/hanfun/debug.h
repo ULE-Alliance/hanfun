@@ -87,12 +87,31 @@ namespace HF
     */
    namespace Debug
    {
+      template<typename T>
+      struct Hex
+      {
+         static_assert (std::is_unsigned <T>::value, "Type MUST be an unsigned integer");
 
+         static constexpr size_t size = 2 * sizeof(T);
 
+         T                       value;
 
+         Hex(T _value):value (_value)
+         {}
+      };
 
+      template<typename T>
+      inline std::ostream &operator <<(std::ostream &stream, Hex <T> hex)
+      {
+         std::ios_base::fmtflags ff = stream.flags ();
+         char f                     = stream.fill (' ');
 
+         stream << std::uppercase << std::right << std::hex << std::setfill ('0')
+                << std::setw (hex.size) << (int) hex.value;
 
+         stream << std::setfill (f) << std::setiosflags (ff);
+         return stream;
+      }
 
    }  // namespace Debug
 
