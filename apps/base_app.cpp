@@ -74,7 +74,7 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
    std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device &device)
    {
       LOG (APP) << (base.link (device.address) != nullptr ? "+ " : "- ");
-      LOG (APP) << std::setw (5) << device.address << " | ";
+      LOG (APP) << std::right << std::setw (5) << device.address << " | ";
       LOG (APP) << device.uid << NL;
    });
    /* *INDENT-ON* */
@@ -89,14 +89,20 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
 
    HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries ();
 
-   LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
+   LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << std::uppercase << NL;
    /* *INDENT-OFF* */
    std::for_each (entries.begin (), entries.end (),
                   [](const HF::Core::BindManagement::Entry &entry)
    {
-      LOG (APP) << "       - "
-      << entry.source.device << ":" << (int) entry.source.unit << " -> "
-      << entry.destination.device << ":" << (int) entry.destination.unit << NL;
+      LOG (APP) << std::right << std::setfill(' ') << std::setw (7)
+                << entry.source.device << ":";
+      LOG (APP) << std::setw (2) << std::setfill('0')
+                << (int) entry.source.unit << " -> ";
+      LOG (APP) << std::right << std::setfill(' ') << std::setw (5)
+                << entry.destination.device << ":";
+      LOG (APP) << std::setw (2) << std::setfill('0')
+                << (int) entry.destination.unit;
+      LOG (APP) << " (0x" << std::hex << entry.itf.id << ":" << entry.itf.role << ")" << NL;
    });
    /* *INDENT-ON* */
 }
@@ -152,8 +158,7 @@ COMMAND (Register, "r", "r 1 x:register device x.\nr 0:exit registration mode.")
       return;
    }
 
-   LOG (APP) << "r 0      : Disable Registration Mode." << NL;
-   LOG (APP) << "r 1 x    : Enable Registration Mode (Register Device x)." << NL;
+   LOG (APP) << usage () << NL;
 }
 
 /*!
@@ -163,7 +168,7 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
 {
    if (args.size () < 1)
    {
-      LOG (APP) << "d x      : deregister device x. " << NL;
+      LOG (APP) << usage () << NL;
       return;
    }
 
@@ -187,7 +192,8 @@ COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
 {
    if (args.size () < 2)
    {
-      LOG (APP) << "b x y    :associate device x with device y. (bind)";
+      LOG (APP) << usage () << NL;
+      return;
    }
 
    uint16_t arg1 = STRTOL (args[0]);
@@ -238,7 +244,8 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
 
    if (args.size () < 2)
    {
-      LOG (APP) << "u x y   : unbind device x with y." << NL;
+      LOG (APP) << usage () << NL;
+      return;
    }
 
    uint16_t arg1 = STRTOL (args[0]);
