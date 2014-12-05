@@ -289,4 +289,35 @@ namespace HF
 
 }   // namespace HF
 
+/*!
+ * @addtogroup on_off_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute);
+
+/*! @} */
+
 #endif /* HF_ITF_ON_OFF_H */

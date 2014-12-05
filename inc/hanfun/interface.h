@@ -429,4 +429,35 @@ namespace HF
 
 }  // namespace HF
 
+/*!
+ * @addtogroup common_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c role into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] role     role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interface::Role role);
+
+/*!
+ * Convert the given @c uid into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] uid      uid value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid);
+
+/*! @} */
+
 #endif /* HF_INTERFACE_H */

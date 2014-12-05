@@ -1045,6 +1045,16 @@ namespace HF
 // =============================================================================
 
 /*!
+ * Convert the given @c byte into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] byte     byte value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const uint8_t byte);
+
+/*!
  * Convert the given @c packet into a string and write it to the given @c stream if
  * <tt>stream == std::cout || stream == std::cerr</tt>. Otherwise send bytes to stream.
  *
@@ -1054,6 +1064,16 @@ namespace HF
  * @return   <tt>stream</tt>
  */
 std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+
+/*!
+ * Convert the given @c interface into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] interface   interface value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface interface);
 
 /*! @} */
 
