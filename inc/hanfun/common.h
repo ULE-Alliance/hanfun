@@ -620,9 +620,14 @@ namespace HF
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(uint8_t);
 
-         uint16_t size () const
+         static uint16_t size (const std::string &data)
          {
             return min_size + data.size ();
+         }
+
+         uint16_t size () const
+         {
+            return size (data);
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
