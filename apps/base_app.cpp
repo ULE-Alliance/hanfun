@@ -261,6 +261,45 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
    }
 }
 
+/*!
+ * Global binds command.
+ */
+COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events")
+{
+   UNUSED (args);
+
+   HF::Common::Interface itf;
+   HF::Protocol::Address source;
+   HF::Protocol::Address dest (0, 1);
+
+   // Bind Alert interface.
+   itf.id   = HF::Interface::ALERT;
+   itf.role = HF::Interface::CLIENT_ROLE;
+
+   auto res = base.unit0 ()->bind_management ()->add (source, dest, itf);
+   assert (res == HF::Common::Result::OK);
+
+   // Bind Level Control interface.
+   itf.id   = HF::Interface::LEVEL_CONTROL;
+   itf.role = HF::Interface::SERVER_ROLE;
+
+   res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
+   assert (res == HF::Common::Result::OK);
+
+   // Bind On-Off interface.
+   itf.id   = HF::Interface::ON_OFF;
+   itf.role = HF::Interface::SERVER_ROLE;
+
+   res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
+   assert (res == HF::Common::Result::OK);
+
+   // Bind Simple Power Meter interface.
+   itf.id   = HF::Interface::SIMPLE_POWER_METER;
+   itf.role = HF::Interface::CLIENT_ROLE;
+
+   res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
+   assert (res == HF::Common::Result::OK);
+}
 // =============================================================================
 // HF::Application::Initialize
 // =============================================================================
@@ -282,6 +321,7 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    COMMAND_ADD (Deregister);
    COMMAND_ADD (Bind);
    COMMAND_ADD (Unbind);
+   COMMAND_ADD (GlobalBind);
 
    Restore ();
 }
