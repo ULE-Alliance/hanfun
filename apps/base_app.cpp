@@ -355,6 +355,27 @@ COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair
    base.commands.on_off ().toggle (device);
 }
 
+COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the network")
+{
+   HF::Common::ByteArray data;
+
+   data.reserve (args.size ());
+
+   /* *INDENT-OFF* */
+   std::for_each (args.begin (), args.end (), [&data](std::string byte)
+   {
+      uint8_t temp = STRTOL_HEX (byte);
+      data.push_back (temp);
+   });
+   /* *INDENT-ON* */
+
+   HF::Protocol::Packet packet;
+   uint16_t offset = packet.unpack (data);
+
+   packet.link = base.link (packet.source.device);
+   base.receive (packet, data, offset);
+}
+
 // =============================================================================
 // HF::Application::Initialize
 // =============================================================================
@@ -380,6 +401,7 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    COMMAND_ADD (On);
    COMMAND_ADD (Off);
    COMMAND_ADD (Toggle);
+   COMMAND_ADD (Raw);
 
    Restore ();
 }
