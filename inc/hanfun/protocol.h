@@ -577,4 +577,25 @@ namespace HF
 
 }  // namespace HF
 
+/*!
+ * @addtogroup protocol
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c packet into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] packet   HAN-FUN packet to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
+
+/*! @} */
+
 #endif /* HF_PROTOCOL_H */

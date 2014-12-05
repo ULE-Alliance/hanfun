@@ -17,11 +17,11 @@
 #include <iomanip>
 #include <algorithm>
 
+#include "hanfun.h"
 #include "hanfun/debug.h"
 
-#include "hanfun/common.h"
-#include "hanfun/uids.h"
-#include "hanfun/protocol.h"
+using namespace HF::Debug;
+
 
 // =============================================================================
 // Stream Helpers

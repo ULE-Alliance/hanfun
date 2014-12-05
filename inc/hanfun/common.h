@@ -1030,5 +1030,26 @@ namespace HF
 
 }  // namespace HF
 
+/*!
+ * @addtogroup common
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c packet into a string and write it to the given @c stream if
+ * <tt>stream == std::cout || stream == std::cerr</tt>. Otherwise send bytes to stream.
+ *
+ * @param [in] stream   out stream to write the string/bytes to.
+ * @param [in] array    byte array to convert to a string/sent to the stream.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+
+/*! @} */
 
 #endif /* HF_COMMON_H */

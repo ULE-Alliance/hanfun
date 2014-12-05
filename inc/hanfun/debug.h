@@ -18,6 +18,7 @@
 #define HF_DEBUG_H
 
 #include <iostream>
+#include <iomanip>
 
 /*!
  * @addtogroup debug Debug
@@ -79,69 +80,24 @@
 //! Log messages with the level given by @c X
 #define LOG(X)   X
 
-/*! @} */
-// =============================================================================
-// Stream Helpers
-// =============================================================================
-
-// Forward declarations
 namespace HF
 {
-   namespace Common
+   /*!
+    * Top-level namespace for debug helper functions.
+    */
+   namespace Debug
    {
-      struct ByteArray;
 
-   }  // namespace Common
 
-   namespace UID
-   {
-      class UID;
 
-   }  // namespace UID
 
-   namespace Protocol
-   {
-      struct Packet;
 
-   }  // namespace Protocol
+
+
+   }  // namespace Debug
 
 }  // namespace HF
 
-/*!
- * @addtogroup debug
- * @{
- */
-
-/*!
- * Convert the given @c packet into a string and write it to the given @c stream if
- * <tt>stream == std::cout || stream == std::cerr</tt>. Otherwise send bytes to stream.
- *
- * @param [in] stream   out stream to write the string/bytes to.
- * @param [in] array    byte array to convert to a string/sent to the stream.
- *
- * @return   <tt>stream</tt>
- */
-std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
-
-/*!
- * Convert the given @c uid into a string and write it to the given @c stream.
- *
- * @param [in] stream   out stream to write the string to.
- * @param [in] uid      device %UID to convert to a string.
- *
- * @return   <tt>stream</tt>
- */
-std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
-
-/*!
- * Convert the given @c packet into a string and write it to the given @c stream.
- *
- * @param [in] stream   out stream to write the string to.
- * @param [in] packet   HAN-FUN packet to convert to a string.
- *
- * @return   <tt>stream</tt>
- */
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
 /*! @} */
 
 #endif /* HF_DEBUG_H */

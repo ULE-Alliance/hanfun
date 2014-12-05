@@ -785,6 +785,7 @@ namespace HF
  * @addtogroup uid_t
  * @{
  */
+
 inline bool operator ==(const HF::UID::UID &lhs, const HF::UID::UID_T &rhs)
 {
    return (lhs.compare (rhs) == 0);
@@ -804,6 +805,16 @@ inline bool operator !=(const HF::UID::UID_T &lhs, const HF::UID::UID &rhs)
 {
    return !(lhs == rhs);
 }
+
+/*!
+ * Convert the given @c uid into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] uid      device %UID to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
 
 /*! @} */
 
