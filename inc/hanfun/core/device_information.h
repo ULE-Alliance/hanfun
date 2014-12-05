@@ -115,6 +115,59 @@ namespace HF
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
 
          /*!
+          * Data type to contain the Friendly name attribute.
+          */
+         struct FriendlyName
+         {
+            /*!
+             * Data type representing a unit0's friendly name.
+             */
+            struct Unit
+            {
+               uint8_t     id;
+               std::string name;
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = sizeof(uint8_t) +
+                                                    HF::Common::SerializableHelper <std::string>::min_size;
+
+               //! @copydoc HF::Common::Serializable::size
+               uint16_t size () const;
+
+               //! @copydoc HF::Common::Serializable::pack
+               uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const;
+
+               //! @copydoc HF::Common::Serializable::unpack
+               uint16_t unpack (const HF::Common::ByteArray &array, uint16_t offset = 0);
+            };
+
+            //! Device unit's friendly names.
+            std::vector <Unit> units;
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const HF::Common::ByteArray &array, uint16_t offset = 0);
+
+            //! @copydoc HF::Attributes::IAttribute::changed
+            float changed (const FriendlyName &other) const
+            {
+               UNUSED (other);
+               return 0.0;
+            }
+
+            //! @copydoc HF::Attributes::IAttribute::compare
+            int compare (const FriendlyName &other) const;
+         };
+
+         /*!
           * Parent class for the Device Information interface implementation.
           */
          class Abstract:public Service <HF::Interface::DEVICE_INFORMATION>

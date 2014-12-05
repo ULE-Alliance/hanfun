@@ -18,10 +18,170 @@
 
 using namespace HF;
 using namespace HF::Core;
+using namespace HF::Core::DeviceInformation;
 
 // =============================================================================
 // API
 // =============================================================================
+
+// =============================================================================
+// FriendlyName::Unit::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t FriendlyName::Unit::size () const
+{
+   return sizeof(uint8_t) + HF::Common::SerializableHelper <std::string>::size (name);
+}
+
+// =============================================================================
+// FriendlyName::Unit::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t FriendlyName::Unit::pack (HF::Common::ByteArray &array, uint16_t offset) const
+{
+   SERIALIZABLE_CHECK (array, offset, size ());
+
+   offset += array.write (offset, id);
+   HF::Common::SerializableHelper <std::string>(name).pack (array, offset);
+
+   return size ();
+}
+
+// =============================================================================
+// FriendlyName::Unit::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t FriendlyName::Unit::unpack (const HF::Common::ByteArray &array, uint16_t offset)
+{
+   SERIALIZABLE_CHECK (array, offset, min_size);
+
+   offset += array.read (offset, id);
+   HF::Common::SerializableHelper <std::string> temp;
+
+   if (temp.unpack (array, offset) == 0)
+   {
+      return 0;
+   }
+
+   name = temp.data;
+
+   return size ();
+}
+
+// =============================================================================
+// FriendlyName::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t FriendlyName::size () const
+{
+   uint16_t result = min_size;
+
+   /* *INDENT-OFF* */
+   std::for_each (units.begin(), units.end(), [&result](const Unit &unit)
+   {
+      result += unit.size();
+   });
+   /* *INDENT-ON* */
+
+   return result;
+}
+
+// =============================================================================
+// FriendlyName::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t FriendlyName::pack (HF::Common::ByteArray &array, uint16_t offset) const
+{
+   SERIALIZABLE_CHECK (array, offset, size ());
+
+   uint8_t _size = units.size ();
+   offset += array.write (offset, _size);
+
+   /* *INDENT-OFF* */
+   std::for_each (units.begin(), units.end(), [&array, &offset](const Unit &unit)
+   {
+      offset += unit.pack(array, offset);
+   });
+   /* *INDENT-ON* */
+
+   return size ();
+}
+
+// =============================================================================
+// FriendlyName::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t FriendlyName::unpack (const HF::Common::ByteArray &array, uint16_t offset)
+{
+   SERIALIZABLE_CHECK (array, offset, size ());
+
+   uint8_t _count = 0;
+   offset += array.read (offset, _count);
+
+   SERIALIZABLE_CHECK (array, offset, (_count * Unit::min_size));
+
+   units.reserve (_count);
+
+   Unit unit;
+
+   for (uint8_t i = 0; i < _count; ++i)
+   {
+      uint16_t res = unit.unpack (array, offset);
+
+      if (res == 0)
+      {
+         return 0;
+      }
+
+      units.push_back (unit);
+      offset += res;
+   }
+
+   return size ();
+}
+
+// =============================================================================
+// FriendlyName::compare
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int FriendlyName::compare (const FriendlyName &other) const
+{
+   int  result = units.size () - other.units.size ();
+
+   auto it     = units.begin ();
+   auto ito    = other.units.begin ();
+
+   for (; result == 0 && it != units.end (); ++it, ++ito)
+   {
+      if ((result = it->id - ito->id) == 0)
+      {
+         result = it->name.compare (ito->name);
+      }
+   }
+
+   return result;
+}
 
 // =============================================================================
 // DeviceInformation::mandatory
@@ -135,6 +295,8 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) con
       default:
          break;
    }
+
+   std::reverse (result.begin (), result.end ());
 
    return result;
 }
