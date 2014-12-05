@@ -681,6 +681,74 @@ namespace HF
       };
 
       /*!
+       * Wrapper for std::vector implementing the Serializable API.
+       *
+       * @remark This class will unpack the same number of bytes as the
+       * size of the @c data vector.
+       */
+      template<>
+      struct SerializableHelper < std::vector < uint8_t >>:
+         public Common::Serializable
+      {
+         std::vector <uint8_t> data;
+
+         SerializableHelper()
+         {}
+
+         SerializableHelper(std::vector <uint8_t> _data):data (_data) {}
+
+         uint16_t size () const
+         {
+            return data.size ();
+         }
+
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
+
+            auto it        = array.begin ();
+            std::advance (it, offset);
+
+            std::copy (data.begin (), data.end (), it);
+
+            offset += data.size ();
+
+            return offset - start;
+         }
+
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
+
+            auto it        = array.begin ();
+            std::advance (it, offset);
+
+            std::copy_n (it, data.size (), data.begin ());
+
+            offset += data.size ();
+
+            return offset - start;
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::compare
+         int compare (const SerializableHelper < std::vector < uint8_t >> &other) const
+         {
+            return memcmp (data.data (), other.data.data (), data.size ());
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::changed
+         float changed (const SerializableHelper < std::vector < uint8_t >> &other) const
+         {
+            UNUSED (other);
+            return 0.0;
+         }
+      };
+
+      /*!
        * This class represents the interface that cloneable objects need
        * to implement.
        */
