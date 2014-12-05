@@ -104,7 +104,7 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
 /*!
  * Setup registration command.
  */
-COMMAND (Register, "r", "r 1 x:register device x.|r 0:exit registration mode.")
+COMMAND (Register, "r", "r 1 x:register device x.\nr 0:exit registration mode.")
 {
    if (args.size () > 0 && args[0] == "0") //!< Disable Registration
    {
