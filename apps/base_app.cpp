@@ -278,6 +278,7 @@ COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events")
 
    auto res = base.unit0 ()->bind_management ()->add (source, dest, itf);
    assert (res == HF::Common::Result::OK);
+   UNUSED (res);
 
    // Bind Level Control interface.
    itf.id   = HF::Interface::LEVEL_CONTROL;
