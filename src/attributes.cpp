@@ -554,6 +554,48 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
             return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr);
          }
       }
+      case MIN_SLEEP_TIME_ATTR:
+      {
+         return new Attribute <uint32_t>(Interface::DEVICE_INFORMATION, attr, (uint32_t) 0);
+      }
+      case ACTUAL_RESP_TIME_ATTR:
+      {
+         return new Attribute <uint32_t>(Interface::DEVICE_INFORMATION, attr, (uint32_t) 0);
+      }
+      case APP_VERSION_ATTR:
+      {
+         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+      }
+      case HW_VERSION_ATTR:
+      {
+         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+      }
+      case EMC_ATTR:
+      {
+         uint16_t value = (server != nullptr ? EMC : 0x0000);
+         return new Attribute <uint16_t>(Interface::DEVICE_INFORMATION, attr, server, value);
+      }
+      case DECT_ID_ATTR:
+      {
+         std::vector <uint8_t> temp (5);
+         return new Attribute < std::vector < uint8_t >> (Interface::DEVICE_INFORMATION, attr, temp);
+      }
+      case MANUFACTURE_NAME_ATTR:
+      {
+         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+      }
+      case LOCATION_ATTR:
+      {
+         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+      }
+      case ENABLED_ATTR:
+      {
+         return new Attribute <uint8_t>(Interface::DEVICE_INFORMATION, attr, (uint8_t) 0xFF);
+      }
+      case FRIENDLY_NAME_ATTR:
+      {
+         return new Attribute <FriendlyName>(Interface::DEVICE_INFORMATION, attr);
+      }
       case UID_ATTR:
       {
          HF::UID::UID value;
@@ -565,10 +607,9 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
 
          return new Attribute <HF::UID::UID>(Interface::DEVICE_INFORMATION, attr, server, value);
       }
-      case EMC_ATTR:
+      case SERIAL_NUMBER_ATTR:
       {
-         uint16_t value = (server != nullptr ? EMC : 0x0000);
-         return new Attribute <uint16_t>(Interface::DEVICE_INFORMATION, attr, server, value);
+         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
       }
       default:
          return nullptr;

@@ -18,6 +18,7 @@
 #define HF_DEBUG_H
 
 #include <iostream>
+#include <iomanip>
 
 /*!
  * @addtogroup debug Debug
@@ -79,69 +80,43 @@
 //! Log messages with the level given by @c X
 #define LOG(X)   X
 
-/*! @} */
-// =============================================================================
-// Stream Helpers
-// =============================================================================
-
-// Forward declarations
 namespace HF
 {
-   namespace Common
+   /*!
+    * Top-level namespace for debug helper functions.
+    */
+   namespace Debug
    {
-      struct ByteArray;
+      template<typename T>
+      struct Hex
+      {
+         static_assert (std::is_unsigned <T>::value, "Type MUST be an unsigned integer");
 
-   }  // namespace Common
+         static constexpr size_t size = 2 * sizeof(T);
 
-   namespace UID
-   {
-      class UID;
+         T                       value;
 
-   }  // namespace UID
+         Hex(T _value):value (_value)
+         {}
+      };
 
-   namespace Protocol
-   {
-      struct Packet;
+      template<typename T>
+      inline std::ostream &operator <<(std::ostream &stream, Hex <T> hex)
+      {
+         std::ios_base::fmtflags ff = stream.flags ();
+         char f                     = stream.fill (' ');
 
-   }  // namespace Protocol
+         stream << std::uppercase << std::right << std::hex << std::setfill ('0')
+                << std::setw (hex.size) << (int) hex.value;
+
+         stream << std::setfill (f) << std::setiosflags (ff);
+         return stream;
+      }
+
+   }  // namespace Debug
 
 }  // namespace HF
 
-/*!
- * @addtogroup debug
- * @{
- */
-
-/*!
- * Convert the given @c packet into a string and write it to the given @c stream if
- * <tt>stream == std::cout || stream == std::cerr</tt>. Otherwise send bytes to stream.
- *
- * @param [in] stream   out stream to write the string/bytes to.
- * @param [in] array    byte array to convert to a string/sent to the stream.
- *
- * @return   <tt>stream</tt>
- */
-std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
-
-/*!
- * Convert the given @c uid into a string and write it to the given @c stream.
- *
- * @param [in] stream   out stream to write the string to.
- * @param [in] uid      device %UID to convert to a string.
- *
- * @return   <tt>stream</tt>
- */
-std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
-
-/*!
- * Convert the given @c packet into a string and write it to the given @c stream.
- *
- * @param [in] stream   out stream to write the string to.
- * @param [in] packet   HAN-FUN packet to convert to a string.
- *
- * @return   <tt>stream</tt>
- */
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
 /*! @} */
 
 #endif /* HF_DEBUG_H */

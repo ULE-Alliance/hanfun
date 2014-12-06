@@ -93,12 +93,12 @@ std::ostream &ICommand::help (std::ostream &stream)
 
                      std::vector <char *> lines;
 
-                     char *p = strtok (temp, "|");
+                     char *p = strtok (temp, "\n");
 
                      while (p)
                      {
                         lines.push_back (p);
-                        p = strtok (NULL, "|");
+                        p = strtok (NULL, "\n");
                      }
 
                      std::for_each (lines.begin (), lines.end (), [&entries, &size](char *line)

@@ -74,8 +74,6 @@ void check_index (_type expected, _type actual, uint32_t index, const char *head
    }
 }
 
-std::ostream &operator <<(std::ostream &os, std::uint8_t val);
-
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index <uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
