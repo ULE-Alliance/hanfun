@@ -63,7 +63,7 @@ const class nullptr_t
 }
 nullptr = {};
 
-#define __attribute_deprecated__    __attribute__((deprecated))
+   #define __attribute_deprecated__   __attribute__ ((deprecated))
 
 #endif
 
