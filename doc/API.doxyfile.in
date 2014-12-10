@@ -756,6 +756,7 @@ WARN_LOGFILE           =
 INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../README.md \
                          @CMAKE_CURRENT_SOURCE_DIR@/../inc       \
                          @CMAKE_CURRENT_SOURCE_DIR@/../apps      \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../RELEASE_NOTES.md    \
                          @CMAKE_CURRENT_SOURCE_DIR@/../FAQ.md    \
                          @CMAKE_CURRENT_SOURCE_DIR@
 
