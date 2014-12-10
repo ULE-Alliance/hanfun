@@ -5,7 +5,7 @@
  * This file contains workarounds for the implementation on C++11 in older versions
  * of GCC.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -62,6 +62,8 @@ const class nullptr_t
 
 }
 nullptr = {};
+
+   #define __attribute_deprecated__   __attribute__ ((deprecated))
 
 #endif
 

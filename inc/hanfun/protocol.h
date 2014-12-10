@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN protocol messages.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -576,5 +576,56 @@ namespace HF
    }  // namespace Protocol
 
 }  // namespace HF
+
+/*!
+ * @addtogroup protocol
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c message into a string and write it to the given @c stream.
+ *
+ * @param [in] stream    out stream to write the string to.
+ * @param [in] message   message value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Type type);
+
+/*!
+ * Convert the given @c message into a string and write it to the given @c stream.
+ *
+ * @param [in] stream    out stream to write the string to.
+ * @param [in] message   message value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &message);
+
+/*!
+ * Convert the given @c address into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] packet   HAN-FUN address to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Address &address);
+
+/*!
+ * Convert the given @c packet into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] packet   HAN-FUN packet to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
+
+/*! @} */
 
 #endif /* HF_PROTOCOL_H */

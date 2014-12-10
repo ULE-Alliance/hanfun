@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -620,9 +620,14 @@ namespace HF
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(uint8_t);
 
-         uint16_t size () const
+         static uint16_t size (const std::string &data)
          {
             return min_size + data.size ();
+         }
+
+         uint16_t size () const
+         {
+            return size (data);
          }
 
          uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
@@ -674,6 +679,74 @@ namespace HF
 
          //! @copydoc HF::Attributes::IAttribute::changed
          float changed (const SerializableHelper <std::string> &other) const
+         {
+            UNUSED (other);
+            return 0.0;
+         }
+      };
+
+      /*!
+       * Wrapper for std::vector implementing the Serializable API.
+       *
+       * @remark This class will unpack the same number of bytes as the
+       * size of the @c data vector.
+       */
+      template<>
+      struct SerializableHelper < std::vector < uint8_t >>:
+         public Common::Serializable
+      {
+         std::vector <uint8_t> data;
+
+         SerializableHelper()
+         {}
+
+         SerializableHelper(std::vector <uint8_t> _data):data (_data) {}
+
+         uint16_t size () const
+         {
+            return data.size ();
+         }
+
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
+
+            auto it        = array.begin ();
+            std::advance (it, offset);
+
+            std::copy (data.begin (), data.end (), it);
+
+            offset += data.size ();
+
+            return offset - start;
+         }
+
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         {
+            SERIALIZABLE_CHECK (array, offset, size ());
+
+            uint16_t start = offset;
+
+            auto it        = array.begin ();
+            std::advance (it, offset);
+
+            std::copy_n (it, data.size (), data.begin ());
+
+            offset += data.size ();
+
+            return offset - start;
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::compare
+         int compare (const SerializableHelper < std::vector < uint8_t >> &other) const
+         {
+            return memcmp (data.data (), other.data.data (), data.size ());
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::changed
+         float changed (const SerializableHelper < std::vector < uint8_t >> &other) const
          {
             UNUSED (other);
             return 0.0;
@@ -962,5 +1035,46 @@ namespace HF
 
 }  // namespace HF
 
+/*!
+ * @addtogroup common
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c byte into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] byte     byte value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const uint8_t byte);
+
+/*!
+ * Convert the given @c packet into a string and write it to the given @c stream if
+ * <tt>stream == std::cout || stream == std::cerr</tt>. Otherwise send bytes to stream.
+ *
+ * @param [in] stream   out stream to write the string/bytes to.
+ * @param [in] array    byte array to convert to a string/sent to the stream.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+
+/*!
+ * Convert the given @c interface into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] interface   interface value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface interface);
+
+/*! @} */
 
 #endif /* HF_COMMON_H */

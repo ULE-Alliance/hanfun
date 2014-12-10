@@ -5,7 +5,7 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -188,6 +188,92 @@ namespace BindManagement
 
 }  // namespace BindManagement
 
+// =============================================================================
+// Helper Units.
+// =============================================================================
+
+namespace Events
+{
+   struct Alert:public HF::Interfaces::Alert::Client
+   {
+      void status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message);
+   };
+
+   struct LevelControl:public HF::Interfaces::LevelControl::Server
+   {
+      void level_change (HF::Protocol::Address &source, uint8_t old_level, uint8_t new_level);
+   };
+
+   struct OnOff:public HF::Interfaces::OnOff::Server
+   {
+      void on (HF::Protocol::Address &source);
+
+      void off (HF::Protocol::Address &source);
+
+      void toggle (HF::Protocol::Address &source);
+   };
+
+   struct SimplePowerMeter:public HF::Interfaces::SimplePowerMeter::Client
+   {
+      void report (HF::Protocol::Address &source, HF::Interfaces::SimplePowerMeter::Report &report);
+   };
+
+   struct Unit:public HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert,
+                                       LevelControl, OnOff, SimplePowerMeter>
+   {
+      Unit(uint8_t id, HF::IDevice &device):
+         HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert, LevelControl,
+                          OnOff, SimplePowerMeter>(id, device)
+      {}
+   };
+
+}  // namespace Listeners
+
+namespace Commands
+{
+   typedef HF::Interfaces::Alert::Server Alert;
+   typedef HF::Interfaces::LevelControl::Client LevelControl;
+   typedef HF::Interfaces::OnOff::Client OnOff;
+   typedef HF::Interfaces::SimplePowerMeter::Server SimplePowerMeter;
+
+   struct Unit:public HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert,
+                                       LevelControl, OnOff, SimplePowerMeter>
+   {
+      Unit(uint8_t id, HF::IDevice &device):
+         HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert, LevelControl,
+                          OnOff, SimplePowerMeter>(id, device)
+      {}
+
+      Alert &alert ()
+      {
+         return *const_cast <Alert *>(get <0>());
+      }
+
+      LevelControl &level_control ()
+      {
+         return *const_cast <LevelControl *>(get <1>());
+      }
+
+      OnOff &on_off ()
+      {
+         return *const_cast <OnOff *>(get <2>());
+      }
+
+      SimplePowerMeter &simple_power_meter ()
+      {
+         return *const_cast <SimplePowerMeter *>(get <3>());
+      }
+
+      HF::Common::Result handle (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload,
+                                 uint16_t offset);
+   };
+
+}  // namespace
+
+// =============================================================================
+// Concentrator.
+// =============================================================================
+
 //! Custom Unit0 declaration
 typedef HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
                                              ::DeviceManagement::Server,
@@ -199,7 +285,11 @@ typedef HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
  */
 struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 {
-   Base():HF::Devices::Concentrator::Abstract <Unit0>()
+   Events::Unit   events;
+   Commands::Unit commands;
+
+   Base():        HF::Devices::Concentrator::Abstract <Unit0>(),
+      events (1, *this), commands (2, *this)
    {}
 
    virtual ~Base()

@@ -5,7 +5,7 @@
  * This file contains the declaration of the classes that implement the HAN-FUN
  * UIDs.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -401,65 +401,6 @@ namespace HF
       };
 
       /*!
-       * RFPI UID class.
-       *
-       * @deprecated Please use the HF::UID::DECT class.
-       */
-      struct RFPI:public ByteArray <RFPI, 5, DECT_UID>
-      {
-         //! Number of bytes in a RFPI UID.
-         constexpr static uint8_t SIZE = 5;
-
-         RFPI():ByteArray <RFPI, 5, DECT_UID>()
-         {}
-
-         /*!
-          * Constructor.
-          *
-          * @param [in] _value   initial value for UID.
-          */
-         RFPI(uint8_t _value[5]):ByteArray <RFPI, 5, DECT_UID>(_value)
-         {}
-
-         // ===================================================================
-         // Cloneable
-         // ===================================================================
-
-         RFPI *clone () const
-         {
-            return new RFPI (*this);
-         }
-      }
-      __attribute_deprecated__;
-
-      /*!
-       * IPUI UID class.
-       *
-       * @deprecated Please use the HF::UID::DECT class.
-       */
-      struct IPUI:public ByteArray <IPUI, 5, DECT_UID>
-      {
-         //! Number of bytes in a IPUI UID.
-         constexpr static uint8_t SIZE = 5;
-
-         IPUI():ByteArray <IPUI, 5, DECT_UID>()
-         {}
-
-         IPUI(uint8_t _value[5]):ByteArray <IPUI, 5, DECT_UID>(_value)
-         {}
-
-         // ===================================================================
-         // Cloneable
-         // ===================================================================
-
-         IPUI *clone () const
-         {
-            return new IPUI (*this);
-         }
-      }
-      __attribute_deprecated__;
-
-      /*!
        * IEEE MAC-48b UID class.
        */
       struct MAC:public ByteArray <MAC, 6, MAC_UID>
@@ -785,6 +726,7 @@ namespace HF
  * @addtogroup uid_t
  * @{
  */
+
 inline bool operator ==(const HF::UID::UID &lhs, const HF::UID::UID_T &rhs)
 {
    return (lhs.compare (rhs) == 0);
@@ -804,6 +746,16 @@ inline bool operator !=(const HF::UID::UID_T &lhs, const HF::UID::UID &rhs)
 {
    return !(lhs == rhs);
 }
+
+/*!
+ * Convert the given @c uid into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] uid      device %UID to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid);
 
 /*! @} */
 

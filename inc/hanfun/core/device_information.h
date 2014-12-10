@@ -5,7 +5,7 @@
  * This file contains the definition for the core Device Information interface
  * of the HAN-FUN protocol.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -113,6 +113,59 @@ namespace HF
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+
+         /*!
+          * Data type to contain the Friendly name attribute.
+          */
+         struct FriendlyName
+         {
+            /*!
+             * Data type representing a unit0's friendly name.
+             */
+            struct Unit
+            {
+               uint8_t     id;
+               std::string name;
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = sizeof(uint8_t) +
+                                                    HF::Common::SerializableHelper <std::string>::min_size;
+
+               //! @copydoc HF::Common::Serializable::size
+               uint16_t size () const;
+
+               //! @copydoc HF::Common::Serializable::pack
+               uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const;
+
+               //! @copydoc HF::Common::Serializable::unpack
+               uint16_t unpack (const HF::Common::ByteArray &array, uint16_t offset = 0);
+            };
+
+            //! Device unit's friendly names.
+            std::vector <Unit> units;
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const HF::Common::ByteArray &array, uint16_t offset = 0);
+
+            //! @copydoc HF::Attributes::IAttribute::changed
+            float changed (const FriendlyName &other) const
+            {
+               UNUSED (other);
+               return 0.0;
+            }
+
+            //! @copydoc HF::Attributes::IAttribute::compare
+            int compare (const FriendlyName &other) const;
+         };
 
          /*!
           * Parent class for the Device Information interface implementation.
@@ -251,5 +304,26 @@ namespace HF
    }  // namespace Core
 
 }  // namespace HF
+
+/*!
+ * @addtogroup dev_info
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformation::Attributes attribute);
+
+/*! @} */
 
 #endif /* HF_DEVICE_INFORMATION_H */

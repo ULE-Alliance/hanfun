@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -317,34 +317,6 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
-
-         /*!
-          * De-register command response.
-          *
-          * @deprecated This message was reverted back to a normal Protocol::Response.
-          */
-         struct DeregisterResponse:public Protocol::Response
-         {
-            uint16_t address; //!< Address for the device.
-
-            /*!
-             * Constructor.
-             *
-             * @param [in] code     operation result code.
-             * @param [in] address  device address the operation relates to.
-             */
-            DeregisterResponse(Common::Result code = Common::FAIL_UNKNOWN,
-                               uint16_t address = Protocol::BROADCAST_ADDR):
-               Protocol::Response (code), address (address & Protocol::BROADCAST_ADDR)
-            {}
-
-            uint16_t size () const;
-
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
-
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
-         }
-         __attribute_deprecated__;
 
          /*!
           * Device Management - Persistent Storage API.
@@ -1013,5 +985,36 @@ namespace HF
    } // namespace Core
 
 } // namespace HF
+
+/*!
+ * @addtogroup dev_mgt
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement::Attributes attribute);
+
+/*! @} */
 
 #endif /* HF_DEVICE_MANGEMENT_H */

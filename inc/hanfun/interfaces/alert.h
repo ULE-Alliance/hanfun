@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Alert interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -385,19 +385,6 @@ namespace HF
                UNUSED (message);
             }
 
-            /*!
-             * Callback function called when a status update message is received
-             * from an %Alert server.
-             *
-             * @deprecated Please use HF::Interfaces::Alert::Client::status(Protocol::Address &,Message &)
-             *
-             * @param [in] message  message received
-             */
-            virtual void status (Message &message) __attribute_deprecated__
-            {
-               UNUSED (message);
-            }
-
             //! @}
             // ======================================================================
 
@@ -415,5 +402,35 @@ namespace HF
 
 }  // namespace HF
 
+/*!
+ * @addtogroup alert_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute);
+
+/*! @} */
 
 #endif /* HF_ITF_ALERT_H */

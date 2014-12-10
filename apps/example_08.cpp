@@ -5,7 +5,7 @@
  * This file contains an example demonstrating the catch all bind management
  * functionality.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

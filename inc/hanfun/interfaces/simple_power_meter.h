@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Power Meter interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -644,18 +644,6 @@ namespace HF
             /*!
              * Receive a report message from a server.
              *
-             * @param [in] report   the report received from the server.
-             *
-             * @deprecated Please use HF::Interfaces::SimplePowerMeter::Client::report(Protocol::Address &, Report &)
-             */
-            virtual void report (Report &report) __attribute_deprecated__
-            {
-               UNUSED (report);
-            }
-
-            /*!
-             * Receive a report message from a server.
-             *
              * @param [in] source   device address that sent the report.
              * @param [in] report   the report received from the server.
              */
@@ -681,5 +669,36 @@ namespace HF
    }  // namespace Interfaces
 
 }   // namespace HF
+
+/*!
+ * @addtogroup spm_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::Attributes attribute);
+
+/*! @} */
 
 #endif /* HF_ITF_SIMPLE_POWER_METER */

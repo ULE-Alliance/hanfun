@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Level Control interface : Server role.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -133,19 +133,6 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 void Server::level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level)
 {
    UNUSED (source);
-   UNUSED (old_level);
-   UNUSED (new_level);
-}
-
-// =============================================================================
-// Server::level_change
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::level_change (uint8_t old_level, uint8_t new_level)
-{
    UNUSED (old_level);
    UNUSED (new_level);
 }

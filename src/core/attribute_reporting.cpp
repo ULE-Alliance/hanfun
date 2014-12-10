@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attribute Reporting service interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -1009,7 +1009,7 @@ uint16_t Report::Event::Field::pack (Common::ByteArray &array, uint16_t offset) 
 {
    assert (nullptr != attribute);
 
-   if (attribute == nullptr)
+   if (nullptr == attribute)
    {
       return 0;
    }

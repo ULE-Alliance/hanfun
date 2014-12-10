@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -73,8 +73,6 @@ void check_index (_type expected, _type actual, uint32_t index, const char *head
       FAIL_TEST_LOCATION (error.str ().c_str (), fileName, lineNumber);
    }
 }
-
-std::ostream &operator <<(std::ostream &os, std::uint8_t val);
 
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index <uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)

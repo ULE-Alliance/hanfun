@@ -4,7 +4,7 @@
  *
  * This file contains helper functions used the tests.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -52,11 +52,6 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
    result += StringFrom (array);
 
    return result;
-}
-
-std::ostream &operator <<(std::ostream &os, std::uint8_t val)
-{
-   return os << static_cast <int>(val);
 }
 
 HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)

@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Device Management core interface.
  *
- * @version    1.1.1
+ * @version    1.2.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -522,59 +522,6 @@ uint16_t DeregisterMessage::unpack (const Common::ByteArray &array,
    array.read (offset, address);
 
    return min_size;
-}
-
-
-// =============================================================================
-// DeregisterResponse::size
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint16_t DeregisterResponse::size () const
-{
-   return Protocol::Response::size () + sizeof(address);
-}
-
-// =============================================================================
-// DeregisterResponse::pack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint16_t DeregisterResponse::pack (Common::ByteArray &array,
-                                   uint16_t offset) const
-{
-   uint16_t start = offset;
-
-   offset += Protocol::Response::pack (array, offset);
-
-   offset += array.write (offset, address);
-
-   return offset - start;
-}
-
-// =============================================================================
-// DeregisterResponse::unpack
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint16_t DeregisterResponse::unpack (const Common::ByteArray &array,
-                                     uint16_t offset)
-{
-   uint16_t start = offset;
-
-   offset  += Protocol::Response::unpack (array, offset);
-
-   offset  += array.read (offset, address);
-
-   address &= Protocol::BROADCAST_ADDR;
-
-   return offset - start;
 }
 
 // =============================================================================

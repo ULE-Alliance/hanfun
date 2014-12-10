@@ -1,0 +1,4 @@
+.project merge=ours
+.cproject merge=ours
+inc/include/config.h merge=ours
+inc/include/version.h merge=ours
