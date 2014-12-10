@@ -1009,7 +1009,7 @@ uint16_t Report::Event::Field::pack (Common::ByteArray &array, uint16_t offset) 
 {
    assert (nullptr != attribute);
 
-   if (attribute == nullptr)
+   if (nullptr == attribute)
    {
       return 0;
    }

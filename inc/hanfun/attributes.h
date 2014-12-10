@@ -19,6 +19,7 @@
 #include <list>
 #include <type_traits>
 #include <algorithm>
+#include <functional>
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
@@ -794,6 +795,18 @@ namespace HF
        * @return  list containing the attributes.
        */
       List get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids);
+
+      template<typename T>
+      Attribute <T> *adapt (IAttribute *attr)
+      {
+         return static_cast <Attribute <T> *>(attr);
+      }
+
+      template<typename T>
+      const Attribute <T> *adapt (const IAttribute *attr)
+      {
+         return static_cast <const Attribute <T> *>(attr);
+      }
 
       /*! @} */
    }  // namespace Attributes

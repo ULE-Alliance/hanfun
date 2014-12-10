@@ -63,6 +63,8 @@ const class nullptr_t
 }
 nullptr = {};
 
+   #define __attribute_deprecated__   __attribute__ ((deprecated))
+
 #endif
 
 #endif /* HF_GCC_H */

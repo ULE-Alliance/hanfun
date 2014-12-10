@@ -57,20 +57,26 @@ namespace HF
       typedef enum _UID
       {
          /* Core Services */
-         DEVICE_MANAGEMENT   = 0x0001,   //!< Device Management Interface UID.
-         BIND_MANAGEMENT     = 0x0002,   //!< Bind Management Interface UID.
-         DEVICE_INFORMATION  = 0x0005,   //!< Device Information Interface UID.
-         ATTRIBUTE_REPORTING = 0x0006,   //!< Attribute Reporting Interface UID.
+         DEVICE_MANAGEMENT   = 0x0001,   //!< %Device Management interface %UID.
+         BIND_MANAGEMENT     = 0x0002,   //!< Bind Management interface %UID.
+         GROUP_MANGEMENT     = 0x0003,   //!< Group Management interface %UID. __Not implemented__
+         IDENTIFY            = 0x0004,   //!< Identify interface %UID. __Not implemented__
+         DEVICE_INFORMATION  = 0x0005,   //!< %Device information Interface UID. __Not implemented__
+         ATTRIBUTE_REPORTING = 0x0006,   //!< %Attribute Reporting interface UID. __Not implemented__
+         TAMPER_ALERT        = 0x0101,   //!< Tamper %Alert interface UID. __Not implemented__
+         TIME                = 0x0102,   //!< %Time interface UID. __Not implemented__
+         POWER               = 0x0110,   //!< Power interface UID. __Not implemented__
+         KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
 
          /* Functional Interfaces. */
-         ALERT              = 0x0100,  //!< Alert Interface UID
-         ON_OFF             = 0x0200,  //!< ON-OFF Interface UID
-         LEVEL_CONTROL      = 0x0201,  //!< Level Control Interface UID
-         SIMPLE_POWER_METER = 0x0300,  //!< Simple Power Meter Interface UID
+         ALERT              = 0x0100,    //!< Alert Interface UID
+         ON_OFF             = 0x0200,    //!< ON-OFF Interface UID
+         LEVEL_CONTROL      = 0x0201,    //!< Level Control Interface UID
+         SIMPLE_POWER_METER = 0x0300,    //!< Simple Power Meter Interface UID
 
          /* Reserved */
-         RESERVED = 0x7F00,           //!< Proprietary interfaces.
-         MAX_UID  = 0x7FFF            //!< Max interface UID value.
+         RESERVED = 0x7F00,              //!< Proprietary interfaces.
+         MAX_UID  = 0x7FFF               //!< Max interface UID value.
       } UID;
 
       //! Maximum value for command IDs in interfaces.
@@ -422,5 +428,36 @@ namespace HF
    /*! @} */
 
 }  // namespace HF
+
+/*!
+ * @addtogroup common_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c role into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] role     role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interface::Role role);
+
+/*!
+ * Convert the given @c uid into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] uid      uid value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid);
+
+/*! @} */
 
 #endif /* HF_INTERFACE_H */

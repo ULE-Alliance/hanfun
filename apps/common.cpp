@@ -79,47 +79,47 @@ std::ostream &ICommand::help (std::ostream &stream)
    uint16_t size = 0;
    std::vector <entry> entries;
 
+   /* *INDENT-OFF* */
    std::for_each (ICommand::registry.begin (), ICommand::registry.end (),
                   [&entries, &size](std::pair <std::string, ICommand *> e)
-                  {
-                     // LOG (TRACE) << "E F : " << e.first << NL;
-                     // LOG (TRACE) << "E S : " << e.second << NL;
+   {
+      // LOG (TRACE) << "E F : " << e.first << NL;
+      // LOG (TRACE) << "E S : " << e.second << NL;
 
-                     const std::string &raw = e.second->usage ();
+      const std::string &raw = e.second->usage ();
 
-                     char *temp = new char[raw.size ()];
+      char *temp = new char[raw.size ()];
 
-                     strncpy (temp, raw.c_str (), raw.size ());
+      strncpy (temp, raw.c_str (), raw.size ());
 
-                     std::vector <char *> lines;
+      std::vector <char *> lines;
 
-                     char *p = strtok (temp, "|");
+      char *p = strtok (temp, "\n");
 
-                     while (p)
-                     {
-                        lines.push_back (p);
-                        p = strtok (NULL, "|");
-                     }
+      while (p)
+      {
+         lines.push_back (p);
+         p = strtok (NULL, "\n");
+      }
 
-                     std::for_each (lines.begin (), lines.end (), [&entries, &size](char *line)
-                                    {
-                                       char *p = strtok (line, ":");
-                                       entry e;
-                                       e.cmd = std::string (p);
-                                       p = strtok (NULL, ":");
-                                       e.help = std::string (p);
-                                       entries.push_back (e);
+      std::for_each (lines.begin (), lines.end (), [&entries, &size](char *line)
+      {
+         char *p = strtok (line, ":");
+         entry e;
+         e.cmd = std::string (p);
+         p = strtok (NULL, ":");
+         e.help = std::string (p);
+         entries.push_back (e);
 
-                                       if (size < e.cmd.size ())
-                                       {
-                                          size = e.cmd.size ();
-                                       }
-                                    }
-                                   );
+         if (size < e.cmd.size ())
+         {
+            size = e.cmd.size ();
+         }
+      });
 
-                     delete[] temp;
-                  }
-                 );
+      delete[] temp;
+   });
+   /* *INDENT-ON* */
 
    size++;
 

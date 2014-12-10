@@ -54,11 +54,6 @@ SimpleString StringFrom (const HF::Common::Serializable &data)
    return result;
 }
 
-std::ostream &operator <<(std::ostream &os, std::uint8_t val)
-{
-   return os << static_cast <int>(val);
-}
-
 HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
 {
    HF::Attributes::Factory result = HF::Attributes::get_factory (itf);

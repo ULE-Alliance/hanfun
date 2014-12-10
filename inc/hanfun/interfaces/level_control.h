@@ -245,16 +245,6 @@ namespace HF
              */
             virtual void level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level);
 
-            /*!
-             * Callback for a @c SET_ATTR_REQ message, when the level value is changed.
-             *
-             * @deprecated Please use HF::Interfaces::LevelControl::Server::level_change(Protocol::Address &, uint8_t, uint8_t)
-             *
-             * @param [in] old_level    the old level value to used.
-             * @param [in] new_level    the new level value to use.
-             */
-            virtual void level_change (uint8_t old_level, uint8_t new_level) __attribute_deprecated__;
-
             //! @}
             // =============================================================================
 
@@ -350,5 +340,36 @@ namespace HF
    }  // namespace Interfaces
 
 }   // namespace HF
+
+/*!
+ * @addtogroup level_ctl_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::Attributes attribute);
+
+/*! @} */
 
 #endif /* LEVEL_CONTROL_H_ */

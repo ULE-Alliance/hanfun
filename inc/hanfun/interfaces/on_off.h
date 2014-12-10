@@ -145,9 +145,6 @@ namespace HF
              */
             virtual void on (Protocol::Address &source);
 
-            //! @deprecated Please use HF::Interfaces::OnOff::Server::on(Protocol::Address &)
-            virtual void on () __attribute_deprecated__;
-
             /*!
              * Callback that is called when a @c OFF_CMD message is received.
              *
@@ -155,18 +152,12 @@ namespace HF
              */
             virtual void off (Protocol::Address &source);
 
-            //! @deprecated Please use HF::Interfaces::OnOff::Server::off(Protocol::Address &)
-            virtual void off () __attribute_deprecated__;
-
             /*!
              * Callback that is called when a @c TOGGLE_CMD message is received.
              *
              * @param [in] source   device address that sent the command.
              */
             virtual void toggle (Protocol::Address &source);
-
-            //! @deprecated Please use HF::Interfaces::OnOff::Server::toggle(Protocol::Address &)
-            virtual void toggle () __attribute_deprecated__;
 
             //! @}
 
@@ -288,5 +279,36 @@ namespace HF
    }  // namespace Interfaces
 
 }   // namespace HF
+
+/*!
+ * @addtogroup on_off_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute);
+
+/*! @} */
 
 #endif /* HF_ITF_ON_OFF_H */
