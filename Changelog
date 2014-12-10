@@ -1,6 +1,40 @@
 
+1.2.0 / 2014-12-10
+==================
 
-v1.1.1 / 2014-11-17
+ * Added the release notes.
+ * Minor formatting.
+ * Added stream helpers for core services.
+ * Examples - Fix compilation warning in release mode.
+ * Example - Added support for getting device information attributes.
+ * Example - Added command to base to inject packets.
+ * Example - Added commands to send ON, OFF and TOGGLE messages.
+ * Example - Added command to create base global binds.
+ * Examples - Minor output formatting changes.
+ * Examples - Changed help separator from '|' to newline.
+ * Added units to example base.
+ * Added more output stream helpers for several classes.
+ * Created helper class for formatted output of integers in hexadecimal.
+ * Added support for parsing all device information attributes.
+ * Added helper class to handle friendly name in device information.
+ * Minor refactor in SerializableHelper for strings.
+ * Add UIDs to all defined interfaces and services.
+ * Refactor out stream helpers to headers defining the classes.
+ * Added SerializableHelper for std::vector.
+ * Added helper function to cast attribute instances.
+ * Removing deprecated API.
+ * Fixes for CR16C compiler.
+ * Added missing return when sending to same device.
+ * Minor tweaks to debug output.
+ * Changes required due to lack of nullptr support.
+ * Use 'this' inside lambdas to call methods.
+ * Turn on all options for the Simple power meter.
+ * Added missing configuration option.
+ * Fix bug with Attribute Pack API change.
+ * Don't use unsupported feature on CR16 toolchain.
+ * Fix includes.
+
+1.1.1 / 2014-11-17
 ===================
 
  * Added configuration option for shared library linkage.
@@ -48,7 +82,7 @@ v1.1.1 / 2014-11-17
  * Code cleanup.
  * Add missing call to Core::DeviceManagement::IServer::registered event.
 
-v1.1.0 / 2014-10-22
+1.1.0 / 2014-10-22
 ===================
 
  * Update version numbers to match specification documents.
@@ -58,7 +92,6 @@ v1.1.0 / 2014-10-22
  * Add UID to concentrator device management entry.
  * Added missing attributes support.
  * Version bump (v1.1.0)
- * Merge branch 'feature/session_management' into develop
  * Updating comments.
  * Added session management to bind management - client side.
  * Added session management to device management - client side.
@@ -86,7 +119,7 @@ v1.1.0 / 2014-10-22
  * Minor fixes in debug helpers.
  * Fix version in doxygen configuration.
 
-v1.0.1 / 2014-10-03
+1.0.1 / 2014-10-03
 ===================
 
  * Bump version (v1.0.1)
@@ -126,7 +159,7 @@ v1.0.1 / 2014-10-03
  * Don't use unsupported feature on CR16 toolchain.
  * Update version number in documentation configuration.
 
-v1.0.0 / 2014-09-02
+1.0.0 / 2014-09-02
 ===================
 
  * README update.
@@ -138,7 +171,6 @@ v1.0.0 / 2014-09-02
  * Added Alertable profile.
  * Minor cleanup.
  * Fix compilation for GCC 4.7
- * Merge branch 'feature/attr_reporting' into develop
  * Added initial implementation of event processing.
  * Minor formatting.
  * Added comparison API to IAttribute.
@@ -173,7 +205,7 @@ v1.0.0 / 2014-09-02
  * Fix documentation configuration.
  * Minor fix.
 
-v0.4.0 / 2014-08-18
+0.4.0 / 2014-08-18
 ===================
 
  * README update.
@@ -204,7 +236,7 @@ v0.4.0 / 2014-08-18
  * Fix missing namespace compilation issue.
  * Update version header file.
 
-v0.3.2 / 2014-07-29
+0.3.2 / 2014-07-29
 ===================
 
  * Updated copyright information.
@@ -212,7 +244,7 @@ v0.3.2 / 2014-07-29
  * Make tests pass again.
  * Fixed tests for GCC prior to 4.8.
 
-v0.3.1 / 2014-07-24
+0.3.1 / 2014-07-24
 ===================
 
  * Minor fixes in example application.
@@ -238,7 +270,7 @@ v0.3.1 / 2014-07-24
  * Don't run tests when cross-compiling.
  * Make libuv use the correct compiler when cross-compiling.
 
-v0.3.0 / 2014-07-01
+0.3.0 / 2014-07-01
 ===================
 
  * Updated README file.
@@ -293,7 +325,7 @@ v0.3.0 / 2014-07-01
  * Minor documentation fixes.
  * Minor refactor.
 
-v0.2.0 / 2014-04-22
+0.2.0 / 2014-04-22
 ===================
 
  * Bump version (v0.2.0)
@@ -311,7 +343,7 @@ v0.2.0 / 2014-04-22
  * Fix minor indentation issue.
  * Use the HF::Common namespace for the respective classes.
 
-v0.1.0 / 2014-03-18
+0.1.0 / 2014-03-18
 ===================
 
  * Bump version (v0.1.0)
