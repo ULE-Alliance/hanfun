@@ -5,7 +5,7 @@
  * This file contains the implementation of the classes for the protocol layer
  * in the HAN-FUN specification.
  *
- * @version    1.2.0
+ * @version    1.2.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

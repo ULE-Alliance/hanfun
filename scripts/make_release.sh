@@ -6,7 +6,7 @@
 #   This helper script is used to create the release tarballs for the HAN-FUN
 #   library.
 #
-#   @version    1.2.0
+#   @version    1.2.1
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #

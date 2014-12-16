@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Information : Server Role.
  *
- * @version    1.2.0
+ * @version    1.2.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -264,6 +264,27 @@ Protocol::Message *DeviceInformation::get (uint8_t uid)
    result->itf.member = uid;
 
    return result;
+}
+
+// =============================================================================
+// DeviceInformation::Server::attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *DeviceInformation::Server::attribute (uint8_t uid)
+{
+   HF::Attributes::UIDS uids = attributes(HF::Attributes::Pack::ALL);
+   if (std::any_of (uids.begin(), uids.end(),
+                    [uid] (uint8_t attr_uid) { return uid == attr_uid; }))
+   {
+      return Core::create_attribute (this, uid);
+   }
+   else
+   {
+      return nullptr;
+   }
 }
 
 // =============================================================================
