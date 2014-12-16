@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN protocol messages.
  *
- * @version    1.2.0
+ * @version    1.2.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
