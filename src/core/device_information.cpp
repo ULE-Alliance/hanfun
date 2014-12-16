@@ -267,6 +267,27 @@ Protocol::Message *DeviceInformation::get (uint8_t uid)
 }
 
 // =============================================================================
+// DeviceInformation::Server::attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *DeviceInformation::Server::attribute (uint8_t uid)
+{
+   HF::Attributes::UIDS uids = attributes(HF::Attributes::Pack::ALL);
+   if (std::any_of (uids.begin(), uids.end(),
+                    [uid] (uint8_t attr_uid) { return uid == attr_uid; }))
+   {
+      return Core::create_attribute (this, uid);
+   }
+   else
+   {
+      return nullptr;
+   }
+}
+
+// =============================================================================
 // DeviceInformation::Server::attributes
 // =============================================================================
 /*!

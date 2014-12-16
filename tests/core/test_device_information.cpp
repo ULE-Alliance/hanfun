@@ -167,3 +167,29 @@ TEST (DeviceInformation, ExtraCapabilities)
    CHECK_TRUE (dev_info->has_paging ());
    CHECK_FALSE (dev_info->has_broadcast ());
 }
+
+TEST (DeviceInformation, Not_Supported_Attr)
+{
+   using namespace HF::Core::DeviceInformation;
+   Protocol::Message *msg = get(MANUFACTURE_NAME_ATTR);
+
+   CHECK_FALSE (msg == nullptr);
+
+   Protocol::Packet packet (*msg);
+
+   delete msg;
+
+   mock ("AbstractDevice").expectOneCall ("send");
+
+   dev_info->handle (packet, packet.message.payload, 0);
+
+   mock ("AbstractDevice").checkExpectations ();
+
+   Protocol::Packet *packet_resp = device->packets.front ();
+
+   Protocol::Response resp;
+
+   resp.unpack (packet_resp->message.payload);
+
+   LONGS_EQUAL (Result::FAIL_SUPPORT, resp.code);
+}
