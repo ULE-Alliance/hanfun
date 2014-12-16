@@ -5,7 +5,7 @@
  * This file contains the definition for the core Device Information interface
  * of the HAN-FUN protocol.
  *
- * @version    1.2.0
+ * @version    1.2.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -206,10 +206,7 @@ namespace HF
             // Interface Attribute API.
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
-            {
-               return Core::create_attribute (this, uid);
-            }
+            HF::Attributes::IAttribute *attribute (uint8_t uid);
 
             HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
 
