@@ -5,7 +5,7 @@
  * This file contains the definitions for the common functionality in the HAN-FUN
  * example applications.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

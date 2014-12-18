@@ -5,7 +5,7 @@
  * This file contains the implementation of the main entry point for the
  * HAN-FUN example applications.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
