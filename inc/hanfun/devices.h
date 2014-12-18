@@ -89,9 +89,6 @@ namespace HF
          //! List containing pointers to the units present in the device.
          IUnits _units;
 
-         //! Support for filtering duplicated message from the network.
-         Protocol::Filters::Repeated repeated_filter;
-
          //! Support for generating missing responses for messages.
          Protocol::Filters::ResponseRequired response_filter;
 
