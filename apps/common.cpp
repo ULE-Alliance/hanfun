@@ -68,13 +68,24 @@ void ICommand::remove (ICommand *command)
  *
  */
 // =============================================================================
-std::ostream &ICommand::help (std::ostream &stream)
+std::ostream &ICommand::help (std::ostream &_stream)
 {
    struct entry
    {
       std::string cmd;
       std::string help;
    };
+
+   static std::string cache   = "";
+   static uint8_t cache_count = 0;
+
+   if (cache_count == ICommand::registry.size())
+   {
+      _stream << cache;
+      return _stream;
+   }
+
+   std::stringstream stream;
 
    uint16_t size = 0;
    std::vector <entry> entries;
@@ -141,7 +152,11 @@ std::ostream &ICommand::help (std::ostream &stream)
           << std::endl << std::endl;
    stream << "Select an Option (Q/q to exit): " << std::endl;
 
-   return stream;
+   cache = stream.str();
+
+   _stream << cache;
+
+   return _stream;
 }
 
 // =============================================================================
