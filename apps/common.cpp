@@ -126,7 +126,8 @@ std::ostream &ICommand::help (std::ostream &stream)
    stream << std::endl;
 
    stream << "================================================" << std::endl;
-   stream << "HAN-FUN Example Application" << std::endl << std::endl;
+   stream << "HAN-FUN Example Application : v" << HF_VERSION << std::endl ;
+   stream << "================================================" << std::endl << std::endl;
 
    stream << std::setfill (' ');
    /* *INDENT-OFF* */
