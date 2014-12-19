@@ -188,7 +188,7 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
 /*!
  * Create bind command.
  */
-COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
+COMMAND (Bind, "b", "b x y:associate device x with device y (bind).")
 {
    if (args.size () < 2)
    {
@@ -264,7 +264,7 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
 /*!
  * Global binds command.
  */
-COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events")
+COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events.")
 {
    UNUSED (args);
 
@@ -305,7 +305,7 @@ COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events")
 /*!
  * Send ON command.
  */
-COMMAND (On, "on", "on d u:Send an ON command to device/unit pair")
+COMMAND (On, "on", "on d u:Send an ON command to device/unit pair.")
 {
    if (args.size () < 2)
    {
@@ -323,7 +323,7 @@ COMMAND (On, "on", "on d u:Send an ON command to device/unit pair")
 /*!
  * Send OFF command.
  */
-COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair")
+COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair.")
 {
    if (args.size () < 2)
    {
@@ -341,7 +341,7 @@ COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair")
 /*!
  * Send TOGGLE command.
  */
-COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair")
+COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair.")
 {
    if (args.size () < 2)
    {
@@ -356,7 +356,7 @@ COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair
    base.commands.on_off ().toggle (device);
 }
 
-COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the network")
+COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the network.")
 {
    HF::Common::ByteArray data;
 
@@ -380,8 +380,8 @@ COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the networ
 /*!
  * Get Device information.
  */
-COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes\n"
-                        "di a d:Get device information all attributes")
+COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes.\n"
+                        "di a d:Get device information all attributes.")
 {
    if (args.size () < 2)
    {

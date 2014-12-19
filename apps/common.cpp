@@ -99,27 +99,29 @@ std::ostream &ICommand::help (std::ostream &_stream)
 
       const std::string &raw = e.second->usage ();
 
-      char *temp = new char[raw.size ()];
+      char *temp = new char[raw.size ()+1];
 
-      strncpy (temp, raw.c_str (), raw.size ());
+      strncpy (temp, raw.c_str (), raw.size ())[raw.size ()] = 0;
 
       std::vector <char *> lines;
 
-      char *p = strtok (temp, "\n");
-
-      while (p)
+      char *saveptr = NULL;
+      for (char *p = strtok_r (temp, "\n", &saveptr); p != NULL; p = strtok_r (NULL, "\n", &saveptr))
       {
          lines.push_back (p);
-         p = strtok (NULL, "\n");
       }
 
       std::for_each (lines.begin (), lines.end (), [&entries, &size](char *line)
       {
-         char *p = strtok (line, ":");
          entry e;
+
+         char *saveptr = NULL;
+         char *p = strtok_r (line, ":", &saveptr);
          e.cmd = std::string (p);
-         p = strtok (NULL, ":");
+
+         p = strtok_r (NULL, ":", &saveptr);
          e.help = std::string (p);
+
          entries.push_back (e);
 
          if (size < e.cmd.size ())
