@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Server role.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -519,7 +519,7 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
    assert (report != nullptr);
    assert (unit != nullptr);
 
-   if (entry.itf.id == HF::Interface::MAX_UID)
+   if (entry.itf.id == HF::Interface::ANY_UID)
    {
       // Search the official interfaces.
       uint16_t count;

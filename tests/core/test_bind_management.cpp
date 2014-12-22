@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Bind Management Interface.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -431,6 +431,17 @@ TEST (BindManagementEntries, CreateDstChange)
 
    dst.unit++;
    SHOULD_CREATE (src, dst, itf);
+}
+
+TEST (BindManagementEntries, CreateItfAny)
+{
+   itf.id = HF::Interface::ANY_UID;
+
+   // Should create a new entry.
+   SHOULD_CREATE (src, dst, itf);
+
+   // Should NOT create a entry with the same parameters.
+   SHOULD_NOT_CREATE (src, dst, itf);
 }
 
 TEST (BindManagementEntries, DestroyOK)
@@ -978,6 +989,21 @@ TEST (BindManagementServer, AddNoMatch)
 
    auto res = server->add (entry.source, entry.destination, entry.itf);
    LONGS_EQUAL (Common::Result::FAIL_ARG, res);
+
+   mock ().checkExpectations ();
+}
+
+TEST (BindManagementServer, AddNoMatchButAnyItf)
+{
+   BindManagement::Entry entry;
+   CreateDeviceEntries (entry, HF::Profiles::SIMPLE_ONOFF_SWITCH, HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE);
+
+   entry.itf.id = HF::Interface::ANY_UID;
+
+   mock_s ().expectOneCall ("add");
+
+   auto res = server->add (entry.source, entry.destination, entry.itf);
+   LONGS_EQUAL (Common::Result::OK, res);
 
    mock ().checkExpectations ();
 }

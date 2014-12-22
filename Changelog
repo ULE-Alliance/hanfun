@@ -1,4 +1,19 @@
 
+1.2.2 / 2014-12-22
+==================
+
+ * Release notes update.
+ * Minor fixes in the concentrator example application.
+ * Fix concentrator routing to handle bind management use cases.
+ * Change bind management to support ANY interface functionality.
+ * Added support for interface UID ANY.
+ * Removed unused configuration option.
+ * Fix bug in example application menu help.
+ * Cache example application help string.
+ * Added version information to example application menu.
+ * Bump version (v1.2.2)
+ * Remove repeated message detection filter.
+
 1.2.0 / 2014-12-10
 ==================
 

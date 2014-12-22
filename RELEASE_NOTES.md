@@ -3,16 +3,16 @@
 |             |                            |
 | ---------:  | -------------------------- |
 | __Project__ | HAN-FUN CI                 |
-| __Version__ | v1.2.0                     |
-| __Date__    | 10/12/2014                 |
+| __Version__ | v1.2.2                     |
+| __Date__    | 22/12/2014                 |
 
 ## Overview
 
 This is the first public release of the ULE Alliance's HAN-FUN Common Implementation.
 
-This software release allows third-party vendors to easilly create devices that are compatible with the ULE Alliance HAN-FUN standard v1.1.0.
+This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.1.0.
 
-Not all of the standard has been implemented so far, please see the *Features* section for futher information on what has been implemented and what is missing.
+Not all of the standard has been implemented so far, please see the *Features* section for further information on what has been implemented and what is missing.
 
 For more information on requirements, building and using this software package, please see the README file present in the software distribution.
 
