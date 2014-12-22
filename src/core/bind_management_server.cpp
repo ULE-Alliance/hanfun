@@ -144,13 +144,13 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
    }
 
    // Check if destination unit has requested interface.
-   if (!dst_unit_it->has_interface (itf.id, role))
+   if (itf.id != Interface::ANY_UID && !dst_unit_it->has_interface (itf.id, role))
    {
       return Common::Result::FAIL_ARG;
    }
 
    // Skip source validation if catch all rule.
-   if (!(source.device == HF::Protocol::BROADCAST_ADDR && source.unit == HF::Protocol::BROADCAST_UNIT))
+   if (!(source.device == HF::Protocol::BROADCAST_ADDR || source.unit == HF::Protocol::BROADCAST_UNIT))
    {
       auto src_dev = unit0 ().device_management ()->entry (source.device);
 
@@ -177,7 +177,7 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
 
       role = (role == Interface::CLIENT_ROLE ? Interface::SERVER_ROLE : Interface::CLIENT_ROLE);
 
-      if (!src_unit_it->has_interface (itf.id, role))
+      if (itf.id != Interface::ANY_UID && !src_unit_it->has_interface (itf.id, role))
       {
          return Common::Result::FAIL_ARG;
       }
