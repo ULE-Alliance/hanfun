@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN protocol messages.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -368,84 +368,6 @@ namespace HF
           * This module contains the filters used in the %Protocol API implementation.
           * @{
           */
-
-         /*!
-          * This class provides support for detecting repeated messages received from the
-          * network.
-          *
-          * It uses the source device address, the application reference value for the message
-          * and a checksum over the entire packet received to determine if the received packet
-          * is a retransmission.
-          */
-         class Repeated
-         {
-            protected:
-
-            //! Filter database entry.
-            struct Entry
-            {
-               uint16_t address;      //!< Source device address.
-               uint8_t  reference;    //!< Last message application reference.
-               uint8_t  ttl;          //!< Time to live - counter used to drop older entries.
-               uint32_t checksum;     //!< Last message checksum.
-
-               Entry(uint16_t _address = HF::Protocol::BROADCAST_ADDR, uint8_t _reference = 0):
-                  address (_address), reference (_reference), ttl (0), checksum (0)
-               {}
-
-               bool operator <(const Entry &other) const
-               {
-                  return this->address < other.address;
-               }
-            };
-
-            //! Filter database.
-            std::list <Entry> db;
-
-            public:
-
-            //! Maximum number of entries that will be kept in the database.
-            static constexpr uint16_t max_size = HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE;
-
-            /*!
-             * Checks if the given @c packet, is a retransmission according to
-             * the filters database data.
-             *
-             * The given @c packet and @c payload are used to update the filters database.
-             *
-             * @param [in] packet     reference to the incoming packet.
-             * @param [in] payload    reference to the packet's payload.
-             *
-             * @retval  true     the packet is a retransmission.
-             * @retval  false    the packet is a not retransmission.
-             */
-            bool operator ()(const HF::Protocol::Packet &packet,
-                             const HF::Common::ByteArray &payload);
-
-            /*!
-             * Number of entries in the filter's database.
-             *
-             * @return  the number of entries in the filter's database.
-             */
-            uint16_t size () const
-            {
-               return db.size ();
-            }
-
-            protected:
-
-            /*!
-             * Create a checksum of the data that is contained in the buffer @c data.
-             *
-             * This method implements the Fletcher-32 checksum algorithm.
-             *
-             * @param data    pointer to the data to calculate the checksum for.
-             * @param words   number of words in the @c data to calculate the checksum from.
-             *
-             * @return  message checksum value.
-             */
-            uint32_t checksum (uint16_t const *data, uint16_t words);
-         };
 
          /*!
           * This class provides support for generating a response when a response is

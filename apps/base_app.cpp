@@ -4,7 +4,7 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -89,20 +89,23 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
 
    HF::Core::BindManagement::Entries &entries = base.unit0 ()->bind_management ()->entries ();
 
-   LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << std::uppercase << NL;
+   LOG (APP) << "HAN-FUN Binds (" << entries.size () << "):" << NL;
+   LOG (APP) << "\t" << std::left << std::setfill(' ')
+             << std::setw(16) << "Source"
+             << std::setw(18) << "| Destination"
+             << "| Interface" << std::endl
+             << "\t" << std::setfill('-')
+             << std::setw(15) << "-"
+             << std::setw(18) << " | "
+             << std::setw(12) << " | " << std::endl
+             << std::setfill(' ');
+
    /* *INDENT-OFF* */
    std::for_each (entries.begin (), entries.end (),
                   [](const HF::Core::BindManagement::Entry &entry)
    {
-      LOG (APP) << std::right << std::setfill(' ') << std::setw (7)
-                << entry.source.device << ":";
-      LOG (APP) << std::setw (2) << std::setfill('0')
-                << (int) entry.source.unit << " -> ";
-      LOG (APP) << std::right << std::setfill(' ') << std::setw (5)
-                << entry.destination.device << ":";
-      LOG (APP) << std::setw (2) << std::setfill('0')
-                << (int) entry.destination.unit;
-      LOG (APP) << " (0x" << std::hex << entry.itf.id << ":" << entry.itf.role << ")" << NL;
+      LOG (APP) << "\t" << entry.source << " | " << entry.destination << " | "
+                << entry.itf << NL;
    });
    /* *INDENT-ON* */
 }
@@ -158,7 +161,7 @@ COMMAND (Register, "r", "r 1 x:register device x.\nr 0:exit registration mode.")
       return;
    }
 
-   LOG (APP) << usage () << NL;
+   LOG (APP) << usage (true) << NL;
 }
 
 /*!
@@ -168,7 +171,7 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
 {
    if (args.size () < 1)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -188,11 +191,11 @@ COMMAND (Deregister, "d", "d x:de-register device x.")
 /*!
  * Create bind command.
  */
-COMMAND (Bind, "b", "b x y:associate device x with device y. (bind)")
+COMMAND (Bind, "b", "b x y:associate device x with device y (bind).")
 {
    if (args.size () < 2)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -244,7 +247,7 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
 
    if (args.size () < 2)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -264,52 +267,49 @@ COMMAND (Unbind, "u", "u x y:unbind device x with y.")
 /*!
  * Global binds command.
  */
-COMMAND (GlobalBind, "gb", "gb:create binds to receive all interface events")
+COMMAND (GlobalBind, "gb", "gb 1:create bind to receive all interface events.\n"
+                           "gb 0:remove bind to receive all interface events.")
 {
-   UNUSED (args);
+   if (args.size () < 1)
+   {
+      LOG (APP) << usage (true) << NL;
+      return;
+   }
 
-   HF::Common::Interface itf;
+   uint16_t arg1 = STRTOL (args[0]);
+
+   HF::Common::Interface itf(HF::Interface::ANY_UID);
    HF::Protocol::Address source;
    HF::Protocol::Address dest (0, 1);
 
-   // Bind Alert interface.
-   itf.id   = HF::Interface::ALERT;
-   itf.role = HF::Interface::CLIENT_ROLE;
-
-   auto res = base.unit0 ()->bind_management ()->add (source, dest, itf);
-   assert (res == HF::Common::Result::OK);
-   UNUSED (res);
-
-   // Bind Level Control interface.
-   itf.id   = HF::Interface::LEVEL_CONTROL;
-   itf.role = HF::Interface::SERVER_ROLE;
-
-   res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
-   assert (res == HF::Common::Result::OK);
-
-   // Bind On-Off interface.
-   itf.id   = HF::Interface::ON_OFF;
-   itf.role = HF::Interface::SERVER_ROLE;
-
-   res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
-   assert (res == HF::Common::Result::OK);
-
-   // Bind Simple Power Meter interface.
-   itf.id   = HF::Interface::SIMPLE_POWER_METER;
-   itf.role = HF::Interface::CLIENT_ROLE;
-
-   res      = base.unit0 ()->bind_management ()->add (source, dest, itf);
-   assert (res == HF::Common::Result::OK);
+   if (arg1 == 1)
+   {
+      // Bind any interface.
+      auto res = base.unit0 ()->bind_management ()->add (source, dest, itf);
+      assert (res == HF::Common::Result::OK);
+      UNUSED (res);
+   }
+   else if (arg1 == 0)
+   {
+      // Bind any interface.
+      auto res = base.unit0 ()->bind_management ()->remove (source, dest, itf);
+      assert (res == HF::Common::Result::OK);
+      UNUSED (res);
+   }
+   else
+   {
+      LOG (APP) << usage (true) << NL;
+   }
 }
 
 /*!
  * Send ON command.
  */
-COMMAND (On, "on", "on d u:Send an ON command to device/unit pair")
+COMMAND (On, "on", "on d u:Send an ON command to device/unit pair.")
 {
    if (args.size () < 2)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -323,11 +323,11 @@ COMMAND (On, "on", "on d u:Send an ON command to device/unit pair")
 /*!
  * Send OFF command.
  */
-COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair")
+COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair.")
 {
    if (args.size () < 2)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -341,11 +341,11 @@ COMMAND (Off, "off", "off d u:Send an OFF command to device/unit pair")
 /*!
  * Send TOGGLE command.
  */
-COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair")
+COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair.")
 {
    if (args.size () < 2)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -356,7 +356,7 @@ COMMAND (Toggle, "toggle", "toggle d u:Send a TOGGLE command to device/unit pair
    base.commands.on_off ().toggle (device);
 }
 
-COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the network")
+COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the network.")
 {
    HF::Common::ByteArray data;
 
@@ -380,12 +380,12 @@ COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the networ
 /*!
  * Get Device information.
  */
-COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes\n"
-                        "di a d:Get device information all attributes")
+COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes.\n"
+                        "di a d:Get device information all attributes.")
 {
    if (args.size () < 2)
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
       return;
    }
 
@@ -411,7 +411,7 @@ COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes\n"
    }
    else
    {
-      LOG (APP) << usage () << NL;
+      LOG (APP) << usage (true) << NL;
    }
 }
 

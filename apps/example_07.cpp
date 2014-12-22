@@ -4,7 +4,7 @@
  *
  * This file contains an example usage of the Attribute reporting service.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

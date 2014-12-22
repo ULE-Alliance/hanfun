@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * HAN-FUN example application.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -68,13 +68,24 @@ void ICommand::remove (ICommand *command)
  *
  */
 // =============================================================================
-std::ostream &ICommand::help (std::ostream &stream)
+std::ostream &ICommand::help (std::ostream &_stream)
 {
    struct entry
    {
       std::string cmd;
       std::string help;
    };
+
+   static std::string cache   = "";
+   static uint8_t cache_count = 0;
+
+   if (cache_count == ICommand::registry.size())
+   {
+      _stream << cache;
+      return _stream;
+   }
+
+   std::stringstream stream;
 
    uint16_t size = 0;
    std::vector <entry> entries;
@@ -88,27 +99,29 @@ std::ostream &ICommand::help (std::ostream &stream)
 
       const std::string &raw = e.second->usage ();
 
-      char *temp = new char[raw.size ()];
+      char *temp = new char[raw.size ()+1];
 
-      strncpy (temp, raw.c_str (), raw.size ());
+      strncpy (temp, raw.c_str (), raw.size ())[raw.size ()] = 0;
 
       std::vector <char *> lines;
 
-      char *p = strtok (temp, "\n");
-
-      while (p)
+      char *saveptr = NULL;
+      for (char *p = strtok_r (temp, "\n", &saveptr); p != NULL; p = strtok_r (NULL, "\n", &saveptr))
       {
          lines.push_back (p);
-         p = strtok (NULL, "\n");
       }
 
       std::for_each (lines.begin (), lines.end (), [&entries, &size](char *line)
       {
-         char *p = strtok (line, ":");
          entry e;
+
+         char *saveptr = NULL;
+         char *p = strtok_r (line, ":", &saveptr);
          e.cmd = std::string (p);
-         p = strtok (NULL, ":");
+
+         p = strtok_r (NULL, ":", &saveptr);
          e.help = std::string (p);
+
          entries.push_back (e);
 
          if (size < e.cmd.size ())
@@ -126,7 +139,8 @@ std::ostream &ICommand::help (std::ostream &stream)
    stream << std::endl;
 
    stream << "================================================" << std::endl;
-   stream << "HAN-FUN Example Application" << std::endl << std::endl;
+   stream << "HAN-FUN Example Application : v" << HF_VERSION << std::endl ;
+   stream << "================================================" << std::endl << std::endl;
 
    stream << std::setfill (' ');
    /* *INDENT-OFF* */
@@ -140,7 +154,11 @@ std::ostream &ICommand::help (std::ostream &stream)
           << std::endl << std::endl;
    stream << "Select an Option (Q/q to exit): " << std::endl;
 
-   return stream;
+   cache = stream.str();
+
+   _stream << cache;
+
+   return _stream;
 }
 
 // =============================================================================
@@ -193,13 +211,7 @@ bool HF::Application::Handle (std::string command)
 
    std::string cmd = *tokens.begin ();
 
-   //   LOG (TRACE) << "CMD : " << cmd << NL;
-
    std::vector <std::string> args (tokens.begin () + 1, tokens.end ());
-
-   //   for_each(args.begin(), args.end(), [](std::string &arg){
-   //      LOG (TRACE) << "  ARG : " << arg << NL;
-   //   });
 
    if (cmd == "q" || cmd == "Q")
    {

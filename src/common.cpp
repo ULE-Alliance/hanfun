@@ -5,7 +5,7 @@
  * This file contains the implementation of the common classes and functions
  * of the HAN-FUN library.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -168,7 +168,7 @@ uint16_t Common::Interface::pack (ByteArray &array, uint16_t offset) const
 {
    SERIALIZABLE_CHECK (array, offset, min_size);
 
-   uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::MAX_UID);
+   uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::ANY_UID);
 
    array.write (offset, uid);
 
@@ -189,8 +189,8 @@ uint16_t Common::Interface::unpack (const ByteArray &array, uint16_t offset)
    uint16_t uid = 0;
    array.read (offset, uid);
 
-   this->role = (uid & ~HF::Interface::MAX_UID) >> 15;
-   this->id   = uid & HF::Interface::MAX_UID;
+   this->role = (uid & ~HF::Interface::ANY_UID) >> 15;
+   this->id   = uid & HF::Interface::ANY_UID;
 
    return min_size;
 }

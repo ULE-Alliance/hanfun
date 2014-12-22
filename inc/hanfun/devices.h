@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.2.1
+ * @version    1.2.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -88,9 +88,6 @@ namespace HF
 
          //! List containing pointers to the units present in the device.
          IUnits _units;
-
-         //! Support for filtering duplicated message from the network.
-         Protocol::Filters::Repeated repeated_filter;
 
          //! Support for generating missing responses for messages.
          Protocol::Filters::ResponseRequired response_filter;
