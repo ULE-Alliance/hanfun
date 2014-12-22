@@ -53,9 +53,12 @@ struct ICommand
    /*!
     * Get the command help documentation.
     *
+    * @param [in] format   if \c true the usage string SHOULD be formatted to be displayed
+    *                      to the user.
+    *
     * @return  command help documentation.
     */
-   virtual const std::string &usage () const = 0;
+   virtual const std::string usage (bool format = false) const = 0;
 
    /*!
     * Execute the command code.
@@ -123,9 +126,23 @@ class Command:public ICommand
       return _key;
    }
 
-   const std::string &usage () const
+   const std::string usage (bool format = false) const
    {
-      return _usage;
+      if (format)
+      {
+         std::string result = _usage;
+         for(std::string::size_type pos = 0; (pos = result.find(":", pos)) != std::string::npos;
+             pos += 3 - 1)
+         {
+            result.replace(pos, 1, " : ");
+         }
+
+         return result;
+      }
+      else
+      {
+         return _usage;
+      }
    }
 };
 

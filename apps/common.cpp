@@ -211,13 +211,7 @@ bool HF::Application::Handle (std::string command)
 
    std::string cmd = *tokens.begin ();
 
-   //   LOG (TRACE) << "CMD : " << cmd << NL;
-
    std::vector <std::string> args (tokens.begin () + 1, tokens.end ());
-
-   //   for_each(args.begin(), args.end(), [](std::string &arg){
-   //      LOG (TRACE) << "  ARG : " << arg << NL;
-   //   });
 
    if (cmd == "q" || cmd == "Q")
    {
