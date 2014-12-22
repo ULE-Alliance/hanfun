@@ -186,6 +186,45 @@ namespace
       }
    };
 
+   struct SimpleLight:public HF::Units::Unit <HF::Profiles::SimpleLight>
+   {
+      SimpleLight(uint8_t index, IDevice &device):
+         HF::Units::Unit <HF::Profiles::SimpleLight>(index, device)
+      {}
+
+      void on (HF::Protocol::Address &source)
+      {
+         UNUSED (source);
+         mock ("SimpleLight").actualCall ("on").onObject (this);
+      }
+
+      void off (HF::Protocol::Address &source)
+      {
+         UNUSED (source);
+         mock ("SimpleLight").actualCall ("off").onObject (this);
+      }
+
+      void toggle (HF::Protocol::Address &source)
+      {
+         UNUSED (source);
+         mock ("SimpleLight").actualCall ("toggle").onObject (this);
+      }
+
+      Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                             uint16_t offset)
+      {
+         mock ("SimpleLight").actualCall ("handle").onObject (this);
+         return HF::Units::Unit <HF::Profiles::SimpleLight>::handle(packet, payload, offset);
+      }
+
+      Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                             uint16_t offset)
+      {
+         mock ("SimpleLight").actualCall ("handle_command").onObject (this);
+         return HF::Units::Unit <HF::Profiles::SimpleLight>::handle_command(packet, payload, offset);
+      }
+   };
+
    struct AbstractDeviceHelper:public HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>
    {
       virtual ~AbstractDeviceHelper()
@@ -195,8 +234,9 @@ namespace
    struct DeviceHelper:public AbstractDeviceHelper
    {
       SimpleDetector unit;
+      SimpleDetector unit2;
 
-      DeviceHelper():unit (SimpleDetector (1, *this))
+      DeviceHelper():unit (1, *this), unit2(2, *this)
       {}
 
       virtual ~DeviceHelper()
@@ -208,7 +248,7 @@ namespace
    {
       Alertable unit;
 
-      DeviceHelper2():unit (Alertable (1, *this))
+      DeviceHelper2():unit (1, *this)
       {}
 
       virtual ~DeviceHelper2()
@@ -218,8 +258,9 @@ namespace
    struct BaseHelper:public HF::Devices::Concentrator::Abstract <HF::Devices::Concentrator::DefaultUnit0>
    {
       Alertable unit;
+      SimpleLight unit2;
 
-      BaseHelper():unit (Alertable (1, *this))
+      BaseHelper():unit (1, *this), unit2(2,*this)
       {}
    };
 
@@ -390,21 +431,100 @@ TEST (Concentrator, BroadcastToDevice)
    mock ().checkExpectations ();
 }
 
-TEST (Concentrator, PacketToAny)
+TEST (Concentrator, BroadcastToAnyDeviceSingleUnitSingleItf)
 {
-   Protocol::Address src;
-   Protocol::Address dst (0, 1);
+   Protocol::Address src (HF::Protocol::BROADCAST_ADDR, 1);
+   Protocol::Address dst (3, 1);
+
    Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
 
    auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
-
    LONGS_EQUAL (Common::Result::OK, res);
 
-   mock ("Alertable").expectNCalls (2, "status").onObject (&(base->unit));
+   mock ("Alertable").expectNCalls (2, "status").onObject (&(device3->unit));
 
    Protocol::Address dest;
    device1->unit.alert (dest, true);
    device2->unit.alert (dest, true);
 
    mock ().checkExpectations ();
+}
+
+TEST (Concentrator, PacketToAnyItf)
+{
+   Protocol::Address src;
+   Protocol::Address dst (0, 2);
+   Common::Interface itf (Interface::ANY_UID);
+
+   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
+
+   LONGS_EQUAL (Common::Result::OK, res);
+
+   mock ("SimpleLight").expectNCalls (2, "handle").onObject (&(base->unit2));
+   mock ("SimpleLight").expectNCalls (0, "handle_command").onObject (&(base->unit2));
+
+   Protocol::Address dest;
+   device1->unit.alert (dest, true);
+   device2->unit.alert (dest, true);
+
+   mock ().checkExpectations ();
+}
+
+TEST (Concentrator, PacketFromAnyUnitSingleItf)
+{
+   Protocol::Address src (1);
+   Protocol::Address dst (3, 1);
+   Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
+
+   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
+
+   LONGS_EQUAL (Common::Result::OK, res);
+
+   mock ("Alertable").expectNCalls (2, "status").onObject (&(device3->unit));
+
+   Protocol::Address dest;
+   device1->unit.alert (dest, true);
+   device1->unit2.alert (dest, true);
+
+   mock ().checkExpectations ();
+}
+
+TEST (Concentrator, PacketFromAnyUnitAnyItf)
+{
+   Protocol::Address src (1);
+   Protocol::Address dst (0, 2);
+   Common::Interface itf (Interface::ANY_UID);
+
+   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
+
+   LONGS_EQUAL (Common::Result::OK, res);
+
+   mock ("SimpleLight").expectNCalls (2, "handle").onObject (&(base->unit2));
+   mock ("SimpleLight").expectNCalls (0, "handle_command").onObject (&(base->unit2));
+
+   Protocol::Address dest;
+   device1->unit.alert (dest, true);
+   device1->unit2.alert (dest, true);
+
+   mock ().checkExpectations ();
+}
+
+IGNORE_TEST (Concentrator, Routing)
+{
+   using namespace HF::Protocol;
+
+   typedef std::pair<Protocol::Address,Common::Interface> RoutePair;
+   std::array<RoutePair, 8> route_pairs {{               // | Idx | Device    | Unit      | Interface |
+                                                         // | --- | --------- | --------- | --------- |
+     { Address(1,1)             , Common::Interface() }, // |  0  | Single    | Single    | Single    |
+     { Address(1,1)             , Interface::Any()    }, // |  1  | Single    | Single    | Any       |
+     { Address(1)               , Common::Interface() }, // |  2  | Single    | Broadcast | Single    |
+     { Address(1)               , Interface::Any()    }, // |  3  | Single    | Broadcast | Any       |
+     { Address()                , Common::Interface() }, // |  4  | Broadcast | Broadcast | Single    |
+     { Address(1,1)             , Interface::Any()    }, // |  5  | Broadcast | Broadcast | Any       |
+     { Address(BROADCAST_ADDR,1), Common::Interface() }, // |  6  | Broadcast | Single    | Single    |
+     { Address(BROADCAST_ADDR,1), Interface::Any()    }  // |  7  | Broadcast | Single    | Any       |
+   }};
+
+   UNUSED (route_pairs);
 }

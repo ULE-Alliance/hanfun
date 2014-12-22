@@ -272,6 +272,21 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
 void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
                                                uint16_t offset)
 {
+   typedef std::pair<Protocol::Address,Common::Interface> RoutePair;
+   /* *INDENT-OFF* */
+   static std::array<RoutePair, 8> route_pairs {{  // | Idx | Device    | Unit      | Interface |
+                                                   // | --- | --------- | --------- | --------- |
+     { Protocol::Address(), Common::Interface() }, // |  0  | Single    | Single    | Single    |
+     { Protocol::Address(), Interface::Any()    }, // |  1  | Single    | Single    | Any       |
+     { Protocol::Address(), Common::Interface() }, // |  2  | Single    | Broadcast | Single    |
+     { Protocol::Address(), Interface::Any()    }, // |  3  | Single    | Broadcast | Any       |
+     { Protocol::Address(), Common::Interface() }, // |  4  | Broadcast | Broadcast | Single    |
+     { Protocol::Address(), Interface::Any()    }, // |  5  | Broadcast | Broadcast | Any       |
+     { Protocol::Address(), Common::Interface() }, // |  6  | Broadcast | Single    | Single    |
+     { Protocol::Address(), Interface::Any()    }  // |  7  | Broadcast | Single    | Any       |
+   }};
+   /* *INDENT-ON* */
+
    // Only route messages that are commands.
    if (!(packet.message.type == Protocol::Message::COMMAND_REQ ||
          packet.message.type == Protocol::Message::COMMAND_RESP_REQ))
@@ -279,14 +294,31 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
       return;
    }
 
+   route_pairs[0].first = packet.source;
+   route_pairs[0].second = packet.message.itf;
+
+   route_pairs[1].first = packet.source;
+
+   route_pairs[2].first.device = packet.source.device;
+   route_pairs[2].second = packet.message.itf;
+
+   route_pairs[3].first.device = packet.source.device;
+
+   route_pairs[4].second = packet.message.itf;
+
+   route_pairs[6].first.unit = packet.source.unit;
+   route_pairs[6].second = packet.message.itf;
+
+   route_pairs[7].first.unit = packet.source.unit;
+
    // Find bind entries for device.
    auto &entries = unit0 ()->bind_management ()->entries ();
 
-   Protocol::Address any_addr;
-
-   // No bindings found !
-   if (!entries.any_of (packet.source, packet.message.itf) &&
-       !entries.any_of (any_addr, packet.message.itf))
+   if (std::none_of (route_pairs.begin(), route_pairs.end(),
+                     [&entries](const RoutePair &pair)
+   {
+      return entries.any_of (pair.first, pair.second);
+   }))
    {
       return;
    }
@@ -305,8 +337,11 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
                            this->send (other);
                         };
 
-   entries.for_each (packet.source, packet.message.itf, process_entry);
-   entries.for_each (any_addr, packet.message.itf, process_entry);
+   std::for_each(route_pairs.begin(), route_pairs.end(),
+                 [&entries, &process_entry](const RoutePair &pair)
+   {
+      entries.for_each (pair.first, pair.second, process_entry);
+   });
 }
 
 // =============================================================================
