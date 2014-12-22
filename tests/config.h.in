@@ -30,10 +30,4 @@
 #define HF_ITF_SPM_REPORT_CMD                   1
 #define HF_ITF_SPM_RESET_CMD                    1
 
-// =============================================================================
-// Protocol Configuration
-// =============================================================================
-
-#define HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE    10
-
 #endif  /* HF_CONFIG_H */

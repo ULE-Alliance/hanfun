@@ -31,8 +31,4 @@
 #define HF_ITF_SPM_REPORT_CMD                   @HF_ITF_SPM_REPORT_CMD@
 #define HF_ITF_SPM_RESET_CMD                    @HF_ITF_SPM_RESET_CMD@
 
-// =============================================================================
-
-#define HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE    @HF_PROTOCOL_FILTER_REPEATED_MAX_SIZE@
-
 #endif  /* HF_CONFIG_H */
