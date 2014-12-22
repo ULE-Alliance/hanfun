@@ -626,9 +626,14 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
          result = "Simple Power Meter";
          break;
       }
+      case HF::Interface::UID::ANY_UID:
+      {
+         result = "Any";
+         break;
+      }
       default:
       {
-         if (uid >= HF::Interface::UID::RESERVED && uid < HF::Interface::UID::MAX_UID)
+         if (uid >= HF::Interface::UID::RESERVED && uid <= HF::Interface::UID::MAX_UID)
          {
             result = "Proprietary";
          }

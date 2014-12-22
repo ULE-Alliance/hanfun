@@ -519,7 +519,7 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
    assert (report != nullptr);
    assert (unit != nullptr);
 
-   if (entry.itf.id == HF::Interface::MAX_UID)
+   if (entry.itf.id == HF::Interface::ANY_UID)
    {
       // Search the official interfaces.
       uint16_t count;

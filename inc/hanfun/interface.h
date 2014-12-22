@@ -76,8 +76,15 @@ namespace HF
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.
-         MAX_UID  = 0x7FFF               //!< Max interface UID value.
+         MAX_UID  = 0x7FFE,              //!< Max interface UID value.
+         ANY_UID  = 0x7FFF,              //!< Any interface UID value.
       } UID;
+
+      struct Any:public Common::Interface
+      {
+         Any() : Common::Interface(ANY_UID)
+         {}
+      };
 
       //! Maximum value for command IDs in interfaces.
       static constexpr uint8_t MAX_CMD_ID = 0xFF;
