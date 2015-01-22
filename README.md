@@ -42,6 +42,13 @@ The build system used is [CMake](http://www.cmake.org/).
       $ make
       $ make doc # Build the documentation
 
+The Doxygen generated API documentation can be found [here](http://ULE-Alliance.github.io/hanfun).
+
+The project will follow [this](http://nvie.com/posts/a-successful-git-branching-model/) convention for development.
+The following helper [scripts](https://github.com/nvie/gitflow) are available.
+
+The versions of the project follow the [SemVer 2.0.0](http://semver.org/) specification.
+
 ## Testing
 
 Currently the build of the unit tests is only supported when compiling using the code from the repository.
