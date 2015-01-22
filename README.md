@@ -131,6 +131,14 @@ toggle command was received.
 
 Please see the help in the applications for further features.
 
+## Contributing
+
+ 1. Fork it!
+ 2. Create your feature branch: `git checkout -b my-new-feature`
+ 3. Commit your changes: `git commit -am 'Add some feature'`
+ 4. Push to the branch: `git push origin my-new-feature`
+ 5. Submit a pull request (PR).
+
 ## Author
 
  * Initial development by [Bithium S.A.](http://www.bithium.com)
@@ -141,3 +149,4 @@ This library is released under dual-license, [GLPv2](http://www.gnu.org/licenses
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
 Please see the file 'LICENSE' in the root folder for further information.
+
