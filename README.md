@@ -1,6 +1,6 @@
 # HAN-FUN
 
-This project aims at providing an implementation of the ULE Alliance's HAN-FUN application specification.
+This project aims at providing an implementation of the [ULE Alliance](http://www.ulealliance.org/) HAN-FUN application specification.
 
 ## Overview
 
