@@ -1,0 +1,4 @@
+<map id="HF::Application::Handle" name="HF::Application::Handle">
+<area shape="rect" id="node2" href="$structICommand.html#a8dd5fc7d97131d640211ec9d3b50fb20" title="Generate the help screen, based on the commands in the registry. " alt="" coords="217,5,335,32"/>
+<area shape="rect" id="node3" href="$structICommand.html#ac4fc5e7fa0f5c4da91bf743787a68511" title="Execute the command code. " alt="" coords="220,56,332,83"/>
+</map>

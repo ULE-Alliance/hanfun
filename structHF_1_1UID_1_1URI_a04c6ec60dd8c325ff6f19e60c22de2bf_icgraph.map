@@ -1,0 +1,4 @@
+<map id="HF::UID::URI::size" name="HF::UID::URI::size">
+<area shape="rect" id="node2" href="$structHF_1_1UID_1_1URI.html#aff63e4946aca336e739d56c3ec4435d5" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="197,5,337,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="189,56,344,83"/>
+</map>

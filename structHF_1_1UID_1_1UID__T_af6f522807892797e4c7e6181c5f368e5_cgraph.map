@@ -1,0 +1,4 @@
+<map id="HF::UID::UID_T::unpack" name="HF::UID::UID_T::unpack">
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="225,5,391,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3" title="Type of the UID. " alt="" coords="232,71,384,97"/>
+</map>

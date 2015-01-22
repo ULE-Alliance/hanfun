@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structHF_1_1Common_1_1IEntries.html" title="HF::Common::IEntries\l\&lt; Entry \&gt;" alt="" coords="5,5,160,46"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1IEntries.html" title="Bind Management persistent storage API. " alt="" coords="209,5,394,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1BindManagement_1_1Entries.html" title="Default implementation of the bind entries container. " alt="" coords="443,5,629,46"/>
+<area shape="rect" id="node4" href="$structBindManagement_1_1Entries.html" title="Custom Bind Management Entries class. " alt="" coords="678,12,850,39"/>
+</map>

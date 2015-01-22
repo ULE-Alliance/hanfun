@@ -1,0 +1,10 @@
+<map id="HF::Units::Unit&lt; Profile, ITF &gt;" name="HF::Units::Unit&lt; Profile, ITF &gt;">
+<area shape="rect" id="node5" href="$classHF_1_1Units_1_1Unit.html" title="{HF::Units::Unit\&lt; HF\l::Profiles::SimpleOnOffSwitch \&gt;\n||+ Unit()\l+ id()\l+ uid()\l+ handle()\l+ attributes()\l+ send()\l+ notify()\l+ interfaces()\l+ periodic()\l# get()\l# for_each()\l# for_each()\l}" alt="" coords="5,956,213,1209"/>
+<area shape="rect" id="node7" href="$classHF_1_1Units_1_1Unit.html" title="{HF::Units::Unit\&lt; HF\l::Profiles::GenericApplication\lLogic, Alert, LevelControl,\l OnOff, SimplePowerMeter \&gt;\n||+ Unit()\l+ id()\l+ uid()\l+ handle()\l+ attributes()\l+ send()\l+ notify()\l+ interfaces()\l+ periodic()\l# get()\l# for_each()\l# for_each()\l}" alt="" coords="238,941,428,1224"/>
+<area shape="rect" id="node8" href="$classHF_1_1Units_1_1Unit.html" title="{HF::Units::Unit\&lt; HF\l::Profiles::SimpleLight \&gt;\n||+ Unit()\l+ id()\l+ uid()\l+ handle()\l+ attributes()\l+ send()\l+ notify()\l+ interfaces()\l+ periodic()\l# get()\l# for_each()\l# for_each()\l}" alt="" coords="487,956,649,1209"/>
+<area shape="rect" id="node2" href="$classHF_1_1Units_1_1AbstractUnit.html" title="This is the parent class for all HAN&#45;FUN units. " alt="" coords="253,379,412,544"/>
+<area shape="rect" id="node3" href="$structHF_1_1Units_1_1IUnit.html" title="This class represents the interface implemented by all HAN&#45;FUN units. " alt="" coords="276,163,391,328"/>
+<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="263,5,403,112"/>
+<area shape="rect" id="node6" href="$structSimpleSwitch.html" title="Unit implementing a Simple Switch. " alt="" coords="48,1297,171,1375"/>
+<area shape="rect" id="node9" href="$structSimpleLight.html" title="Unit implementing a Simple Light. " alt="" coords="513,1275,623,1397"/>
+</map>

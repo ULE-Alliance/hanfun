@@ -1,0 +1,8 @@
+<map id="HF::Core::BindManagement::IServer" name="HF::Core::BindManagement::IServer">
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1BindManagement_1_1AbstractServer.html" title="Parent class for bind management &#45; server role. " alt="" coords="102,595,287,775"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="111,176,279,283"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="117,6,271,98"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="5,827,189,1007"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="81,1073,265,1253"/>
+<area shape="rect" id="node7" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="89,1304,257,1411"/>
+</map>

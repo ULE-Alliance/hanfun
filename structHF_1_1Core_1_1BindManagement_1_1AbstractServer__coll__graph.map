@@ -1,0 +1,5 @@
+<map id="HF::Core::BindManagement::AbstractServer" name="HF::Core::BindManagement::AbstractServer">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1IServer.html" title="Bind Management interface : Server side API. " alt="" coords="5,334,189,543"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="13,176,181,283"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="20,6,173,98"/>
+</map>

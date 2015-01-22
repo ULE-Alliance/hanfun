@@ -1,0 +1,5 @@
+<map id="HF::Attributes::get" name="HF::Attributes::get">
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html#ac9f54d760ca1a6ee80c14ebd5ce54c07" title="HF::Profiles::Profile\l\&lt; SIMPLE_LIGHT, Interfaces\l::OnOff::Server \&gt;::attributes" alt="" coords="209,5,404,61"/>
+<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1Profile2.html#afc1a96d818e4e559f1188fcb65a2ac2a" title="Return a list of all the attributes for a given interface, pack id and list of attributes UID&#39;s..." alt="" coords="185,86,429,157"/>
+<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1Detector.html#a547b27685fcfb9f6b2619cc0c70cab8e" title="Return a list of all the attributes for a given interface, pack id and list of attributes UID&#39;s..." alt="" coords="189,181,424,222"/>
+</map>

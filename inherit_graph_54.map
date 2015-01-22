@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classHF_1_1Unit0.html" title="HF::Unit0\&lt; IUnit0,\l ITF...\&gt;" alt="" coords="5,114,136,155"/>
+<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1Concentrator_1_1Unit0.html" title="Template to create Unit0 for HAN&#45;FUN concentrator devices. " alt="" coords="252,5,431,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Devices_1_1Node_1_1Unit0.html" title="Template to create Unit 0 for HAN&#45;FUN node devices. " alt="" coords="270,70,413,111"/>
+<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1Concentrator_1_1Unit0.html" title="HF::Devices::Concentrator\l::Unit0\&lt; Core::DeviceInformation\l::Server, Core::DeviceManagement\l::DefaultServer, Core::AttributeReporting\l::Server, Core::BindManagement::DefaultServer \&gt;" alt="" coords="185,136,498,221"/>
+<area shape="rect" id="node6" href="$structHF_1_1Devices_1_1Node_1_1Unit0.html" title="HF::Devices::Node::\lUnit0\&lt; HF::Core::DeviceInformation\l::Server, HF::Core::DeviceManagement\l::Client, HF::Core::AttributeReporting::Server \&gt;" alt="" coords="193,246,490,317"/>
+<area shape="rect" id="node5" href="$structHF_1_1Devices_1_1Concentrator_1_1DefaultUnit0.html" title="Unit0 using default classes to provide the core services. " alt="" coords="547,158,725,199"/>
+<area shape="rect" id="node7" href="$structHF_1_1Devices_1_1Node_1_1DefaultUnit0.html" title="Unit0 using default classes to provide the core services for node devices. " alt="" coords="565,261,707,302"/>
+</map>

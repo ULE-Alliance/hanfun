@@ -1,0 +1,4 @@
+<map id="HF::Core::AttributeReporting::Report::Periodic::CreateMessage" name="HF::Core::AttributeReporting::Report::Periodic::CreateMessage">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1CreateMessage.html" title="This message is used to create a reporting rule. " alt="" coords="21,265,211,386"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Address.html" title="Network Address. " alt="" coords="40,5,192,200"/>
+</map>

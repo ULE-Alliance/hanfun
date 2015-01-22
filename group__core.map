@@ -1,0 +1,8 @@
+<map id="Core Services &amp; Interfaces" name="Core Services &amp; Interfaces">
+<area shape="rect" id="node1" href="$group__dev__mgt.html" title="This module contains the classes that implement the Device Management service. " alt="" coords="238,5,381,32"/>
+<area shape="rect" id="node2" href="$group__attr__reporting.html" title="This module contains the classes that implement the Attribute Reporting service. " alt="" coords="244,56,375,83"/>
+<area shape="rect" id="node3" href="$group__bind__mgt.html" title="This module contains the classes that implement the Bind Management service. " alt="" coords="246,107,373,133"/>
+<area shape="rect" id="node4" href="$group__core__common.html" title="This module contains the common classes for the Core Services and Interfaces API implementation. " alt="" coords="272,157,347,184"/>
+<area shape="rect" id="node5" href="$group__sessions.html" title="This module contains the classes that implement the Session Management functionality. " alt="" coords="235,208,383,235"/>
+<area shape="rect" id="node6" href="$group__dev__info.html" title="This module contains the classes that implement the Device Information service. " alt="" coords="243,259,375,285"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="HF::Profiles::SimplePendant" name="HF::Profiles::SimplePendant">
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SIMPLE_PENDANT \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="174,1851,340,2002"/>
+<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="315,1352,501,1488"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Detector.html" title="Class template for Detector type profiles. " alt="" coords="238,1635,388,1786"/>
+<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="337,1099,477,1205"/>
+<area shape="rect" id="node5" href="$classHF_1_1Interfaces_1_1Alert_1_1Server.html" title="Alert Interface : Server side implementation. " alt="" coords="140,1257,280,1583"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, Interface\l::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="118,1099,303,1205"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="8,929,148,1021"/>
+<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="5,771,152,877"/>
+<area shape="rect" id="node9" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="11,222,173,549"/>
+<area shape="rect" id="node11" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="95,600,239,707"/>
+<area shape="rect" id="node10" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="31,5,153,171"/>
+<area shape="rect" id="node12" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="173,929,337,1021"/>
+</map>

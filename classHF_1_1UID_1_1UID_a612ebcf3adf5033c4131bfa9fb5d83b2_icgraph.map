@@ -1,0 +1,4 @@
+<map id="HF::UID::UID::size" name="HF::UID::UID::size">
+<area shape="rect" id="node2" href="$structhello__msg__t.html#a83da2253be72bd608c02bd60f5782eff" title="Number bytes needed to serialize the message. " alt="" coords="190,5,314,32"/>
+<area shape="rect" id="node3" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="363,5,491,32"/>
+</map>

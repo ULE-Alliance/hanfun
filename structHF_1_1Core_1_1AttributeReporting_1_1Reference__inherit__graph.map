@@ -1,0 +1,5 @@
+<map id="HF::Core::AttributeReporting::Reference" name="HF::Core::AttributeReporting::Reference">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Abstract.html" title="Parent call for all reports. " alt="" coords="112,219,301,311"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html" title="Event type notification. " alt="" coords="5,360,195,525"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html" title="Periodic report notification. " alt="" coords="219,367,408,518"/>
+</map>

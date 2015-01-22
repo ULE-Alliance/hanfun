@@ -1,0 +1,6 @@
+<map id="HF::Devices::Concentrator::Abstract::unit0" name="HF::Devices::Concentrator::Abstract::unit0">
+<area shape="rect" id="node2" href="$group__examples.html#ga96e4919d4eaf03cc6e92adfd42e5d95b" title="ListRegs List registrations command. " alt="" coords="269,5,363,32"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="233,56,399,83"/>
+<area shape="rect" id="node5" href="$group__examples.html#gaa0581a446c239d3fae170963ada22247" title="Save application configuration. " alt="" coords="241,107,391,133"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="448,56,616,83"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="HF::Transport::Endpoint::connected" name="HF::Transport::Endpoint::connected">
+<area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Node_1_1Transport.html#a055dac52a5e852875f2bbb2aaa4b8fd8" title="Register the given Endpoint to receive events. " alt="" coords="241,5,383,46"/>
+<area shape="rect" id="node3" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a2d8326c56bc6329ae2e4e54cd3019aa9" title="Register the given Endpoint to receive events. " alt="" coords="223,70,401,111"/>
+<area shape="rect" id="node4" href="$classHF_1_1Transport_1_1AbstractLayer.html#a1b681c555717183845911a844c15ddf1" title="Call the connected method for all the registered end&#45;points with the given link as argument..." alt="" coords="216,135,408,177"/>
+<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Node_1_1Transport.html#ab446585afda98dc70516162a1b242a88" title="Add the given link to the list of known links and call the connected method for all registered end&#45;po..." alt="" coords="474,102,617,143"/>
+<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a29becfcea0f7a833dfded68cb8746a8a" title="Add the given link to the list of known links and call the connected method for all registered end&#45;po..." alt="" coords="456,167,635,209"/>
+</map>

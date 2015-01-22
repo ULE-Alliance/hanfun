@@ -1,0 +1,5 @@
+<map id="HF::Core::BindManagement::Message" name="HF::Core::BindManagement::Message">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1Entry.html" title="This represents a bind entry data structure. " alt="" coords="82,277,267,443"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1Interface.html" title="Interface UID. " alt="" coords="5,27,164,178"/>
+<area shape="rect" id="node4" href="$structHF_1_1Protocol_1_1Address.html" title="Network Address. " alt="" coords="189,5,341,200"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="HF::UID::MAC" name="HF::UID::MAC">
+<area shape="rect" id="node2" href="$classHF_1_1UID_1_1ByteArray.html" title="{HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\n|+ min_size\l# value\l|+ ByteArray()\l+ ByteArray()\l+ ByteArray()\l+ size()\l+ pack()\l+ unpack()\l+ compare()\l+ operator[]()\l+ operator[]()\l+ at()\l+ at()\l+ fill()\l+ clear()\l+ length()\l}" alt="" coords="96,1043,255,1341"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1Abstract.html" title="Helper template parent class for all UID&#39;s implementation. " alt="" coords="82,537,219,629"/>
+<area shape="rect" id="node8" href="$classHF_1_1UID_1_1ByteArray.html" title="Helper template parent class for all UIDs based on fixed number of bytes. " alt="" coords="173,681,339,978"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="91,320,209,485"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,147,181,269"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="206,162,372,254"/>
+<area shape="rect" id="node7" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="190,5,388,83"/>
+</map>

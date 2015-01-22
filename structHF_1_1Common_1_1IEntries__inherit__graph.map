@@ -1,0 +1,10 @@
+<map id="HF::Common::IEntries&lt; T &gt;" name="HF::Common::IEntries&lt; T &gt;">
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Entry \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="44,177,197,298"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Device \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="225,177,379,298"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1BindManagement_1_1IEntries.html" title="Bind Management persistent storage API. " alt="" coords="5,349,189,485"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1BindManagement_1_1Entries.html" title="Default implementation of the bind entries container. " alt="" coords="5,537,189,805"/>
+<area shape="rect" id="node5" href="$structBindManagement_1_1Entries.html" title="Custom Bind Management Entries class. " alt="" coords="11,856,183,963"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html" title="Device Management &#45; Persistent Storage API. " alt="" coords="215,357,413,478"/>
+<area shape="rect" id="node8" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html" title="Default implementation of the persistence API. " alt="" coords="215,559,413,783"/>
+<area shape="rect" id="node9" href="$structDeviceManagement_1_1Entries.html" title="Custom Device Management Entries class. " alt="" coords="221,856,408,963"/>
+</map>

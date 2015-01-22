@@ -1,0 +1,9 @@
+<map id="HF::Core::DeviceManagement::Server&lt; _Entries &gt;" name="HF::Core::DeviceManagement::Server&lt; _Entries &gt;">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="5,725,204,979"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="5,377,204,660"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="21,191,189,297"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="28,6,181,98"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="Helper template to inject session management functionality into services requiring it &#45; Server side..." alt="" coords="230,769,436,935"/>
+<area shape="rect" id="node7" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="230,363,436,675"/>
+<area shape="rect" id="node8" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="230,176,436,312"/>
+</map>

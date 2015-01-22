@@ -1,0 +1,5 @@
+<map id="HF::Core::DeviceManagement::AbstractServer" name="HF::Core::DeviceManagement::AbstractServer">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="4,333,203,616"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="20,176,188,283"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="27,6,180,98"/>
+</map>

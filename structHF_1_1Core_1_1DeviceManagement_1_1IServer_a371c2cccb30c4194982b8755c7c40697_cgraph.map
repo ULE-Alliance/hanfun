@@ -1,0 +1,4 @@
+<map id="HF::Core::DeviceManagement::IServer::entry" name="HF::Core::DeviceManagement::IServer::entry">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#ab10b8b339531c6f21444ce7beab90dfd" title="Get a reference to the current object implementing the persistence API, for the device information..." alt="" coords="253,5,453,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#ad048cade9dc4e492857cfb0e0a14674c" title="Return the Device entry for the given address. " alt="" coords="253,70,453,111"/>
+</map>

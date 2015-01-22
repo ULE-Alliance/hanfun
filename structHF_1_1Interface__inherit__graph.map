@@ -1,0 +1,50 @@
+<map id="HF::Interface" name="HF::Interface">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="802,339,933,431"/>
+<area shape="rect" id="node12" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="1129,222,1292,549"/>
+<area shape="rect" id="node27" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="2941,332,3077,439"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="574,643,751,808"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Server.html" title="Attribute Reporting &#45; Server Role. " alt="" coords="436,886,625,1271"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="267,1018,401,1139"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="307,1408,469,1544"/>
+<area shape="rect" id="node8" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::BIND\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="567,1408,711,1544"/>
+<area shape="rect" id="node10" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_INFORMATION \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="19,1408,181,1544"/>
+<area shape="rect" id="node7" href="$classHF_1_1Core_1_1DeviceManagement_1_1Abstract.html" title="Parent class for the Device Management interface implementation. " alt="" coords="288,1742,487,1834"/>
+<area shape="rect" id="node9" href="$classHF_1_1Core_1_1BindManagement_1_1Abstract.html" title="Parent class for the Bind Management interface implementation. " alt="" coords="546,1742,731,1834"/>
+<area shape="rect" id="node11" href="$classHF_1_1Core_1_1DeviceInformation_1_1Abstract.html" title="Parent class for the Device Information interface implementation. " alt="" coords="5,1742,195,1834"/>
+<area shape="rect" id="node13" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; HF::Interface::ATTRIBUTE\l_REPORTING \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1391,1018,1585,1139"/>
+<area shape="rect" id="node16" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="994,1025,1141,1132"/>
+<area shape="rect" id="node20" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::LEVEL_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="751,1025,969,1132"/>
+<area shape="rect" id="node22" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::ON_OFF \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1645,1025,1803,1132"/>
+<area shape="rect" id="node24" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::SIMPLE_POWER\l_METER \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1167,1018,1365,1139"/>
+<area shape="rect" id="node26" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="1139,672,1283,779"/>
+<area shape="rect" id="node14" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html" title="Attribute Reporting &#45; Client Role. " alt="" coords="1393,1349,1583,1603"/>
+<area shape="rect" id="node15" href="$structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html" title="Helper class for using the Attribute Reporting service. " alt="" coords="1393,1654,1583,1922"/>
+<area shape="rect" id="node17" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="997,1430,1137,1522"/>
+<area shape="rect" id="node18" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, Interface\l::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="1079,1735,1264,1841"/>
+<area shape="rect" id="node19" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, Interface\l::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="870,1735,1055,1841"/>
+<area shape="rect" id="node21" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Base.html" title="Level Control Interface : Parent. " alt="" coords="767,1415,953,1537"/>
+<area shape="rect" id="node23" href="$structHF_1_1Interfaces_1_1OnOff_1_1Base.html" title="On&#45;Off Interface : Parent. " alt="" coords="1649,1430,1797,1522"/>
+<area shape="rect" id="node25" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html" title="Simple Power Meter Interface : Parent. " alt="" coords="1171,1423,1361,1529"/>
+<area shape="rect" id="node28" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; ALERTABLE, Interfaces\l::Alert::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3895,665,4072,786"/>
+<area shape="rect" id="node30" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROL,\l Interfaces::LevelControl\l::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="4097,657,4303,793"/>
+<area shape="rect" id="node32" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_ONOFF_SWITCH,\l Interfaces::OnOff::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="1849,665,2049,786"/>
+<area shape="rect" id="node34" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; AC_OUTLET, Interfaces\l::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2075,665,2253,786"/>
+<area shape="rect" id="node36" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2277,657,2524,793"/>
+<area shape="rect" id="node38" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_ONOFF_SWITCHABLE,\l Interfaces::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2549,665,2783,786"/>
+<area shape="rect" id="node40" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; DOOR_BELL, Interfaces\l::Alert::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2808,665,2987,786"/>
+<area shape="rect" id="node42" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_POWER_METER,\l Interfaces::SimplePowerMeter\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3011,657,3213,793"/>
+<area shape="rect" id="node44" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIREN, Interfaces::\lOnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3238,665,3388,786"/>
+<area shape="rect" id="node46" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_DOOR_LOCK, Interfaces\l::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3413,665,3651,786"/>
+<area shape="rect" id="node48" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LIGHT, Interfaces\l::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3676,665,3871,786"/>
+<area shape="rect" id="node29" href="$classHF_1_1Profiles_1_1Alertable.html" title="Alertable profile implementation. " alt="" coords="3909,1040,4059,1117"/>
+<area shape="rect" id="node31" href="$classHF_1_1Profiles_1_1SimpleLevelControl.html" title="Simple Level Control profile implementation. " alt="" coords="4115,1033,4285,1125"/>
+<area shape="rect" id="node33" href="$classHF_1_1Profiles_1_1SimpleOnOffSwitch.html" title="Simple On/Off Switch profile implementation. " alt="" coords="1862,1033,2036,1125"/>
+<area shape="rect" id="node35" href="$classHF_1_1Profiles_1_1AC__Outlet.html" title="AC Outlet profile implementation. " alt="" coords="2083,1040,2244,1117"/>
+<area shape="rect" id="node37" href="$classHF_1_1Profiles_1_1SimpleLevelControllable.html" title="Simple Level Controllable profile implementation. " alt="" coords="2306,1033,2496,1125"/>
+<area shape="rect" id="node39" href="$classHF_1_1Profiles_1_1SimpleOnOffSwitchable.html" title="Simple On/Off Switchable profile implementation. " alt="" coords="2572,1033,2761,1125"/>
+<area shape="rect" id="node41" href="$classHF_1_1Profiles_1_1DoorBell.html" title="Door Bell profile implementation. " alt="" coords="2822,1040,2972,1117"/>
+<area shape="rect" id="node43" href="$classHF_1_1Profiles_1_1SimplePowerMeter.html" title="Simple Power Meter profile implementation. " alt="" coords="3023,1033,3200,1125"/>
+<area shape="rect" id="node45" href="$classHF_1_1Profiles_1_1Siren.html" title="Siren profile implementation. " alt="" coords="3248,1040,3377,1117"/>
+<area shape="rect" id="node47" href="$classHF_1_1Profiles_1_1SimpleDoorLock.html" title="Simple Door Lock profile implementation. " alt="" coords="3434,1040,3629,1117"/>
+<area shape="rect" id="node49" href="$classHF_1_1Profiles_1_1SimpleLight.html" title="Simple Light profile implementation. " alt="" coords="3689,1040,3857,1117"/>
+</map>

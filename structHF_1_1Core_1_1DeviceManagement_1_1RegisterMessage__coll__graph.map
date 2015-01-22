@@ -1,0 +1,4 @@
+<map id="HF::Core::DeviceManagement::RegisterMessage" name="HF::Core::DeviceManagement::RegisterMessage">
+<area shape="rect" id="node2" href="$classHF_1_1UID_1_1UID.html" title="Wrapper around UID_T pointer&#39;s. " alt="" coords="51,179,156,403"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="16,6,192,127"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="HF::Devices::Concentrator::Transport::add" name="HF::Devices::Concentrator::Transport::add">
+<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLayer.html#a3e808b2bebbd3932cf465f4552e984ac" title="Add an entry to the list of end&#45;points connected to the transport layer. " alt="" coords="232,5,453,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Endpoint.html#a8fd44cf4a9d09f6924aaa67d70eeb972" title="Callback to report that a new transport link was been created to a remote device. ..." alt="" coords="261,57,424,98"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="HF::Core::BindManagement::Client" name="HF::Core::BindManagement::Client">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::CLIENT_ROLE \&gt;\n||}" alt="" coords="5,488,173,595"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="12,295,165,387"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SessionManagement_1_1Client.html" title="{HF::Core::SessionManagement\l::Client\&lt; Entry \&gt;\n||+ entries()\l# handle_command()\l* entries()\l}" alt="" coords="198,481,404,602"/>
+<area shape="rect" id="node5" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractClient.html" title="Parent class for session management functionality &#45; Client side. " alt="" coords="219,5,425,229"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1SessionManagement_1_1Client.html" title="Helper template to inject session management functionality into services requiring it &#45; Client side..." alt="" coords="318,281,524,402"/>
+</map>

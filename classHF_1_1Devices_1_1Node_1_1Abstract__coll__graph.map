@@ -1,0 +1,7 @@
+<map id="HF::Devices::Node::Abstract&lt; CoreServices &gt;" name="HF::Devices::Node::Abstract&lt; CoreServices &gt;">
+<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="95,454,289,693"/>
+<area shape="rect" id="node3" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="40,209,133,389"/>
+<area shape="rect" id="node4" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="5,6,168,157"/>
+<area shape="rect" id="node5" href="$classHF_1_1Protocol_1_1Filters_1_1ResponseRequired.html" title="This class provides support for generating a response when a response is required from an incoming me..." alt="" coords="157,245,297,352"/>
+<area shape="rect" id="node6" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="314,505,448,641"/>
+</map>

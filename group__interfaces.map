@@ -1,0 +1,7 @@
+<map id="Interfaces" name="Interfaces">
+<area shape="rect" id="node1" href="$group__common__itf.html" title="This module contains the common classes for the Interfaces API implementation. " alt="" coords="173,5,248,32"/>
+<area shape="rect" id="node2" href="$group__on__off__itf.html" title="This module contains the classes that define and implement the On&#45;Off interface API. " alt="" coords="153,56,269,83"/>
+<area shape="rect" id="node4" href="$group__level__ctl__itf.html" title="This module contains the classes that define and implement the Level Control interface API..." alt="" coords="133,107,288,133"/>
+<area shape="rect" id="node5" href="$group__spm__itf.html" title="This module contains the classes that define and implement the Simple Power Meter interface API..." alt="" coords="141,158,281,199"/>
+<area shape="rect" id="node6" href="$group__alert__itf.html" title="This module contains the classes that define and implement the Alert interface API. " alt="" coords="159,224,263,251"/>
+</map>

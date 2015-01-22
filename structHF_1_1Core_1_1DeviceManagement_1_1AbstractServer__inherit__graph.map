@@ -1,0 +1,8 @@
+<map id="HF::Core::DeviceManagement::AbstractServer" name="HF::Core::DeviceManagement::AbstractServer">
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="5,971,204,1151"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="85,1217,284,1397"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="108,333,307,616"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="124,176,292,283"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="131,6,284,98"/>
+<area shape="rect" id="node7" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="93,1449,277,1629"/>
+</map>

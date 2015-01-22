@@ -1,0 +1,7 @@
+<map id="HF::Transport::AbstractLink" name="HF::Transport::AbstractLink">
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="5,335,139,471"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="163,320,281,485"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="77,147,253,269"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="278,162,444,254"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="262,5,460,83"/>
+</map>

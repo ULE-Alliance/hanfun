@@ -1,0 +1,6 @@
+<map id="HF::Units::AbstractUnit::send" name="HF::Units::AbstractUnit::send">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AbstractService.html#a743b9b04ff501b7605be2ef3bc2d9ff8" title="Send message msg to the network address given by addr. " alt="" coords="214,37,391,78"/>
+<area shape="rect" id="node5" href="$classHF_1_1Units_1_1Unit.html#aa72ae8ae7d01f63c005fe333ff39ebd3" title="Send message msg to the network address given by addr. " alt="" coords="227,101,378,157"/>
+<area shape="rect" id="node3" href="$group__bind__mgt.html#ga3a63b85104abb01dd833d91bce9b31c7" title="Send message msg to the network address given by addr. " alt="" coords="447,5,633,46"/>
+<area shape="rect" id="node4" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#ac46802e51c43b6303a25c34a1052e352" title="Send message msg to the network address given by addr. " alt="" coords="440,70,640,111"/>
+</map>

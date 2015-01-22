@@ -1,0 +1,6 @@
+<map id="HF::Core::BindManagement::Entries" name="HF::Core::BindManagement::Entries">
+<area shape="rect" id="node5" href="$structBindManagement_1_1Entries.html" title="Custom Bind Management Entries class. " alt="" coords="13,856,184,963"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1IEntries.html" title="Bind Management persistent storage API. " alt="" coords="6,349,191,485"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Entry \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="21,177,175,298"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1IEntries.html" title="Basic API for persistent storage implementations. " alt="" coords="5,5,192,112"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="HF::Core::BindManagement::Abstract" name="HF::Core::BindManagement::Abstract">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::BIND\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="71,1016,215,1152"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="33,600,209,765"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="143,817,277,938"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="5,339,136,431"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="112,5,235,171"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="161,222,324,549"/>
+</map>

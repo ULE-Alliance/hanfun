@@ -1,0 +1,5 @@
+<map id="HF::Attributes::UIDS::pack" name="HF::Attributes::UIDS::pack">
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1UIDS.html#a05a13d78915323e4bb4ca607933fdb52" title="Number of elements in the list. " alt="" coords="211,5,357,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281" title="Number bytes needed to serialize the message. " alt="" coords="211,70,357,111"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="201,135,367,177"/>
+</map>

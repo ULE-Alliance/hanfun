@@ -1,0 +1,4 @@
+<map id="ICommand::help" name="ICommand::help">
+<area shape="rect" id="node2" href="$namespaceHF_1_1Application.html#a84af61388002a17a0270fe14526ddc24" title="Handle the command. " alt="" coords="174,5,335,32"/>
+<area shape="rect" id="node3" href="$structICommand.html#afc8249df1de90480be99ea04ce3bd643" title="Find and run the command with the given key, using the arguments in args. " alt="" coords="199,56,311,83"/>
+</map>

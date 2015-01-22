@@ -1,0 +1,4 @@
+<map id="HF::Core::AbstractService::send" name="HF::Core::AbstractService::send">
+<area shape="rect" id="node2" href="$classHF_1_1Units_1_1AbstractUnit.html#a5d0db40fd1dce208ed184f177a7d6c27" title="Create and send a new packet with the given message to the given address. " alt="" coords="241,5,401,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html#a0f6bc1cc1d5f33fc0474744dd92c0c94" title="The device this unit is associated with. " alt="" coords="233,70,410,111"/>
+</map>

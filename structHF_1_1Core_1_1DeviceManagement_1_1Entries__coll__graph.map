@@ -1,0 +1,5 @@
+<map id="HF::Core::DeviceManagement::Entries" name="HF::Core::DeviceManagement::Entries">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html" title="Device Management &#45; Persistent Storage API. " alt="" coords="4,350,203,471"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Device \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="27,177,180,298"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1IEntries.html" title="Basic API for persistent storage implementations. " alt="" coords="11,5,197,112"/>
+</map>

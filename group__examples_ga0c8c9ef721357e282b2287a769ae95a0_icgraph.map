@@ -1,0 +1,5 @@
+<map id="from_json" name="from_json">
+<area shape="rect" id="node2" href="$group__examples.html#gad16a673ee959a53f7479a2eb2450e963" title="Fill a HF::Core::DeviceManagement::Unit from the given Json::Value object. " alt="" coords="186,5,265,32"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga7128458f468451885a811e6289f5b116" title="Restore the device entries from the JSON database. " alt="" coords="133,57,317,98"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga8f7c62314e86a932696850abe655df3f" title="Restore the bind entries from the JSON database. " alt="" coords="141,122,310,163"/>
+</map>

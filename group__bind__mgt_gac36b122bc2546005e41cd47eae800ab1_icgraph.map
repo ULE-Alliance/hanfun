@@ -1,0 +1,3 @@
+<map id="HF::Core::BindManagement::Entries::destroy" name="HF::Core::BindManagement::Entries::destroy">
+<area shape="rect" id="node2" href="$group__bind__mgt.html#ga8e413e3c07260df695c8790face0270b" title="Destroy the entries in the persistent storage, for which the given predicate function returns true..." alt="" coords="241,5,426,46"/>
+</map>

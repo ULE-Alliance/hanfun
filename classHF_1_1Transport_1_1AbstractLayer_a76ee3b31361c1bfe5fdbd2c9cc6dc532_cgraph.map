@@ -1,0 +1,4 @@
+<map id="HF::Transport::AbstractLayer::receive" name="HF::Transport::AbstractLayer::receive">
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Endpoint.html#a87a1d9f9debfa75297593fd3f73e87b2" title="Callback to deliver a packet received from the transport layer. " alt="" coords="245,5,408,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Packet.html#a905bccfbeb81a9b427ea2bcb68d682be" title="Read a message from a ByteArray. " alt="" coords="254,70,399,111"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="HF::Profiles::UserInterface" name="HF::Profiles::UserInterface">
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="{HF::Profiles::AbstractProfile\l\&lt; USER_INTERFACE \&gt;\n||+ ~AbstractProfile()\l+ uid()\l+ attributes()\l+ handle()\l}" alt="" coords="5,363,192,499"/>
+<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="47,5,187,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="115,163,301,299"/>
+</map>

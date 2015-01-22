@@ -1,0 +1,15 @@
+<map id="HF::Devices::Concentrator::DefaultUnit0" name="HF::Devices::Concentrator::DefaultUnit0">
+<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1Concentrator_1_1Unit0.html" title="{HF::Devices::Concentrator\l::Unit0\&lt; Core::DeviceInformation\l::Server, Core::DeviceManagement\l::DefaultServer, Core::AttributeReporting\l::Server, Core::BindManagement::DefaultServer \&gt;\n||}" alt="" coords="5,2019,317,2155"/>
+<area shape="rect" id="node3" href="$classHF_1_1Unit0.html" title="{HF::Unit0\&lt; IUnit0,\l ITF...\&gt;\n||}" alt="" coords="69,1675,199,1767"/>
+<area shape="rect" id="node14" href="$structHF_1_1Devices_1_1Concentrator_1_1Unit0.html" title="Template to create Unit0 for HAN&#45;FUN concentrator devices. " alt="" coords="156,1819,335,1911"/>
+<area shape="rect" id="node4" href="$classHF_1_1Unit0.html" title="Helper template class used to define custom Unit 0 for devices. " alt="" coords="54,1533,215,1611"/>
+<area shape="rect" id="node5" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="85,1317,184,1483"/>
+<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="45,1160,224,1267"/>
+<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="232,744,411,939"/>
+<area shape="rect" id="node11" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="248,1160,427,1267"/>
+<area shape="rect" id="node12" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="319,989,501,1096"/>
+<area shape="rect" id="node13" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="451,1160,629,1267"/>
+<area shape="rect" id="node8" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="224,440,419,693"/>
+<area shape="rect" id="node9" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="275,209,368,389"/>
+<area shape="rect" id="node10" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="240,6,403,157"/>
+</map>

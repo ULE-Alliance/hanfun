@@ -1,0 +1,3 @@
+<map id="HF::Transport::AbstractLayer::disconnected" name="HF::Transport::AbstractLayer::disconnected">
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Endpoint.html#ab6a9921706cbbdea032702cd68b3c49f" title="Callback to the report that the given transport link no longer is valid and MUST not be used to send ..." alt="" coords="245,5,408,46"/>
+</map>

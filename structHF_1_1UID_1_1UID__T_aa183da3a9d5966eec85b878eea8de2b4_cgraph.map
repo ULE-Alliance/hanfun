@@ -1,0 +1,4 @@
+<map id="HF::UID::UID_T::pack" name="HF::UID::UID_T::pack">
+<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3" title="Type of the UID. " alt="" coords="216,5,368,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="209,57,375,98"/>
+</map>

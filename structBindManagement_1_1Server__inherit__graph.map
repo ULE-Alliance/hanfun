@@ -1,0 +1,12 @@
+<map id="BindManagement::Server" name="BindManagement::Server">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="235,1217,420,1397"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1BindManagement_1_1AbstractServer.html" title="Parent class for bind management &#45; server role. " alt="" coords="366,726,551,906"/>
+<area shape="rect" id="node11" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="235,971,420,1151"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1BindManagement_1_1IServer.html" title="Bind Management interface : Server side API. " alt="" coords="366,414,551,623"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="375,191,543,297"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="381,6,535,98"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="{HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;\n||+ entries()\l# entries()\l# Server()\l# Server()\l# ~Server()\l# entries_size()\l}" alt="" coords="5,979,211,1144"/>
+<area shape="rect" id="node8" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="65,363,271,675"/>
+<area shape="rect" id="node10" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="Helper template to inject session management functionality into services requiring it &#45; Server side..." alt="" coords="135,733,341,899"/>
+<area shape="rect" id="node9" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="65,176,271,312"/>
+</map>

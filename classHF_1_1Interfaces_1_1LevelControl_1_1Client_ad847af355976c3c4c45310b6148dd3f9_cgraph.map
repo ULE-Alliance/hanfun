@@ -1,0 +1,3 @@
+<map id="HF::Interfaces::LevelControl::Client::level" name="HF::Interfaces::LevelControl::Client::level">
+<area shape="rect" id="node2" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Client.html#ac4f50ff37fbc5ad7d07f466d3bb71da6" title="Send a SET_LEVEL_CMD to the given address to set the level at new_level. " alt="" coords="240,5,427,46"/>
+</map>

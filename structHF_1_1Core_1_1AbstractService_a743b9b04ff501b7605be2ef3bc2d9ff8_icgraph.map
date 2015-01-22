@@ -1,0 +1,4 @@
+<map id="HF::Core::AbstractService::send" name="HF::Core::AbstractService::send">
+<area shape="rect" id="node2" href="$group__bind__mgt.html#ga3a63b85104abb01dd833d91bce9b31c7" title="Send message msg to the network address given by addr. " alt="" coords="239,5,425,46"/>
+<area shape="rect" id="node3" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#ac46802e51c43b6303a25c34a1052e352" title="Send message msg to the network address given by addr. " alt="" coords="232,70,432,111"/>
+</map>

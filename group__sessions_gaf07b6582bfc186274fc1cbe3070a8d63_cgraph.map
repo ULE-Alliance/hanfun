@@ -1,0 +1,6 @@
+<map id="HF::Core::SessionManagement::AbstractClient::get_entries" name="HF::Core::SessionManagement::AbstractClient::get_entries">
+<area shape="rect" id="node2" href="$group__sessions.html#ga6a9fcdfd0d9d76b0cc7dad2603627b1b" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="262,5,469,46"/>
+<area shape="rect" id="node4" href="$group__sessions.html#ga6034d62ad87761058104fe9671f128af" title="Send message msg to the network address given by addr. " alt="" coords="262,70,469,111"/>
+<area shape="rect" id="node5" href="$group__sessions.html#gadb7497d39d21e4bf1c875b0ec96412e7" title="Number bytes needed to serialize the message. " alt="" coords="262,135,469,177"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="518,5,685,46"/>
+</map>

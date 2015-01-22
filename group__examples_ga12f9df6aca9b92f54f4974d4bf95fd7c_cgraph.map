@@ -1,0 +1,7 @@
+<map id="HF::Application::Initialize" name="HF::Application::Initialize">
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Layer.html#a5f3e805702b6c5acc697c53677383496" title="Register the given Endpoint to receive events. " alt="" coords="222,5,394,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Layer.html#ae57f695375cc3f973ed8a8aa0ff6a00f" title="Initialize the associated transport layer. " alt="" coords="237,57,379,98"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="225,123,391,149"/>
+<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html#a2cb2098ad66f441fe4c9eb6a376007af" title="Get the unit 0 used by this concentrator device. " alt="" coords="443,86,621,127"/>
+<area shape="rect" id="node6" href="$group__examples.html#ga7d4e44368d960972d8b80cb5f5ae3360" title="Callback indicating that the application configuration has been restored. " alt="" coords="445,152,619,179"/>
+</map>

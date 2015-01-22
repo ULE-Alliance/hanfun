@@ -1,0 +1,8 @@
+<map id="HF::Protocol::Packet" name="HF::Protocol::Packet">
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="5,525,139,661"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Message.html" title="Network Message. " alt="" coords="164,503,321,683"/>
+<area shape="rect" id="node4" href="$structHF_1_1Protocol_1_1Message_1_1Interface.html" title="Interface Address. " alt="" coords="24,245,181,395"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Interface.html" title="Interface UID. " alt="" coords="23,6,181,157"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1ByteArray.html" title="This class represents a byte array. " alt="" coords="206,208,372,432"/>
+<area shape="rect" id="node7" href="$structHF_1_1Protocol_1_1Address.html" title="Network Address. " alt="" coords="345,496,497,691"/>
+</map>

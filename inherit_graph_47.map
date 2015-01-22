@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structHF_1_1Protocol_1_1Response.html" title="Parent class for the response messages. " alt="" coords="5,97,168,124"/>
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Response.html" title="This class represents the response sent when a Protocol::Message::GET_ATTR_REQ request. " alt="" coords="235,5,405,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1RegisterResponse.html" title="Register command response. " alt="" coords="220,57,420,98"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SessionManagement_1_1StartResponse.html" title="Start Read Session Command Message. " alt="" coords="217,122,423,163"/>
+<area shape="rect" id="node5" href="$structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html" title="This class represents the payload of a HF::Message::GET_ATTR_PACK_RES message. " alt="" coords="233,187,407,229"/>
+</map>

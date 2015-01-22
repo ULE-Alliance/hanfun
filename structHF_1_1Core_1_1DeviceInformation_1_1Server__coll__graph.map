@@ -1,0 +1,6 @@
+<map id="HF::Core::DeviceInformation::Server" name="HF::Core::DeviceInformation::Server">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="12,264,180,371"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="5,21,159,113"/>
+<area shape="rect" id="node4" href="$classHF_1_1UID_1_1UID.html" title="Wrapper around UID_T pointer&#39;s. " alt="" coords="211,205,316,429"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="184,6,360,127"/>
+</map>

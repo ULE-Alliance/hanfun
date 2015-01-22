@@ -1,0 +1,8 @@
+<map id="HF::Devices::Node::Abstract&lt; CoreServices &gt;" name="HF::Devices::Node::Abstract&lt; CoreServices &gt;">
+<area shape="rect" id="node5" href="$structNode.html" title="This class represents a node in the HAN&#45;FUN network. " alt="" coords="61,1307,144,1384"/>
+<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; NodeUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# is_local()\l}" alt="" coords="188,1039,345,1249"/>
+<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; HF::Devices\l::Node::DefaultUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# is_local()\l}" alt="" coords="369,1032,527,1256"/>
+<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="5,440,200,693"/>
+<area shape="rect" id="node3" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="56,209,149,389"/>
+<area shape="rect" id="node4" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="21,6,184,157"/>
+</map>

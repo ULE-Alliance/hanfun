@@ -1,0 +1,17 @@
+<map id="HF::Core::ServiceRole&lt; Parent, _role &gt;" name="HF::Core::ServiceRole&lt; Parent, _role &gt;">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::CLIENT_ROLE \&gt;\n||}" alt="" coords="231,176,399,283"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Abstract, HF::Interface\l::SERVER_ROLE \&gt;\n||}" alt="" coords="607,176,775,283"/>
+<area shape="rect" id="node3" href="$classHF_1_1Core_1_1BindManagement_1_1Client.html" title="Bind Management interface : Client side. " alt="" coords="5,371,189,712"/>
+<area shape="rect" id="node4" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html" title="Device Management interface : Client side. " alt="" coords="215,334,413,749"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1BindManagement_1_1IServer.html" title="Bind Management interface : Server side API. " alt="" coords="439,437,624,646"/>
+<area shape="rect" id="node11" href="$structHF_1_1Core_1_1DeviceInformation_1_1Server.html" title="Device Information interface : Server side. " alt="" coords="649,422,839,661"/>
+<area shape="rect" id="node12" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="864,400,1063,683"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1BindManagement_1_1AbstractServer.html" title="Parent class for bind management &#45; server role. " alt="" coords="439,837,624,1017"/>
+<area shape="rect" id="node8" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="406,1105,591,1285"/>
+<area shape="rect" id="node9" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="481,1350,665,1530"/>
+<area shape="rect" id="node10" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="489,1619,657,1725"/>
+<area shape="rect" id="node13" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="864,800,1063,1053"/>
+<area shape="rect" id="node14" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="740,1105,939,1285"/>
+<area shape="rect" id="node15" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="744,1350,943,1530"/>
+<area shape="rect" id="node16" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="752,1582,936,1762"/>
+</map>

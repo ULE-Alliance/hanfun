@@ -1,0 +1,4 @@
+<map id="HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;::clone" name="HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;::clone">
+<area shape="rect" id="node2" href="$classHF_1_1Attributes_1_1AbstractAttribute.html#acb6d8bddf572600999d4f01596ba32ef" title="Indicate if the attribute is writable. " alt="" coords="238,5,399,46"/>
+<area shape="rect" id="node3" href="$classHF_1_1Attributes_1_1AbstractAttribute.html#af161bc1ec0ca8e49ec418c4a343f3125" title="Attribute&#39;s UID. " alt="" coords="238,70,399,111"/>
+</map>

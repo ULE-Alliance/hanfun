@@ -1,0 +1,5 @@
+<map id="HF::Interfaces::create_attribute" name="HF::Interfaces::create_attribute">
+<area shape="rect" id="node2" href="$classHF_1_1Interfaces_1_1OnOff_1_1Server.html#af4eaca824835ac8c02812ee27a7a745e" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="224,5,373,46"/>
+<area shape="rect" id="node3" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a12438e47bc1bf8172d03479ad4e1e1d5" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="205,70,392,111"/>
+<area shape="rect" id="node4" href="$classHF_1_1Interfaces_1_1Alert_1_1Server.html#a27a69ee2ac60abebf4a46a3714dc4adf" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="228,135,369,177"/>
+</map>

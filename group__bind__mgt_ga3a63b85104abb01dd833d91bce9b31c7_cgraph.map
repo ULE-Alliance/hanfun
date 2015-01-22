@@ -1,0 +1,5 @@
+<map id="HF::Core::BindManagement::Client::send" name="HF::Core::BindManagement::Client::send">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AbstractService.html#a743b9b04ff501b7605be2ef3bc2d9ff8" title="Send message msg to the network address given by addr. " alt="" coords="241,38,418,79"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html#a0f6bc1cc1d5f33fc0474744dd92c0c94" title="The device this unit is associated with. " alt="" coords="467,5,645,46"/>
+<area shape="rect" id="node4" href="$classHF_1_1Units_1_1AbstractUnit.html#a5d0db40fd1dce208ed184f177a7d6c27" title="Create and send a new packet with the given message to the given address. " alt="" coords="476,70,636,111"/>
+</map>
