@@ -669,7 +669,7 @@ IAttribute *Core::create_attribute (BindManagement::IServer *server, uint8_t uid
  *
  */
 // =============================================================================
-IAttribute *Core::create_attribute (AttributeReporting::Server *server, uint8_t uid)
+IAttribute *Core::create_attribute (AttributeReporting::IServer *server, uint8_t uid)
 {
    AttributeReporting::Attributes attr = static_cast <AttributeReporting::Attributes>(uid);
 

@@ -259,7 +259,7 @@ namespace HF
       static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
                      "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
 
-      static_assert (std::is_base_of <HF::Core::AttributeReporting::Server, AttrReporting>::value,
+      static_assert (std::is_base_of <HF::Core::AttributeReporting::IServer, AttrReporting>::value,
                      "AttrReporting must be of type HF::Core::AttributeReporting::Server");
 
       /*!

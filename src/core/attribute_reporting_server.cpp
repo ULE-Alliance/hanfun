@@ -71,6 +71,50 @@ static uint8_t find_available_id (Iterator begin, Iterator end)
 }
 
 // =============================================================================
+// IServer::response
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void IServer::response (Protocol::Packet &packet, Reference &report, Common::Result result)
+{
+   Response *resp = new Response ();
+   resp->code   = result;
+   resp->report = report;
+
+   Protocol::Message *resp_msg = new Protocol::Message (packet.message, resp->size ());
+
+   resp->pack (resp_msg->payload);
+
+   delete resp;
+
+   unit ().send (packet.source, *resp_msg, packet.link);
+
+   delete resp_msg;
+}
+
+// =============================================================================
+// IServer::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result IServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       uint16_t offset)
+{
+   UNUSED (payload);
+   UNUSED (offset);
+
+   Reference report;
+
+   response (packet, report, Common::Result::FAIL_RESOURCES);
+
+   return Common::Result::FAIL_RESOURCES;
+}
+
+// =============================================================================
 // Server::payload_size
 // =============================================================================
 /*!
@@ -450,30 +494,6 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
    }
 
    return result;
-}
-
-// =============================================================================
-// Server::response
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::response (Protocol::Packet &packet, Reference &report, Common::Result result)
-{
-   Response *resp = new Response ();
-   resp->code   = result;
-   resp->report = report;
-
-   Protocol::Message *resp_msg = new Protocol::Message (packet.message, resp->size ());
-
-   resp->pack (resp_msg->payload);
-
-   delete resp;
-
-   unit ().send (packet.source, *resp_msg, packet.link);
-
-   delete resp_msg;
 }
 
 // =============================================================================

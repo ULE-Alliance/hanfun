@@ -29,7 +29,7 @@ namespace HF
       // Forward declaration.
       namespace AttributeReporting
       {
-         struct Server;
+         struct IServer;
       }  // namespace AttributeReporting
 
       /*!
@@ -46,7 +46,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (HF::Core::AttributeReporting::Server *server,
+      HF::Attributes::IAttribute *create_attribute (HF::Core::AttributeReporting::IServer *server,
                                                     uint8_t uid);
 
       /*!
@@ -1485,22 +1485,24 @@ namespace HF
 
          /*!
           * %Attribute Reporting - %Server %Role.
+          *
+          * This class provides the minimal implementation for the %Attribute reporting
+          * server role functionality.
+          *
+          * All requests will get a HF::Common::Result::FAIL_RESOURCES response.
           */
-         struct Server:public AbstractService
+         struct IServer:public AbstractService
          {
-            std::forward_list <Periodic::Rule> periodic_rules;    //!< Periodic rules.
-            std::forward_list <Event::Rule>    event_rules;       //!< Event rules.
-
             /*!
              * Constructor.
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Server(Unit0 &unit):
-               AbstractService (unit), last_time (0)
+            IServer(Unit0 &unit):
+               AbstractService (unit)
             {}
 
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // =============================================================================
             // API
@@ -1515,6 +1517,116 @@ namespace HF
             {
                return HF::Interface::SERVER_ROLE;
             }
+
+            /*!
+             * Process an attribute change from @c old_value to @c new_value for the given
+             * @c unit.
+             *
+             * This method checks if the change in the given attribute matches the conditions
+             * present in any of the attribute reporting rules.
+             *
+             * @param [in] unit        unit ID where the attribute is present.
+             * @param [in] old_value   old value for the attribute.
+             * @param [in] new_value   new value for the attribute.
+             */
+            virtual void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                                 const HF::Attributes::IAttribute &new_value)
+            {
+               UNUSED (unit);
+               UNUSED (old_value);
+               UNUSED (new_value);
+            }
+
+            /*!
+             * Get the number of rules for the given @c type.
+             *
+             * @param [in] type  attribute reporting type to get the number of rules for.
+             *
+             * @return  number of rules for the given @c type.
+             */
+            virtual uint16_t count (Type type) const
+            {
+               UNUSED (type);
+               return 0;
+            }
+
+            // =============================================================================
+            // Interface Attribute API.
+            // =============================================================================
+
+            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            {
+               return Core::create_attribute (this, uid);
+            }
+
+            HF::Attributes::UIDS attributes (uint8_t pack_id =
+                                                HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED (pack_id);
+               return HF::Attributes::UIDS {REPORT_COUNT_ATTR, PERIODIC_REPORT_COUNT_ATTR,
+                                            EVENT_REPORT_COUNT_ATTR};
+            }
+
+            protected:
+
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           uint16_t offset);
+
+            /*!
+             * Send the response to a command with the given @c result.
+             *
+             * @param [in] packet   incoming packet to generate the response for.
+             * @param [in] report   report identification.
+             * @param [in] result   operation result.
+             */
+            void response (Protocol::Packet &packet, Reference &report, Common::Result result);
+
+            /*!
+             * Check if the given command is authorized for the device with
+             * the given address.
+             *
+             * @param [in] member interface member to check.
+             * @param [in] source device address of the incoming command.
+             *
+             * @retval  true  the command if authorized.
+             * @retval  false otherwise.
+             */
+            virtual bool authorized (uint8_t member, Protocol::Address &source)
+            {
+               UNUSED (member);
+               UNUSED (source);
+
+               return true;
+            }
+
+            bool check_uid (uint16_t uid) const
+            {
+               return IServer::uid () == uid;
+            }
+         };
+
+         /*!
+          * %Attribute Reporting - %Server %Role.
+          */
+         struct Server:public IServer
+         {
+            std::forward_list <Periodic::Rule> periodic_rules;    //!< Periodic rules.
+            std::forward_list <Event::Rule>    event_rules;       //!< Event rules.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
+            Server(Unit0 &unit):
+               IServer (unit), last_time (0)
+            {}
+
+            virtual ~Server() {}
+
+            // =============================================================================
+            // API
+            // =============================================================================
 
             /*!
              * Handle a create periodic rule command.
@@ -1570,45 +1682,10 @@ namespace HF
 
             void periodic (uint32_t time);
 
-            /*!
-             * Process an attribute change from @c old_value to @c new_value for the given
-             * @c unit.
-             *
-             * This method checks if the change in the given attribute matches the conditions
-             * present in any of the attribute reporting rules.
-             *
-             * @param [in] unit        unit ID where the attribute is present.
-             * @param [in] old_value   old value for the attribute.
-             * @param [in] new_value   new value for the attribute.
-             */
-            virtual void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
-                                 const HF::Attributes::IAttribute &new_value);
+            void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                         const HF::Attributes::IAttribute &new_value);
 
-            /*!
-             * Get the number of rules for the given @c type.
-             *
-             * @param [in] type  attribute reporting type to get the number of rules for.
-             *
-             * @return  number of rules for the given @c type.
-             */
             uint16_t count (Type type) const;
-
-            // =============================================================================
-            // Interface Attribute API.
-            // =============================================================================
-
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
-            {
-               return Core::create_attribute (this, uid);
-            }
-
-            HF::Attributes::UIDS attributes (uint8_t pack_id =
-                                                HF::Attributes::Pack::MANDATORY) const
-            {
-               UNUSED (pack_id);
-               return HF::Attributes::UIDS {REPORT_COUNT_ATTR, PERIODIC_REPORT_COUNT_ATTR,
-                                            EVENT_REPORT_COUNT_ATTR};
-            }
 
             protected:
 
@@ -1621,38 +1698,6 @@ namespace HF
 
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
                                            uint16_t offset);
-
-            /*!
-             * Send the response to a command with the given @c result.
-             *
-             * @param [in] packet   incoming packet to generate the response for.
-             * @param [in] report   report identification.
-             * @param [in] result   operation result.
-             */
-            void response (Protocol::Packet &packet, Reference &report, Common::Result result);
-
-            /*!
-             * Check if the given command is authorized for the device with
-             * the given address.
-             *
-             * @param [in] member interface member to check.
-             * @param [in] source device address of the incoming command.
-             *
-             * @retval  true  the command if authorized.
-             * @retval  false otherwise.
-             */
-            virtual bool authorized (uint8_t member, Protocol::Address &source)
-            {
-               UNUSED (member);
-               UNUSED (source);
-
-               return true;
-            }
-
-            bool check_uid (uint16_t uid) const
-            {
-               return Server::uid () == uid;
-            }
          };
 
          /*! @} */

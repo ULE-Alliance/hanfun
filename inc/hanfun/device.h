@@ -33,7 +33,7 @@ namespace HF
 
       namespace AttributeReporting
       {
-         struct Server;
+         struct IServer;
 
       }  // namespace DeviceInformation
 
@@ -101,14 +101,14 @@ namespace HF
           *
           * @return  pointer to unit 0 attribute reporting service.
           */
-         virtual Core::AttributeReporting::Server *attribute_reporting () const = 0;
+         virtual Core::AttributeReporting::IServer *attribute_reporting () const = 0;
 
          /*!
           * Return a pointer to unit 0 attribute reporting service.
           *
           * @return  pointer to unit 0 attribute reporting service.
           */
-         virtual Core::AttributeReporting::Server *attribute_reporting () = 0;
+         virtual Core::AttributeReporting::IServer *attribute_reporting () = 0;
       };
 
       /*!
