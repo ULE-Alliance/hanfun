@@ -17,9 +17,6 @@
 #ifndef HF_DEVICE_MANGEMENT_H
 #define HF_DEVICE_MANGEMENT_H
 
-#include <algorithm>
-#include <vector>
-
 #include "hanfun/common.h"
 #include "hanfun/uids.h"
 

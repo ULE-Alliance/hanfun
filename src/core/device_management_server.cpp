@@ -13,7 +13,6 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-#include <algorithm>
 
 #include "hanfun/core/device_management.h"
 #include "hanfun/devices.h"

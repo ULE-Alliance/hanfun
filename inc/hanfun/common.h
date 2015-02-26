@@ -17,16 +17,23 @@
 #ifndef HF_COMMON_H
 #define HF_COMMON_H
 
-#include <cstdlib>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <cmath>
 
-#include <string>
-#include <vector>
 #include <algorithm>
+#include <forward_list>
+#include <functional>
 #include <iterator>
+#include <limits>
+#include <list>
+#include <memory>
+#include <set>
+#include <string>
+#include <type_traits>
+#include <vector>
 
 #include <assert.h>
 

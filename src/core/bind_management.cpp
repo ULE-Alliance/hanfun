@@ -15,8 +15,6 @@
  */
 // =============================================================================
 
-#include <set>
-
 #include "hanfun/interface.h"
 #include "hanfun/core/bind_management.h"
 

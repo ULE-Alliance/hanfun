@@ -17,9 +17,6 @@
 #ifndef HF_TRANSPORT_H
 #define HF_TRANSPORT_H
 
-#include <algorithm>
-#include <forward_list>
-
 #include "hanfun/common.h"
 #include "hanfun/uids.h"
 #include "hanfun/protocol.h"

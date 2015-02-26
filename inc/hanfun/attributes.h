@@ -16,11 +16,6 @@
 #ifndef HF_ATTRIBUTES_H
 #define HF_ATTRIBUTES_H
 
-#include <list>
-#include <type_traits>
-#include <algorithm>
-#include <functional>
-
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 

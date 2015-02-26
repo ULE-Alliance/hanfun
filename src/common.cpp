@@ -15,8 +15,6 @@
  */
 // =============================================================================
 
-#include <string.h>
-
 #include "hanfun/common.h"
 #include "hanfun/interface.h"
 

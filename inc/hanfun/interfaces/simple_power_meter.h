@@ -16,8 +16,6 @@
 #ifndef HF_ITF_SIMPLE_POWER_METER_H
 #define HF_ITF_SIMPLE_POWER_METER_H
 
-#include <array>
-
 #include "hanfun/common.h"
 
 #include "hanfun/protocol.h"

@@ -16,9 +16,6 @@
 #ifndef HF_SESSION_MANAGEMENT_H
 #define HF_SESSION_MANAGEMENT_H
 
-#include <algorithm>
-#include <vector>
-
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 

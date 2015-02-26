@@ -17,9 +17,6 @@
 #ifndef HF_CORE_ATTRIBUTE_REPORTING_H
 #define HF_CORE_ATTRIBUTE_REPORTING_H
 
-#include <forward_list>
-#include <memory>
-
 #include "hanfun/common.h"
 #include "hanfun/core.h"
 

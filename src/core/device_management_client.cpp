@@ -14,8 +14,6 @@
  */
 // =============================================================================
 
-#include <limits>
-
 #include "hanfun/profiles.h"
 
 #include "hanfun/core/device_information.h"

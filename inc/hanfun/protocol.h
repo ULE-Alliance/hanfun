@@ -16,8 +16,6 @@
 #ifndef HF_PROTOCOL_H
 #define HF_PROTOCOL_H
 
-#include <list>
-
 #include "hanfun/common.h"
 
 // =============================================================================

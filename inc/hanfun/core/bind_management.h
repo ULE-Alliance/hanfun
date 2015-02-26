@@ -17,8 +17,6 @@
 #ifndef HF_BIND_MANAGEMENT_H
 #define HF_BIND_MANAGEMENT_H
 
-#include <set>
-
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 

@@ -14,7 +14,6 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-#include <algorithm>
 
 #include "hanfun/core/attribute_reporting.h"
 

@@ -15,7 +15,6 @@
 // =============================================================================
 
 #include <iomanip>
-#include <algorithm>
 
 #include "hanfun.h"
 #include "hanfun/debug.h"

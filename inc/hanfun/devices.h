@@ -16,8 +16,6 @@
 #ifndef HF_DEVICES_H
 #define HF_DEVICES_H
 
-#include <cstring>
-
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
 
