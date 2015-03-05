@@ -610,7 +610,7 @@ namespace HF
             protected:
 
             //! List of links present in this concentrator.
-            std::forward_list <Transport::Link *> _links;
+            Common::SimpleList <Transport::Link *> _links;
 
             // =============================================================================
 
@@ -666,7 +666,7 @@ namespace HF
             protected:
 
             //! List of links present in the transport layer.
-            std::forward_list <HF::Transport::Link *> links;
+            Common::SimpleList <HF::Transport::Link *> links;
 
             public:
 

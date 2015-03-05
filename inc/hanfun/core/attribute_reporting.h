@@ -230,7 +230,7 @@ namespace HF
              */
             struct Rule:public AttributeReporting::Rule
             {
-               typedef std::forward_list <Entry> Container;
+               typedef Common::SimpleList <Entry> Container;
 
                typedef Container::iterator iterator;
 
@@ -440,7 +440,7 @@ namespace HF
              */
             struct Rule:public AttributeReporting::Rule
             {
-               typedef std::forward_list <Entry> Container;
+               typedef Common::SimpleList <Entry> Container;
 
                typedef Container::iterator iterator;
 
@@ -805,7 +805,7 @@ namespace HF
                };
 
                //! Entries associated with this notification.
-               std::forward_list <Entry> entries;
+               Common::SimpleList <Entry> entries;
 
                /*!
                 * Constructor.
@@ -854,7 +854,7 @@ namespace HF
                 */
                struct AddEntryMessage:public Report::AddEntryMessage
                {
-                  typedef std::forward_list <AttributeReporting::Periodic::Entry> Container;
+                  typedef Common::SimpleList <AttributeReporting::Periodic::Entry> Container;
 
                   typedef Container::iterator iterator;
 
@@ -1030,7 +1030,7 @@ namespace HF
                };
 
                //! Entries for the event notification.
-               std::forward_list <Entry> entries;
+               Common::SimpleList <Entry> entries;
 
                /*!
                 * Constructor.
@@ -1073,7 +1073,7 @@ namespace HF
                 */
                struct AddEntryMessage:public Report::AddEntryMessage
                {
-                  typedef std::forward_list <AttributeReporting::Event::Entry> Container;
+                  typedef Common::SimpleList <AttributeReporting::Event::Entry> Container;
 
                   typedef Container::iterator iterator;
 
@@ -1610,8 +1610,8 @@ namespace HF
           */
          struct Server:public IServer
          {
-            std::forward_list <Periodic::Rule> periodic_rules;    //!< Periodic rules.
-            std::forward_list <Event::Rule>    event_rules;       //!< Event rules.
+            Common::SimpleList <Periodic::Rule> periodic_rules;    //!< Periodic rules.
+            Common::SimpleList <Event::Rule>    event_rules;       //!< Event rules.
 
             /*!
              * Constructor.

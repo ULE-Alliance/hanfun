@@ -241,7 +241,7 @@ namespace HF
          protected:
 
          //! List of registered end-points for this layer.
-         std::forward_list <HF::Transport::Endpoint *> endpoints;
+         Common::SimpleList <HF::Transport::Endpoint *> endpoints;
 
          //! UID associated with the local transport layer.
          HF::UID::UID_T *_uid;

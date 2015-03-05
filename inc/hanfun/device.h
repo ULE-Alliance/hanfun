@@ -69,7 +69,7 @@ namespace HF
       /*!
        * %Unit list type.
        */
-      struct IUnits:public std::forward_list <Units::IUnit *>
+      struct IUnits:public Common::SimpleList <Units::IUnit *>
       {
          IUnits::size_type size () const
          {
