@@ -515,8 +515,8 @@ TEST (BindManagementEntries, BeginEnd)
 }
 
 template<typename T>
-void create_entries (T &entries, std::set <HF::Common::Interface> &db_itf,
-                     std::set <HF::Protocol::Address> &db_addr)
+void create_entries (T &entries, __std::set <HF::Common::Interface> &db_itf,
+                     __std::set <HF::Protocol::Address> &db_addr)
 {
    db_itf.insert (HF::Common::Interface (1, 0));
    db_itf.insert (HF::Common::Interface (2, 0));
@@ -564,8 +564,8 @@ void create_entries (T &entries, std::set <HF::Common::Interface> &db_itf,
 
 TEST (BindManagementEntries, FindRange)
 {
-   std::set <HF::Common::Interface> db_itf;
-   std::set <HF::Protocol::Address> db_addr;
+   __std::set <HF::Common::Interface> db_itf;
+   __std::set <HF::Protocol::Address> db_addr;
 
    create_entries (this->entries, db_itf, db_addr);
 
@@ -602,8 +602,8 @@ TEST (BindManagementEntries, Find)
 
 TEST (BindManagementEntries, DestroyPredicate)
 {
-   std::set <HF::Common::Interface> db_itf;
-   std::set <HF::Protocol::Address> db_addr;
+   __std::set <HF::Common::Interface> db_itf;
+   __std::set <HF::Protocol::Address> db_addr;
 
    create_entries (this->entries, db_itf, db_addr);
 
@@ -631,8 +631,8 @@ TEST (BindManagementEntries, DestroyPredicate)
 
 TEST (BindManagementEntries, DestroyAddress)
 {
-   std::set <HF::Common::Interface> db_itf;
-   std::set <HF::Protocol::Address> db_addr;
+   __std::set <HF::Common::Interface> db_itf;
+   __std::set <HF::Protocol::Address> db_addr;
 
    create_entries (this->entries, db_itf, db_addr);
 

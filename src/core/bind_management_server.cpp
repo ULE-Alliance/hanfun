@@ -131,11 +131,11 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
 
    // Check if the destination unit exist.
    /* *INDENT-OFF* */
-   auto dst_unit_it = std::find_if(dst_dev->units.begin(), dst_dev->units.end(),
-                                   [&destination](const DeviceManagement::Unit &unit)
-                                   {
-                                      return unit.id == destination.unit;
-                                   });
+   auto dst_unit_it = __std::find_if(dst_dev->units.begin(), dst_dev->units.end(),
+                                      [&destination](const DeviceManagement::Unit &unit)
+                                      {
+                                         return unit.id == destination.unit;
+                                      });
    /* *INDENT-ON* */
 
    if (dst_unit_it == dst_dev->units.end ())
@@ -161,8 +161,8 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
 
       // Check if the source unit exist.
       /* *INDENT-OFF* */
-      auto src_unit_it = std::find_if(src_dev->units.begin(), src_dev->units.end(),
-                                      [&source](const DeviceManagement::Unit &unit)
+      auto src_unit_it = __std::find_if(src_dev->units.begin(), src_dev->units.end(),
+                                        [&source](const DeviceManagement::Unit &unit)
       {
          return unit.id == source.unit;
       });

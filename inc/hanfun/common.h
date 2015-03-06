@@ -35,6 +35,8 @@
 #include <type_traits>
 #include <vector>
 
+#define __std std
+
 #include <assert.h>
 
 #include "hanfun/gcc.h"
@@ -146,7 +148,7 @@ namespace HF
        * The method in this class are used to serialize the messages to be sent over the
        * network, converting between the host's endianness and the big-endian network format.
        */
-      struct ByteArray:public std::vector <uint8_t>
+      struct ByteArray:public __std::vector <uint8_t>
       {
          /*!
           * Create a byte array with the given initial size.
@@ -168,7 +170,7 @@ namespace HF
           *
           * @param [in] raw  values to add to the byte array.
           */
-         ByteArray(std::initializer_list <uint8_t> raw):vector (raw)
+         ByteArray(std::initializer_list <uint8_t> raw):__std::vector <uint8_t> (raw)
          {}
 
          //! Destructor
@@ -283,7 +285,7 @@ namespace HF
          bool operator ==(const ByteArray &other)
          {
             return (this->size () == other.size () &&
-                    std::equal (this->begin (), this->end (), other.begin ()));
+                    __std::equal (this->begin (), this->end (), other.begin ()));
          }
 
          bool operator !=(const ByteArray &other)
@@ -314,9 +316,9 @@ namespace HF
          {
             if (!available (_offset, _size))
             {
-               _size = _size - available (_offset) + std::max <int16_t>((int16_t) (_offset - size ()), 0);
-               vector <uint8_t>::reserve (size () + _size);
-               std::fill_n (back_inserter (*this), _size, 0);
+               _size = _size - available (_offset) + __std::max <int16_t>((int16_t) (_offset - size ()), 0);
+               __std::vector <uint8_t>::reserve (size () + _size);
+               __std::fill_n (__std::back_inserter (*this), _size, 0);
             }
          }
       };
@@ -563,9 +565,9 @@ namespace HF
             offset += array.write (offset, (uint8_t) data.size ());
 
             auto it = array.begin ();
-            std::advance (it, offset);
+            __std::advance (it, offset);
 
-            std::copy (data.begin (), data.end (), it);
+            __std::copy (data.begin (), data.end (), it);
 
             offset += data.size ();
 
@@ -618,20 +620,20 @@ namespace HF
        * Wrapper for std::string implementing the Serializable API.
        */
       template<>
-      struct SerializableHelper <std::string> :
+      struct SerializableHelper <__std::string> :
          public Common::Serializable
       {
-         std::string data;
+         __std::string data;
 
          SerializableHelper()
          {}
 
-         SerializableHelper(std::string _data):data (_data) {}
+         SerializableHelper(__std::string _data):data (_data) {}
 
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(uint8_t);
 
-         static uint16_t size (const std::string &data)
+         static uint16_t size (const __std::string &data)
          {
             return min_size + data.size ();
          }
@@ -650,9 +652,9 @@ namespace HF
             offset += array.write (offset, (uint8_t) data.size ());
 
             auto it = array.begin ();
-            std::advance (it, offset);
+            __std::advance (it, offset);
 
-            std::copy (data.begin (), data.end (), it);
+            __std::copy (data.begin (), data.end (), it);
 
             offset += data.size ();
 
@@ -671,7 +673,7 @@ namespace HF
             SERIALIZABLE_CHECK (array, offset, _size);
 
             auto it = array.begin ();
-            std::advance (it, offset);
+            __std::advance (it, offset);
 
             data.resize (_size);
 
@@ -683,13 +685,13 @@ namespace HF
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper <std::string> &other) const
+         int compare (const SerializableHelper <__std::string> &other) const
          {
             return strcmp (data.data (), other.data.data ());
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper <std::string> &other) const
+         float changed (const SerializableHelper <__std::string> &other) const
          {
             UNUSED (other);
             return 0.0;
@@ -703,15 +705,15 @@ namespace HF
        * size of the @c data vector.
        */
       template<>
-      struct SerializableHelper < std::vector < uint8_t >>:
+      struct SerializableHelper <__std::vector<uint8_t>>:
          public Common::Serializable
       {
-         std::vector <uint8_t> data;
+         __std::vector <uint8_t> data;
 
          SerializableHelper()
          {}
 
-         SerializableHelper(std::vector <uint8_t> _data):data (_data) {}
+         SerializableHelper(__std::vector <uint8_t> _data):data (_data) {}
 
          uint16_t size () const
          {
@@ -725,9 +727,9 @@ namespace HF
             uint16_t start = offset;
 
             auto it        = array.begin ();
-            std::advance (it, offset);
+            __std::advance (it, offset);
 
-            std::copy (data.begin (), data.end (), it);
+            __std::copy (data.begin (), data.end (), it);
 
             offset += data.size ();
 
@@ -741,7 +743,7 @@ namespace HF
             uint16_t start = offset;
 
             auto it        = array.begin ();
-            std::advance (it, offset);
+            __std::advance (it, offset);
 
             std::copy_n (it, data.size (), data.begin ());
 
@@ -751,13 +753,13 @@ namespace HF
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper < std::vector < uint8_t >> &other) const
+         int compare (const SerializableHelper < __std::vector < uint8_t >> &other) const
          {
             return memcmp (data.data (), other.data.data (), data.size ());
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper < std::vector < uint8_t >> &other) const
+         float changed (const SerializableHelper < __std::vector < uint8_t >> &other) const
          {
             UNUSED (other);
             return 0.0;
@@ -888,8 +890,8 @@ namespace HF
           */
          Pointer(Pointer <T> &&other):pointer (nullptr), owner (false)
          {
-            std::swap (this->pointer, other.pointer);
-            std::swap (this->owner, other.owner);
+            __std::swap (this->pointer, other.pointer);
+            __std::swap (this->owner, other.owner);
          }
 
          /*!

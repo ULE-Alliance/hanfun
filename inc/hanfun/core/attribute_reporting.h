@@ -287,7 +287,7 @@ namespace HF
                 */
                uint16_t entries_count ()
                {
-                  return std::distance (entries.begin (), entries.end ());
+                  return __std::distance (entries.begin (), entries.end ());
                }
 
 
@@ -426,7 +426,7 @@ namespace HF
             struct Entry:public AttributeReporting::Entry
             {
                //! Vector containing the fields for this entry.
-               std::vector <Field> fields;
+               __std::vector <Field> fields;
 
                uint16_t size () const;
 
@@ -484,7 +484,7 @@ namespace HF
                 */
                uint16_t entries_count ()
                {
-                  return std::distance (entries.begin (), entries.end ());
+                  return __std::distance (entries.begin (), entries.end ());
                }
 
                /*!
@@ -767,7 +767,7 @@ namespace HF
                 */
                struct Entry:public Report::Entry
                {
-                  std::vector <Report::Attribute> attributes;
+                  __std::vector <Report::Attribute> attributes;
 
                   Entry() {}
 
@@ -928,7 +928,7 @@ namespace HF
 
                   uint8_t count () const
                   {
-                     return std::distance (entries.begin (), entries.end ());
+                     return __std::distance (entries.begin (), entries.end ());
                   }
 
                   uint16_t entry_size () const
@@ -989,7 +989,7 @@ namespace HF
                struct Entry:public Report::Entry
                {
                   //! Vector containing the fields for the event entry.
-                  std::vector <Field> fields;
+                  __std::vector <Field> fields;
 
                   Entry() {}
 
@@ -1147,7 +1147,7 @@ namespace HF
 
                   uint8_t count () const
                   {
-                     return std::distance (entries.begin (), entries.end ());
+                     return __std::distance (entries.begin (), entries.end ());
                   }
 
                   uint16_t entry_size () const
@@ -1208,8 +1208,8 @@ namespace HF
          //! Value indicating all reports.
          static constexpr uint8_t ALL_ADDR = 0x7F;
 
-         typedef std::vector <Periodic::Entry>::iterator periodic_iterator;
-         typedef std::vector <Event::Entry>::iterator event_iterator;
+         typedef __std::vector <Periodic::Entry>::iterator periodic_iterator;
+         typedef __std::vector <Event::Entry>::iterator event_iterator;
 
          /*!
           * Create a new attribute reporting event rule for the device with the

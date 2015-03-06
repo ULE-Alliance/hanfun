@@ -148,7 +148,7 @@ TEST (SessionManagement, GetEntriesResponse)
 TEST_GROUP (SessionManagementServer)
 {
    typedef Common::SerializableHelper <uint16_t> TestType;
-   typedef std::vector <TestType> TestContainer;
+   typedef __std::vector <TestType> TestContainer;
 
    struct TestEntries:public Common::IEntries <TestType>, public TestContainer
    {
@@ -166,7 +166,7 @@ TEST_GROUP (SessionManagementServer)
       Common::Result destroy (const TestType &value)
       {
          /* *INDENT-OFF* */
-         auto it = std::find_if(begin(), end(), [value](TestType &entry)
+         auto it = __std::find_if(begin(), end(), [value](TestType &entry)
                                  { return entry.data == value.data; });
          /* *INDENT-ON* */
 
@@ -188,8 +188,8 @@ TEST_GROUP (SessionManagementServer)
       Common::Result destroy (uint16_t value)
       {
          /* *INDENT-OFF* */
-         auto it = std::find_if(begin(), end(), [value](TestType &entry)
-                                { return entry.data == value; });
+         auto it = __std::find_if(begin(), end(), [value](TestType &entry)
+                                 { return entry.data == value; });
          /* *INDENT-ON* */
 
          if (it != end ())

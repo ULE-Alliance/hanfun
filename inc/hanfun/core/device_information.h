@@ -125,11 +125,11 @@ namespace HF
             struct Unit
             {
                uint8_t     id;
-               std::string name;
+               __std::string name;
 
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = sizeof(uint8_t) +
-                                                    HF::Common::SerializableHelper <std::string>::min_size;
+                                                    HF::Common::SerializableHelper <__std::string>::min_size;
 
                //! @copydoc HF::Common::Serializable::size
                uint16_t size () const;
@@ -142,7 +142,7 @@ namespace HF
             };
 
             //! Device unit's friendly names.
-            std::vector <Unit> units;
+            __std::vector <Unit> units;
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t);

@@ -564,11 +564,11 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
       }
       case APP_VERSION_ATTR:
       {
-         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute <__std::string>(Interface::DEVICE_INFORMATION, attr, "");
       }
       case HW_VERSION_ATTR:
       {
-         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute <__std::string>(Interface::DEVICE_INFORMATION, attr, "");
       }
       case EMC_ATTR:
       {
@@ -577,16 +577,16 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
       }
       case DECT_ID_ATTR:
       {
-         std::vector <uint8_t> temp (5);
-         return new Attribute < std::vector < uint8_t >> (Interface::DEVICE_INFORMATION, attr, temp);
+         __std::vector <uint8_t> temp (5);
+         return new Attribute < __std::vector < uint8_t >> (Interface::DEVICE_INFORMATION, attr, temp);
       }
       case MANUFACTURE_NAME_ATTR:
       {
-         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute <__std::string>(Interface::DEVICE_INFORMATION, attr, "");
       }
       case LOCATION_ATTR:
       {
-         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute <__std::string>(Interface::DEVICE_INFORMATION, attr, "");
       }
       case ENABLED_ATTR:
       {
@@ -609,7 +609,7 @@ IAttribute *Core::create_attribute (DeviceInformation::Server *server, uint8_t u
       }
       case SERIAL_NUMBER_ATTR:
       {
-         return new Attribute <std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute <__std::string>(Interface::DEVICE_INFORMATION, attr, "");
       }
       default:
          return nullptr;

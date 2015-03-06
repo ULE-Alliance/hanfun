@@ -385,7 +385,7 @@ namespace HF
          {}
 
          //! Pair holding the two interface wrappers.
-         std::pair <first_itf_t, second_itf_t> interfaces;
+         __std::pair <first_itf_t, second_itf_t> interfaces;
       };
 
       /*!

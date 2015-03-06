@@ -219,7 +219,7 @@ uint16_t Message::pack (Common::ByteArray &array, uint16_t offset) const
 
    assert (array.available (offset, payload.size ()));
 
-   std::copy (payload.begin (), payload.end (), array.begin () + offset);
+   __std::copy (payload.begin (), payload.end (), array.begin () + offset);
 
    offset += payload.size ();
 
@@ -628,7 +628,7 @@ bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
    }
 
    /* *INDENT-OFF* */
-   auto it = std::find_if (db.begin(), db.end(), [&packet](const Entry entry)
+   auto it = __std::find_if (db.begin(), db.end(), [&packet](const Entry entry)
    {
       return (entry.address == packet.source.device) && (entry.itf == packet.message.itf) &&
               matches (entry.type, packet.message.type);

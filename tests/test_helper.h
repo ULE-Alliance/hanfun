@@ -127,7 +127,7 @@ namespace HF
             auto begin = array.begin () + offset;
             auto end   = begin + data.size ();
 
-            std::copy (begin, end, data.begin ());
+            __std::copy (begin, end, data.begin ());
 
             return data.size ();
          }
@@ -386,7 +386,7 @@ namespace HF
       {
          uint16_t                         _address;
 
-         std::vector <Protocol::Packet *> packets;
+         __std::vector <Protocol::Packet *> packets;
 
          Link                             link;
 

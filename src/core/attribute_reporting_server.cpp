@@ -44,7 +44,7 @@ template<typename _Rule, typename Iterator>
 static uint8_t find_available_id (Iterator begin, Iterator end)
 {
    // Find the next available entry.
-   std::vector <uint8_t> ids;
+   __std::vector <uint8_t> ids;
 
    for (auto it = begin; it != end; ++it)
    {
@@ -57,7 +57,7 @@ static uint8_t find_available_id (Iterator begin, Iterator end)
 
    for (id = START_ADDR; id < ALL_ADDR; id++)
    {
-      auto it = std::lower_bound (ids.begin (), ids.end (), id);
+      auto it = __std::lower_bound (ids.begin (), ids.end (), id);
 
       if (it == ids.end () || *it != id)
       {
@@ -320,11 +320,11 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
 Common::Result Server::handle (const Report::Periodic::AddEntryMessage &message)
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(periodic_rules.begin(), periodic_rules.end(),
-                          [&message](const Periodic::Rule &rule)
-                          {
-                             return rule.report.id == message.report.id;
-                          });
+   auto it = __std::find_if(periodic_rules.begin(), periodic_rules.end(),
+                           [&message](const Periodic::Rule &rule)
+                           {
+                              return rule.report.id == message.report.id;
+                           });
    /* *INDENT-ON* */
 
    if (it == periodic_rules.end ())
@@ -384,11 +384,11 @@ Common::Result Server::handle (const Report::Event::CreateMessage &message)
 Common::Result Server::handle (const Report::Event::AddEntryMessage &message)
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(event_rules.begin(), event_rules.end(),
-                          [&message](const Event::Rule &rule)
-                          {
-                             return rule.report.id == message.report.id;
-                          });
+   auto it = __std::find_if(event_rules.begin(), event_rules.end(),
+                             [&message](const Event::Rule &rule)
+                             {
+                                return rule.report.id == message.report.id;
+                             });
    /* *INDENT-ON* */
 
    if (it == event_rules.end ())
@@ -426,11 +426,11 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
          else
          {
             /* *INDENT-OFF* */
-            auto it = std::find_if(periodic_rules.begin(), periodic_rules.end(),
-                                   [&message](const Periodic::Rule &rule)
-                                   {
-                                      return rule.report.id == message.report.id;
-                                   });
+            auto it = __std::find_if(periodic_rules.begin(), periodic_rules.end(),
+                                      [&message](const Periodic::Rule &rule)
+                                      {
+                                         return rule.report.id == message.report.id;
+                                      });
             /* *INDENT-ON* */
 
             if (it == periodic_rules.end ())
@@ -459,11 +459,11 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
          else
          {
             /* *INDENT-OFF* */
-            auto it = std::find_if(event_rules.begin(), event_rules.end(),
-                                   [&message](const Event::Rule &rule)
-                                   {
-                                      return rule.report.id == message.report.id;
-                                   });
+            auto it = __std::find_if(event_rules.begin(), event_rules.end(),
+                                      [&message](const Event::Rule &rule)
+                                      {
+                                         return rule.report.id == message.report.id;
+                                      });
             /* *INDENT-ON* */
 
             if (it == event_rules.end ())
@@ -620,7 +620,7 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
    /* *INDENT-OFF* */
    for (auto rule_it = event_rules.begin (); rule_it != event_rules.end (); ++rule_it)
    {
-      std::vector<Report::Event::Entry *> entries;
+      __std::vector<Report::Event::Entry *> entries;
       for (auto entry_it = rule_it->cbegin (); entry_it != rule_it->cend (); ++entry_it)
       {
          if (entry_it->unit == unit && entry_it->itf.id == new_value.interface())
@@ -673,10 +673,10 @@ uint16_t Server::count (Type type) const
    switch (type)
    {
       case PERIODIC:
-         return std::distance (periodic_rules.begin (), periodic_rules.end ());
+         return __std::distance (periodic_rules.begin (), periodic_rules.end ());
 
       case EVENT:
-         return std::distance (event_rules.begin (), event_rules.end ());
+         return __std::distance (event_rules.begin (), event_rules.end ());
 
       default:
          return 0;

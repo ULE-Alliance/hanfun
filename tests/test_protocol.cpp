@@ -20,7 +20,7 @@
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
 
-using namespace std;
+using namespace __std;
 using namespace HF;
 using namespace HF::Protocol;
 using namespace HF::Common;
@@ -798,7 +798,7 @@ TEST (ResponseRequired, NoResponse)
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
-   std::swap (packet.source, packet.destination);
+   __std::swap (packet.source, packet.destination);
 
    CHECK_FALSE (filter (packet));
 
@@ -814,7 +814,7 @@ TEST (ResponseRequired, ResponseNeeded)
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
-   std::swap (packet.source, packet.destination);
+   __std::swap (packet.source, packet.destination);
 
    CHECK_TRUE (filter (packet));
 

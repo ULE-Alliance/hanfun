@@ -33,7 +33,7 @@ using namespace HF::Core::DeviceInformation;
 // =============================================================================
 uint16_t FriendlyName::Unit::size () const
 {
-   return sizeof(uint8_t) + HF::Common::SerializableHelper <std::string>::size (name);
+   return sizeof(uint8_t) + HF::Common::SerializableHelper <__std::string>::size (name);
 }
 
 // =============================================================================
@@ -48,7 +48,7 @@ uint16_t FriendlyName::Unit::pack (HF::Common::ByteArray &array, uint16_t offset
    SERIALIZABLE_CHECK (array, offset, size ());
 
    offset += array.write (offset, id);
-   HF::Common::SerializableHelper <std::string>(name).pack (array, offset);
+   HF::Common::SerializableHelper <__std::string>(name).pack (array, offset);
 
    return size ();
 }
@@ -65,7 +65,7 @@ uint16_t FriendlyName::Unit::unpack (const HF::Common::ByteArray &array, uint16_
    SERIALIZABLE_CHECK (array, offset, min_size);
 
    offset += array.read (offset, id);
-   HF::Common::SerializableHelper <std::string> temp;
+   HF::Common::SerializableHelper <__std::string> temp;
 
    if (temp.unpack (array, offset) == 0)
    {
@@ -313,7 +313,7 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) con
          break;
    }
 
-   std::reverse (result.begin (), result.end ());
+   __std::reverse (result.begin (), result.end ());
 
    return result;
 }

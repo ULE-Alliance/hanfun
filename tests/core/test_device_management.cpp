@@ -601,8 +601,8 @@ TEST (DeviceManagementClient, RegisterMessage)
 
    LONGS_EQUAL (device->units ().size () - 1, payload.units.size ());
 
-   std::vector <uint8_t> expected;
-   std::vector <uint8_t> actual;
+   __std::vector <uint8_t> expected;
+   __std::vector <uint8_t> actual;
 
    for (auto it = payload.units.begin (); it != payload.units.end (); ++it)
    {
@@ -632,7 +632,7 @@ TEST (DeviceManagementClient, RegisterMessage)
    expected.push_back (unit2->uid ());
    expected.push_back (unit3->uid ());
 
-   CHECK_TRUE (is_permutation (expected.begin (), expected.end (), actual.begin ()));
+   CHECK_TRUE (std::is_permutation (expected.begin (), expected.end (), actual.begin ()));
 }
 
 TEST (DeviceManagementClient, RegisterMessage_EMC)

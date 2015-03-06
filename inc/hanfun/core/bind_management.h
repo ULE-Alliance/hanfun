@@ -533,7 +533,7 @@ namespace HF
           */
          struct Entries:public IEntries
          {
-            typedef std::set <Entry> Container;
+            typedef __std::set <Entry> Container;
             typedef Container::iterator iterator;
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
@@ -594,8 +594,8 @@ namespace HF
              *
              * @return  iterators to the entries found.
              */
-            std::pair <iterator, iterator> find (Protocol::Address const &source,
-                                                 Common::Interface const &itf) const;
+            __std::pair <iterator, iterator> find (Protocol::Address const &source,
+                                                   Common::Interface const &itf) const;
 
             /*!
              * Destroy the entries in the persistent storage, for which the given

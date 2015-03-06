@@ -392,7 +392,7 @@ namespace HF
             };
 
             //! Filter database.
-            std::list <Entry> db;
+            __std::list <Entry> db;
 
             public:
 

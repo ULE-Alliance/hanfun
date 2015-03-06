@@ -111,7 +111,7 @@ namespace HF
             uint16_t profile;   //!< Unit UID. @see IProfile::UID.
 
             //! Optional interfaces.
-            std::vector <Common::Interface> interfaces;
+            __std::vector <Common::Interface> interfaces;
 
             /*!
              * Constructor.
@@ -168,7 +168,7 @@ namespace HF
          struct Device
          {
             uint16_t           address;   //!< Device Address.
-            std::vector <Unit> units;     //!< Unit list of the interface.
+            __std::vector <Unit> units;     //!< Unit list of the interface.
 
             uint16_t           emc;       //!< Device EMC if applicable, 0 otherwise.
 
@@ -233,7 +233,7 @@ namespace HF
          struct RegisterMessage
          {
             uint16_t           emc;   //! Device EMC if applicable, 0 otherwise.
-            std::vector <Unit> units; //! Device units listing.
+            __std::vector <Unit> units; //! Device units listing.
 
             HF::UID::UID       uid;   //! Device UID.
 
@@ -747,7 +747,7 @@ namespace HF
           */
          struct Entries:public IEntries
          {
-            typedef std::vector <Device> Container;
+            typedef __std::vector <Device> Container;
             typedef Container::iterator iterator;
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;

@@ -292,7 +292,7 @@ uint16_t Periodic::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += array.write (offset, interval);
 
-   uint8_t _size = std::distance (entries.begin (), entries.end ());
+   uint8_t _size = __std::distance (entries.begin (), entries.end ());
 
    offset += array.write (offset, _size);
 
@@ -412,9 +412,9 @@ uint16_t Event::Field::pack (Common::ByteArray &array, uint16_t offset, bool wit
       offset += array.write (offset, (uint8_t) value.size ());
 
       auto dst = array.begin ();
-      std::advance (dst, offset);
+      __std::advance (dst, offset);
 
-      std::copy (value.begin (), value.end (), dst);
+      __std::copy (value.begin (), value.end (), dst);
 
       offset += value.size ();
    }
@@ -458,7 +458,7 @@ uint16_t Event::Field::unpack (const Common::ByteArray &array, uint16_t offset, 
    SERIALIZABLE_CHECK (array, offset, temp);
 
    auto it = array.begin ();
-   std::advance (it, offset);
+   __std::advance (it, offset);
 
    value = Common::ByteArray (temp);
 
@@ -624,7 +624,7 @@ uint16_t Event::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += AttributeReporting::Rule::pack (array, offset);
 
-   uint8_t _size = std::distance (entries.begin (), entries.end ());
+   uint8_t _size = __std::distance (entries.begin (), entries.end ());
 
    offset += array.write (offset, _size);
 
@@ -1633,7 +1633,7 @@ Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::E
 {
    Report::Event::Entry *result = nullptr;
 
-   std::vector <Event::Field *> fields;
+   __std::vector <Event::Field *> fields;
 
    if (entry.pack_id == HF::Attributes::DYNAMIC)
    {
@@ -1884,8 +1884,8 @@ Protocol::Message *AttributeReporting::destroy (Reference report)
  */
 // =============================================================================
 Protocol::Message *AttributeReporting::add (Reference report,
-                                            std::vector <Periodic::Entry>::iterator begin,
-                                            std::vector <Periodic::Entry>::iterator end)
+                                            __std::vector <Periodic::Entry>::iterator begin,
+                                            __std::vector <Periodic::Entry>::iterator end)
 {
    if (report.type != PERIODIC)
    {
@@ -1935,8 +1935,8 @@ Protocol::Message *AttributeReporting::add (Reference report,
  */
 // =============================================================================
 Protocol::Message *AttributeReporting::add (Reference report,
-                                            std::vector <Event::Entry>::iterator begin,
-                                            std::vector <Event::Entry>::iterator end)
+                                            __std::vector <Event::Entry>::iterator begin,
+                                            __std::vector <Event::Entry>::iterator end)
 {
    if (report.type != EVENT)
    {

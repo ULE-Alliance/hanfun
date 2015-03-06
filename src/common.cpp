@@ -42,10 +42,10 @@ using namespace HF::Common;
 // ByteArray
 // =============================================================================
 
-ByteArray::ByteArray(uint16_t size):std::vector <uint8_t>(size, 0)
+ByteArray::ByteArray(uint16_t size):__std::vector <uint8_t>(size, 0)
 {}
 
-ByteArray::ByteArray(const uint8_t data[], const uint16_t size):vector (size, 0)
+ByteArray::ByteArray(const uint8_t data[], const uint16_t size):__std::vector<uint8_t> (size, 0)
 {
    memcpy (this->data (), data, size);
 }

@@ -547,7 +547,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    switch (uid)
    {
@@ -655,7 +655,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::Alert;
 
@@ -685,7 +685,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Att
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::Alert;
 
@@ -718,7 +718,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::LevelControl;
 
@@ -747,7 +747,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::LevelControl;
 
@@ -776,7 +776,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::OnOff;
 
@@ -811,7 +811,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Att
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::OnOff;
 
@@ -840,7 +840,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::SimplePowerMeter;
 
@@ -869,7 +869,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Interfaces::SimplePowerMeter;
 
@@ -950,7 +950,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    stream << Hex <uint8_t>((uint8_t) command) << " (" << result << " [C])";
 
@@ -1015,7 +1015,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Core::AttributeReporting;
 
@@ -1056,7 +1056,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Core::BindManagement;
 
@@ -1107,7 +1107,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Core::BindManagement;
 
@@ -1138,7 +1138,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformatio
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Core::DeviceInformation;
 
@@ -1244,7 +1244,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Core::DeviceManagement;
 
@@ -1295,7 +1295,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
    std::ios_base::fmtflags ff = stream.flags ();
    char f                     = stream.fill (' ');
 
-   std::string result         = "Unknown";
+   __std::string result       = "Unknown";
 
    using namespace HF::Core::DeviceManagement;
 

@@ -77,7 +77,7 @@ namespace HF
           *
           * @return  vector containing the list of extra interfaces.
           */
-         virtual std::vector <Common::Interface> interfaces () const = 0;
+         virtual __std::vector <Common::Interface> interfaces () const = 0;
 
          //! @copydoc HF::Interface::periodic
          virtual void periodic (uint32_t time) = 0;
@@ -105,9 +105,9 @@ namespace HF
 
          void send (const Protocol::Address &addr, Protocol::Message &message, Transport::Link *link);
 
-         std::vector <Common::Interface> interfaces () const
+         __std::vector <Common::Interface> interfaces () const
          {
-            return std::vector <Common::Interface>();
+            return __std::vector <Common::Interface>();
          }
 
          void periodic (uint32_t time)
@@ -247,10 +247,10 @@ namespace HF
           * @return  a vector containing the UIDs for the optional interfaces
           *          implemented by this unit.
           */
-         std::vector <Common::Interface> interfaces () const
+         __std::vector <Common::Interface> interfaces () const
          {
-            std::vector <Common::Interface> result;
-            result.reserve (sizeof ... (ITF));
+            __std::vector <Common::Interface> result;
+            result.reserve(sizeof ... (ITF));
 
             Common::Interface temp;
             /* *INDENT-OFF* */

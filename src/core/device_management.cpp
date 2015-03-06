@@ -529,7 +529,7 @@ uint16_t DeregisterMessage::unpack (const Common::ByteArray &array,
 DevicePtr Entries::find (uint16_t address) const
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [address](const Device &device)
+   auto it = __std::find_if(db.begin(), db.end(), [address](const Device &device)
    {
       return device.address == address;
    });
@@ -555,7 +555,7 @@ DevicePtr Entries::find (uint16_t address) const
 DevicePtr Entries::find (const HF::UID::UID &uid) const
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&uid](const Device &device)
+   auto it = __std::find_if(db.begin(), db.end(), [&uid](const Device &device)
    {
       return device.uid == uid;
    });
@@ -588,7 +588,7 @@ Common::Result Entries::save (const Device &entry)
    // Add new entry into the database.
 
    /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&entry](const Device &other)
+   auto it = __std::find_if(db.begin(), db.end(), [&entry](const Device &other)
    {
       return entry.address == other.address;
    });
@@ -614,7 +614,7 @@ Common::Result Entries::save (const Device &entry)
 Common::Result Entries::destroy (const Device &entry)
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(db.begin(), db.end(), [&entry](const Device &other)
+   auto it = __std::find_if(db.begin(), db.end(), [&entry](const Device &other)
    {
       return entry.address == other.address;
    });

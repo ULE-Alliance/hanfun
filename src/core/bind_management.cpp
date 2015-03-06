@@ -239,8 +239,8 @@ void Entries::for_each (Protocol::Address const &source, Common::Interface const
  *
  */
 // =============================================================================
-std::pair <Entries::iterator, Entries::iterator> Entries::find (Protocol::Address const &source,
-                                                                Common::Interface const &itf) const
+__std::pair <Entries::iterator, Entries::iterator> Entries::find (Protocol::Address const &source,
+                                                                  Common::Interface const &itf) const
 {
    Entry _begin (source, itf);
    Entry _end (source, itf);
@@ -248,5 +248,5 @@ std::pair <Entries::iterator, Entries::iterator> Entries::find (Protocol::Addres
    memset (&(_begin.destination), 0x00, sizeof(Protocol::Address));
    memset (&(_end.destination), 0xFF, sizeof(Protocol::Address));
 
-   return std::make_pair (db.lower_bound (_begin), db.upper_bound (_end));
+   return __std::make_pair (db.lower_bound (_begin), db.upper_bound (_end));
 }

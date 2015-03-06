@@ -165,9 +165,9 @@ namespace HF
       /*!
        * List of attributes UIDs.
        */
-      struct UIDS:public std::vector <uint8_t>
+      struct UIDS:public __std::vector <uint8_t>
       {
-         UIDS():std::vector <uint8_t>()
+         UIDS():__std::vector <uint8_t>()
          {}
 
          /*!
@@ -187,9 +187,9 @@ namespace HF
           *
           * @return  number of elements.
           */
-         vector <uint8_t>::size_type length () const
+         __std::vector <uint8_t>::size_type length () const
          {
-            return vector <uint8_t>::size ();
+            return __std::vector <uint8_t>::size ();
          }
 
          //! Minimum pack/unpack required data size.
@@ -211,7 +211,7 @@ namespace HF
             uint8_t  count = length ();
             offset += array.write (offset, count);
 
-            for (auto it = std::vector<uint8_t>::begin(); it != std::vector<uint8_t>::end(); ++it)
+            for (auto it = __std::vector<uint8_t>::begin(); it != __std::vector<uint8_t>::end(); ++it)
             {
                offset += array.write (offset, *it);
             }
@@ -680,7 +680,7 @@ namespace HF
        * The difference between the @c list indexes and the @c Attribute
        * indexes is that the former start at 0 and the latter at 1.
        */
-      struct List:public std::list <IAttribute *>
+      struct List:public __std::list <IAttribute *>
       {
          IAttribute *operator [](uint8_t uid) const
          {
@@ -1035,7 +1035,7 @@ namespace HF
                }
             };
 
-            typedef std::vector <Result> results_t;
+            typedef __std::vector <Result> results_t;
 
             results_t results;   //!< Response results.
 

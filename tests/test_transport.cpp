@@ -31,7 +31,7 @@ namespace HF
    {
       struct Endpoint:public HF::Transport::Endpoint
       {
-         std::list <HF::Transport::Link *> links;
+         __std::list <HF::Transport::Link *> links;
 
          virtual void connected (HF::Transport::Link *link)
          {
@@ -63,10 +63,10 @@ namespace HF
 
       struct Transport:public HF::Transport::Layer
       {
-         std::list <HF::Transport::Endpoint *> endpoints;
-         std::list <Link *>                    links;
+         __std::list <HF::Transport::Endpoint *> endpoints;
+         __std::list <Link *>                    links;
 
-         HF::UID::UID_T                        *_uid;
+         HF::UID::UID_T                          *_uid;
 
          Transport(HF::UID::UID_T *uid):
             _uid (uid)

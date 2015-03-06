@@ -429,12 +429,12 @@ namespace HF
        */
       struct URI:public Abstract <URI_UID>
       {
-         std::string value;
+         __std::string value;
 
          URI()
          {}
 
-         URI(const std::string &value):
+         URI(const __std::string &value):
             value (value)
          {}
 
@@ -475,7 +475,7 @@ namespace HF
 
             SERIALIZABLE_CHECK (array, offset, size);
 
-            value = std::string (size, 0);
+            value = __std::string (size, 0);
 
             for (uint8_t i = 0; i < size; i++)
             {
@@ -511,7 +511,7 @@ namespace HF
           *
           * @return  the string associated with this URI.
           */
-         std::string str () const
+         __std::string str () const
          {
             return value;
          }
@@ -652,8 +652,8 @@ namespace HF
           */
          UID &operator =(UID &&other)
          {
-            std::swap (this->_raw, other._raw);
-            std::swap (this->owner, other.owner);
+            __std::swap (this->_raw, other._raw);
+            __std::swap (this->owner, other.owner);
 
             return *this;
          }

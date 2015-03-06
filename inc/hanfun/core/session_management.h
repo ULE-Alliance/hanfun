@@ -143,7 +143,7 @@ namespace HF
          template<typename _Entry>
          struct GetEntriesResponse:public Protocol::Response
          {
-            std::vector <_Entry> entries;
+            __std::vector <_Entry> entries;
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = Protocol::Response::min_size
@@ -327,7 +327,7 @@ namespace HF
                {}
             };
 
-            typedef std::vector <Session> Container;
+            typedef __std::vector <Session> Container;
             typedef Container::iterator iterator;
             typedef Container::const_iterator const_iterator;
 
@@ -427,8 +427,8 @@ namespace HF
             iterator find (uint16_t address)
             {
                /* *INDENT-OFF* */
-               return std::find_if (sessions.begin (), sessions.end (),
-                                    [address](const Session &session)
+               return __std::find_if (sessions.begin (), sessions.end (),
+                                      [address](const Session &session)
                {
                   return address == session.address;
                });
@@ -445,8 +445,8 @@ namespace HF
             const_iterator find (uint16_t address) const
             {
                /* *INDENT-OFF* */
-               return std::find_if (sessions.cbegin (), sessions.cend (),
-                                    [address](const Session &session)
+               return __std::find_if (sessions.begin (), sessions.end (),
+                                      [address](const Session &session)
                {
                   return address == session.address;
                });
@@ -630,11 +630,11 @@ namespace HF
                if (response.code == Common::Result::OK)
                {
                   auto start = _entries.begin ();
-                  std::advance (start, offset);
+                  __std::advance (start, offset);
 
                   auto end = start;
-                  std::advance (end, count);
-                  std::copy (start, end, std::back_inserter (response.entries));
+                  __std::advance (end, count);
+                  __std::copy (start, end, __std::back_inserter (response.entries));
                }
 
                payload = Common::ByteArray (response.size ());

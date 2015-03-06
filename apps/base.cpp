@@ -450,14 +450,14 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
          }
          case APP_VERSION_ATTR:
          {
-            auto *version = adapt <std::string>(attr);
+            auto *version = adapt <__std::string>(attr);
             LOG (APP) << "APP Version (" << Hex <uint8_t>(attr->uid ()) << ") | "
                       << version->get ();
             break;
          }
          case HW_VERSION_ATTR:
          {
-            auto *version = adapt <std::string>(attr);
+            auto *version = adapt <__std::string>(attr);
             LOG (APP) << "HW Version (" << Hex <uint8_t>(attr->uid ()) << ") | "
                       << version->get ();
             break;
@@ -471,7 +471,7 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
          }
          case DECT_ID_ATTR:
          {
-            auto *dect = adapt < std::vector < uint8_t >> (attr);
+            auto *dect = adapt <__std::vector<uint8_t>> (attr);
             LOG (APP) << "DECT (" << Hex <uint8_t>(attr->uid ()) << ") | ";
 
             auto value = dect->get ();
@@ -485,14 +485,14 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
          }
          case MANUFACTURE_NAME_ATTR:
          {
-            auto *name = adapt <std::string>(attr);
+            auto *name = adapt <__std::string>(attr);
             LOG (APP) << "Manuf. Name (" << Hex <uint8_t>(attr->uid ()) << ") | "
                       << name->get ();
             break;
          }
          case LOCATION_ATTR:
          {
-            auto *location = adapt <std::string>(attr);
+            auto *location = adapt <__std::string>(attr);
             LOG (APP) << "Location (" << Hex <uint8_t>(attr->uid ()) << ") | "
                       << location->get ();
             break;

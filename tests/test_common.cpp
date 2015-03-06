@@ -274,7 +274,7 @@ TEST (UID, DECT)
    std::stringstream ss;
    ss << uid;
 
-   STRCMP_EQUAL (std::string ("dect: 0073705AA5").c_str (), ss.str ().c_str ());
+   STRCMP_EQUAL (__std::string ("dect: 0073705AA5").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, MAC)
@@ -324,12 +324,12 @@ TEST (UID, MAC)
    std::stringstream ss;
    ss << uid;
 
-   STRCMP_EQUAL (std::string ("mac: 12:34:56:78:9A:BC").c_str (), ss.str ().c_str ());
+   STRCMP_EQUAL (__std::string ("mac: 12:34:56:78:9A:BC").c_str (), ss.str ().c_str ());
 }
 
 TEST (UID, URI)
 {
-   std::string str = "Hello World !";
+   __std::string str = "Hello World !";
    UID::URI    uri (str);
 
    LONGS_EQUAL (UID::URI_UID, uri.type ());
@@ -563,7 +563,7 @@ TEST (Attributes, Serialize_Pack)
 
    Common::ByteArray result (expected.size ());
 
-   std::fill (result.begin (), result.end (), 0);
+   __std::fill (result.begin (), result.end (), 0);
 
    uint16_t w_size = attr_wrapper.pack (result, 3);
    LONGS_EQUAL (sizeof(attr), w_size);

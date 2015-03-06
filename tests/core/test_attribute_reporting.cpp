@@ -268,7 +268,7 @@ TEST (AttrReport_Periodic_Entry, Pack)
                0xFF, 0xFF, 0xFF};
 
    ByteArray result (expected.size ());
-   std::fill_n (result.begin (), expected.size (), 0xFF);
+   __std::fill_n (result.begin (), expected.size (), 0xFF);
 
    entry.unit     = 0x5A;
    entry.itf.role = HF::Interface::SERVER_ROLE;
@@ -289,7 +289,7 @@ TEST (AttrReport_Periodic_Entry, Pack2)
                0xFF, 0xFF, 0xFF};
 
    ByteArray result (expected.size ());
-   std::fill_n (result.begin (), expected.size (), 0xFF);
+   __std::fill_n (result.begin (), expected.size (), 0xFF);
 
    entry.unit     = 0x5A;
    entry.itf.role = HF::Interface::SERVER_ROLE;
@@ -311,7 +311,7 @@ TEST (AttrReport_Periodic_Entry, Pack3)
                0xFF, 0xFF, 0xFF};
 
    ByteArray result (expected.size ());
-   std::fill_n (result.begin (), expected.size (), 0xFF);
+   __std::fill_n (result.begin (), expected.size (), 0xFF);
 
    entry.unit     = 0x5A;
    entry.itf.role = HF::Interface::SERVER_ROLE;
@@ -1304,7 +1304,7 @@ TEST (AttrReport_Report_Periodic, Unpack)
 
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x03, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x03, __std::distance (report.entries.begin (), report.entries.end ()));
 
    for (const auto &entry : report.entries)
    {
@@ -1334,7 +1334,7 @@ TEST (AttrReport_Report_Periodic, Unpack2)
    size += Report::Entry::min_size;
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
 
@@ -1345,7 +1345,7 @@ TEST (AttrReport_Report_Periodic, Unpack2)
 
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
 
@@ -1356,7 +1356,7 @@ TEST (AttrReport_Report_Periodic, Unpack2)
 
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().attributes.size ());
 
@@ -1368,7 +1368,7 @@ TEST (AttrReport_Report_Periodic, Unpack2)
    size += sizeof(uint8_t) + sizeof(uint16_t);
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x01, report.entries.front ().attributes.size ());
 };
@@ -1826,7 +1826,7 @@ TEST (AttrReport_Report_Event, Unpack)
 
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x03, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x03, __std::distance (report.entries.begin (), report.entries.end ()));
 
    for (const auto &entry : report.entries)
    {
@@ -1856,7 +1856,7 @@ TEST (AttrReport_Report_Event, Unpack2)
 
    LONGS_EQUAL (size + Report::Entry::min_size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
 
@@ -1868,7 +1868,7 @@ TEST (AttrReport_Report_Event, Unpack2)
    size += Report::Entry::min_size;
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
 
@@ -1878,7 +1878,7 @@ TEST (AttrReport_Report_Event, Unpack2)
 
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
 
@@ -1888,7 +1888,7 @@ TEST (AttrReport_Report_Event, Unpack2)
 
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x00, report.entries.front ().fields.size ());
 
@@ -1900,7 +1900,7 @@ TEST (AttrReport_Report_Event, Unpack2)
    size += Report::Event::Field::min_size + sizeof(uint16_t);
    LONGS_EQUAL (size, report.unpack (get_factory, expected, 3));
 
-   LONGS_EQUAL (0x04, std::distance (report.entries.begin (), report.entries.end ()));
+   LONGS_EQUAL (0x04, __std::distance (report.entries.begin (), report.entries.end ()));
 
    LONGS_EQUAL (0x01, report.entries.front ().fields.size ());
 };
@@ -2255,7 +2255,7 @@ TEST (AttrReport_Report_Periodic_AddEntryMessage, Unpack)
    LONGS_EQUAL (PERIODIC, message.report.type);
    LONGS_EQUAL (0x0A, message.report.id);
 
-   LONGS_EQUAL (0x03, std::distance (message.begin (), message.end ()));
+   LONGS_EQUAL (0x03, __std::distance (message.begin (), message.end ()));
 }
 
 TEST_GROUP (AttrReport_Report_Event_AddEntryMessage)
@@ -2436,7 +2436,7 @@ TEST (AttrReport_Report_Event_AddEntryMessage, Unpack)
    LONGS_EQUAL (EVENT, message.report.type);
    LONGS_EQUAL (0x0A, message.report.id);
 
-   LONGS_EQUAL (0x03, std::distance (message.begin (), message.end ()));
+   LONGS_EQUAL (0x03, __std::distance (message.begin (), message.end ()));
 }
 
 // =============================================================================
@@ -2585,7 +2585,7 @@ TEST (AttributeReporting, DeleteReport)
 
 TEST (AttributeReporting, AddPeriodicEntry)
 {
-   std::vector <Periodic::Entry> entries (3);
+   __std::vector <Periodic::Entry> entries (3);
 
    Reference report (EVENT, 0x55);
 
@@ -2607,14 +2607,14 @@ TEST (AttributeReporting, AddPeriodicEntry)
 
    LONGS_EQUAL (payload.report.type, PERIODIC);
    LONGS_EQUAL (payload.report.id, 0x55);
-   LONGS_EQUAL (0x03, std::distance (payload.begin (), payload.end ()));
+   LONGS_EQUAL (0x03, __std::distance (payload.begin (), payload.end ()));
 
    delete message;
 }
 
 TEST (AttributeReporting, AddEventEntry)
 {
-   std::vector <Event::Entry> entries (3);
+   __std::vector <Event::Entry> entries (3);
 
    Reference report (PERIODIC, 0x55);
 
@@ -2636,7 +2636,7 @@ TEST (AttributeReporting, AddEventEntry)
 
    LONGS_EQUAL (payload.report.type, EVENT);
    LONGS_EQUAL (payload.report.id, 0x55);
-   LONGS_EQUAL (0x03, std::distance (payload.begin (), payload.end ()));
+   LONGS_EQUAL (0x03, __std::distance (payload.begin (), payload.end ()));
 
    delete message;
 }
@@ -2879,7 +2879,7 @@ TEST_GROUP (AttributeReporting_Server)
 
       LONGS_EQUAL_LOCATION (0x5A, report.id, file, line);
       LONGS_EQUAL_LOCATION (EVENT, report.type, file, line);
-      LONGS_EQUAL_LOCATION (1, std::distance (report.entries.begin (), report.entries.end ()), file, line)
+      LONGS_EQUAL_LOCATION (1, __std::distance (report.entries.begin (), report.entries.end ()), file, line)
 
       auto &entry2 = *report.entries.begin ();
 
@@ -2925,7 +2925,7 @@ TEST (AttributeReporting_Server, Periodic)
 
    LONGS_EQUAL (0x5A, report.id);
    LONGS_EQUAL (PERIODIC, report.type);
-   LONGS_EQUAL (1, std::distance (report.entries.begin (), report.entries.end ()))
+   LONGS_EQUAL (1, __std::distance (report.entries.begin (), report.entries.end ()))
 
    auto &entry2 = *report.entries.begin ();
 

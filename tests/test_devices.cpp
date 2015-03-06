@@ -296,9 +296,9 @@ namespace
 
    struct TransportHelper
    {
-      HF::Devices::Concentrator::Transport         base_tsp;
+      HF::Devices::Concentrator::Transport           base_tsp;
 
-      std::vector <HF::Devices::Node::Transport *> devices_tsp;
+      __std::vector <HF::Devices::Node::Transport *> devices_tsp;
 
       TransportHelper(BaseHelper &_base)
       {
@@ -314,7 +314,7 @@ namespace
          }
       }
 
-      void add (AbstractDeviceHelper &device, std::string id)
+      void add (AbstractDeviceHelper &device, __std::string id)
       {
          HF::Devices::Node::Transport *dev_tsp = new HF::Devices::Node::Transport ();
          dev_tsp->add (&device);
@@ -355,15 +355,15 @@ TEST_GROUP (Concentrator)
       device3   = new DeviceHelper2 ();
 
       transport = new TransportHelper (*base);
-      transport->add (*device1, "1");
+      transport->add (*device1, __std::string("1"));
       device1->unit0 ()->device_management ()->register_device ();
       // LONGS_EQUAL (1, device1->address());
 
-      transport->add (*device2, "2");
+      transport->add (*device2, __std::string("2"));
       device2->unit0 ()->device_management ()->register_device ();
       // LONGS_EQUAL (2, device2->address());
 
-      transport->add (*device3, "3");
+      transport->add (*device3, __std::string("3"));
       device3->unit0 ()->device_management ()->register_device ();
       // LONGS_EQUAL (3, device3->address());
    }
@@ -507,7 +507,7 @@ IGNORE_TEST (Concentrator, Routing)
 {
    using namespace HF::Protocol;
 
-   typedef std::pair<Protocol::Address,Common::Interface> RoutePair;
+   typedef __std::pair<Protocol::Address,Common::Interface> RoutePair;
    std::array<RoutePair, 8> route_pairs {{               // | Idx | Device    | Unit      | Interface |
                                                          // | --- | --------- | --------- | --------- |
      { Address(1,1)             , Common::Interface() }, // |  0  | Single    | Single    | Single    |

@@ -47,7 +47,7 @@ Report::Report()
    memset (&current, 0, sizeof(Measurement));         // Current measurement.
    memset (&frequency, 0, sizeof(Measurement));       // Frequency measurement.
 
-   std::fill (enabled.begin (), enabled.end (), false);
+   __std::fill (enabled.begin (), enabled.end (), false);
 }
 
 // =============================================================================
@@ -131,7 +131,7 @@ uint16_t Report::pack (Common::ByteArray &array, uint16_t offset) const
 
    // Number of attributes.
 
-   id      = std::count (enabled.begin (), enabled.end (), true);
+   id      = __std::count (enabled.begin (), enabled.end (), true);
    offset += array.write (offset, id);
 
    // Energy measurement.

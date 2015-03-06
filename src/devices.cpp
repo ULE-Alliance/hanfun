@@ -43,7 +43,7 @@ Units::IUnit *AbstractDevice::unit (uint8_t id) const
    }
 
    /* *INDENT-OFF* */
-   auto it = find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
+   auto it = __std::find_if(_units.begin(), _units.end(), [id](Units::IUnit *unit)
    {
       return unit->id () == id;
    });
@@ -224,7 +224,7 @@ void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::Byte
 
       other.message.payload = Common::ByteArray (payload.size () - offset);
 
-      std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+      __std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
       send (other);
    }
@@ -245,11 +245,10 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
    }
 
    /* *INDENT-OFF* */
-   auto it = std::find_if(_links.begin(), _links.end(),
-                          [addr](HF::Transport::Link *link)
-                          {
-                             return link->address () == addr;
-                          });
+   auto it = __std::find_if(_links.begin(), _links.end(), [addr](HF::Transport::Link *link)
+   {
+      return link->address () == addr;
+   });
    /* *INDENT-ON* */
 
    if (it == _links.end ())
@@ -270,7 +269,7 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
 void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
                                                uint16_t offset)
 {
-   typedef std::pair<Protocol::Address,Common::Interface> RoutePair;
+   typedef __std::pair<Protocol::Address,Common::Interface> RoutePair;
    /* *INDENT-OFF* */
    static std::array<RoutePair, 8> route_pairs {{  // | Idx | Device    | Unit      | Interface |
                                                    // | --- | --------- | --------- | --------- |
@@ -326,7 +325,7 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
 
    other.message.payload = Common::ByteArray (payload.size () - offset);
 
-   std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+   __std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
 
    auto process_entry = [this, &other, &packet](const Core::BindManagement::Entry &entry)
                         {
@@ -397,7 +396,7 @@ void Concentrator::Transport::remove (HF::Transport::Link *link)
 HF::Transport::Link *Concentrator::Transport::find (uint16_t address)
 {
    /* *INDENT-OFF* */
-   auto it = std::find_if(links.begin(), links.end(),
+   auto it = __std::find_if(links.begin(), links.end(),
                           [address](const HF::Transport::Link *link)
                           {
                              return link->address () == address;
