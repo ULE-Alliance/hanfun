@@ -749,7 +749,7 @@ void to_json (const HF::UID::UID &uid, Json::Value &node)
       case HF::UID::URI_UID:
       {
          node["type"]  = "uri";
-         node["value"] = static_cast <const HF::UID::URI *>(uid.raw ())->str ();
+         node["value"] = std::string(static_cast <const HF::UID::URI *>(uid.raw ())->str ().c_str());
          break;
       }
    }
@@ -887,7 +887,7 @@ void from_json (Json::Value &node, HF::UID::UID &uid)
    else if (uid_type == "uri")
    {
       HF::UID::URI *uri = new HF::UID::URI;
-      uri->value = node["value"].asString ();
+      uri->value = node["value"].asString ().c_str();
       uid        = uri;
    }
 }

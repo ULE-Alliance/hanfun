@@ -227,4 +227,35 @@ bool HF::Application::Handle (std::string command)
    return false;
 }
 
+#ifdef HF_USE_EASTL
+
+// EASTL expects us to define these, see allocator.h line 194
+void* operator new[] (size_t size, const char* pName, int flags, unsigned debugFlags,
+                      const char* file, int line)
+{
+   UNUSED (pName);
+   UNUSED (flags);
+   UNUSED (debugFlags);
+   UNUSED (file);
+   UNUSED (line);
+
+  return ::malloc(size);
+}
+
+void* operator new[] (size_t size, size_t alignment, size_t alignmentOffset, const char* pName,
+                      int flags, unsigned debugFlags, const char* file, int line)
+{
+   UNUSED (pName);
+   UNUSED (flags);
+   UNUSED (debugFlags);
+   UNUSED (alignment);
+   UNUSED (alignmentOffset);
+   UNUSED (file);
+   UNUSED (line);
+
+  return ::malloc(size);
+}
+
+#endif
+
 /*! @} */

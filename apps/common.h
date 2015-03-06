@@ -172,10 +172,10 @@ class Command:public ICommand
 // =============================================================================
 
 //! Helper macro to convert a std::string into a number (base 10).
-#define STRTOL(X)       strtol (X.c_str (), NULL, 10);
+#define STRTOL(X)       strtol ((X).c_str (), NULL, 10);
 
 //! Helper macro to convert a std::string into a number (base 16).
-#define STRTOL_HEX(X)   strtol (X.c_str (), NULL, 16);
+#define STRTOL_HEX(X)   strtol ((X).c_str (), NULL, 16);
 
 /*! @} */
 

@@ -137,7 +137,7 @@ int main (int argc, char *argv[])
    std::stringstream ss;
    ss << "hf://node.example.com/" << argv[1];
 
-   HF::UID::URI *uid = new HF::UID::URI (ss.str ());
+   HF::UID::URI *uid = new HF::UID::URI (ss.str ().c_str());
 #endif
 
    HF::Application::Initialize (transport);
