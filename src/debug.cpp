@@ -40,6 +40,16 @@ static int8_t log_width = -1;
 // Stream Helpers
 // =============================================================================
 
+#ifdef HF_USE_EASTL
+
+std::ostream &operator <<(std::ostream &stream, const eastl::string &s)
+{
+   stream << s.c_str();
+   return stream;
+}
+
+#endif
+
 // =============================================================================
 // operator <<
 // =============================================================================

@@ -318,7 +318,7 @@ namespace HF
                 */
                const_iterator cbegin () const
                {
-                  return entries.cbegin ();
+                  return entries.begin ();
                }
 
                /*!
@@ -328,7 +328,7 @@ namespace HF
                 */
                const_iterator cend () const
                {
-                  return entries.cend ();
+                  return entries.end ();
                }
 
                protected:
@@ -514,7 +514,7 @@ namespace HF
                 */
                const_iterator cbegin () const
                {
-                  return entries.cbegin ();
+                  return entries.begin ();
                }
 
                /*!
@@ -524,7 +524,7 @@ namespace HF
                 */
                const_iterator cend () const
                {
-                  return entries.cend ();
+                  return entries.end ();
                }
 
                protected:
@@ -906,7 +906,7 @@ namespace HF
                    */
                   const_iterator cbegin () const
                   {
-                     return entries.cbegin ();
+                     return entries.begin ();
                   }
 
                   /*!
@@ -916,7 +916,7 @@ namespace HF
                    */
                   const_iterator cend () const
                   {
-                     return entries.cend ();
+                     return entries.end ();
                   }
 
                   protected:
@@ -1125,7 +1125,7 @@ namespace HF
                    */
                   const_iterator cbegin () const
                   {
-                     return entries.cbegin ();
+                     return entries.begin ();
                   }
 
                   /*!
@@ -1135,7 +1135,7 @@ namespace HF
                    */
                   const_iterator cend () const
                   {
-                     return entries.cend ();
+                     return entries.end ();
                   }
 
                   protected:

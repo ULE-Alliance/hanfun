@@ -16,6 +16,8 @@
 #
 # =============================================================================
 
+include(CMakeDependentOption)
+
 # =============================================================================
 # Project Configuration
 # =============================================================================
@@ -68,6 +70,10 @@ endif()
 option(HF_APP_EXT_REG "Build example application with external registration support." OFF)
 
 # =============================================================================
+# Library Configuration
+# =============================================================================
+
+# =============================================================================
 # SimplePowerMeter Configuration
 # =============================================================================
 
@@ -85,3 +91,10 @@ option(HF_ITF_SPM_REPORT_INTERVAL_ATTR     "Interface - Simple Power Meter - Rep
 
 option(HF_ITF_SPM_REPORT_CMD               "Interface - Simple Power Meter - Periodic Report Command Support")
 option(HF_ITF_SPM_RESET_CMD                "Interface - Simple Power Meter - Reading Values Reset Command Support")
+
+# =============================================================================
+# Support Configuration
+# =============================================================================
+
+option(HF_USE_EASTL  "Use EASTL to provide C++ STL support" OFF)
+cmake_dependent_option(HF_BUILD_EASTL "Build EASTL to provide C++ STL support" ON "HF_USE_EASTL" OFF)

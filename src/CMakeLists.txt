@@ -62,3 +62,8 @@ install(TARGETS hanfun EXPORT ${PACKAGE_NAME}-targets
         ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
 
 set (HF_TARGETS ${HF_TARGETS} hanfun PARENT_SCOPE)
+
+if(HF_USE_EASTL)
+    target_link_libraries(hanfun ${EASTL_LIBRARY})
+    add_dependencies(hanfun eastl)
+endif()

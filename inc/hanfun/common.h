@@ -24,18 +24,36 @@
 #include <cmath>
 
 #include <algorithm>
+#include <memory>
+#include <limits>
+
+#ifdef HF_USE_EASTL
+#include <EASTL/algorithm.h>
+#include <EASTL/functional.h>
+#include <EASTL/iterator.h>
+#include <EASTL/list.h>
+#include <EASTL/memory.h>
+#include <EASTL/set.h>
+#include <EASTL/string.h>
+#include <EASTL/type_traits.h>
+#include <EASTL/vector.h>
+#else
 #include <forward_list>
 #include <functional>
 #include <iterator>
-#include <limits>
 #include <list>
 #include <memory>
 #include <set>
 #include <string>
 #include <type_traits>
 #include <vector>
+#endif
 
+#ifdef HF_USE_EASTL
+#define __std eastl
+#else
 #define __std std
+#endif
 
 #include <assert.h>
 
@@ -165,6 +183,7 @@ namespace HF
           */
          ByteArray(const uint8_t data[], const uint16_t size);
 
+#ifndef HF_USE_EASTL
          /*!
           * Create byte array from the values in the given list.
           *
@@ -172,6 +191,16 @@ namespace HF
           */
          ByteArray(std::initializer_list <uint8_t> raw):__std::vector <uint8_t> (raw)
          {}
+#else
+         /*!
+          * Create byte array from the values in the given list.
+          *
+          * @param [in] raw  values to add to the byte array.
+          */
+         ByteArray(std::initializer_list <uint8_t> raw):
+            __std::vector <uint8_t> (raw.begin(), raw.end())
+         {}
+#endif
 
          //! Destructor
          virtual ~ByteArray() {}
@@ -323,9 +352,15 @@ namespace HF
          }
       };
 
+#ifdef HF_USE_EASTL
+      template<typename T>
+      struct SimpleList:public eastl::list<T>
+      {};
+#else
       template<typename T>
       struct SimpleList:public std::forward_list<T>
       {};
+#endif
 
       // =============================================================================
       // Common Interfaces

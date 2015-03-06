@@ -801,7 +801,7 @@ namespace HF
              */
             const_iterator begin () const
             {
-               return db.cbegin ();
+               return db.begin ();
             }
 
             /*!
@@ -811,7 +811,7 @@ namespace HF
              */
             const_iterator end () const
             {
-               return db.cend ();
+               return db.end ();
             }
 
             protected:

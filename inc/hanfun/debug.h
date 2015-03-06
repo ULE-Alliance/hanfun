@@ -117,6 +117,10 @@ namespace HF
 
 }  // namespace HF
 
+#ifdef HF_USE_EASTL
+std::ostream &operator <<(std::ostream &stream, const eastl::string &s);
+#endif
+
 /*! @} */
 
 #endif /* HF_DEBUG_H */

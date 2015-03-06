@@ -541,7 +541,11 @@ DevicePtr Entries::find (uint16_t address) const
    }
    else
    {
+#ifndef HF_USE_EASTL
       return std::move (DevicePtr (*(it.base ())));
+#else
+      return std::move (DevicePtr (it));
+#endif
    }
 }
 
@@ -567,7 +571,11 @@ DevicePtr Entries::find (const HF::UID::UID &uid) const
    }
    else
    {
+#ifndef HF_USE_EASTL
       return std::move (DevicePtr (*(it.base ())));
+#else
+      return std::move (DevicePtr (it));
+#endif
    }
 }
 

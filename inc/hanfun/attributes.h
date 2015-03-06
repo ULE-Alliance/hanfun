@@ -170,14 +170,23 @@ namespace HF
          UIDS():__std::vector <uint8_t>()
          {}
 
+#ifndef HF_USE_EASTL
          /*!
           * Constructor
           *
           * @param [in] uids attributes UIDs list.
           */
-         UIDS(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
+         UIDS(std::initializer_list <uint8_t> uids):__std::vector <uint8_t>(uids)
          {}
-
+#else
+         /*!
+          * Constructor
+          *
+          * @param [in] uids attributes UIDs list.
+          */
+         UIDS(std::initializer_list <uint8_t> uids):__std::vector <uint8_t>(uids.begin(), uids.end())
+         {}
+#endif
          /*!
           * Number of elements in the list.
           *

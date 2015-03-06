@@ -55,6 +55,8 @@ configure_file( ${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/hanfun/confi
 # Library
 # ==============================================================================
 
+include("cmake/eastl.cmake")
+
 add_subdirectory(src)
 
 # ==============================================================================
