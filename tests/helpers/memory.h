@@ -17,6 +17,10 @@
 #define HF_MEMORY_HELPER_H
 
 #include <forward_list>
+
+#include "cpputest/config.h"
+
 #include "CppUTest/MemoryLeakDetectorMallocMacros.h"
+#include "CppUTest/MemoryLeakDetectorNewMacros.h"
 
 #endif /* HF_MEMORY_HELPER_H */
