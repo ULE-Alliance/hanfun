@@ -312,6 +312,8 @@ namespace
             tsp->destroy ();
             delete tsp;
          }
+
+         base_tsp.destroy();
       }
 
       void add (AbstractDeviceHelper &device, __std::string id)
