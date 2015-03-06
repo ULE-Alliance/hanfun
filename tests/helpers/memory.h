@@ -18,8 +18,14 @@
 
 #include <forward_list>
 
-#include "cpputest/config.h"
+#ifdef HF_USE_EASTL
+#include <EASTL/memory.h>
+#include <EASTL/list.h>
+#include <EASTL/set.h>
+#include <EASTL/vector.h>
+#endif
 
+#include "cpputest/config.h"
 #include "CppUTest/MemoryLeakDetectorMallocMacros.h"
 #include "CppUTest/MemoryLeakDetectorNewMacros.h"
 

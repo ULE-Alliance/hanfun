@@ -93,7 +93,7 @@ TEST (Devices, NoResponseRequired)
    packet.source.device      = device.address ();
    packet.source.unit        = 0x23;
 
-   std::vector <Protocol::Message::Type> types {
+   std::array <Protocol::Message::Type, 6> types {
       Protocol::Message::COMMAND_REQ,
       Protocol::Message::GET_ATTR_REQ,
       Protocol::Message::SET_ATTR_REQ,
@@ -126,7 +126,7 @@ TEST (Devices, ResponseRequired)
 
    packet.message.reference  = 0x5A;
 
-   std::vector <Protocol::Message::Type> types {
+   std::array <Protocol::Message::Type, 4> types {
       Protocol::Message::COMMAND_RESP_REQ,
       Protocol::Message::SET_ATTR_RESP_REQ,
       Protocol::Message::SET_ATTR_PACK_RESP_REQ,

@@ -990,7 +990,7 @@ TEST (DeviceManagementServer, Handle_Deregister)
       dev->address = 0x5A50 + i;
       std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
-      dev->uid = new UID::URI (uri.str ());
+      dev->uid = new UID::URI (__std::string(uri.str ().c_str()));
       dev_mgt->entries ().save (*dev);
       delete dev;
    }
@@ -1047,7 +1047,7 @@ TEST (DeviceManagementServer, Handle_Deregister_With_Bindings)
       dev->address = 0x5A50 + i;
       std::ostringstream uri;
       uri << "hf://device" << i << "@example.com";
-      dev->uid = new UID::URI (uri.str ());
+      dev->uid = new UID::URI (__std::string(uri.str ().c_str()));
       uint16_t profile = (uint16_t) (i % 2 == 0 ? Profiles::SIMPLE_ONOFF_SWITCH : Profiles::SIMPLE_ONOFF_SWITCHABLE);
       dev->units.push_back (DeviceManagement::Unit (i + 1, profile));
       dev_mgt->entries ().save (*dev);

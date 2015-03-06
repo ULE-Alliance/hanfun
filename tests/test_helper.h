@@ -51,6 +51,17 @@ using namespace HF::Protocol;
 
 SimpleString StringFrom (const std::vector <uint8_t> &array);
 
+#ifdef HF_USE_EASTL
+SimpleString StringFrom (const __std::vector <uint8_t> &array);
+
+bool operator ==(const std::vector <uint8_t> &lhs, const __std::vector <uint8_t> &rhs);
+
+inline bool operator !=(const std::vector <uint8_t> &lhs, const __std::vector <uint8_t> &rhs)
+{
+   return !(lhs == rhs);
+}
+#endif
+
 SimpleString StringFrom (const HF::Common::Serializable &data);
 
 SimpleString StringFrom (const HF::Common::Interface &itf);
