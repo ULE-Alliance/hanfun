@@ -46,20 +46,17 @@ void Client::register_device ()
 
    HF::IDevice &device        = unit ().device ();
 
-   /* *INDENT-OFF* */
-   for_each (device.units ().begin (), device.units ().end (),
-             [&payload](const Units::IUnit *dev_unit)
+   for (auto it = device.units ().begin (); it != device.units ().end (); ++it)
    {
       /*
        * Add a unit entry if not unit 0 or unit 0 has optional interfaces.
        */
-      if (dev_unit != nullptr && (dev_unit->id () != 0 ||
-          (dev_unit->id () == 0 && dev_unit->interfaces().size() != 0)))
+      if (*it != nullptr && ((*it)->id () != 0 ||
+          ((*it)->id () == 0 && (*it)->interfaces().size() != 0)))
       {
-         payload->units.push_back (Unit(*dev_unit));
+         payload->units.push_back (Unit(*(*it)));
       }
-   });
-   /* *INDENT-ON* */
+   }
 
    Protocol::Message message (payload->size ());
 

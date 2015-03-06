@@ -70,14 +70,12 @@ COMMAND (ListRegs, "lr", "lr:list registrations.")
    LOG (APP) << std::setfill (' ');
    LOG (APP) << "HAN-FUN" << "  Registered Devices (" << (int) devices.size () << "):" << NL;
 
-   /* *INDENT-OFF* */
-   std::for_each(devices.begin(), devices.end(), [](const HF::Core::DeviceManagement::Device &device)
+   for (auto it = devices.begin(); it != devices.end(); ++it)
    {
-      LOG (APP) << (base.link (device.address) != nullptr ? "+ " : "- ");
-      LOG (APP) << std::right << std::setw (5) << device.address << " | ";
-      LOG (APP) << device.uid << NL;
-   });
-   /* *INDENT-ON* */
+      LOG (APP) << (base.link (it->address) != nullptr ? "+ " : "- ");
+      LOG (APP) << std::right << std::setw (5) << it->address << " | ";
+      LOG (APP) << it->uid << NL;
+   }
 }
 
 /*!
@@ -100,14 +98,11 @@ COMMAND (ListBinds, "lb", "lb:list binds.")
              << std::setw(12) << " | " << std::endl
              << std::setfill(' ');
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin (), entries.end (),
-                  [](const HF::Core::BindManagement::Entry &entry)
+   for (auto it = entries.begin (); it != entries.end (); ++it)
    {
-      LOG (APP) << "\t" << entry.source << " | " << entry.destination << " | "
-                << entry.itf << NL;
-   });
-   /* *INDENT-ON* */
+      LOG (APP) << "\t" << it->source << " | " << it->destination << " | "
+                << it->itf << NL;
+   }
 }
 
 /*!
@@ -362,13 +357,11 @@ COMMAND (Raw, "raw", "raw <raw data>:simulate receiving a packet from the networ
 
    data.reserve (args.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (args.begin (), args.end (), [&data](std::string byte)
+   for (auto it = args.begin (); it != args.end (); ++it)
    {
-      uint8_t temp = STRTOL_HEX (byte);
+      uint8_t temp = STRTOL_HEX ((*it));
       data.push_back (temp);
-   });
-   /* *INDENT-ON* */
+   }
 
    HF::Protocol::Packet packet;
    uint16_t offset = packet.unpack (data);

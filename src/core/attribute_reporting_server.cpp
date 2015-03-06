@@ -46,12 +46,10 @@ static uint8_t find_available_id (Iterator begin, Iterator end)
    // Find the next available entry.
    std::vector <uint8_t> ids;
 
-   /* *INDENT-OFF* */
-   std::for_each(begin, end, [&ids](const _Rule &rule)
+   for (auto it = begin; it != end; ++it)
    {
-      ids.push_back(rule.report.id);
-   });
-   /* *INDENT-ON* */
+      ids.push_back(it->report.id);
+   }
 
    std::sort (ids.begin (), ids.end ());
 
@@ -334,12 +332,10 @@ Common::Result Server::handle (const Report::Periodic::AddEntryMessage &message)
       return Common::Result::FAIL_ARG;
    }
 
-   /* *INDENT-OFF* */
-   std::for_each (message.cbegin(), message.cend(), [it](const Periodic::Entry &entry)
+   for (auto entry_it = message.cbegin(); entry_it != message.cend(); ++entry_it)
    {
-      it->add(entry);
-   });
-   /* *INDENT-ON* */
+      it->add(*entry_it);
+   }
 
    return Common::Result::OK;
 }
@@ -400,12 +396,10 @@ Common::Result Server::handle (const Report::Event::AddEntryMessage &message)
       return Common::Result::FAIL_ARG;
    }
 
-   /* *INDENT-OFF* */
-   std::for_each (message.cbegin(), message.cend(), [it](const Event::Entry &entry)
+   for (auto entry_it = message.cbegin(); entry_it != message.cend(); ++entry_it)
    {
-      it->add(entry);
-   });
-   /* *INDENT-ON* */
+      it->add(*entry_it);
+   }
 
    return Common::Result::OK;
 }
@@ -515,12 +509,11 @@ static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
    auto result = new Report::Periodic::Entry (unit->id (), itf);
 
    auto attrs  = unit->attributes (itf, pack_id, uids);
-   /* *INDENT-OFF* */
-   std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
+
+   for (auto it = attrs.begin(); it != attrs.end(); ++it)
    {
-      result->add (attr);
-   });
-   /* *INDENT-ON* */
+      result->add (*it);
+   }
 
    return result;
 }
@@ -577,44 +570,41 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
 // =============================================================================
 void Server::periodic (uint32_t time)
 {
-   /* *INDENT-OFF* */
-   std::for_each(periodic_rules.begin (), periodic_rules.end (),
-                 [this, time](Periodic::Rule &rule)
+   for (auto rule_it = periodic_rules.begin (); rule_it != periodic_rules.end (); ++rule_it)
    {
-      if ((time/rule.interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < rule.interval)
+      if ((time/rule_it->interval) == 0 || (uint32_t) abs ((int32_t)time - rule_it->last_time) < rule_it->interval)
       {
          return;
       }
 
-      rule.last_time = time;
+      rule_it->last_time = time;
 
       Protocol::Message * message = new Protocol::Message ();
       message->itf.role = HF::Interface::CLIENT_ROLE;
       message->itf.id = HF::Interface::ATTRIBUTE_REPORTING;
       message->itf.member = PERIODIC_REPORT_CMD;
 
-      Report::Periodic * report = new Report::Periodic(rule.report.id);
+      Report::Periodic * report = new Report::Periodic(rule_it->report.id);
 
-      std::for_each(rule.cbegin(), rule.cend(), [this, report](const Periodic::Entry &entry)
+      for (auto entry_it = rule_it->cbegin(); entry_it != rule_it->cend(); ++entry_it)
       {
-         Units::IUnit * _unit = this->unit().device().unit(entry.unit);
+         Units::IUnit * _unit = this->unit().device().unit(entry_it->unit);
          assert (_unit != nullptr);
          if (_unit != nullptr)
          {
-            fill_report(report, entry, _unit);
+            fill_report(report, *entry_it, _unit);
          }
-      });
+      }
 
       message->payload = Common::ByteArray (report->size());
 
       report->pack(message->payload);
 
-      this->send (rule.destination, *message);
+      this->send (rule_it->destination, *message);
 
       delete report;
       delete message;
-   });
-   /* *INDENT-ON* */
+   }
 }
 
 // =============================================================================
@@ -628,32 +618,30 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
                      const HF::Attributes::IAttribute &new_value)
 {
    /* *INDENT-OFF* */
-   std::for_each (event_rules.begin (), event_rules.end (),
-                  [this, unit, &old_value, &new_value](const Event::Rule &rule)
+   for (auto rule_it = event_rules.begin (); rule_it != event_rules.end (); ++rule_it)
    {
       std::vector<Report::Event::Entry *> entries;
-      std::for_each (rule.cbegin (), rule.cend (),
-                     [unit, &entries, &old_value, &new_value](const Event::Entry &entry)
+      for (auto entry_it = rule_it->cbegin (); entry_it != rule_it->cend (); ++entry_it)
       {
-         if (entry.unit == unit && entry.itf.id == new_value.interface())
+         if (entry_it->unit == unit && entry_it->itf.id == new_value.interface())
          {
-            entries.push_back (Report::Event::process (entry, old_value, new_value));
+            entries.push_back (Report::Event::process (*entry_it, old_value, new_value));
          }
-      });
+      }
 
       if (std::any_of (entries.begin(), entries.end(),
                        [](const Report::Event::Entry * entry) { return entry != nullptr; }))
       {
-         Report::Event * report = new Report::Event (rule.report.id);
+         Report::Event * report = new Report::Event (rule_it->report.id);
 
-         std::for_each (entries.begin(), entries.end(), [report](Report::Event::Entry * entry)
+         for (auto it = entries.begin(); it != entries.end(); ++it)
          {
-            if (entry != nullptr)
+            if (*it != nullptr)
             {
-               report->add(*entry);
-               delete entry;
+               report->add(*(*it));
+               delete *it;
             }
-         });
+         }
 
          Protocol::Message * message = new Protocol::Message ();
 
@@ -665,14 +653,12 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
 
          report->pack(message->payload);
 
-         this->send (rule.destination, *message);
+         this->send (rule_it->destination, *message);
 
          delete report;
          delete message;
       }
-
-   });
-   /* *INDENT-ON* */
+   }
 }
 
 // =============================================================================

@@ -153,12 +153,10 @@ namespace HF
             {
                uint16_t result = min_size;
 
-               /* *INDENT-OFF* */
-               std::for_each (entries.begin (), entries.end (), [&result](const _Entry &entry)
+               for (auto it = entries.begin (); it != entries.end (); ++it)
                {
-                  result += entry.size ();
-               });
-               /* *INDENT-ON* */
+                  result += it->size ();
+               }
 
                return result;
             }
@@ -174,13 +172,10 @@ namespace HF
                uint8_t count = entries.size ();
                offset += array.write (offset, count);
 
-               /* *INDENT-OFF* */
-               std::for_each(entries.begin(), entries.end(),
-                             [&offset, &array](const _Entry &entry)
+               for (auto it = entries.begin(); it != entries.end(); ++it)
                {
-                  offset += entry.pack (array, offset);
-               });
-               /* *INDENT-ON* */
+                  offset += it->pack (array, offset);
+               }
 
                return offset - start;
             }
@@ -398,12 +393,10 @@ namespace HF
              */
             void invalidate ()
             {
-               /* *INDENT-OFF* */
-               std::for_each (sessions.begin (), sessions.end (), [](Session &session)
+               for (auto it = sessions.begin (); it != sessions.end (); ++it)
                {
-                  session.valid = false;
-               });
-               /* *INDENT-ON* */
+                  it->valid = false;
+               }
             }
 
             protected:

@@ -550,21 +550,16 @@ void create_entries (T &entries, std::set <HF::Common::Interface> &db_itf,
    db_addr.insert (HF::Protocol::Address (3, 2, HF::Protocol::Address::GROUP));
    db_addr.insert (HF::Protocol::Address (3, 3, HF::Protocol::Address::GROUP));
 
-   /* *INDENT-OFF* */
-   for_each (db_addr.begin (), db_addr.end (),
-             [&entries, &db_itf, &db_addr] (HF::Protocol::Address const &src)
+   for (auto src_it = db_addr.begin(); src_it != db_addr.end(); ++src_it)
    {
-      for_each (db_itf.begin (), db_itf.end (),
-                [&entries, &db_itf, &db_addr, &src](HF::Common::Interface const &itf)
+      for (auto itf_it = db_itf.begin(); itf_it != db_itf.end(); ++itf_it)
       {
-         for_each (db_addr.begin (), db_addr.end (),
-                   [&entries, &db_itf, &db_addr, &src, &itf](HF::Protocol::Address const &dst)
+         for (auto dst_it = db_addr.begin(); dst_it != db_addr.end(); ++dst_it)
          {
-            entries.save (BindManagement::Entry (src, itf, dst));
-         });
-      });
-   });
-   /* *INDENT-ON* */
+            entries.save(BindManagement::Entry(*src_it, *itf_it, *dst_it));
+         }
+      }
+   }
 }
 
 TEST (BindManagementEntries, FindRange)
@@ -582,12 +577,10 @@ TEST (BindManagementEntries, FindRange)
 
    LONGS_EQUAL (18, distance (range.first, range.second));
 
-   /* *INDENT-OFF* */
-   for_each (range.first, range.second, [&db_addr] (HF::Core::BindManagement::Entry const &entry)
+   for (auto it = range.first; it != range.second; ++it)
    {
-      db_addr.erase (entry.destination);
-   });
-   /* *INDENT-ON* */
+      db_addr.erase (it->destination);
+   }
 
    CHECK_TRUE (db_addr.empty ());
 }

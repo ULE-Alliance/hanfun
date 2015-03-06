@@ -307,13 +307,10 @@ namespace HF
 
             uint16_t offset = packet->unpack (payload);
 
-            /* *INDENT-OFF* */
-            std::for_each (endpoints.begin (), endpoints.end (),
-                  [&packet, &payload, &offset](HF::Transport::Endpoint *ep)
-                  {
-                     ep->receive (*packet, payload, offset);
-                  });
-            /* *INDENT-ON* */
+            for (auto it = endpoints.begin (); it != endpoints.end (); ++it)
+            {
+               (*it)->receive (*packet, payload, offset);
+            }
 
             delete packet;
          }
@@ -343,13 +340,10 @@ namespace HF
          {
             assert (link != nullptr);
 
-            /* *INDENT-OFF* */
-            std::for_each (endpoints.begin (), endpoints.end (),
-                  [link](HF::Transport::Endpoint *ep)
-                  {
-                     ep->connected (link);
-                  });
-            /* *INDENT-ON* */
+            for (auto it = endpoints.begin (); it != endpoints.end (); ++it)
+            {
+               (*it)->connected (link);
+            }
          }
 
          /*!
@@ -362,13 +356,10 @@ namespace HF
          {
             assert (link != nullptr);
 
-            /* *INDENT-OFF* */
-            std::for_each (endpoints.begin (), endpoints.end (),
-                  [link](HF::Transport::Endpoint *ep)
-                  {
-                     ep->disconnected (link);
-                  });
-            /* *INDENT-ON* */
+            for (auto it = endpoints.begin (); it != endpoints.end (); ++it)
+            {
+               (*it)->disconnected (link);
+            }
          }
       };
 

@@ -107,13 +107,10 @@ namespace HF
 
          void destroy ()
          {
-            /* *INDENT-OFF* */
-            for_each(links.begin(), links.end(), [this](Link *link)
+            for (auto it = links.begin(); it != links.end(); ++it)
             {
-               this->destroy_link(link);
-
-            });
-            /* *INDENT-ON* */
+               this->destroy_link(*it);
+            }
 
             remove (nullptr);
          }
@@ -128,22 +125,18 @@ namespace HF
             Testing::Link *link = new Testing::Link (uid, this);
             links.push_back (link);
 
-            /* *INDENT-OFF* */
-            for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
+            for (auto it = endpoints.begin(); it != endpoints.end(); ++it)
             {
-               ep->connected (link);
-            });
-            /* *INDENT-ON* */
+               (*it)->connected (link);
+            }
          }
 
          void destroy_link (Link * &link)
          {
-            /* *INDENT-OFF* */
-            for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
+            for (auto it = endpoints.begin(); it != endpoints.end(); ++it)
             {
-               ep->disconnected (link);
-            });
-            /* *INDENT-ON* */
+               (*it)->disconnected (link);
+            }
 
             delete link;
             link = nullptr;

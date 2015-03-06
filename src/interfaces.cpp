@@ -403,11 +403,9 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          if (result == Common::Result::OK)
          {
-            /* *INDENT-OFF* */
-            for_each (attributes.begin (), attributes.end (),
-                       [attr_response, &result, this](uint8_t uid)
+            for (auto it = attributes.begin (); it != attributes.end (); ++it)
             {
-               HF::Attributes::IAttribute *attr = attribute (uid);
+               HF::Attributes::IAttribute *attr = attribute (*it);
                if (attr != nullptr)
                {
                   attr_response->attributes.push_back (attr);
@@ -416,8 +414,7 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
                {
                   result = Common::Result::FAIL_SUPPORT;
                }
-            });
-            /* *INDENT-ON* */
+            }
          }
 
          attr_response->code = result;

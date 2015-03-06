@@ -2081,12 +2081,10 @@ TEST_GROUP (AttrReport_Report_AddEntryMessage)
 
          offset += Report::AddEntryMessage::pack (array, offset);
 
-         /* *INDENT-OFF* */
-         std::for_each (entries.begin (), entries.end (), [&array, &offset](uint8_t value)
+         for (auto it = entries.begin (); it != entries.end (); ++it)
          {
-            offset += array.write (offset, value);
-         });
-         /* *INDENT-ON* */
+            offset += array.write (offset, *it);
+         }
 
          return offset - start;
       }

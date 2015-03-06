@@ -758,11 +758,11 @@ TEST (ResponseRequired, ShouldNotAddCommands)
       Protocol::Message::ATOMIC_SET_ATTR_PACK_RESP_REQ,
    };
 
-   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
-                     packet.message.type = type;
-                     filter (packet);
-                  }
-                 );
+   for (auto it = types.begin (); it != types.end (); ++it)
+   {
+      packet.message.type = *it;
+      filter (packet);
+   }
 
    LONGS_EQUAL (0, filter.size ());
 }
@@ -780,13 +780,11 @@ TEST (ResponseRequired, ShouldAddResponses)
       Protocol::Message::ATOMIC_SET_ATTR_PACK_RES,
    };
 
-   /* *INDENT-OFF* */
-   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
+   for (auto it = types.begin (); it != types.end (); ++it)
    {
-                     packet.message.type = type;
-                     filter (packet);
-   });
-   /* *INDENT-ON* */
+      packet.message.type = *it;
+      filter (packet);
+   }
 
    LONGS_EQUAL (types.size (), filter.size ());
 }

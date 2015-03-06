@@ -394,13 +394,10 @@ uint16_t GetAttributePack::Response::size () const
 {
    uint16_t result = min_size;
 
-   /* *INDENT-OFF* */
-   std::for_each (attributes.begin(), attributes.end(),
-                  [&result](HF::Attributes::IAttribute *attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      result += attr->size(true);
-   });
-   /* *INDENT-ON* */
+      result += (*it)->size(true);
+   }
 
    return result;
 }
@@ -422,13 +419,10 @@ uint16_t GetAttributePack::Response::pack (Common::ByteArray &array, uint16_t of
 
    offset += array.write (offset, (uint8_t) attributes.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (attributes.begin(), attributes.end(),
-                  [&array, &offset] (HF::Attributes::IAttribute * attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      offset += attr->pack(array, offset, true);
-   });
-   /* *INDENT-ON* */
+      offset += (*it)->pack(array, offset, true);
+   }
 
    return offset - start;
 }
@@ -494,13 +488,10 @@ uint16_t GetAttributePack::Response::unpack (const Common::ByteArray &array, uin
 
 SetAttributePack::Request::~Request()
 {
-   /* *INDENT-OFF* */
-   std::for_each(attributes.begin(), attributes.end(),
-                 [](HF::Attributes::IAttribute *attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      delete attr;
-   });
-   /* *INDENT-ON* */
+      delete *it;
+   }
 }
 
 // =============================================================================
@@ -514,13 +505,10 @@ uint16_t SetAttributePack::Request::size () const
 {
    uint16_t result = min_size;
 
-   /* *INDENT-OFF* */
-   std::for_each ( attributes.begin(), attributes.end(),
-                   [&result](HF::Attributes::IAttribute * attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      result += attr->size(true);
-   });
-   /* *INDENT-ON* */
+      result += (*it)->size(true);
+   }
 
    return result;
 }
@@ -540,13 +528,10 @@ uint16_t SetAttributePack::Request::pack (Common::ByteArray &array, uint16_t off
 
    offset += array.write (offset, (uint8_t) attributes.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (attributes.begin (), attributes.end (),
-                  [&array,&offset](HF::Attributes::IAttribute * attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      offset += attr->pack (array, offset, true);
-   });
-   /* *INDENT-ON* */
+      offset += (*it)->pack (array, offset, true);
+   }
 
    return offset - start;
 }
@@ -582,12 +567,10 @@ uint16_t SetAttributePack::Response::pack (Common::ByteArray &array, uint16_t of
 
    offset += array.write (offset, (uint8_t) results.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (results.begin (), results.end (), [&array,&offset](Result result)
+   for (auto it = results.begin(); it != results.end(); ++it)
    {
-      offset += result.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }

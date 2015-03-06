@@ -87,23 +87,19 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &arr
       stream << std::left;
       stream << "(" << Hex <uint16_t>(array.size ()) << ") ";
 
-      /* *INDENT-OFF* */
-      std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
+      for (auto it = array.begin (); it != array.end (); ++it)
       {
-         stream << Hex<uint8_t>(byte) << " ";
-      });
-      /* *INDENT-ON* */
+         stream << Hex<uint8_t>(*it) << " ";
+      }
 
       stream << std::setfill (f) << std::setiosflags (ff);
    }
    else
    {
-      /* *INDENT-OFF* */
-      std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
+      for (auto it = array.begin (); it != array.end (); ++it)
       {
-         stream << byte;
-      });
-      /* *INDENT-ON* */
+         stream << *it;
+      }
    }
 
    return stream;

@@ -396,12 +396,10 @@ namespace HF
 
          virtual ~AbstractDevice()
          {
-            /* *INDENT-OFF* */
-            std::for_each (packets.begin (), packets.end (), [](Protocol::Packet *packet)
+            for (auto it = packets.begin (); it != packets.end (); ++it)
             {
-               delete packet;
-            });
-            /* *INDENT-ON* */
+               delete *it;
+            }
 
             packets.clear ();
          }

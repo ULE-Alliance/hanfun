@@ -90,14 +90,12 @@ std::ostream &ICommand::help (std::ostream &_stream)
    uint16_t size = 0;
    std::vector <entry> entries;
 
-   /* *INDENT-OFF* */
-   std::for_each (ICommand::registry.begin (), ICommand::registry.end (),
-                  [&entries, &size](std::pair <std::string, ICommand *> e)
+   for (auto entry_it = ICommand::registry.begin (); entry_it != ICommand::registry.end (); ++entry_it)
    {
       // LOG (TRACE) << "E F : " << e.first << NL;
       // LOG (TRACE) << "E S : " << e.second << NL;
 
-      const std::string &raw = e.second->usage ();
+      const std::string &raw = entry_it->second->usage ();
 
       char *temp = new char[raw.size ()+1];
 
@@ -111,12 +109,12 @@ std::ostream &ICommand::help (std::ostream &_stream)
          lines.push_back (p);
       }
 
-      std::for_each (lines.begin (), lines.end (), [&entries, &size](char *line)
+      for (auto line_it = lines.begin (); line_it != lines.end (); ++line_it)
       {
          entry e;
 
          char *saveptr = NULL;
-         char *p = strtok_r (line, ":", &saveptr);
+         char *p = strtok_r (*line_it, ":", &saveptr);
          e.cmd = std::string (p);
 
          p = strtok_r (NULL, ":", &saveptr);
@@ -128,11 +126,10 @@ std::ostream &ICommand::help (std::ostream &_stream)
          {
             size = e.cmd.size ();
          }
-      });
+      }
 
       delete[] temp;
-   });
-   /* *INDENT-ON* */
+   }
 
    size++;
 
@@ -143,12 +140,10 @@ std::ostream &ICommand::help (std::ostream &_stream)
    stream << "================================================" << std::endl << std::endl;
 
    stream << std::setfill (' ');
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin (), entries.end (), [&stream, size](entry &e)
+   for (auto it = entries.begin (); it != entries.end (); ++it)
    {
-      stream << std::left << std::setw (size) << e.cmd << "\t: " << e.help << std::endl;
-   });
-   /* *INDENT-ON* */
+      stream << std::left << std::setw (size) << it->cmd << "\t: " << it->help << std::endl;
+   }
 
    stream << std::left << std::setw (size) << "h/?" << "\t: " << "this help menu."
           << std::endl << std::endl;

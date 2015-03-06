@@ -64,12 +64,10 @@ DevicePtr IServer::entry (uint16_t address) const
 
       auto &units = unit ().device ().units ();
 
-      /* *INDENT-OFF* */
-      std::for_each(units.begin(), units.end(), [&device](const HF::Units::IUnit *unit)
+      for (auto it = units.begin(); it != units.end(); ++it)
       {
-         device->units.push_back(DeviceManagement::Unit(*unit));
-      });
-      /* *INDENT-ON* */
+         device->units.push_back(DeviceManagement::Unit(*(*it)));
+      }
 
       return DevicePtr (device, true);
    }

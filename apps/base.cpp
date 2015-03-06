@@ -162,14 +162,11 @@ void DeviceManagement::Server::save (Json::Value &root)
 
    unsigned i = 0;
 
-   /* *INDENT-OFF* */
-   for_each( entries ().begin (), entries ().end (),
-             [&root, &i](HF::Core::DeviceManagement::Device &device)
+   for (auto it = entries ().begin (); it != entries ().end (); ++it)
    {
-      to_json (device, root[i]);
+      to_json (*it, root[i]);
       i++;
-   });
-   /* *INDENT-ON* */
+   }
 }
 
 // =============================================================================
@@ -249,14 +246,11 @@ void BindManagement::Server::save (Json::Value &root)
 
    unsigned i = 0;
 
-   /* *INDENT-OFF* */
-   for_each(entries().begin(), entries().end(),
-            [&root, &i](const HF::Core::BindManagement::Entry &entry)
-            {
-               to_json (entry, root[i]);
-               i++;
-            });
-   /* *INDENT-ON* */
+   for (auto it = entries().begin(); it != entries().end(); ++it)
+   {
+      to_json (*it, root[i]);
+      i++;
+   }
 }
 
 // =============================================================================
@@ -404,10 +398,10 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
    LOG (INFO) << "====== Device Information : Attributes ======" << std::endl
               << std::right << std::setw (log_width) << std::setfill (' ');
 
+   for (auto it = response.attributes.begin (); it != response.attributes.end (); ++it)
    /* *INDENT-OFF* */
-   std::for_each (response.attributes.begin (), response.attributes.end (),
-                  [log_width](const HF::Attributes::IAttribute *attr)
    {
+      auto attr = *it;
       LOG (APP) << std::right << std::setw (log_width) << std::setfill (' ');
 
       switch (attr->uid ())
@@ -482,10 +476,10 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
 
             auto value = dect->get ();
 
-            std::for_each(value.begin (), value.end (), [](uint8_t byte)
+            for (auto it = value.begin (); it != value.end (); ++it)
             {
-               LOG (APP) << byte;
-            });
+               LOG (APP) << *it;
+            }
 
             break;
          }
@@ -516,11 +510,10 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
             LOG (APP) << "Friendly Name (" << Hex <uint8_t>(attr->uid ()) << ") |";
             auto const &names = names_attr->get ();
 
-            std::for_each (names.units.begin (), names.units.end (),
-                           [](const FriendlyName::Unit &unit)
+            for (auto it = names.units.begin (); it != names.units.end (); ++it)
             {
-               LOG (APP) << " (" << (int) unit.id << ") " << unit.name;
-            });
+               LOG (APP) << " (" << (int) it->id << ") " << it->name;
+            }
 
             break;
          }
@@ -547,8 +540,7 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
 
       LOG (APP) << std::endl;
 
-   });
-   /* *INDENT-ON* */
+   }
 
    LOG (INFO) << "====== Device Information : Attributes ======" << NL;
 }

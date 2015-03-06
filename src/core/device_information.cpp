@@ -88,12 +88,10 @@ uint16_t FriendlyName::size () const
 {
    uint16_t result = min_size;
 
-   /* *INDENT-OFF* */
-   std::for_each (units.begin(), units.end(), [&result](const Unit &unit)
+   for (auto it = units.begin(); it != units.end(); ++it)
    {
-      result += unit.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -112,12 +110,10 @@ uint16_t FriendlyName::pack (HF::Common::ByteArray &array, uint16_t offset) cons
    uint8_t _size = units.size ();
    offset += array.write (offset, _size);
 
-   /* *INDENT-OFF* */
-   std::for_each (units.begin(), units.end(), [&array, &offset](const Unit &unit)
+   for (auto it = units.begin(); it != units.end(); ++it)
    {
-      offset += unit.pack(array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack(array, offset);
+   }
 
    return size ();
 }

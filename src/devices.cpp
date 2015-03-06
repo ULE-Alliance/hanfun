@@ -149,12 +149,10 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
 // =============================================================================
 void AbstractDevice::periodic (uint32_t time)
 {
-   /* *INDENT-OFF* */
-   std::for_each(units().begin(), units().end(), [time](Units::IUnit *unit)
+   for (auto it = units().begin(); it != units().end(); ++it)
    {
-      unit->periodic(time);
-   });
-   /* *INDENT-ON* */
+      (*it)->periodic(time);
+   }
 }
 
 // =============================================================================
@@ -337,11 +335,10 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
                            this->send (other);
                         };
 
-   std::for_each(route_pairs.begin(), route_pairs.end(),
-                 [&entries, &process_entry](const RoutePair &pair)
+   for (auto it = route_pairs.begin(); it != route_pairs.end(); ++it)
    {
-      entries.for_each (pair.first, pair.second, process_entry);
-   });
+      entries.for_each (it->first, it->second, process_entry);
+   }
 }
 
 // =============================================================================
@@ -365,12 +362,10 @@ void Concentrator::Transport::remove (HF::Transport::Link *link)
 {
    if (link != nullptr)
    {
-      /* *INDENT-OFF* */
-      std::for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
+      for (auto it = endpoints.begin(); it != endpoints.end(); ++it)
       {
-         ep->disconnected (link);
-      });
-      /* *INDENT-ON* */
+         (*it)->disconnected (link);
+      }
 
       links.remove (link);
 
@@ -378,17 +373,15 @@ void Concentrator::Transport::remove (HF::Transport::Link *link)
    }
    else
    {
-      /* *INDENT-OFF* */
-      std::for_each (links.begin (), links.end (), [this](HF::Transport::Link *link)
+      for (auto link_it = links.begin (); link_it != links.end (); ++link_it)
       {
-         std::for_each(endpoints.begin(), endpoints.end(), [link](HF::Transport::Endpoint *ep)
+         for (auto ep_it = endpoints.begin(); ep_it != endpoints.end(); ++ep_it)
          {
-            ep->disconnected (link);
-         });
+            (*ep_it)->disconnected (*link_it);
+         }
 
-         delete link;
-      });
-      /* *INDENT-ON* */
+         delete *link_it;
+      }
 
       links.clear ();
    }

@@ -226,7 +226,10 @@ void Entries::for_each (Protocol::Address const &source, Common::Interface const
                         std::function <void(const Entry &)> func) const
 {
    auto range = find (source, itf);
-   std::for_each (range.first, range.second, func);
+   for (auto it = range.first; it != range.second; ++it)
+   {
+      func(*it);
+   }
 }
 
 // =============================================================================

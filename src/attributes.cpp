@@ -720,12 +720,10 @@ List Attributes::get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uid
       attr_uids = uids;
    }
 
-   /* *INDENT-OFF* */
-   std::for_each(attr_uids.begin (), attr_uids.end (), [&result, &itf](uint8_t uid)
+   for (auto it = attr_uids.begin (); it != attr_uids.end (); ++it)
    {
-      result.push_back(const_cast<HF::Interface &>(itf).attribute(uid));
-   });
-   /* *INDENT-ON* */
+      result.push_back(const_cast<HF::Interface &>(itf).attribute(*it));
+   }
 
    return result;
 }

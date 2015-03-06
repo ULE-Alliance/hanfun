@@ -211,13 +211,10 @@ namespace HF
             uint8_t  count = length ();
             offset += array.write (offset, count);
 
-            /* *INDENT-OFF* */
-            std::for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(),
-                           [&offset,&array](uint8_t uid)
+            for (auto it = std::vector<uint8_t>::begin(); it != std::vector<uint8_t>::end(); ++it)
             {
-               offset += array.write (offset, uid);
-            });
-            /* *INDENT-ON* */
+               offset += array.write (offset, *it);
+            }
 
             return offset - start;
          }
@@ -908,13 +905,10 @@ namespace HF
 
             virtual ~Response()
             {
-               /* *INDENT-OFF* */
-               std::for_each (attributes.begin (), attributes.end (),
-                               [](HF::Attributes::IAttribute *attr)
+               for (auto it = attributes.begin (); it != attributes.end (); ++it)
                {
-                  delete attr;
-               });
-               /* *INDENT-ON* */
+                  delete *it;
+               }
             }
 
             //! Minimum pack/unpack required data size.

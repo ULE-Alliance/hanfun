@@ -109,29 +109,25 @@ namespace
                                                          report.entries.end ()) << " (#)");
 
                uint8_t unit_count = 0;
-               /* *INDENT-OFF* */
-               std::for_each (report.entries.begin (), report.entries.end (),
-                     [&unit_count](Report::Periodic::Entry &entry)
+               for (auto e_it = report.entries.begin (); e_it != report.entries.end (); ++e_it)
                {
-                  TABLE_LOG ("Entry : " << (int) unit_count++ << std::endl << entry);
+                  TABLE_LOG ("Entry : " << (int) unit_count++ << std::endl << *e_it);
 
                   uint8_t attr_count = 0;
-                  std::for_each (entry.attributes.begin (), entry.attributes.end (),
-                        [&attr_count](Report::Attribute attr)
+                  for (auto attr_it = e_it->attributes.begin (); attr_it != e_it->attributes.end (); ++attr_it)
                   {
-                     TABLE_LOG (" Attribute : " << (int) attr_count++ << attr);
+                     TABLE_LOG (" Attribute : " << (int) attr_count++ << (*attr_it));
 
-                     if (attr->interface () == HF::Interface::LEVEL_CONTROL &&
-                           attr->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
+                     if ((*attr_it)->interface () == HF::Interface::LEVEL_CONTROL &&
+                           (*attr_it)->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
                      {
                         HF::Interfaces::LevelControl::Level *level_attr =
-                        (HF::Interfaces::LevelControl::Level *) attr.get ();
+                        (HF::Interfaces::LevelControl::Level *) (*attr_it).get ();
                         int precent = HF::Common::to_percent <uint8_t>(level_attr->get ());
                         TABLE_LOG ("Attr Value : " << precent << "%");
                      }
-                  });
-               });
-               /* *INDENT-ON* */
+                  }
+               }
 
                break;
             }
@@ -152,30 +148,27 @@ namespace
 
                uint8_t unit_count = 0;
                /* *INDENT-OFF* */
-               std::for_each (report.entries.begin (), report.entries.end (),
-                     [&unit_count](Report::Event::Entry &entry)
+               for (auto e_it = report.entries.begin (); e_it != report.entries.end (); ++e_it)
                {
-                  TABLE_LOG ("Entry : " << (int) unit_count++ << std::endl << entry);
+                  TABLE_LOG ("Entry : " << (int) unit_count++ << std::endl << *e_it);
 
                   uint8_t field_count = 0;
-                  std::for_each (entry.fields.begin (), entry.fields.end (),
-                        [&field_count](Report::Event::Field &field)
+                  for (auto field_it = e_it->fields.begin (); field_it != e_it->fields.end (); ++field_it)
                   {
-                     TABLE_LOG (" Field : " << (int) field_count++ << field);
-                     TABLE_LOG (" Attribute : " << field.attribute->interface () << " (itf) "
-                                                << (int) field.attribute->uid () << " (uid)");
+                     TABLE_LOG (" Field : " << (int) field_count++ << *field_it);
+                     TABLE_LOG (" Attribute : " << field_it->attribute->interface () << " (itf) "
+                                                << (int) field_it->attribute->uid () << " (uid)");
 
-                     if (field.attribute->interface () == HF::Interface::LEVEL_CONTROL &&
-                           field.attribute->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
+                     if (field_it->attribute->interface () == HF::Interface::LEVEL_CONTROL &&
+                           field_it->attribute->uid () == HF::Interfaces::LevelControl::LEVEL_ATTR)
                      {
                         HF::Interfaces::LevelControl::Level *level_attr =
-                        (HF::Interfaces::LevelControl::Level *) field.attribute.get ();
+                        (HF::Interfaces::LevelControl::Level *) field_it->attribute.get ();
                         int precent = HF::Common::to_percent <uint8_t>(level_attr->get ());
                         TABLE_LOG ("Attr Value : " << precent << "%");
                      }
-                  });
-               });
-               /* *INDENT-ON* */
+                  }
+               }
 
                break;
             }

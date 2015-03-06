@@ -267,12 +267,10 @@ uint16_t Periodic::Rule::size () const
 {
    uint16_t result = min_size;
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin(), entries.end(), [&result](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      result += entry.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -298,13 +296,10 @@ uint16_t Periodic::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += array.write (offset, _size);
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin (), entries.end (),
-                  [&offset, &array](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      offset += entry.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -497,13 +492,10 @@ uint16_t Event::Entry::size () const
       result += (sizeof(uint8_t) + sizeof(uint8_t));
    }
 
-   /* *INDENT-OFF* */
-   std::for_each(fields.begin(), fields.end(),
-                 [&result, attr_uid](const Event::Field &field)
+   for (auto it = fields.begin(); it != fields.end(); ++it)
    {
-      result += field.size(attr_uid);
-   });
-   /* *INDENT-ON* */
+      result += it->size(attr_uid);
+   }
 
    return result;
 }
@@ -536,13 +528,10 @@ uint16_t Event::Entry::pack (Common::ByteArray &array, uint16_t offset) const
       offset += array.write (offset, (uint8_t) 0);
    }
 
-   /* *INDENT-OFF* */
-   std::for_each(fields.begin(), fields.end(),
-                 [&offset, &array, attr_uid](const Event::Field &field)
+   for (auto it = fields.begin(); it != fields.end(); ++it)
    {
-      offset += field.pack(array, offset, attr_uid);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack(array, offset, attr_uid);
+   }
 
    return offset - start;
 }
@@ -612,12 +601,10 @@ uint16_t Event::Rule::size () const
 {
    uint16_t result = min_size;
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin(), entries.end(), [&result](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      result += entry.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -641,12 +628,10 @@ uint16_t Event::Rule::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += array.write (offset, _size);
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin (), entries.end (), [&offset, &array](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      offset += entry.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -791,12 +776,10 @@ uint16_t Report::Periodic::Entry::size () const
 {
    uint16_t result = Report::Entry::size ();
 
-   /* *INDENT-OFF* */
-   std::for_each(attributes.begin(), attributes.end(), [&result](const Attribute &attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      result += attr->size(true);
-   });
-   /* *INDENT-ON* */
+      result += (*it)->size(true);
+   }
 
    return result;
 }
@@ -816,12 +799,10 @@ uint16_t Report::Periodic::Entry::pack (Common::ByteArray &array, uint16_t offse
 
    offset += Report::Entry::pack (array, offset);
 
-   /* *INDENT-OFF* */
-   std::for_each(attributes.begin(), attributes.end(), [&offset, &array](const Attribute &attr)
+   for (auto it = attributes.begin(); it != attributes.end(); ++it)
    {
-      offset += attr->pack(array, offset, true);
-   });
-   /* *INDENT-ON* */
+      offset += (*it)->pack(array, offset, true);
+   }
 
    return offset - start;
 }
@@ -898,12 +879,10 @@ uint16_t Report::Periodic::size () const
 {
    uint16_t result = Report::Abstract::size ();
 
-   /* *INDENT-OFF* */
-   std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      result += entry.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -923,12 +902,10 @@ uint16_t Report::Periodic::pack (Common::ByteArray &array, uint16_t offset) cons
 
    offset += Report::Abstract::pack (array, offset);
 
-   /* *INDENT-OFF* */
-   std::for_each(entries.begin(), entries.end(), [&offset, &array](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      offset += entry.pack(array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack(array, offset);
+   }
 
    return offset - start;
 }
@@ -1097,12 +1074,10 @@ uint16_t Report::Event::Entry::size () const
 {
    uint16_t result = Report::Entry::size ();
 
-   /* *INDENT-OFF* */
-   std::for_each (fields.begin (), fields.end (), [&result](const Field &field)
+   for (auto it = fields.begin(); it != fields.end(); ++it)
    {
-      result += field.size ();
-   });
-   /* *INDENT-ON* */
+      result += it->size ();
+   }
 
    return result;
 }
@@ -1122,12 +1097,10 @@ uint16_t Report::Event::Entry::pack (Common::ByteArray &array, uint16_t offset) 
 
    offset += Report::Entry::pack (array, offset);
 
-   /* *INDENT-OFF* */
-   std::for_each (fields.begin (), fields.end (), [&offset, &array](const Field &field)
+   for (auto it = fields.begin(); it != fields.end(); ++it)
    {
-      offset += field.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -1164,12 +1137,10 @@ uint16_t Report::Event::size () const
 {
    uint16_t result = Reference::size ();
 
-   /* *INDENT-OFF* */
-   std::for_each(entries.begin(), entries.end(), [&result](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      result += entry.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -1189,12 +1160,10 @@ uint16_t Report::Event::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += Report::Abstract::pack (array, offset);
 
-   /* *INDENT-OFF* */
-   std::for_each(entries.begin(), entries.end(), [&offset, &array](const Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      offset += entry.pack(array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack(array, offset);
+   }
 
    return offset - start;
 }
@@ -1455,13 +1424,10 @@ uint16_t Report::Periodic::AddEntryMessage::size () const
 {
    uint16_t result = Report::AddEntryMessage::size ();
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin(), entries.end(),
-                  [&result](const AttributeReporting::Periodic::Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      result += entry.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -1481,13 +1447,10 @@ uint16_t Report::Periodic::AddEntryMessage::pack (Common::ByteArray &array, uint
 
    offset += Report::AddEntryMessage::pack (array, offset);
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin(), entries.end(),
-                  [&array, &offset](const AttributeReporting::Periodic::Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      offset += entry.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -1524,13 +1487,10 @@ uint16_t Report::Event::AddEntryMessage::size () const
 {
    uint16_t result = Report::AddEntryMessage::size ();
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin(), entries.end(),
-                  [&result](const AttributeReporting::Event::Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      result += entry.size();
-   });
-   /* *INDENT-ON* */
+      result += it->size();
+   }
 
    return result;
 }
@@ -1550,13 +1510,10 @@ uint16_t Report::Event::AddEntryMessage::pack (Common::ByteArray &array, uint16_
 
    offset += Report::AddEntryMessage::pack (array, offset);
 
-   /* *INDENT-OFF* */
-   std::for_each (entries.begin(), entries.end(),
-                  [&array, &offset](const AttributeReporting::Event::Entry &entry)
+   for (auto it = entries.begin(); it != entries.end(); ++it)
    {
-      offset += entry.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -1680,16 +1637,13 @@ Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::E
 
    if (entry.pack_id == HF::Attributes::DYNAMIC)
    {
-      /* *INDENT-OFF* */
-      std::for_each (entry.fields.begin (),entry.fields.end (),
-                     [&fields, &old_value, &new_value](const AttributeReporting::Event::Field &field)
+      for (auto it = entry.fields.begin(); it != entry.fields.end(); ++it)
       {
-         if (field.attr_uid == new_value.uid())
+         if (it->attr_uid == new_value.uid())
          {
-            fields.push_back(process_field(field, old_value, new_value));
+            fields.push_back(process_field(*it, old_value, new_value));
          }
-      });
-      /* *INDENT-ON* */
+      }
    }
    else
    {
@@ -1722,16 +1676,14 @@ Report::Event::Entry *Report::Event::process (const AttributeReporting::Event::E
    {
       result = new Report::Event::Entry (entry.unit, entry.itf);
 
-      /* *INDENT-OFF* */
-      std::for_each (fields.begin (), fields.end (), [result](Event::Field *field)
+      for (auto it = fields.begin(); it != fields.end(); ++it)
       {
-         if (field != nullptr)
+         if (*it != nullptr)
          {
-            result->add (*field);
-            delete field;
+            result->add (*(*it));
+            delete *it;
          }
-      });
-      /* *INDENT-ON* */
+      }
    }
 
    return result;
@@ -1949,12 +1901,11 @@ Protocol::Message *AttributeReporting::add (Reference report,
    }
 
    add_msg->report = report;
-   /* *INDENT-OFF* */
-   std::for_each (begin, end, [add_msg](Periodic::Entry &entry)
+
+   for (auto it = begin; it != end; ++it)
    {
-      add_msg->add (entry);
-   });
-   /* *INDENT-ON* */
+      add_msg->add (*it);
+   }
 
    Protocol::Message * message = new Protocol::Message (add_msg->size ());
    assert (message != nullptr);
@@ -2001,10 +1952,10 @@ Protocol::Message *AttributeReporting::add (Reference report,
    }
 
    add_msg->report = report;
-   std::for_each (begin, end, [add_msg](const Event::Entry &entry) {
-                     add_msg->add (entry);
-                  }
-                 );
+   for (auto it = begin; it != end; ++it)
+   {
+      add_msg->add (*it);
+   }
 
    Protocol::Message *message = new Protocol::Message (add_msg->size ());
    assert (message != nullptr);

@@ -86,12 +86,11 @@ uint16_t Unit::pack (Common::ByteArray &array, uint16_t offset) const
       offset += array.write (offset, (uint8_t) interfaces.size ());
 
       /* *INDENT-OFF* */
-      std::for_each(interfaces.begin (), interfaces.end (),
-                    [&offset, &array](const HF::Common::Interface &itf)
+
+      for (auto it = interfaces.begin (); it != interfaces.end (); ++it)
       {
-         offset += itf.pack (array, offset);
-      });
-      /* *INDENT-ON* */
+         offset += it->pack (array, offset);
+      }
    }
 
    return offset - start;
@@ -186,12 +185,10 @@ uint16_t Device::size () const
 {
    uint16_t result = min_size;
 
-   /* *INDENT-OFF* */
-   std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
+   for (auto it = units.begin (); it != units.end (); ++it)
    {
-      result += unit.size ();
-   });
-   /* *INDENT-ON* */
+      result += it->size ();
+   }
 
    return result;
 }
@@ -213,12 +210,10 @@ uint16_t Device::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += array.write (offset, (uint8_t) units.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
+   for (auto it = units.begin (); it != units.end (); ++it)
    {
-      offset += unit.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }
@@ -287,12 +282,10 @@ uint16_t RegisterMessage::size () const
 
    result += sizeof(uint8_t); // Number of units.
 
-   /* *INDENT-OFF* */
-   std::for_each (units.begin (), units.end (), [&result](const Unit &unit)
+   for (auto it = units.begin (); it != units.end (); ++it)
    {
-      result += unit.size ();
-   });
-   /* *INDENT-ON* */
+      result += it->size ();
+   }
 
    return result;
 }
@@ -320,12 +313,10 @@ uint16_t RegisterMessage::pack (Common::ByteArray &array, uint16_t offset) const
 
    offset += array.write (offset, (uint8_t) units.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (units.begin (), units.end (), [&array, &offset](const Unit &unit)
+   for (auto it = units.begin (); it != units.end (); ++it)
    {
-      offset += unit.pack (array, offset);
-   });
-   /* *INDENT-ON* */
+      offset += it->pack (array, offset);
+   }
 
    return offset - start;
 }

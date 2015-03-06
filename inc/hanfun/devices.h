@@ -680,12 +680,10 @@ namespace HF
             void add (HF::Transport::Endpoint *ep)
             {
                HF::Transport::AbstractLayer::add (ep);
-               /* *INDENT-OFF* */
-               std::for_each(links.begin(), links.end(), [ep](HF::Transport::Link *link)
+               for (auto it = links.begin(); it != links.end(); ++it)
                {
-                  ep->connected (link);
-               });
-               /* *INDENT-ON* */
+                  ep->connected (*it);
+               }
             }
 
             /*!

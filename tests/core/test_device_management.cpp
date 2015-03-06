@@ -229,13 +229,10 @@ TEST (DeviceManagement, Device)
    LONGS_EQUAL (0x3333, device.address);
    LONGS_EQUAL (3, device.units.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (device.units.begin (), device.units.end (),
-                  [&unit](const DeviceManagement::Unit &_unit)
+   for (auto it = device.units.begin (); it != device.units.end (); ++it)
    {
-      CHECK_EQUAL (unit, _unit);
-   });
-   /* *INDENT-ON* */
+      CHECK_EQUAL (unit, *it);
+   }
 }
 
 // =============================================================================
@@ -311,13 +308,10 @@ TEST (DeviceManagement_RegisterMessage, No_EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (message->units.begin (), message->units.end (),
-                  [this](const DeviceManagement::Unit &_unit)
+   for (auto it = message->units.begin (); it != message->units.end (); ++it)
    {
-      CHECK_EQUAL (unit, _unit);
-   });
-   /* *INDENT-ON* */
+      CHECK_EQUAL (unit, *it);
+   }
 }
 
 TEST (DeviceManagement_RegisterMessage, No_UID)
@@ -385,13 +379,10 @@ TEST (DeviceManagement_RegisterMessage, EMC)
 
    CHECK_EQUAL (3, message->units.size ());
 
-   /* *INDENT-OFF* */
-   std::for_each (message->units.begin (), message->units.end (),
-                  [this](const DeviceManagement::Unit &_unit)
+   for (auto it = message->units.begin (); it != message->units.end (); ++it)
    {
-      CHECK_EQUAL (unit, _unit);
-   });
-   /* *INDENT-ON* */
+      CHECK_EQUAL (unit, *it);
+   }
 }
 
 // =============================================================================
@@ -613,12 +604,10 @@ TEST (DeviceManagementClient, RegisterMessage)
    std::vector <uint8_t> expected;
    std::vector <uint8_t> actual;
 
-   /* *INDENT-OFF* */
-   for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
+   for (auto it = payload.units.begin (); it != payload.units.end (); ++it)
    {
-      actual.push_back (unit.id);
-   });
-   /* *INDENT-ON* */
+      actual.push_back (it->id);
+   }
 
    // Unit 0 - Should not be present.
    /* *INDENT-OFF* */
@@ -634,12 +623,10 @@ TEST (DeviceManagementClient, RegisterMessage)
    expected.clear ();
    actual.clear ();
 
-   /* *INDENT-OFF* */
-   for_each (payload.units.begin (), payload.units.end (), [&actual](DeviceManagement::Unit &unit)
+   for (auto it = payload.units.begin (); it != payload.units.end (); ++it)
    {
-      actual.push_back (unit.profile);
-   });
-   /* *INDENT-ON* */
+      actual.push_back (it->profile);
+   }
 
    expected.push_back (unit1->uid ());
    expected.push_back (unit2->uid ());
