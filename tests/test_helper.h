@@ -14,10 +14,7 @@
 #ifndef HF_TEST_HELPER_H
 #define HF_TEST_HELPER_H
 
-#include <string.h>
 #include <sstream>
-#include <algorithm>
-#include <iostream>
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -35,6 +32,8 @@
 #include "hanfun/core/attribute_reporting.h"
 
 #include "hanfun/units.h"
+
+#include "hanfun/debug.h"
 
 using namespace HF;
 using namespace HF::Protocol;

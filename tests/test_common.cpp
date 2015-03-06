@@ -18,8 +18,6 @@
 #include "hanfun/common.h"
 #include "hanfun/uids.h"
 
-#include "hanfun/debug.h"
-
 #include "test_helper.h"
 
 using namespace HF;

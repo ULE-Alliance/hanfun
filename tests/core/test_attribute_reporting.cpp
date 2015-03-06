@@ -20,8 +20,6 @@
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/units.h"
 
-#include "hanfun/debug.h"
-
 using namespace HF;
 using namespace HF::Common;
 using namespace HF::Core;
