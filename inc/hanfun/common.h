@@ -24,6 +24,7 @@
 #include <cmath>
 
 #include <algorithm>
+#include <array>
 #include <forward_list>
 #include <functional>
 #include <iterator>
