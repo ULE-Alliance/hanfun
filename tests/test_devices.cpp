@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the Device API.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -318,6 +318,8 @@ namespace
             tsp->destroy ();
             delete tsp;
          }
+
+         base_tsp.destroy();
       }
 
       void add (AbstractDeviceHelper &device, std::string id)
