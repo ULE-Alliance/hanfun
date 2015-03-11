@@ -1,6 +1,6 @@
 # HAN-FUN
 
-This project aims at providing an implementation of the ULE Alliance's HAN-FUN application specification.
+This project aims at providing an implementation of the [ULE Alliance](http://www.ulealliance.org/) HAN-FUN application specification.
 
 ## Overview
 
@@ -41,6 +41,13 @@ The build system used is [CMake](http://www.cmake.org/).
       $ cmake ..
       $ make
       $ make doc # Build the documentation
+
+The Doxygen generated API documentation can be found [here](http://ULE-Alliance.github.io/hanfun).
+
+The project will follow [this](http://nvie.com/posts/a-successful-git-branching-model/) convention for development.
+The following helper [scripts](https://github.com/nvie/gitflow) are available.
+
+The versions of the project follow the [SemVer 2.0.0](http://semver.org/) specification.
 
 ## Testing
 
@@ -131,6 +138,14 @@ toggle command was received.
 
 Please see the help in the applications for further features.
 
+## Contributing
+
+ 1. Fork it!
+ 2. Create your feature branch: `git checkout -b my-new-feature`
+ 3. Commit your changes: `git commit -am 'Add some feature'`
+ 4. Push to the branch: `git push origin my-new-feature`
+ 5. Submit a pull request (PR).
+
 ## Author
 
  * Initial development by [Bithium S.A.](http://www.bithium.com)
@@ -141,3 +156,4 @@ This library is released under dual-license, [GLPv2](http://www.gnu.org/licenses
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
 Please see the file 'LICENSE' in the root folder for further information.
+

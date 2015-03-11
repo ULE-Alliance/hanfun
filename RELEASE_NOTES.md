@@ -3,12 +3,12 @@
 |             |                            |
 | ---------:  | -------------------------- |
 | __Project__ | HAN-FUN CI                 |
-| __Version__ | v1.2.2                     |
+| __Version__ | v1.2.3                     |
 | __Date__    | 22/12/2014                 |
 
 ## Overview
 
-This is the first public release of the ULE Alliance's HAN-FUN Common Implementation.
+This a ULE Alliance's HAN-FUN Common Implementation public release.
 
 This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.1.0.
 
@@ -20,6 +20,10 @@ For more information on requirements, building and using this software package, 
 
 * A - Attribute
 * C - Command
+
+### New
+
+  * Added an empty Attribute Reporting Server implementation. This implementation will respond to any command with a FAIL_RESOURCES error code.
 
 ### 1. Protocol [HF-Protocol v1.1.0]
 
@@ -235,7 +239,7 @@ For more information on requirements, building and using this software package, 
 
 ## Bug Fixes
 
-This is the first public release.
+  * Adding missing call to base transport destroy in the device's unit tests.
 
 ## Known Issues and Problems
 

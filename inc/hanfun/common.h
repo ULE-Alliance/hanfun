@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,6 +24,7 @@
 #include <cmath>
 
 #include <algorithm>
+#include <array>
 #include <memory>
 #include <limits>
 
