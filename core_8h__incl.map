@@ -1,16 +1,16 @@
 <map id="core.h" name="core.h">
-<area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="481,544,607,571"/>
-<area shape="rect" id="node16" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="575,320,701,347"/>
-<area shape="rect" id="node21" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="735,469,857,496"/>
-<area shape="rect" id="node22" href="$units_8h.html" title="This file contains the definitions for the HAN&#45;FUN unit implementation. " alt="" coords="512,80,616,107"/>
-<area shape="rect" id="node13" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="778,619,875,645"/>
-<area shape="rect" id="node17" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="459,395,588,421"/>
-<area shape="rect" id="node23" href="$profiles_8h.html" title="This file contains the declarations and definitions for the HAN&#45;FUN Profiles. " alt="" coords="509,155,627,181"/>
-<area shape="rect" id="node29" href="$device_8h.html" title="This file contains the declaration of the API for a HAN&#45;FUN device. " alt="" coords="1108,320,1223,347"/>
-<area shape="rect" id="node24" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="271,237,433,264"/>
-<area shape="rect" id="node25" href="$on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="925,230,1064,271"/>
-<area shape="rect" id="node26" href="$level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="559,230,712,271"/>
-<area shape="rect" id="node27" href="$simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="737,230,900,271"/>
-<area shape="rect" id="node31" href="$inc_2hanfun_2transport_8h.html" title="This file contains the definition of the transport layer API for the HAN&#45;FUN common implementation..." alt="" coords="1115,395,1241,421"/>
-<area shape="rect" id="node32" href="$uids_8h.html" title="This file contains the declaration of the classes that implement the HAN&#45;FUN UIDs. " alt="" coords="1026,469,1125,496"/>
+<area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="874,544,1000,571"/>
+<area shape="rect" id="node24" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="1078,320,1204,347"/>
+<area shape="rect" id="node26" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1132,469,1255,496"/>
+<area shape="rect" id="node27" href="$units_8h.html" title="This file contains the definitions for the HAN&#45;FUN unit implementation. " alt="" coords="995,80,1099,107"/>
+<area shape="rect" id="node21" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,619,1669,645"/>
+<area shape="rect" id="node25" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="975,395,1104,421"/>
+<area shape="rect" id="node28" href="$profiles_8h.html" title="This file contains the declarations and definitions for the HAN&#45;FUN Profiles. " alt="" coords="983,155,1101,181"/>
+<area shape="rect" id="node33" href="$device_8h.html" title="This file contains the declaration of the API for a HAN&#45;FUN device. " alt="" coords="1517,320,1632,347"/>
+<area shape="rect" id="node29" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="889,237,1052,264"/>
+<area shape="rect" id="node30" href="$on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="1178,230,1317,271"/>
+<area shape="rect" id="node31" href="$level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="1342,230,1495,271"/>
+<area shape="rect" id="node32" href="$simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="701,230,864,271"/>
+<area shape="rect" id="node34" href="$inc_2hanfun_2transport_8h.html" title="This file contains the definition of the transport layer API for the HAN&#45;FUN common implementation..." alt="" coords="1410,395,1536,421"/>
+<area shape="rect" id="node35" href="$uids_8h.html" title="This file contains the declaration of the classes that implement the HAN&#45;FUN UIDs. " alt="" coords="1377,469,1476,496"/>
 </map>

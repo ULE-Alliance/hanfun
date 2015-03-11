@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -135,11 +135,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ad55c4245af299250cb854e656d11e888"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad55c4245af299250cb854e656d11e888"></a>
-std::forward_list<br class="typebreak" />
-&lt; <a class="el" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a></td></tr>
-<tr class="memdesc:ad55c4245af299250cb854e656d11e888"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of registered end-points for this layer. <br /></td></tr>
-<tr class="separator:ad55c4245af299250cb854e656d11e888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c4dc78810af5726973e161f45ca1235"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c4dc78810af5726973e161f45ca1235"></a>
+Common::SimpleList<br class="typebreak" />
+&lt; <a class="el" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a></td></tr>
+<tr class="memdesc:a5c4dc78810af5726973e161f45ca1235"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of registered end-points for this layer. <br /></td></tr>
+<tr class="separator:a5c4dc78810af5726973e161f45ca1235"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a102524ec3fa02b372e306050fbcb9aab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a102524ec3fa02b372e306050fbcb9aab"></a>
 <a class="el" href="structHF_1_1UID_1_1UID__T.html">HF::UID::UID_T</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">_uid</a></td></tr>
 <tr class="memdesc:a102524ec3fa02b372e306050fbcb9aab"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespaceHF_1_1UID.html" title="This is the top-level namespace for HAN-FUN UIDs. ">UID</a> associated with the local transport layer. <br /></td></tr>
@@ -148,7 +148,7 @@ std::forward_list<br class="typebreak" />
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Parent class for all <a class="el" href="structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. ">HF::Transport::Layer</a> implementations. </p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00242">242</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00239">239</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a3e808b2bebbd3932cf465f4552e984ac"></a>
 <div class="memitem">
@@ -182,14 +182,14 @@ std::forward_list<br class="typebreak" />
 
 <p>Implements <a class="el" href="structHF_1_1Transport_1_1Layer.html#a5f3e805702b6c5acc697c53677383496">HF::Transport::Layer</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00271">271</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00268">268</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
 
-<p>Referenced by <a class="el" href="devices_8h_source.html#l00381">HF::Devices::Node::Transport::add()</a>, and <a class="el" href="devices_8h_source.html#l00682">HF::Devices::Concentrator::Transport::add()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;         {</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            assert (ep != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.push_front (ep);</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_ad55c4245af299250cb854e656d11e888"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">std::forward_list&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
+<p>Referenced by <a class="el" href="devices_8h_source.html#l00379">HF::Devices::Node::Transport::add()</a>, and <a class="el" href="devices_8h_source.html#l00680">HF::Devices::Concentrator::Transport::add()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;         {</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            assert (ep != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.push_front (ep);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;         }</div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a5c4dc78810af5726973e161f45ca1235"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">Common::SimpleList&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00244">inc/hanfun/transport.h:244</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -234,24 +234,24 @@ std::forward_list<br class="typebreak" />
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00345">345</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00342">342</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
 
 <p>References <a class="el" href="structHF_1_1Transport_1_1Endpoint.html#a8fd44cf4a9d09f6924aaa67d70eeb972">HF::Transport::Endpoint::connected()</a>.</p>
 
-<p>Referenced by <a class="el" href="devices_8h_source.html#l00397">HF::Devices::Node::Transport::add()</a>, and <a class="el" href="devices_8h_source.html#l00699">HF::Devices::Concentrator::Transport::add()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;         {</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;            assert (link != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;            std::for_each (<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.begin (), <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.end (),</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                  [link](<a class="code" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> *ep)</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;                  {</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;                     ep-&gt;connected (link);</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                  });</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_ad55c4245af299250cb854e656d11e888"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">std::forward_list&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
-<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00092">inc/hanfun/transport.h:92</a></div></div>
+<p>Referenced by <a class="el" href="devices_8h_source.html#l00395">HF::Devices::Node::Transport::add()</a>, and <a class="el" href="devices_8h_source.html#l00697">HF::Devices::Concentrator::Transport::add()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;         {</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;            assert (link != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;            std::for_each (<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.begin (), <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.end (),</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                  [link](<a class="code" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> *ep)</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                  {</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                     ep-&gt;connected (link);</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                  });</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00089">inc/hanfun/transport.h:89</a></div></div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a5c4dc78810af5726973e161f45ca1235"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">Common::SimpleList&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00244">inc/hanfun/transport.h:244</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -307,24 +307,24 @@ std::forward_list<br class="typebreak" />
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00364">364</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00361">361</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
 
 <p>References <a class="el" href="structHF_1_1Transport_1_1Endpoint.html#ab6a9921706cbbdea032702cd68b3c49f">HF::Transport::Endpoint::disconnected()</a>.</p>
 
-<p>Referenced by <a class="el" href="devices_8h_source.html#l00413">HF::Devices::Node::Transport::remove()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;         {</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;            assert (link != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            std::for_each (<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.begin (), <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.end (),</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                  [link](<a class="code" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> *ep)</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                  {</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;                     ep-&gt;disconnected (link);</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                  });</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_ad55c4245af299250cb854e656d11e888"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">std::forward_list&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
-<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00092">inc/hanfun/transport.h:92</a></div></div>
+<p>Referenced by <a class="el" href="devices_8h_source.html#l00411">HF::Devices::Node::Transport::remove()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;         {</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;            assert (link != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;            std::for_each (<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.begin (), <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.end (),</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;                  [link](<a class="code" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> *ep)</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;                  {</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;                     ep-&gt;disconnected (link);</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                  });</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00089">inc/hanfun/transport.h:89</a></div></div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a5c4dc78810af5726973e161f45ca1235"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">Common::SimpleList&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00244">inc/hanfun/transport.h:244</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -378,8 +378,8 @@ std::forward_list<br class="typebreak" />
 
 <p>Reimplemented in <a class="el" href="group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688">HF::Application::Transport</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00262">262</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;{}</div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00259">259</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -424,28 +424,28 @@ std::forward_list<br class="typebreak" />
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00305">305</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00302">302</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
 
-<p>References <a class="el" href="protocol_8h_source.html#l00268">HF::Protocol::Packet::link</a>, <a class="el" href="structHF_1_1Transport_1_1Endpoint.html#a87a1d9f9debfa75297593fd3f73e87b2">HF::Transport::Endpoint::receive()</a>, and <a class="el" href="structHF_1_1Protocol_1_1Packet.html#a905bccfbeb81a9b427ea2bcb68d682be">HF::Protocol::Packet::unpack()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;         {</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;            assert (link != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            Protocol::Packet *packet = <span class="keyword">new</span> Protocol::Packet ();</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            packet-&gt;link = link;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            uint16_t offset = packet-&gt;unpack (payload);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;            std::for_each (<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.begin (), <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.end (),</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                  [&amp;packet, &amp;payload, &amp;offset](<a class="code" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> *ep)</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                  {</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                     ep-&gt;receive (*packet, payload, offset);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;                  });</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            <span class="keyword">delete</span> packet;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_ad55c4245af299250cb854e656d11e888"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">std::forward_list&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
-<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00092">inc/hanfun/transport.h:92</a></div></div>
+<p>References <a class="el" href="protocol_8h_source.html#l00266">HF::Protocol::Packet::link</a>, <a class="el" href="structHF_1_1Transport_1_1Endpoint.html#a87a1d9f9debfa75297593fd3f73e87b2">HF::Transport::Endpoint::receive()</a>, and <a class="el" href="structHF_1_1Protocol_1_1Packet.html#a905bccfbeb81a9b427ea2bcb68d682be">HF::Protocol::Packet::unpack()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;         {</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;            assert (link != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;            Protocol::Packet *packet = <span class="keyword">new</span> Protocol::Packet ();</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            packet-&gt;link = link;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            uint16_t offset = packet-&gt;unpack (payload);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            std::for_each (<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.begin (), <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.end (),</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;                  [&amp;packet, &amp;payload, &amp;offset](<a class="code" href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a> *ep)</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;                  {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                     ep-&gt;receive (*packet, payload, offset);</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                  });</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            <span class="keyword">delete</span> packet;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00089">inc/hanfun/transport.h:89</a></div></div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a5c4dc78810af5726973e161f45ca1235"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">Common::SimpleList&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00244">inc/hanfun/transport.h:244</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -493,18 +493,18 @@ std::forward_list<br class="typebreak" />
 
 <p>Implements <a class="el" href="structHF_1_1Transport_1_1Layer.html#ad0e420885cf8446a387141451c779306">HF::Transport::Layer</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00286">286</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;         {</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            <span class="keywordflow">if</span> (ep != <span class="keyword">nullptr</span>)</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;            {</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;               <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.remove (ep);</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;            }</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            {</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;               <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">endpoints</a>.clear ();</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            }</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_ad55c4245af299250cb854e656d11e888"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">std::forward_list&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00283">283</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;         {</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">if</span> (ep != <span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            {</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;               <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.remove (ep);</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            }</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;            {</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;               <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">endpoints</a>.clear ();</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;            }</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;         }</div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a5c4dc78810af5726973e161f45ca1235"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235">HF::Transport::AbstractLayer::endpoints</a></div><div class="ttdeci">Common::SimpleList&lt; HF::Transport::Endpoint * &gt; endpoints</div><div class="ttdoc">List of registered end-points for this layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00244">inc/hanfun/transport.h:244</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -535,11 +535,11 @@ std::forward_list<br class="typebreak" />
 
 <p>Implements <a class="el" href="structHF_1_1Transport_1_1Layer.html#a79906e1127b8aab5902c3a7dfff70151">HF::Transport::Layer</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00324">324</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;         {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="group__common__profile.html#ga0c568d585cd0b917c43e49b7f16baa70">HF::UID::UID</a>(<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">_uid</a>);</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a102524ec3fa02b372e306050fbcb9aab"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">HF::Transport::AbstractLayer::_uid</a></div><div class="ttdeci">HF::UID::UID_T * _uid</div><div class="ttdoc">UID associated with the local transport layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00250">inc/hanfun/transport.h:250</a></div></div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00321">321</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;         {</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="group__common__profile.html#ga0c568d585cd0b917c43e49b7f16baa70">HF::UID::UID</a>(<a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">_uid</a>);</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;         }</div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a102524ec3fa02b372e306050fbcb9aab"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">HF::Transport::AbstractLayer::_uid</a></div><div class="ttdeci">HF::UID::UID_T * _uid</div><div class="ttdoc">UID associated with the local transport layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
 <div class="ttc" id="group__common__profile_html_ga0c568d585cd0b917c43e49b7f16baa70"><div class="ttname"><a href="group__common__profile.html#ga0c568d585cd0b917c43e49b7f16baa70">HF::Profiles::UID</a></div><div class="ttdeci">UID</div><div class="ttdoc">Profiles UID&#39;s </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00051">profiles.h:51</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -574,13 +574,13 @@ std::forward_list<br class="typebreak" />
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00334">334</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00331">331</a> of file <a class="el" href="inc_2hanfun_2transport_8h_source.html">inc/hanfun/transport.h</a>.</p>
 
-<p>References <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00250">_uid</a>.</p>
-<div class="fragment"><div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;         {</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            this-&gt;_uid = <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">_uid</a>;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;         }</div>
-<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a102524ec3fa02b372e306050fbcb9aab"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">HF::Transport::AbstractLayer::_uid</a></div><div class="ttdeci">HF::UID::UID_T * _uid</div><div class="ttdoc">UID associated with the local transport layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00250">inc/hanfun/transport.h:250</a></div></div>
+<p>References <a class="el" href="inc_2hanfun_2transport_8h_source.html#l00247">_uid</a>.</p>
+<div class="fragment"><div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;         {</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            this-&gt;_uid = <a class="code" href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">_uid</a>;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;         }</div>
+<div class="ttc" id="classHF_1_1Transport_1_1AbstractLayer_html_a102524ec3fa02b372e306050fbcb9aab"><div class="ttname"><a href="classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab">HF::Transport::AbstractLayer::_uid</a></div><div class="ttdeci">HF::UID::UID_T * _uid</div><div class="ttdoc">UID associated with the local transport layer. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00247">inc/hanfun/transport.h:247</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -593,7 +593,7 @@ std::forward_list<br class="typebreak" />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Transport.html">Transport</a></li><li class="navelem"><a class="el" href="classHF_1_1Transport_1_1AbstractLayer.html">AbstractLayer</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:41 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:32 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

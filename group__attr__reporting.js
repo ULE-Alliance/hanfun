@@ -23,12 +23,21 @@ var group__attr__reporting =
       [ "destroy", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#a25f166177c953a18cc127508aefc04e7", null ],
       [ "unit", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#a518e511db661304e601fec2aad86daa0", null ]
     ] ],
+    [ "IServer", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html", [
+      [ "IServer", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a03d407b15db1c38c4a61af34458c47ce", null ],
+      [ "attribute", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a2f25c6e4d17dd654f52f1a7e25e63bef", null ],
+      [ "attributes", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a7642b537e8956a5d37a1cfdb4e3d5661", null ],
+      [ "authorized", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#ad827e1183f35a4ae157cb6abe7fed81f", null ],
+      [ "check_uid", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a504cfec86b3d103ad7db39fe963240c3", null ],
+      [ "count", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a56ea56428b6f8f0b1d24437e0d7af288", null ],
+      [ "handle_command", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#aedd0c14f9637490395943da676306fdd", null ],
+      [ "notify", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#ab4633c437f7d496628c1e36a141712e4", null ],
+      [ "response", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a1e55754a36a156c79049e79ce6b121a3", null ],
+      [ "role", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#aadb9cd7132aeb55a7be7a91781afc5eb", null ],
+      [ "uid", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a17b524898a83fc7f3c64caf2832d1364", null ]
+    ] ],
     [ "Server", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html", [
       [ "Server", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a54c9bc9cfff8f9d0c4e138364592ab84", null ],
-      [ "attribute", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a7b1c986dfc39fc055499bf055752f868", null ],
-      [ "attributes", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a22767418d2df412cb5029d028bacde7e", null ],
-      [ "authorized", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a5583dd06162dd23f3b85fc4dba10fc7a", null ],
-      [ "check_uid", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a949137cdf81b4ac0fd78132718e93128", null ],
       [ "count", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#ad73c580eed6b4511207e3f21c0475cbe", null ],
       [ "handle", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a093508dc22adf6ed80c4655c20519b32", null ],
       [ "handle", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a607f445a20d3ea31e97e17190ed822e1", null ],
@@ -36,17 +45,14 @@ var group__attr__reporting =
       [ "handle", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a20af665d75849ed0cd06ce4cd56d05d8", null ],
       [ "handle", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#aa36f735c64f3a0636350f8a69a5801d3", null ],
       [ "handle_command", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a1147584e3ab7524e9af9a3cbf13ea124", null ],
-      [ "notify", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a3864a9cef6a02509f5cec4d035bac73e", null ],
+      [ "notify", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a8ae25f39724b80509a434b8606565c7c", null ],
       [ "payload_size", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a04184156659529cced6e80b08f8a852d", null ],
       [ "periodic", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#aa98ae59ca6abaef8243a9ad472384058", null ],
-      [ "response", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#acdfd84beedcf274cca9e56ebcbbcdab2", null ],
-      [ "role", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#ad6c3770355b1d05cce546a0ecaabf5f3", null ],
-      [ "uid", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a41bc7eb6b97813bd121434ad4d28657a", null ],
-      [ "event_rules", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a8c7903e5b2c399aa7fb64cc213864f46", null ],
+      [ "event_rules", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a67f79d82305913c1090f0554b373c700", null ],
       [ "last_time", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a675df1e5a45879c6de5960c50ad7d29f", null ],
-      [ "periodic_rules", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a86e5ad8537981a78f3b3c798454cb926", null ]
+      [ "periodic_rules", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a5841109230569efdd684494e91e3e2fa", null ]
     ] ],
-    [ "create_attribute", "group__attr__reporting.html#ga30e6254b87c4671c90153c72e4bf1db6", null ],
+    [ "create_attribute", "group__attr__reporting.html#ga4b7d99bc33d6d45f87ed07258bc56fd2", null ],
     [ "operator<<", "group__attr__reporting.html#ga46e5be8bc1a40025e354308517948f1e", null ],
     [ "operator<<", "group__attr__reporting.html#ga6e2744a3deac4e2f3ea81e42944a9531", null ]
 ];

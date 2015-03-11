@@ -1,6 +1,6 @@
 <map id="interface.h" name="interface.h">
-<area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="569,229,695,256"/>
-<area shape="rect" id="node16" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="765,80,895,107"/>
-<area shape="rect" id="node20" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="620,155,743,181"/>
-<area shape="rect" id="node13" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="518,304,615,331"/>
+<area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="874,229,1000,256"/>
+<area shape="rect" id="node24" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="899,80,1028,107"/>
+<area shape="rect" id="node25" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="975,155,1097,181"/>
+<area shape="rect" id="node21" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,304,1669,331"/>
 </map>

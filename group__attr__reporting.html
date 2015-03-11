@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -107,15 +107,18 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html">HF::Core::AttributeReporting::AbstractClient</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper class for using the Attribute Reporting service.  <a href="structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">HF::Core::AttributeReporting::IServer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attribute Reporting - Server Role.  <a href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html">HF::Core::AttributeReporting::Server</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attribute Reporting - Server Role.  <a href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga30e6254b87c4671c90153c72e4bf1db6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structHF_1_1Attributes_1_1IAttribute.html">HF::Attributes::IAttribute</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__attr__reporting.html#ga30e6254b87c4671c90153c72e4bf1db6">HF::Core::create_attribute</a> (<a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html">HF::Core::AttributeReporting::Server</a> *server, uint8_t uid)</td></tr>
-<tr class="memdesc:ga30e6254b87c4671c90153c72e4bf1db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an attribute object that can hold the attribute with the given <code>uid</code>.  <a href="#ga30e6254b87c4671c90153c72e4bf1db6">More...</a><br /></td></tr>
-<tr class="separator:ga30e6254b87c4671c90153c72e4bf1db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b7d99bc33d6d45f87ed07258bc56fd2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structHF_1_1Attributes_1_1IAttribute.html">HF::Attributes::IAttribute</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__attr__reporting.html#ga4b7d99bc33d6d45f87ed07258bc56fd2">HF::Core::create_attribute</a> (<a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">HF::Core::AttributeReporting::IServer</a> *server, uint8_t uid)</td></tr>
+<tr class="memdesc:ga4b7d99bc33d6d45f87ed07258bc56fd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an attribute object that can hold the attribute with the given <code>uid</code>.  <a href="#ga4b7d99bc33d6d45f87ed07258bc56fd2">More...</a><br /></td></tr>
+<tr class="separator:ga4b7d99bc33d6d45f87ed07258bc56fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga46e5be8bc1a40025e354308517948f1e"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__attr__reporting.html#ga46e5be8bc1a40025e354308517948f1e">operator&lt;&lt;</a> (std::ostream &amp;stream, const <a class="el" href="group__attr__reporting__common.html#gabc48c996b7ab5e5a575122d56c42381e">HF::Core::AttributeReporting::CMD</a> command)</td></tr>
 <tr class="memdesc:ga46e5be8bc1a40025e354308517948f1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the given <code>command</code> into a string and write it to the given <code>stream</code>.  <a href="#ga46e5be8bc1a40025e354308517948f1e">More...</a><br /></td></tr>
 <tr class="separator:ga46e5be8bc1a40025e354308517948f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,14 +129,14 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>This module contains the classes that implement the Attribute Reporting service. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ga30e6254b87c4671c90153c72e4bf1db6"></a>
+<a class="anchor" id="ga4b7d99bc33d6d45f87ed07258bc56fd2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="structHF_1_1Attributes_1_1IAttribute.html">HF::Attributes::IAttribute</a>* HF::Core::create_attribute </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html">HF::Core::AttributeReporting::Server</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">HF::Core::AttributeReporting::IServer</a> *&#160;</td>
           <td class="paramname"><em>server</em>, </td>
         </tr>
         <tr>
@@ -161,16 +164,16 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>pointer to an attribute object or <code>nullptr</code> if the attribute <a class="el" href="namespaceHF_1_1UID.html" title="This is the top-level namespace for HAN-FUN UIDs. ">UID</a> does not exist. </dd></dl>
 
-<p>Referenced by <a class="el" href="attribute__reporting_8h_source.html#l01603">HF::Core::AttributeReporting::Server::attribute()</a>.</p>
+<p>Referenced by <a class="el" href="attribute__reporting_8h_source.html#l01557">HF::Core::AttributeReporting::IServer::attribute()</a>.</p>
 
 <p><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="group__attr__reporting_ga30e6254b87c4671c90153c72e4bf1db6_icgraph.png" border="0" usemap="#group__attr__reporting_ga30e6254b87c4671c90153c72e4bf1db6_icgraph" alt=""/></div>
-<map name="group__attr__reporting_ga30e6254b87c4671c90153c72e4bf1db6_icgraph" id="group__attr__reporting_ga30e6254b87c4671c90153c72e4bf1db6_icgraph">
-<area shape="rect" id="node2" href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html#a7b1c986dfc39fc055499bf055752f868" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="229,5,419,46"/></map>
+<div class="center"><img src="group__attr__reporting_ga4b7d99bc33d6d45f87ed07258bc56fd2_icgraph.png" border="0" usemap="#group__attr__reporting_ga4b7d99bc33d6d45f87ed07258bc56fd2_icgraph" alt=""/></div>
+<map name="group__attr__reporting_ga4b7d99bc33d6d45f87ed07258bc56fd2_icgraph" id="group__attr__reporting_ga4b7d99bc33d6d45f87ed07258bc56fd2_icgraph">
+<area shape="rect" id="node2" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a2f25c6e4d17dd654f52f1a7e25e63bef" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="229,5,419,46"/></map>
 </div>
 </p>
 
@@ -253,7 +256,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:40 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:26 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

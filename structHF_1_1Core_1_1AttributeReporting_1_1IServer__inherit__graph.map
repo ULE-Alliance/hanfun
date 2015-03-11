@@ -1,0 +1,7 @@
+<map id="HF::Core::AttributeReporting::IServer" name="HF::Core::AttributeReporting::IServer">
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1AttributeReporting_1_1Server.html" title="Attribute Reporting &#45; Server Role. " alt="" coords="61,1109,251,1392"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="67,595,244,760"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="5,337,136,429"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="95,5,217,171"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="161,219,324,546"/>
+</map>

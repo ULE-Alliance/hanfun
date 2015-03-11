@@ -1,5 +1,10 @@
 var NAVTREEINDEX7 =
 {
+"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a346aa9a30afe949dd74d96831fe4d53c":[4,1,4,10,3],
+"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a4485e0a408bb586eadf667d223bee635":[4,1,4,10,8],
+"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a4b9b63127ac3e2d542ab70fdb2ce12a2":[4,1,4,10,6],
+"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a58b0feacb4affdbf6de5d849976d4e58":[4,1,4,10,7],
+"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a64a7eb9a8e9031190d1a3a067c620b64":[4,1,4,10,5],
 "structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#ac18a9c095828e842d97b5a48dec860bc":[4,1,4,10,1],
 "structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#aeb6302bbc4a9a256bec63b5484955a6b":[4,1,4,10,4],
 "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html":[4,1,4,5],
@@ -98,9 +103,9 @@ var NAVTREEINDEX7 =
 "structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67":[4,3,0,0,1],
 "structHF_1_1IDevice.html#aea601a201c645eb6694b2904f2863b98":[4,3,0,0,6],
 "structHF_1_1IDevice_1_1IUnit0.html":[4,3,0,2],
-"structHF_1_1IDevice_1_1IUnit0.html#a043ad5c71f780ec66d3beeebbb4f8bff":[4,3,0,2,0],
+"structHF_1_1IDevice_1_1IUnit0.html#a104dc28bc38ec6be4142aae2b00f57af":[4,3,0,2,0],
 "structHF_1_1IDevice_1_1IUnit0.html#a444ec17c4073ae150b14d7ea1a02d6a9":[4,3,0,2,3],
-"structHF_1_1IDevice_1_1IUnit0.html#abca15dd3c7abf18a4878f310bb723564":[4,3,0,2,1],
+"structHF_1_1IDevice_1_1IUnit0.html#acc5a8d23ce5ac9d404bd3009f0923f6a":[4,3,0,2,1],
 "structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da":[4,3,0,2,2],
 "structHF_1_1IDevice_1_1IUnits.html":[4,3,0,1],
 "structHF_1_1Interface.html":[4,5,1,0],
@@ -244,10 +249,5 @@ var NAVTREEINDEX7 =
 "structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b":[4,7,2,4],
 "structHF_1_1Protocol_1_1Message.html#a390d0384b5e38d65afaa61aaf7e5bd1d":[4,7,2,5],
 "structHF_1_1Protocol_1_1Message.html#a3d733a7f26dbd395f15405386dbbd4d8":[4,7,2,9],
-"structHF_1_1Protocol_1_1Message.html#a4b229abdbe07c40c0e0bcc8ee5b96456":[4,7,2,1],
-"structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4":[4,7,2,7],
-"structHF_1_1Protocol_1_1Message.html#abc90641b141aa56863d2c703f6a2377f":[4,7,2,10],
-"structHF_1_1Protocol_1_1Message.html#abfbe381dd8d59ff77ba886e265691bd1":[4,7,2,6],
-"structHF_1_1Protocol_1_1Message.html#adb967c1c061c49c46917932fabb9742f":[4,7,2,8],
-"structHF_1_1Protocol_1_1Message.html#aff4180756b28359a81e909fa6f30bdb2":[4,7,2,2]
+"structHF_1_1Protocol_1_1Message.html#a4b229abdbe07c40c0e0bcc8ee5b96456":[4,7,2,1]
 };

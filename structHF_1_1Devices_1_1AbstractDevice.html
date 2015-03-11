@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('structHF_1_1Devices_1_1AbstractDevice.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aea1e81dec1b22ba9f8514d1ad9052dcc"><td class="memItemLeft" align="right" valign="top">const IUnits &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#aea1e81dec1b22ba9f8514d1ad9052dcc">units</a> () const </td></tr>
+<tr class="memitem:aea1e81dec1b22ba9f8514d1ad9052dcc"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#aea1e81dec1b22ba9f8514d1ad9052dcc">units</a> () const </td></tr>
 <tr class="memdesc:aea1e81dec1b22ba9f8514d1ad9052dcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of units registered in this device.  <a href="#aea1e81dec1b22ba9f8514d1ad9052dcc">More...</a><br /></td></tr>
 <tr class="separator:aea1e81dec1b22ba9f8514d1ad9052dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d585df054909fde07ee6f705e0bbef7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#a2d585df054909fde07ee6f705e0bbef7">add</a> (<a class="el" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit</a>)</td></tr>
@@ -159,7 +159,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <tr class="memdesc:ac75f89b5f477744d57ea9e3cc17b72a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last reference number used to send a packet. <br /></td></tr>
 <tr class="separator:ac75f89b5f477744d57ea9e3cc17b72a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a2a8ce62f90b268e135333769af2e11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a2a8ce62f90b268e135333769af2e11"></a>
-IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a></td></tr>
+<a class="el" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a></td></tr>
 <tr class="memdesc:a7a2a8ce62f90b268e135333769af2e11"><td class="mdescLeft">&#160;</td><td class="mdescRight">List containing pointers to the units present in the device. <br /></td></tr>
 <tr class="separator:a7a2a8ce62f90b268e135333769af2e11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31e7734496bdc12646e76594fc8e3998"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a31e7734496bdc12646e76594fc8e3998"></a>
@@ -170,7 +170,7 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class provides the basic implementation for the Device's interface. </p>
 
-<p>Definition at line <a class="el" href="devices_8h_source.html#l00055">55</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
+<p>Definition at line <a class="el" href="devices_8h_source.html#l00053">53</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a2d585df054909fde07ee6f705e0bbef7"></a>
 <div class="memitem">
@@ -204,14 +204,14 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 
 <p>Implements <a class="el" href="structHF_1_1IDevice.html#a91cf93ead80a0e7cf64be389e00b6dae">HF::IDevice</a>.</p>
 
-<p>Definition at line <a class="el" href="devices_8h_source.html#l00066">66</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
+<p>Definition at line <a class="el" href="devices_8h_source.html#l00064">64</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
 
-<p>References <a class="el" href="devices_8h_source.html#l00090">_units</a>.</p>
-<div class="fragment"><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;         {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a>.push_front (<a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit</a>);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;         }</div>
+<p>References <a class="el" href="devices_8h_source.html#l00088">_units</a>.</p>
+<div class="fragment"><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;         {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a>.push_front (<a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit</a>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a33127cd044a58fdac5ff445fbeb60869"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">HF::Devices::AbstractDevice::unit</a></div><div class="ttdeci">Units::IUnit * unit(uint8_t id) const </div><div class="ttdoc">Return pointer to the unit with the given id. </div></div>
-<div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a7a2a8ce62f90b268e135333769af2e11"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">HF::Devices::AbstractDevice::_units</a></div><div class="ttdeci">IUnits _units</div><div class="ttdoc">List containing pointers to the units present in the device. </div><div class="ttdef"><b>Definition:</b> <a href="devices_8h_source.html#l00090">devices.h:90</a></div></div>
+<div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a7a2a8ce62f90b268e135333769af2e11"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">HF::Devices::AbstractDevice::_units</a></div><div class="ttdeci">IUnits _units</div><div class="ttdoc">List containing pointers to the units present in the device. </div><div class="ttdef"><b>Definition:</b> <a href="devices_8h_source.html#l00088">devices.h:88</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -248,14 +248,14 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 
 <p>Reimplemented in <a class="el" href="classHF_1_1Devices_1_1Node_1_1Abstract.html#ae67ab29a2822a30aaaf917e1d34d14d1">HF::Devices::Node::Abstract&lt; CoreServices &gt;</a>, <a class="el" href="classHF_1_1Devices_1_1Node_1_1Abstract.html#ae67ab29a2822a30aaaf917e1d34d14d1">HF::Devices::Node::Abstract&lt; NodeUnit0 &gt;</a>, and <a class="el" href="classHF_1_1Devices_1_1Node_1_1Abstract.html#ae67ab29a2822a30aaaf917e1d34d14d1">HF::Devices::Node::Abstract&lt; HF::Devices::Node::DefaultUnit0 &gt;</a>.</p>
 
-<p>Definition at line <a class="el" href="devices_8h_source.html#l00119">119</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
+<p>Definition at line <a class="el" href="devices_8h_source.html#l00117">117</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
 
-<p>References <a class="el" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address()</a>, <a class="el" href="protocol_8h_source.html#l00260">HF::Protocol::Packet::destination</a>, and <a class="el" href="protocol_8h_source.html#l00189">HF::Protocol::Address::device</a>.</p>
+<p>References <a class="el" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address()</a>, <a class="el" href="protocol_8h_source.html#l00258">HF::Protocol::Packet::destination</a>, and <a class="el" href="protocol_8h_source.html#l00187">HF::Protocol::Address::device</a>.</p>
 
-<p>Referenced by <a class="el" href="devices_8h_source.html#l00350">HF::Devices::Node::Abstract&lt; HF::Devices::Node::DefaultUnit0 &gt;::is_local()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;         {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <span class="keywordflow">return</span> packet.destination.device == <a class="code" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">address</a> ();</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;         }</div>
+<p>Referenced by <a class="el" href="devices_8h_source.html#l00348">HF::Devices::Node::Abstract&lt; HF::Devices::Node::DefaultUnit0 &gt;::is_local()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;         {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">return</span> packet.destination.device == <a class="code" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">address</a> ();</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1IDevice_html_ae785f2abc55eeb8197d40564b1d49e67"><div class="ttname"><a href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address</a></div><div class="ttdeci">virtual uint16_t address() const =0</div><div class="ttdoc">Return the device address on the HAN-FUN network, when the device is registered, or HF_BROADCAST_ADDR...</div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -307,13 +307,13 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 <p>not <a class="el" href="group__protocol.html#ga23f7a5fde66435071c5d332e9d3dbf0f" title="HAN-FUN Broadcast - device address. ">HF::Protocol::BROADCAST_ADDR</a>.</p>
 <dl class="section return"><dt>Returns</dt><dd>if the device address is different from <a class="el" href="group__protocol.html#ga23f7a5fde66435071c5d332e9d3dbf0f" title="HAN-FUN Broadcast - device address. ">HF::Protocol::BROADCAST_ADDR</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="devices_8h_source.html#l00129">129</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
+<p>Definition at line <a class="el" href="devices_8h_source.html#l00127">127</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
 
-<p>References <a class="el" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address()</a>, and <a class="el" href="protocol_8h_source.html#l00047">HF::Protocol::BROADCAST_ADDR</a>.</p>
-<div class="fragment"><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;         {</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keywordflow">return</span> this-&gt;<a class="code" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">address</a> () != <a class="code" href="group__protocol.html#ga23f7a5fde66435071c5d332e9d3dbf0f">Protocol::BROADCAST_ADDR</a>;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;         }</div>
-<div class="ttc" id="group__protocol_html_ga23f7a5fde66435071c5d332e9d3dbf0f"><div class="ttname"><a href="group__protocol.html#ga23f7a5fde66435071c5d332e9d3dbf0f">HF::Protocol::BROADCAST_ADDR</a></div><div class="ttdeci">constexpr uint16_t BROADCAST_ADDR</div><div class="ttdoc">HAN-FUN Broadcast - device address. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00047">protocol.h:47</a></div></div>
+<p>References <a class="el" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address()</a>, and <a class="el" href="protocol_8h_source.html#l00045">HF::Protocol::BROADCAST_ADDR</a>.</p>
+<div class="fragment"><div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;         {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="keywordflow">return</span> this-&gt;<a class="code" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">address</a> () != <a class="code" href="group__protocol.html#ga23f7a5fde66435071c5d332e9d3dbf0f">Protocol::BROADCAST_ADDR</a>;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;         }</div>
+<div class="ttc" id="group__protocol_html_ga23f7a5fde66435071c5d332e9d3dbf0f"><div class="ttname"><a href="group__protocol.html#ga23f7a5fde66435071c5d332e9d3dbf0f">HF::Protocol::BROADCAST_ADDR</a></div><div class="ttdeci">constexpr uint16_t BROADCAST_ADDR</div><div class="ttdoc">HAN-FUN Broadcast - device address. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00045">protocol.h:45</a></div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_ae785f2abc55eeb8197d40564b1d49e67"><div class="ttname"><a href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address</a></div><div class="ttdeci">virtual uint16_t address() const =0</div><div class="ttdoc">Return the device address on the HAN-FUN network, when the device is registered, or HF_BROADCAST_ADDR...</div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -450,7 +450,7 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 
 <p>Reimplemented in <a class="el" href="classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#ab0467aac7d70d76acf4173fcbe08bd61">HF::Devices::Concentrator::AbstractBase</a>, <a class="el" href="classHF_1_1Devices_1_1Node_1_1Abstract.html#a2493c5452d22e45bc3a0924aba50c8cf">HF::Devices::Node::Abstract&lt; CoreServices &gt;</a>, <a class="el" href="classHF_1_1Devices_1_1Node_1_1Abstract.html#a2493c5452d22e45bc3a0924aba50c8cf">HF::Devices::Node::Abstract&lt; NodeUnit0 &gt;</a>, <a class="el" href="classHF_1_1Devices_1_1Node_1_1Abstract.html#a2493c5452d22e45bc3a0924aba50c8cf">HF::Devices::Node::Abstract&lt; HF::Devices::Node::DefaultUnit0 &gt;</a>, <a class="el" href="group__examples.html#gae79fbea99ae2a8cd83482c482ecbbd74">Base</a>, and <a class="el" href="group__examples.html#ga2399cd963b3458a3541a0dc62e2b5b99">Node</a>.</p>
 
-<p>Referenced by <a class="el" href="devices_8h_source.html#l00304">HF::Devices::Node::Abstract&lt; HF::Devices::Node::DefaultUnit0 &gt;::receive()</a>.</p>
+<p>Referenced by <a class="el" href="devices_8h_source.html#l00302">HF::Devices::Node::Abstract&lt; HF::Devices::Node::DefaultUnit0 &gt;::receive()</a>.</p>
 
 <p><div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -497,14 +497,14 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 
 <p>Implements <a class="el" href="structHF_1_1IDevice.html#ab16f15e9b37f504ad660372632b34b3d">HF::IDevice</a>.</p>
 
-<p>Definition at line <a class="el" href="devices_8h_source.html#l00071">71</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
+<p>Definition at line <a class="el" href="devices_8h_source.html#l00069">69</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
 
-<p>References <a class="el" href="devices_8h_source.html#l00090">_units</a>, and <a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;         {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a>.remove (<a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit</a>);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;         }</div>
+<p>References <a class="el" href="devices_8h_source.html#l00088">_units</a>, and <a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;         {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a>.remove (<a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">unit</a>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a33127cd044a58fdac5ff445fbeb60869"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869">HF::Devices::AbstractDevice::unit</a></div><div class="ttdeci">Units::IUnit * unit(uint8_t id) const </div><div class="ttdoc">Return pointer to the unit with the given id. </div></div>
-<div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a7a2a8ce62f90b268e135333769af2e11"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">HF::Devices::AbstractDevice::_units</a></div><div class="ttdeci">IUnits _units</div><div class="ttdoc">List containing pointers to the units present in the device. </div><div class="ttdef"><b>Definition:</b> <a href="devices_8h_source.html#l00090">devices.h:90</a></div></div>
+<div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a7a2a8ce62f90b268e135333769af2e11"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">HF::Devices::AbstractDevice::_units</a></div><div class="ttdeci">IUnits _units</div><div class="ttdoc">List containing pointers to the units present in the device. </div><div class="ttdef"><b>Definition:</b> <a href="devices_8h_source.html#l00088">devices.h:88</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -586,7 +586,7 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 
 <p>Implements <a class="el" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">HF::IDevice</a>.</p>
 
-<p>Referenced by <a class="el" href="devices_8h_source.html#l00071">remove()</a>.</p>
+<p>Referenced by <a class="el" href="devices_8h_source.html#l00069">remove()</a>.</p>
 
 <p><div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -609,7 +609,7 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const IUnits&amp; HF::Devices::AbstractDevice::units </td>
+          <td class="memname">const <a class="el" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a>&amp; HF::Devices::AbstractDevice::units </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -627,13 +627,13 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 
 <p>Implements <a class="el" href="structHF_1_1IDevice.html#a2e4c1664095629120a3f5a39e0369a09">HF::IDevice</a>.</p>
 
-<p>Definition at line <a class="el" href="devices_8h_source.html#l00061">61</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
+<p>Definition at line <a class="el" href="devices_8h_source.html#l00059">59</a> of file <a class="el" href="devices_8h_source.html">devices.h</a>.</p>
 
-<p>References <a class="el" href="devices_8h_source.html#l00090">_units</a>.</p>
-<div class="fragment"><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;         {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a7a2a8ce62f90b268e135333769af2e11"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">HF::Devices::AbstractDevice::_units</a></div><div class="ttdeci">IUnits _units</div><div class="ttdoc">List containing pointers to the units present in the device. </div><div class="ttdef"><b>Definition:</b> <a href="devices_8h_source.html#l00090">devices.h:90</a></div></div>
+<p>References <a class="el" href="devices_8h_source.html#l00088">_units</a>.</p>
+<div class="fragment"><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;         {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">_units</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Devices_1_1AbstractDevice_html_a7a2a8ce62f90b268e135333769af2e11"><div class="ttname"><a href="structHF_1_1Devices_1_1AbstractDevice.html#a7a2a8ce62f90b268e135333769af2e11">HF::Devices::AbstractDevice::_units</a></div><div class="ttdeci">IUnits _units</div><div class="ttdoc">List containing pointers to the units present in the device. </div><div class="ttdef"><b>Definition:</b> <a href="devices_8h_source.html#l00088">devices.h:88</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -646,7 +646,7 @@ IUnits&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="st
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Devices.html">Devices</a></li><li class="navelem"><a class="el" href="structHF_1_1Devices_1_1AbstractDevice.html">AbstractDevice</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:40 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:30 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

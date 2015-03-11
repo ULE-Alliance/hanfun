@@ -36,6 +36,6 @@ var group__transport =
       [ "uid", "classHF_1_1Transport_1_1AbstractLayer.html#adf1ef3bc1ae4b615bd0918f8832baed5", null ],
       [ "uid", "classHF_1_1Transport_1_1AbstractLayer.html#ada46ab23a7a43d381bdd0895dd0a1846", null ],
       [ "_uid", "classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab", null ],
-      [ "endpoints", "classHF_1_1Transport_1_1AbstractLayer.html#ad55c4245af299250cb854e656d11e888", null ]
+      [ "endpoints", "classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235", null ]
     ] ]
 ];

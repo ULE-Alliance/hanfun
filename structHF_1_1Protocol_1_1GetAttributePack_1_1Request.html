@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -116,7 +116,7 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class represents the payload of a HF::Message::GET_ATTR_PACK_REQ request, when the payload is Type::DYNAMIC. </p>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00831">831</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00826">826</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ad8844b6a58ea44555d43323b2197b1fe"></a>
 <div class="memitem">
@@ -164,14 +164,14 @@ Data Fields</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of bytes written. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00856">856</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00851">851</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>References <a class="el" href="attributes_8h_source.html#l00210">HF::Attributes::UIDS::pack()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;            {</div>
-<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">attributes</a>.<a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a61947a3b9c4c6b76d5ed8518bcc72623">pack</a> (array, offset);</div>
-<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;            }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a61947a3b9c4c6b76d5ed8518bcc72623"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a61947a3b9c4c6b76d5ed8518bcc72623">HF::Attributes::UIDS::pack</a></div><div class="ttdeci">uint16_t pack(Common::ByteArray &amp;array, uint16_t offset=0) const </div><div class="ttdoc">Write the object on to a ByteArray so it can be sent over the network. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00210">attributes.h:210</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a4050038860f8263acdb57314040226b7"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">HF::Protocol::GetAttributePack::Request::attributes</a></div><div class="ttdeci">HF::Attributes::UIDS attributes</div><div class="ttdoc">Vector containing the attributes UID&#39;s to get. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00833">attributes.h:833</a></div></div>
+<p>References <a class="el" href="attributes_8h_source.html#l00205">HF::Attributes::UIDS::pack()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;            {</div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">attributes</a>.<a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a61947a3b9c4c6b76d5ed8518bcc72623">pack</a> (array, offset);</div>
+<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;            }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a61947a3b9c4c6b76d5ed8518bcc72623"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a61947a3b9c4c6b76d5ed8518bcc72623">HF::Attributes::UIDS::pack</a></div><div class="ttdeci">uint16_t pack(Common::ByteArray &amp;array, uint16_t offset=0) const </div><div class="ttdoc">Write the object on to a ByteArray so it can be sent over the network. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00205">attributes.h:205</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a4050038860f8263acdb57314040226b7"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">HF::Protocol::GetAttributePack::Request::attributes</a></div><div class="ttdeci">HF::Attributes::UIDS attributes</div><div class="ttdoc">Vector containing the attributes UID&#39;s to get. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00828">attributes.h:828</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -210,14 +210,14 @@ Data Fields</h2></td></tr>
 <p>Number bytes needed to serialize the message. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes the message requires to be serialized. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00850">850</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00845">845</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>References <a class="el" href="attributes_8h_source.html#l00204">HF::Attributes::UIDS::size()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;            {</div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">attributes</a>.<a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">size</a> ();</div>
-<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;            }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a6bafd77d0a6a05553079fe3751f24281"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">HF::Attributes::UIDS::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00204">attributes.h:204</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a4050038860f8263acdb57314040226b7"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">HF::Protocol::GetAttributePack::Request::attributes</a></div><div class="ttdeci">HF::Attributes::UIDS attributes</div><div class="ttdoc">Vector containing the attributes UID&#39;s to get. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00833">attributes.h:833</a></div></div>
+<p>References <a class="el" href="attributes_8h_source.html#l00199">HF::Attributes::UIDS::size()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;            {</div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">attributes</a>.<a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">size</a> ();</div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;            }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a6bafd77d0a6a05553079fe3751f24281"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">HF::Attributes::UIDS::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00199">attributes.h:199</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a4050038860f8263acdb57314040226b7"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">HF::Protocol::GetAttributePack::Request::attributes</a></div><div class="ttdeci">HF::Attributes::UIDS attributes</div><div class="ttdoc">Vector containing the attributes UID&#39;s to get. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00828">attributes.h:828</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -274,15 +274,15 @@ Data Fields</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of bytes read. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00862">862</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00857">857</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>References <a class="el" href="attributes_8h_source.html#l00231">HF::Attributes::UIDS::unpack()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;            {</div>
-<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">attributes</a>.<a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">unpack</a> (array, offset, <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a99de7b5c64cf6b2397331a858a36b104">count</a>);</div>
-<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;            }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a2703bcad141d2b865bcf528957378af1"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">HF::Attributes::UIDS::unpack</a></div><div class="ttdeci">uint16_t unpack(const Common::ByteArray &amp;array, uint16_t offset=0)</div><div class="ttdoc">Read a message from a ByteArray. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00231">attributes.h:231</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a99de7b5c64cf6b2397331a858a36b104"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a99de7b5c64cf6b2397331a858a36b104">HF::Protocol::GetAttributePack::Request::count</a></div><div class="ttdeci">uint8_t count</div><div class="ttdoc">Unpack attribute count. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00841">attributes.h:841</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a4050038860f8263acdb57314040226b7"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">HF::Protocol::GetAttributePack::Request::attributes</a></div><div class="ttdeci">HF::Attributes::UIDS attributes</div><div class="ttdoc">Vector containing the attributes UID&#39;s to get. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00833">attributes.h:833</a></div></div>
+<p>References <a class="el" href="attributes_8h_source.html#l00226">HF::Attributes::UIDS::unpack()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;            {</div>
+<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">attributes</a>.<a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">unpack</a> (array, offset, <a class="code" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a99de7b5c64cf6b2397331a858a36b104">count</a>);</div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;            }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a2703bcad141d2b865bcf528957378af1"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">HF::Attributes::UIDS::unpack</a></div><div class="ttdeci">uint16_t unpack(const Common::ByteArray &amp;array, uint16_t offset=0)</div><div class="ttdoc">Read a message from a ByteArray. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00226">attributes.h:226</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a99de7b5c64cf6b2397331a858a36b104"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a99de7b5c64cf6b2397331a858a36b104">HF::Protocol::GetAttributePack::Request::count</a></div><div class="ttdeci">uint8_t count</div><div class="ttdoc">Unpack attribute count. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00836">attributes.h:836</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1GetAttributePack_1_1Request_html_a4050038860f8263acdb57314040226b7"><div class="ttname"><a href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a4050038860f8263acdb57314040226b7">HF::Protocol::GetAttributePack::Request::attributes</a></div><div class="ttdeci">HF::Attributes::UIDS attributes</div><div class="ttdoc">Vector containing the attributes UID&#39;s to get. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00828">attributes.h:828</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -310,7 +310,7 @@ Data Fields</h2></td></tr>
 
 <p>Vector containing the attributes <a class="el" href="namespaceHF_1_1UID.html" title="This is the top-level namespace for HAN-FUN UIDs. ">UID</a>'s to get. </p>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00833">833</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00828">828</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
 </div>
 </div>
@@ -327,7 +327,7 @@ Data Fields</h2></td></tr>
 <p>Unpack attribute count. </p>
 <dl class="section warning"><dt>Warning</dt><dd>This value will not be used as the number of attributes, when packing the request. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00841">841</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00836">836</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
 </div>
 </div>
@@ -340,7 +340,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Protocol.html">Protocol</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Protocol_1_1GetAttributePack.html">GetAttributePack</a></li><li class="navelem"><a class="el" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html">Request</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:41 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:32 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

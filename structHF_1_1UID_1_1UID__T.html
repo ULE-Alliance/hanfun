@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -268,7 +268,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 <p>Definition at line <a class="el" href="uids_8h_source.html#l00104">104</a> of file <a class="el" href="uids_8h_source.html">uids.h</a>.</p>
 
-<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00066">SERIALIZABLE_CHECK</a>, <a class="el" href="structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3">type()</a>, and <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">HF::Common::ByteArray::write()</a>.</p>
+<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>, <a class="el" href="structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3">type()</a>, and <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">HF::Common::ByteArray::write()</a>.</p>
 
 <p>Referenced by <a class="el" href="uids_8h_source.html#l00146">HF::UID::NONE::pack()</a>, and <a class="el" href="uids_8h_source.html#l00607">HF::UID::UID::pack()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;         {</div>
@@ -279,7 +279,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">sizeof</span>(uint8_t);</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1UID_1_1UID__T_html_aff90c25a589dbe3523b46da0d0ac97f3"><div class="ttname"><a href="structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3">HF::UID::UID_T::type</a></div><div class="ttdeci">virtual uint8_t type() const =0</div><div class="ttdoc">Type of the UID. </div></div>
-<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00066">inc/hanfun/common.h:66</a></div></div>
+<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00074">inc/hanfun/common.h:74</a></div></div>
 <div class="ttc" id="structHF_1_1UID_1_1UID__T_html_a82d4cc02f451e032c90c62a9e6126935"><div class="ttname"><a href="structHF_1_1UID_1_1UID__T.html#a82d4cc02f451e032c90c62a9e6126935">HF::UID::UID_T::min_size</a></div><div class="ttdeci">static constexpr uint16_t min_size</div><div class="ttdoc">Minimum pack/unpack required data size. </div><div class="ttdef"><b>Definition:</b> <a href="uids_8h_source.html#l00094">uids.h:94</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -447,7 +447,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 <p>Definition at line <a class="el" href="uids_8h_source.html#l00114">114</a> of file <a class="el" href="uids_8h_source.html">uids.h</a>.</p>
 
-<p>References <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">HF::Common::ByteArray::read()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00066">SERIALIZABLE_CHECK</a>, and <a class="el" href="structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3">type()</a>.</p>
+<p>References <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">HF::Common::ByteArray::read()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>, and <a class="el" href="structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3">type()</a>.</p>
 
 <p>Referenced by <a class="el" href="uids_8h_source.html#l00157">HF::UID::NONE::unpack()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;         {</div>
@@ -461,7 +461,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">sizeof</span>(uint8_t);</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1UID_1_1UID__T_html_aff90c25a589dbe3523b46da0d0ac97f3"><div class="ttname"><a href="structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3">HF::UID::UID_T::type</a></div><div class="ttdeci">virtual uint8_t type() const =0</div><div class="ttdoc">Type of the UID. </div></div>
-<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00066">inc/hanfun/common.h:66</a></div></div>
+<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00074">inc/hanfun/common.h:74</a></div></div>
 <div class="ttc" id="structHF_1_1UID_1_1UID__T_html_a82d4cc02f451e032c90c62a9e6126935"><div class="ttname"><a href="structHF_1_1UID_1_1UID__T.html#a82d4cc02f451e032c90c62a9e6126935">HF::UID::UID_T::min_size</a></div><div class="ttdeci">static constexpr uint16_t min_size</div><div class="ttdoc">Minimum pack/unpack required data size. </div><div class="ttdef"><b>Definition:</b> <a href="uids_8h_source.html#l00094">uids.h:94</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -497,7 +497,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1UID.html">UID</a></li><li class="navelem"><a class="el" href="structHF_1_1UID_1_1UID__T.html">UID_T</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:41 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:32 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

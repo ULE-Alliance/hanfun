@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -89,8 +89,6 @@ $(document).ready(function(){initNavTree('structHF_1_1Common_1_1ByteArray.html',
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="structHF_1_1Common_1_1ByteArray__coll__graph.png" border="0" usemap="#HF_1_1Common_1_1ByteArray_coll__map" alt="Collaboration graph"/></div>
-<map name="HF_1_1Common_1_1ByteArray_coll__map" id="HF_1_1Common_1_1ByteArray_coll__map">
-</map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -149,7 +147,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <div class="textblock"><p>This class represents a byte array. </p>
 <p>The method in this class are used to serialize the messages to be sent over the network, converting between the host's endianness and the big-endian network format. </p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00142">142</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00150">150</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aa51f451edbb8b492c92c594ac3d5df07"></a>
 <div class="memitem">
@@ -240,9 +238,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00164">164</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                                                     :vector (raw)</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;         {}</div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00172">172</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                                                     :vector (raw)</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;         {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -295,13 +293,13 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00259">259</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00267">267</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
-<p>Referenced by <a class="el" href="inc_2hanfun_2common_8h_source.html#l00306">ensure()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;         {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            <span class="keywordflow">return</span> expected &lt;= <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">available</a> (offset);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Common_1_1ByteArray_html_a6e9f9e29c1907295bc1c8c5934cda4f3"><div class="ttname"><a href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">HF::Common::ByteArray::available</a></div><div class="ttdeci">bool available(uint16_t offset, uint16_t expected) const </div><div class="ttdoc">Check if the array as at least expected bytes available from the given offset. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00259">inc/hanfun/common.h:259</a></div></div>
+<p>Referenced by <a class="el" href="inc_2hanfun_2common_8h_source.html#l00314">ensure()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;         {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;            <span class="keywordflow">return</span> expected &lt;= <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">available</a> (offset);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Common_1_1ByteArray_html_a6e9f9e29c1907295bc1c8c5934cda4f3"><div class="ttname"><a href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">HF::Common::ByteArray::available</a></div><div class="ttdeci">bool available(uint16_t offset, uint16_t expected) const </div><div class="ttdoc">Check if the array as at least expected bytes available from the given offset. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00267">inc/hanfun/common.h:267</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -347,10 +345,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of data bytes available from the given <code>offset</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00271">271</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;         {</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="keywordflow">return</span> (size () &gt;= offset ? size () - offset : 0);</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;         }</div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00279">279</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;         {</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            <span class="keywordflow">return</span> (size () &gt;= offset ? size () - offset : 0);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;         }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -395,18 +393,18 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00306">306</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00314">314</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
-<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00259">available()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;         {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            <span class="keywordflow">if</span> (!<a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">available</a> (_offset, _size))</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            {</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;               _size = _size - <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">available</a> (_offset) + std::max &lt;int16_t&gt;((int16_t) (_offset - size ()), 0);</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;               vector &lt;uint8_t&gt;::reserve (size () + _size);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;               std::fill_n (back_inserter (*<span class="keyword">this</span>), _size, 0);</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            }</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Common_1_1ByteArray_html_a6e9f9e29c1907295bc1c8c5934cda4f3"><div class="ttname"><a href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">HF::Common::ByteArray::available</a></div><div class="ttdeci">bool available(uint16_t offset, uint16_t expected) const </div><div class="ttdoc">Check if the array as at least expected bytes available from the given offset. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00259">inc/hanfun/common.h:259</a></div></div>
+<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00267">available()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;         {</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            <span class="keywordflow">if</span> (!<a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">available</a> (_offset, _size))</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            {</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;               _size = _size - <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">available</a> (_offset) + std::max &lt;int16_t&gt;((int16_t) (_offset - size ()), 0);</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;               vector &lt;uint8_t&gt;::reserve (size () + _size);</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;               std::fill_n (back_inserter (*<span class="keyword">this</span>), _size, 0);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            }</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Common_1_1ByteArray_html_a6e9f9e29c1907295bc1c8c5934cda4f3"><div class="ttname"><a href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">HF::Common::ByteArray::available</a></div><div class="ttdeci">bool available(uint16_t offset, uint16_t expected) const </div><div class="ttdoc">Check if the array as at least expected bytes available from the given offset. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00267">inc/hanfun/common.h:267</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -452,10 +450,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00294">294</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;         {</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;            vector &lt;uint8_t&gt;::reserve (size () + _size);</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;         }</div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00302">302</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;         {</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;            vector &lt;uint8_t&gt;::reserve (size () + _size);</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;         }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -493,7 +491,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes read (1). </dd></dl>
 
-<p>Referenced by <a class="el" href="inc_2hanfun_2common_8h_source.html#l00239">read()</a>, <a class="el" href="transport_8cpp_source.html#l00113">msg_t::unpack()</a>, <a class="el" href="uids_8h_source.html#l00114">HF::UID::UID_T::unpack()</a>, <a class="el" href="session__management_8h_source.html#l00135">HF::Core::SessionManagement::GetEntriesMessage::unpack()</a>, <a class="el" href="uids_8h_source.html#l00157">HF::UID::NONE::unpack()</a>, <a class="el" href="transport_8cpp_source.html#l00180">hello_msg_t::unpack()</a>, <a class="el" href="simple__power__meter_8h_source.html#l00181">HF::Interfaces::SimplePowerMeter::Measurement::unpack()</a>, <a class="el" href="attributes_8h_source.html#l00243">HF::Attributes::UIDS::unpack()</a>, <a class="el" href="attributes_8h_source.html#l00443">HF::Attributes::Attribute&lt; bool &gt;::unpack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00502">HF::Common::SerializableHelper&lt; T, typename std::enable_if&lt; std::is_integral&lt; typename std::remove_reference&lt; T &gt;::type &gt;::value &gt;::type &gt;::unpack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00564">HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::unpack()</a>, <a class="el" href="attributes_8h_source.html#l00600">HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;::unpack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00651">HF::Common::SerializableHelper&lt; std::string &gt;::unpack()</a>, and <a class="el" href="attributes_8h_source.html#l01035">HF::Protocol::SetAttributePack::Response::Result::unpack()</a>.</p>
+<p>Referenced by <a class="el" href="inc_2hanfun_2common_8h_source.html#l00247">read()</a>, <a class="el" href="transport_8cpp_source.html#l00113">msg_t::unpack()</a>, <a class="el" href="uids_8h_source.html#l00114">HF::UID::UID_T::unpack()</a>, <a class="el" href="session__management_8h_source.html#l00132">HF::Core::SessionManagement::GetEntriesMessage::unpack()</a>, <a class="el" href="uids_8h_source.html#l00157">HF::UID::NONE::unpack()</a>, <a class="el" href="simple__power__meter_8h_source.html#l00179">HF::Interfaces::SimplePowerMeter::Measurement::unpack()</a>, <a class="el" href="transport_8cpp_source.html#l00180">hello_msg_t::unpack()</a>, <a class="el" href="attributes_8h_source.html#l00238">HF::Attributes::UIDS::unpack()</a>, <a class="el" href="attributes_8h_source.html#l00438">HF::Attributes::Attribute&lt; bool &gt;::unpack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00514">HF::Common::SerializableHelper&lt; T, typename std::enable_if&lt; std::is_integral&lt; typename std::remove_reference&lt; T &gt;::type &gt;::value &gt;::type &gt;::unpack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00576">HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::unpack()</a>, <a class="el" href="attributes_8h_source.html#l00595">HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;::unpack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00663">HF::Common::SerializableHelper&lt; std::string &gt;::unpack()</a>, and <a class="el" href="attributes_8h_source.html#l01030">HF::Protocol::SetAttributePack::Response::Result::unpack()</a>.</p>
 
 <p><div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -502,7 +500,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="structHF_1_1Common_1_1ByteArray_a6e5634544a5b09d00786d0befe46f88a_icgraph.png" border="0" usemap="#structHF_1_1Common_1_1ByteArray_a6e5634544a5b09d00786d0befe46f88a_icgraph" alt=""/></div>
 <map name="structHF_1_1Common_1_1ByteArray_a6e5634544a5b09d00786d0befe46f88a_icgraph" id="structHF_1_1Common_1_1ByteArray_a6e5634544a5b09d00786d0befe46f88a_icgraph">
-<area shape="rect" id="node2" href="structHF_1_1Common_1_1ByteArray.html#ae945cf20657dd5a300dc851795d8805e" title="Read the byte at offset into data. (uint16_t, uint8_t) " alt="" coords="261,5,427,46"/><area shape="rect" id="node3" href="structmsg__t.html#aa06d48e197175e35850c8e7a973aa2cb" title="Read a message from a ByteArray. " alt="" coords="290,71,398,97"/><area shape="rect" id="node4" href="structHF_1_1UID_1_1UID__T.html#af6f522807892797e4c7e6181c5f368e5" title="Read a message from a ByteArray. " alt="" coords="259,121,429,148"/><area shape="rect" id="node5" href="structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="515,147,685,173"/><area shape="rect" id="node6" href="group__sessions.html#ga80eb5eb237feeab2d395c1edd961f934" title="Read a message from a ByteArray. " alt="" coords="241,223,447,265"/><area shape="rect" id="node7" href="structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848" title="Read a message from a ByteArray. " alt="" coords="273,289,415,316"/><area shape="rect" id="node8" href="structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ad9dc1a3f6c784e3c74b9558914eb70e4" title="Read a message from a ByteArray. " alt="" coords="248,341,440,382"/><area shape="rect" id="node9" href="structHF_1_1Attributes_1_1UIDS.html#a793c7e2cd64220b25375aa1005abeaf8" title="Read a message from a ByteArray. " alt="" coords="271,406,417,447"/><area shape="rect" id="node10" href="structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::unpack" alt="" coords="263,471,425,513"/><area shape="rect" id="node11" href="structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a7fd9afc6231b35e67ed600bb185e1eae" title="Read a message from a ByteArray. " alt="" coords="221,537,467,623"/><area shape="rect" id="node12" href="structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ad8041b04ce7ee09ded6d524de1c3a7e9" title="Read a message from a ByteArray. " alt="" coords="249,647,439,703"/><area shape="rect" id="node13" href="structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a6db168cb4800f3cf9d4cb8840f9df968" title="Read a message from a ByteArray. " alt="" coords="253,727,435,812"/><area shape="rect" id="node14" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476" title="Read a message from a ByteArray. " alt="" coords="256,836,432,892"/><area shape="rect" id="node15" href="structHF_1_1Protocol_1_1SetAttributePack_1_1Response_1_1Result.html#a784b1142bc2ca1496c083e8a411a7c14" title="Read a message from a ByteArray. " alt="" coords="257,916,431,972"/></map>
+<area shape="rect" id="node2" href="structHF_1_1Common_1_1ByteArray.html#ae945cf20657dd5a300dc851795d8805e" title="Read the byte at offset into data. (uint16_t, uint8_t) " alt="" coords="261,5,427,46"/><area shape="rect" id="node3" href="structmsg__t.html#aa06d48e197175e35850c8e7a973aa2cb" title="Read a message from a ByteArray. " alt="" coords="290,71,398,97"/><area shape="rect" id="node4" href="structHF_1_1UID_1_1UID__T.html#af6f522807892797e4c7e6181c5f368e5" title="Read a message from a ByteArray. " alt="" coords="259,121,429,148"/><area shape="rect" id="node5" href="structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="515,147,685,173"/><area shape="rect" id="node6" href="group__sessions.html#ga80eb5eb237feeab2d395c1edd961f934" title="Read a message from a ByteArray. " alt="" coords="241,223,447,265"/><area shape="rect" id="node7" href="structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ad9dc1a3f6c784e3c74b9558914eb70e4" title="Read a message from a ByteArray. " alt="" coords="248,289,440,330"/><area shape="rect" id="node8" href="structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848" title="Read a message from a ByteArray. " alt="" coords="273,355,415,381"/><area shape="rect" id="node9" href="structHF_1_1Attributes_1_1UIDS.html#a793c7e2cd64220b25375aa1005abeaf8" title="Read a message from a ByteArray. " alt="" coords="271,406,417,447"/><area shape="rect" id="node10" href="structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::unpack" alt="" coords="263,471,425,513"/><area shape="rect" id="node11" href="structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a7fd9afc6231b35e67ed600bb185e1eae" title="Read a message from a ByteArray. " alt="" coords="221,537,467,623"/><area shape="rect" id="node12" href="structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ad8041b04ce7ee09ded6d524de1c3a7e9" title="Read a message from a ByteArray. " alt="" coords="249,647,439,703"/><area shape="rect" id="node13" href="structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a6db168cb4800f3cf9d4cb8840f9df968" title="Read a message from a ByteArray. " alt="" coords="253,727,435,812"/><area shape="rect" id="node14" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476" title="Read a message from a ByteArray. " alt="" coords="256,836,432,892"/><area shape="rect" id="node15" href="structHF_1_1Protocol_1_1SetAttributePack_1_1Response_1_1Result.html#a784b1142bc2ca1496c083e8a411a7c14" title="Read a message from a ByteArray. " alt="" coords="257,916,431,972"/></map>
 </div>
 </p>
 
@@ -622,17 +620,17 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes read (1). (uint16_t, uint8_t) </dd></dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00239">239</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00247">247</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
 <p>References <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">read()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;         {</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            uint8_t  temp;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            uint16_t result = <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">read</a> (offset, temp);</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;            data = (temp &amp; 0x01) != 0;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;         }</div>
+<div class="fragment"><div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;         {</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            uint8_t  temp;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            uint16_t result = <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">read</a> (offset, temp);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            data = (temp &amp; 0x01) != 0;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1Common_1_1ByteArray_html_a6e5634544a5b09d00786d0befe46f88a"><div class="ttname"><a href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">HF::Common::ByteArray::read</a></div><div class="ttdeci">uint16_t read(uint16_t offset, uint8_t &amp;data) const </div><div class="ttdoc">Read the byte at offset into data. </div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -682,7 +680,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes written (1). </dd></dl>
 
-<p>Referenced by <a class="el" href="transport_8cpp_source.html#l00095">msg_t::pack()</a>, <a class="el" href="uids_8h_source.html#l00104">HF::UID::UID_T::pack()</a>, <a class="el" href="session__management_8h_source.html#l00124">HF::Core::SessionManagement::GetEntriesMessage::pack()</a>, <a class="el" href="uids_8h_source.html#l00146">HF::UID::NONE::pack()</a>, <a class="el" href="transport_8cpp_source.html#l00164">hello_msg_t::pack()</a>, <a class="el" href="simple__power__meter_8h_source.html#l00170">HF::Interfaces::SimplePowerMeter::Measurement::pack()</a>, <a class="el" href="attributes_8h_source.html#l00210">HF::Attributes::UIDS::pack()</a>, <a class="el" href="attributes_8h_source.html#l00422">HF::Attributes::Attribute&lt; bool &gt;::pack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00493">HF::Common::SerializableHelper&lt; T, typename std::enable_if&lt; std::is_integral&lt; typename std::remove_reference&lt; T &gt;::type &gt;::value &gt;::type &gt;::pack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00546">HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::pack()</a>, <a class="el" href="attributes_8h_source.html#l00575">HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;::pack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00633">HF::Common::SerializableHelper&lt; std::string &gt;::pack()</a>, <a class="el" href="attributes_8h_source.html#l01023">HF::Protocol::SetAttributePack::Response::Result::pack()</a>, and <a class="el" href="inc_2hanfun_2common_8h_source.html#l00203">write()</a>.</p>
+<p>Referenced by <a class="el" href="transport_8cpp_source.html#l00095">msg_t::pack()</a>, <a class="el" href="uids_8h_source.html#l00104">HF::UID::UID_T::pack()</a>, <a class="el" href="session__management_8h_source.html#l00121">HF::Core::SessionManagement::GetEntriesMessage::pack()</a>, <a class="el" href="uids_8h_source.html#l00146">HF::UID::NONE::pack()</a>, <a class="el" href="transport_8cpp_source.html#l00164">hello_msg_t::pack()</a>, <a class="el" href="simple__power__meter_8h_source.html#l00168">HF::Interfaces::SimplePowerMeter::Measurement::pack()</a>, <a class="el" href="attributes_8h_source.html#l00205">HF::Attributes::UIDS::pack()</a>, <a class="el" href="attributes_8h_source.html#l00417">HF::Attributes::Attribute&lt; bool &gt;::pack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00505">HF::Common::SerializableHelper&lt; T, typename std::enable_if&lt; std::is_integral&lt; typename std::remove_reference&lt; T &gt;::type &gt;::value &gt;::type &gt;::pack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00558">HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::pack()</a>, <a class="el" href="attributes_8h_source.html#l00570">HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;::pack()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00645">HF::Common::SerializableHelper&lt; std::string &gt;::pack()</a>, <a class="el" href="attributes_8h_source.html#l01018">HF::Protocol::SetAttributePack::Response::Result::pack()</a>, and <a class="el" href="inc_2hanfun_2common_8h_source.html#l00211">write()</a>.</p>
 
 <p><div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -811,12 +809,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes written (1). (uint16_t, uint8_t) </dd></dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00203">203</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00211">211</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
 <p>References <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">write()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;         {</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">write</a> (offset, static_cast &lt;uint8_t&gt;(data));</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;         }</div>
+<div class="fragment"><div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;         {</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">write</a> (offset, static_cast &lt;uint8_t&gt;(data));</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;         }</div>
 <div class="ttc" id="structHF_1_1Common_1_1ByteArray_html_a4d8497059b06cf33f1e2b899bbf7f08a"><div class="ttname"><a href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">HF::Common::ByteArray::write</a></div><div class="ttdeci">uint16_t write(uint16_t offset, uint8_t data)</div><div class="ttdoc">Write a byte into the array at the given offset. </div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -841,7 +839,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Common.html">Common</a></li><li class="navelem"><a class="el" href="structHF_1_1Common_1_1ByteArray.html">ByteArray</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:40 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:27 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

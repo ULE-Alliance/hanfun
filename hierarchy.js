@@ -133,10 +133,13 @@ var hierarchy =
       [ "HF::Devices::Concentrator::IUnit0", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html", null ],
       [ "HF::Devices::Node::IUnit0", "structHF_1_1Devices_1_1Node_1_1IUnit0.html", null ]
     ] ],
+    [ "HF::IDevice::IUnits", "structHF_1_1IDevice_1_1IUnits.html", null ],
     [ "HF::Interface", "structHF_1_1Interface.html", [
       [ "HF::Core::IService", "structHF_1_1Core_1_1IService.html", [
         [ "HF::Core::AbstractService", "structHF_1_1Core_1_1AbstractService.html", [
-          [ "HF::Core::AttributeReporting::Server", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html", null ],
+          [ "HF::Core::AttributeReporting::IServer", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html", [
+            [ "HF::Core::AttributeReporting::Server", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html", null ]
+          ] ],
           [ "HF::Core::Service< _uid >", "structHF_1_1Core_1_1Service.html", null ],
           [ "HF::Core::Service< HF::Interface::BIND_MANAGEMENT >", "structHF_1_1Core_1_1Service.html", [
             [ "HF::Core::BindManagement::Abstract", "classHF_1_1Core_1_1BindManagement_1_1Abstract.html", null ]
@@ -453,9 +456,7 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "std::forward_list< T >", null, [
-      [ "HF::IDevice::IUnits", "structHF_1_1IDevice_1_1IUnits.html", null ]
-    ] ],
+    [ "std::forward_list< T >", null, null ],
     [ "std::list< T >", null, [
       [ "HF::Attributes::List", "structHF_1_1Attributes_1_1List.html", null ]
     ] ],

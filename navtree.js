@@ -52,8 +52,8 @@ var NAVTREEINDEX =
 "group__protocol.html#gac7883f52b7ae594e458e5bbe55165030",
 "namespaceHF_1_1Core_1_1SessionManagement.html",
 "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476",
-"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#ac18a9c095828e842d97b5a48dec860bc",
-"structHF_1_1Protocol_1_1Message_1_1Interface.html"
+"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a346aa9a30afe949dd74d96831fe4d53c",
+"structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

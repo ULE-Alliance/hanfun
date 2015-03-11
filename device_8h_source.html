@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -78,115 +78,113 @@ $(document).ready(function(){initNavTree('device_8h_source.html','');});
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#ifndef HF_DEVICE_H</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#define HF_DEVICE_H</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;forward_list&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="inc_2hanfun_2common_8h.html">hanfun/common.h</a>&quot;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="inc_2hanfun_2transport_8h.html">hanfun/transport.h</a>&quot;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceHF.html">HF</a></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   <span class="comment">// Forward declaration of the core namespace.</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   <span class="keyword">namespace </span>Core</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;   {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;      <span class="keyword">namespace </span>DeviceInformation</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;      {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;         <span class="keyword">struct </span>Server;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="inc_2hanfun_2common_8h.html">hanfun/common.h</a>&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="inc_2hanfun_2transport_8h.html">hanfun/transport.h</a>&quot;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceHF.html">HF</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   <span class="comment">// Forward declaration of the core namespace.</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;   <span class="keyword">namespace </span>Core</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;      <span class="keyword">namespace </span>DeviceInformation</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;      {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;         <span class="keyword">struct </span>Server;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      }  <span class="comment">// namespace DeviceInformation</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      }  <span class="comment">// namespace DeviceInformation</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      <span class="keyword">namespace </span>AttributeReporting</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;         <span class="keyword">struct </span>Server;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      <span class="keyword">namespace </span>AttributeReporting</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;         <span class="keyword">struct </span>IServer;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      }  <span class="comment">// namespace DeviceInformation</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      }  <span class="comment">// namespace DeviceInformation</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   }  <span class="comment">// namespace Devices</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   }  <span class="comment">// namespace Devices</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   <span class="comment">// Forward declaration of the units namespace.</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="namespaceHF_1_1Units.html">   46</a></span>&#160;   <span class="keyword">namespace </span>Units</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="comment">// Forward declaration of the Unit&#39;s interface.</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keyword">struct </span><a class="code" href="structHF_1_1Units_1_1IUnit.html">IUnit</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   <span class="comment">// Forward declaration of the units namespace.</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="namespaceHF_1_1Units.html">   44</a></span>&#160;   <span class="keyword">namespace </span>Units</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="comment">// Forward declaration of the Unit&#39;s interface.</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keyword">struct </span><a class="code" href="structHF_1_1Units_1_1IUnit.html">IUnit</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   }  <span class="comment">// namespace Units</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   }  <span class="comment">// namespace Units</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <span class="comment">// Forward declaration of the protocol namespace.</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   <span class="keyword">namespace </span>Protocol</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      <span class="comment">// Forward declaration of the protocol packet structure.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keyword">struct </span>Packet;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   <span class="comment">// Forward declaration of the protocol namespace.</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   <span class="keyword">namespace </span>Protocol</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="comment">// Forward declaration of the protocol packet structure.</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keyword">struct </span>Packet;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   }  <span class="comment">// namespace Protocol</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   }  <span class="comment">// namespace Protocol</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structHF_1_1IDevice.html">   69</a></span>&#160;   <span class="keyword">struct </span><a class="code" href="structHF_1_1IDevice.html">IDevice</a>:<span class="keyword">public</span> <a class="code" href="structHF_1_1Transport_1_1Endpoint.html">Transport::Endpoint</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;   {</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structHF_1_1IDevice_1_1IUnits.html">   74</a></span>&#160;      <span class="keyword">struct </span><a class="code" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a>:<span class="keyword">public</span> std::forward_list &lt;Units::IUnit *&gt;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;         IUnits::size_type size ()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">         </span>{</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keywordflow">return</span> distance (begin (), end ());</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;         }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      };</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="structHF_1_1IDevice_1_1IUnit0.html">   85</a></span>&#160;      <span class="keyword">struct </span><a class="code" href="structHF_1_1IDevice_1_1IUnit0.html">IUnit0</a></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1DeviceInformation_1_1Server.html">Core::DeviceInformation::Server</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da">device_info</a> () <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1DeviceInformation_1_1Server.html">Core::DeviceInformation::Server</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da">device_info</a> () = 0;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html">Core::AttributeReporting::Server</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#a043ad5c71f780ec66d3beeebbb4f8bff">attribute_reporting</a> () <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html">Core::AttributeReporting::Server</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#a043ad5c71f780ec66d3beeebbb4f8bff">attribute_reporting</a> () = 0;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      };</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;      <span class="keyword">virtual</span> uint16_t <a class="code" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">address</a> () <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a> &amp;<a class="code" href="structHF_1_1IDevice.html#a2e4c1664095629120a3f5a39e0369a09">units</a> () <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="code" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">unit</a> (uint8_t <span class="keywordtype">id</span>) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <span class="keyword">virtual</span> <a class="code" href="structHF_1_1IDevice_1_1IUnit0.html">IUnit0</a> *<a class="code" href="structHF_1_1IDevice.html#aea601a201c645eb6694b2904f2863b98">unit0</a> () <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structHF_1_1IDevice.html#a91cf93ead80a0e7cf64be389e00b6dae">add</a> (<a class="code" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="code" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">unit</a>) = 0;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <span class="keyword">remove</span> (<a class="code" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="code" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">unit</a>) = 0;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structHF_1_1IDevice.html#a3de1b4a442049c7df5dd2c9873a39109">send</a> (<a class="code" href="structHF_1_1Protocol_1_1Packet.html">Protocol::Packet</a> &amp;packet) = 0;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structHF_1_1IDevice.html#a9a36a695912e0da82b3ffa3ddad0aaf1">periodic</a> (uint32_t time) = 0;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;   };</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;}  <span class="comment">// namespace HF</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEVICE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structHF_1_1IDevice.html">   67</a></span>&#160;   <span class="keyword">struct </span><a class="code" href="structHF_1_1IDevice.html">IDevice</a>:<span class="keyword">public</span> <a class="code" href="structHF_1_1Transport_1_1Endpoint.html">Transport::Endpoint</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;   {</div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="structHF_1_1IDevice_1_1IUnits.html">   72</a></span>&#160;      <span class="keyword">struct </span><a class="code" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a>:<span class="keyword">public</span> Common::SimpleList &lt;Units::IUnit *&gt;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;         IUnits::size_type size ()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">         </span>{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keywordflow">return</span> distance (begin (), end ());</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      };</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structHF_1_1IDevice_1_1IUnit0.html">   83</a></span>&#160;      <span class="keyword">struct </span><a class="code" href="structHF_1_1IDevice_1_1IUnit0.html">IUnit0</a></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1DeviceInformation_1_1Server.html">Core::DeviceInformation::Server</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da">device_info</a> () <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1DeviceInformation_1_1Server.html">Core::DeviceInformation::Server</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da">device_info</a> () = 0;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">Core::AttributeReporting::IServer</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#a104dc28bc38ec6be4142aae2b00f57af">attribute_reporting</a> () <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;         <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">Core::AttributeReporting::IServer</a> *<a class="code" href="structHF_1_1IDevice_1_1IUnit0.html#a104dc28bc38ec6be4142aae2b00f57af">attribute_reporting</a> () = 0;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      };</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="keyword">virtual</span> uint16_t <a class="code" href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">address</a> () <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;      <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="structHF_1_1IDevice_1_1IUnits.html">IUnits</a> &amp;<a class="code" href="structHF_1_1IDevice.html#a2e4c1664095629120a3f5a39e0369a09">units</a> () <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      <span class="keyword">virtual</span> <a class="code" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="code" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">unit</a> (uint8_t <span class="keywordtype">id</span>) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;      <span class="keyword">virtual</span> <a class="code" href="structHF_1_1IDevice_1_1IUnit0.html">IUnit0</a> *<a class="code" href="structHF_1_1IDevice.html#aea601a201c645eb6694b2904f2863b98">unit0</a> () <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structHF_1_1IDevice.html#a91cf93ead80a0e7cf64be389e00b6dae">add</a> (<a class="code" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="code" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">unit</a>) = 0;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <span class="keyword">remove</span> (<a class="code" href="structHF_1_1Units_1_1IUnit.html">Units::IUnit</a> *<a class="code" href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">unit</a>) = 0;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structHF_1_1IDevice.html#a3de1b4a442049c7df5dd2c9873a39109">send</a> (<a class="code" href="structHF_1_1Protocol_1_1Packet.html">Protocol::Packet</a> &amp;packet) = 0;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structHF_1_1IDevice.html#a9a36a695912e0da82b3ffa3ddad0aaf1">periodic</a> (uint32_t time) = 0;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;   };</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}  <span class="comment">// namespace HF</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEVICE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="structHF_1_1IDevice_1_1IUnit0_html_ad52c1eb1dd552fd20f7915d6e36165da"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da">HF::IDevice::IUnit0::device_info</a></div><div class="ttdeci">virtual Core::DeviceInformation::Server * device_info() const =0</div><div class="ttdoc">Return a pointer to unit 0 device information service. </div></div>
 <div class="ttc" id="inc_2hanfun_2common_8h_html"><div class="ttname"><a href="inc_2hanfun_2common_8h.html">common.h</a></div><div class="ttdoc">This file contains the common defines for the HAN-FUN library. </div></div>
-<div class="ttc" id="structHF_1_1IDevice_1_1IUnits_html"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnits.html">HF::IDevice::IUnits</a></div><div class="ttdoc">Unit list type. </div><div class="ttdef"><b>Definition:</b> <a href="device_8h_source.html#l00074">device.h:74</a></div></div>
+<div class="ttc" id="structHF_1_1IDevice_1_1IUnits_html"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnits.html">HF::IDevice::IUnits</a></div><div class="ttdoc">Unit list type. </div><div class="ttdef"><b>Definition:</b> <a href="device_8h_source.html#l00072">device.h:72</a></div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_a2e4c1664095629120a3f5a39e0369a09"><div class="ttname"><a href="structHF_1_1IDevice.html#a2e4c1664095629120a3f5a39e0369a09">HF::IDevice::units</a></div><div class="ttdeci">virtual const IUnits &amp; units() const =0</div><div class="ttdoc">Return the list of units registered in this device. </div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_a91cf93ead80a0e7cf64be389e00b6dae"><div class="ttname"><a href="structHF_1_1IDevice.html#a91cf93ead80a0e7cf64be389e00b6dae">HF::IDevice::add</a></div><div class="ttdeci">virtual void add(Units::IUnit *unit)=0</div><div class="ttdoc">Add unit to devices unit lists. </div></div>
-<div class="ttc" id="structHF_1_1Core_1_1AttributeReporting_1_1Server_html"><div class="ttname"><a href="structHF_1_1Core_1_1AttributeReporting_1_1Server.html">HF::Core::AttributeReporting::Server</a></div><div class="ttdoc">Attribute Reporting - Server Role. </div><div class="ttdef"><b>Definition:</b> <a href="attribute__reporting_8h_source.html#l01492">attribute_reporting.h:1492</a></div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_ac1bc3c73836f5de2341d48063dc46c60"><div class="ttname"><a href="structHF_1_1IDevice.html#ac1bc3c73836f5de2341d48063dc46c60">HF::IDevice::unit</a></div><div class="ttdeci">virtual Units::IUnit * unit(uint8_t id) const =0</div><div class="ttdoc">Return pointer to the unit with the given id. </div></div>
-<div class="ttc" id="structHF_1_1IDevice_1_1IUnit0_html_a043ad5c71f780ec66d3beeebbb4f8bff"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnit0.html#a043ad5c71f780ec66d3beeebbb4f8bff">HF::IDevice::IUnit0::attribute_reporting</a></div><div class="ttdeci">virtual Core::AttributeReporting::Server * attribute_reporting() const =0</div><div class="ttdoc">Return a pointer to unit 0 attribute reporting service. </div></div>
-<div class="ttc" id="structHF_1_1IDevice_html"><div class="ttname"><a href="structHF_1_1IDevice.html">HF::IDevice</a></div><div class="ttdoc">This class represents the interface common to all HAN-FUN devices. </div><div class="ttdef"><b>Definition:</b> <a href="device_8h_source.html#l00069">device.h:69</a></div></div>
+<div class="ttc" id="structHF_1_1IDevice_html"><div class="ttname"><a href="structHF_1_1IDevice.html">HF::IDevice</a></div><div class="ttdoc">This class represents the interface common to all HAN-FUN devices. </div><div class="ttdef"><b>Definition:</b> <a href="device_8h_source.html#l00067">device.h:67</a></div></div>
+<div class="ttc" id="structHF_1_1IDevice_1_1IUnit0_html_a104dc28bc38ec6be4142aae2b00f57af"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnit0.html#a104dc28bc38ec6be4142aae2b00f57af">HF::IDevice::IUnit0::attribute_reporting</a></div><div class="ttdeci">virtual Core::AttributeReporting::IServer * attribute_reporting() const =0</div><div class="ttdoc">Return a pointer to unit 0 attribute reporting service. </div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_ae785f2abc55eeb8197d40564b1d49e67"><div class="ttname"><a href="structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67">HF::IDevice::address</a></div><div class="ttdeci">virtual uint16_t address() const =0</div><div class="ttdoc">Return the device address on the HAN-FUN network, when the device is registered, or HF_BROADCAST_ADDR...</div></div>
 <div class="ttc" id="inc_2hanfun_2transport_8h_html"><div class="ttname"><a href="inc_2hanfun_2transport_8h.html">transport.h</a></div><div class="ttdoc">This file contains the definition of the transport layer API for the HAN-FUN common implementation...</div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_aea601a201c645eb6694b2904f2863b98"><div class="ttname"><a href="structHF_1_1IDevice.html#aea601a201c645eb6694b2904f2863b98">HF::IDevice::unit0</a></div><div class="ttdeci">virtual IUnit0 * unit0() const =0</div><div class="ttdoc">Return pointer to the unit 0 for this device. </div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_a3de1b4a442049c7df5dd2c9873a39109"><div class="ttname"><a href="structHF_1_1IDevice.html#a3de1b4a442049c7df5dd2c9873a39109">HF::IDevice::send</a></div><div class="ttdeci">virtual void send(Protocol::Packet &amp;packet)=0</div><div class="ttdoc">Send given packet into the HAN-FUN network. </div></div>
-<div class="ttc" id="structHF_1_1IDevice_1_1IUnit0_html"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnit0.html">HF::IDevice::IUnit0</a></div><div class="ttdoc">HAN-FUN device Unit 0 common API. </div><div class="ttdef"><b>Definition:</b> <a href="device_8h_source.html#l00085">device.h:85</a></div></div>
+<div class="ttc" id="structHF_1_1IDevice_1_1IUnit0_html"><div class="ttname"><a href="structHF_1_1IDevice_1_1IUnit0.html">HF::IDevice::IUnit0</a></div><div class="ttdoc">HAN-FUN device Unit 0 common API. </div><div class="ttdef"><b>Definition:</b> <a href="device_8h_source.html#l00083">device.h:83</a></div></div>
 <div class="ttc" id="structHF_1_1IDevice_html_a9a36a695912e0da82b3ffa3ddad0aaf1"><div class="ttname"><a href="structHF_1_1IDevice.html#a9a36a695912e0da82b3ffa3ddad0aaf1">HF::IDevice::periodic</a></div><div class="ttdeci">virtual void periodic(uint32_t time)=0</div><div class="ttdoc">Handle periodic processing. </div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1Packet_html"><div class="ttname"><a href="structHF_1_1Protocol_1_1Packet.html">HF::Protocol::Packet</a></div><div class="ttdoc">HAN-FUN Protocol Packet. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00257">protocol.h:257</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1Packet_html"><div class="ttname"><a href="structHF_1_1Protocol_1_1Packet.html">HF::Protocol::Packet</a></div><div class="ttdoc">HAN-FUN Protocol Packet. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00255">protocol.h:255</a></div></div>
 <div class="ttc" id="structHF_1_1Units_1_1IUnit_html"><div class="ttname"><a href="structHF_1_1Units_1_1IUnit.html">HF::Units::IUnit</a></div><div class="ttdoc">This class represents the interface implemented by all HAN-FUN units. </div><div class="ttdef"><b>Definition:</b> <a href="units_8h_source.html#l00042">units.h:42</a></div></div>
 <div class="ttc" id="structHF_1_1Core_1_1DeviceInformation_1_1Server_html"><div class="ttname"><a href="structHF_1_1Core_1_1DeviceInformation_1_1Server.html">HF::Core::DeviceInformation::Server</a></div><div class="ttdoc">Device Information interface : Server side. </div><div class="ttdef"><b>Definition:</b> <a href="device__information_8h_source.html#l00190">device_information.h:190</a></div></div>
-<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00092">inc/hanfun/transport.h:92</a></div></div>
-<div class="ttc" id="namespaceHF_html"><div class="ttname"><a href="namespaceHF.html">HF</a></div><div class="ttdoc">Top-level namespace for the HAN-FUN library. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00027">attributes.h:27</a></div></div>
+<div class="ttc" id="structHF_1_1Core_1_1AttributeReporting_1_1IServer_html"><div class="ttname"><a href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">HF::Core::AttributeReporting::IServer</a></div><div class="ttdoc">Attribute Reporting - Server Role. </div><div class="ttdef"><b>Definition:</b> <a href="attribute__reporting_8h_source.html#l01494">attribute_reporting.h:1494</a></div></div>
+<div class="ttc" id="structHF_1_1Transport_1_1Endpoint_html"><div class="ttname"><a href="structHF_1_1Transport_1_1Endpoint.html">HF::Transport::Endpoint</a></div><div class="ttdoc">This is the interface used by the transport layer to signal events comming in from the network...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2transport_8h_source.html#l00089">inc/hanfun/transport.h:89</a></div></div>
+<div class="ttc" id="namespaceHF_html"><div class="ttname"><a href="namespaceHF.html">HF</a></div><div class="ttdoc">Top-level namespace for the HAN-FUN library. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00022">attributes.h:22</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bfccd401955b95cf8c75461437045ac0.html">inc</a></li><li class="navelem"><a class="el" href="dir_dfd4f5aa79d47f1bcf2ca6b2ffdbfdaa.html">hanfun</a></li><li class="navelem"><a class="el" href="device_8h.html">device.h</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:39 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:25 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

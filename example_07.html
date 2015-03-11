@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -168,12 +168,12 @@ $(document).ready(function(){initNavTree('example_07.html','');});
 <div class="line">               report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#ac45448b757a46d499b1726d544d69ee7">unpack</a> (<a class="code" href="group__attributes.html#gae271ba996fe0d158397877c944e55862">HF::Attributes::get_factory</a>, payload, offset);</div>
 <div class="line"></div>
 <div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Report : &quot;</span> &lt;&lt; report);</div>
-<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.begin (),</div>
-<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
+<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.begin (),</div>
+<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
 <div class="line"></div>
 <div class="line">               uint8_t unit_count = 0;</div>
 <div class="line">               <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.end (),</div>
+<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.end (),</div>
 <div class="line">                     [&amp;unit_count](<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry.html">Report::Periodic::Entry</a> &amp;entry)</div>
 <div class="line">               {</div>
 <div class="line">                  TABLE_LOG (<span class="stringliteral">&quot;Entry : &quot;</span> &lt;&lt; (<span class="keywordtype">int</span>) unit_count++ &lt;&lt; std::endl &lt;&lt; entry);</div>
@@ -208,12 +208,12 @@ $(document).ready(function(){initNavTree('example_07.html','');});
 <div class="line">               report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a4f014654d2ce96c28c3d37330ff36477">unpack</a> (<a class="code" href="group__attributes.html#gae271ba996fe0d158397877c944e55862">HF::Attributes::get_factory</a>, payload, offset);</div>
 <div class="line"></div>
 <div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Report : &quot;</span> &lt;&lt; report);</div>
-<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.begin (),</div>
-<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
+<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.begin (),</div>
+<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
 <div class="line"></div>
 <div class="line">               uint8_t unit_count = 0;</div>
 <div class="line">               <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.end (),</div>
+<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.end (),</div>
 <div class="line">                     [&amp;unit_count](<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Entry.html">Report::Event::Entry</a> &amp;entry)</div>
 <div class="line">               {</div>
 <div class="line">                  TABLE_LOG (<span class="stringliteral">&quot;Entry : &quot;</span> &lt;&lt; (<span class="keywordtype">int</span>) unit_count++ &lt;&lt; std::endl &lt;&lt; entry);</div>
@@ -735,12 +735,12 @@ Event Reports</h1>
 <div class="line">               report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#ac45448b757a46d499b1726d544d69ee7">unpack</a> (<a class="code" href="group__attributes.html#gae271ba996fe0d158397877c944e55862">HF::Attributes::get_factory</a>, payload, offset);</div>
 <div class="line"></div>
 <div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Report : &quot;</span> &lt;&lt; report);</div>
-<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.begin (),</div>
-<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
+<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.begin (),</div>
+<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
 <div class="line"></div>
 <div class="line">               uint8_t unit_count = 0;</div>
 <div class="line">               <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db">entries</a>.end (),</div>
+<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b">entries</a>.end (),</div>
 <div class="line">                     [&amp;unit_count](<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry.html">Report::Periodic::Entry</a> &amp;entry)</div>
 <div class="line">               {</div>
 <div class="line">                  TABLE_LOG (<span class="stringliteral">&quot;Entry : &quot;</span> &lt;&lt; (<span class="keywordtype">int</span>) unit_count++ &lt;&lt; std::endl &lt;&lt; entry);</div>
@@ -775,12 +775,12 @@ Event Reports</h1>
 <div class="line">               report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a4f014654d2ce96c28c3d37330ff36477">unpack</a> (<a class="code" href="group__attributes.html#gae271ba996fe0d158397877c944e55862">HF::Attributes::get_factory</a>, payload, offset);</div>
 <div class="line"></div>
 <div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Report : &quot;</span> &lt;&lt; report);</div>
-<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.begin (),</div>
-<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
+<div class="line">               TABLE_LOG (<span class="stringliteral">&quot;Entries : &quot;</span> &lt;&lt; std::distance (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.begin (),</div>
+<div class="line">                                                         report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.end ()) &lt;&lt; <span class="stringliteral">&quot; (#)&quot;</span>);</div>
 <div class="line"></div>
 <div class="line">               uint8_t unit_count = 0;</div>
 <div class="line">               <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901">entries</a>.end (),</div>
+<div class="line">               std::for_each (report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.begin (), report.<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194">entries</a>.end (),</div>
 <div class="line">                     [&amp;unit_count](<a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Entry.html">Report::Event::Entry</a> &amp;entry)</div>
 <div class="line">               {</div>
 <div class="line">                  TABLE_LOG (<span class="stringliteral">&quot;Entry : &quot;</span> &lt;&lt; (<span class="keywordtype">int</span>) unit_count++ &lt;&lt; std::endl &lt;&lt; entry);</div>
@@ -1156,7 +1156,7 @@ Event Reports</h1>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="tutorials.html">Getting Started</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:40 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:26 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -8,5 +8,5 @@ var structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event =
     [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#aa8b588fb567affb6a50127810aac2f95", null ],
     [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a62aab8ba38cdf86c91ed79abc01d7a8c", null ],
     [ "unpack", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a4f014654d2ce96c28c3d37330ff36477", null ],
-    [ "entries", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901", null ]
+    [ "entries", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194", null ]
 ];

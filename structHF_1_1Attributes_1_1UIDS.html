@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -90,8 +90,6 @@ $(document).ready(function(){initNavTree('structHF_1_1Attributes_1_1UIDS.html','
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="structHF_1_1Attributes_1_1UIDS__coll__graph.png" border="0" usemap="#HF_1_1Attributes_1_1UIDS_coll__map" alt="Collaboration graph"/></div>
-<map name="HF_1_1Attributes_1_1UIDS_coll__map" id="HF_1_1Attributes_1_1UIDS_coll__map">
-</map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -125,7 +123,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="structHF_1_1Attributes_1_1List.html" title="This class has the same behavior has a list, however the list element access methods where overwritte...">List</a> of attributes UIDs. </p>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00173">173</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00168">168</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aecc7efdc68e253987fd3ff587731906a"></a>
 <div class="memitem">
@@ -157,9 +155,9 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00183">183</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;                                                 :vector &lt;uint8_t&gt;(uids)</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;         {}</div>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00178">178</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                                                 :vector &lt;uint8_t&gt;(uids)</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;         {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -189,12 +187,12 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <dl class="section note"><dt>Note</dt><dd>this is used as an alias to the underling method, <code>std::vector&lt;uint8_t&gt;::size</code>, as the size method signature is used to provide a Serializable type interface.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>number of elements. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00195">195</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00190">190</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00210">pack()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;         {</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            <span class="keywordflow">return</span> vector &lt;uint8_t&gt;::size ();</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;         }</div>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00205">pack()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;         {</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            <span class="keywordflow">return</span> vector &lt;uint8_t&gt;::size ();</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;         }</div>
 </div><!-- fragment -->
 <p><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -255,32 +253,32 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of bytes written. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00210">210</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00205">205</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>References <a class="el" href="attributes_8h_source.html#l00195">length()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00066">SERIALIZABLE_CHECK</a>, <a class="el" href="attributes_8h_source.html#l00204">size()</a>, and <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">HF::Common::ByteArray::write()</a>.</p>
+<p>References <a class="el" href="attributes_8h_source.html#l00190">length()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>, <a class="el" href="attributes_8h_source.html#l00199">size()</a>, and <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">HF::Common::ByteArray::write()</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00856">HF::Protocol::GetAttributePack::Request::pack()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;         {</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">size</a> ());</div>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00851">HF::Protocol::GetAttributePack::Request::pack()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;         {</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">size</a> ());</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            uint16_t start = offset;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            uint8_t  count = <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a05a13d78915323e4bb4ca607933fdb52">length</a> ();</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            offset += array.write (offset, count);</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            uint16_t start = offset;</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            uint8_t  count = <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a05a13d78915323e4bb4ca607933fdb52">length</a> ();</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            offset += array.write (offset, count);</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            std::for_each (vector&lt;uint8_t&gt;::begin(), vector&lt;uint8_t&gt;::end(),</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;                           [&amp;offset,&amp;array](uint8_t uid)</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            {</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;               offset += array.write (offset, uid);</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            });</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a6bafd77d0a6a05553079fe3751f24281"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">HF::Attributes::UIDS::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00204">attributes.h:204</a></div></div>
-<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00066">inc/hanfun/common.h:66</a></div></div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a05a13d78915323e4bb4ca607933fdb52"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a05a13d78915323e4bb4ca607933fdb52">HF::Attributes::UIDS::length</a></div><div class="ttdeci">vector&lt; uint8_t &gt;::size_type length() const </div><div class="ttdoc">Number of elements in the list. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00195">attributes.h:195</a></div></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            <span class="comment">/* *INDENT-OFF* */</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            std::for_each (vector&lt;uint8_t&gt;::begin(), vector&lt;uint8_t&gt;::end(),</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                           [&amp;offset,&amp;array](uint8_t uid)</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            {</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;               offset += array.write (offset, uid);</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            });</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            <span class="comment">/* *INDENT-ON* */</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a6bafd77d0a6a05553079fe3751f24281"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">HF::Attributes::UIDS::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00199">attributes.h:199</a></div></div>
+<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00074">inc/hanfun/common.h:74</a></div></div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a05a13d78915323e4bb4ca607933fdb52"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a05a13d78915323e4bb4ca607933fdb52">HF::Attributes::UIDS::length</a></div><div class="ttdeci">vector&lt; uint8_t &gt;::size_type length() const </div><div class="ttdoc">Number of elements in the list. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00190">attributes.h:190</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -330,13 +328,13 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <p>Number bytes needed to serialize the message. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes the message requires to be serialized. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00204">204</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00199">199</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00210">pack()</a>, and <a class="el" href="attributes_8h_source.html#l00850">HF::Protocol::GetAttributePack::Request::size()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;         {</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">min_size</a> + <span class="keyword">sizeof</span>(uint8_t) * vector &lt;uint8_t&gt;::size ();</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a80078ceb24e6fed18d369397b30a24b7"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">HF::Attributes::UIDS::min_size</a></div><div class="ttdeci">static constexpr uint8_t min_size</div><div class="ttdoc">Minimum pack/unpack required data size. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00201">attributes.h:201</a></div></div>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00205">pack()</a>, and <a class="el" href="attributes_8h_source.html#l00845">HF::Protocol::GetAttributePack::Request::size()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;         {</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">min_size</a> + <span class="keyword">sizeof</span>(uint8_t) * vector &lt;uint8_t&gt;::size ();</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a80078ceb24e6fed18d369397b30a24b7"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">HF::Attributes::UIDS::min_size</a></div><div class="ttdeci">static constexpr uint8_t min_size</div><div class="ttdoc">Minimum pack/unpack required data size. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00196">attributes.h:196</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -393,14 +391,14 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of bytes read. </dd></dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00231">231</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00226">226</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00862">HF::Protocol::GetAttributePack::Request::unpack()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;         {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            uint8_t count = 0;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">unpack</a> (array, offset, count);</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a2703bcad141d2b865bcf528957378af1"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">HF::Attributes::UIDS::unpack</a></div><div class="ttdeci">uint16_t unpack(const Common::ByteArray &amp;array, uint16_t offset=0)</div><div class="ttdoc">Read a message from a ByteArray. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00231">attributes.h:231</a></div></div>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00857">HF::Protocol::GetAttributePack::Request::unpack()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;         {</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            uint8_t count = 0;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">unpack</a> (array, offset, count);</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a2703bcad141d2b865bcf528957378af1"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">HF::Attributes::UIDS::unpack</a></div><div class="ttdeci">uint16_t unpack(const Common::ByteArray &amp;array, uint16_t offset=0)</div><div class="ttdoc">Read a message from a ByteArray. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00226">attributes.h:226</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -469,31 +467,31 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="attributes_8h_source.html#l00243">243</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
+<p>Definition at line <a class="el" href="attributes_8h_source.html#l00238">238</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>References <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">HF::Common::ByteArray::read()</a>, and <a class="el" href="inc_2hanfun_2common_8h_source.html#l00066">SERIALIZABLE_CHECK</a>.</p>
-<div class="fragment"><div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;         {</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">min_size</a>);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            uint16_t start = offset;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            offset += array.read (offset, count);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, count);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            vector &lt;uint8_t&gt;::reserve (count);</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; count; i++)</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            {</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;               uint8_t uid;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;               offset += array.read (offset, uid);</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;               vector &lt;uint8_t&gt;::push_back (uid);</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            }</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a80078ceb24e6fed18d369397b30a24b7"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">HF::Attributes::UIDS::min_size</a></div><div class="ttdeci">static constexpr uint8_t min_size</div><div class="ttdoc">Minimum pack/unpack required data size. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00201">attributes.h:201</a></div></div>
-<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00066">inc/hanfun/common.h:66</a></div></div>
+<p>References <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a">HF::Common::ByteArray::read()</a>, and <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>.</p>
+<div class="fragment"><div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;         {</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">min_size</a>);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            uint16_t start = offset;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;            offset += array.read (offset, count);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, count);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            vector &lt;uint8_t&gt;::reserve (count);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; count; i++)</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            {</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;               uint8_t uid;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;               offset += array.read (offset, uid);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;               vector &lt;uint8_t&gt;::push_back (uid);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            }</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Attributes_1_1UIDS_html_a80078ceb24e6fed18d369397b30a24b7"><div class="ttname"><a href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">HF::Attributes::UIDS::min_size</a></div><div class="ttdeci">static constexpr uint8_t min_size</div><div class="ttdoc">Minimum pack/unpack required data size. </div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00196">attributes.h:196</a></div></div>
+<div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00074">inc/hanfun/common.h:74</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -517,7 +515,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Attributes.html">Attributes</a></li><li class="navelem"><a class="el" href="structHF_1_1Attributes_1_1UIDS.html">UIDS</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:40 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:27 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

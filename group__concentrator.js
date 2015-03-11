@@ -19,7 +19,7 @@ var group__concentrator =
       [ "receive", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#ab0467aac7d70d76acf4173fcbe08bd61", null ],
       [ "route_packet", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a3183029380b77a90d46ce85cfb82691a", null ],
       [ "unit0", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a4f0417caead3cffb026663c34400b43b", null ],
-      [ "_links", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#adc5ca055a94f2dc50c261fd7cf29a510", null ]
+      [ "_links", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a5e043bbf05c5dec91ca6ea963df2a9c7", null ]
     ] ],
     [ "Abstract", "classHF_1_1Devices_1_1Concentrator_1_1Abstract.html", [
       [ "unit0", "classHF_1_1Devices_1_1Concentrator_1_1Abstract.html#a2cb2098ad66f441fe4c9eb6a376007af", null ]
@@ -30,6 +30,6 @@ var group__concentrator =
       [ "destroy", "classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a99bb0f8cfa6085076296941d8311147b", null ],
       [ "find", "classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a063aec30d5fdf459a2afcf703ca378ff", null ],
       [ "remove", "classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a1aa7ac013bcdd14172c9b1ddcbf22795", null ],
-      [ "links", "classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a02c7b64d860f94bbd66f1478e14873b6", null ]
+      [ "links", "classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a9732004a6bd8db8ec37c949d107fc2ad", null ]
     ] ]
 ];

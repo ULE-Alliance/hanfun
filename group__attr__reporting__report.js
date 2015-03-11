@@ -58,7 +58,7 @@ var group__attr__reporting__report =
       [ "Periodic", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#ae5847a3e003d4549b727e14f5498ff62", null ],
       [ "add", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a9743443e490315d9a7a9bb4febb1e2e2", null ],
       [ "unpack", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#ac45448b757a46d499b1726d544d69ee7", null ],
-      [ "entries", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a0b5c8b17b2d73e184c9857d471dda0db", null ]
+      [ "entries", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#a077b6ab0424ba23c7a88e2039932ea7b", null ]
     ] ],
     [ "Event", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html", [
       [ "AddEntryMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1AddEntryMessage.html", [
@@ -85,7 +85,7 @@ var group__attr__reporting__report =
       [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#aa8b588fb567affb6a50127810aac2f95", null ],
       [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a62aab8ba38cdf86c91ed79abc01d7a8c", null ],
       [ "unpack", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a4f014654d2ce96c28c3d37330ff36477", null ],
-      [ "entries", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#acc9ab251b08dbae5956494fe79df8901", null ]
+      [ "entries", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html#a2ce818d5720fc06ea6b55889223c0194", null ]
     ] ],
     [ "Field", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Field.html", [
       [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Field.html#ae0eb45e7ed1fc9fc12ab164957105fe9", null ],

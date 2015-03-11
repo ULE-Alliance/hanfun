@@ -35,7 +35,7 @@ var attribute__reporting_8h =
     [ "add", "attribute__reporting_8h.html#ga16e2adb57b2437af38b51963ab2631bc", null ],
     [ "create", "attribute__reporting_8h.html#ga97ba6170bfd3e3f4fea987c5e7e5ebd4", null ],
     [ "create", "attribute__reporting_8h.html#gaa330e5c82415a9c760f9db20b6d9086f", null ],
-    [ "create_attribute", "attribute__reporting_8h.html#ga30e6254b87c4671c90153c72e4bf1db6", null ],
+    [ "create_attribute", "attribute__reporting_8h.html#ga4b7d99bc33d6d45f87ed07258bc56fd2", null ],
     [ "create_attribute", "attribute__reporting_8h.html#ga00e8734e745f791b258275d5bc83fca2", null ],
     [ "destroy", "attribute__reporting_8h.html#ga64303b6c1f6d441929d1ea7091f83a6a", null ],
     [ "destroy", "attribute__reporting_8h.html#gafa4ea0e7cd9db1c3bf33f6070853c037", null ],

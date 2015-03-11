@@ -12,8 +12,8 @@ var group__dev__common =
     ] ],
     [ "IUnits", "structHF_1_1IDevice_1_1IUnits.html", null ],
     [ "IUnit0", "structHF_1_1IDevice_1_1IUnit0.html", [
-      [ "attribute_reporting", "structHF_1_1IDevice_1_1IUnit0.html#a043ad5c71f780ec66d3beeebbb4f8bff", null ],
-      [ "attribute_reporting", "structHF_1_1IDevice_1_1IUnit0.html#abca15dd3c7abf18a4878f310bb723564", null ],
+      [ "attribute_reporting", "structHF_1_1IDevice_1_1IUnit0.html#a104dc28bc38ec6be4142aae2b00f57af", null ],
+      [ "attribute_reporting", "structHF_1_1IDevice_1_1IUnit0.html#acc5a8d23ce5ac9d404bd3009f0923f6a", null ],
       [ "device_info", "structHF_1_1IDevice_1_1IUnit0.html#ad52c1eb1dd552fd20f7915d6e36165da", null ],
       [ "device_info", "structHF_1_1IDevice_1_1IUnit0.html#a444ec17c4073ae150b14d7ea1a02d6a9", null ]
     ] ],

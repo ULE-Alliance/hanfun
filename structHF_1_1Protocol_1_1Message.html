@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.2</span>
+   &#160;<span id="projectnumber">1.2.3</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -176,7 +176,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Network <a class="el" href="structHF_1_1Protocol_1_1Message.html" title="Network Message. ">Message</a>. </p>
 
-<p>Definition at line <a class="el" href="protocol_8h_source.html#l00062">62</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
+<p>Definition at line <a class="el" href="protocol_8h_source.html#l00060">60</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a4b229abdbe07c40c0e0bcc8ee5b96456"></a>
 <div class="memitem">
@@ -219,20 +219,20 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="protocol_8h_source.html#l00146">146</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
+<p>Definition at line <a class="el" href="protocol_8h_source.html#l00144">144</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
 
 <p>References <a class="el" href="structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b">size()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                                                             :</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <a class="code" href="structHF_1_1Protocol_1_1Message.html#a3d733a7f26dbd395f15405386dbbd4d8">reference</a> (0), <a class="code" href="structHF_1_1Protocol_1_1Message.html#abc90641b141aa56863d2c703f6a2377f">type</a> (_type), <a class="code" href="structHF_1_1Protocol_1_1Message.html#adb967c1c061c49c46917932fabb9742f">payload</a> (Common::ByteArray (<a class="code" href="structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b">size</a>)), <a class="code" href="structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4">length</a> (0)</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;         {</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            assert (<a class="code" href="structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b">size</a> &lt;= <a class="code" href="group__protocol.html#ga90e200be872c1d6f78263e62575cb2f7">MAX_PAYLOAD</a>);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;         }</div>
-<div class="ttc" id="group__protocol_html_ga90e200be872c1d6f78263e62575cb2f7"><div class="ttname"><a href="group__protocol.html#ga90e200be872c1d6f78263e62575cb2f7">HF::Protocol::MAX_PAYLOAD</a></div><div class="ttdeci">constexpr uint16_t MAX_PAYLOAD</div><div class="ttdoc">HAN-FUN Network - Maximum application payload length. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00053">protocol.h:53</a></div></div>
+<div class="fragment"><div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                                                             :</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            <a class="code" href="structHF_1_1Protocol_1_1Message.html#a3d733a7f26dbd395f15405386dbbd4d8">reference</a> (0), <a class="code" href="structHF_1_1Protocol_1_1Message.html#abc90641b141aa56863d2c703f6a2377f">type</a> (_type), <a class="code" href="structHF_1_1Protocol_1_1Message.html#adb967c1c061c49c46917932fabb9742f">payload</a> (Common::ByteArray (<a class="code" href="structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b">size</a>)), <a class="code" href="structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4">length</a> (0)</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;         {</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            assert (<a class="code" href="structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b">size</a> &lt;= <a class="code" href="group__protocol.html#ga90e200be872c1d6f78263e62575cb2f7">MAX_PAYLOAD</a>);</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;         }</div>
+<div class="ttc" id="group__protocol_html_ga90e200be872c1d6f78263e62575cb2f7"><div class="ttname"><a href="group__protocol.html#ga90e200be872c1d6f78263e62575cb2f7">HF::Protocol::MAX_PAYLOAD</a></div><div class="ttdeci">constexpr uint16_t MAX_PAYLOAD</div><div class="ttdoc">HAN-FUN Network - Maximum application payload length. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00051">protocol.h:51</a></div></div>
 <div class="ttc" id="structHF_1_1Protocol_1_1Message_html_a34204af3729b208319c9bc769502b94b"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b">HF::Protocol::Message::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_adb967c1c061c49c46917932fabb9742f"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#adb967c1c061c49c46917932fabb9742f">HF::Protocol::Message::payload</a></div><div class="ttdeci">Common::ByteArray payload</div><div class="ttdoc">Message payload. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00135">protocol.h:135</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_abc90641b141aa56863d2c703f6a2377f"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#abc90641b141aa56863d2c703f6a2377f">HF::Protocol::Message::type</a></div><div class="ttdeci">Type type</div><div class="ttdoc">Message type. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00128">protocol.h:128</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_a68d26f119d538fb9a66ee4270e4cdeb4"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4">HF::Protocol::Message::length</a></div><div class="ttdeci">uint16_t length</div><div class="ttdoc">The payload length value read when unpacking the message. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00138">protocol.h:138</a></div></div>
-<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_a3d733a7f26dbd395f15405386dbbd4d8"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#a3d733a7f26dbd395f15405386dbbd4d8">HF::Protocol::Message::reference</a></div><div class="ttdeci">uint8_t reference</div><div class="ttdoc">Application reference. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00127">protocol.h:127</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_adb967c1c061c49c46917932fabb9742f"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#adb967c1c061c49c46917932fabb9742f">HF::Protocol::Message::payload</a></div><div class="ttdeci">Common::ByteArray payload</div><div class="ttdoc">Message payload. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00133">protocol.h:133</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_abc90641b141aa56863d2c703f6a2377f"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#abc90641b141aa56863d2c703f6a2377f">HF::Protocol::Message::type</a></div><div class="ttdeci">Type type</div><div class="ttdoc">Message type. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00126">protocol.h:126</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_a68d26f119d538fb9a66ee4270e4cdeb4"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4">HF::Protocol::Message::length</a></div><div class="ttdeci">uint16_t length</div><div class="ttdoc">The payload length value read when unpacking the message. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00136">protocol.h:136</a></div></div>
+<div class="ttc" id="structHF_1_1Protocol_1_1Message_html_a3d733a7f26dbd395f15405386dbbd4d8"><div class="ttname"><a href="structHF_1_1Protocol_1_1Message.html#a3d733a7f26dbd395f15405386dbbd4d8">HF::Protocol::Message::reference</a></div><div class="ttdeci">uint8_t reference</div><div class="ttdoc">Application reference. </div><div class="ttdef"><b>Definition:</b> <a href="protocol_8h_source.html#l00125">protocol.h:125</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -340,7 +340,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <p>Number bytes needed to serialize the message. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of bytes the message requires to be serialized. </dd></dl>
 
-<p>Referenced by <a class="el" href="protocol_8h_source.html#l00146">Message()</a>.</p>
+<p>Referenced by <a class="el" href="protocol_8h_source.html#l00144">Message()</a>.</p>
 
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -405,9 +405,9 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 <p><a class="el" href="structHF_1_1Protocol_1_1Message_1_1Interface.html" title="Interface Address. ">Interface</a> <a class="el" href="structHF_1_1Protocol_1_1Address.html" title="Network Address. ">Address</a>. </p>
 
-<p>Definition at line <a class="el" href="protocol_8h_source.html#l00130">130</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
+<p>Definition at line <a class="el" href="protocol_8h_source.html#l00128">128</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
 
-<p>Referenced by <a class="el" href="session__management_8h_source.html#l00763">HF::Core::SessionManagement::AbstractClient::get_entries()</a>, <a class="el" href="units_8h_source.html#l00195">HF::Units::Unit&lt; HF::Profiles::SimpleLight &gt;::handle()</a>, and <a class="el" href="session__management_8h_source.html#l00790">HF::Core::SessionManagement::AbstractClient::request()</a>.</p>
+<p>Referenced by <a class="el" href="session__management_8h_source.html#l00760">HF::Core::SessionManagement::AbstractClient::get_entries()</a>, <a class="el" href="units_8h_source.html#l00195">HF::Units::Unit&lt; HF::Profiles::SimpleLight &gt;::handle()</a>, and <a class="el" href="session__management_8h_source.html#l00787">HF::Core::SessionManagement::AbstractClient::request()</a>.</p>
 
 </div>
 </div>
@@ -423,7 +423,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 <p><a class="el" href="namespaceHF_1_1Application.html" title="This namespace contains the declaration of the functions that implement the HAN-FUN example applicati...">Application</a> reference. </p>
 
-<p>Definition at line <a class="el" href="protocol_8h_source.html#l00127">127</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
+<p>Definition at line <a class="el" href="protocol_8h_source.html#l00125">125</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
 
 </div>
 </div>
@@ -440,7 +440,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <p><a class="el" href="structHF_1_1Protocol_1_1Message.html" title="Network Message. ">Message</a> type. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__protocol.html#ga6336f640a072106c7044489fed8bc10d" title="Message types. ">Message::Type</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="protocol_8h_source.html#l00128">128</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
+<p>Definition at line <a class="el" href="protocol_8h_source.html#l00126">126</a> of file <a class="el" href="protocol_8h_source.html">protocol.h</a>.</p>
 
 </div>
 </div>
@@ -453,7 +453,7 @@ static constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Protocol.html">Protocol</a></li><li class="navelem"><a class="el" href="structHF_1_1Protocol_1_1Message.html">Message</a></li>
-    <li class="footer">Generated on Thu Jan 22 2015 17:01:41 for HAN-FUN API by
+    <li class="footer">Generated on Wed Mar 11 2015 17:50:32 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>
