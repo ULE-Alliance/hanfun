@@ -5,7 +5,7 @@
  * This file contains the definition of the transport layer API for the HAN-FUN
  * common implementation.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -16,9 +16,6 @@
 // =============================================================================
 #ifndef HF_TRANSPORT_H
 #define HF_TRANSPORT_H
-
-#include <algorithm>
-#include <forward_list>
 
 #include "hanfun/common.h"
 #include "hanfun/uids.h"
@@ -244,7 +241,7 @@ namespace HF
          protected:
 
          //! List of registered end-points for this layer.
-         std::forward_list <HF::Transport::Endpoint *> endpoints;
+         Common::SimpleList <HF::Transport::Endpoint *> endpoints;
 
          //! UID associated with the local transport layer.
          HF::UID::UID_T *_uid;

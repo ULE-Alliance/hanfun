@@ -4,7 +4,7 @@
  *
  * This file contains the declaration of the API for a HAN-FUN device.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -16,8 +16,6 @@
 
 #ifndef HF_DEVICE_H
 #define HF_DEVICE_H
-
-#include <forward_list>
 
 #include "hanfun/common.h"
 #include "hanfun/transport.h"
@@ -35,7 +33,7 @@ namespace HF
 
       namespace AttributeReporting
       {
-         struct Server;
+         struct IServer;
 
       }  // namespace DeviceInformation
 
@@ -71,7 +69,7 @@ namespace HF
       /*!
        * %Unit list type.
        */
-      struct IUnits:public std::forward_list <Units::IUnit *>
+      struct IUnits:public Common::SimpleList <Units::IUnit *>
       {
          IUnits::size_type size () const
          {
@@ -103,14 +101,14 @@ namespace HF
           *
           * @return  pointer to unit 0 attribute reporting service.
           */
-         virtual Core::AttributeReporting::Server *attribute_reporting () const = 0;
+         virtual Core::AttributeReporting::IServer *attribute_reporting () const = 0;
 
          /*!
           * Return a pointer to unit 0 attribute reporting service.
           *
           * @return  pointer to unit 0 attribute reporting service.
           */
-         virtual Core::AttributeReporting::Server *attribute_reporting () = 0;
+         virtual Core::AttributeReporting::IServer *attribute_reporting () = 0;
       };
 
       /*!

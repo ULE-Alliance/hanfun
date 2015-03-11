@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -259,7 +259,7 @@ namespace HF
       static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
                      "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
 
-      static_assert (std::is_base_of <HF::Core::AttributeReporting::Server, AttrReporting>::value,
+      static_assert (std::is_base_of <HF::Core::AttributeReporting::IServer, AttrReporting>::value,
                      "AttrReporting must be of type HF::Core::AttributeReporting::Server");
 
       /*!

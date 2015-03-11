@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -15,8 +15,6 @@
 // =============================================================================
 #ifndef HF_DEVICES_H
 #define HF_DEVICES_H
-
-#include <cstring>
 
 #include "hanfun/common.h"
 #include "hanfun/protocol.h"
@@ -612,7 +610,7 @@ namespace HF
             protected:
 
             //! List of links present in this concentrator.
-            std::forward_list <Transport::Link *> _links;
+            Common::SimpleList <Transport::Link *> _links;
 
             // =============================================================================
 
@@ -668,7 +666,7 @@ namespace HF
             protected:
 
             //! List of links present in the transport layer.
-            std::forward_list <HF::Transport::Link *> links;
+            Common::SimpleList <HF::Transport::Link *> links;
 
             public:
 

@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -17,16 +17,24 @@
 #ifndef HF_COMMON_H
 #define HF_COMMON_H
 
-#include <cstdlib>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <cmath>
 
-#include <string>
-#include <vector>
 #include <algorithm>
+#include <array>
+#include <forward_list>
+#include <functional>
 #include <iterator>
+#include <limits>
+#include <list>
+#include <memory>
+#include <set>
+#include <string>
+#include <type_traits>
+#include <vector>
 
 #include <assert.h>
 
@@ -313,6 +321,10 @@ namespace HF
             }
          }
       };
+
+      template<typename T>
+      struct SimpleList:public std::forward_list<T>
+      {};
 
       // =============================================================================
       // Common Interfaces

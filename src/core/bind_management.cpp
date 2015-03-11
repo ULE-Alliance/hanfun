@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Bind Management core interface.
  *
- * @version    1.2.2
+ * @version    1.2.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -14,8 +14,6 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-
-#include <set>
 
 #include "hanfun/interface.h"
 #include "hanfun/core/bind_management.h"
