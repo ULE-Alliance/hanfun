@@ -5,7 +5,7 @@
  * This file contains workarounds for the implementation on C++11 in older versions
  * of GCC.
  *
- * @version    1.2.3
+ * @version    1.2.4
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

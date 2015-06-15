@@ -152,7 +152,7 @@ Please see the help in the applications for further features.
 
 ## License
 
-This library is released under dual-license, [GLPv2](http://www.gnu.org/licenses/gpl-2.0.html) and
+This library is released under dual-license, [GPLv2](http://www.gnu.org/licenses/gpl-2.0.html) and
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
 Please see the file 'LICENSE' in the root folder for further information.
