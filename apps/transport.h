@@ -4,7 +4,7 @@
  *
  * This file contains the declarations of the transport layer over libuv.
  *
- * @version    1.2.3
+ * @version    1.2.4
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
