@@ -5,7 +5,7 @@
  * This file contains the implementation of the Node class that represents the
  * HAN-FUN Node on the example application.
  *
- * @version    1.2.3
+ * @version    1.2.4
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
