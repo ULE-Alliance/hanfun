@@ -27,7 +27,7 @@ add_subdirectory(cpputest)
 find_package(CppUTest REQUIRED HINTS ${CMAKE_BINARY_DIR} )
 
 include_directories(
-    ${CPPUTEST_INCLUDE_DIRS}
+    ${CppUTest_INCLUDE_DIRS}
     "."
 )
 
@@ -76,7 +76,7 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_TRANSPORT_SRCS}
                             ${TESTS_UNITS_SRCS} )
 
-target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
+target_link_libraries( test_hanfun hanfun ${CppUTest_LIBRARIES} )
 
 if(NOT CMAKE_CROSSCOMPILING)
   add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
