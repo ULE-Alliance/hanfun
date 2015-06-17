@@ -22,6 +22,7 @@
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
+#include "hanfun/interfaces/simple_humidity.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -575,6 +576,61 @@ IAttribute *Interfaces::create_attribute (SimpleTemperature::Server *server, uin
          else
          {
             return new Attribute <int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case TOLERANCE_ATTR:
+      {
+         bool writabble = Tolerance::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint16_t (Server::*) (void)) & Server::tolerance;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, writabble);
+         }
+         else
+         {
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// Interfaces::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Interfaces::create_attribute (SimpleHumidity::Server *server, uint8_t uid)
+{
+   using namespace HF::Interfaces::SimpleHumidity;
+
+   SimpleHumidity::Attributes attr = static_cast <SimpleHumidity::Attributes>(uid);
+
+   uint16_t itf_uid                = Interface::SIMPLE_HUMIDITY;
+
+   switch (attr)
+   {
+      case VALUE_ATTR:
+      {
+         bool writabble = Humidity::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint16_t (Server::*) (void)) & Server::humidity;
+            auto setter = (void (Server::*) (uint16_t)) & Server::humidity;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
          }
       }
 

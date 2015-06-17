@@ -74,6 +74,7 @@ namespace HF
          LEVEL_CONTROL      = 0x0201,    //!< Level Control Interface UID
          SIMPLE_POWER_METER = 0x0300,    //!< Simple Power Meter Interface UID
          SIMPLE_TEMPERATURE = 0x0301,    //!< Simple Temperature Interface UID
+         SIMPLE_HUMIDITY    = 0x0302,    //!< Simple Humidity Interface UID
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.
