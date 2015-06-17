@@ -213,6 +213,14 @@ namespace HF
             return write (offset, static_cast <uint8_t>(data));
          }
 
+         //! @copydoc ByteArray::write (uint16_t, uint8_t)
+         template<typename T>
+         uint16_t write (uint16_t offset, T data)
+         {
+            typedef typename std::make_unsigned <T>::type Type;
+            return write (offset, static_cast <Type>(data));
+         }
+
          /*!
           * Read the byte at @c offset into @c data.
           *
@@ -250,6 +258,19 @@ namespace HF
             uint16_t result = read (offset, temp);
 
             data = (temp & 0x01) != 0;
+
+            return result;
+         }
+
+         //! @copydoc  ByteArray::read (uint16_t, uint8_t)
+         template<typename T>
+         uint16_t read (uint16_t offset, T &data) const
+         {
+            typedef typename std::make_unsigned <T>::type Type;
+            Type temp;
+            uint16_t result = read (offset, temp);
+
+            data = static_cast <T>(temp);
 
             return result;
          }
