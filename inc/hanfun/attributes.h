@@ -538,6 +538,18 @@ namespace HF
             AbstractAttribute (__owner.uid (), uid, writable), _owner (__owner), getter (_getter), setter (_setter)
          {}
 
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] __owner   reference to attribute's interface owner object.
+          * @param [in] uid       attribute's UID.
+          * @param [in] _getter   owner's member function to get the value of the attribute.
+          * @param [in] writable  attribute's writable information.
+          */
+         Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, bool writable = false):
+            AbstractAttribute (__owner.uid (), uid, writable), _owner (__owner), getter (_getter)
+         {}
+
          // =============================================================================
          // API
          // =============================================================================
@@ -559,7 +571,10 @@ namespace HF
 
          void value (value_type __value)
          {
+            if (setter)
+            {
                setter (_owner, __value);
+            }
          }
 
          HF::Interface const *owner () const
