@@ -386,7 +386,7 @@ namespace HF
 
          void set (value_type __value)
          {
-            helper.data = value;
+            value (__value);
          }
 
          value_type get () const
@@ -397,6 +397,11 @@ namespace HF
          value_type value () const
          {
             return helper.data;
+         }
+
+         void value (value_type __value)
+         {
+            helper.data = __value;
          }
 
          HF::Interface const *owner () const
@@ -539,7 +544,7 @@ namespace HF
 
          void set (value_type __value)
          {
-            setter (_owner, value);
+            value (__value);
          }
 
          value_type get () const
@@ -550,6 +555,11 @@ namespace HF
          value_type value () const
          {
             return getter (_owner);
+         }
+
+         void value (value_type __value)
+         {
+               setter (_owner, __value);
          }
 
          HF::Interface const *owner () const
