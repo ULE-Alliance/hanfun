@@ -384,7 +384,7 @@ namespace HF
          // API
          // =============================================================================
 
-         virtual void set (value_type value)
+         void set (value_type __value)
          {
             helper.data = value;
          }
@@ -537,7 +537,7 @@ namespace HF
          // API
          // =============================================================================
 
-         virtual void set (value_type value)
+         void set (value_type __value)
          {
             setter (_owner, value);
          }
