@@ -47,7 +47,7 @@ static const HF::Common::Interface profiles_interfaces[] =
    // 00 - HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
    {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
 
-   // 01 - HF::Profiles::SHF::Interface::CHF::Interface::CLIENT_ROLELIENT_ROLEIMPLE_ONOFF_SWITCH
+   // 01 - HF::Profiles::SIMPLE_ONOFF_SWITCH
    {HF::Interface::ON_OFF,             HF::Interface::CLIENT_ROLE},
 
    // 02 - HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE
@@ -121,7 +121,7 @@ static const HF::Common::Interface profiles_interfaces[] =
    // 28 - HF::Profiles::SIREN,
    {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
 
-   // 29 - HF::Profiles::SIREN,
+   // 29 - HF::Profiles::ALERTABLE,
    {HF::Interface::ALERT,              HF::Interface::CLIENT_ROLE},
 
    // 30 - HF::Profiles::SIMPLE_PENDANT,
