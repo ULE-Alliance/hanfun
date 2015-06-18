@@ -126,6 +126,9 @@ static const HF::Common::Interface profiles_interfaces[] =
 
    // 30 - HF::Profiles::SIMPLE_PENDANT,
    {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+
+   // 31 - HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,
+   {HF::Interface::SIMPLE_TEMPERATURE, HF::Interface::SERVER_ROLE},
 };
 
 /*!
@@ -160,8 +163,9 @@ static const Profile profiles[] =
    {HF::Profiles::SIREN,                                0x001C, 1},      // 28
    {HF::Profiles::ALERTABLE,                            0x001D, 1},      // 29
    {HF::Profiles::SIMPLE_PENDANT,                       0x001E, 1},      // 30
-   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      // 31
-   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      // 32
+   {HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,            0x001F, 1},      // 31
+   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
+   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };
 
 // =============================================================================
