@@ -158,7 +158,7 @@ void Server::periodic (uint32_t time)
 
 #if HF_ITF_SPM_REPORT_CMD
 
-   if (_report_interval > 0 && abs ((int64_t) _last_periodic - time) >= _report_interval)
+   if (_report_interval > 0 && std::abs ((int64_t) _last_periodic - time) >= _report_interval)
    {
       Protocol::Address addr;
 

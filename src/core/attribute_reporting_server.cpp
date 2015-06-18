@@ -581,7 +581,8 @@ void Server::periodic (uint32_t time)
    std::for_each(periodic_rules.begin (), periodic_rules.end (),
                  [this, time](Periodic::Rule &rule)
    {
-      if ((time/rule.interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < rule.interval)
+      if ((time/rule.interval) == 0 ||
+          (uint32_t) std::abs ((int64_t)time - rule.last_time) < rule.interval)
       {
          return;
       }

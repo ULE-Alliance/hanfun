@@ -1569,6 +1569,8 @@ namespace HF
 
             protected:
 
+            using AbstractService::notify;
+
             Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
                                            uint16_t offset);
 

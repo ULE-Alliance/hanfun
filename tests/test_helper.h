@@ -141,10 +141,7 @@ namespace HF
          Protocol::Message sendMsg;
 
          InterfaceHelper()
-         {
-            memset (&sendMsg, 0, sizeof(Protocol::Message));
-            memset (&addr, 0, sizeof(Protocol::Address));
-         }
+         {}
 
          virtual ~InterfaceHelper()
          {}
