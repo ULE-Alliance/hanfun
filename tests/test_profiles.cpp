@@ -55,6 +55,7 @@ namespace HF
       HELPER_CLASS (SimpleLight);
       HELPER_CLASS (SimpleDoorLock);
       HELPER_CLASS (SimpleTemperatureSensor);
+      HELPER_CLASS (SimpleHumiditySensor);
 
       HELPER_CLASS (DoorBell);
       HELPER_CLASS (SimplePowerMeter);
@@ -173,6 +174,10 @@ TEST (Profiles, UIDs)
 
    profile = new Testing::SimpleTemperatureSensor ();
    CHECK_EQUAL (Profiles::SIMPLE_TEMPERATURE_SENSOR, profile->uid ());
+   delete profile;
+
+   profile = new Testing::SimpleHumiditySensor ();
+   CHECK_EQUAL (Profiles::SIMPLE_HUMIDITY_SENSOR, profile->uid ());
    delete profile;
 
    // =============================================================================
@@ -460,6 +465,14 @@ TEST (Profiles, InterfaceMapping)
    LONGS_EQUAL (1, count);
 
    LONGS_EQUAL (HF::Interface::SIMPLE_TEMPERATURE, itf->id);
+   LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_HUMIDITY_SENSOR
+   itf = Profiles::interfaces (HF::Profiles::SIMPLE_HUMIDITY_SENSOR, count);
+   CHECK_FALSE (itf == nullptr);
+   LONGS_EQUAL (1, count);
+
+   LONGS_EQUAL (HF::Interface::SIMPLE_HUMIDITY, itf->id);
    LONGS_EQUAL (HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::SIMPLE_DETECTOR

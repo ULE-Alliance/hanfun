@@ -24,6 +24,7 @@
 #include "hanfun/interfaces/level_control.h"
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
+#include "hanfun/interfaces/simple_humidity.h"
 
 // =============================================================================
 // API
@@ -102,6 +103,9 @@ namespace HF
 
          //! Simple sensor to measure the temperature.
          SIMPLE_TEMPERATURE_SENSOR = 0x010E,
+
+         //! Simple sensor to measure the relative humidity.
+         SIMPLE_HUMIDITY_SENSOR = 0x010F,
 
          // =============================================================================
          // Security Unit Types
@@ -703,6 +707,16 @@ namespace HF
          public:
 
          virtual ~SimpleTemperatureSensor() {}
+      };
+
+      /*!
+       * Simple Humidity Sensor profile implementation.
+       */
+      class SimpleHumiditySensor:public Profile <SIMPLE_HUMIDITY_SENSOR, Interfaces::SimpleHumidity::Server>
+      {
+         public:
+
+         virtual ~SimpleHumiditySensor() {}
       };
 
       // =============================================================================
