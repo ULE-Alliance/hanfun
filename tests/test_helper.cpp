@@ -12,7 +12,6 @@
  */
 // =============================================================================
 
-#include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -70,6 +69,9 @@ HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
 // Library Overrides
 // =============================================================================
 
+#ifndef NDEBUG
+#include <execinfo.h>
+
 extern const char *__progname;
 
 void __assert_fail (const char *__assertion, const char *__file, unsigned int __line,
@@ -87,6 +89,8 @@ void __assert_fail (const char *__assertion, const char *__file, unsigned int __
 
    abort ();
 }
+
+#endif
 
 // =============================================================================
 // Main
