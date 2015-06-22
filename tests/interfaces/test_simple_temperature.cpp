@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Temperature %Interface
  * implementation.
  *
- * @version    x.x.x
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

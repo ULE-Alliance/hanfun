@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Simple Temperature interface : Server role.
  *
- * @version    x.x.x
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

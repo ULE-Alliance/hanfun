@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the Simple Metering
  * Interface.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *

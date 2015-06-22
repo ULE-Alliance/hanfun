@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Temperature interface.
  *
- * @version    x.x.x
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
