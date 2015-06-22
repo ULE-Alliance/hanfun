@@ -299,6 +299,11 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
 
    using HF::Devices::Concentrator::Abstract <Unit0>::link;
 
+   std::forward_list <HF::Transport::Link *> &links()
+   {
+      return _links;
+   }
+
    /*!
     * Check if bind exists.
     *
