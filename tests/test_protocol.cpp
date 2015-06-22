@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the protocol
  * layer in the HAN-FUN specification.
  *
- * @version    1.2.4
+ * \version    1.2.4
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -184,7 +184,6 @@ TEST_GROUP (Message)
    ByteArray   expected;
 
    Testing::Payload payload;
-
    TEST_SETUP ()
    {
       expected = ByteArray {0x00, 0x00, 0x00,
@@ -193,7 +192,6 @@ TEST_GROUP (Message)
                             0xFA, 0xAA, 0x55,           // Interface Address.
                             0x01, 0xAA,                 // Payload length.
                             0x00, 0x00, 0x00};
-
       payload = Testing::Payload (0x01AA);
 
       expected.reserve (expected.size () + payload.size ());
@@ -247,7 +245,6 @@ TEST (Message, Unpack)
    LONGS_EQUAL (0x55, message.itf.member);
 
    LONGS_EQUAL (0x01AA, message.length);
-
    Testing::Payload temp (payload.size ());
 
    temp.unpack (expected, 3 + 7);
@@ -708,6 +705,7 @@ TEST_GROUP (ResponseRequired)
 {
    struct FilterTest:public HF::Protocol::Filters::ResponseRequired
    {
+
       void clear ()
       {
          db.clear ();
@@ -715,12 +713,14 @@ TEST_GROUP (ResponseRequired)
    };
 
    FilterTest filter;
+   Testing::Link link;
 
    Packet packet;
 
    TEST_SETUP ()
    {
       filter.clear ();
+      packet.link = &link;
 
       std::random_device rd;
       std::mt19937 gen (rd ());
@@ -758,11 +758,13 @@ TEST (ResponseRequired, ShouldNotAddCommands)
       Protocol::Message::ATOMIC_SET_ATTR_PACK_RESP_REQ,
    };
 
-   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type) {
-                     packet.message.type = type;
-                     filter (packet);
-                  }
-                 );
+   /* *INDENT-OFF* */
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
+   {
+      packet.message.type = type;
+      filter (packet);
+   });
+   /* *INDENT-ON* */
 
    LONGS_EQUAL (0, filter.size ());
 }
@@ -783,8 +785,8 @@ TEST (ResponseRequired, ShouldAddResponses)
    /* *INDENT-OFF* */
    std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
    {
-                     packet.message.type = type;
-                     filter (packet);
+      packet.message.type = type;
+      filter (packet);
    });
    /* *INDENT-ON* */
 
@@ -800,7 +802,34 @@ TEST (ResponseRequired, NoResponse)
    filter (packet);
 
    packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
-   std::swap (packet.source, packet.destination);
+   std::swap(packet.source, packet.destination);
+
+   CHECK_FALSE (filter (packet));
+
+   LONGS_EQUAL (0, filter.size ());
+}
+
+/*!
+ * Regression test.
+ *
+ * Registration response message destination address does not match the
+ * incoming packet source address.
+ */
+TEST (ResponseRequired, NoResponse2)
+{
+   LONGS_EQUAL (0, filter.size ());
+
+   packet.message.type = Protocol::Message::COMMAND_RES;
+
+   filter (packet);
+
+   packet.message.type = Protocol::Message::COMMAND_RESP_REQ;
+   std::swap(packet.source, packet.destination);
+
+   link.address(packet.source.device);
+
+   packet.source.device = HF::Protocol::BROADCAST_ADDR;
+   packet.source.unit = HF::Protocol::BROADCAST_UNIT;
 
    CHECK_FALSE (filter (packet));
 

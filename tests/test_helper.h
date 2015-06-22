@@ -389,7 +389,9 @@ namespace HF
 
          AbstractDevice():
             _address (Protocol::BROADCAST_ADDR)
-         {}
+         {
+            link.address(42);
+         }
 
          virtual ~AbstractDevice()
          {

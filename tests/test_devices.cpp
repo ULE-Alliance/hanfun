@@ -65,6 +65,8 @@ TEST_GROUP (Devices)
    Device device;
 
    Testing::Link link;
+   Protocol::Packet  packet;
+   Common::ByteArray payload;
 
    TEST_SETUP ()
    {
@@ -74,6 +76,13 @@ TEST_GROUP (Devices)
       mock ().ignoreOtherCalls ();
 
       device.connected (&link);
+      packet.destination.device = 0x7AA5;
+      packet.destination.unit   = 0x78;
+
+      packet.source.device      = device.address ();
+      packet.source.unit        = 0x23;
+
+      packet.link               = &link;
    }
 
    TEST_TEARDOWN ()
@@ -84,15 +93,6 @@ TEST_GROUP (Devices)
 
 TEST (Devices, NoResponseRequired)
 {
-   Protocol::Packet  packet;
-   Common::ByteArray payload;
-
-   packet.destination.device = 0x7AA5;
-   packet.destination.unit   = 0x78;
-
-   packet.source.device      = device.address ();
-   packet.source.unit        = 0x23;
-
    std::vector <Protocol::Message::Type> types {
       Protocol::Message::COMMAND_REQ,
       Protocol::Message::GET_ATTR_REQ,
@@ -105,12 +105,11 @@ TEST (Devices, NoResponseRequired)
    mock ("Link").expectNCalls (0, "send");
 
    /* *INDENT-OFF* */
-   std::for_each (types.begin (), types.end (),
-         [this, &packet, &payload](Protocol::Message::Type type)
-         {
-            packet.message.type = type;
-            device.receive (packet, payload, 0);
-         });
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
+   {
+      packet.message.type = type;
+      device.receive (packet, payload, 0);
+   });
    /* *INDENT-ON* */
 
    mock ("Link").checkExpectations ();
@@ -118,17 +117,6 @@ TEST (Devices, NoResponseRequired)
 
 TEST (Devices, ResponseRequired)
 {
-   Protocol::Packet  packet;
-   Common::ByteArray payload;
-
-   packet.destination.device = 0x7AA5;
-   packet.destination.unit   = 0x78;
-
-   packet.source.device      = device.address ();
-   packet.source.unit        = 0x23;
-
-   packet.message.reference  = 0x5A;
-
    std::vector <Protocol::Message::Type> types {
       Protocol::Message::COMMAND_RESP_REQ,
       Protocol::Message::SET_ATTR_RESP_REQ,
@@ -139,12 +127,10 @@ TEST (Devices, ResponseRequired)
    mock ("Link").expectNCalls (types.size (), "send");
 
    /* *INDENT-OFF* */
-   std::for_each (types.begin (), types.end (),
-                  [this, &packet, &payload](Protocol::Message::Type type)
+   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
    {
       packet.message.type = type;
       device.receive (packet, payload, 0);
-
       Protocol::Packet resp_packet;
       uint16_t offset = resp_packet.unpack(link.data, 0);
       LONGS_EQUAL (packet.message.reference, resp_packet.message.reference);
@@ -318,7 +304,6 @@ namespace
             tsp->destroy ();
             delete tsp;
          }
-
          base_tsp.destroy();
       }
 
@@ -332,6 +317,8 @@ namespace
 
          dev_link->other  = base_link;
          base_link->other = dev_link;
+
+         dev_link->address(0);   // Ensure device link has valid base address.
 
          dev_tsp->add (dev_link);
          base_tsp.add (base_link);
@@ -437,7 +424,6 @@ TEST (Concentrator, BroadcastToAnyDeviceSingleUnitSingleItf)
 {
    Protocol::Address src (HF::Protocol::BROADCAST_ADDR, 1);
    Protocol::Address dst (3, 1);
-
    Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
 
    auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
