@@ -886,18 +886,3 @@ TEST (SimplePowerMeterClient, Handle_Invalid_UID)
 
    CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
 }
-
-//! @test FIXME Should not handle message with invalid payload size.
-IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload_Size)
-{
-   SimplePowerMeter::Report report;
-   packet.message.length = report.size () - 1;
-
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
-}
-
-//! @test FIXME Should not handle message with not enough payload.
-IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload)
-{
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 10));
-}
