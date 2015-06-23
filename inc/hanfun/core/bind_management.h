@@ -639,10 +639,10 @@ namespace HF
           * Helper class used to implement custom functionality to the bind management
           * server side.
           */
-         template<typename _Entries = Entries>
+         template<typename _Entries = BindManagement::Entries>
          struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
          {
-            typedef SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionManagement::Server <_Entries> SessionMgr;
             typedef typename SessionMgr::Container Container;
 
             /*!

@@ -507,10 +507,10 @@ namespace HF
 // =============================================================================
 
 /*!
- * Convert the given @c message into a string and write it to the given @c stream.
+ * Convert the given message @c type into a string and write it to the given @c stream.
  *
- * @param [in] stream    out stream to write the string to.
- * @param [in] message   message value to convert to a string.
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] type     message type value to convert to a string.
  *
  * @return   <tt>stream</tt>
  */
@@ -530,7 +530,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
  * Convert the given @c address into a string and write it to the given @c stream.
  *
  * @param [in] stream   out stream to write the string to.
- * @param [in] packet   HAN-FUN address to convert to a string.
+ * @param [in] address  HAN-FUN address to convert to a string.
  *
  * @return   <tt>stream</tt>
  */
