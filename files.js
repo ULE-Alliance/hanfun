@@ -40,7 +40,9 @@ var files =
     [ "profiles.h", "profiles_8h.html", "profiles_8h" ],
     [ "protocol.h", "protocol_8h.html", "protocol_8h" ],
     [ "session_management.h", "session__management_8h.html", "session__management_8h" ],
+    [ "simple_humidity.h", "simple__humidity_8h.html", "simple__humidity_8h" ],
     [ "simple_power_meter.h", "simple__power__meter_8h.html", "simple__power__meter_8h" ],
+    [ "simple_temperature.h", "simple__temperature_8h.html", "simple__temperature_8h" ],
     [ "transport.cpp", "transport_8cpp.html", "transport_8cpp" ],
     [ "inc/hanfun/transport.h", "inc_2hanfun_2transport_8h.html", null ],
     [ "apps/transport.h", "apps_2transport_8h.html", [

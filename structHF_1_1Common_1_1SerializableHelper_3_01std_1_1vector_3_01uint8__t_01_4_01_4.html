@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -130,7 +130,7 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
 <p>Wrapper for std::vector implementing the <a class="el" href="structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. ">Serializable</a> API. </p>
 <dl class="section remark"><dt>Remarks</dt><dd>This class will unpack the same number of bytes as the size of the <code>data</code> vector. </dd></dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00707">707</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00728">728</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ad73d8f156a1ccc1d1ffce5f34d5fa8dc"></a>
 <div class="memitem">
@@ -163,13 +163,13 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>float indicating the percentage of change. </dd></dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00761">761</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00782">782</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
 <p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00059">UNUSED</a>.</p>
-<div class="fragment"><div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;         {</div>
-<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;            <a class="code" href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a> (other);</div>
-<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;            <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;         }</div>
+<div class="fragment"><div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;         {</div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;            <a class="code" href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a> (other);</div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;            <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;         }</div>
 <div class="ttc" id="group__common_html_ga86d500a34c624c2cae56bc25a31b12f3"><div class="ttname"><a href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a></div><div class="ttdeci">#define UNUSED(x)</div><div class="ttdoc">Helper macro to remove warning about unused function/method argument. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00059">inc/hanfun/common.h:59</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -213,10 +213,10 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00755">755</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;         {</div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;            <span class="keywordflow">return</span> memcmp (data.data (), other.data.data (), data.size ());</div>
-<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;         }</div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00776">776</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;         {</div>
+<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;            <span class="keywordflow">return</span> memcmp (data.data (), other.data.data (), data.size ());</div>
+<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;         }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -268,24 +268,24 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
 
 <p>Implements <a class="el" href="structHF_1_1Common_1_1Serializable.html#aa1f1cec7924e345387ebec0793c59856">HF::Common::Serializable</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00722">722</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00743">743</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
 <p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>.</p>
-<div class="fragment"><div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;         {</div>
-<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">size</a> ());</div>
-<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;</div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;            uint16_t start = offset;</div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;</div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;            <span class="keyword">auto</span> it        = array.begin ();</div>
-<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;            std::advance (it, offset);</div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;</div>
-<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;            std::copy (data.begin (), data.end (), it);</div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;</div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;            offset += data.size ();</div>
-<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;</div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
-<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4_html_a757620f224cd7551d6a3a4af61248663"><div class="ttname"><a href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00717">inc/hanfun/common.h:717</a></div></div>
+<div class="fragment"><div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;         {</div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">size</a> ());</div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;</div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;            uint16_t start = offset;</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;</div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;            <span class="keyword">auto</span> it        = array.begin ();</div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;            std::advance (it, offset);</div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;</div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;            std::copy (data.begin (), data.end (), it);</div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;</div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;            offset += data.size ();</div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;</div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
+<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4_html_a757620f224cd7551d6a3a4af61248663"><div class="ttname"><a href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00738">inc/hanfun/common.h:738</a></div></div>
 <div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00074">inc/hanfun/common.h:74</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -316,10 +316,10 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
 
 <p>Implements <a class="el" href="structHF_1_1Common_1_1Serializable.html#a8f42af5e150e53d8b453f19f718e3ef9">HF::Common::Serializable</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00717">717</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;         {</div>
-<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;            <span class="keywordflow">return</span> data.size ();</div>
-<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;         }</div>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00738">738</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;         {</div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;            <span class="keywordflow">return</span> data.size ();</div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;         }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -367,24 +367,24 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
 
 <p>Implements <a class="el" href="structHF_1_1Common_1_1Serializable.html#a97b583a90b618f96fa72860628e78467">HF::Common::Serializable</a>.</p>
 
-<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00738">738</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
+<p>Definition at line <a class="el" href="inc_2hanfun_2common_8h_source.html#l00759">759</a> of file <a class="el" href="inc_2hanfun_2common_8h_source.html">inc/hanfun/common.h</a>.</p>
 
 <p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>.</p>
-<div class="fragment"><div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;         {</div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">size</a> ());</div>
-<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;</div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;            uint16_t start = offset;</div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;</div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;            <span class="keyword">auto</span> it        = array.begin ();</div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;            std::advance (it, offset);</div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;</div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;            std::copy_n (it, data.size (), data.begin ());</div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;</div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;            offset += data.size ();</div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4_html_a757620f224cd7551d6a3a4af61248663"><div class="ttname"><a href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00717">inc/hanfun/common.h:717</a></div></div>
+<div class="fragment"><div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;         {</div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">size</a> ());</div>
+<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;</div>
+<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;            uint16_t start = offset;</div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;</div>
+<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;            <span class="keyword">auto</span> it        = array.begin ();</div>
+<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;            std::advance (it, offset);</div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;</div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;            std::copy_n (it, data.size (), data.begin ());</div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;            offset += data.size ();</div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;</div>
+<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;            <span class="keywordflow">return</span> offset - start;</div>
+<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4_html_a757620f224cd7551d6a3a4af61248663"><div class="ttname"><a href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663">HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;::size</a></div><div class="ttdeci">uint16_t size() const </div><div class="ttdoc">Number bytes needed to serialize the message. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00738">inc/hanfun/common.h:738</a></div></div>
 <div class="ttc" id="group__common_html_ga14833f4465bd11f4318ad9b8ba4d1676"><div class="ttname"><a href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a></div><div class="ttdeci">#define SERIALIZABLE_CHECK(__array, __offset, __size)</div><div class="ttdoc">Helper macro to check if the given __array has enough size so __size bytes can be written/read from t...</div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00074">inc/hanfun/common.h:74</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -398,7 +398,7 @@ struct HF::Common::SerializableHelper&lt; std::vector&lt; uint8_t &gt; &gt;</h3>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Common.html">Common</a></li><li class="navelem"><a class="el" href="structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html">SerializableHelper< std::vector< uint8_t > ></a></li>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:27 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:13 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -19,6 +19,8 @@ var structHF_1_1Interface =
       [ "ON_OFF", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a5f07e8b3492d650d44e22d32bc571afe", null ],
       [ "LEVEL_CONTROL", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a35c81a1ba262bd4d43d5d35614a6d71b", null ],
       [ "SIMPLE_POWER_METER", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a349952fcd3f99b019e5e8ce7697c24ed", null ],
+      [ "SIMPLE_TEMPERATURE", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a92b5c04da776e0af4d4749c083dbc9af", null ],
+      [ "SIMPLE_HUMIDITY", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a49ad9c3220eb895998427d0d9dead03c", null ],
       [ "RESERVED", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052aa9772ff442c7f2053fd96d74d4d5617b", null ],
       [ "MAX_UID", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a2454e0097684740559cacdfc76c8b3cf", null ],
       [ "ANY_UID", "group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d", null ]

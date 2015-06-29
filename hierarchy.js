@@ -6,6 +6,16 @@ var hierarchy =
           [ "HF::Attributes::Attribute< bool >", "structHF_1_1Attributes_1_1Attribute.html", [
             [ "HF::Interfaces::OnOff::State", "structHF_1_1Interfaces_1_1OnOff_1_1State.html", null ]
           ] ],
+          [ "HF::Attributes::Attribute< int16_t >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Interfaces::SimpleTemperature::MaximumTemperature", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1MaximumTemperature.html", null ],
+            [ "HF::Interfaces::SimpleTemperature::MininumTemperature", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1MininumTemperature.html", null ],
+            [ "HF::Interfaces::SimpleTemperature::Temperature", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1Temperature.html", null ]
+          ] ],
+          [ "HF::Attributes::Attribute< uint16_t >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Interfaces::SimpleHumidity::Humidity", "structHF_1_1Interfaces_1_1SimpleHumidity_1_1Humidity.html", null ],
+            [ "HF::Interfaces::SimpleHumidity::Tolerance", "structHF_1_1Interfaces_1_1SimpleHumidity_1_1Tolerance.html", null ],
+            [ "HF::Interfaces::SimpleTemperature::Tolerance", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1Tolerance.html", null ]
+          ] ],
           [ "HF::Attributes::Attribute< uint32_t >", "structHF_1_1Attributes_1_1Attribute.html", [
             [ "HF::Interfaces::Alert::Enable", "structHF_1_1Interfaces_1_1Alert_1_1Enable.html", null ],
             [ "HF::Interfaces::Alert::State", "structHF_1_1Interfaces_1_1Alert_1_1State.html", null ]
@@ -57,7 +67,9 @@ var hierarchy =
       [ "HF::UID::UID", "classHF_1_1UID_1_1UID.html", null ],
       [ "HF::UID::UID_T", "structHF_1_1UID_1_1UID__T.html", null ],
       [ "HF::Common::SerializableHelper< bool >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
+      [ "HF::Common::SerializableHelper< int16_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< T >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
+      [ "HF::Common::SerializableHelper< uint16_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint32_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint8_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< value_type >", "structHF_1_1Common_1_1SerializableHelper.html", null ]
@@ -265,6 +277,20 @@ var hierarchy =
             ] ]
           ] ]
         ] ],
+        [ "HF::Interfaces::Base< Interface::SIMPLE_HUMIDITY >", "structHF_1_1Interfaces_1_1Base.html", [
+          [ "HF::Interfaces::SimpleHumidity::Base", "structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html", [
+            [ "HF::Interfaces::InterfaceRole< SimpleHumidity::Base, Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleHumidity::Client", "classHF_1_1Interfaces_1_1SimpleHumidity_1_1Client.html", null ]
+            ] ],
+            [ "HF::Interfaces::InterfaceRole< SimpleHumidity::Base, Interface::SERVER_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleHumidity::Server", "classHF_1_1Interfaces_1_1SimpleHumidity_1_1Server.html", [
+                [ "HF::Profiles::Profile< SIMPLE_HUMIDITY_SENSOR, Interfaces::SimpleHumidity::Server >", "structHF_1_1Profiles_1_1Profile.html", [
+                  [ "HF::Profiles::SimpleHumiditySensor", "classHF_1_1Profiles_1_1SimpleHumiditySensor.html", null ]
+                ] ]
+              ] ]
+            ] ]
+          ] ]
+        ] ],
         [ "HF::Interfaces::Base< Interface::SIMPLE_POWER_METER >", "structHF_1_1Interfaces_1_1Base.html", [
           [ "HF::Interfaces::SimplePowerMeter::Base", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html", [
             [ "HF::Interfaces::InterfaceRole< SimplePowerMeter::Base, Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
@@ -274,6 +300,20 @@ var hierarchy =
               [ "HF::Interfaces::SimplePowerMeter::Server", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html", [
                 [ "HF::Profiles::Profile< SIMPLE_POWER_METER, Interfaces::SimplePowerMeter::Server >", "structHF_1_1Profiles_1_1Profile.html", [
                   [ "HF::Profiles::SimplePowerMeter", "classHF_1_1Profiles_1_1SimplePowerMeter.html", null ]
+                ] ]
+              ] ]
+            ] ]
+          ] ]
+        ] ],
+        [ "HF::Interfaces::Base< Interface::SIMPLE_TEMPERATURE >", "structHF_1_1Interfaces_1_1Base.html", [
+          [ "HF::Interfaces::SimpleTemperature::Base", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1Base.html", [
+            [ "HF::Interfaces::InterfaceRole< SimpleTemperature::Base, Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleTemperature::Client", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Client.html", null ]
+            ] ],
+            [ "HF::Interfaces::InterfaceRole< SimpleTemperature::Base, Interface::SERVER_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleTemperature::Server", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html", [
+                [ "HF::Profiles::Profile< SIMPLE_TEMPERATURE_SENSOR, Interfaces::SimpleTemperature::Server >", "structHF_1_1Profiles_1_1Profile.html", [
+                  [ "HF::Profiles::SimpleTemperatureSensor", "classHF_1_1Profiles_1_1SimpleTemperatureSensor.html", null ]
                 ] ]
               ] ]
             ] ]
@@ -331,12 +371,14 @@ var hierarchy =
         [ "HF::Profiles::Profile< ALERTABLE, Interfaces::Alert::Client >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< DOOR_BELL, Interfaces::Alert::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_DOOR_LOCK, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
+        [ "HF::Profiles::Profile< SIMPLE_HUMIDITY_SENSOR, Interfaces::SimpleHumidity::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LEVEL_CONTROL, Interfaces::LevelControl::Client >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LEVEL_CONTROLLABLE, Interfaces::LevelControl::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LIGHT, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_ONOFF_SWITCH, Interfaces::OnOff::Client >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_ONOFF_SWITCHABLE, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_POWER_METER, Interfaces::SimplePowerMeter::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
+        [ "HF::Profiles::Profile< SIMPLE_TEMPERATURE_SENSOR, Interfaces::SimpleTemperature::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIREN, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ]
       ] ],
       [ "HF::Units::IUnit", "structHF_1_1Units_1_1IUnit.html", [

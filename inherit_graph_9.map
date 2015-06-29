@@ -1,39 +1,49 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Common_1_1Cloneable.html" title="HF::Common::Cloneable\l\&lt; IAttribute \&gt;" alt="" coords="10,245,177,286"/>
-<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="260,252,425,279"/>
-<area shape="rect" id="node3" href="$classHF_1_1Attributes_1_1AbstractAttribute.html" title="Parent class for Attribute API implementation. " alt="" coords="505,201,666,242"/>
-<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; bool \&gt;" alt="" coords="726,5,887,46"/>
-<area shape="rect" id="node6" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; uint32_t \&gt;" alt="" coords="726,102,887,143"/>
-<area shape="rect" id="node9" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; uint8_t \&gt;" alt="" coords="726,167,887,209"/>
-<area shape="rect" id="node11" href="$structHF_1_1Attributes_1_1Attribute.html" title="Helper template class to declare an attribute with the given T type. " alt="" coords="721,233,893,274"/>
-<area shape="rect" id="node12" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html" title="Helper template class to declare an attribute with the given T type. " alt="" coords="715,299,898,384"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1OnOff_1_1State.html" title="Helper class to handle the State attribute for the On&#45;Off interface. " alt="" coords="965,5,1115,46"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Alert_1_1Enable.html" title="Helper class to handle the Enabled attribute for the Alert interface. " alt="" coords="969,70,1111,111"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1Alert_1_1State.html" title="Helper class to handle the State attribute for the Alert interface. " alt="" coords="969,135,1111,177"/>
-<area shape="rect" id="node10" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Level.html" title="Helper class to handle the Level attribute for the Level Control interface. " alt="" coords="947,201,1133,242"/>
-<area shape="rect" id="node13" href="$structHF_1_1Common_1_1Cloneable.html" title="HF::Common::Cloneable\l\&lt; UID_T \&gt;" alt="" coords="10,429,177,470"/>
-<area shape="rect" id="node14" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="283,436,402,463"/>
-<area shape="rect" id="node15" href="$structHF_1_1UID_1_1Abstract.html" title="HF::UID::Abstract\&lt;\l NONE_UID \&gt;" alt="" coords="517,397,654,438"/>
-<area shape="rect" id="node17" href="$structHF_1_1UID_1_1Abstract.html" title="HF::UID::Abstract\&lt;\l URI_UID \&gt;" alt="" coords="517,462,654,503"/>
-<area shape="rect" id="node19" href="$structHF_1_1UID_1_1Abstract.html" title="Helper template parent class for all UID&#39;s implementation. " alt="" coords="517,553,654,594"/>
-<area shape="rect" id="node16" href="$structHF_1_1UID_1_1NONE.html" title="This class represents an empty UID. " alt="" coords="747,408,866,435"/>
-<area shape="rect" id="node18" href="$structHF_1_1UID_1_1URI.html" title="URI UID class. " alt="" coords="755,465,859,492"/>
-<area shape="rect" id="node20" href="$classHF_1_1UID_1_1ByteArray.html" title="HF::UID::ByteArray\l\&lt; DECT, 5, DECT_UID \&gt;" alt="" coords="719,582,894,623"/>
-<area shape="rect" id="node22" href="$classHF_1_1UID_1_1ByteArray.html" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;" alt="" coords="727,647,887,689"/>
-<area shape="rect" id="node24" href="$classHF_1_1UID_1_1ByteArray.html" title="Helper template parent class for all UIDs based on fixed number of bytes. " alt="" coords="723,517,890,558"/>
-<area shape="rect" id="node21" href="$structHF_1_1UID_1_1DECT.html" title="DECT UID class. " alt="" coords="981,589,1099,616"/>
-<area shape="rect" id="node23" href="$structHF_1_1UID_1_1MAC.html" title="IEEE MAC&#45;48b UID class. " alt="" coords="985,655,1095,681"/>
-<area shape="rect" id="node25" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,775,181,801"/>
-<area shape="rect" id="node26" href="$structHF_1_1Common_1_1SerializableHelper.html" title="Wrapper for classes that implement the Serializable concept. " alt="" coords="255,865,431,906"/>
-<area shape="rect" id="node27" href="$structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html" title="Wrapper for Common::ByteArray implementing the Serializable API. " alt="" coords="241,930,444,971"/>
-<area shape="rect" id="node28" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html" title="Wrapper for std::string implementing the Serializable API. " alt="" coords="255,995,431,1037"/>
-<area shape="rect" id="node29" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html" title="Wrapper for std::vector implementing the Serializable API. " alt="" coords="238,1061,447,1102"/>
-<area shape="rect" id="node30" href="$structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html" title="Wrapper for base integer types implementing the Serializable API. " alt="" coords="230,1127,455,1212"/>
-<area shape="rect" id="node31" href="$structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html" title="Wrapper to pointers for classes that implement the Serializable concept. " alt="" coords="255,1237,431,1307"/>
-<area shape="rect" id="node32" href="$classHF_1_1UID_1_1UID.html" title="Wrapper around UID_T pointer&#39;s. " alt="" coords="291,487,395,513"/>
-<area shape="rect" id="node33" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; bool \&gt;" alt="" coords="255,538,431,579"/>
-<area shape="rect" id="node34" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; T \&gt;" alt="" coords="255,603,431,645"/>
-<area shape="rect" id="node35" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; uint32_t \&gt;" alt="" coords="255,669,431,710"/>
-<area shape="rect" id="node36" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; uint8_t \&gt;" alt="" coords="255,734,431,775"/>
-<area shape="rect" id="node37" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; value_type \&gt;" alt="" coords="255,799,431,841"/>
+<area shape="rect" id="node1" href="$structHF_1_1Common_1_1Cloneable.html" title="HF::Common::Cloneable\l\&lt; IAttribute \&gt;" alt="" coords="10,419,177,461"/>
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="260,427,425,453"/>
+<area shape="rect" id="node3" href="$classHF_1_1Attributes_1_1AbstractAttribute.html" title="Parent class for Attribute API implementation. " alt="" coords="505,365,666,406"/>
+<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; bool \&gt;" alt="" coords="726,135,887,177"/>
+<area shape="rect" id="node6" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; int16_t \&gt;" alt="" coords="726,201,887,242"/>
+<area shape="rect" id="node10" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; uint16_t \&gt;" alt="" coords="726,331,887,373"/>
+<area shape="rect" id="node14" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; uint32_t \&gt;" alt="" coords="726,397,887,438"/>
+<area shape="rect" id="node17" href="$structHF_1_1Attributes_1_1Attribute.html" title="HF::Attributes::Attribute\l\&lt; uint8_t \&gt;" alt="" coords="726,462,887,503"/>
+<area shape="rect" id="node19" href="$structHF_1_1Attributes_1_1Attribute.html" title="Helper template class to declare an attribute with the given T type. " alt="" coords="721,527,893,569"/>
+<area shape="rect" id="node20" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html" title="Helper template class to declare an attribute with the given T type. " alt="" coords="715,25,898,111"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1OnOff_1_1State.html" title="Helper class to handle the State attribute for the On&#45;Off interface. " alt="" coords="985,5,1135,46"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1MaximumTemperature.html" title="Helper class to handle the Maximum Measured Temperature attribute for the Simple Temperature interfac..." alt="" coords="947,70,1173,111"/>
+<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1MininumTemperature.html" title="Helper class to handle the Minimum Measured Temperature attribute for the Simple Temperature interfac..." alt="" coords="947,135,1173,177"/>
+<area shape="rect" id="node9" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1Temperature.html" title="Helper class to handle the Measured Temperature attribute for the Simple Temperature interface..." alt="" coords="947,201,1173,242"/>
+<area shape="rect" id="node11" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Humidity.html" title="Helper class to handle the Measured Humidity attribute for the Simple Humidity interface. " alt="" coords="957,331,1163,373"/>
+<area shape="rect" id="node12" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Tolerance.html" title="Helper class to handle the Tolerance attribute for the Simple Humidity interface. ..." alt="" coords="957,397,1163,438"/>
+<area shape="rect" id="node13" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1Tolerance.html" title="Helper class to handle the Tolerance attribute for the Simple Temperature interface. " alt="" coords="947,266,1173,307"/>
+<area shape="rect" id="node15" href="$structHF_1_1Interfaces_1_1Alert_1_1Enable.html" title="Helper class to handle the Enabled attribute for the Alert interface. " alt="" coords="989,527,1131,569"/>
+<area shape="rect" id="node16" href="$structHF_1_1Interfaces_1_1Alert_1_1State.html" title="Helper class to handle the State attribute for the Alert interface. " alt="" coords="989,462,1131,503"/>
+<area shape="rect" id="node18" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Level.html" title="Helper class to handle the Level attribute for the Level Control interface. " alt="" coords="967,593,1153,634"/>
+<area shape="rect" id="node21" href="$structHF_1_1Common_1_1Cloneable.html" title="HF::Common::Cloneable\l\&lt; UID_T \&gt;" alt="" coords="10,614,177,655"/>
+<area shape="rect" id="node22" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="283,621,402,648"/>
+<area shape="rect" id="node23" href="$structHF_1_1UID_1_1Abstract.html" title="HF::UID::Abstract\&lt;\l NONE_UID \&gt;" alt="" coords="517,582,654,623"/>
+<area shape="rect" id="node25" href="$structHF_1_1UID_1_1Abstract.html" title="HF::UID::Abstract\&lt;\l URI_UID \&gt;" alt="" coords="517,647,654,689"/>
+<area shape="rect" id="node27" href="$structHF_1_1UID_1_1Abstract.html" title="Helper template parent class for all UID&#39;s implementation. " alt="" coords="517,738,654,779"/>
+<area shape="rect" id="node24" href="$structHF_1_1UID_1_1NONE.html" title="This class represents an empty UID. " alt="" coords="747,593,866,620"/>
+<area shape="rect" id="node26" href="$structHF_1_1UID_1_1URI.html" title="URI UID class. " alt="" coords="755,651,859,677"/>
+<area shape="rect" id="node28" href="$classHF_1_1UID_1_1ByteArray.html" title="HF::UID::ByteArray\l\&lt; DECT, 5, DECT_UID \&gt;" alt="" coords="719,767,894,809"/>
+<area shape="rect" id="node30" href="$classHF_1_1UID_1_1ByteArray.html" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;" alt="" coords="727,833,887,874"/>
+<area shape="rect" id="node32" href="$classHF_1_1UID_1_1ByteArray.html" title="Helper template parent class for all UIDs based on fixed number of bytes. " alt="" coords="723,702,890,743"/>
+<area shape="rect" id="node29" href="$structHF_1_1UID_1_1DECT.html" title="DECT UID class. " alt="" coords="1001,775,1119,801"/>
+<area shape="rect" id="node31" href="$structHF_1_1UID_1_1MAC.html" title="IEEE MAC&#45;48b UID class. " alt="" coords="1005,840,1115,867"/>
+<area shape="rect" id="node33" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,1040,181,1067"/>
+<area shape="rect" id="node34" href="$structHF_1_1Common_1_1SerializableHelper.html" title="Wrapper for classes that implement the Serializable concept. " alt="" coords="255,1065,431,1106"/>
+<area shape="rect" id="node35" href="$structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html" title="Wrapper for Common::ByteArray implementing the Serializable API. " alt="" coords="241,1130,444,1171"/>
+<area shape="rect" id="node36" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html" title="Wrapper for std::string implementing the Serializable API. " alt="" coords="255,1195,431,1237"/>
+<area shape="rect" id="node37" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html" title="Wrapper for std::vector implementing the Serializable API. " alt="" coords="238,1261,447,1302"/>
+<area shape="rect" id="node38" href="$structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html" title="Wrapper for base integer types implementing the Serializable API. " alt="" coords="230,1327,455,1412"/>
+<area shape="rect" id="node39" href="$structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html" title="Wrapper to pointers for classes that implement the Serializable concept. " alt="" coords="255,1437,431,1507"/>
+<area shape="rect" id="node40" href="$classHF_1_1UID_1_1UID.html" title="Wrapper around UID_T pointer&#39;s. " alt="" coords="291,1532,395,1559"/>
+<area shape="rect" id="node41" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; bool \&gt;" alt="" coords="255,1583,431,1625"/>
+<area shape="rect" id="node42" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; int16_t \&gt;" alt="" coords="255,673,431,714"/>
+<area shape="rect" id="node43" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; T \&gt;" alt="" coords="255,738,431,779"/>
+<area shape="rect" id="node44" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; uint16_t \&gt;" alt="" coords="255,803,431,845"/>
+<area shape="rect" id="node45" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; uint32_t \&gt;" alt="" coords="255,869,431,910"/>
+<area shape="rect" id="node46" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; uint8_t \&gt;" alt="" coords="255,934,431,975"/>
+<area shape="rect" id="node47" href="$structHF_1_1Common_1_1SerializableHelper.html" title="HF::Common::Serializable\lHelper\&lt; value_type \&gt;" alt="" coords="255,999,431,1041"/>
 </map>

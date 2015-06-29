@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -220,10 +220,12 @@ Additional Inherited Members</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a35c81a1ba262bd4d43d5d35614a6d71b">LEVEL_CONTROL</a> = 0x0201, 
 <a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a349952fcd3f99b019e5e8ce7697c24ed">SIMPLE_POWER_METER</a> = 0x0300, 
-<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052aa9772ff442c7f2053fd96d74d4d5617b">RESERVED</a> = 0x7F00, 
-<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a2454e0097684740559cacdfc76c8b3cf">MAX_UID</a> = 0x7FFE, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a92b5c04da776e0af4d4749c083dbc9af">SIMPLE_TEMPERATURE</a> = 0x0301, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a49ad9c3220eb895998427d0d9dead03c">SIMPLE_HUMIDITY</a> = 0x0302, 
 <br />
-&#160;&#160;<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d">ANY_UID</a> = 0x7FFF
+&#160;&#160;<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052aa9772ff442c7f2053fd96d74d4d5617b">RESERVED</a> = 0x7F00, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a2454e0097684740559cacdfc76c8b3cf">MAX_UID</a> = 0x7FFE, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d">ANY_UID</a> = 0x7FFF
 <br />
  }</td></tr>
 <tr class="memdesc:gaa56692f4035b4541ea47538adfda3052"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespaceHF_1_1Interfaces.html" title="This is the top-level namespace for the implemented Interfaces. ">Interfaces</a> Unique Identifiers (<a class="el" href="namespaceHF_1_1UID.html" title="This is the top-level namespace for HAN-FUN UIDs. ">UID</a>).  <a href="group__common__itf.html#gaa56692f4035b4541ea47538adfda3052">More...</a><br /></td></tr>
@@ -437,15 +439,15 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="attribute__reporting_8h_source.html#l01594">1594</a> of file <a class="el" href="attribute__reporting_8h_source.html">attribute_reporting.h</a>.</p>
+<p>Definition at line <a class="el" href="attribute__reporting_8h_source.html#l01596">1596</a> of file <a class="el" href="attribute__reporting_8h_source.html">attribute_reporting.h</a>.</p>
 
 <p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00059">UNUSED</a>.</p>
-<div class="fragment"><div class="line"><a name="l01595"></a><span class="lineno"> 1595</span>&#160;            {</div>
-<div class="line"><a name="l01596"></a><span class="lineno"> 1596</span>&#160;               <a class="code" href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a> (member);</div>
-<div class="line"><a name="l01597"></a><span class="lineno"> 1597</span>&#160;               <a class="code" href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a> (source);</div>
-<div class="line"><a name="l01598"></a><span class="lineno"> 1598</span>&#160;</div>
-<div class="line"><a name="l01599"></a><span class="lineno"> 1599</span>&#160;               <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01600"></a><span class="lineno"> 1600</span>&#160;            }</div>
+<div class="fragment"><div class="line"><a name="l01597"></a><span class="lineno"> 1597</span>&#160;            {</div>
+<div class="line"><a name="l01598"></a><span class="lineno"> 1598</span>&#160;               <a class="code" href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a> (member);</div>
+<div class="line"><a name="l01599"></a><span class="lineno"> 1599</span>&#160;               <a class="code" href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a> (source);</div>
+<div class="line"><a name="l01600"></a><span class="lineno"> 1600</span>&#160;</div>
+<div class="line"><a name="l01601"></a><span class="lineno"> 1601</span>&#160;               <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01602"></a><span class="lineno"> 1602</span>&#160;            }</div>
 <div class="ttc" id="group__common_html_ga86d500a34c624c2cae56bc25a31b12f3"><div class="ttname"><a href="group__common.html#ga86d500a34c624c2cae56bc25a31b12f3">UNUSED</a></div><div class="ttdeci">#define UNUSED(x)</div><div class="ttdoc">Helper macro to remove warning about unused function/method argument. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00059">inc/hanfun/common.h:59</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -489,12 +491,12 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 
 <p>Implements <a class="el" href="structHF_1_1Interfaces_1_1AbstractInterface.html#a0b0682cb079593595141a02632c13d2f">HF::Interfaces::AbstractInterface</a>.</p>
 
-<p>Definition at line <a class="el" href="attribute__reporting_8h_source.html#l01602">1602</a> of file <a class="el" href="attribute__reporting_8h_source.html">attribute_reporting.h</a>.</p>
+<p>Definition at line <a class="el" href="attribute__reporting_8h_source.html#l01604">1604</a> of file <a class="el" href="attribute__reporting_8h_source.html">attribute_reporting.h</a>.</p>
 
 <p>References <a class="el" href="attribute__reporting_8h_source.html#l01511">uid()</a>.</p>
-<div class="fragment"><div class="line"><a name="l01603"></a><span class="lineno"> 1603</span>&#160;            {</div>
-<div class="line"><a name="l01604"></a><span class="lineno"> 1604</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a17b524898a83fc7f3c64caf2832d1364">IServer::uid</a> () == <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a17b524898a83fc7f3c64caf2832d1364">uid</a>;</div>
-<div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160;            }</div>
+<div class="fragment"><div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160;            {</div>
+<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a17b524898a83fc7f3c64caf2832d1364">IServer::uid</a> () == <a class="code" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a17b524898a83fc7f3c64caf2832d1364">uid</a>;</div>
+<div class="line"><a name="l01607"></a><span class="lineno"> 1607</span>&#160;            }</div>
 <div class="ttc" id="structHF_1_1Core_1_1AttributeReporting_1_1IServer_html_a17b524898a83fc7f3c64caf2832d1364"><div class="ttname"><a href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a17b524898a83fc7f3c64caf2832d1364">HF::Core::AttributeReporting::IServer::uid</a></div><div class="ttdeci">uint16_t uid() const </div><div class="ttdoc">This method returns the interface UID. </div><div class="ttdef"><b>Definition:</b> <a href="attribute__reporting_8h_source.html#l01511">attribute_reporting.h:1511</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -796,7 +798,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 
 <p>References <a class="el" href="interface_8h_source.html#l00065">HF::Interface::ATTRIBUTE_REPORTING</a>.</p>
 
-<p>Referenced by <a class="el" href="attribute__reporting_8h_source.html#l01602">check_uid()</a>.</p>
+<p>Referenced by <a class="el" href="attribute__reporting_8h_source.html#l01604">check_uid()</a>.</p>
 <div class="fragment"><div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160;            {</div>
 <div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a35f88a998f2517699f4be05c55ce6f5e">HF::Interface::ATTRIBUTE_REPORTING</a>;</div>
 <div class="line"><a name="l01514"></a><span class="lineno"> 1514</span>&#160;            }</div>
@@ -824,7 +826,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Core.html">Core</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Core_1_1AttributeReporting.html">AttributeReporting</a></li><li class="navelem"><a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1IServer.html">IServer</a></li>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:27 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:13 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

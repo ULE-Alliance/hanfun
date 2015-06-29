@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('functions_a.html','');});
 : <a class="el" href="structHF_1_1Core_1_1AttributeReporting_1_1Event_1_1Field.html#a112eeaa7a5a03f688231743e98a1e2dc">HF::Core::AttributeReporting::Event::Field</a>
 </li>
 <li>Attribute()
-: <a class="el" href="structHF_1_1Attributes_1_1Attribute.html#a98c675dd5a4c91349997af03a3170e89">HF::Attributes::Attribute&lt; T, _Owner, typename &gt;</a>
+: <a class="el" href="structHF_1_1Attributes_1_1Attribute.html#a89b72cf5c3b3c064b0cd036fcb243fff">HF::Attributes::Attribute&lt; T, _Owner, typename &gt;</a>
 , <a class="el" href="structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a218dca75bec312ec61345d85801d593b">HF::Attributes::Attribute&lt; T, _Owner, typename std::enable_if&lt; std::is_base_of&lt; HF::Interface, _Owner &gt;::value &gt;::type &gt;</a>
 </li>
 <li>attribute()
@@ -210,13 +210,15 @@ $(document).ready(function(){initNavTree('functions_a.html','');});
 , <a class="el" href="classHF_1_1Interfaces_1_1Alert_1_1Server.html#a27a69ee2ac60abebf4a46a3714dc4adf">HF::Interfaces::Alert::Server</a>
 , <a class="el" href="classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a12438e47bc1bf8172d03479ad4e1e1d5">HF::Interfaces::LevelControl::Server</a>
 , <a class="el" href="classHF_1_1Interfaces_1_1OnOff_1_1Server.html#af4eaca824835ac8c02812ee27a7a745e">HF::Interfaces::OnOff::Server</a>
+, <a class="el" href="classHF_1_1Interfaces_1_1SimpleHumidity_1_1Server.html#a522caadd23453ba9060d7f1a01e8ac68">HF::Interfaces::SimpleHumidity::Server</a>
 , <a class="el" href="classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#a6e8c8721c821abd14a8447aaf64a5c12">HF::Interfaces::SimplePowerMeter::Server</a>
+, <a class="el" href="classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a0f5d3867b02050f545e0b0a5af0f3228">HF::Interfaces::SimpleTemperature::Server</a>
 </li>
 <li>attribute_factory
 : <a class="el" href="structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html#ad48f5841f0eefb0f682bf93302b88395">HF::Protocol::GetAttributePack::Response</a>
 </li>
 <li>attribute_reporting()
-: <a class="el" href="structHF_1_1IDevice_1_1IUnit0.html#acc5a8d23ce5ac9d404bd3009f0923f6a">HF::IDevice::IUnit0</a>
+: <a class="el" href="structHF_1_1IDevice_1_1IUnit0.html#a104dc28bc38ec6be4142aae2b00f57af">HF::IDevice::IUnit0</a>
 </li>
 <li>ATTRIBUTE_REPORTING
 : <a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a35f88a998f2517699f4be05c55ce6f5e">HF::Interface</a>
@@ -230,7 +232,9 @@ $(document).ready(function(){initNavTree('functions_a.html','');});
 , <a class="el" href="classHF_1_1Interfaces_1_1Alert_1_1Server.html#ac2c1cf4ee1b3d6c30a21603dd39b0dae">HF::Interfaces::Alert::Server</a>
 , <a class="el" href="classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e1ef2063d35295fa660b235bbb7f6f8">HF::Interfaces::LevelControl::Server</a>
 , <a class="el" href="classHF_1_1Interfaces_1_1OnOff_1_1Server.html#a80146c59b107c6accb7576943343c146">HF::Interfaces::OnOff::Server</a>
+, <a class="el" href="classHF_1_1Interfaces_1_1SimpleHumidity_1_1Server.html#a0dee751d29974ce7546244ff9b79ddae">HF::Interfaces::SimpleHumidity::Server</a>
 , <a class="el" href="classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#ad0d3062f1752d608476de5c970d00362">HF::Interfaces::SimplePowerMeter::Server</a>
+, <a class="el" href="classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#af462331c58d06a319414cc8f502354ec">HF::Interfaces::SimpleTemperature::Server</a>
 , <a class="el" href="structHF_1_1Profiles_1_1AbstractProfile.html#a32cb08254edaa9e99b754a81e1acc170">HF::Profiles::AbstractProfile&lt; _uid &gt;</a>
 , <a class="el" href="structHF_1_1Profiles_1_1Detector.html#a547b27685fcfb9f6b2619cc0c70cab8e">HF::Profiles::Detector&lt; _uid &gt;</a>
 , <a class="el" href="structHF_1_1Profiles_1_1IProfile.html#ad0bf4997cc500bc4fdf64f91c4b13721">HF::Profiles::IProfile</a>
@@ -246,7 +250,7 @@ $(document).ready(function(){initNavTree('functions_a.html','');});
 </li>
 <li>available()
 : <a class="el" href="group__examples.html#ga595ce42fe36ec8f0ca2a56d1432ae325">DeviceManagement::Server</a>
-, <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3">HF::Common::ByteArray</a>
+, <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a07293a50501ff39265a5c86a279aaeab">HF::Common::ByteArray</a>
 </li>
 <li>avg_power
 : <a class="el" href="structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a85a83235359dd58bd4cd51a87f630347">HF::Interfaces::SimplePowerMeter::Report</a>
@@ -260,7 +264,7 @@ $(document).ready(function(){initNavTree('functions_a.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:33 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:17 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

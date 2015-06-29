@@ -1,9 +1,9 @@
 <map id="Node" name="Node">
-<area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="Template for declaring HAN&#45;FUN node devices. " alt="" coords="5,1047,179,1241"/>
-<area shape="rect" id="node3" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="181,440,376,693"/>
-<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; HF::Devices\l::Node::DefaultUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# is_local()\l}" alt="" coords="204,1032,361,1256"/>
-<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="Template for declaring HAN&#45;FUN node devices. " alt="" coords="277,745,451,954"/>
-<area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; NodeUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# is_local()\l}" alt="" coords="385,1039,543,1249"/>
-<area shape="rect" id="node4" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="232,209,325,389"/>
-<area shape="rect" id="node5" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="197,6,360,157"/>
+<area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; NodeUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# is_local()\l}" alt="" coords="5,1039,163,1249"/>
+<area shape="rect" id="node3" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="255,440,449,693"/>
+<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="Template for declaring HAN&#45;FUN node devices. " alt="" coords="162,745,336,954"/>
+<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="Template for declaring HAN&#45;FUN node devices. " alt="" coords="369,1047,543,1241"/>
+<area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; HF::Devices\l::Node::DefaultUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# is_local()\l}" alt="" coords="187,1032,344,1256"/>
+<area shape="rect" id="node4" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="305,209,399,389"/>
+<area shape="rect" id="node5" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="271,6,433,157"/>
 </map>

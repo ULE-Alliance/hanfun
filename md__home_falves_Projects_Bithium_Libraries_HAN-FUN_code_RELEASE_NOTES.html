@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -72,13 +72,13 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <tr>
 <td align="right"><b>Project</b> </td><td>HAN-FUN CI </td></tr>
 <tr>
-<td align="right"><b>Version</b> </td><td>v1.2.3 </td></tr>
+<td align="right"><b>Version</b> </td><td>v1.3.0 </td></tr>
 <tr>
-<td align="right"><b>Date</b> </td><td>22/12/2014 </td></tr>
+<td align="right"><b>Date</b> </td><td>23/06/2015 </td></tr>
 </table>
 <h2>Overview</h2>
 <p>This a ULE Alliance's HAN-FUN Common Implementation public release.</p>
-<p>This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.1.0.</p>
+<p>This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.2.0.</p>
 <p>Not all of the standard has been implemented so far, please see the <em>Features</em> section for further information on what has been implemented and what is missing.</p>
 <p>For more information on requirements, building and using this software package, please see the README file present in the software distribution.</p>
 <h2>Features</h2>
@@ -88,13 +88,16 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 </ul>
 <h3>New</h3>
 <ul>
-<li>Added an empty Attribute Reporting Server implementation. This implementation will respond to any command with a FAIL_RESOURCES error code.</li>
+<li>Simple Temperature interface.</li>
+<li>Simple Humidity interface.</li>
+<li>Simple Temperature Sensor profile.</li>
+<li>Simple Humidity Sensor profile.</li>
 </ul>
-<h3>1. Protocol [HF-Protocol v1.1.0]</h3>
+<h3>1. Protocol [HF-Protocol v1.2.0]</h3>
 <ul>
 <li>General support for all defined features has been implemented.</li>
 </ul>
-<h3>2. Core Services &amp; Interfaces [HF-Services v1.1.0]</h3>
+<h3>2. Core Services &amp; Interfaces [HF-Services v1.2.0]</h3>
 <h4>2.1 Device Management Service [6.1]</h4>
 <table class="doxtable">
 <tr>
@@ -294,16 +297,34 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <tr>
 <td>6.9.1.19 </td><td>Power Source </td><td align="center">A </td><td>Not Applicable </td><td>Not Implemented </td></tr>
 </table>
-<h4>2.10 Keep Alive Interface [6.10]</h4>
+<h4>2.10 RSSI [6.10]</h4>
 <table class="doxtable">
 <tr>
 <th><b>Reference</b> </th><th><b>Commands &amp; Attributes</b> </th><th align="center"><b>Type</b> </th><th><b>Client</b> </th><th><b>Server</b>  </th></tr>
 <tr>
-<td>6.10.1.1 </td><td>Interval </td><td align="center">A </td><td>Not Applicable </td><td>Not Implemented </td></tr>
-<tr>
-<td>6.10.3.1 </td><td>I am Alive </td><td align="center">C </td><td>Not Applicable </td><td>Not Implemented </td></tr>
+<td>6.10.1.1 </td><td>RSSI </td><td align="center">A </td><td>Not Applicable </td><td>Not Implemented </td></tr>
 </table>
-<h3>3. Profiles [HF-Profiles v1.1.0]</h3>
+<h4>2.11 Keep Alive Interface [6.11]</h4>
+<table class="doxtable">
+<tr>
+<th><b>Reference</b> </th><th><b>Commands &amp; Attributes</b> </th><th align="center"><b>Type</b> </th><th><b>Client</b> </th><th><b>Server</b>  </th></tr>
+<tr>
+<td>6.11.1.1 </td><td>Interval </td><td align="center">A </td><td>Not Applicable </td><td>Not Implemented </td></tr>
+<tr>
+<td>6.11.3.1 </td><td>I am Alive </td><td align="center">C </td><td>Not Applicable </td><td>Not Implemented </td></tr>
+</table>
+<h4>2.12 Keep Alive Interface [6.12]</h4>
+<table class="doxtable">
+<tr>
+<th><b>Reference</b> </th><th><b>Commands &amp; Attributes</b> </th><th align="center"><b>Type</b> </th><th><b>Client</b> </th><th><b>Server</b>  </th></tr>
+<tr>
+<td>6.12.3.1 </td><td>New Version Available </td><td align="center">C </td><td>Not Applicable </td><td>Not Implemented </td></tr>
+<tr>
+<td>6.12.4.1 </td><td>Check Vesion </td><td align="center">C </td><td>Not Implemented </td><td>Not Applicable </td></tr>
+<tr>
+<td>6.12.4.2 </td><td>Upgrade Complete </td><td align="center">C </td><td>Not Implemented </td><td>Not Applicable </td></tr>
+</table>
+<h3>3. Profiles [HF-Profiles v1.2.0]</h3>
 <table class="doxtable">
 <tr>
 <th><b>Reference</b> </th><th><b>Profile</b> </th><th><b>Status</b>  </th></tr>
@@ -322,7 +343,7 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <tr>
 <td>5.1.7 </td><td>AC Outlet </td><td>Implemented </td></tr>
 <tr>
-<td>5.1.8 </td><td>AC Outlet with Simple Poweretering </td><td>Implemented </td></tr>
+<td>5.1.8 </td><td>AC Outlet with Simple Power Metering </td><td>Implemented </td></tr>
 <tr>
 <td>5.1.9 </td><td>Simple Light </td><td>Implemented </td></tr>
 <tr>
@@ -335,6 +356,10 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <td>5.1.13 </td><td>Simple Door Bell </td><td>Implemented </td></tr>
 <tr>
 <td>5.1.14 </td><td>Simple Power Meter </td><td>Implemented </td></tr>
+<tr>
+<td>5.1.15 </td><td>Simple Temperature Sensor </td><td>Implemented </td></tr>
+<tr>
+<td>5.1.16 </td><td>Simple Humidity Sensor </td><td>Implemented </td></tr>
 <tr>
 <td>5.2.1 </td><td>Simple Detector </td><td>Implemented </td></tr>
 <tr>
@@ -364,7 +389,7 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <tr>
 <td>5.4.2 </td><td>Generic Application Logic </td><td>Implemented </td></tr>
 </table>
-<h3>4. Interfaces [HF-Interfaces v1.1.0]</h3>
+<h3>4. Interfaces [HF-Interfaces v1.2.0]</h3>
 <h4>4.1 Alert [5.1]</h4>
 <table class="doxtable">
 <tr>
@@ -429,9 +454,31 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <tr>
 <td>5.4.4.1 </td><td>Measurment Reset </td><td align="center">C </td><td>Not Implemented </td><td>Not Implemented </td></tr>
 </table>
+<h4>4.5 Simple Temperature [5.5]</h4>
+<table class="doxtable">
+<tr>
+<th><b>Reference</b> </th><th><b>Commands &amp; Attributes</b> </th><th align="center"><b>Type</b> </th><th><b>Client</b> </th><th><b>Server</b>  </th></tr>
+<tr>
+<td>5.5.1.1 </td><td>Measured Temperature </td><td align="center">A </td><td>Not Applicable </td><td>Implemented </td></tr>
+<tr>
+<td>5.5.1.2 </td><td>Min. Measurable Temp. </td><td align="center">A </td><td>Not Applicable </td><td>Implemented </td></tr>
+<tr>
+<td>5.5.1.3 </td><td>Max. Measurable Temp. </td><td align="center">A </td><td>Not Applicable </td><td>Implemented </td></tr>
+<tr>
+<td>5.5.1.4 </td><td>Tolerance </td><td align="center">A </td><td>Not Applicable </td><td>Implemented </td></tr>
+</table>
+<h4>4.6 Simple Humidity [5.6]</h4>
+<table class="doxtable">
+<tr>
+<th><b>Reference</b> </th><th><b>Commands &amp; Attributes</b> </th><th align="center"><b>Type</b> </th><th><b>Client</b> </th><th><b>Server</b>  </th></tr>
+<tr>
+<td>5.6.1.1 </td><td>Measured Humidity </td><td align="center">A </td><td>Not Applicable </td><td>Implemented </td></tr>
+<tr>
+<td>5.6.1.2 </td><td>Tolerance </td><td align="center">A </td><td>Not Applicable </td><td>Implemented </td></tr>
+</table>
 <h2>Bug Fixes</h2>
 <ul>
-<li>Adding missing call to base transport destroy in the device's unit tests.</li>
+<li>See Changelog file.</li>
 </ul>
 <h2>Known Issues and Problems</h2>
 <p>See the Todo List in the doxygen documentation for the software release. </p>
@@ -440,7 +487,7 @@ $(document).ready(function(){initNavTree('md__home_falves_Projects_Bithium_Libra
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:26 for HAN-FUN API by
+    <li class="footer">Generated on Tue Jun 23 2015 09:59:08 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

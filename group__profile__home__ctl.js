@@ -13,5 +13,7 @@ var group__profile__home__ctl =
     [ "DimmerSwitch", "classHF_1_1Profiles_1_1DimmerSwitch.html", null ],
     [ "SimpleDoorLock", "classHF_1_1Profiles_1_1SimpleDoorLock.html", null ],
     [ "DoorBell", "classHF_1_1Profiles_1_1DoorBell.html", null ],
-    [ "SimplePowerMeter", "classHF_1_1Profiles_1_1SimplePowerMeter.html", null ]
+    [ "SimplePowerMeter", "classHF_1_1Profiles_1_1SimplePowerMeter.html", null ],
+    [ "SimpleTemperatureSensor", "classHF_1_1Profiles_1_1SimpleTemperatureSensor.html", null ],
+    [ "SimpleHumiditySensor", "classHF_1_1Profiles_1_1SimpleHumiditySensor.html", null ]
 ];

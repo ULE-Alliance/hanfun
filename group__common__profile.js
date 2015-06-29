@@ -44,6 +44,8 @@ var group__common__profile =
       [ "SIMPLE_DOOR_LOCK", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70aac27f88b10ecbe1dd909567976a69719", null ],
       [ "DOOR_BELL", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a3c9f5f0b9caee612d3a985fd18191b84", null ],
       [ "SIMPLE_POWER_METER", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70af47a0fa69f896d1fe2b6fe2e889c79a9", null ],
+      [ "SIMPLE_TEMPERATURE_SENSOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a2c7885f2d7d2b7e632c6a3d878a04051", null ],
+      [ "SIMPLE_HUMIDITY_SENSOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae9cdf44dcfb58477b78b14f8e0857f96", null ],
       [ "SIMPLE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70adf8489206c0c4016d174ad741d408fdf", null ],
       [ "DOOR_OPEN_CLOSE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae7a32367bbc0df9ad1f32e4ac2449b50", null ],
       [ "WINDOW_OPEN_CLOSE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a1c68e8fe9b4ec8eff95b8379180ea31d", null ],

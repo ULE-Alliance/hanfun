@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -152,7 +152,7 @@ struct HF::Profiles::Profile2&lt; _uid, Interface1, Interface2 &gt;</h3>
 
 <p>Class template for profiles containing two interfaces. </p>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00284">284</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00292">292</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="afc1a96d818e4e559f1188fcb65a2ac2a"></a>
 <div class="memitem">
@@ -207,26 +207,26 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 
 <p>Reimplemented from <a class="el" href="structHF_1_1Profiles_1_1AbstractProfile.html#a32cb08254edaa9e99b754a81e1acc170">HF::Profiles::AbstractProfile&lt; _uid &gt;</a>.</p>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00365">365</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;         {</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">first</a> ()-&gt;<a class="code" href="structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab">uid</a> () == itf.id)</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            {</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="group__attr__packs.html#gad9f1613dcd69ed8468b4a327c453be65">HF::Attributes::get</a> (*<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">first</a> (), pack_id, uids);</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;            }</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">second</a> ()-&gt;<a class="code" href="structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab">uid</a> () == itf.id)</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;            {</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="group__attr__packs.html#gad9f1613dcd69ed8468b4a327c453be65">HF::Attributes::get</a> (*<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">second</a> (), pack_id, uids);</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            }</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <span class="keywordflow">else</span></div>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00373">373</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;         {</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">first</a> ()-&gt;<a class="code" href="structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab">uid</a> () == itf.id)</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;            {</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1List.html">HF::Attributes::List</a> ();</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="group__attr__packs.html#gad9f1613dcd69ed8468b4a327c453be65">HF::Attributes::get</a> (*<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">first</a> (), pack_id, uids);</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            }</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;         }</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">second</a> ()-&gt;<a class="code" href="structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab">uid</a> () == itf.id)</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;            {</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="group__attr__packs.html#gad9f1613dcd69ed8468b4a327c453be65">HF::Attributes::get</a> (*<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">second</a> (), pack_id, uids);</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;            }</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;            {</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1List.html">HF::Attributes::List</a> ();</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;            }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;         }</div>
 <div class="ttc" id="group__attr__packs_html_gad9f1613dcd69ed8468b4a327c453be65"><div class="ttname"><a href="group__attr__packs.html#gad9f1613dcd69ed8468b4a327c453be65">HF::Attributes::get</a></div><div class="ttdeci">List get(const HF::Interface &amp;itf, uint8_t pack_id, const UIDS &amp;uids)</div><div class="ttdoc">Get a list with the attributes for the given interface, pack id or the uids passed in...</div></div>
-<div class="ttc" id="structHF_1_1Attributes_1_1List_html"><div class="ttname"><a href="structHF_1_1Attributes_1_1List.html">HF::Attributes::List</a></div><div class="ttdoc">This class has the same behavior has a list, however the list element access methods where overwritte...</div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00686">attributes.h:686</a></div></div>
-<div class="ttc" id="structHF_1_1Profiles_1_1AbstractProfile_html_af2550e2edbc11a6e924c0415c2d787ab"><div class="ttname"><a href="structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab">HF::Profiles::AbstractProfile::uid</a></div><div class="ttdeci">uint16_t uid() const </div><div class="ttdoc">Return this profile HAN-FUN UID. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00226">profiles.h:226</a></div></div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a879b189ad39afbed5c1ff98e6c42e008"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">HF::Profiles::Profile2::second</a></div><div class="ttdeci">Interface2 * second()</div><div class="ttdoc">Pointer to the second interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00332">profiles.h:332</a></div></div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_ae2e449b914d35105c6ef8006bc6d7492"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">HF::Profiles::Profile2::first</a></div><div class="ttdeci">Interface1 * first()</div><div class="ttdoc">Pointer to the first interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00322">profiles.h:322</a></div></div>
+<div class="ttc" id="structHF_1_1Attributes_1_1List_html"><div class="ttname"><a href="structHF_1_1Attributes_1_1List.html">HF::Attributes::List</a></div><div class="ttdoc">This class has the same behavior has a list, however the list element access methods where overwritte...</div><div class="ttdef"><b>Definition:</b> <a href="attributes_8h_source.html#l00711">attributes.h:711</a></div></div>
+<div class="ttc" id="structHF_1_1Profiles_1_1AbstractProfile_html_af2550e2edbc11a6e924c0415c2d787ab"><div class="ttname"><a href="structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab">HF::Profiles::AbstractProfile::uid</a></div><div class="ttdeci">uint16_t uid() const </div><div class="ttdoc">Return this profile HAN-FUN UID. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00234">profiles.h:234</a></div></div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a879b189ad39afbed5c1ff98e6c42e008"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">HF::Profiles::Profile2::second</a></div><div class="ttdeci">Interface2 * second()</div><div class="ttdoc">Pointer to the second interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00340">profiles.h:340</a></div></div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_ae2e449b914d35105c6ef8006bc6d7492"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">HF::Profiles::Profile2::first</a></div><div class="ttdeci">Interface1 * first()</div><div class="ttdoc">Pointer to the first interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00330">profiles.h:330</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -256,13 +256,13 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 <p>Pointer to the first interface instance. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to the interface instance. </dd></dl>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00322">322</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00330">330</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
 
-<p>Referenced by <a class="el" href="profiles_8h_source.html#l00365">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::attributes()</a>, and <a class="el" href="profiles_8h_source.html#l00311">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::periodic()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;         {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;Interface1 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.first));</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00388">profiles.h:388</a></div></div>
+<p>Referenced by <a class="el" href="profiles_8h_source.html#l00373">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::attributes()</a>, and <a class="el" href="profiles_8h_source.html#l00319">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::periodic()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;         {</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;Interface1 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.first));</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00396">profiles.h:396</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -303,11 +303,11 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 <p>Pointer to the first interface instance. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to the interface instance. </dd></dl>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00342">342</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;         {</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;<span class="keyword">const</span> Interface1 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.first));</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00388">profiles.h:388</a></div></div>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00350">350</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;         {</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;<span class="keyword">const</span> Interface1 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.first));</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00396">profiles.h:396</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -362,23 +362,23 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the result of the message processing. </dd></dl>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00295">295</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;         {</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;            <a class="code" href="group__common.html#gad26f666619e5c98083f6b8eaf5372f3e">Common::Result</a> result = <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.first.handle (packet, payload, offset);</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            <span class="keywordflow">if</span> (result == <a class="code" href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db">Common::Result::OK</a> || result == <a class="code" href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3eaf5a9f2ecf52dba61912088ccc8e37a1c">Common::Result::FAIL_SUPPORT</a>)</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            {</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;               <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            }</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;            {</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.second.handle (packet, payload, offset);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;            }</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00388">profiles.h:388</a></div></div>
-<div class="ttc" id="group__common_html_ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db"><div class="ttname"><a href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db">HF::Common::OK</a></div><div class="ttdoc">Request OK. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00788">inc/hanfun/common.h:788</a></div></div>
-<div class="ttc" id="group__common_html_ggad26f666619e5c98083f6b8eaf5372f3eaf5a9f2ecf52dba61912088ccc8e37a1c"><div class="ttname"><a href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3eaf5a9f2ecf52dba61912088ccc8e37a1c">HF::Common::FAIL_SUPPORT</a></div><div class="ttdoc">Fail - Not Supported. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00791">inc/hanfun/common.h:791</a></div></div>
-<div class="ttc" id="group__common_html_gad26f666619e5c98083f6b8eaf5372f3e"><div class="ttname"><a href="group__common.html#gad26f666619e5c98083f6b8eaf5372f3e">HF::Common::Result</a></div><div class="ttdeci">Result</div><div class="ttdoc">Commands result codes. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00786">inc/hanfun/common.h:786</a></div></div>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00303">303</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;         {</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            <a class="code" href="group__common.html#gad26f666619e5c98083f6b8eaf5372f3e">Common::Result</a> result = <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.first.handle (packet, payload, offset);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            <span class="keywordflow">if</span> (result == <a class="code" href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db">Common::Result::OK</a> || result == <a class="code" href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3eaf5a9f2ecf52dba61912088ccc8e37a1c">Common::Result::FAIL_SUPPORT</a>)</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;               <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            }</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.second.handle (packet, payload, offset);</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            }</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00396">profiles.h:396</a></div></div>
+<div class="ttc" id="group__common_html_ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db"><div class="ttname"><a href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db">HF::Common::OK</a></div><div class="ttdoc">Request OK. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00809">inc/hanfun/common.h:809</a></div></div>
+<div class="ttc" id="group__common_html_ggad26f666619e5c98083f6b8eaf5372f3eaf5a9f2ecf52dba61912088ccc8e37a1c"><div class="ttname"><a href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3eaf5a9f2ecf52dba61912088ccc8e37a1c">HF::Common::FAIL_SUPPORT</a></div><div class="ttdoc">Fail - Not Supported. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00812">inc/hanfun/common.h:812</a></div></div>
+<div class="ttc" id="group__common_html_gad26f666619e5c98083f6b8eaf5372f3e"><div class="ttname"><a href="group__common.html#gad26f666619e5c98083f6b8eaf5372f3e">HF::Common::Result</a></div><div class="ttdeci">Result</div><div class="ttdoc">Commands result codes. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00807">inc/hanfun/common.h:807</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -459,13 +459,13 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00311">311</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;         {</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">first</a> ()-&gt;periodic (time);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;            <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">second</a> ()-&gt;periodic (time);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a879b189ad39afbed5c1ff98e6c42e008"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">HF::Profiles::Profile2::second</a></div><div class="ttdeci">Interface2 * second()</div><div class="ttdoc">Pointer to the second interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00332">profiles.h:332</a></div></div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_ae2e449b914d35105c6ef8006bc6d7492"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">HF::Profiles::Profile2::first</a></div><div class="ttdeci">Interface1 * first()</div><div class="ttdoc">Pointer to the first interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00322">profiles.h:322</a></div></div>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00319">319</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;         {</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">first</a> ()-&gt;periodic (time);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;            <a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">second</a> ()-&gt;periodic (time);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a879b189ad39afbed5c1ff98e6c42e008"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008">HF::Profiles::Profile2::second</a></div><div class="ttdeci">Interface2 * second()</div><div class="ttdoc">Pointer to the second interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00340">profiles.h:340</a></div></div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_ae2e449b914d35105c6ef8006bc6d7492"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492">HF::Profiles::Profile2::first</a></div><div class="ttdeci">Interface1 * first()</div><div class="ttdoc">Pointer to the first interface instance. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00330">profiles.h:330</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -495,13 +495,13 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 <p>Pointer to the second interface instance. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to the interface instance. </dd></dl>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00332">332</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00340">340</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
 
-<p>Referenced by <a class="el" href="profiles_8h_source.html#l00365">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::attributes()</a>, and <a class="el" href="profiles_8h_source.html#l00311">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::periodic()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;         {</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;Interface2 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.second));</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00388">profiles.h:388</a></div></div>
+<p>Referenced by <a class="el" href="profiles_8h_source.html#l00373">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::attributes()</a>, and <a class="el" href="profiles_8h_source.html#l00319">HF::Profiles::Profile2&lt; SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer &gt;::periodic()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;         {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;Interface2 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.second));</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00396">profiles.h:396</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -542,11 +542,11 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 <p>Pointer to the second interface instance. </p>
 <dl class="section return"><dt>Returns</dt><dd>pointer to the interface instance. </dd></dl>
 
-<p>Definition at line <a class="el" href="profiles_8h_source.html#l00352">352</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;         {</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;<span class="keyword">const</span> Interface2 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.second));</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;         }</div>
-<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00388">profiles.h:388</a></div></div>
+<p>Definition at line <a class="el" href="profiles_8h_source.html#l00360">360</a> of file <a class="el" href="profiles_8h_source.html">profiles.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;         {</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;            <span class="keywordflow">return</span> static_cast &lt;<span class="keyword">const</span> Interface2 *&gt;(&amp;(this-&gt;<a class="code" href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">interfaces</a>.second));</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;         }</div>
+<div class="ttc" id="structHF_1_1Profiles_1_1Profile2_html_a47b1cbc77d76106e19c5ff02792104f2"><div class="ttname"><a href="structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2">HF::Profiles::Profile2::interfaces</a></div><div class="ttdeci">std::pair&lt; first_itf_t, second_itf_t &gt; interfaces</div><div class="ttdoc">Pair holding the two interface wrappers. </div><div class="ttdef"><b>Definition:</b> <a href="profiles_8h_source.html#l00396">profiles.h:396</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -604,7 +604,7 @@ template&lt;uint16_t _uid, typename Interface1, typename Interface2&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Profiles.html">Profiles</a></li><li class="navelem"><a class="el" href="structHF_1_1Profiles_1_1Profile2.html">Profile2</a></li>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:31 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:15 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

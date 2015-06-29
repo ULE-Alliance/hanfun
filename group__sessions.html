@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -999,7 +999,7 @@ template&lt;typename _Entries&gt; </div>
 <div class="ttc" id="group__sessions_html_ga4807f7c2fb473194603ec2130f985fba"><div class="ttname"><a href="group__sessions.html#ga4807f7c2fb473194603ec2130f985fba">HF::Core::SessionManagement::Server::entries_size</a></div><div class="ttdeci">uint16_t entries_size() const </div><div class="ttdoc">Get the number of entries present in the container. </div><div class="ttdef"><b>Definition:</b> <a href="session__management_8h_source.html#l00624">session_management.h:624</a></div></div>
 <div class="ttc" id="group__protocol_html_gaee9a7a9160cb9b4b920ec76aeb89f176"><div class="ttname"><a href="group__protocol.html#gaee9a7a9160cb9b4b920ec76aeb89f176">HF::Protocol::response</a></div><div class="ttdeci">bool response(Message::Type type)</div><div class="ttdoc">Check if message is a response. </div></div>
 <div class="ttc" id="group__sessions_html_ga0bad24a2d5432ea7316503785a1d7173"><div class="ttname"><a href="group__sessions.html#ga0bad24a2d5432ea7316503785a1d7173">HF::Core::SessionManagement::AbstractServer::check_offset</a></div><div class="ttdeci">Common::Result check_offset(uint16_t offset, uint8_t &amp;count, uint16_t size) const </div><div class="ttdoc">Check if the given offset is valid and adjust the count value if necessary. </div></div>
-<div class="ttc" id="group__common_html_ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db"><div class="ttname"><a href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db">HF::Common::OK</a></div><div class="ttdoc">Request OK. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00788">inc/hanfun/common.h:788</a></div></div>
+<div class="ttc" id="group__common_html_ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db"><div class="ttname"><a href="group__common.html#ggad26f666619e5c98083f6b8eaf5372f3ea5d4bb90f00d78e74f7a9c62a9a7ce6db">HF::Common::OK</a></div><div class="ttdoc">Request OK. </div><div class="ttdef"><b>Definition:</b> <a href="inc_2hanfun_2common_8h_source.html#l00809">inc/hanfun/common.h:809</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1370,7 +1370,7 @@ template&lt;uint8_t _role, uint16_t _uid, uint8_t _member&gt; </div>
 
 <p>Definition at line <a class="el" href="session__management_8h_source.html#l00760">760</a> of file <a class="el" href="session__management_8h_source.html">session_management.h</a>.</p>
 
-<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00805">HF::Common::Interface::id</a>, <a class="el" href="protocol_8h_source.html#l00128">HF::Protocol::Message::itf</a>, <a class="el" href="protocol_8h_source.html#l00099">HF::Protocol::Message::Interface::member</a>, <a class="el" href="session__management_8h_source.html#l00121">HF::Core::SessionManagement::GetEntriesMessage::pack()</a>, <a class="el" href="protocol_8h_source.html#l00133">HF::Protocol::Message::payload</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00804">HF::Common::Interface::role</a>, <a class="el" href="group__sessions.html#ga6034d62ad87761058104fe9671f128af">HF::Core::SessionManagement::AbstractClient::send()</a>, and <a class="el" href="session__management_8h_source.html#l00115">HF::Core::SessionManagement::GetEntriesMessage::size()</a>.</p>
+<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00826">HF::Common::Interface::id</a>, <a class="el" href="protocol_8h_source.html#l00128">HF::Protocol::Message::itf</a>, <a class="el" href="protocol_8h_source.html#l00099">HF::Protocol::Message::Interface::member</a>, <a class="el" href="session__management_8h_source.html#l00121">HF::Core::SessionManagement::GetEntriesMessage::pack()</a>, <a class="el" href="protocol_8h_source.html#l00133">HF::Protocol::Message::payload</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00825">HF::Common::Interface::role</a>, <a class="el" href="group__sessions.html#ga6034d62ad87761058104fe9671f128af">HF::Core::SessionManagement::AbstractClient::send()</a>, and <a class="el" href="session__management_8h_source.html#l00115">HF::Core::SessionManagement::GetEntriesMessage::size()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;            {</div>
 <div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;               SessionManagement::GetEntriesMessage msg (offset, count);</div>
 <div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;</div>
@@ -1816,7 +1816,7 @@ template&lt;uint8_t _role, uint16_t _uid, uint8_t _member&gt; </div>
 
 <p>Definition at line <a class="el" href="session__management_8h_source.html#l00787">787</a> of file <a class="el" href="session__management_8h_source.html">session_management.h</a>.</p>
 
-<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00805">HF::Common::Interface::id</a>, <a class="el" href="protocol_8h_source.html#l00128">HF::Protocol::Message::itf</a>, <a class="el" href="protocol_8h_source.html#l00099">HF::Protocol::Message::Interface::member</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00804">HF::Common::Interface::role</a>, and <a class="el" href="group__sessions.html#ga6034d62ad87761058104fe9671f128af">HF::Core::SessionManagement::AbstractClient::send()</a>.</p>
+<p>References <a class="el" href="inc_2hanfun_2common_8h_source.html#l00826">HF::Common::Interface::id</a>, <a class="el" href="protocol_8h_source.html#l00128">HF::Protocol::Message::itf</a>, <a class="el" href="protocol_8h_source.html#l00099">HF::Protocol::Message::Interface::member</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00825">HF::Common::Interface::role</a>, and <a class="el" href="group__sessions.html#ga6034d62ad87761058104fe9671f128af">HF::Core::SessionManagement::AbstractClient::send()</a>.</p>
 
 <p>Referenced by <a class="el" href="bind__management_8h_source.html#l00356">HF::Core::BindManagement::Client::end_session()</a>, <a class="el" href="device__management_8h_source.html#l00482">HF::Core::DeviceManagement::Client::end_session()</a>, <a class="el" href="bind__management_8h_source.html#l00335">HF::Core::BindManagement::Client::start_session()</a>, and <a class="el" href="device__management_8h_source.html#l00461">HF::Core::DeviceManagement::Client::start_session()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;            {</div>
@@ -2310,7 +2310,7 @@ template&lt;typename Parent&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:26 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:11 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

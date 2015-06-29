@@ -49,6 +49,7 @@ var group__attributes =
     ] ],
     [ "Attribute< T, _Owner, typename std::enable_if< std::is_base_of< HF::Interface, _Owner >::value >::type >", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html", [
       [ "Attribute", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a218dca75bec312ec61345d85801d593b", null ],
+      [ "Attribute", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a08d670012a95f9e45ae546d97c79de34", null ],
       [ "changed", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#ac689a246ec4f768f961e1a78c687a4c4", null ],
       [ "clone", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a5b7f4c1c41d0c747f3fd7404047a1aec", null ],
       [ "compare", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a12bc9e9869c8896248cdd31eb9c28eea", null ],

@@ -1,15 +1,15 @@
 var NAVTREE =
 [
   [ "HAN-FUN API", "index.html", [
-    [ "Release Notes", "md__home_falves_Projects_Bithium_Libraries_HAN-FUN_code_RELEASE_NOTES.html", null ],
-    [ "FAQ", "md__home_falves_Projects_Bithium_Libraries_HAN-FUN_code_FAQ.html", null ],
+    [ "Release Notes", "md__home_falves_Projects_ULEAlliance_HAN-FUN_code_RELEASE_NOTES.html", null ],
+    [ "FAQ", "md__home_falves_Projects_ULEAlliance_HAN-FUN_code_FAQ.html", null ],
     [ "Getting Started", "tutorials.html", "tutorials" ],
     [ "Todo List", "todo.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
+        [ "All", "namespacemembers.html", "namespacemembers_dup" ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
@@ -46,14 +46,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classHF_1_1Profiles_1_1UserInterface.html",
-"group__attr__reporting__common.html#gga5dee0ba2828750575a162474b07772dda488fa3a02b292a4782f38008f26dc249",
-"group__concentrator.html",
-"group__protocol.html#gac7883f52b7ae594e458e5bbe55165030",
-"namespaceHF_1_1Core_1_1SessionManagement.html",
-"structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476",
-"structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a346aa9a30afe949dd74d96831fe4d53c",
-"structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4"
+"classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#ae660a6b2b4911d6ffde6866f972c40b6",
+"group__alert__itf.html#gga4205e7df81775bc9aed5af311c13c472a0f6f34f238831879529963c2036566b2",
+"group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052af7c8311f848e0af2a22253d5e4f02dc4",
+"group__level__ctl__itf.html#gafc5c75faf837f56d818efe9e771ef640",
+"inc_2hanfun_2common_8h.html#ggad56ba1494114e66754fc2151c1da2f0ca3577a90d53a9787f050148d8afdbf4c7",
+"structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a218dca75bec312ec61345d85801d593b",
+"structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Field.html#ae0eb45e7ed1fc9fc12ab164957105fe9",
+"structHF_1_1Interfaces_1_1OnOff_1_1Base.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

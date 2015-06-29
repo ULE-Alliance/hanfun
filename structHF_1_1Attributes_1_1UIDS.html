@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -257,7 +257,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 
 <p>References <a class="el" href="attributes_8h_source.html#l00190">length()</a>, <a class="el" href="inc_2hanfun_2common_8h_source.html#l00074">SERIALIZABLE_CHECK</a>, <a class="el" href="attributes_8h_source.html#l00199">size()</a>, and <a class="el" href="structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a">HF::Common::ByteArray::write()</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00851">HF::Protocol::GetAttributePack::Request::pack()</a>.</p>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00876">HF::Protocol::GetAttributePack::Request::pack()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;         {</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            <a class="code" href="group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676">SERIALIZABLE_CHECK</a> (array, offset, <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a6bafd77d0a6a05553079fe3751f24281">size</a> ());</div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
@@ -330,7 +330,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 
 <p>Definition at line <a class="el" href="attributes_8h_source.html#l00199">199</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00205">pack()</a>, and <a class="el" href="attributes_8h_source.html#l00845">HF::Protocol::GetAttributePack::Request::size()</a>.</p>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00205">pack()</a>, and <a class="el" href="attributes_8h_source.html#l00870">HF::Protocol::GetAttributePack::Request::size()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;         {</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a80078ceb24e6fed18d369397b30a24b7">min_size</a> + <span class="keyword">sizeof</span>(uint8_t) * vector &lt;uint8_t&gt;::size ();</div>
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;         }</div>
@@ -393,7 +393,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 
 <p>Definition at line <a class="el" href="attributes_8h_source.html#l00226">226</a> of file <a class="el" href="attributes_8h_source.html">attributes.h</a>.</p>
 
-<p>Referenced by <a class="el" href="attributes_8h_source.html#l00857">HF::Protocol::GetAttributePack::Request::unpack()</a>.</p>
+<p>Referenced by <a class="el" href="attributes_8h_source.html#l00882">HF::Protocol::GetAttributePack::Request::unpack()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;         {</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            uint8_t count = 0;</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1">unpack</a> (array, offset, count);</div>
@@ -515,7 +515,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Attributes.html">Attributes</a></li><li class="navelem"><a class="el" href="structHF_1_1Attributes_1_1UIDS.html">UIDS</a></li>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:27 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:12 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

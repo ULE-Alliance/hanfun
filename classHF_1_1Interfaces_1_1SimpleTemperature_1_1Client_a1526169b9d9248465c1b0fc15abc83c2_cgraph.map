@@ -1,0 +1,4 @@
+<map id="HF::Interfaces::SimpleTemperature::Client::read" name="HF::Interfaces::SimpleTemperature::Client::read">
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1AbstractInterface.html#a8347ec57ee4a1a820eb30fecbc51589c" title="Send message msg to the network address given by addr. " alt="" coords="324,5,487,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Base.html#aaf715cbe319d9e5f59b2889fbddf2fcc" title="This method returns the interface UID. " alt="" coords="280,69,531,125"/>
+</map>

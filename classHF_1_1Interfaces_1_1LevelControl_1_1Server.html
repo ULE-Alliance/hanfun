@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -215,10 +215,12 @@ Additional Inherited Members</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a35c81a1ba262bd4d43d5d35614a6d71b">LEVEL_CONTROL</a> = 0x0201, 
 <a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a349952fcd3f99b019e5e8ce7697c24ed">SIMPLE_POWER_METER</a> = 0x0300, 
-<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052aa9772ff442c7f2053fd96d74d4d5617b">RESERVED</a> = 0x7F00, 
-<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a2454e0097684740559cacdfc76c8b3cf">MAX_UID</a> = 0x7FFE, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a92b5c04da776e0af4d4749c083dbc9af">SIMPLE_TEMPERATURE</a> = 0x0301, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a49ad9c3220eb895998427d0d9dead03c">SIMPLE_HUMIDITY</a> = 0x0302, 
 <br />
-&#160;&#160;<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d">ANY_UID</a> = 0x7FFF
+&#160;&#160;<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052aa9772ff442c7f2053fd96d74d4d5617b">RESERVED</a> = 0x7F00, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a2454e0097684740559cacdfc76c8b3cf">MAX_UID</a> = 0x7FFE, 
+<a class="el" href="group__common__itf.html#ggaa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d">ANY_UID</a> = 0x7FFF
 <br />
  }</td></tr>
 <tr class="memdesc:gaa56692f4035b4541ea47538adfda3052"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespaceHF_1_1Interfaces.html" title="This is the top-level namespace for the implemented Interfaces. ">Interfaces</a> Unique Identifiers (<a class="el" href="namespaceHF_1_1UID.html" title="This is the top-level namespace for HAN-FUN UIDs. ">UID</a>).  <a href="group__common__itf.html#gaa56692f4035b4541ea47538adfda3052">More...</a><br /></td></tr>
@@ -278,7 +280,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;               <span class="keywordflow">return</span> <a class="code" href="group__alert__itf.html#ga569f37dfb107e55549cd2789b38f7d66">Interfaces::create_attribute</a> (<span class="keyword">this</span>, <a class="code" href="structHF_1_1Interfaces_1_1Base.html#aaf715cbe319d9e5f59b2889fbddf2fcc">uid</a>);</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;            }</div>
 <div class="ttc" id="group__alert__itf_html_ga569f37dfb107e55549cd2789b38f7d66"><div class="ttname"><a href="group__alert__itf.html#ga569f37dfb107e55549cd2789b38f7d66">HF::Interfaces::create_attribute</a></div><div class="ttdeci">HF::Attributes::IAttribute * create_attribute(HF::Interfaces::Alert::Server *server, uint8_t uid)</div><div class="ttdoc">Create an attribute object that can hold the attribute with the given uid. </div></div>
-<div class="ttc" id="structHF_1_1Interfaces_1_1Base_html_aaf715cbe319d9e5f59b2889fbddf2fcc"><div class="ttname"><a href="structHF_1_1Interfaces_1_1Base.html#aaf715cbe319d9e5f59b2889fbddf2fcc">HF::Interfaces::Base&lt; Interface::LEVEL_CONTROL &gt;::uid</a></div><div class="ttdeci">uint16_t uid() const</div><div class="ttdoc">This method returns the interface UID. </div><div class="ttdef"><b>Definition:</b> <a href="interface_8h_source.html#l00356">interface.h:356</a></div></div>
+<div class="ttc" id="structHF_1_1Interfaces_1_1Base_html_aaf715cbe319d9e5f59b2889fbddf2fcc"><div class="ttname"><a href="structHF_1_1Interfaces_1_1Base.html#aaf715cbe319d9e5f59b2889fbddf2fcc">HF::Interfaces::Base&lt; Interface::LEVEL_CONTROL &gt;::uid</a></div><div class="ttdeci">uint16_t uid() const</div><div class="ttdoc">This method returns the interface UID. </div><div class="ttdef"><b>Definition:</b> <a href="interface_8h_source.html#l00358">interface.h:358</a></div></div>
 </div><!-- fragment -->
 <p><div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
@@ -587,7 +589,7 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceHF.html">HF</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Interfaces.html">Interfaces</a></li><li class="navelem"><a class="el" href="namespaceHF_1_1Interfaces_1_1LevelControl.html">LevelControl</a></li><li class="navelem"><a class="el" href="classHF_1_1Interfaces_1_1LevelControl_1_1Server.html">Server</a></li>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:31 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:14 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

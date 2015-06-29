@@ -13,10 +13,12 @@ var group__common =
       [ "read", "structHF_1_1Common_1_1ByteArray.html#aa41213d3a61b5c6a0a9cf1dfff6cc991", null ],
       [ "read", "structHF_1_1Common_1_1ByteArray.html#a90ca5cb7138f6939c4a23e242d70bd58", null ],
       [ "read", "structHF_1_1Common_1_1ByteArray.html#ae945cf20657dd5a300dc851795d8805e", null ],
+      [ "read", "structHF_1_1Common_1_1ByteArray.html#a5bb80a47d85708778bdc91cb8d6a92b5", null ],
       [ "write", "structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a", null ],
       [ "write", "structHF_1_1Common_1_1ByteArray.html#a3770bad5a4ee141fb3e8a6f76489caf5", null ],
       [ "write", "structHF_1_1Common_1_1ByteArray.html#a1312172eda4778987c0db48e66569bb5", null ],
-      [ "write", "structHF_1_1Common_1_1ByteArray.html#aba6bff3d27d27f1c4b91c8b97e2097e4", null ]
+      [ "write", "structHF_1_1Common_1_1ByteArray.html#aba6bff3d27d27f1c4b91c8b97e2097e4", null ],
+      [ "write", "structHF_1_1Common_1_1ByteArray.html#a1e9b7d4c37579c2aa781b80465872f8f", null ]
     ] ],
     [ "Serializable", "structHF_1_1Common_1_1Serializable.html", [
       [ "~Serializable", "structHF_1_1Common_1_1Serializable.html#a1ce13da919dc555beceb288787712185", null ],

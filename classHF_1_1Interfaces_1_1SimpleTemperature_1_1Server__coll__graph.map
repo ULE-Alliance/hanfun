@@ -1,0 +1,9 @@
+<map id="HF::Interfaces::SimpleTemperature::Server" name="HF::Interfaces::SimpleTemperature::Server">
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleTemperature\l::Base, Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="181,1128,419,1235"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1Base.html" title="Simple Temperature Interface : Parent. " alt="" coords="23,942,249,1034"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::SIMPLE_TEMPERATURE \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="5,784,267,891"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="68,222,231,549"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="152,600,296,707"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="88,5,211,171"/>
+<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="273,942,437,1034"/>
+</map>

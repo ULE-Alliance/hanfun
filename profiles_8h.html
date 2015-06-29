@@ -26,7 +26,7 @@
   <td id="projectlogo"><img alt="Logo" src="ule-logo.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">HAN-FUN API
-   &#160;<span id="projectnumber">1.2.3</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">This project provides the common implementation of ULE Alliance&#39;s HAN-FUN application protocol.</div>
   </td>
@@ -86,6 +86,8 @@ $(document).ready(function(){initNavTree('profiles_8h.html','');});
 <code>#include &quot;<a class="el" href="on__off_8h_source.html">hanfun/interfaces/on_off.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="level__control_8h_source.html">hanfun/interfaces/level_control.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="simple__power__meter_8h_source.html">hanfun/interfaces/simple_power_meter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="simple__temperature_8h_source.html">hanfun/interfaces/simple_temperature.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="simple__humidity_8h_source.html">hanfun/interfaces/simple_humidity.h</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for profiles.h:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -93,7 +95,7 @@ $(document).ready(function(){initNavTree('profiles_8h.html','');});
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="profiles_8h__incl.png" border="0" usemap="#profiles_8h" alt=""/></div>
 <map name="profiles_8h" id="profiles_8h">
-<area shape="rect" id="node2" href="inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="896,395,977,421"/><area shape="rect" id="node24" href="interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="1041,171,1167,197"/><area shape="rect" id="node27" href="alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="792,88,955,115"/><area shape="rect" id="node28" href="on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="1030,81,1169,122"/><area shape="rect" id="node29" href="level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="1194,81,1347,122"/><area shape="rect" id="node30" href="simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="1371,81,1535,122"/><area shape="rect" id="node21" href="gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,469,1669,496"/><area shape="rect" id="node25" href="attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="936,245,1065,272"/><area shape="rect" id="node26" href="protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1093,320,1216,347"/></map>
+<area shape="rect" id="node2" href="inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="896,395,977,421"/><area shape="rect" id="node24" href="interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="818,171,944,197"/><area shape="rect" id="node27" href="alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="923,88,1085,115"/><area shape="rect" id="node28" href="on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="530,81,669,122"/><area shape="rect" id="node29" href="level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="694,81,847,122"/><area shape="rect" id="node30" href="simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="342,81,505,122"/><area shape="rect" id="node31" href="simple__temperature_8h.html" title="This file contains the definitions for the Simple Temperature interface. " alt="" coords="1110,81,1273,122"/><area shape="rect" id="node32" href="simple__humidity_8h.html" title="This file contains the definitions for the Simple Humidity interface. " alt="" coords="1298,81,1461,122"/><area shape="rect" id="node21" href="gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,469,1669,496"/><area shape="rect" id="node25" href="attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="808,245,937,272"/><area shape="rect" id="node26" href="protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="659,320,781,347"/></map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> This graph shows which files directly or indirectly include this file:</div>
@@ -165,6 +167,12 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Profiles_1_1SimplePowerMeter.html">HF::Profiles::SimplePowerMeter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple Power Meter profile implementation.  <a href="classHF_1_1Profiles_1_1SimplePowerMeter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Profiles_1_1SimpleTemperatureSensor.html">HF::Profiles::SimpleTemperatureSensor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple Temperature Sensor profile implementation.  <a href="classHF_1_1Profiles_1_1SimpleTemperatureSensor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Profiles_1_1SimpleHumiditySensor.html">HF::Profiles::SimpleHumiditySensor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple Humidity Sensor profile implementation.  <a href="classHF_1_1Profiles_1_1SimpleHumiditySensor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHF_1_1Profiles_1_1SimpleDetector.html">HF::Profiles::SimpleDetector</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple <a class="el" href="structHF_1_1Profiles_1_1Detector.html" title="Class template for Detector type profiles. ">Detector</a> profile implementation.  <a href="classHF_1_1Profiles_1_1SimpleDetector.html#details">More...</a><br /></td></tr>
@@ -238,25 +246,27 @@ Enumerations</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a3c9f5f0b9caee612d3a985fd18191b84">HF::Profiles::DOOR_BELL</a> = 0x010C, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70af47a0fa69f896d1fe2b6fe2e889c79a9">HF::Profiles::SIMPLE_POWER_METER</a> = 0x010D, 
-<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70adf8489206c0c4016d174ad741d408fdf">HF::Profiles::SIMPLE_DETECTOR</a> = 0x0200, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a2c7885f2d7d2b7e632c6a3d878a04051">HF::Profiles::SIMPLE_TEMPERATURE_SENSOR</a> = 0x010E, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae9cdf44dcfb58477b78b14f8e0857f96">HF::Profiles::SIMPLE_HUMIDITY_SENSOR</a> = 0x010F, 
+<br />
+&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70adf8489206c0c4016d174ad741d408fdf">HF::Profiles::SIMPLE_DETECTOR</a> = 0x0200, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae7a32367bbc0df9ad1f32e4ac2449b50">HF::Profiles::DOOR_OPEN_CLOSE_DETECTOR</a> = 0x0201, 
-<br />
-&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a1c68e8fe9b4ec8eff95b8379180ea31d">HF::Profiles::WINDOW_OPEN_CLOSE_DETECTOR</a> = 0x0202, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a1c68e8fe9b4ec8eff95b8379180ea31d">HF::Profiles::WINDOW_OPEN_CLOSE_DETECTOR</a> = 0x0202, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ac5fa4d2a5104c10071e6cf40829bdece">HF::Profiles::MOTION_DETECTOR</a> = 0x0203, 
-<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70af3420fd2743611cd0d0a6a18beeedcc1">HF::Profiles::SMOKE_DETECTOR</a> = 0x0204, 
+<br />
+&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70af3420fd2743611cd0d0a6a18beeedcc1">HF::Profiles::SMOKE_DETECTOR</a> = 0x0204, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a772424c3d4cb708f56fe9b329850d3ee">HF::Profiles::GAS_DETECTOR</a> = 0x0205, 
-<br />
-&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a8657587efb7c63e14e1a562c09a22c8f">HF::Profiles::FLOOD_DETECTOR</a> = 0x0206, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a8657587efb7c63e14e1a562c09a22c8f">HF::Profiles::FLOOD_DETECTOR</a> = 0x0206, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a0f8bcc2bc6d2997a125fe91688b0e209">HF::Profiles::GLASS_BREAK_DETECTOR</a> = 0x0207, 
-<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a5bec0d8fc9a3b14bd1fc2cf89f49fc4a">HF::Profiles::VIBRATION_DETECTOR</a> = 0x0208, 
+<br />
+&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a5bec0d8fc9a3b14bd1fc2cf89f49fc4a">HF::Profiles::VIBRATION_DETECTOR</a> = 0x0208, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a7120b90b54c2f5ad551173459496c77a">HF::Profiles::SIREN</a> = 0x0280, 
-<br />
-&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a6e2f1b1381f80ddff2ae541451f68b2d">HF::Profiles::ALERTABLE</a> = 0x0281, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a6e2f1b1381f80ddff2ae541451f68b2d">HF::Profiles::ALERTABLE</a> = 0x0281, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70afd7145f3d55a08b408529be513d3aa41">HF::Profiles::SIMPLE_PENDANT</a> = 0x0300, 
-<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a06efe3fd6b4a3c4a7bf6cdd804f64274">HF::Profiles::USER_INTERFACE</a> = 0x0410, 
-<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a2d4450f2690ce78c48aa49468e17c9f8">HF::Profiles::GENERIC_APPLICATION</a> = 0x0411, 
 <br />
-&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a0720ad8abc5f4bc1bd692ee0c6a2bd61">HF::Profiles::PROPRIETARY_START</a> = 0xFF00, 
+&#160;&#160;<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a06efe3fd6b4a3c4a7bf6cdd804f64274">HF::Profiles::USER_INTERFACE</a> = 0x0410, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a2d4450f2690ce78c48aa49468e17c9f8">HF::Profiles::GENERIC_APPLICATION</a> = 0x0411, 
+<a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a0720ad8abc5f4bc1bd692ee0c6a2bd61">HF::Profiles::PROPRIETARY_START</a> = 0xFF00, 
 <a class="el" href="group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a957a38be263be583f949d6db142d6dbf">HF::Profiles::PROPRIETARY_END</a> = 0xFFFF
 <br />
  }</td></tr>
@@ -271,7 +281,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the declarations and definitions for the HAN-FUN Profiles. </p>
-<dl class="section version"><dt>Version</dt><dd>1.2.3</dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.3.0</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright &copy; &#160; 2014 ULE Alliance</dd></dl>
 <p>For licensing information, please see the file 'LICENSE' in the root folder.</p>
 <p>Initial development by Bithium S.A. [<a href="http://www.bithium.com">http://www.bithium.com</a>] </p>
@@ -283,7 +293,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_bfccd401955b95cf8c75461437045ac0.html">inc</a></li><li class="navelem"><a class="el" href="dir_dfd4f5aa79d47f1bcf2ca6b2ffdbfdaa.html">hanfun</a></li><li class="navelem"><a class="el" href="profiles_8h.html">profiles.h</a></li>
-    <li class="footer">Generated on Wed Mar 11 2015 17:50:25 for HAN-FUN API by
+    <li class="footer">Generated on Mon Jun 29 2015 13:07:10 for HAN-FUN API by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>
