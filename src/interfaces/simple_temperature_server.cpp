@@ -1,8 +1,8 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/on_off_client.cpp
+ * @file       src/interfaces/simple_temperature_server.cpp
  *
- * This file contains the implementation of the On-Off interface : Server role.
+ * This file contains the implementation of the Simple Temperature interface : Server role.
  *
  * @version    1.3.0
  *
@@ -14,7 +14,7 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/on_off.h"
+#include "hanfun/interfaces/simple_temperature.h"
 
 // =============================================================================
 // API
@@ -22,111 +22,95 @@
 
 using namespace HF;
 using namespace HF::Interfaces;
-using namespace HF::Interfaces::OnOff;
+using namespace HF::Interfaces::SimpleTemperature;
 
 // =============================================================================
-// On-Off Interface : Server Role
+// Simple Temperature Interface : Server Role
 // =============================================================================
 
 // =============================================================================
-// Server::handle_command
+// Server::temperature
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+int16_t Server::temperature ()
 {
-   UNUSED (payload);
-   UNUSED (offset);
-
-   CMD cmd = static_cast <CMD>(packet.message.itf.member);
-
-   switch (cmd)
-   {
-      case ON_CMD:
-         on (packet.source);
-         break;
-      case OFF_CMD:
-         off (packet.source);
-         break;
-      case TOGGLE_CMD:
-         toggle (packet.source);
-         break;
-      default:
-         return Common::Result::FAIL_SUPPORT;
-   }
-
-   return Common::Result::OK;
+   return _value;
 }
 
 // =============================================================================
-// Server::on
+// Server::set_temperature
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::on (HF::Protocol::Address &source)
+void Server::temperature (int16_t __value)
 {
-   UNUSED (source);
-   state (true);
-}
+   uint8_t old = this->_value;
 
-// =============================================================================
-// Server::off
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::off (HF::Protocol::Address &source)
-{
-   UNUSED (source);
-   state (false);
-}
+   this->_value = __value;
 
-// =============================================================================
-// Server::toggle
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::toggle (HF::Protocol::Address &source)
-{
-   UNUSED (source);
-   state (!state ());
-}
-
-// =============================================================================
-// Server::state
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::state (bool state)
-{
-   bool old = this->_state;
-
-   this->_state = state;
-
-   State old_attr (old, this);
-   State new_attr (this->_state, this);
+   Temperature old_attr (old, this);
+   Temperature new_attr (this->_value, this);
 
    notify (old_attr, new_attr);
 }
 
 // =============================================================================
-// Server::state
+// Server::minimum_temperature
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool Server::state ()
+int16_t Server::minimum_temperature ()
 {
-   return _state;
+   return _minimum;
+}
+
+// =============================================================================
+// Server::maximum_temperature
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int16_t Server::maximum_temperature ()
+{
+   return _maximum;
+}
+
+// =============================================================================
+// Server::tolerance
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Server::tolerance ()
+{
+   return _tolerance;
+}
+
+// =============================================================================
+// Server::attributes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::UIDS Server::attributes (uint8_t pack_id) const
+{
+   UNUSED (pack_id);
+   /* *INDENT-OFF* */
+   return HF::Attributes::UIDS({
+      SimpleTemperature::VALUE_ATTR,
+      SimpleTemperature::MINIMUM_ATTR,
+      SimpleTemperature::MAXIMUM_ATTR,
+      SimpleTemperature::TOLERANCE_ATTR,
+   });
+   /* *INDENT-ON* */
 }

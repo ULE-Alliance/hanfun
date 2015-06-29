@@ -5,7 +5,7 @@
  * This file contains the implementation of the Simple Power Meter interface :
  * Server role.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -158,7 +158,7 @@ void Server::periodic (uint32_t time)
 
 #if HF_ITF_SPM_REPORT_CMD
 
-   if (_report_interval > 0 && abs ((int64_t) _last_periodic - time) >= _report_interval)
+   if (_report_interval > 0 && std::abs ((int64_t) _last_periodic - time) >= _report_interval)
    {
       Protocol::Address addr;
 

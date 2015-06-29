@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Server role.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -581,7 +581,8 @@ void Server::periodic (uint32_t time)
    std::for_each(periodic_rules.begin (), periodic_rules.end (),
                  [this, time](Periodic::Rule &rule)
    {
-      if ((time/rule.interval) == 0 || (uint32_t) abs ((int32_t)time - rule.last_time) < rule.interval)
+      if ((time/rule.interval) == 0 ||
+          (uint32_t) std::abs ((int64_t)time - rule.last_time) < rule.interval)
       {
          return;
       }

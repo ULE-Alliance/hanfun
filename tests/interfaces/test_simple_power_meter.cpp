@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the Simple Metering
  * Interface.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -885,19 +885,4 @@ TEST (SimplePowerMeterClient, Handle_Invalid_UID)
    packet.message.itf.id = client.uid () + 1;
 
    CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
-}
-
-//! @test FIXME Should not handle message with invalid payload size.
-IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload_Size)
-{
-   SimplePowerMeter::Report report;
-   packet.message.length = report.size () - 1;
-
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
-}
-
-//! @test FIXME Should not handle message with not enough payload.
-IGNORE_TEST (SimplePowerMeterClient, Handle_Invalid_Payload)
-{
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 10));
 }

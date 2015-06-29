@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -84,7 +84,7 @@ void AbstractDevice::send (Protocol::Packet &packet)
 
    if (tsp_link == nullptr)
    {
-      tsp_link = link (packet.destination.device);
+      packet.link = tsp_link = link (packet.destination.device);
    }
 
    if (tsp_link != nullptr)
@@ -109,6 +109,8 @@ void AbstractDevice::send (Protocol::Packet &packet)
 void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
+
+   assert (nullptr != packet.link);
 
    if (is_local (packet))
    {

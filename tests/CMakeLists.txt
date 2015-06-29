@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   @version 1.2.4
+#   @version 1.3.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -27,9 +27,14 @@ add_subdirectory(cpputest)
 find_package(CppUTest REQUIRED HINTS ${CMAKE_BINARY_DIR} )
 
 include_directories(
-    ${CPPUTEST_INCLUDE_DIRS}
+    ${CppUTest_INCLUDE_DIRS}
     "."
 )
+
+find_package("Backtrace")
+if (Backtrace_FOUND)
+  include_directories(${Backtrace_INCLUDE_DIR})
+endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
@@ -51,7 +56,9 @@ set(TESTS_INTERFACES_SRCS "test_interfaces.cpp"
                           "interfaces/test_alert.cpp"
                           "interfaces/test_on_off.cpp"
                           "interfaces/test_level_control.cpp"
-                          "interfaces/test_simple_power_meter.cpp")
+                          "interfaces/test_simple_power_meter.cpp"
+                          "interfaces/test_simple_temperature.cpp"
+                          "interfaces/test_simple_humidity.cpp")
 
 set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 
@@ -76,7 +83,10 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_TRANSPORT_SRCS}
                             ${TESTS_UNITS_SRCS} )
 
-target_link_libraries( test_hanfun hanfun ${CPPUTEST_LIBRARIES} )
+target_link_libraries( test_hanfun hanfun ${CppUTest_LIBRARIES} )
+if (Backtrace_FOUND)
+  target_link_libraries( test_hanfun ${Backtrace_LIBRARIES} )
+endif()
 
 if(NOT CMAKE_CROSSCOMPILING)
   add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)

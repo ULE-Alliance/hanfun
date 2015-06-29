@@ -4,7 +4,7 @@
  *
  * This file contains helper functions used the tests.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -12,7 +12,6 @@
  */
 // =============================================================================
 
-#include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -70,6 +69,8 @@ HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
 // Library Overrides
 // =============================================================================
 
+#if Backtrace_FOUND
+
 extern const char *__progname;
 
 void __assert_fail (const char *__assertion, const char *__file, unsigned int __line,
@@ -87,6 +88,8 @@ void __assert_fail (const char *__assertion, const char *__file, unsigned int __
 
    abort ();
 }
+
+#endif
 
 // =============================================================================
 // Main

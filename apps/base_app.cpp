@@ -4,7 +4,7 @@
  *
  * This file contains an example for a HAN-FUN base application.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -415,6 +415,22 @@ COMMAND (DevInfo, "di", "di m d:Get device information mandatory attributes.\n"
    }
 }
 
+COMMAND (Links, "ll", "ll :list links.")
+{
+   UNUSED (args);
+
+   auto &links = base.links();
+
+   /* *INDENT-OFF* */
+   std::for_each(links.begin(), links.end(), [](const HF::Transport::Link *link)
+   {
+      LOG (APP) << std::setw (5) << link->address() << " | ";
+      LOG (APP) << link->uid() << NL;
+   });
+   /* *INDENT-ON* */
+
+}
+
 // =============================================================================
 // HF::Application::Initialize
 // =============================================================================
@@ -442,6 +458,7 @@ void HF::Application::Initialize (HF::Transport::Layer &transport)
    COMMAND_ADD (Toggle);
    COMMAND_ADD (Raw);
    COMMAND_ADD (DevInfo);
+   COMMAND_ADD (Links);
 
    Restore ();
 }
@@ -499,5 +516,4 @@ void HF::Application::Restore ()
 
    Restored ();
 }
-
 /*! @} */

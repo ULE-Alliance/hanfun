@@ -5,7 +5,7 @@
  * This file contains the implementation of the classes for the protocol layer
  * in the HAN-FUN specification.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -18,6 +18,8 @@
 #include "hanfun/transport.h"
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
+
+#include "hanfun/transport.h"
 
 using namespace HF;
 using namespace HF::Protocol;
@@ -644,10 +646,17 @@ bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
       return false;
    }
 
+   assert (packet.link != nullptr);
+
+   uint16_t address = (packet.source.device == Protocol::BROADCAST_ADDR ? packet.link->address () :
+                                                                          packet.source.device);
+
+   assert (address != Protocol::BROADCAST_ADDR);
+
    /* *INDENT-OFF* */
-   auto it = std::find_if (db.begin(), db.end(), [&packet](const Entry entry)
+   auto it = std::find_if (db.begin(), db.end(), [address, &packet](const Entry entry)
    {
-      return (entry.address == packet.source.device) && (entry.itf == packet.message.itf) &&
+      return (entry.address == address) && (entry.itf == packet.message.itf) &&
               matches (entry.type, packet.message.type);
    });
    /* *INDENT-ON* */

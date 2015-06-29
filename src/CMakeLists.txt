@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   @version 1.2.4
+#   @version 1.3.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -37,7 +37,11 @@ set(HF_INTERFACES_SRCS interfaces.cpp
                        interfaces/level_control_client.cpp
                        interfaces/simple_power_meter.cpp
                        interfaces/simple_power_meter_server.cpp
-                       interfaces/simple_power_meter_client.cpp )
+                       interfaces/simple_power_meter_client.cpp
+                       interfaces/simple_temperature_client.cpp
+                       interfaces/simple_temperature_server.cpp
+                       interfaces/simple_humidity_client.cpp
+                       interfaces/simple_humidity_server.cpp )
 
 set(HF_CORE_SRCS       core/device_management.cpp
                        core/device_management_client.cpp

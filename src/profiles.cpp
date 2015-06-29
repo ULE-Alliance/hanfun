@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality related with HAN-FUN
  * Profiles.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -47,7 +47,7 @@ static const HF::Common::Interface profiles_interfaces[] =
    // 00 - HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
    {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
 
-   // 01 - HF::Profiles::SHF::Interface::CHF::Interface::CLIENT_ROLELIENT_ROLEIMPLE_ONOFF_SWITCH
+   // 01 - HF::Profiles::SIMPLE_ONOFF_SWITCH
    {HF::Interface::ON_OFF,             HF::Interface::CLIENT_ROLE},
 
    // 02 - HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE
@@ -121,11 +121,17 @@ static const HF::Common::Interface profiles_interfaces[] =
    // 28 - HF::Profiles::SIREN,
    {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
 
-   // 29 - HF::Profiles::SIREN,
+   // 29 - HF::Profiles::ALERTABLE,
    {HF::Interface::ALERT,              HF::Interface::CLIENT_ROLE},
 
    // 30 - HF::Profiles::SIMPLE_PENDANT,
    {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+
+   // 31 - HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,
+   {HF::Interface::SIMPLE_TEMPERATURE, HF::Interface::SERVER_ROLE},
+
+   // 32 - HF::Profiles::SIMPLE_HUMIDITY_SENSOR,
+   {HF::Interface::SIMPLE_HUMIDITY,    HF::Interface::SERVER_ROLE},
 };
 
 /*!
@@ -160,8 +166,10 @@ static const Profile profiles[] =
    {HF::Profiles::SIREN,                                0x001C, 1},      // 28
    {HF::Profiles::ALERTABLE,                            0x001D, 1},      // 29
    {HF::Profiles::SIMPLE_PENDANT,                       0x001E, 1},      // 30
-   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      // 31
-   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      // 32
+   {HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,            0x001F, 1},      // 31
+   {HF::Profiles::SIMPLE_HUMIDITY_SENSOR,               0x0020, 1},      // 32
+   {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
+   {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };
 
 // =============================================================================

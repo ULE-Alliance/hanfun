@@ -3,14 +3,14 @@
 |             |                            |
 | ---------:  | -------------------------- |
 | __Project__ | HAN-FUN CI                 |
-| __Version__ | v1.2.3                     |
-| __Date__    | 22/12/2014                 |
+| __Version__ | v1.3.0                     |
+| __Date__    | 23/06/2015                 |
 
 ## Overview
 
 This a ULE Alliance's HAN-FUN Common Implementation public release.
 
-This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.1.0.
+This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.2.0.
 
 Not all of the standard has been implemented so far, please see the *Features* section for further information on what has been implemented and what is missing.
 
@@ -23,13 +23,16 @@ For more information on requirements, building and using this software package, 
 
 ### New
 
-  * Added an empty Attribute Reporting Server implementation. This implementation will respond to any command with a FAIL_RESOURCES error code.
+  * Simple Temperature interface.
+  * Simple Humidity interface.
+  * Simple Temperature Sensor profile.
+  * Simple Humidity Sensor profile.
 
-### 1. Protocol [HF-Protocol v1.1.0]
+### 1. Protocol [HF-Protocol v1.2.0]
 
 * General support for all defined features has been implemented.
 
-### 2. Core Services & Interfaces [HF-Services v1.1.0]
+### 2. Core Services & Interfaces [HF-Services v1.2.0]
 
 #### 2.1 Device Management Service [6.1]
 
@@ -153,14 +156,28 @@ For more information on requirements, building and using this software package, 
 | 6.9.1.18      | Battery Maximum Charge Level      | A        | Not Applicable  | Not Implemented |
 | 6.9.1.19      | Power Source                      | A        | Not Applicable  | Not Implemented |
 
-#### 2.10 Keep Alive Interface [6.10]
+#### 2.10 RSSI [6.10]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.10.1.1      | Interval                  | A        | Not Applicable  | Not Implemented |
-| 6.10.3.1      | I am Alive                | C        | Not Applicable  | Not Implemented |
+| 6.10.1.1      | RSSI                      | A        | Not Applicable  | Not Implemented |
 
-### 3. Profiles [HF-Profiles v1.1.0]
+#### 2.11 Keep Alive Interface [6.11]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 6.11.1.1      | Interval                  | A        | Not Applicable  | Not Implemented |
+| 6.11.3.1      | I am Alive                | C        | Not Applicable  | Not Implemented |
+
+#### 2.12 Keep Alive Interface [6.12]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 6.12.3.1      | New Version Available     | C        | Not Applicable  | Not Implemented |
+| 6.12.4.1      | Check Vesion              | C        | Not Implemented | Not Applicable  |
+| 6.12.4.2      | Upgrade Complete          | C        | Not Implemented | Not Applicable  |
+
+### 3. Profiles [HF-Profiles v1.2.0]
 
 | __Reference__ | __Profile__                          | __Status__  |
 | ------------- | ------------------------------------ | ----------- |
@@ -171,13 +188,15 @@ For more information on requirements, building and using this software package, 
 | 5.1.5         | Simple Level Controllable Switchable | Implemented |
 | 5.1.6         | Simple Level Control switch          | Implemented |
 | 5.1.7         | AC Outlet                            | Implemented |
-| 5.1.8         | AC Outlet with Simple Poweretering   | Implemented |
+| 5.1.8         | AC Outlet with Simple Power Metering | Implemented |
 | 5.1.9         | Simple Light                         | Implemented |
 | 5.1.10        | Dimmable Light                       | Implemented |
 | 5.1.11        | Dimmer Switch                        | Implemented |
 | 5.1.12        | Simple Door Lock                     | Implemented |
 | 5.1.13        | Simple Door Bell                     | Implemented |
 | 5.1.14        | Simple Power Meter                   | Implemented |
+| 5.1.15        | Simple Temperature Sensor            | Implemented |
+| 5.1.16        | Simple Humidity Sensor               | Implemented |
 | 5.2.1         | Simple Detector                      | Implemented |
 | 5.2.2         | Door Open Close Detector             | Implemented |
 | 5.2.3         | Window Open Close Detector           | Implemented |
@@ -193,7 +212,7 @@ For more information on requirements, building and using this software package, 
 | 5.4.1         | User Interface                       | Implemented |
 | 5.4.2         | Generic Application Logic            | Implemented |
 
-### 4. Interfaces [HF-Interfaces v1.1.0]
+### 4. Interfaces [HF-Interfaces v1.2.0]
 
 #### 4.1 Alert [5.1]
 
@@ -237,9 +256,25 @@ For more information on requirements, building and using this software package, 
 | 5.4.3.1       | Report                    | C        | Implemented     | Implemented     |
 | 5.4.4.1       | Measurment Reset          | C        | Not Implemented | Not Implemented |
 
+#### 4.5 Simple Temperature [5.5]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 5.5.1.1       | Measured Temperature      | A        | Not Applicable  | Implemented     |
+| 5.5.1.2       | Min. Measurable Temp.     | A        | Not Applicable  | Implemented     |
+| 5.5.1.3       | Max. Measurable Temp.     | A        | Not Applicable  | Implemented     |
+| 5.5.1.4       | Tolerance                 | A        | Not Applicable  | Implemented     |
+
+#### 4.6 Simple Humidity [5.6]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 5.6.1.1       | Measured Humidity         | A        | Not Applicable  | Implemented     |
+| 5.6.1.2       | Tolerance                 | A        | Not Applicable  | Implemented     |
+
 ## Bug Fixes
 
-  * Adding missing call to base transport destroy in the device's unit tests.
+  * See Changelog file.
 
 ## Known Issues and Problems
 

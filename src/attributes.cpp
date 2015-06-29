@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -21,6 +21,8 @@
 #include "hanfun/interfaces/level_control.h"
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/simple_power_meter.h"
+#include "hanfun/interfaces/simple_temperature.h"
+#include "hanfun/interfaces/simple_humidity.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -83,6 +85,10 @@ static const Entry factories[] =
    {
       HF::Interface::SIMPLE_POWER_METER,
       HF::Interfaces::SimplePowerMeter::create_attribute
+   },
+   {
+      HF::Interface::SIMPLE_TEMPERATURE,
+      HF::Interfaces::SimpleTemperature::create_attribute
    },
 };
 
@@ -494,6 +500,149 @@ IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *server, uint
             return nullptr;
 
 #endif
+         }
+         else
+         {
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      default:
+         return nullptr;
+   }
+}
+
+
+// =============================================================================
+// Interfaces::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Interfaces::create_attribute (SimpleTemperature::Server *server, uint8_t uid)
+{
+   using namespace HF::Interfaces::SimpleTemperature;
+
+   SimpleTemperature::Attributes attr = static_cast <SimpleTemperature::Attributes>(uid);
+
+   uint16_t itf_uid                   = Interface::SIMPLE_TEMPERATURE;
+
+   switch (attr)
+   {
+      case VALUE_ATTR:
+      {
+         bool writabble = Temperature::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*) (void)) & Server::temperature;
+            auto setter = (void (Server::*) (int16_t)) & Server::temperature;
+
+            return new Attribute <int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new Attribute <int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case MINIMUM_ATTR:
+      {
+         bool writabble = MininumTemperature::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*) (void)) & Server::minimum_temperature;
+
+            return new Attribute <int16_t, Server>(*server, attr, getter, writabble);
+         }
+         else
+         {
+            return new Attribute <int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case MAXIMUM_ATTR:
+      {
+         bool writabble = MaximumTemperature::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*) (void)) & Server::maximum_temperature;
+
+            return new Attribute <int16_t, Server>(*server, attr, getter, writabble);
+         }
+         else
+         {
+            return new Attribute <int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case TOLERANCE_ATTR:
+      {
+         bool writabble = Tolerance::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint16_t (Server::*) (void)) & Server::tolerance;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, writabble);
+         }
+         else
+         {
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// Interfaces::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Interfaces::create_attribute (SimpleHumidity::Server *server, uint8_t uid)
+{
+   using namespace HF::Interfaces::SimpleHumidity;
+
+   SimpleHumidity::Attributes attr = static_cast <SimpleHumidity::Attributes>(uid);
+
+   uint16_t itf_uid                = Interface::SIMPLE_HUMIDITY;
+
+   switch (attr)
+   {
+      case VALUE_ATTR:
+      {
+         bool writabble = Humidity::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint16_t (Server::*) (void)) & Server::humidity;
+            auto setter = (void (Server::*) (uint16_t)) & Server::humidity;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new Attribute <uint16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case TOLERANCE_ATTR:
+      {
+         bool writabble = Tolerance::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint16_t (Server::*) (void)) & Server::tolerance;
+
+            return new Attribute <uint16_t, Server>(*server, attr, getter, writabble);
          }
          else
          {

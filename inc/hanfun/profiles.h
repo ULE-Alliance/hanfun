@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -23,6 +23,8 @@
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/level_control.h"
 #include "hanfun/interfaces/simple_power_meter.h"
+#include "hanfun/interfaces/simple_temperature.h"
+#include "hanfun/interfaces/simple_humidity.h"
 
 // =============================================================================
 // API
@@ -98,6 +100,12 @@ namespace HF
 
          //! Allows a unit to do and provide measurements over electric quantities.
          SIMPLE_POWER_METER = 0x010D,
+
+         //! Simple sensor to measure the temperature.
+         SIMPLE_TEMPERATURE_SENSOR = 0x010E,
+
+         //! Simple sensor to measure the relative humidity.
+         SIMPLE_HUMIDITY_SENSOR = 0x010F,
 
          // =============================================================================
          // Security Unit Types
@@ -688,6 +696,27 @@ namespace HF
          public:
 
          virtual ~SimplePowerMeter() {}
+      };
+
+      /*!
+       * Simple Temperature Sensor profile implementation.
+       */
+      class SimpleTemperatureSensor:public Profile <SIMPLE_TEMPERATURE_SENSOR,
+                                                    Interfaces::SimpleTemperature::Server>
+      {
+         public:
+
+         virtual ~SimpleTemperatureSensor() {}
+      };
+
+      /*!
+       * Simple Humidity Sensor profile implementation.
+       */
+      class SimpleHumiditySensor:public Profile <SIMPLE_HUMIDITY_SENSOR, Interfaces::SimpleHumidity::Server>
+      {
+         public:
+
+         virtual ~SimpleHumiditySensor() {}
       };
 
       // =============================================================================

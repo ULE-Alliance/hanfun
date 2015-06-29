@@ -6,7 +6,7 @@
 #   This is a helper script to format the code present in HAN-FUN source
 #   repository using the library's configuration for uncrustify.
 #
-#   @version    1.2.4
+#   @version    1.3.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #

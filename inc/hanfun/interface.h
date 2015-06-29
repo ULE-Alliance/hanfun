@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -73,6 +73,8 @@ namespace HF
          ON_OFF             = 0x0200,    //!< ON-OFF Interface UID
          LEVEL_CONTROL      = 0x0201,    //!< Level Control Interface UID
          SIMPLE_POWER_METER = 0x0300,    //!< Simple Power Meter Interface UID
+         SIMPLE_TEMPERATURE = 0x0301,    //!< Simple Temperature Interface UID
+         SIMPLE_HUMIDITY    = 0x0302,    //!< Simple Humidity Interface UID
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.

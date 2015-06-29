@@ -1,8 +1,8 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/on_off_client.cpp
+ * @file       src/interfaces/simple_humidity_server.cpp
  *
- * This file contains the implementation of the On-Off interface : Client role.
+ * This file contains the implementation of the Simple Humidity interface : Server role.
  *
  * @version    1.3.0
  *
@@ -14,7 +14,7 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/on_off.h"
+#include "hanfun/interfaces/simple_humidity.h"
 
 // =============================================================================
 // API
@@ -22,62 +22,69 @@
 
 using namespace HF;
 using namespace HF::Interfaces;
-using namespace HF::Interfaces::OnOff;
+using namespace HF::Interfaces::SimpleHumidity;
 
 // =============================================================================
-// On-Off Interface : Client Role
+// Simple Humidity Interface : Server Role
 // =============================================================================
 
 // =============================================================================
-// Client::on
+// Server::humidity
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Client::on (Protocol::Address &addr)
+uint16_t Server::humidity ()
 {
-   Protocol::Message message;
-
-   message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
-   message.itf.member = ON_CMD;
-
-   send (addr, message);
+   return _value;
 }
 
 // =============================================================================
-// Client::off
+// Server::set_humidity
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Client::off (Protocol::Address &addr)
+void Server::humidity (uint16_t __value)
 {
-   Protocol::Message message;
+   uint8_t old = this->_value;
 
-   message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
-   message.itf.member = OFF_CMD;
+   this->_value = __value;
 
-   send (addr, message);
+   Humidity old_attr (old, this);
+   Humidity new_attr (this->_value, this);
+
+   notify (old_attr, new_attr);
 }
 
 // =============================================================================
-// Client::toggle
+// Server::tolerance
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Client::toggle (Protocol::Address &addr)
+uint16_t Server::tolerance ()
 {
-   Protocol::Message message;
+   return _tolerance;
+}
 
-   message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
-   message.itf.member = TOGGLE_CMD;
-
-   send (addr, message);
+// =============================================================================
+// Server::attributes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::UIDS Server::attributes (uint8_t pack_id) const
+{
+   UNUSED (pack_id);
+   /* *INDENT-OFF* */
+   return HF::Attributes::UIDS({
+      SimpleHumidity::VALUE_ATTR,
+      SimpleHumidity::TOLERANCE_ATTR,
+   });
+   /* *INDENT-ON* */
 }

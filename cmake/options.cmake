@@ -6,7 +6,7 @@
 #
 #   This file contains the configuration options for the HAN-FUN library.
 #
-#   @version    1.1.1
+#   @version    1.3.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
