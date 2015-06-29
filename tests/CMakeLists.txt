@@ -31,6 +31,11 @@ include_directories(
     "."
 )
 
+find_package("Backtrace")
+if (Backtrace_FOUND)
+  include_directories(${Backtrace_INCLUDE_DIR})
+endif()
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${CMAKE_CURRENT_SOURCE_DIR}/helpers/memory.h")
 
@@ -79,6 +84,9 @@ add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_UNITS_SRCS} )
 
 target_link_libraries( test_hanfun hanfun ${CppUTest_LIBRARIES} )
+if (Backtrace_FOUND)
+  target_link_libraries( test_hanfun ${Backtrace_LIBRARIES} )
+endif()
 
 if(NOT CMAKE_CROSSCOMPILING)
   add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)

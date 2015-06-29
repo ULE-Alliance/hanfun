@@ -30,4 +30,9 @@
 #define HF_ITF_SPM_REPORT_CMD                   1
 #define HF_ITF_SPM_RESET_CMD                    1
 
+#cmakedefine Backtrace_FOUND  1
+#ifdef Backtrace_FOUND
+  #include <@Backtrace_HEADER@>
+#endif
+
 #endif  /* HF_CONFIG_H */

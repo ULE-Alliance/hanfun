@@ -69,8 +69,7 @@ HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
 // Library Overrides
 // =============================================================================
 
-#ifndef NDEBUG
-#include <execinfo.h>
+#if Backtrace_FOUND
 
 extern const char *__progname;
 

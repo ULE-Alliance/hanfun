@@ -30,6 +30,8 @@ include_directories(
   ${PROJECT_INCLUDE_DIR}
 )
 
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 # ==============================================================================
 # Configuration
 # ==============================================================================
