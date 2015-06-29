@@ -28,7 +28,7 @@ if (HF_BASE_APP OR HF_NODE_APP)
 
     ExternalProject_Add(libuv
         PREFIX ${LIBUV_PREFIX}
-        URL "http://libuv.org/dist/v0.10.27/libuv-v0.10.27.tar.gz"
+        URL "http://dist.libuv.org/dist/v0.10.27/libuv-v0.10.27.tar.gz"
         URL_HASH MD5=8bc14dc254363092bd36919ea05cc9ab
         CONFIGURE_COMMAND ""
         BUILD_COMMAND CC=${CMAKE_C_COMPILER} ${MAKE_BIN}
