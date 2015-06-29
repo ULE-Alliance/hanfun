@@ -1,12 +1,12 @@
 # =============================================================================
 #
-#   \file cmake/checks.cmake
+#   @file cmake/compiler.cmake
 #
 #   HAN-FUN Library compiler and enviroment checks and configuration.
 #
-#   \version    1.1.1
+#   @version    1.3.0
 #
-#   \copyright  Copyright (c) 2014  ULE Alliance
+#   @copyright  Copyright (c) 2014  ULE Alliance
 #
 #   For licensing information, please see the file 'LICENSE' in the root folder.
 #
@@ -48,7 +48,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g3 -O0")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O0")
 
-if(HF_BUILD_TESTS)
+if(HF_BUILD_TESTS AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -rdynamic")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -rdynamic")
-endif(HF_BUILD_TESTS)
+endif()

@@ -4,7 +4,7 @@
  *
  * This file contains helper functions used the tests.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -69,8 +69,7 @@ HF::Attributes::Factory HF::Testing::FactoryGetter (HF::Common::Interface itf)
 // Library Overrides
 // =============================================================================
 
-#ifndef NDEBUG
-#include <execinfo.h>
+#if Backtrace_FOUND
 
 extern const char *__progname;
 

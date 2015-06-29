@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the Device API.
  *
- * @version    1.2.4
+ * @version    1.3.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -495,24 +495,4 @@ TEST (Concentrator, PacketFromAnyUnitAnyItf)
    device1->unit2.alert (dest, true);
 
    mock ().checkExpectations ();
-}
-
-IGNORE_TEST (Concentrator, Routing)
-{
-   using namespace HF::Protocol;
-
-   typedef std::pair<Protocol::Address,Common::Interface> RoutePair;
-   std::array<RoutePair, 8> route_pairs {{               // | Idx | Device    | Unit      | Interface |
-                                                         // | --- | --------- | --------- | --------- |
-     { Address(1,1)             , Common::Interface() }, // |  0  | Single    | Single    | Single    |
-     { Address(1,1)             , Interface::Any()    }, // |  1  | Single    | Single    | Any       |
-     { Address(1)               , Common::Interface() }, // |  2  | Single    | Broadcast | Single    |
-     { Address(1)               , Interface::Any()    }, // |  3  | Single    | Broadcast | Any       |
-     { Address()                , Common::Interface() }, // |  4  | Broadcast | Broadcast | Single    |
-     { Address(1,1)             , Interface::Any()    }, // |  5  | Broadcast | Broadcast | Any       |
-     { Address(BROADCAST_ADDR,1), Common::Interface() }, // |  6  | Broadcast | Single    | Single    |
-     { Address(BROADCAST_ADDR,1), Interface::Any()    }  // |  7  | Broadcast | Single    | Any       |
-   }};
-
-   UNUSED (route_pairs);
 }
