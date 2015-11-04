@@ -44,13 +44,13 @@ const class nullptr_t
    }
 
    template<typename T>
-   bool operator ==(const T &other) const
+   bool operator==(const T &other) const
    {
       return *this == other;
    }
 
    template<typename T>
-   bool operator !=(const T &other) const
+   bool operator!=(const T &other) const
    {
       return *this != other;
    }
@@ -58,12 +58,12 @@ const class nullptr_t
    private:
 
    /* Not allowed to get the address */
-   void operator &() const;
+   void operator&() const;
 
 }
 nullptr = {};
 
-   #define __attribute_deprecated__   __attribute__ ((deprecated))
+   #define __attribute_deprecated__   __attribute__((deprecated))
 
 #endif
 

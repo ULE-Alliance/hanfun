@@ -43,23 +43,23 @@ using namespace HF::Protocol;
 // Helper Test Functions
 // =============================================================================
 
-#define STRING_FROM(_T)                                                    \
-   SimpleString StringFrom (const _T &data)                                \
-   {                                                                       \
-      Common::SerializableHelper <_T &> wrapper (const_cast <_T &>(data)); \
-      return StringFrom (wrapper);                                         \
+#define STRING_FROM(_T)                                                 \
+   SimpleString StringFrom(const _T &data)                              \
+   {                                                                    \
+      Common::SerializableHelper<_T &> wrapper(const_cast<_T &>(data)); \
+      return StringFrom(wrapper);                                       \
    }
 
-SimpleString StringFrom (const std::vector <uint8_t> &array);
+SimpleString StringFrom(const std::vector<uint8_t> &array);
 
-SimpleString StringFrom (const HF::Common::Serializable &data);
+SimpleString StringFrom(const HF::Common::Serializable &data);
 
-SimpleString StringFrom (const HF::Common::Interface &itf);
+SimpleString StringFrom(const HF::Common::Interface &itf);
 
 template<typename _type>
-void check_index (_type expected, _type actual, uint32_t index, const char *header,
-                  const char *fileName,
-                  int lineNumber)
+void check_index(_type expected, _type actual, uint32_t index, const char *header,
+                 const char *fileName,
+                 int lineNumber)
 {
    if (actual != expected)
    {
@@ -70,12 +70,12 @@ void check_index (_type expected, _type actual, uint32_t index, const char *head
             << "\t\t but was  : "
             << actual;
 
-      FAIL_TEST_LOCATION (error.str ().c_str (), fileName, lineNumber);
+      FAIL_TEST_LOCATION(error.str().c_str(), fileName, lineNumber);
    }
 }
 
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
-   check_index <uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
+   check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
 // =============================================================================
 // Helper Test Classes
@@ -90,52 +90,52 @@ namespace HF
          Common::ByteArray data;
 
          Payload(uint16_t _size = 0):
-            data (_size & Protocol::MAX_PAYLOAD)
+            data(_size & Protocol::MAX_PAYLOAD)
          {
             std::random_device rd;
-            std::mt19937 mt (rd ());
-            std::uniform_int_distribution <uint8_t> dist;
+            std::mt19937 mt(rd());
+            std::uniform_int_distribution<uint8_t> dist;
 
-            auto gen = std::bind (dist, mt);
+            auto gen = std::bind(dist, mt);
 
-            std::generate_n (data.begin (), data.size (), gen);
+            std::generate_n(data.begin(), data.size(), gen);
          }
 
          virtual ~Payload()
          {}
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return data.size ();
+            return data.size();
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            array.extend (data.size ());
+            array.extend(data.size());
 
-            auto start = array.begin () + offset;
+            auto start = array.begin() + offset;
 
-            array.insert (start, data.begin (), data.end ());
+            array.insert(start, data.begin(), data.end());
 
-            return data.size ();
+            return data.size();
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            assert (array.available (offset, data.size ()));
+            assert(array.available(offset, data.size()));
 
-            auto begin = array.begin () + offset;
-            auto end   = begin + data.size ();
+            auto begin = array.begin() + offset;
+            auto end   = begin + data.size();
 
-            std::copy (begin, end, data.begin ());
+            std::copy(begin, end, data.begin());
 
-            return data.size ();
+            return data.size();
          }
       };
 
       //! Test Interface.
       template<class Base>
-      struct InterfaceHelper:public Base
+      struct InterfaceHelper: public Base
       {
          Protocol::Address addr;
          Protocol::Message sendMsg;
@@ -146,34 +146,34 @@ namespace HF
          virtual ~InterfaceHelper()
          {}
 
-         void send (const Protocol::Address &addr, Protocol::Message &message)
+         void send(const Protocol::Address &addr, Protocol::Message &message)
          {
-            mock ("Interface").actualCall ("send");
+            mock("Interface").actualCall("send");
 
             this->addr    = addr;
             this->sendMsg = message;
          }
 
-         void notify (const HF::Attributes::IAttribute &old_value,
-                      const HF::Attributes::IAttribute &new_value) const
+         void notify(const HF::Attributes::IAttribute &old_value,
+                     const HF::Attributes::IAttribute &new_value) const
          {
-            UNUSED (old_value);
-            UNUSED (new_value);
+            UNUSED(old_value);
+            UNUSED(new_value);
 
-            mock ("Interface").actualCall ("notify");
+            mock("Interface").actualCall("notify");
          }
       };
 
       template<class Base>
-      struct InterfaceParentHelper:public InterfaceHelper <Base>
+      struct InterfaceParentHelper: public InterfaceHelper<Base>
       {
-         Interface::Role role () const
+         Interface::Role role() const
          {
             return Interface::SERVER_ROLE;
          }
       };
 
-      struct TestInterface:public InterfaceHelper <Interfaces::AbstractInterface>
+      struct TestInterface: public InterfaceHelper<Interfaces::AbstractInterface>
       {
          static const uint16_t UID = 0x5A5A;
 
@@ -190,51 +190,51 @@ namespace HF
          uint16_t        attr2;
          uint16_t        attr3;
 
-         TestInterface():_role (Interface::SERVER_ROLE), _uid (UID) {}
+         TestInterface(): _role(Interface::SERVER_ROLE), _uid(UID) {}
 
          TestInterface(Role role, uint16_t _uid):
-            _role (role), _uid (_uid), attr1 (0x5A51), attr2 (0x5A52), attr3 (0x5A53)
+            _role(role), _uid(_uid), attr1(0x5A51), attr2(0x5A52), attr3(0x5A53)
          {}
 
-         uint16_t uid () const
+         uint16_t uid() const
          {
             return _uid;
          }
 
-         Interface::Role role () const
+         Interface::Role role() const
          {
             return _role;
          }
 
-         HF::Attributes::IAttribute *attribute (uint8_t uid)
+         HF::Attributes::IAttribute *attribute(uint8_t uid)
          {
-            return create_attribute (this, uid);
+            return create_attribute(this, uid);
          }
 
          //! @see AbstractInterface::attributes
-         HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         HF::Attributes::UIDS attributes(uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
             HF::Attributes::UIDS result;
 
             if (pack_id == HF::Attributes::Pack::ALL)
             {
-               result.push_back (ATTR1);
-               result.push_back (ATTR2);
+               result.push_back(ATTR1);
+               result.push_back(ATTR2);
             }
 
-            result.push_back (ATTR3);
+            result.push_back(ATTR3);
 
             return result;
          }
 
-         static HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+         static HF::Attributes::IAttribute *create_attribute(uint8_t uid)
          {
-            return create_attribute (nullptr, uid);
+            return create_attribute(nullptr, uid);
          }
 
-         static HF::Attributes::IAttribute *create_attribute (TestInterface *itf, uint8_t uid)
+         static HF::Attributes::IAttribute *create_attribute(TestInterface *itf, uint8_t uid)
          {
-            uint16_t itf_uid = (itf != nullptr ? itf->uid () : TestInterface::UID);
+            uint16_t itf_uid = (itf != nullptr ? itf->uid() : TestInterface::UID);
 
             switch (uid)
             {
@@ -242,11 +242,12 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute<uint16_t>(itf_uid, uid);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr1);
+                     return new HF::Attributes::Attribute<uint16_t &>(itf_uid, uid, itf,
+                                                                      itf->attr1);
                   }
 
                   break;
@@ -256,11 +257,12 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid);
+                     return new HF::Attributes::Attribute<uint16_t>(itf_uid, uid);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr2);
+                     return new HF::Attributes::Attribute<uint16_t &>(itf_uid, uid, itf,
+                                                                      itf->attr2);
                   }
 
                   break;
@@ -269,11 +271,15 @@ namespace HF
                {
                   if (itf == nullptr)
                   {
-                     return new HF::Attributes::Attribute <uint16_t>(itf_uid, uid, itf, 0, true);
+                     return new HF::Attributes::Attribute<uint16_t>(itf_uid, uid, itf, 0, true);
                   }
                   else
                   {
-                     return new HF::Attributes::Attribute <uint16_t &>(itf_uid, uid, itf, itf->attr3, true);
+                     return new HF::Attributes::Attribute<uint16_t &>(itf_uid,
+                                                                      uid,
+                                                                      itf,
+                                                                      itf->attr3,
+                                                                      true);
                   }
 
                   break;
@@ -286,74 +292,76 @@ namespace HF
 
          protected:
 
-         Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         Common::Result handle_command(Protocol::Packet &packet,
+                                       Common::ByteArray &payload,
+                                       uint16_t offset)
          {
-            UNUSED (packet);
-            UNUSED (payload);
-            UNUSED (offset);
+            UNUSED(packet);
+            UNUSED(payload);
+            UNUSED(offset);
 
-            mock ("Interface").actualCall ("handle_command").onObject (this);
+            mock("Interface").actualCall("handle_command").onObject(this);
 
             return Common::Result::OK;
          }
 
-         bool check_uid (uint16_t uid) const
+         bool check_uid(uint16_t uid) const
          {
             return this->_uid == uid;
          }
       };
 
-      HF::Attributes::Factory FactoryGetter (HF::Common::Interface itf);
+      HF::Attributes::Factory FactoryGetter(HF::Common::Interface itf);
 
       //! Test Interface.
       template<class Base>
-      struct ProfileHelper:public InterfaceHelper <Base>
+      struct ProfileHelper: public InterfaceHelper<Base>
       {
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (itf);
-            UNUSED (pack_id);
-            UNUSED (uids);
-            return HF::Attributes::List ();
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
+            return HF::Attributes::List();
          }
       };
 
-      struct Profile:public Profiles::IProfile, public TestInterface
+      struct Profile: public Profiles::IProfile, public TestInterface
       {
          uint16_t _uid;
 
-         uint16_t uid () const
+         uint16_t uid() const
          {
             return _uid;
          }
 
          using TestInterface::attributes;
 
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (itf);
-            return HF::Attributes::get (*this, pack_id, uids);
+            UNUSED(itf);
+            return HF::Attributes::get(*this, pack_id, uids);
          }
       };
 
-      struct Unit:public HF::Units::Unit <Profile>
+      struct Unit: public HF::Units::Unit<Profile>
       {
          Unit(uint16_t id, IDevice &device):
-            HF::Units::Unit <Profile>(id, device)
+            HF::Units::Unit<Profile>(id, device)
          {}
       };
 
-      struct Link:public HF::Transport::AbstractLink
+      struct Link: public HF::Transport::AbstractLink
       {
          HF::UID::UID_T       *_uid;
          HF::Transport::Layer *tsp;
 
          Common::ByteArray    data;
 
-         Link(HF::UID::UID_T *uid = new HF::UID::NONE (), HF::Transport::Layer *tsp = nullptr):
-            _uid (uid), tsp (tsp)
+         Link(HF::UID::UID_T *uid = new HF::UID::NONE(), HF::Transport::Layer *tsp = nullptr):
+            _uid(uid), tsp(tsp)
          {}
 
          virtual ~Link()
@@ -361,34 +369,34 @@ namespace HF
             delete _uid;
          }
 
-         void send (Common::ByteArray &array)
+         void send(Common::ByteArray &array)
          {
             this->data = array;
-            mock ("Link").actualCall ("send");
+            mock("Link").actualCall("send");
          }
 
-         const HF::UID::UID uid () const
+         const HF::UID::UID uid() const
          {
             return HF::UID::UID(_uid);
          }
 
-         HF::Transport::Layer const *transport () const
+         HF::Transport::Layer const *transport() const
          {
             return tsp;
          }
       };
 
       template<class Parent>
-      struct AbstractDevice:public Parent
+      struct AbstractDevice: public Parent
       {
-         uint16_t                         _address;
+         uint16_t                        _address;
 
-         std::vector <Protocol::Packet *> packets;
+         std::vector<Protocol::Packet *> packets;
 
-         Link                             link;
+         Link                            link;
 
          AbstractDevice():
-            _address (Protocol::BROADCAST_ADDR)
+            _address(Protocol::BROADCAST_ADDR)
          {
             link.address(42);
          }
@@ -402,41 +410,41 @@ namespace HF
             });
             /* *INDENT-ON* */
 
-            packets.clear ();
+            packets.clear();
          }
 
-         void connected (HF::Transport::Link *link)
+         void connected(HF::Transport::Link *link)
          {
-            UNUSED (link);
-            mock ("AbstractDevice").actualCall ("connected");
+            UNUSED(link);
+            mock("AbstractDevice").actualCall("connected");
          }
 
-         void disconnected (HF::Transport::Link *link)
+         void disconnected(HF::Transport::Link *link)
          {
-            UNUSED (link);
-            mock ("AbstractDevice").actualCall ("disconnected");
+            UNUSED(link);
+            mock("AbstractDevice").actualCall("disconnected");
          }
 
-         void send (Protocol::Packet &packet)
+         void send(Protocol::Packet &packet)
          {
-            mock ("AbstractDevice").actualCall ("send");
+            mock("AbstractDevice").actualCall("send");
 
             if (packet.link == nullptr)
             {
                packet.link = &link;
             }
 
-            Parent::send (packet);
+            Parent::send(packet);
 
-            Protocol::Packet *temp = new Protocol::Packet (packet);
+            Protocol::Packet *temp = new Protocol::Packet(packet);
 
-            packets.push_back (temp);
+            packets.push_back(temp);
          }
 
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         void receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
-            mock ("AbstractDevice").actualCall ("receive");
-            Parent::receive (packet, payload, offset);
+            mock("AbstractDevice").actualCall("receive");
+            Parent::receive(packet, payload, offset);
          }
       };
 
@@ -450,17 +458,17 @@ namespace HF
       _X = _Y;              \
    }
 
-      class DeviceUnit0:public HF::Devices::Node::IUnit0
+      class DeviceUnit0: public HF::Devices::Node::IUnit0
       {
          HF::Core::DeviceInformation::Server *dev_info;
-         HF::Core::DeviceManagement::Client  *dev_mgt;
+         HF::Core::DeviceManagement::Client *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
 
          public:
 
          DeviceUnit0(HF::IDevice &device):
-            HF::Devices::Node::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
-            attr_reporting (nullptr)
+            HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
+            attr_reporting(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -470,96 +478,98 @@ namespace HF
             delete attr_reporting;
          }
 
-         void device_info (HF::Core::DeviceInformation::Server *_dev_info)
+         void device_info(HF::Core::DeviceInformation::Server *_dev_info)
          {
-            SET_SERVICE (dev_info, _dev_info);
+            SET_SERVICE(dev_info, _dev_info);
          }
 
-         HF::Core::DeviceInformation::Server *device_info ()
+         HF::Core::DeviceInformation::Server *device_info()
          {
             if (dev_info == nullptr)
             {
-               device_info (new HF::Core::DeviceInformation::Server (*this));
+               device_info(new HF::Core::DeviceInformation::Server(*this));
             }
 
             return dev_info;
          }
 
-         HF::Core::DeviceInformation::Server *device_info () const
+         HF::Core::DeviceInformation::Server *device_info() const
          {
             return dev_info;
          }
 
-         void device_management (HF::Core::DeviceManagement::Client *_dev_mgt)
+         void device_management(HF::Core::DeviceManagement::Client *_dev_mgt)
          {
-            SET_SERVICE (dev_mgt, _dev_mgt);
+            SET_SERVICE(dev_mgt, _dev_mgt);
          }
 
-         HF::Core::DeviceManagement::Client *device_management ()
+         HF::Core::DeviceManagement::Client *device_management()
          {
             if (dev_mgt == nullptr)
             {
-               device_management (new HF::Core::DeviceManagement::Client (*this));
+               device_management(new HF::Core::DeviceManagement::Client(*this));
             }
 
             return dev_mgt;
          }
 
-         HF::Core::DeviceManagement::Client *device_management () const
+         HF::Core::DeviceManagement::Client *device_management() const
          {
             return dev_mgt;
          }
 
-         void attribute_reporting (HF::Core::AttributeReporting::Server *_attr_reporting)
+         void attribute_reporting(HF::Core::AttributeReporting::Server *_attr_reporting)
          {
-            SET_SERVICE (attr_reporting, _attr_reporting);
+            SET_SERVICE(attr_reporting, _attr_reporting);
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting ()
+         HF::Core::AttributeReporting::Server *attribute_reporting()
          {
             if (attr_reporting == nullptr)
             {
-               attribute_reporting (new HF::Core::AttributeReporting::Server (*this));
+               attribute_reporting(new HF::Core::AttributeReporting::Server(*this));
             }
 
             return attr_reporting;
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         HF::Core::AttributeReporting::Server *attribute_reporting() const
          {
             return attr_reporting;
          }
 
-         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         Common::Result handle(HF::Protocol::Packet &packet,
+                               Common::ByteArray &payload,
+                               uint16_t offset)
          {
-            UNUSED (packet);
-            UNUSED (payload);
-            UNUSED (offset);
+            UNUSED(packet);
+            UNUSED(payload);
+            UNUSED(offset);
             return Common::Result::FAIL_UNKNOWN;
          }
 
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (itf);
-            UNUSED (pack_id);
-            UNUSED (uids);
-            return HF::Attributes::List ();
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
+            return HF::Attributes::List();
          }
       };
 
-      class ConcentratorUnit0:public HF::Devices::Concentrator::IUnit0
+      class ConcentratorUnit0: public HF::Devices::Concentrator::IUnit0
       {
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
-         HF::Core::BindManagement::IServer   *bind_mgt;
+         HF::Core::BindManagement::IServer *bind_mgt;
 
          public:
 
          ConcentratorUnit0(HF::IDevice &device):
-            HF::Devices::Concentrator::IUnit0 (device), dev_info (nullptr), dev_mgt (nullptr),
-            attr_reporting (nullptr), bind_mgt (nullptr)
+            HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
+            attr_reporting(nullptr), bind_mgt(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -574,125 +584,128 @@ namespace HF
          // API
          // =============================================================================
 
-         void device_info (HF::Core::DeviceInformation::Server *_dev_info)
+         void device_info(HF::Core::DeviceInformation::Server *_dev_info)
          {
-            SET_SERVICE (dev_info, _dev_info);
+            SET_SERVICE(dev_info, _dev_info);
          }
 
-         HF::Core::DeviceInformation::Server *device_info () const
+         HF::Core::DeviceInformation::Server *device_info() const
          {
             return dev_info;
          }
 
-         HF::Core::DeviceInformation::Server *device_info ()
+         HF::Core::DeviceInformation::Server *device_info()
          {
             if (dev_info == nullptr)
             {
-               device_info (new HF::Core::DeviceInformation::Server (*this));
+               device_info(new HF::Core::DeviceInformation::Server(*this));
             }
 
             return dev_info;
          }
 
-         void device_management (HF::Core::DeviceManagement::IServer *_dev_mgt)
+         void device_management(HF::Core::DeviceManagement::IServer *_dev_mgt)
          {
-            SET_SERVICE (dev_mgt, _dev_mgt);
+            SET_SERVICE(dev_mgt, _dev_mgt);
          }
 
-         HF::Core::DeviceManagement::IServer *device_management ()
+         HF::Core::DeviceManagement::IServer *device_management()
          {
             if (dev_mgt == nullptr)
             {
-               device_management (new HF::Core::DeviceManagement::DefaultServer (*this));
+               device_management(new HF::Core::DeviceManagement::DefaultServer(*this));
             }
 
             return dev_mgt;
          }
 
-         HF::Core::DeviceManagement::IServer *device_management () const
+         HF::Core::DeviceManagement::IServer *device_management() const
          {
             return dev_mgt;
          }
 
-         void attribute_reporting (HF::Core::AttributeReporting::Server *_attr_reporting)
+         void attribute_reporting(HF::Core::AttributeReporting::Server *_attr_reporting)
          {
-            SET_SERVICE (attr_reporting, _attr_reporting);
+            SET_SERVICE(attr_reporting, _attr_reporting);
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting () const
+         HF::Core::AttributeReporting::Server *attribute_reporting() const
          {
             return attr_reporting;
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting ()
+         HF::Core::AttributeReporting::Server *attribute_reporting()
          {
             if (attr_reporting == nullptr)
             {
-               attribute_reporting (new HF::Core::AttributeReporting::Server (*this));
+               attribute_reporting(new HF::Core::AttributeReporting::Server(*this));
             }
 
             return attr_reporting;
          }
 
-         void bind_management (HF::Core::BindManagement::IServer *_bind_mgt)
+         void bind_management(HF::Core::BindManagement::IServer *_bind_mgt)
          {
-            SET_SERVICE (bind_mgt, _bind_mgt);
+            SET_SERVICE(bind_mgt, _bind_mgt);
          }
 
-         HF::Core::BindManagement::IServer *bind_management ()
+         HF::Core::BindManagement::IServer *bind_management()
          {
             if (bind_mgt == nullptr)
             {
-               bind_management (new HF::Core::BindManagement::DefaultServer (*this));
+               bind_management(new HF::Core::BindManagement::DefaultServer(*this));
             }
 
             return bind_mgt;
          }
 
-         HF::Core::BindManagement::IServer *bind_management () const
+         HF::Core::BindManagement::IServer *bind_management() const
          {
             return bind_mgt;
          }
 
-         Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         Common::Result handle(HF::Protocol::Packet &packet,
+                               Common::ByteArray &payload,
+                               uint16_t offset)
          {
             switch (packet.message.itf.id)
             {
                case HF::Interface::DEVICE_INFORMATION:
                {
-                  return device_info ()->handle (packet, payload, offset);
+                  return device_info()->handle(packet, payload, offset);
                }
                case HF::Interface::ATTRIBUTE_REPORTING:
                {
-                  return attribute_reporting ()->handle (packet, payload, offset);
+                  return attribute_reporting()->handle(packet, payload, offset);
                }
                case HF::Interface::DEVICE_MANAGEMENT:
                {
-                  return device_management ()->handle (packet, payload, offset);
+                  return device_management()->handle(packet, payload, offset);
                }
                case HF::Interface::BIND_MANAGEMENT:
                {
-                  return bind_management ()->handle (packet, payload, offset);
+                  return bind_management()->handle(packet, payload, offset);
                }
                default:
                   return Common::Result::FAIL_UNKNOWN;
             }
          }
 
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (itf);
-            UNUSED (pack_id);
-            UNUSED (uids);
-            return HF::Attributes::List ();
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
+            return HF::Attributes::List();
          }
       };
 
-      struct Device:public AbstractDevice < HF::Devices::Node::Abstract < DeviceUnit0 >>
+      struct Device: public AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>>
       {};
 
-      struct Concentrator:public AbstractDevice < HF::Devices::Concentrator::Abstract < ConcentratorUnit0 >>
+      struct Concentrator: public AbstractDevice<HF::Devices::Concentrator::Abstract<
+                                                    ConcentratorUnit0>>
       {};
 
    } // namespace Testing

@@ -183,7 +183,7 @@ static const Profile profiles[] =
  *
  */
 // =============================================================================
-HF::Common::Interface const *HF::Profiles::interfaces (uint16_t profile, uint16_t &count)
+HF::Common::Interface const *HF::Profiles::interfaces(uint16_t profile, uint16_t &count)
 {
    for (uint32_t index = 0; index < (sizeof(profiles) / sizeof(*profiles)); ++index)
    {

@@ -90,7 +90,7 @@ namespace HF
          /*!
           * Interface Address.
           */
-         struct Interface:public Common::Interface
+         struct Interface: public Common::Interface
          {
             //! Minimum pack/unpack required data size.
             static const uint16_t min_size = Common::Interface::min_size // Interface UID.
@@ -105,17 +105,18 @@ namespace HF
              * @param [in] role     interface role.
              * @param [in] member   interface member.
              */
-            Interface(uint16_t uid = 0, uint8_t role = 0, uint8_t member = 0):Common::Interface(uid, role), member (member)
+            Interface(uint16_t uid = 0, uint8_t role = 0, uint8_t member = 0):
+               Common::Interface(uid, role), member(member)
             {}
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          // =============================================================================
@@ -142,9 +143,9 @@ namespace HF
           * @param [in] _type    message type.
           */
          Message(uint16_t size = 0, Type _type = COMMAND_REQ):
-            reference (0), type (_type), payload (Common::ByteArray (size)), length (0)
+            reference(0), type(_type), payload(Common::ByteArray(size)), length(0)
          {
-            assert (size <= MAX_PAYLOAD);
+            assert(size <= MAX_PAYLOAD);
          }
 
          /*!
@@ -164,10 +165,10 @@ namespace HF
                                               + sizeof(uint16_t);   // Payload Length Value.
 
          //! @copydoc HF::Common::Serializable::size
-         uint16_t size () const;
+         uint16_t size() const;
 
          //! @copydoc HF::Common::Serializable::pack
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
          /*!
           * @copydoc HF::Common::Serializable::unpack
@@ -175,7 +176,7 @@ namespace HF
           * @warning This __DOES NOT__ copy the payload portion from the given @c array into
           * the @c payload field in this object.
           */
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       /*!
@@ -205,8 +206,8 @@ namespace HF
           * @param [in] _mod    address modifier. Default @c DEVICE_ADDR.
           */
          Address(uint16_t _dev = BROADCAST_ADDR, uint8_t _unit = BROADCAST_UNIT,
-                 Type _mod = DEVICE)
-            :mod (_mod), device (_dev), unit (_unit)
+                 Type _mod = DEVICE):
+            mod(_mod), device(_dev), unit(_unit)
          {}
 
          //! Minimum pack/unpack required data size.
@@ -214,13 +215,13 @@ namespace HF
                                               + sizeof(uint8_t);  // Unit Address.
 
          //! @copydoc HF::Common::Serializable::size
-         uint16_t size () const;
+         uint16_t size() const;
 
          //! @copydoc HF::Common::Serializable::pack
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
          /*!
           * Checks if this address if for the Protocol::BROADCAST_ADDR and
@@ -229,7 +230,7 @@ namespace HF
           * @retval true   if it is the network's broadcast address,
           * @retval false  otherwise.
           */
-         bool is_broadcast ()
+         bool is_broadcast()
          {
             return device == BROADCAST_ADDR && unit == BROADCAST_UNIT;
          }
@@ -243,7 +244,7 @@ namespace HF
           * @retval true   if it is the network's address are equal,
           * @retval false  otherwise.
           */
-         bool is_local (uint16_t address)
+         bool is_local(uint16_t address)
          {
             return this->device == address;
          }
@@ -265,14 +266,14 @@ namespace HF
          //! Link where this packet originated from.
          Transport::Link *link;
 
-         Packet():link (nullptr) {}
+         Packet(): link(nullptr) {}
 
          /*!
           * Constructor.
           *
           * @param [in] message  message this packet holds.
           */
-         Packet(Message &message):message (message), link (nullptr) {}
+         Packet(Message &message): message(message), link(nullptr) {}
 
          /*!
           * Constructor.
@@ -282,7 +283,7 @@ namespace HF
           * @param [in] unit        destination unit for this packet.
           */
          Packet(Address &dst_addr, Message &message, uint8_t unit = BROADCAST_UNIT):
-            destination (dst_addr), message (message), link (nullptr)
+            destination(dst_addr), message(message), link(nullptr)
          {
             source.mod    = Address::DEVICE;
             source.device = BROADCAST_ADDR;
@@ -297,7 +298,7 @@ namespace HF
           * @param [in] message     message payload.
           */
          Packet(Address &src_addr, Address &dst_addr, Message &message):
-            source (src_addr), destination (dst_addr), message (message), link (nullptr)
+            source(src_addr), destination(dst_addr), message(message), link(nullptr)
          {}
 
          //! Minimum pack/unpack required header data size.
@@ -310,13 +311,13 @@ namespace HF
                                               + Message::min_size;   // Message size.
 
          //! @copydoc HF::Common::Serializable::size
-         uint16_t size () const;
+         uint16_t size() const;
 
          //! @copydoc HF::Common::Serializable::pack
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       /*!
@@ -333,16 +334,16 @@ namespace HF
 
          Common::Result            code;
 
-         Response(Common::Result code = Common::Result::OK):code (code) {}
+         Response(Common::Result code = Common::Result::OK): code(code) {}
 
          //! @copydoc HF::Common::Serializable::size
-         uint16_t size () const;
+         uint16_t size() const;
 
          //! @copydoc HF::Common::Serializable::pack
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       /*! @} */
@@ -383,16 +384,16 @@ namespace HF
                Message::Interface itf;     //!< Interface the message relates to.
 
                Entry(uint16_t _address, Message::Type _type, Message::Interface _itf):
-                  address (_address), type (_type), itf (_itf)
+                  address(_address), type(_type), itf(_itf)
                {}
 
-               Entry(const Packet &packet):address (packet.destination.device),
-                  type (packet.message.type), itf (packet.message.itf)
+               Entry(const Packet &packet): address(packet.destination.device),
+                  type(packet.message.type), itf(packet.message.itf)
                {}
             };
 
             //! Filter database.
-            std::list <Entry> db;
+            std::list<Entry> db;
 
             public:
 
@@ -407,16 +408,16 @@ namespace HF
              * @retval  true     the packet is a retransmission.
              * @retval  false    the packet is a not retransmission.
              */
-            bool operator ()(const HF::Protocol::Packet &packet);
+            bool operator()(const HF::Protocol::Packet &packet);
 
             /*!
              * Number of entries in the filter's database.
              *
              * @return  the number of entries in the filter's database.
              */
-            uint16_t size () const
+            uint16_t size() const
             {
-               return db.size ();
+               return db.size();
             }
          };
 
@@ -432,17 +433,17 @@ namespace HF
       // Operators
       // =============================================================================
 
-      inline bool operator ==(Address const &lhs, Address const &rhs)
+      inline bool operator==(Address const &lhs, Address const &rhs)
       {
          return (lhs.device == rhs.device) && (lhs.unit == rhs.unit) && (lhs.mod == rhs.mod);
       }
 
-      inline bool operator !=(Address const &lhs, Address const &rhs)
+      inline bool operator!=(Address const &lhs, Address const &rhs)
       {
          return !(lhs == rhs);
       }
 
-      inline bool operator <(Address const &lhs, Address const &rhs)
+      inline bool operator<(Address const &lhs, Address const &rhs)
       {
          return (lhs.device < rhs.device) ||
                 (lhs.device == rhs.device &&
@@ -466,7 +467,7 @@ namespace HF
        * @retval true   if the message is a request.
        * @retval false  otherwise.
        */
-      bool request (Message::Type type, bool response = false);
+      bool request(Message::Type type, bool response = false);
 
       /*!
        * Check if message is a response.
@@ -476,7 +477,7 @@ namespace HF
        * @retval true   if the message is a response.
        * @retval false  otherwise.
        */
-      bool response (Message::Type type);
+      bool response(Message::Type type);
 
       /*!
        * Check if the given message types are the request and response for
@@ -489,7 +490,7 @@ namespace HF
        * @retval true   if the message types match.
        * @retval false  otherwise.
        */
-      bool matches (Message::Type lhs, Message::Type rhs);
+      bool matches(Message::Type lhs, Message::Type rhs);
 
       /*! @} */
 
@@ -514,7 +515,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Type type);
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message::Type type);
 
 /*!
  * Convert the given @c message into a string and write it to the given @c stream.
@@ -524,7 +525,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Typ
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &message);
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &message);
 
 /*!
  * Convert the given @c address into a string and write it to the given @c stream.
@@ -534,7 +535,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Address &address);
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Address &address);
 
 /*!
  * Convert the given @c packet into a string and write it to the given @c stream.
@@ -544,7 +545,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Address &add
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet);
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Packet &packet);
 
 /*! @} */
 

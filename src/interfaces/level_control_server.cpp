@@ -35,7 +35,7 @@ using namespace HF::Interfaces::LevelControl;
  *
  */
 // =============================================================================
-uint8_t Server::level ()
+uint8_t Server::level()
 {
    return this->_level;
 }
@@ -47,16 +47,16 @@ uint8_t Server::level ()
  *
  */
 // =============================================================================
-void Server::level (uint8_t __level)
+void Server::level(uint8_t __level)
 {
    uint8_t old = this->_level;
 
    this->_level = __level;
 
-   Level old_attr (old, this);
-   Level new_attr (this->_level, this);
+   Level old_attr(old, this);
+   Level new_attr(this->_level, this);
 
-   notify (old_attr, new_attr);
+   notify(old_attr, new_attr);
 }
 
 // =============================================================================
@@ -66,11 +66,11 @@ void Server::level (uint8_t __level)
  *
  */
 // =============================================================================
-void Server::level (float new_level)
+void Server::level(float new_level)
 {
-   check_and_fix (new_level);
-   uint8_t value = HF::Common::from_percent <uint8_t>(new_level);
-   level (value);
+   check_and_fix(new_level);
+   uint8_t value = HF::Common::from_percent<uint8_t>(new_level);
+   level(value);
 }
 
 // =============================================================================
@@ -80,16 +80,16 @@ void Server::level (float new_level)
  *
  */
 // =============================================================================
-Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                         uint16_t offset)
+Common::Result Server::handle_attribute(Protocol::Packet &packet, Common::ByteArray &payload,
+                                        uint16_t offset)
 {
-   uint8_t old_level     = level ();
+   uint8_t old_level     = level();
 
-   Common::Result result = AbstractInterface::handle_attribute (packet, payload, offset);
+   Common::Result result = AbstractInterface::handle_attribute(packet, payload, offset);
 
    if (result == Common::Result::OK && packet.message.type == Protocol::Message::SET_ATTR_REQ)
    {
-      level_change (packet.source, old_level, level ());
+      level_change(packet.source, old_level, level());
    }
 
    return result;
@@ -102,8 +102,8 @@ Common::Result Server::handle_attribute (Protocol::Packet &packet, Common::ByteA
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
    Message level_msg;
 
@@ -112,12 +112,12 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
       return Common::Result::FAIL_SUPPORT;
    }
 
-   level_msg.unpack (payload, offset);
+   level_msg.unpack(payload, offset);
 
-   uint8_t old_value = level ();
-   level (level_msg.level);
+   uint8_t old_value = level();
+   level(level_msg.level);
 
-   level_change (packet.source, old_value, level_msg.level);
+   level_change(packet.source, old_value, level_msg.level);
 
    return Common::Result::OK;
 }
@@ -129,9 +129,9 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void Server::level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level)
+void Server::level_change(Protocol::Address &source, uint8_t old_level, uint8_t new_level)
 {
-   UNUSED (source);
-   UNUSED (old_level);
-   UNUSED (new_level);
+   UNUSED(source);
+   UNUSED(old_level);
+   UNUSED(new_level);
 }

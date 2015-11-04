@@ -59,8 +59,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (HF::Core::DeviceInformation::Server *server,
-                                                    uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Core::DeviceInformation::Server *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the classes that implement the Device Information service.
@@ -74,11 +74,11 @@ namespace HF
           * This module contains the classes that implement the %Device Information service.
           * @{
           */
-         constexpr static uint8_t  CORE_VERSION      = HF::CORE_VERSION;       //!< HAN-FUN Core version.
-         constexpr static uint8_t  PROFILE_VERSION   = HF::PROFILES_VERSION;   //!< HAN-FUN Profile version.
-         constexpr static uint8_t  INTERFACE_VERSION = HF::INTERFACES_VERSION; //!< HAN-FUN Interface version.
+         constexpr static uint8_t CORE_VERSION      = HF::CORE_VERSION;        //!< HAN-FUN Core version.
+         constexpr static uint8_t PROFILE_VERSION   = HF::PROFILES_VERSION;    //!< HAN-FUN Profile version.
+         constexpr static uint8_t INTERFACE_VERSION = HF::INTERFACES_VERSION;  //!< HAN-FUN Interface version.
 
-         constexpr static uint16_t EMC               = HF_DEVICE_MANUFACTURER_CODE; //!< Electronic Manufacture Code.
+         constexpr static uint16_t EMC              = HF_DEVICE_MANUFACTURER_CODE;  //!< Electronic Manufacture Code.
 
          //! Attributes.
          typedef enum _Attributes
@@ -112,7 +112,7 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * Data type to contain the Friendly name attribute.
@@ -127,50 +127,51 @@ namespace HF
                uint8_t     id;
                std::string name;
 
+               using string_helper = HF::Common::SerializableHelper<std::string>;
+
                //! Minimum pack/unpack required data size.
-               static constexpr uint16_t min_size = sizeof(uint8_t) +
-                                                    HF::Common::SerializableHelper <std::string>::min_size;
+               static constexpr uint16_t min_size = sizeof(uint8_t) + string_helper::min_size;
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(HF::Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc HF::Common::Serializable::unpack
-               uint16_t unpack (const HF::Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const HF::Common::ByteArray &array, uint16_t offset = 0);
             };
 
             //! Device unit's friendly names.
-            std::vector <Unit> units;
+            std::vector<Unit> units;
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t);
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (HF::Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(HF::Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const HF::Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const HF::Common::ByteArray &array, uint16_t offset = 0);
 
             //! @copydoc HF::Attributes::IAttribute::changed
-            float changed (const FriendlyName &other) const
+            float changed(const FriendlyName &other) const
             {
-               UNUSED (other);
+               UNUSED(other);
                return 0.0;
             }
 
             //! @copydoc HF::Attributes::IAttribute::compare
-            int compare (const FriendlyName &other) const;
+            int compare(const FriendlyName &other) const;
          };
 
          /*!
           * Parent class for the Device Information interface implementation.
           */
-         class Abstract:public Service <HF::Interface::DEVICE_INFORMATION>
+         class Abstract: public Service<HF::Interface::DEVICE_INFORMATION>
          {
             protected:
 
@@ -180,14 +181,14 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Abstract(Unit0 &unit):
-               Service (unit)
+               Service(unit)
             {}
          };
 
          /*!
           * Device Information interface : Server side.
           */
-         struct Server:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
+         struct Server: public ServiceRole<Abstract, HF::Interface::SERVER_ROLE>
          {
             HF::UID::UID device_uid;   //! Device UID.
 
@@ -197,7 +198,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Server(HF::Core::Unit0 &unit):
-               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit), _capabilities (0)
+               ServiceRole<Abstract, HF::Interface::SERVER_ROLE>(unit), _capabilities(0)
             {}
 
             virtual ~Server() {}
@@ -206,16 +207,17 @@ namespace HF
             // Interface Attribute API.
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid);
+            HF::Attributes::IAttribute *attribute(uint8_t uid);
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
 
             /*!
              * Set extra capabilities attribute paging bit to given @c value.
              *
              * @param [in] value    paging bit value to place in extra capabilities attribute.
              */
-            void paging (bool value);
+            void paging(bool value);
 
             /*!
              * Get extra capabilities attribute paging bit.
@@ -223,14 +225,14 @@ namespace HF
              * @retval  true the broadcast bit is 1.
              * @retval  false the broadcast bit is 0.
              */
-            bool has_paging ()  const;
+            bool has_paging()  const;
 
             /*!
              * Set extra capabilities attribute broadcast bit to given @c value.
              *
              * @param [in] value    broadcast bit value to place in extra capabilities attribute.
              */
-            void broadcast (bool value);
+            void broadcast(bool value);
 
             /*!
              * Get extra capabilities attribute broadcast bit.
@@ -238,21 +240,21 @@ namespace HF
              * @retval  true the broadcast bit is 1.
              * @retval  false the broadcast bit is 0.
              */
-            bool has_broadcast () const;
+            bool has_broadcast() const;
 
             /*!
              * Setter for the extra capabilities attribute.
              *
              * @param [in] value    bitmask value for the extra capabilities attribute.
              */
-            void capabilities (uint8_t value);
+            void capabilities(uint8_t value);
 
             /*!
              * Getter for the extra capabilities attribute bitmask.
              *
              * @return  the bitmask value of the extra capabilities attribute.
              */
-            uint8_t capabilities ();
+            uint8_t capabilities();
 
             protected:
 
@@ -265,7 +267,7 @@ namespace HF
           *
           * @return    pointer to a message to retrieve the mandatory attributes.
           */
-         Protocol::Message *mandatory ();
+         Protocol::Message *mandatory();
 
          /*!
           * Create a message that can be used to retrieve all the attributes
@@ -273,7 +275,7 @@ namespace HF
           *
           * @return    pointer to a message to retrieve all the attributes.
           */
-         Protocol::Message *all ();
+         Protocol::Message *all();
 
          /*!
           * Create a message that can be used to retrieve the attributes with the given @c uids of the
@@ -283,7 +285,7 @@ namespace HF
           *
           * @return    pointer to a message to retrieve the attributes with the given uid's.
           */
-         Protocol::Message *get (HF::Attributes::UIDS &uids);
+         Protocol::Message *get(HF::Attributes::UIDS &uids);
 
          /*!
           * Create a message that can be used to retrieve the attribute with the given @c uid.
@@ -292,7 +294,7 @@ namespace HF
           *
           * @return    pointer to a message to retrieve the attribute with the given uid.
           */
-         Protocol::Message *get (uint8_t uid);
+         Protocol::Message *get(uint8_t uid);
 
          /*! @} */
 
@@ -319,7 +321,8 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformation::Attributes attribute);
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceInformation::Attributes attribute);
 
 /*! @} */
 

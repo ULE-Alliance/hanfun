@@ -27,27 +27,27 @@ using namespace HF::Common;
 // =============================================================================
 
 //! AbstractInterface test group.
-TEST_GROUP (AbstractInterface)
+TEST_GROUP(AbstractInterface)
 {
    TestInterface *itf;
    Protocol::Packet packet;
    ByteArray payload;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      itf                     = new TestInterface (HF::Interface::SERVER_ROLE, 0x5AA5);
+      itf                     = new TestInterface(HF::Interface::SERVER_ROLE, 0x5AA5);
 
-      packet.message.itf.id   = itf->uid ();
-      packet.message.itf.role = itf->role ();
+      packet.message.itf.id   = itf->uid();
+      packet.message.itf.role = itf->role();
 
-      mock ().ignoreOtherCalls ();
+      mock().ignoreOtherCalls();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
       delete itf;
 
-      mock ().clear ();
+      mock().clear();
    }
 };
 
@@ -55,40 +55,40 @@ TEST_GROUP (AbstractInterface)
  * @test Should handle request message coming from the same interface and
  *       from the same role.
  */
-TEST (AbstractInterface, Handle_Request)
+TEST(AbstractInterface, Handle_Request)
 {
    packet.message.type = Message::COMMAND_REQ;
 
-   CHECK_EQUAL (Result::OK, itf->handle (packet, payload, 0));
+   CHECK_EQUAL(Result::OK, itf->handle(packet, payload, 0));
 
    itf->_role = HF::Interface::CLIENT_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, itf->handle (packet, payload, 0));
+   CHECK_EQUAL(Result::FAIL_SUPPORT, itf->handle(packet, payload, 0));
 
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
    packet.message.itf.id   = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ARG, itf->handle (packet, payload, 0));
+   CHECK_EQUAL(Result::FAIL_ARG, itf->handle(packet, payload, 0));
 }
 
 /*!
  * @test Should handle request message coming from the same interface and
  *       from the same role.
  */
-TEST (AbstractInterface, Handle_RequestResp)
+TEST(AbstractInterface, Handle_RequestResp)
 {
    packet.message.type = Message::COMMAND_RESP_REQ;
 
-   CHECK_EQUAL (Result::OK, itf->handle (packet, payload, 0));
+   CHECK_EQUAL(Result::OK, itf->handle(packet, payload, 0));
 
    itf->_role = HF::Interface::CLIENT_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, itf->handle (packet, payload, 0));
+   CHECK_EQUAL(Result::FAIL_SUPPORT, itf->handle(packet, payload, 0));
 
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
    packet.message.itf.id   = 0x7AAA;
 
-   CHECK_EQUAL (Result::FAIL_ARG, itf->handle (packet, payload, 0));
+   CHECK_EQUAL(Result::FAIL_ARG, itf->handle(packet, payload, 0));
 }
 
 // =============================================================================
@@ -100,67 +100,67 @@ TEST (AbstractInterface, Handle_RequestResp)
 // =============================================================================
 
 //! @test Should handle valid get attribute requests.
-TEST (AbstractInterface, Handle_GetAttribute_Valid)
+TEST(AbstractInterface, Handle_GetAttribute_Valid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR1;
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 0);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 0);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
-   LONGS_EQUAL (TestInterface::ATTR1, itf->sendMsg.itf.member);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(TestInterface::ATTR1, itf->sendMsg.itf.member);
 
-   HF::Attributes::Response attr_res (itf->attribute (TestInterface::ATTR1));
+   HF::Attributes::Response attr_res(itf->attribute(TestInterface::ATTR1));
 
-   attr_res.unpack (itf->sendMsg.payload);
+   attr_res.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_res.code);
+   CHECK_EQUAL(Result::OK, attr_res.code);
 
-   CHECK_TRUE (attr_res.attribute != nullptr);
+   CHECK_TRUE(attr_res.attribute != nullptr);
 
-   CHECK_FALSE (attr_res.attribute->isWritable ());
+   CHECK_FALSE(attr_res.attribute->isWritable());
 
-   LONGS_EQUAL (TestInterface::ATTR1, attr_res.attribute->uid ());
+   LONGS_EQUAL(TestInterface::ATTR1, attr_res.attribute->uid());
 
-   LONGS_EQUAL (itf->uid (), attr_res.attribute->interface ());
+   LONGS_EQUAL(itf->uid(), attr_res.attribute->interface());
 }
 
 //! @test Should handle invalid get attribute requests.
-TEST (AbstractInterface, Handle_GetAttribute_Invalid)
+TEST(AbstractInterface, Handle_GetAttribute_Invalid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR3 + 4;
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 0);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 0);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
-   LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(packet.message.itf.member, itf->sendMsg.itf.member);
 
    HF::Attributes::Response attr_res;
-   attr_res.unpack (itf->sendMsg.payload);
+   attr_res.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_res.code);
+   CHECK_EQUAL(Result::FAIL_SUPPORT, attr_res.code);
 
-   CHECK_TRUE (attr_res.attribute == nullptr);
+   CHECK_TRUE(attr_res.attribute == nullptr);
 }
 
 // =============================================================================
 // AbstractInterface::SetAttribute
 // =============================================================================
 //! @test Should handle valid set attribute requests.
-TEST (AbstractInterface, Handle_SetAttribute_Valid)
+TEST(AbstractInterface, Handle_SetAttribute_Valid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR3;
@@ -169,20 +169,20 @@ TEST (AbstractInterface, Handle_SetAttribute_Valid)
                                           0x5A, 0xAA,  // Attribute value.
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5AAA, itf->attr3);
+   LONGS_EQUAL(0x5AAA, itf->attr3);
 }
 
 //! @test Should handle invalid set attribute requests.
-TEST (AbstractInterface, Handle_SetAttribute_Invalid)
+TEST(AbstractInterface, Handle_SetAttribute_Invalid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR3 + 4;
@@ -191,20 +191,20 @@ TEST (AbstractInterface, Handle_SetAttribute_Invalid)
                                           0x5A, 0xAA,  // Attribute value.
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::FAIL_SUPPORT, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::FAIL_SUPPORT, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 }
 
 //! @test Should handle invalid set attribute requests.
-TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
+TEST(AbstractInterface, Handle_SetAttribute_ReadOnly)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_REQ;
    packet.message.itf.member = TestInterface::ATTR1;
@@ -213,20 +213,20 @@ TEST (AbstractInterface, Handle_SetAttribute_ReadOnly)
                                           0x5A, 0xAA,  // Attribute value.
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::FAIL_RO_ATTR, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::FAIL_RO_ATTR, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 }
 
 //! @test Should handle valid set response required attribute requests.
-TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
+TEST(AbstractInterface, Handle_SetAttributeResponse_Valid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
    packet.message.itf.member = TestInterface::ATTR3;
@@ -235,20 +235,20 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Valid)
                                           0x5A, 0xAA,  // Attribute value.
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5AAA, itf->attr3);
+   LONGS_EQUAL(0x5AAA, itf->attr3);
 }
 
 //! @test Should handle invalid set response required attribute requests.
-TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
+TEST(AbstractInterface, Handle_SetAttributeResponse_Invalid)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
    packet.message.itf.member = TestInterface::ATTR3 + 4;
@@ -257,29 +257,29 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_Invalid)
                                           0x5A, 0xAA,  // Attribute value.
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
-   LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(packet.message.itf.member, itf->sendMsg.itf.member);
 
    Response res;
-   res.unpack (itf->sendMsg.payload);
+   res.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, res.code);
+   CHECK_EQUAL(Result::FAIL_SUPPORT, res.code);
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 }
 
 //! @test Should handle invalid set response required attribute requests.
-TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
+TEST(AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_RESP_REQ;
    packet.message.itf.member = TestInterface::ATTR1;
@@ -288,25 +288,25 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
                                           0x5A, 0xAA,  // Attribute value.
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
-   LONGS_EQUAL (packet.message.itf.member, itf->sendMsg.itf.member);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(packet.message.itf.member, itf->sendMsg.itf.member);
 
    Response res;
-   res.unpack (itf->sendMsg.payload);
+   res.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_RO_ATTR, res.code);
+   CHECK_EQUAL(Result::FAIL_RO_ATTR, res.code);
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A51, itf->attr1);
 }
 
 // =============================================================================
@@ -314,85 +314,85 @@ TEST (AbstractInterface, Handle_SetAttributeResponse_ReadOnly)
 // =============================================================================
 
 //! @test Should handle valid get attribute pack requests for mandatory attributes.
-TEST (AbstractInterface, Handle_GetAttributesPack_Mandatory)
+TEST(AbstractInterface, Handle_GetAttributesPack_Mandatory)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = HF::Attributes::Pack::MANDATORY;
 
    payload                   = ByteArray {0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
 
    GetAttributePack::Response attr_resp;
    attr_resp.attribute_factory = &(TestInterface::create_attribute);
-   attr_resp.unpack (itf->sendMsg.payload);
+   attr_resp.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_resp.code);
+   CHECK_EQUAL(Result::OK, attr_resp.code);
 
-   LONGS_EQUAL (1, attr_resp.attributes.size ());
+   LONGS_EQUAL(1, attr_resp.attributes.size());
 
    HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR2];
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR3];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 }
 
 //! @test Should handle valid get attribute pack requests for all attributes.
-TEST (AbstractInterface, Handle_GeAttributesPack_All)
+TEST(AbstractInterface, Handle_GeAttributesPack_All)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = HF::Attributes::Pack::ALL;
 
    payload                   = ByteArray {0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
 
    GetAttributePack::Response attr_resp;
    attr_resp.attribute_factory = &(TestInterface::create_attribute);
-   attr_resp.unpack (itf->sendMsg.payload);
+   attr_resp.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_resp.code);
+   CHECK_EQUAL(Result::OK, attr_resp.code);
 
-   LONGS_EQUAL (3, attr_resp.attributes.size ());
+   LONGS_EQUAL(3, attr_resp.attributes.size());
 
    HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR2];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR3];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 }
 
 //! @test Should handle valid get attribute pack requests.
-TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
+TEST(AbstractInterface, Handle_GetAttributesPack_Valid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = HF::Attributes::Pack::DYNAMIC;
@@ -403,39 +403,39 @@ TEST (AbstractInterface, Handle_GetAttributesPack_Valid)
                                           0x01, 0x03,
                                           0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
 
    GetAttributePack::Response attr_resp;
    attr_resp.attribute_factory = &(TestInterface::create_attribute);
-   attr_resp.unpack (itf->sendMsg.payload);
+   attr_resp.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::OK, attr_resp.code);
+   CHECK_EQUAL(Result::OK, attr_resp.code);
 
-   LONGS_EQUAL (2, attr_resp.attributes.size ());
+   LONGS_EQUAL(2, attr_resp.attributes.size());
 
    HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR2];
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR3];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 }
 
 //! @test Should handle invalid get attribute requests.
-TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
+TEST(AbstractInterface, Handle_GetAttributePack_Invalid)
 {
    packet.message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
    packet.message.itf.member = HF::Attributes::Pack::DYNAMIC;
@@ -446,37 +446,37 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
                                           0x01, 0x03, 0x04,
                                           0x00, 0x00, 0x00};
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::FAIL_SUPPORT, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::FAIL_SUPPORT, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (itf->_uid, itf->sendMsg.itf.id);
-   LONGS_EQUAL (itf->_role, itf->sendMsg.itf.role);
+   LONGS_EQUAL(itf->_uid, itf->sendMsg.itf.id);
+   LONGS_EQUAL(itf->_role, itf->sendMsg.itf.role);
 
-   LONGS_EQUAL (Message::GET_ATTR_PACK_RES, itf->sendMsg.type);
+   LONGS_EQUAL(Message::GET_ATTR_PACK_RES, itf->sendMsg.type);
 
    GetAttributePack::Response attr_resp;
    attr_resp.attribute_factory = &(TestInterface::create_attribute);
-   attr_resp.unpack (itf->sendMsg.payload);
+   attr_resp.unpack(itf->sendMsg.payload);
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, attr_resp.code);
+   CHECK_EQUAL(Result::FAIL_SUPPORT, attr_resp.code);
 
-   LONGS_EQUAL (2, attr_resp.attributes.size ());
+   LONGS_EQUAL(2, attr_resp.attributes.size());
 
    HF::Attributes::IAttribute *attr = attr_resp.attributes[TestInterface::ATTR1];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR2];
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 
    attr = attr_resp.attributes[TestInterface::ATTR3];
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 }
 
 // =============================================================================
@@ -484,7 +484,7 @@ TEST (AbstractInterface, Handle_GetAttributePack_Invalid)
 // =============================================================================
 
 //! @test Should handle set attribute pack requests.
-TEST (AbstractInterface, Handle_SetAttributePack)
+TEST(AbstractInterface, Handle_SetAttributePack)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
@@ -497,24 +497,24 @@ TEST (AbstractInterface, Handle_SetAttributePack)
                                           0x04, 0xDD, 0xDD,  // Attribute 4 - Invalid
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0xCCCC, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0xCCCC, itf->attr3);
 }
 
 //! @test Should handle valid set response pack response required attribute requests.
-TEST (AbstractInterface, Handle_SetAttributePackResponse)
+TEST(AbstractInterface, Handle_SetAttributePackResponse)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
    packet.message.itf.member = 0;
@@ -527,41 +527,41 @@ TEST (AbstractInterface, Handle_SetAttributePackResponse)
                                           0x04, 0xDD, 0xDD,  // Attribute 4 - Invalid
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0xCCCC, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0xCCCC, itf->attr3);
 
    SetAttributePack::Response response;
-   response.unpack (itf->sendMsg.payload);
+   response.unpack(itf->sendMsg.payload);
 
-   LONGS_EQUAL (4, response.results.size ());
+   LONGS_EQUAL(4, response.results.size());
 
-   LONGS_EQUAL (TestInterface::ATTR1, response.results[0].uid);
-   LONGS_EQUAL (Result::FAIL_RO_ATTR, response.results[0].code);
+   LONGS_EQUAL(TestInterface::ATTR1, response.results[0].uid);
+   LONGS_EQUAL(Result::FAIL_RO_ATTR, response.results[0].code);
 
-   LONGS_EQUAL (TestInterface::ATTR2, response.results[1].uid);
-   LONGS_EQUAL (Result::FAIL_RO_ATTR, response.results[1].code);
+   LONGS_EQUAL(TestInterface::ATTR2, response.results[1].uid);
+   LONGS_EQUAL(Result::FAIL_RO_ATTR, response.results[1].code);
 
-   LONGS_EQUAL (TestInterface::ATTR3, response.results[2].uid);
-   LONGS_EQUAL (Result::OK, response.results[2].code);
+   LONGS_EQUAL(TestInterface::ATTR3, response.results[2].uid);
+   LONGS_EQUAL(Result::OK, response.results[2].code);
 
-   LONGS_EQUAL (0x04, response.results[3].uid);
-   LONGS_EQUAL (Result::FAIL_SUPPORT, response.results[3].code);
+   LONGS_EQUAL(0x04, response.results[3].uid);
+   LONGS_EQUAL(Result::FAIL_SUPPORT, response.results[3].code);
 }
 
 //! @test Should fast fail on set response pack requests.
-TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
+TEST(AbstractInterface, Handle_SetAttributePack_FastFail)
 {
    packet.message.type       = Protocol::Message::SET_ATTR_PACK_RESP_REQ;
    packet.message.itf.member = 0;
@@ -574,31 +574,31 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
                                           0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
    SetAttributePack::Response response;
-   response.unpack (itf->sendMsg.payload);
+   response.unpack(itf->sendMsg.payload);
 
-   LONGS_EQUAL (2, response.results.size ());
+   LONGS_EQUAL(2, response.results.size());
 
-   LONGS_EQUAL (TestInterface::ATTR1, response.results[0].uid);
-   LONGS_EQUAL (Result::FAIL_RO_ATTR, response.results[0].code);
+   LONGS_EQUAL(TestInterface::ATTR1, response.results[0].uid);
+   LONGS_EQUAL(Result::FAIL_RO_ATTR, response.results[0].code);
 
-   LONGS_EQUAL (0x04, response.results[1].uid);
-   LONGS_EQUAL (Result::FAIL_SUPPORT, response.results[1].code);
+   LONGS_EQUAL(0x04, response.results[1].uid);
+   LONGS_EQUAL(Result::FAIL_SUPPORT, response.results[1].code);
 }
 
 // =============================================================================
@@ -606,7 +606,7 @@ TEST (AbstractInterface, Handle_SetAttributePack_FastFail)
 // =============================================================================
 
 //! @test Should handle atomic set attribute pack requests.
-TEST (AbstractInterface, Handle_AtomicSetAttributePack)
+TEST(AbstractInterface, Handle_AtomicSetAttributePack)
 {
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
@@ -616,22 +616,22 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack)
                                           0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A51, itf->attr1);
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0xCCCC, itf->attr3);
+   LONGS_EQUAL(0x5A51, itf->attr1);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0xCCCC, itf->attr3);
 }
 
 //! @test Should handle atomic set attribute pack requests.
-TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
+TEST(AbstractInterface, Handle_AtomicSetAttributePack_Fail)
 {
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
@@ -642,22 +642,22 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail)
                                           0x03, 0xCC, 0xCC,  // Attribute 3 - Valid/RW
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 }
 
 //! @test Should handle atomic set attribute pack requests.
-TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
+TEST(AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
 {
    packet.message.type       = Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ;
    packet.message.itf.member = 0;
@@ -668,16 +668,16 @@ TEST (AbstractInterface, Handle_AtomicSetAttributePack_Fail2)
                                           0x04, 0xCC, 0xCC,  // Attribute 4 - Invalid
                                           0x00, 0x00, 0x00};
 
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 
-   mock ("Interface").expectNCalls (0, "send");
+   mock("Interface").expectNCalls(0, "send");
 
-   Result result = itf->handle (packet, payload, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = itf->handle(packet, payload, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 
-   LONGS_EQUAL (0x5A52, itf->attr2);
-   LONGS_EQUAL (0x5A53, itf->attr3);
+   LONGS_EQUAL(0x5A52, itf->attr2);
+   LONGS_EQUAL(0x5A53, itf->attr3);
 }

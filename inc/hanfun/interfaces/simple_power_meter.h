@@ -57,23 +57,23 @@
 // =============================================================================
 
 //! Helper macro used to support attribute reporting.
-#define ATTR_SETTER(__type, __arg, __uid)                                              \
-   {                                                                                   \
-      __type old = __arg;                                                              \
-                                                                                       \
-      __arg = value;                                                                   \
-                                                                                       \
-      HF::Attributes::Attribute <__type> *old_attr =                                   \
-         static_cast <HF::Attributes::Attribute <__type> *>(create_attribute (__uid)); \
-      old_attr->set (old);                                                             \
-                                                                                       \
-      HF::Attributes::Attribute <__type> *new_attr =                                   \
-         static_cast <HF::Attributes::Attribute <__type> *>(attribute (__uid));        \
-                                                                                       \
-      notify (*old_attr, *new_attr);                                                   \
-                                                                                       \
-      delete old_attr;                                                                 \
-      delete new_attr;                                                                 \
+#define ATTR_SETTER(__type, __arg, __uid)                                           \
+   {                                                                                \
+      __type old = __arg;                                                           \
+                                                                                    \
+      __arg = value;                                                                \
+                                                                                    \
+      HF::Attributes::Attribute<__type> *old_attr =                                 \
+         static_cast<HF::Attributes::Attribute<__type> *>(create_attribute(__uid)); \
+      old_attr->set(old);                                                           \
+                                                                                    \
+      HF::Attributes::Attribute<__type> *new_attr =                                 \
+         static_cast<HF::Attributes::Attribute<__type> *>(attribute(__uid));        \
+                                                                                    \
+      notify(*old_attr, *new_attr);                                                 \
+                                                                                    \
+      delete old_attr;                                                              \
+      delete new_attr;                                                              \
    }
 
 // =============================================================================
@@ -104,8 +104,9 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (HF::Interfaces::SimplePowerMeter::Server *server,
-                                                    uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(
+         HF::Interfaces::SimplePowerMeter::Server *server,
+         uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Power Meter interface.
@@ -159,33 +160,33 @@ namespace HF
             uint32_t value; //!< %Measurement value.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK (array, offset, min_size);
+               SERIALIZABLE_CHECK(array, offset, min_size);
 
-               offset += array.write (offset, static_cast <uint8_t>(unit));
-               array.write (offset, value);
+               offset += array.write(offset, static_cast<uint8_t>(unit));
+               array.write(offset, value);
 
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK (array, offset, min_size);
+               SERIALIZABLE_CHECK(array, offset, min_size);
 
                uint8_t temp;
-               offset += array.read (offset, temp);
+               offset += array.read(offset, temp);
 
-               unit    = static_cast <Common::Precision>(temp);
+               unit    = static_cast<Common::Precision>(temp);
 
-               offset += array.read (offset, value);
+               offset += array.read(offset, value);
 
                return min_size;
             }
@@ -195,7 +196,7 @@ namespace HF
              *
              * @todo Take unit into consideration.
              */
-            int compare (const Measurement &other) const
+            int compare(const Measurement &other) const
             {
                int res = value - other.value;
                return res;
@@ -206,7 +207,7 @@ namespace HF
              *
              * @todo Take unit into consideration.
              */
-            float changed (const Measurement &other) const
+            float changed(const Measurement &other) const
             {
                return (((float) (value - other.value)) / other.value);
             }
@@ -240,7 +241,7 @@ namespace HF
              * This array contains an indication of with attributes should be packed or
              * were unpacked.
              */
-            std::array <bool, __LAST_ATTR__ + 1> enabled;
+            std::array<bool, __LAST_ATTR__ + 1> enabled;
 
             Report();
 
@@ -248,13 +249,13 @@ namespace HF
             static constexpr uint16_t min_size = sizeof(uint8_t);  // Number of attributes.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -267,25 +268,25 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * Simple Power Meter Interface : Parent.
           *
           * This is the parent class for the Simple Power Meter interface implementation.
           */
-         struct Base:public Interfaces::Base <Interface::SIMPLE_POWER_METER>
+         struct Base: public Interfaces::Base<Interface::SIMPLE_POWER_METER>
          {
             protected:
 
             Base() {}
 
-            using Interfaces::Base <Interface::SIMPLE_POWER_METER>::payload_size;
+            using Interfaces::Base<Interface::SIMPLE_POWER_METER>::payload_size;
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size(Protocol::Message::Interface &itf) const
             {
-               UNUSED (itf);
-               return payload_size_helper <Report>();
+               UNUSED(itf);
+               return payload_size_helper<Report>();
             }
          };
 
@@ -294,7 +295,7 @@ namespace HF
           *
           * This class provides the server side of the Simple Power Meter interface.
           */
-         class Server:public InterfaceRole <SimplePowerMeter::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimplePowerMeter::Base, Interface::SERVER_ROLE>
          {
             protected:
 
@@ -354,7 +355,7 @@ namespace HF
             // API
             // =============================================================================
 
-            void periodic (uint32_t time);
+            void periodic(uint32_t time);
 
             // ======================================================================
             // Getters & Setters
@@ -368,7 +369,7 @@ namespace HF
              *
              * @return  the current measurement for the energy attribute.
              */
-            Measurement energy ()
+            Measurement energy()
             {
                return _energy;
             }
@@ -378,9 +379,9 @@ namespace HF
              *
              * @param value   the measurement to set as current.
              */
-            void energy (Measurement &value)
+            void energy(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _energy, ENERGY_ATTR);
+               ATTR_SETTER(Measurement, _energy, ENERGY_ATTR);
             }
 #endif
 
@@ -390,7 +391,7 @@ namespace HF
              *
              * @return     the energy measurement value at the last reset.
              */
-            Measurement last_energy ()
+            Measurement last_energy()
             {
                return _last_energy;
             }
@@ -400,9 +401,9 @@ namespace HF
              *
              * @param value     the energy measurement value.
              */
-            void last_energy (Measurement &value)
+            void last_energy(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _last_energy, ENERGY_AT_RESET_ATTR);
+               ATTR_SETTER(Measurement, _last_energy, ENERGY_AT_RESET_ATTR);
             }
 #endif
 
@@ -412,7 +413,7 @@ namespace HF
              *
              * @return      the device time value at the last reset.
              */
-            Measurement last_time ()
+            Measurement last_time()
             {
                return _last_time;
             }
@@ -422,9 +423,9 @@ namespace HF
              *
              * @param value     the device time value.
              */
-            void last_time (Measurement &value)
+            void last_time(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _last_time, TIME_AT_RESET_ATTR);
+               ATTR_SETTER(Measurement, _last_time, TIME_AT_RESET_ATTR);
             }
 #endif
 
@@ -434,7 +435,7 @@ namespace HF
              *
              * @return  the current value for the instantaneous power attribute.
              */
-            Measurement power ()
+            Measurement power()
             {
                return _power;
             }
@@ -444,9 +445,9 @@ namespace HF
              *
              * @param value   the measurement value to set the instantaneous power attribute to.
              */
-            void power (Measurement &value)
+            void power(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _power, POWER_ATTR);
+               ATTR_SETTER(Measurement, _power, POWER_ATTR);
             }
 #endif
 
@@ -456,7 +457,7 @@ namespace HF
              *
              * @return  the current measurement for the average power attribute.
              */
-            Measurement avg_power ()
+            Measurement avg_power()
             {
                return _avg_power;
             }
@@ -466,9 +467,9 @@ namespace HF
              *
              * @param value   the measurement value to set the average power attribute to.
              */
-            void avg_power (Measurement &value)
+            void avg_power(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _avg_power, AVG_POWER_ATTR);
+               ATTR_SETTER(Measurement, _avg_power, AVG_POWER_ATTR);
             }
 #endif
 
@@ -478,7 +479,7 @@ namespace HF
              *
              * @return  the current value for the average power interval attribute.
              */
-            uint16_t avg_power_interval ()
+            uint16_t avg_power_interval()
             {
                return _avg_power_interval;
             }
@@ -488,9 +489,9 @@ namespace HF
              *
              * @param value   the measurement value to set the average power interval attribute to.
              */
-            void avg_power_interval (uint16_t value)
+            void avg_power_interval(uint16_t value)
             {
-               ATTR_SETTER (uint16_t, _avg_power_interval, AVG_POWER_INTERVAL_ATTR);
+               ATTR_SETTER(uint16_t, _avg_power_interval, AVG_POWER_INTERVAL_ATTR);
             }
 #endif
 
@@ -500,7 +501,7 @@ namespace HF
              *
              * @return  the value for the power factor attribute.
              */
-            uint8_t power_factor ()
+            uint8_t power_factor()
             {
                return _power_factor;
             }
@@ -510,9 +511,9 @@ namespace HF
              *
              * @param value   the measurement value to set the power factor attribute to.
              */
-            void power_factor (uint8_t value)
+            void power_factor(uint8_t value)
             {
-               ATTR_SETTER (uint8_t, _power_factor, POWER_FACTOR_ATTR);
+               ATTR_SETTER(uint8_t, _power_factor, POWER_FACTOR_ATTR);
             }
 #endif
 
@@ -522,7 +523,7 @@ namespace HF
              *
              * @return  the current measurement for the voltage attribute.
              */
-            Measurement voltage ()
+            Measurement voltage()
             {
                return _voltage;
             }
@@ -532,9 +533,9 @@ namespace HF
              *
              * @param value   the measurement value to set the voltage attribute to.
              */
-            void voltage (Measurement &value)
+            void voltage(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _voltage, VOLTAGE_ATTR);
+               ATTR_SETTER(Measurement, _voltage, VOLTAGE_ATTR);
             }
 #endif
 
@@ -544,7 +545,7 @@ namespace HF
              *
              * @return  the measurement for the current attribute.
              */
-            Measurement current ()
+            Measurement current()
             {
                return _current;
             }
@@ -554,9 +555,9 @@ namespace HF
              *
              * @param value   the measurement value to set the current attribute to.
              */
-            void current (Measurement &value)
+            void current(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _current, CURRENT_ATTR);
+               ATTR_SETTER(Measurement, _current, CURRENT_ATTR);
             }
 #endif
 
@@ -566,7 +567,7 @@ namespace HF
              *
              * @return  the measurement for the frequency attribute.
              */
-            Measurement frequency ()
+            Measurement frequency()
             {
                return _frequency;
             }
@@ -576,9 +577,9 @@ namespace HF
              *
              * @param value   the measurement value to set the frequency attribute to.
              */
-            void frequency (Measurement &value)
+            void frequency(Measurement &value)
             {
-               ATTR_SETTER (Measurement, _frequency, FREQUENCY_ATTR);
+               ATTR_SETTER(Measurement, _frequency, FREQUENCY_ATTR);
             }
 #endif
 
@@ -588,7 +589,7 @@ namespace HF
              *
              * @return  the value for the report interval attribute.
              */
-            uint16_t report_interval ()
+            uint16_t report_interval()
             {
                return _report_interval;
             }
@@ -598,9 +599,9 @@ namespace HF
              *
              * @param value   the value to set the report interval attribute to.
              */
-            void report_interval (uint16_t value)
+            void report_interval(uint16_t value)
             {
-               ATTR_SETTER (uint16_t, _report_interval, REPORT_INTERVAL_ATTR);
+               ATTR_SETTER(uint16_t, _report_interval, REPORT_INTERVAL_ATTR);
             }
 #endif
 
@@ -610,11 +611,14 @@ namespace HF
             // Attribute API
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid);
+            HF::Attributes::IAttribute *attribute(uint8_t uid);
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute (SimplePowerMeter::Server *, uint8_t);
+            friend HF::Attributes::IAttribute *Interfaces::create_attribute(
+               SimplePowerMeter::Server *,
+               uint8_t);
 
             protected:
 
@@ -623,7 +627,7 @@ namespace HF
              *
              * @return  message to send or @c nullptr if the message cannot be created.
              */
-            virtual Report *report ();
+            virtual Report *report();
          };
 
          /*!
@@ -631,7 +635,7 @@ namespace HF
           *
           * This class provides the client side of the Simple Power Meter interface.
           */
-         struct Client:public InterfaceRole <SimplePowerMeter::Base, Interface::CLIENT_ROLE>
+         struct Client: public InterfaceRole<SimplePowerMeter::Base, Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Events
@@ -645,10 +649,10 @@ namespace HF
              * @param [in] source   device address that sent the report.
              * @param [in] report   the report received from the server.
              */
-            virtual void report (Protocol::Address &source, Report &report)
+            virtual void report(Protocol::Address &source, Report &report)
             {
-               UNUSED (source);
-               UNUSED (report);
+               UNUSED(source);
+               UNUSED(report);
             }
 
             //! @}
@@ -656,8 +660,8 @@ namespace HF
 
             protected:
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
          };
 
          /*! @} */
@@ -685,7 +689,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command);
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command);
 
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
@@ -695,7 +699,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::Attributes attribute);
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimplePowerMeter::Attributes attribute);
 
 /*! @} */
 

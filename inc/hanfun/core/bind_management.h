@@ -70,8 +70,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (HF::Core::BindManagement::IServer *server,
-                                                    uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Core::BindManagement::IServer *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the classes that implement the Bind Management service.
@@ -125,7 +125,7 @@ namespace HF
              * @param [in] _itf     interface UID + role for the bind entry.
              */
             Entry(Protocol::Address _source, Common::Interface _itf):
-               source (_source), itf (_itf)
+               source(_source), itf(_itf)
             {}
 
             /*!
@@ -137,7 +137,7 @@ namespace HF
              */
             Entry(Protocol::Address _source, Common::Interface _itf,
                   Protocol::Address _destination):
-               source (_source), destination (_destination), itf (_itf)
+               source(_source), destination(_destination), itf(_itf)
             {}
 
             //! Minimum pack/unpack required data size.
@@ -146,21 +146,21 @@ namespace HF
                                                  + Common::Interface::min_size;  // Interface UID.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         typedef HF::Common::Pointer <const Entry> EntryPtr;
+         typedef HF::Common::Pointer<const Entry> EntryPtr;
 
          /*!
           * Add/Remove Bind message.
           */
-         struct Message:public Entry
+         struct Message: public Entry
          {};
 
          // =============================================================================
@@ -170,13 +170,13 @@ namespace HF
          /*!
           * Bind Management persistent storage API.
           */
-         struct IEntries:public Common::IEntries <Entry>
+         struct IEntries: public Common::IEntries<Entry>
          {
             // =============================================================================
             // API
             // =============================================================================
 
-            using Common::IEntries <Entry>::destroy;
+            using Common::IEntries<Entry>::destroy;
 
             /*!
              * Destroy the entries in the persistent storage, that refer to the
@@ -191,8 +191,8 @@ namespace HF
              * @retval  Common::Result::OK and a copy of the destroyed entry if the entry was destroyed.
              * @retval  Common::Result::FAIL_ARG and @c nullptr otherwise.
              */
-            virtual Common::Result destroy (uint16_t address, Protocol::Address::Type type =
-                                               Protocol::Address::DEVICE) = 0;
+            virtual Common::Result destroy(uint16_t address, Protocol::Address::Type type =
+                                              Protocol::Address::DEVICE) = 0;
 
             // =============================================================================
             // Query API
@@ -208,8 +208,8 @@ namespace HF
              * @retval a pointer to bind entry for the given parameters,
              * @retval nullptr if bind entry does not exist.
              */
-            virtual EntryPtr find (const Protocol::Address &source, const Common::Interface &itf,
-                                   const Protocol::Address &destination) const = 0;
+            virtual EntryPtr find(const Protocol::Address &source, const Common::Interface &itf,
+                                  const Protocol::Address &destination) const = 0;
 
             /*!
              * Check if entries for the device with given @c source address and for the given
@@ -221,8 +221,8 @@ namespace HF
              * @retval  true if entries exist,
              * @retval  false otherwise.
              */
-            virtual bool any_of (Protocol::Address const &source,
-                                 Common::Interface const &itf) const = 0;
+            virtual bool any_of(Protocol::Address const &source,
+                                Common::Interface const &itf) const = 0;
 
             /*!
              * Call the given function for all the entries with given @c source address and
@@ -232,8 +232,8 @@ namespace HF
              * @param [in] itf      interface id to search for.
              * @param [in] func     function to call for all the entries.
              */
-            virtual void for_each (Protocol::Address const &source, Common::Interface const &itf,
-                                   std::function <void(const Entry &)> func) const = 0;
+            virtual void for_each(Protocol::Address const &source, Common::Interface const &itf,
+                                  std::function<void(const Entry &)> func) const = 0;
          };
 
          /*!
@@ -246,12 +246,12 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * Parent class for the Bind Management interface implementation.
           */
-         class Abstract:public Service <HF::Interface::BIND_MANAGEMENT>
+         class Abstract: public Service<HF::Interface::BIND_MANAGEMENT>
          {
             protected:
 
@@ -261,21 +261,21 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Abstract(HF::Core::Unit0 &unit):
-               Service (unit)
+               Service(unit)
             {}
          };
 
          /*!
           * Bind Management interface : Client side.
           */
-         class Client:public ServiceRole <Abstract, HF::Interface::CLIENT_ROLE>,
-            protected SessionManagement::Client <Entry>
+         class Client: public ServiceRole<Abstract, HF::Interface::CLIENT_ROLE>,
+            protected SessionManagement::Client<Entry>
          {
-            typedef ServiceRole <Abstract, HF::Interface::CLIENT_ROLE> Service;
+            typedef ServiceRole<Abstract, HF::Interface::CLIENT_ROLE> Service;
 
             public:
 
-            typedef SessionManagement::Client <Entry> SessionMgr;
+            typedef SessionManagement::Client<Entry> SessionMgr;
 
             /*!
              * Constructor.
@@ -283,7 +283,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Client(HF::Core::Unit0 &unit):
-               ServiceRole (unit)
+               ServiceRole(unit)
             {}
 
             virtual ~Client() {}
@@ -294,7 +294,7 @@ namespace HF
              * @return  reference to the object implementing the session management API for
              *          this device management client.
              */
-            SessionMgr &session ()
+            SessionMgr &session()
             {
                return *this;
             }
@@ -312,8 +312,8 @@ namespace HF
              * @param [in] destination    the HAN-FUN destination device.
              * @param [in] itf            the interface to bind between source and destination.
              */
-            void add (const Protocol::Address &source, const Protocol::Address &destination,
-                      const Common::Interface &itf);
+            void add(const Protocol::Address &source, const Protocol::Address &destination,
+                     const Common::Interface &itf);
 
             /*!
              * Send a REMOVE_BIND command.
@@ -322,8 +322,8 @@ namespace HF
              * @param [in] destination    the HAN-FUN destination device.
              * @param [in] itf            the interface to unbind between source and destination.
              */
-            void remove (const Protocol::Address &source, const Protocol::Address &destination,
-                         const Common::Interface &itf);
+            void remove(const Protocol::Address &source, const Protocol::Address &destination,
+                        const Common::Interface &itf);
 
             // ======================================================================
             // Session Management
@@ -332,10 +332,10 @@ namespace HF
             /*!
              * Start read entries session.
              */
-            void start_session () const
+            void start_session() const
             {
-               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
-                                    START_SESSION_CMD>();
+               SessionMgr::request<SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                   START_SESSION_CMD>();
             }
 
             /*!
@@ -344,19 +344,19 @@ namespace HF
              * @param [in] offset   start read at offset.
              * @param [in] count    number of entries to read.
              */
-            void get_entries (uint16_t offset, uint8_t count = 0) const
+            void get_entries(uint16_t offset, uint8_t count = 0) const
             {
-               SessionMgr::get_entries <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
-                                        GET_ENTRIES_CMD>(offset, count);
+               SessionMgr::get_entries<SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                       GET_ENTRIES_CMD>(offset, count);
             }
 
             /*!
              * End read entries session.
              */
-            void end_session () const
+            void end_session() const
             {
-               SessionMgr::request <SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
-                                    END_SESSION_CMD>();
+               SessionMgr::request<SERVER_ROLE, Interface::DEVICE_MANAGEMENT,
+                                   END_SESSION_CMD>();
             }
 
             //! @}
@@ -374,32 +374,32 @@ namespace HF
              * @param [in] cmd      the command that response refers to.
              * @param [in] response the result of the command.
              */
-            virtual void response (const CMD cmd, const Protocol::Response &response);
+            virtual void response(const CMD cmd, const Protocol::Response &response);
 
             //! @}
             // ======================================================================
 
             using Service::send;
 
-            void send (const Protocol::Address &addr, Protocol::Message &message)
+            void send(const Protocol::Address &addr, Protocol::Message &message)
             {
-               Service::send (addr, message);
+               Service::send(addr, message);
             }
 
             protected:
 
             using ServiceRole::payload_size;
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
          };
 
          /*!
           * Bind Management interface : Server side API.
           */
-         struct IServer:public ServiceRole <Abstract, HF::Interface::SERVER_ROLE>
+         struct IServer: public ServiceRole<Abstract, HF::Interface::SERVER_ROLE>
          {
             virtual ~IServer() {}
 
@@ -415,7 +415,7 @@ namespace HF
              *
              * @return  a reference to the unit that holds this interface.
              */
-            HF::Devices::Concentrator::IUnit0 &unit0 () const;
+            HF::Devices::Concentrator::IUnit0 &unit0() const;
 
             // ======================================================================
             // Commands
@@ -432,9 +432,9 @@ namespace HF
              *
              * @return  Common::Result::OK if the bind was created or Result::FAIL_* otherwise.
              */
-            virtual Common::Result add (const Protocol::Address &source,
-                                        const Protocol::Address &destination,
-                                        const Common::Interface &itf) = 0;
+            virtual Common::Result add(const Protocol::Address &source,
+                                       const Protocol::Address &destination,
+                                       const Common::Interface &itf) = 0;
 
             /*!
              * Remove a bind entry from the database.
@@ -445,9 +445,9 @@ namespace HF
              *
              * @return  Common::Result::OK if the bind was removed or Result::FAIL_* otherwise.
              */
-            virtual Common::Result remove (const Protocol::Address &source,
-                                           const Protocol::Address &destination,
-                                           const Common::Interface &itf) = 0;
+            virtual Common::Result remove(const Protocol::Address &source,
+                                          const Protocol::Address &destination,
+                                          const Common::Interface &itf) = 0;
 
             //! @}
             // ======================================================================
@@ -458,7 +458,7 @@ namespace HF
              * @return  reference to the object responsible by the persistent storage of the
              *          bind entries.
              */
-            virtual IEntries &entries () const = 0;
+            virtual IEntries &entries() const = 0;
 
             /*!
              * Reference to the session management API.
@@ -466,7 +466,7 @@ namespace HF
              * @return  reference to the object implementing the session management API for
              *          this bind management server.
              */
-            virtual SessionManagement::IServer &sessions () = 0;
+            virtual SessionManagement::IServer &sessions() = 0;
 
             protected:
 
@@ -476,14 +476,14 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             IServer(Unit0 &unit):
-               ServiceRole <Abstract, HF::Interface::SERVER_ROLE>(unit)
+               ServiceRole<Abstract, HF::Interface::SERVER_ROLE>(unit)
             {}
          };
 
          /*!
           * Parent class for bind management - server role.
           */
-         struct AbstractServer:public IServer
+         struct AbstractServer: public IServer
          {
             virtual ~AbstractServer() {}
 
@@ -491,26 +491,27 @@ namespace HF
             // API.
             // =============================================================================
 
-            Common::Result add (const Protocol::Address &source,
-                                const Protocol::Address &destination,
-                                const Common::Interface &itf);
+            Common::Result add(const Protocol::Address &source,
+                               const Protocol::Address &destination,
+                               const Common::Interface &itf);
 
-            Common::Result remove (const Protocol::Address &source,
-                                   const Protocol::Address &destination,
-                                   const Common::Interface &itf);
+            Common::Result remove(const Protocol::Address &source,
+                                  const Protocol::Address &destination,
+                                  const Common::Interface &itf);
 
             // =============================================================================
             // Interface Attribute API.
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            HF::Attributes::IAttribute *attribute(uint8_t uid)
             {
-               return Core::create_attribute (this, uid);
+               return Core::create_attribute(this, uid);
             }
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const
             {
-               UNUSED (pack_id);
+               UNUSED(pack_id);
                return HF::Attributes::UIDS {NUMBER_OF_ENTRIES_ATTR};
             }
 
@@ -521,26 +522,26 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            AbstractServer(Unit0 &unit):IServer (unit)
+            AbstractServer(Unit0 &unit): IServer(unit)
             {}
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
          };
 
          /*!
           * Default implementation of the bind entries container.
           */
-         struct Entries:public IEntries
+         struct Entries: public IEntries
          {
-            typedef std::set <Entry> Container;
+            typedef std::set<Entry> Container;
             typedef Container::iterator iterator;
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            uint16_t size () const;
+            uint16_t size() const;
 
-            Common::Result save (const Entry &entry);
+            Common::Result save(const Entry &entry);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -548,41 +549,41 @@ namespace HF
              * @warning the reference passed into this method SHOULD NOT be considered
              *          valid if it was obtained by calling the find method.
              */
-            Common::Result destroy (const Entry &entry);
+            Common::Result destroy(const Entry &entry);
 
-            Common::Result destroy (uint16_t address,
-                                    Protocol::Address::Type type = Protocol::Address::DEVICE);
+            Common::Result destroy(uint16_t address,
+                                   Protocol::Address::Type type = Protocol::Address::DEVICE);
 
             // =============================================================================
             // Query API
             // =============================================================================
 
-            EntryPtr find (const Protocol::Address &source, const Common::Interface &itf,
-                           const Protocol::Address &destination) const;
+            EntryPtr find(const Protocol::Address &source, const Common::Interface &itf,
+                          const Protocol::Address &destination) const;
 
-            bool any_of (Protocol::Address const &source, Common::Interface const &itf) const;
+            bool any_of(Protocol::Address const &source, Common::Interface const &itf) const;
 
-            void for_each (Protocol::Address const &source, Common::Interface const &itf,
-                           std::function <void(const Entry &)> func) const;
+            void for_each(Protocol::Address const &source, Common::Interface const &itf,
+                          std::function<void(const Entry &)> func) const;
 
-            iterator begin ()
+            iterator begin()
             {
-               return db.begin ();
+               return db.begin();
             }
 
-            iterator end ()
+            iterator end()
             {
-               return db.end ();
+               return db.end();
             }
 
-            const_iterator begin () const
+            const_iterator begin() const
             {
-               return db.begin ();
+               return db.begin();
             }
 
-            iterator end () const
+            iterator end() const
             {
-               return db.end ();
+               return db.end();
             }
 
             /*!
@@ -594,8 +595,8 @@ namespace HF
              *
              * @return  iterators to the entries found.
              */
-            std::pair <iterator, iterator> find (Protocol::Address const &source,
-                                                 Common::Interface const &itf) const;
+            std::pair<iterator, iterator> find(Protocol::Address const &source,
+                                               Common::Interface const &itf) const;
 
             /*!
              * Destroy the entries in the persistent storage, for which the given
@@ -608,16 +609,16 @@ namespace HF
              * @retval  Common::Result::FAIL_ARG, otherwise.
              */
             template<typename Func>
-            Common::Result destroy (Func func)
+            Common::Result destroy(Func func)
             {
                Common::Result result = Common::Result::FAIL_ARG;
 
-               for (iterator itr = db.begin (); itr != db.end ();)
+               for (iterator itr = db.begin(); itr != db.end();)
                {
-                  if (func (*itr))
+                  if (func(*itr))
                   {
                      auto old = itr++;
-                     destroy (*old);
+                     destroy(*old);
                      result = Common::Result::OK;
                   }
                   else
@@ -640,9 +641,9 @@ namespace HF
           * server side.
           */
          template<typename _Entries = BindManagement::Entries>
-         struct Server:public AbstractServer, public SessionManagement::Server <_Entries>
+         struct Server: public AbstractServer, public SessionManagement::Server<_Entries>
          {
-            typedef typename SessionManagement::Server <_Entries> SessionMgr;
+            typedef typename SessionManagement::Server<_Entries> SessionMgr;
             typedef typename SessionMgr::Container Container;
 
             /*!
@@ -650,98 +651,99 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Server(Unit0 &unit):AbstractServer (unit)
+            Server(Unit0 &unit): AbstractServer(unit)
             {}
 
             virtual ~Server()
             {}
 
-            Container &entries () const
+            Container &entries() const
             {
-               return SessionMgr::entries ();
+               return SessionMgr::entries();
             }
 
-            SessionMgr &sessions ()
+            SessionMgr &sessions()
             {
                return *this;
             }
 
             using AbstractServer::send;
 
-            void send (const Protocol::Address &addr, Protocol::Message &message)
+            void send(const Protocol::Address &addr, Protocol::Message &message)
             {
-               AbstractServer::send (addr, message);
+               AbstractServer::send(addr, message);
             }
 
             protected:
 
             _Entries _entries; //!< Bind entries database.
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size(Protocol::Message::Interface &itf) const
             {
                switch (itf.member)
                {
                   case START_SESSION_CMD:
-                     return SessionMgr::payload_size (SessionManagement::START);
+                     return SessionMgr::payload_size(SessionManagement::START);
 
                   case GET_ENTRIES_CMD:
-                     return SessionMgr::payload_size (SessionManagement::GET);
+                     return SessionMgr::payload_size(SessionManagement::GET);
 
                   case END_SESSION_CMD:
-                     return SessionMgr::payload_size (SessionManagement::END);
+                     return SessionMgr::payload_size(SessionManagement::END);
 
                   default:
-                     return AbstractService::payload_size (itf);
+                     return AbstractService::payload_size(itf);
                }
             }
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset)
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset)
             {
                switch (packet.message.itf.member)
                {
                   case START_SESSION_CMD:
-                     return SessionMgr::handle_command (SessionManagement::START, packet,
-                                                        payload, offset);
+                     return SessionMgr::handle_command(SessionManagement::START, packet,
+                                                       payload, offset);
 
                   case GET_ENTRIES_CMD:
-                     return SessionMgr::handle_command (SessionManagement::GET, packet,
-                                                        payload, offset);
+                     return SessionMgr::handle_command(SessionManagement::GET, packet,
+                                                       payload, offset);
 
                   case END_SESSION_CMD:
-                     return SessionMgr::handle_command (SessionManagement::END, packet,
-                                                        payload, offset);
+                     return SessionMgr::handle_command(SessionManagement::END, packet,
+                                                       payload, offset);
 
                   default:
-                     return AbstractServer::handle_command (packet, payload, offset);
+                     return AbstractServer::handle_command(packet, payload, offset);
                }
             }
 
             using SessionMgr::entries;
          };
 
-         typedef Server <> DefaultServer;
+         typedef Server<> DefaultServer;
 
          // =============================================================================
          // Operators
          // =============================================================================
 
-         inline bool operator ==(const Entry &lhs, const Entry &rhs)
+         inline bool operator==(const Entry &lhs, const Entry &rhs)
          {
             return lhs.source == rhs.source && lhs.destination == rhs.destination &&
                    lhs.itf == rhs.itf;
          }
 
-         inline bool operator !=(const Entry &lhs, const Entry &rhs)
+         inline bool operator!=(const Entry &lhs, const Entry &rhs)
          {
             return !(lhs == rhs);
          }
 
-         inline bool operator <(const Entry &lhs, const Entry &rhs)
+         inline bool operator<(const Entry &lhs, const Entry &rhs)
          {
             return lhs.source < rhs.source || (lhs.source == rhs.source
                                                && (lhs.itf < rhs.itf ||
-                                                   (lhs.itf == rhs.itf && lhs.destination < rhs.destination)));
+                                                   (lhs.itf == rhs.itf &&
+                                                    lhs.destination < rhs.destination)));
          }
 
       }  // namespace BindManagement
@@ -769,7 +771,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::CMD command);
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::CMD command);
 
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
@@ -779,7 +781,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute);
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::BindManagement::Attributes attribute);
 
 /*! @} */
 

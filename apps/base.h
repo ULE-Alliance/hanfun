@@ -40,14 +40,14 @@ namespace DeviceManagement
     * This class saves the application configuration every time an entry
     * is save or destroyed.
     */
-   struct Entries:public HF::Core::DeviceManagement::Entries
+   struct Entries: public HF::Core::DeviceManagement::Entries
    {
       typedef HF::Core::DeviceManagement::Device Device;
       typedef HF::Core::DeviceManagement::DevicePtr DevicePtr;
 
-      HF::Common::Result save (const Device &device);
+      HF::Common::Result save(const Device &device);
 
-      HF::Common::Result destroy (const Device &device);
+      HF::Common::Result destroy(const Device &device);
 
       /*!
        * Insert a device management entry into the database.
@@ -56,7 +56,7 @@ namespace DeviceManagement
        *
        * @param [in] device   device entry to add.
        */
-      void insert (const Device &device);
+      void insert(const Device &device);
    };
 
    /*!
@@ -65,11 +65,11 @@ namespace DeviceManagement
     * This class allows for the application to select the address to
     * be given to next device that registers.
     */
-   struct Server:public HF::Core::DeviceManagement::Server <Entries>
+   struct Server: public HF::Core::DeviceManagement::Server<Entries>
    {
       Server(HF::Core::Unit0 &unit):
-         HF::Core::DeviceManagement::Server <Entries>(unit),
-         _next_address (HF::Protocol::BROADCAST_ADDR)
+         HF::Core::DeviceManagement::Server<Entries>(unit),
+         _next_address(HF::Protocol::BROADCAST_ADDR)
       {}
 
       virtual ~Server() {}
@@ -81,7 +81,7 @@ namespace DeviceManagement
        *
        * @return  the address that was set.
        */
-      uint16_t next_address (uint16_t addr)
+      uint16_t next_address(uint16_t addr)
       {
          _next_address = addr;
          return _next_address;
@@ -95,7 +95,7 @@ namespace DeviceManagement
        * @retval  <tt>true</tt> if no device is registered with the given @c address;
        * @retval  <tt>false</tt> otherwise.
        */
-      bool available (uint16_t address);
+      bool available(uint16_t address);
 
       /*!
        * De-register the device with the given @c address.
@@ -105,30 +105,30 @@ namespace DeviceManagement
        * @retval  <tt>true</tt> if the device was de-registered;
        * @retval  <tt>false</tt> otherwise.
        */
-      bool deregister (uint16_t address);
+      bool deregister(uint16_t address);
 
       /*!
        * Save the device entries into the JSON database.
        *
        * @param [in] root  database root to start saving the entries.
        */
-      void save (Json::Value &root);
+      void save(Json::Value &root);
 
       /*!
        * Restore the device entries from the JSON database.
        *
        * @param [in] root  database root to start reading the entries.
        */
-      void restore (Json::Value root);
+      void restore(Json::Value root);
 
       protected:
 
-      using HF::Core::DeviceManagement::Server <Entries>::deregister;
+      using HF::Core::DeviceManagement::Server<Entries>::deregister;
 
       //! The address the next registering device will be assigned.
       uint16_t _next_address;
 
-      uint16_t next_address ();
+      uint16_t next_address();
    };
 
 }     // namespace DeviceManagement
@@ -141,14 +141,14 @@ namespace BindManagement
     * This class saves the application configuration every time an entry
     * is save or destroyed.
     */
-   struct Entries:public HF::Core::BindManagement::Entries
+   struct Entries: public HF::Core::BindManagement::Entries
    {
       typedef HF::Core::BindManagement::Entry Entry;
       typedef HF::Core::BindManagement::EntryPtr EntryPtr;
 
-      HF::Common::Result save (const Entry &entry);
+      HF::Common::Result save(const Entry &entry);
 
-      HF::Common::Result destroy (const Entry &entry);
+      HF::Common::Result destroy(const Entry &entry);
 
       /*!
        * Insert a bind management entry into the database.
@@ -157,7 +157,7 @@ namespace BindManagement
        *
        * @param [in] entry   device entry to add.
        */
-      void insert (Entry &entry);
+      void insert(Entry &entry);
    };
 
    /*!
@@ -165,10 +165,10 @@ namespace BindManagement
     *
     * This class allows for the application to save and restore bindings from a file.
     */
-   struct Server:public HF::Core::BindManagement::Server <Entries>
+   struct Server: public HF::Core::BindManagement::Server<Entries>
    {
       Server(HF::Devices::Concentrator::IUnit0 &unit):
-         HF::Core::BindManagement::Server <Entries>(unit)
+         HF::Core::BindManagement::Server<Entries>(unit)
       {}
 
       /*!
@@ -176,14 +176,14 @@ namespace BindManagement
        *
        * @param [in] root  database root to start saving the entries.
        */
-      void save (Json::Value &root);
+      void save(Json::Value &root);
 
       /*!
        * Restore the bind entries from the JSON database.
        *
        * @param [in] root  database root to start reading the entries.
        */
-      void restore (Json::Value root);
+      void restore(Json::Value root);
    };
 
 }  // namespace BindManagement
@@ -194,36 +194,36 @@ namespace BindManagement
 
 namespace Events
 {
-   struct Alert:public HF::Interfaces::Alert::Client
+   struct Alert: public HF::Interfaces::Alert::Client
    {
-      void status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message);
+      void status(HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message);
    };
 
-   struct LevelControl:public HF::Interfaces::LevelControl::Server
+   struct LevelControl: public HF::Interfaces::LevelControl::Server
    {
-      void level_change (HF::Protocol::Address &source, uint8_t old_level, uint8_t new_level);
+      void level_change(HF::Protocol::Address &source, uint8_t old_level, uint8_t new_level);
    };
 
-   struct OnOff:public HF::Interfaces::OnOff::Server
+   struct OnOff: public HF::Interfaces::OnOff::Server
    {
-      void on (HF::Protocol::Address &source);
+      void on(HF::Protocol::Address &source);
 
-      void off (HF::Protocol::Address &source);
+      void off(HF::Protocol::Address &source);
 
-      void toggle (HF::Protocol::Address &source);
+      void toggle(HF::Protocol::Address &source);
    };
 
-   struct SimplePowerMeter:public HF::Interfaces::SimplePowerMeter::Client
+   struct SimplePowerMeter: public HF::Interfaces::SimplePowerMeter::Client
    {
-      void report (HF::Protocol::Address &source, HF::Interfaces::SimplePowerMeter::Report &report);
+      void report(HF::Protocol::Address &source, HF::Interfaces::SimplePowerMeter::Report &report);
    };
 
-   struct Unit:public HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert,
+   struct Unit: public HF::Units::Unit<HF::Profiles::GenericApplicationLogic, Alert,
                                        LevelControl, OnOff, SimplePowerMeter>
    {
       Unit(uint8_t id, HF::IDevice &device):
-         HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert, LevelControl,
-                          OnOff, SimplePowerMeter>(id, device)
+         HF::Units::Unit<HF::Profiles::GenericApplicationLogic, Alert, LevelControl,
+                         OnOff, SimplePowerMeter>(id, device)
       {}
    };
 
@@ -236,36 +236,36 @@ namespace Commands
    typedef HF::Interfaces::OnOff::Client OnOff;
    typedef HF::Interfaces::SimplePowerMeter::Server SimplePowerMeter;
 
-   struct Unit:public HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert,
+   struct Unit: public HF::Units::Unit<HF::Profiles::GenericApplicationLogic, Alert,
                                        LevelControl, OnOff, SimplePowerMeter>
    {
       Unit(uint8_t id, HF::IDevice &device):
-         HF::Units::Unit <HF::Profiles::GenericApplicationLogic, Alert, LevelControl,
-                          OnOff, SimplePowerMeter>(id, device)
+         HF::Units::Unit<HF::Profiles::GenericApplicationLogic, Alert, LevelControl,
+                         OnOff, SimplePowerMeter>(id, device)
       {}
 
-      Alert &alert ()
+      Alert &alert()
       {
-         return *const_cast <Alert *>(get <0>());
+         return *const_cast<Alert *>(get<0>());
       }
 
-      LevelControl &level_control ()
+      LevelControl &level_control()
       {
-         return *const_cast <LevelControl *>(get <1>());
+         return *const_cast<LevelControl *>(get<1>());
       }
 
-      OnOff &on_off ()
+      OnOff &on_off()
       {
-         return *const_cast <OnOff *>(get <2>());
+         return *const_cast<OnOff *>(get<2>());
       }
 
-      SimplePowerMeter &simple_power_meter ()
+      SimplePowerMeter &simple_power_meter()
       {
-         return *const_cast <SimplePowerMeter *>(get <3>());
+         return *const_cast<SimplePowerMeter *>(get<3>());
       }
 
-      HF::Common::Result handle (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload,
-                                 uint16_t offset);
+      HF::Common::Result handle(HF::Protocol::Packet &packet, HF::Common::ByteArray &payload,
+                                uint16_t offset);
    };
 
 }  // namespace
@@ -275,31 +275,31 @@ namespace Commands
 // =============================================================================
 
 //! Custom Unit0 declaration
-typedef HF::Devices::Concentrator::Unit0 <HF::Core::DeviceInformation::Server,
-                                             ::DeviceManagement::Server,
-                                          HF::Core::AttributeReporting::Server,
-                                             ::BindManagement::Server> Unit0;
+typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
+                                            ::DeviceManagement::Server,
+                                         HF::Core::AttributeReporting::Server,
+                                            ::BindManagement::Server> Unit0;
 
 /*!
  * This class represents a HAN-FUN Concentrator.
  */
-struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
+struct Base: public HF::Devices::Concentrator::Abstract<Unit0>
 {
    Events::Unit   events;
    Commands::Unit commands;
 
-   Base():        HF::Devices::Concentrator::Abstract <Unit0>(),
-      events (1, *this), commands (2, *this)
+   Base():        HF::Devices::Concentrator::Abstract<Unit0>(),
+      events(1, *this), commands(2, *this)
    {}
 
    virtual ~Base()
    {}
 
-   void receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset);
+   void receive(HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset);
 
-   using HF::Devices::Concentrator::Abstract <Unit0>::link;
+   using HF::Devices::Concentrator::Abstract<Unit0>::link;
 
-   std::forward_list <HF::Transport::Link *> &links()
+   std::forward_list<HF::Transport::Link *> &links()
    {
       return _links;
    }
@@ -313,7 +313,7 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
     * @retval  true  if the binding exist;
     * @retval  false otherwise.
     */
-   bool has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2);
+   bool has_bind(uint16_t dev_addr_1, uint16_t dev_addr_2);
 
    /*!
     * Create a new bind entry.
@@ -326,7 +326,7 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
     * @retval  2  First device does not exist.
     * @retval  3  Second device does not exist.
     */
-   uint8_t bind (uint16_t dev_addr_1, uint16_t dev_addr_2);
+   uint8_t bind(uint16_t dev_addr_1, uint16_t dev_addr_2);
 
    /*!
     * Remove the binding entry for the given devices.
@@ -339,7 +339,7 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
     * @retval  true  if the bind entry was found and removed,
     * @retval  false otherwise.
     */
-   bool unbind (uint16_t dev_addr_1, uint16_t dev_addr_2);
+   bool unbind(uint16_t dev_addr_1, uint16_t dev_addr_2);
 };
 
 // =============================================================================
@@ -357,7 +357,7 @@ struct Base:public HF::Devices::Concentrator::Abstract <Unit0>
  * @param [out] node       reference to the Json::Value to place the serialization result in.
  */
 // =============================================================================
-void to_json (const HF::Common::Interface &interface, Json::Value &node);
+void to_json(const HF::Common::Interface &interface, Json::Value &node);
 
 // =============================================================================
 // to_json
@@ -370,7 +370,7 @@ void to_json (const HF::Common::Interface &interface, Json::Value &node);
  * @param [out] node    reference to the Json::Value to place the serialization result in.
  */
 // =============================================================================
-void to_json (HF::UID::UID *uid, Json::Value &node);
+void to_json(HF::UID::UID *uid, Json::Value &node);
 
 // =============================================================================
 // to_json
@@ -384,7 +384,7 @@ void to_json (HF::UID::UID *uid, Json::Value &node);
  * @param [out] node    reference to the Json::Value to place the serialization result in.
  */
 // =============================================================================
-void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node);
+void to_json(const HF::Core::DeviceManagement::Unit &unit, Json::Value &node);
 
 // =============================================================================
 // to_json
@@ -398,7 +398,7 @@ void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node);
  * @param [out] node    reference to the Json::Value to place the serialization result in.
  */
 // =============================================================================
-void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &node);
+void to_json(const HF::Core::DeviceManagement::Device &device, Json::Value &node);
 
 // =============================================================================
 // to_json
@@ -411,7 +411,7 @@ void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &nod
  * @param [out] node    reference to the Json::Value to place the serialization result in.
  */
 // =============================================================================
-void to_json (const HF::Protocol::Address &address, Json::Value &node);
+void to_json(const HF::Protocol::Address &address, Json::Value &node);
 
 // =============================================================================
 // to_json
@@ -425,7 +425,7 @@ void to_json (const HF::Protocol::Address &address, Json::Value &node);
  * @param [out] node    reference to the Json::Value to place the serialization result in.
  */
 // =============================================================================
-void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node);
+void to_json(const HF::Core::BindManagement::Entry &entry, Json::Value &node);
 
 // =============================================================================
 // from_json
@@ -439,7 +439,7 @@ void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node);
  * @param [out] interface  reference to the HF::Common::Interface to update.
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Common::Interface &interface);
+void from_json(Json::Value &node, HF::Common::Interface &interface);
 
 // =============================================================================
 // from_json
@@ -455,7 +455,7 @@ void from_json (Json::Value &node, HF::Common::Interface &interface);
  *                      object of the correct type (NONE/RFPI/IPUI/MAC/URI).
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::UID::UID * &uid);
+void from_json(Json::Value &node, HF::UID::UID * &uid);
 
 // =============================================================================
 // from_json
@@ -469,7 +469,7 @@ void from_json (Json::Value &node, HF::UID::UID * &uid);
  * @param [out] unit    reference to the HF::Core::DeviceManagement::Unit to update.
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit);
+void from_json(Json::Value &node, HF::Core::DeviceManagement::Unit &unit);
 
 // =============================================================================
 // from_json
@@ -484,7 +484,7 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit);
  *                      update.
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &device);
+void from_json(Json::Value &node, HF::Core::DeviceManagement::Device &device);
 
 // =============================================================================
 // from_json
@@ -498,7 +498,7 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &device);
  * @param [out] address    reference to the HF::Protocol::Address to update.
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Protocol::Address &address);
+void from_json(Json::Value &node, HF::Protocol::Address &address);
 
 // =============================================================================
 // from_json
@@ -513,7 +513,7 @@ void from_json (Json::Value &node, HF::Protocol::Address &address);
  *                      update.
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry);
+void from_json(Json::Value &node, HF::Core::BindManagement::Entry &entry);
 
 /*! @} */
 

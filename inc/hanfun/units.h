@@ -39,7 +39,7 @@ namespace HF
       /*!
        * This class represents the interface implemented by all HAN-FUN units.
        */
-      struct IUnit:public Profiles::IProfile
+      struct IUnit: public Profiles::IProfile
       {
          virtual ~IUnit() {}
 
@@ -48,18 +48,18 @@ namespace HF
           *
           * @return id number of this unit on the device.
           */
-         virtual uint8_t id () const = 0;
+         virtual uint8_t id() const = 0;
 
          /*!
           * Reference to the device this unit belongs to.
           *
           * @return  reference to the device this unit belongs to
           */
-         virtual IDevice &device () const = 0;
+         virtual IDevice &device() const = 0;
 
          //! @copydoc HF::Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                        uint16_t offset) = 0;
+         virtual Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                                       uint16_t offset) = 0;
 
          /*!
           * Create and send a new packet with the given message to the given address.
@@ -68,8 +68,8 @@ namespace HF
           * @param [in] message  message to send.
           * @param [in] link     preferred link to send the message on.
           */
-         virtual void send (const Protocol::Address &addr, Protocol::Message &message,
-                            Transport::Link *link = nullptr) = 0;
+         virtual void send(const Protocol::Address &addr, Protocol::Message &message,
+                           Transport::Link *link = nullptr) = 0;
 
          /*!
           * Return a vector containing a list of extra interfaces, other than the interfaces
@@ -77,16 +77,16 @@ namespace HF
           *
           * @return  vector containing the list of extra interfaces.
           */
-         virtual std::vector <Common::Interface> interfaces () const = 0;
+         virtual std::vector<Common::Interface> interfaces() const = 0;
 
          //! @copydoc HF::Interface::periodic
-         virtual void periodic (uint32_t time) = 0;
+         virtual void periodic(uint32_t time) = 0;
       };
 
       /*!
        * This is the parent class for all HAN-FUN units.
        */
-      class AbstractUnit:public IUnit
+      class AbstractUnit: public IUnit
       {
          //! Reference to the device this unit belongs to.
          IDevice &_device;
@@ -95,24 +95,25 @@ namespace HF
 
          virtual ~AbstractUnit()
          {
-            device ().remove (this);
+            device().remove(this);
          }
 
-         IDevice &device () const
+         IDevice &device() const
          {
             return _device;
          }
 
-         void send (const Protocol::Address &addr, Protocol::Message &message, Transport::Link *link);
+         void send(const Protocol::Address &addr, Protocol::Message &message,
+                   Transport::Link *link);
 
-         std::vector <Common::Interface> interfaces () const
+         std::vector<Common::Interface> interfaces() const
          {
-            return std::vector <Common::Interface>();
+            return std::vector<Common::Interface>();
          }
 
-         void periodic (uint32_t time)
+         void periodic(uint32_t time)
          {
-            UNUSED (time);
+            UNUSED(time);
          }
 
          protected:
@@ -125,9 +126,9 @@ namespace HF
           *
           * @param [in] device   reference to the device that holds this unit.
           */
-         AbstractUnit(IDevice &device):_device (device)
+         AbstractUnit(IDevice &device): _device(device)
          {
-            device.add (this);
+            device.add(this);
          }
 
          /*!
@@ -136,32 +137,32 @@ namespace HF
           * @param [in] old_value   reference to the previous value of the attribute.
           * @param [in] new_value   reference to the current value of the attribute.
           */
-         void notify (const HF::Attributes::IAttribute &old_value,
-                      const HF::Attributes::IAttribute &new_value) const;
+         void notify(const HF::Attributes::IAttribute &old_value,
+                     const HF::Attributes::IAttribute &new_value) const;
       };
 
       /*!
        * Helper template class to implement units.
        */
       template<class Profile, typename... ITF>
-      class Unit:public HF::Units::AbstractUnit, public virtual Profile
+      class Unit: public HF::Units::AbstractUnit, public virtual Profile
       {
          uint8_t _id;
 
          template<typename _Interface, typename _Proxy>
-         struct Proxy:public HF::Interfaces::Proxy <_Interface, _Proxy>
+         struct Proxy: public HF::Interfaces::Proxy<_Interface, _Proxy>
          {
             Proxy(_Proxy &_proxy):
-               HF::Interfaces::Proxy <_Interface, _Proxy>(_proxy)
+               HF::Interfaces::Proxy<_Interface, _Proxy>(_proxy)
             {}
 
-            _Proxy &unit () const
+            _Proxy &unit() const
             {
-               return HF::Interfaces::Proxy <_Interface, _Proxy>::proxy;
+               return HF::Interfaces::Proxy<_Interface, _Proxy>::proxy;
             }
          };
 
-         typedef std::tuple <Proxy <ITF, Unit> ...> interfaces_t;
+         typedef std::tuple<Proxy<ITF, Unit>...> interfaces_t;
 
          //! Tuple containing the optional implemented interfaces of this unit.
          interfaces_t _interfaces;
@@ -175,36 +176,36 @@ namespace HF
           * @param [in] device   device that contains this units.
           */
          Unit(uint8_t id, IDevice &device):
-            Profile (), HF::Units::AbstractUnit (device), _id (id),
-            _interfaces (Proxy <ITF, Unit>(*this) ...)
+            Profile(), HF::Units::AbstractUnit(device), _id(id),
+            _interfaces(Proxy<ITF, Unit>(*this) ...)
          {}
 
          //! @copydoc HF::Units::IUnit::id
-         uint8_t id () const
+         uint8_t id() const
          {
             return _id;
          }
 
          //! @copydoc HF::Profiles::IProfile::uid
-         uint16_t uid () const
+         uint16_t uid() const
          {
-            return Profile::uid ();
+            return Profile::uid();
          }
 
          //! @copydoc HF::Interface::handle
-         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                uint16_t offset)
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
          {
-            Common::Result result = Profile::handle (packet, payload, offset);
+            Common::Result result = Profile::handle(packet, payload, offset);
 
             // Message not handled by base profile, then try extra interfaces.
             if (result == Common::Result::FAIL_ARG)
             {
-               Interface *itf = find <0, ITF...>(packet.message.itf.id);
+               Interface *itf = find<0, ITF...>(packet.message.itf.id);
 
                if (itf != nullptr)
                {
-                  return itf->handle (packet, payload, offset);
+                  return itf->handle(packet, payload, offset);
                }
                else
                {
@@ -216,12 +217,12 @@ namespace HF
          }
 
          //! @copydoc HF::Profiles::IProfile::attributes
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            auto result = Profile::attributes (itf, pack_id, uids);
+            auto result = Profile::attributes(itf, pack_id, uids);
 
-            attributes_itf <0, ITF...>(result, itf, pack_id, uids);
+            attributes_itf<0, ITF...>(result, itf, pack_id, uids);
 
             return result;
          }
@@ -229,16 +230,16 @@ namespace HF
          using HF::Units::AbstractUnit::send;
 
          //! @copydoc HF::Interfaces::AbstractInterface::send
-         void send (const Protocol::Address &addr, Protocol::Message &message)
+         void send(const Protocol::Address &addr, Protocol::Message &message)
          {
-            AbstractUnit::send (addr, message, nullptr);
+            AbstractUnit::send(addr, message, nullptr);
          }
 
          //! @copydoc HF::Units::AbstractUnit::notify
-         void notify (const HF::Attributes::IAttribute &old_value,
-                      const HF::Attributes::IAttribute &new_value) const
+         void notify(const HF::Attributes::IAttribute &old_value,
+                     const HF::Attributes::IAttribute &new_value) const
          {
-            AbstractUnit::notify (old_value, new_value);
+            AbstractUnit::notify(old_value, new_value);
          }
 
          /*!
@@ -247,10 +248,10 @@ namespace HF
           * @return  a vector containing the UIDs for the optional interfaces
           *          implemented by this unit.
           */
-         std::vector <Common::Interface> interfaces () const
+         std::vector<Common::Interface> interfaces() const
          {
-            std::vector <Common::Interface> result;
-            result.reserve (sizeof ... (ITF));
+            std::vector<Common::Interface> result;
+            result.reserve(sizeof ... (ITF));
 
             Common::Interface temp;
             /* *INDENT-OFF* */
@@ -265,9 +266,9 @@ namespace HF
             return result;
          }
 
-         void periodic (uint32_t time)
+         void periodic(uint32_t time)
          {
-            Profile::periodic (time);
+            Profile::periodic(time);
 
             /* *INDENT-OFF* */
             for_each ([time](HF::Interface &itf) { itf.periodic (time);});
@@ -284,9 +285,9 @@ namespace HF
           * @return  a pointer to the optional implemented interface.
           */
          template<uint8_t N>
-         const typename std::tuple_element <N, interfaces_t>::type::base * get () const
+         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
          {
-            return &std::get <N>(_interfaces);
+            return &std::get<N>(_interfaces);
          }
 
          /*!
@@ -294,9 +295,9 @@ namespace HF
           *
           * @param [in] func  function to call with each of the optional implemented interfaces.
           */
-         void for_each (std::function <void(HF::Interface &)> func) const
+         void for_each(std::function<void(HF::Interface &)> func) const
          {
-            for_each <0, ITF...>(func);
+            for_each<0, ITF...>(func);
          }
 
          /*!
@@ -304,9 +305,9 @@ namespace HF
           *
           * @param [in] func  function to call with each of the optional implemented interfaces.
           */
-         void for_each (std::function <void(HF::Interface &)> func)
+         void for_each(std::function<void(HF::Interface &)> func)
          {
-            for_each <0, ITF...>(func);
+            for_each<0, ITF...>(func);
          }
 
          private:
@@ -325,20 +326,20 @@ namespace HF
           *                   the interface is not present.
           */
          template<uint8_t N, typename Head, typename... Tail>
-         HF::Interface *find (uint16_t itf_uid) const
+         HF::Interface *find(uint16_t itf_uid) const
          {
-            static_assert (std::is_base_of <HF::Interface, Head>::value,
-                           "Head must be of type HF::Interface");
+            static_assert(std::is_base_of<HF::Interface, Head>::value,
+                          "Head must be of type HF::Interface");
 
-            const Head &head = std::get <N>(_interfaces);
+            const Head &head = std::get<N>(_interfaces);
 
-            if (head.uid () == itf_uid)
+            if (head.uid() == itf_uid)
             {
-               return const_cast <Head *>(&head);
+               return const_cast<Head *>(&head);
             }
             else
             {
-               return find <N + 1, Tail...>(itf_uid);
+               return find<N + 1, Tail...>(itf_uid);
             }
          }
 
@@ -354,9 +355,9 @@ namespace HF
           * @return  @c nullptr, i.e. the interface is not present.
           */
          template<uint8_t N>
-         HF::Interface *find (uint16_t itf_uid) const
+         HF::Interface *find(uint16_t itf_uid) const
          {
-            UNUSED (itf_uid);
+            UNUSED(itf_uid);
             return nullptr;
          }
 
@@ -371,13 +372,13 @@ namespace HF
           * @tparam  Tail  the classes associated with the remaining optional interfaces.
           */
          template<uint8_t N, typename Head, typename... Tail>
-         void for_each (std::function <void(HF::Interface &)> func) const
+         void for_each(std::function<void(HF::Interface &)> func) const
          {
-            const auto &head = std::get <N>(this->_interfaces);
+            const auto &head = std::get<N>(this->_interfaces);
 
-            func (*(const_cast <HF::Interface *>(static_cast <const HF::Interface *>(&head))));
+            func(*(const_cast<HF::Interface *>(static_cast<const HF::Interface *>(&head))));
 
-            for_each <N + 1, Tail...>(func);
+            for_each<N + 1, Tail...>(func);
          }
 
          /*!
@@ -389,9 +390,9 @@ namespace HF
           * @tparam  N     index in the optional interfaces tuple to check if UID matches.
           */
          template<uint8_t N>
-         void for_each (std::function <void(HF::Interface &)> func) const
+         void for_each(std::function<void(HF::Interface &)> func) const
          {
-            UNUSED (func);
+            UNUSED(func);
          }
 
          /*!
@@ -409,19 +410,19 @@ namespace HF
           * @tparam  Tail  the classes associated with the remaining optional interfaces.
           */
          template<uint8_t N, typename Head, typename... Tail>
-         void attributes_itf (HF::Attributes::List &attrs, Common::Interface itf,
-                              uint8_t pack_id, const HF::Attributes::UIDS &uids) const
+         void attributes_itf(HF::Attributes::List &attrs, Common::Interface itf,
+                             uint8_t pack_id, const HF::Attributes::UIDS &uids) const
          {
-            const auto &head = std::get <N>(this->_interfaces);
+            const auto &head = std::get<N>(this->_interfaces);
 
-            if (head.uid () == itf.id)
+            if (head.uid() == itf.id)
             {
-               auto result = HF::Attributes::get (head, pack_id, uids);
-               attrs.merge (result);
+               auto result = HF::Attributes::get(head, pack_id, uids);
+               attrs.merge(result);
             }
             else
             {
-               attributes_itf <N + 1, Tail...>(attrs, itf, pack_id, uids);
+               attributes_itf<N + 1, Tail...>(attrs, itf, pack_id, uids);
             }
          }
 
@@ -439,13 +440,13 @@ namespace HF
           * @tparam N    index in the optional interfaces tuple to check if UID matches.
           */
          template<uint8_t N>
-         void attributes_itf (HF::Attributes::List &attrs, Common::Interface itf,
-                              uint8_t pack_id, const HF::Attributes::UIDS &uids) const
+         void attributes_itf(HF::Attributes::List &attrs, Common::Interface itf,
+                             uint8_t pack_id, const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (attrs);
-            UNUSED (itf);
-            UNUSED (pack_id);
-            UNUSED (uids);
+            UNUSED(attrs);
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
          }
       };
 

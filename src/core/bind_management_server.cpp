@@ -37,9 +37,9 @@ using namespace HF::Core::BindManagement;
  *
  */
 // =============================================================================
-HF::Devices::Concentrator::IUnit0 &IServer::unit0 () const
+HF::Devices::Concentrator::IUnit0 &IServer::unit0() const
 {
-   return static_cast <HF::Devices::Concentrator::IUnit0 &>(ServiceRole::unit ());
+   return static_cast<HF::Devices::Concentrator::IUnit0 &>(ServiceRole::unit());
 }
 
 // =============================================================================
@@ -49,12 +49,12 @@ HF::Devices::Concentrator::IUnit0 &IServer::unit0 () const
  *
  */
 // =============================================================================
-Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
-                                               Common::ByteArray &payload, uint16_t offset)
+Common::Result AbstractServer::handle_command(Protocol::Packet &packet,
+                                              Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result res      = Common::Result::FAIL_UNKNOWN;
 
-   BindManagement::CMD cmd = static_cast <BindManagement::CMD>(packet.message.itf.member);
+   BindManagement::CMD cmd = static_cast<BindManagement::CMD>(packet.message.itf.member);
 
    Entry entry;
 
@@ -62,17 +62,17 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
    {
       case ADD_BIND_CMD:
       {
-         entry.unpack (payload, offset);
+         entry.unpack(payload, offset);
 
-         res = this->add (entry.source, entry.destination, entry.itf);
+         res = this->add(entry.source, entry.destination, entry.itf);
 
          break;
       }
       case REMOVE_BIND_CMD:
       {
-         entry.unpack (payload, offset);
+         entry.unpack(payload, offset);
 
-         res = this->remove (entry.source, entry.destination, entry.itf);
+         res = this->remove(entry.source, entry.destination, entry.itf);
 
          break;
       }
@@ -80,17 +80,17 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
          break;
    }
 
-   Protocol::Response resp (res);
+   Protocol::Response resp(res);
 
-   Protocol::Message  response (packet.message, resp.size ());
+   Protocol::Message response(packet.message, resp.size());
 
    response.itf.role   = SERVER_ROLE;
-   response.itf.id     = BindManagement::IServer::uid ();
+   response.itf.id     = BindManagement::IServer::uid();
    response.itf.member = cmd;
 
-   resp.pack (response.payload);
+   resp.pack(response.payload);
 
-   send (packet.source, response);
+   send(packet.source, response);
 
    return res;
 }
@@ -102,10 +102,11 @@ Common::Result AbstractServer::handle_command (Protocol::Packet &packet,
  * @todo Add support for group binding.
  */
 // =============================================================================
-Common::Result AbstractServer::add (const Protocol::Address &source,
-                                    const Protocol::Address &destination, const Common::Interface &itf)
+Common::Result AbstractServer::add(const Protocol::Address &source,
+                                   const Protocol::Address &destination,
+                                   const Common::Interface &itf)
 {
-   auto entry = this->entries ().find (source, itf, destination);
+   auto entry = this->entries().find(source, itf, destination);
 
    // If the entry already exists, do nothing.
    if (entry != nullptr)
@@ -120,9 +121,9 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
    }
 
    // Get device entries from device management.
-   HF::Interface::Role role = static_cast <HF::Interface::Role>(itf.role);
+   HF::Interface::Role role = static_cast<HF::Interface::Role>(itf.role);
 
-   auto dst_dev             = unit0 ().device_management ()->entry (destination.device);
+   auto dst_dev             = unit0().device_management()->entry(destination.device);
 
    if (dst_dev == nullptr)
    {
@@ -138,21 +139,22 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
                                    });
    /* *INDENT-ON* */
 
-   if (dst_unit_it == dst_dev->units.end ())
+   if (dst_unit_it == dst_dev->units.end())
    {
       return Common::Result::FAIL_ARG;
    }
 
    // Check if destination unit has requested interface.
-   if (itf.id != Interface::ANY_UID && !dst_unit_it->has_interface (itf.id, role))
+   if (itf.id != Interface::ANY_UID && !dst_unit_it->has_interface(itf.id, role))
    {
       return Common::Result::FAIL_ARG;
    }
 
    // Skip source validation if catch all rule.
-   if (!(source.device == HF::Protocol::BROADCAST_ADDR || source.unit == HF::Protocol::BROADCAST_UNIT))
+   if (!(source.device == HF::Protocol::BROADCAST_ADDR ||
+         source.unit == HF::Protocol::BROADCAST_UNIT))
    {
-      auto src_dev = unit0 ().device_management ()->entry (source.device);
+      auto src_dev = unit0().device_management()->entry(source.device);
 
       if (src_dev == nullptr)
       {
@@ -168,7 +170,7 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
       });
       /* *INDENT-ON* */
 
-      if (src_unit_it == src_dev->units.end ())
+      if (src_unit_it == src_dev->units.end())
       {
          return Common::Result::FAIL_ARG;
       }
@@ -177,13 +179,13 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
 
       role = (role == Interface::CLIENT_ROLE ? Interface::SERVER_ROLE : Interface::CLIENT_ROLE);
 
-      if (itf.id != Interface::ANY_UID && !src_unit_it->has_interface (itf.id, role))
+      if (itf.id != Interface::ANY_UID && !src_unit_it->has_interface(itf.id, role))
       {
          return Common::Result::FAIL_ARG;
       }
    }
 
-   return entries ().save (Entry (source, itf, destination));
+   return entries().save(Entry(source, itf, destination));
 }
 
 // =============================================================================
@@ -193,10 +195,11 @@ Common::Result AbstractServer::add (const Protocol::Address &source,
  *
  */
 // =============================================================================
-Common::Result AbstractServer::remove (const Protocol::Address &source,
-                                       const Protocol::Address &destination, const Common::Interface &itf)
+Common::Result AbstractServer::remove(const Protocol::Address &source,
+                                      const Protocol::Address &destination,
+                                      const Common::Interface &itf)
 {
-   auto entry = this->entries ().find (source, itf, destination);
+   auto entry = this->entries().find(source, itf, destination);
 
    // If the entry does not exists, fail.
    if (entry == nullptr)
@@ -204,5 +207,5 @@ Common::Result AbstractServer::remove (const Protocol::Address &source,
       return Common::Result::FAIL_ARG;
    }
 
-   return this->entries ().destroy (*entry);
+   return this->entries().destroy(*entry);
 }

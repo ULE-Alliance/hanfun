@@ -41,10 +41,10 @@ using namespace HF::Core::AttributeReporting;
  */
 // =============================================================================
 template<typename _Rule, typename Iterator>
-static uint8_t find_available_id (Iterator begin, Iterator end)
+static uint8_t find_available_id(Iterator begin, Iterator end)
 {
    // Find the next available entry.
-   std::vector <uint8_t> ids;
+   std::vector<uint8_t> ids;
 
    /* *INDENT-OFF* */
    std::for_each(begin, end, [&ids](const _Rule &rule)
@@ -53,15 +53,15 @@ static uint8_t find_available_id (Iterator begin, Iterator end)
    });
    /* *INDENT-ON* */
 
-   std::sort (ids.begin (), ids.end ());
+   std::sort(ids.begin(), ids.end());
 
    uint8_t id;
 
    for (id = START_ADDR; id < ALL_ADDR; id++)
    {
-      auto it = std::lower_bound (ids.begin (), ids.end (), id);
+      auto it = std::lower_bound(ids.begin(), ids.end(), id);
 
-      if (it == ids.end () || *it != id)
+      if (it == ids.end() || *it != id)
       {
          break;
       }
@@ -77,19 +77,19 @@ static uint8_t find_available_id (Iterator begin, Iterator end)
  *
  */
 // =============================================================================
-void IServer::response (Protocol::Packet &packet, Reference &report, Common::Result result)
+void IServer::response(Protocol::Packet &packet, Reference &report, Common::Result result)
 {
-   Response *resp = new Response ();
+   Response *resp = new Response();
    resp->code   = result;
    resp->report = report;
 
-   Protocol::Message *resp_msg = new Protocol::Message (packet.message, resp->size ());
+   Protocol::Message *resp_msg = new Protocol::Message(packet.message, resp->size());
 
-   resp->pack (resp_msg->payload);
+   resp->pack(resp_msg->payload);
 
    delete resp;
 
-   unit ().send (packet.source, *resp_msg, packet.link);
+   unit().send(packet.source, *resp_msg, packet.link);
 
    delete resp_msg;
 }
@@ -101,15 +101,15 @@ void IServer::response (Protocol::Packet &packet, Reference &report, Common::Res
  *
  */
 // =============================================================================
-Common::Result IServer::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                        uint16_t offset)
 {
-   UNUSED (payload);
-   UNUSED (offset);
+   UNUSED(payload);
+   UNUSED(offset);
 
    Reference report;
 
-   response (packet, report, Common::Result::FAIL_RESOURCES);
+   response(packet, report, Common::Result::FAIL_RESOURCES);
 
    return Common::Result::FAIL_RESOURCES;
 }
@@ -121,24 +121,24 @@ Common::Result IServer::handle_command (Protocol::Packet &packet, Common::ByteAr
  *
  */
 // =============================================================================
-uint16_t Server::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Server::payload_size(Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
       case CREATE_PERIODIC_CMD:
-         return payload_size_helper <Report::Periodic::CreateMessage>();
+         return payload_size_helper<Report::Periodic::CreateMessage>();
 
       case CREATE_EVENT_CMD:
-         return payload_size_helper <Report::Event::CreateMessage>();
+         return payload_size_helper<Report::Event::CreateMessage>();
 
       case ADD_PERIODIC_ENTRY_CMD:
-         return payload_size_helper <Report::Periodic::AddEntryMessage>();
+         return payload_size_helper<Report::Periodic::AddEntryMessage>();
 
       case ADD_EVENT_ENTRY_CMD:
-         return payload_size_helper <Report::Event::AddEntryMessage>();
+         return payload_size_helper<Report::Event::AddEntryMessage>();
 
       case DELETE_REPORT_CMD:
-         return payload_size_helper <Report::DeleteMessage>();
+         return payload_size_helper<Report::DeleteMessage>();
 
       default:
          return 0;
@@ -152,17 +152,17 @@ uint16_t Server::payload_size (Protocol::Message::Interface &itf) const
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
-   Common::Result result = AbstractInterface::check (packet.message, payload, offset);
+   Common::Result result = AbstractInterface::check(packet.message, payload, offset);
 
    if (result != Common::Result::OK)
    {
       return result;
    }
 
-   CMD cmd = static_cast <CMD>(packet.message.itf.member);
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    if (packet.message.type != Protocol::Message::COMMAND_REQ &&
        packet.message.type != Protocol::Message::COMMAND_RESP_REQ)
@@ -170,11 +170,11 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
       return Common::Result::FAIL_SUPPORT;
    }
 
-   if (!this->authorized (packet.message.itf.member, packet.source))
+   if (!this->authorized(packet.message.itf.member, packet.source))
    {
       Reference report;
 
-      response (packet, report, Common::Result::FAIL_AUTH);
+      response(packet, report, Common::Result::FAIL_AUTH);
 
       return Common::Result::FAIL_AUTH;
    }
@@ -183,20 +183,20 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
    {
       case CREATE_PERIODIC_CMD:
       {
-         Report::Periodic::CreateMessage *message = new Report::Periodic::CreateMessage ();
+         Report::Periodic::CreateMessage *message = new Report::Periodic::CreateMessage();
 
-         message->unpack (payload, offset);
+         message->unpack(payload, offset);
 
-         result = this->handle (*message);
+         result = this->handle(*message);
 
          Reference report;
 
          if (result == Common::Result::OK)
          {
-            report = periodic_rules.begin ()->report;
+            report = periodic_rules.begin()->report;
          }
 
-         response (packet, report, result);
+         response(packet, report, result);
 
          delete message;
 
@@ -205,13 +205,13 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
       case ADD_PERIODIC_ENTRY_CMD:
       {
-         Report::Periodic::AddEntryMessage *message = new Report::Periodic::AddEntryMessage ();
+         Report::Periodic::AddEntryMessage *message = new Report::Periodic::AddEntryMessage();
 
-         message->unpack (payload, offset);
+         message->unpack(payload, offset);
 
-         result = this->handle (*message);
+         result = this->handle(*message);
 
-         response (packet, message->report, result);
+         response(packet, message->report, result);
 
          delete message;
 
@@ -220,20 +220,20 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
       case CREATE_EVENT_CMD:
       {
-         Report::Event::CreateMessage *message = new Report::Event::CreateMessage ();
+         Report::Event::CreateMessage *message = new Report::Event::CreateMessage();
 
-         message->unpack (payload, offset);
+         message->unpack(payload, offset);
 
-         result = this->handle (*message);
+         result = this->handle(*message);
 
          Reference report;
 
          if (result == Common::Result::OK)
          {
-            report = event_rules.begin ()->report;
+            report = event_rules.begin()->report;
          }
 
-         response (packet, report, result);
+         response(packet, report, result);
 
          delete message;
 
@@ -242,13 +242,13 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
       case ADD_EVENT_ENTRY_CMD:
       {
-         Report::Event::AddEntryMessage *message = new Report::Event::AddEntryMessage ();
+         Report::Event::AddEntryMessage *message = new Report::Event::AddEntryMessage();
 
-         message->unpack (payload, offset);
+         message->unpack(payload, offset);
 
-         result = this->handle (*message);
+         result = this->handle(*message);
 
-         response (packet, message->report, result);
+         response(packet, message->report, result);
 
          delete message;
 
@@ -257,13 +257,13 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
       case DELETE_REPORT_CMD:
       {
-         Report::DeleteMessage *message = new Report::DeleteMessage ();
+         Report::DeleteMessage *message = new Report::DeleteMessage();
 
-         message->unpack (payload, offset);
+         message->unpack(payload, offset);
 
-         result = this->handle (*message);
+         result = this->handle(*message);
 
-         response (packet, message->report, result);
+         response(packet, message->report, result);
 
          delete message;
 
@@ -284,17 +284,17 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
+Common::Result Server::handle(const Report::Periodic::CreateMessage &message)
 {
-   Periodic::Rule *rule = new Periodic::Rule (message.interval);
+   Periodic::Rule *rule = new Periodic::Rule(message.interval);
 
    if (rule == nullptr)
    {
       return Common::Result::FAIL_RESOURCES;
    }
 
-   uint8_t report_id = find_available_id <Periodic::Rule>(periodic_rules.begin (),
-                                                          periodic_rules.end ());
+   uint8_t report_id = find_available_id<Periodic::Rule>(periodic_rules.begin(),
+                                                         periodic_rules.end());
 
    if (report_id == ALL_ADDR)
    {
@@ -305,7 +305,7 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
    rule->destination = message.destination;
    rule->report.id   = report_id;
 
-   periodic_rules.push_front (*rule);
+   periodic_rules.push_front(*rule);
 
    delete rule;
 
@@ -319,7 +319,7 @@ Common::Result Server::handle (const Report::Periodic::CreateMessage &message)
  *
  */
 // =============================================================================
-Common::Result Server::handle (const Report::Periodic::AddEntryMessage &message)
+Common::Result Server::handle(const Report::Periodic::AddEntryMessage &message)
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(periodic_rules.begin(), periodic_rules.end(),
@@ -329,7 +329,7 @@ Common::Result Server::handle (const Report::Periodic::AddEntryMessage &message)
                           });
    /* *INDENT-ON* */
 
-   if (it == periodic_rules.end ())
+   if (it == periodic_rules.end())
    {
       return Common::Result::FAIL_ARG;
    }
@@ -351,16 +351,16 @@ Common::Result Server::handle (const Report::Periodic::AddEntryMessage &message)
  *
  */
 // =============================================================================
-Common::Result Server::handle (const Report::Event::CreateMessage &message)
+Common::Result Server::handle(const Report::Event::CreateMessage &message)
 {
-   Event::Rule *rule = new Event::Rule ();
+   Event::Rule *rule = new Event::Rule();
 
    if (rule == nullptr)
    {
       return Common::Result::FAIL_RESOURCES;
    }
 
-   uint8_t report_id = find_available_id <Event::Rule>(event_rules.begin (), event_rules.end ());
+   uint8_t report_id = find_available_id<Event::Rule>(event_rules.begin(), event_rules.end());
 
    if (report_id == ALL_ADDR)
    {
@@ -371,7 +371,7 @@ Common::Result Server::handle (const Report::Event::CreateMessage &message)
    rule->destination = message.destination;
    rule->report.id   = report_id;
 
-   event_rules.push_front (*rule);
+   event_rules.push_front(*rule);
 
    delete rule;
 
@@ -385,7 +385,7 @@ Common::Result Server::handle (const Report::Event::CreateMessage &message)
  *
  */
 // =============================================================================
-Common::Result Server::handle (const Report::Event::AddEntryMessage &message)
+Common::Result Server::handle(const Report::Event::AddEntryMessage &message)
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(event_rules.begin(), event_rules.end(),
@@ -395,7 +395,7 @@ Common::Result Server::handle (const Report::Event::AddEntryMessage &message)
                           });
    /* *INDENT-ON* */
 
-   if (it == event_rules.end ())
+   if (it == event_rules.end())
    {
       return Common::Result::FAIL_ARG;
    }
@@ -417,7 +417,7 @@ Common::Result Server::handle (const Report::Event::AddEntryMessage &message)
  *
  */
 // =============================================================================
-Common::Result Server::handle (const Report::DeleteMessage &message)
+Common::Result Server::handle(const Report::DeleteMessage &message)
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
@@ -427,7 +427,7 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
       {
          if (message.report.id == ALL_ADDR)
          {
-            periodic_rules.clear ();
+            periodic_rules.clear();
          }
          else
          {
@@ -439,7 +439,7 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
                                    });
             /* *INDENT-ON* */
 
-            if (it == periodic_rules.end ())
+            if (it == periodic_rules.end())
             {
                return Common::Result::FAIL_ARG;
             }
@@ -460,7 +460,7 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
       {
          if (message.report.id == ALL_ADDR)
          {
-            event_rules.clear ();
+            event_rules.clear();
          }
          else
          {
@@ -472,7 +472,7 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
                                    });
             /* *INDENT-ON* */
 
-            if (it == event_rules.end ())
+            if (it == event_rules.end())
             {
                return Common::Result::FAIL_ARG;
             }
@@ -507,14 +507,14 @@ Common::Result Server::handle (const Report::DeleteMessage &message)
  *
  */
 // =============================================================================
-static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
-                                                     const Common::Interface &itf,
-                                                     uint8_t pack_id,
-                                                     const HF::Attributes::UIDS &uids)
+static Report::Periodic::Entry *create_report_entry(const Units::IUnit *unit,
+                                                    const Common::Interface &itf,
+                                                    uint8_t pack_id,
+                                                    const HF::Attributes::UIDS &uids)
 {
-   auto result = new Report::Periodic::Entry (unit->id (), itf);
+   auto result = new Report::Periodic::Entry(unit->id(), itf);
 
-   auto attrs  = unit->attributes (itf, pack_id, uids);
+   auto attrs  = unit->attributes(itf, pack_id, uids);
    /* *INDENT-OFF* */
    std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
    {
@@ -532,27 +532,27 @@ static Report::Periodic::Entry *create_report_entry (const Units::IUnit *unit,
  *
  */
 // =============================================================================
-static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
-                         const Units::IUnit *unit)
+static void fill_report(Report::Periodic *report, const Periodic::Entry &entry,
+                        const Units::IUnit *unit)
 {
-   assert (report != nullptr);
-   assert (unit != nullptr);
+   assert(report != nullptr);
+   assert(unit != nullptr);
 
    if (entry.itf.id == HF::Interface::ANY_UID)
    {
       // Search the official interfaces.
       uint16_t count;
-      const Common::Interface *itf = Profiles::interfaces (unit->uid (), count);
+      const Common::Interface *itf = Profiles::interfaces(unit->uid(), count);
 
-      assert (itf != nullptr);
+      assert(itf != nullptr);
 
       if (itf != nullptr)
       {
          for (uint16_t i = 0; i < count; ++i, ++itf)
          {
-            Report::Periodic::Entry *_entry = create_report_entry (unit, *itf, entry.pack_id,
-                                                                   entry.uids);
-            report->add (*_entry);
+            Report::Periodic::Entry *_entry = create_report_entry(unit, *itf, entry.pack_id,
+                                                                  entry.uids);
+            report->add(*_entry);
 
             delete _entry;
          }
@@ -560,9 +560,9 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
    }
    else
    {
-      Report::Periodic::Entry *_entry = create_report_entry (unit, entry.itf, entry.pack_id,
-                                                             entry.uids);
-      report->add (*_entry);
+      Report::Periodic::Entry *_entry = create_report_entry(unit, entry.itf, entry.pack_id,
+                                                            entry.uids);
+      report->add(*_entry);
 
       delete _entry;
    }
@@ -575,7 +575,7 @@ static void fill_report (Report::Periodic *report, const Periodic::Entry &entry,
  *
  */
 // =============================================================================
-void Server::periodic (uint32_t time)
+void Server::periodic(uint32_t time)
 {
    /* *INDENT-OFF* */
    std::for_each(periodic_rules.begin (), periodic_rules.end (),
@@ -625,8 +625,8 @@ void Server::periodic (uint32_t time)
  *
  */
 // =============================================================================
-void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
-                     const HF::Attributes::IAttribute &new_value)
+void Server::notify(uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                    const HF::Attributes::IAttribute &new_value)
 {
    /* *INDENT-OFF* */
    std::for_each (event_rules.begin (), event_rules.end (),
@@ -683,15 +683,15 @@ void Server::notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
  *
  */
 // =============================================================================
-uint16_t Server::count (Type type) const
+uint16_t Server::count(Type type) const
 {
    switch (type)
    {
       case PERIODIC:
-         return std::distance (periodic_rules.begin (), periodic_rules.end ());
+         return std::distance(periodic_rules.begin(), periodic_rules.end());
 
       case EVENT:
-         return std::distance (event_rules.begin (), event_rules.end ());
+         return std::distance(event_rules.begin(), event_rules.end());
 
       default:
          return 0;

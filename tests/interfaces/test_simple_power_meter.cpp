@@ -27,18 +27,18 @@ using namespace HF::Testing;
 // =============================================================================
 
 //! Test Group for SimplePowerMeter interface parent class.
-TEST_GROUP (SimplePowerMeter)
+TEST_GROUP(SimplePowerMeter)
 {
-   class TestSimplePowerMeter:public InterfaceParentHelper <SimplePowerMeter::Base>
+   class TestSimplePowerMeter: public InterfaceParentHelper<SimplePowerMeter::Base>
    {};
 
    TestSimplePowerMeter interface;
 };
 
 //! @test SimplePowerMeter::uid should return @c Interface::SIMPLE_POWER_METER.
-TEST (SimplePowerMeter, UID)
+TEST(SimplePowerMeter, UID)
 {
-   CHECK_EQUAL (HF::Interface::SIMPLE_POWER_METER, interface.uid ());
+   CHECK_EQUAL(HF::Interface::SIMPLE_POWER_METER, interface.uid());
 }
 
 // =============================================================================
@@ -46,15 +46,15 @@ TEST (SimplePowerMeter, UID)
 // =============================================================================
 
 //! Test Group for SimplePowerMeter::Measurement class.
-TEST_GROUP (SimplePowerMeter_Measurement)
+TEST_GROUP(SimplePowerMeter_Measurement)
 {
    SimplePowerMeter::Measurement measurement;
 
    ByteArray expected;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      measurement = SimplePowerMeter::Measurement ();
+      measurement = SimplePowerMeter::Measurement();
 
       expected    = ByteArray {0x00, 0x00, 0x00,
                                Precision::MICRO,        // Measurement precision.
@@ -64,38 +64,38 @@ TEST_GROUP (SimplePowerMeter_Measurement)
 };
 
 //! @test Should report correct size.
-TEST (SimplePowerMeter_Measurement, Size)
+TEST(SimplePowerMeter_Measurement, Size)
 {
-   LONGS_EQUAL (5, measurement.size ());
+   LONGS_EQUAL(5, measurement.size());
 }
 
 //! @test Should pack the measurement correctly.
-TEST (SimplePowerMeter_Measurement, Pack)
+TEST(SimplePowerMeter_Measurement, Pack)
 {
    measurement.unit  = Precision::MICRO;
    measurement.value = 0xFF5AA5CC;
 
-   ByteArray array (measurement.size () + 6);
+   ByteArray array(measurement.size() + 6);
 
-   uint16_t  wsize = measurement.pack (array, 3);
+   uint16_t wsize = measurement.pack(array, 3);
 
-   LONGS_EQUAL (measurement.size (), wsize);
+   LONGS_EQUAL(measurement.size(), wsize);
 
-   CHECK_EQUAL (expected, array);
+   CHECK_EQUAL(expected, array);
 }
 
 //! @test Should unpack the measurement correctly.
-TEST (SimplePowerMeter_Measurement, Unpack)
+TEST(SimplePowerMeter_Measurement, Unpack)
 {
-   LONGS_EQUAL (Precision::BASE, measurement.unit);
-   LONGS_EQUAL (0, measurement.value);
+   LONGS_EQUAL(Precision::BASE, measurement.unit);
+   LONGS_EQUAL(0, measurement.value);
 
-   uint16_t rsize = measurement.unpack (expected, 3);
+   uint16_t rsize = measurement.unpack(expected, 3);
 
-   LONGS_EQUAL (measurement.size (), rsize);
+   LONGS_EQUAL(measurement.size(), rsize);
 
-   LONGS_EQUAL (Precision::MICRO, measurement.unit);
-   LONGS_EQUAL (0xFF5AA5CC, measurement.value);
+   LONGS_EQUAL(Precision::MICRO, measurement.unit);
+   LONGS_EQUAL(0xFF5AA5CC, measurement.value);
 }
 
 // =============================================================================
@@ -103,23 +103,23 @@ TEST (SimplePowerMeter_Measurement, Unpack)
 // =============================================================================
 
 //! Test Group for SimplePowerMeter::Measurement class.
-TEST_GROUP (SimplePowerMeter_Report)
+TEST_GROUP(SimplePowerMeter_Report)
 {
    SimplePowerMeter::Report report;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      report = SimplePowerMeter::Report ();
+      report = SimplePowerMeter::Report();
    }
 };
 
 //! @test Should report correct size.
-TEST (SimplePowerMeter_Report, Size)
+TEST(SimplePowerMeter_Report, Size)
 {
    uint16_t expected = 0;
    uint16_t delta    = 1;
 
-   LONGS_EQUAL (expected + delta, report.size ());
+   LONGS_EQUAL(expected + delta, report.size());
 
    /* *INDENT-OFF* */
    // =============================================================================
@@ -268,11 +268,11 @@ static const uint8_t pack_data[] =
 // =============================================================================
 
 //! @test Should pack the measurement correctly.
-TEST (SimplePowerMeter_Report, Pack)
+TEST(SimplePowerMeter_Report, Pack)
 {
-   ByteArray expected (pack_data, sizeof(pack_data));
+   ByteArray expected(pack_data, sizeof(pack_data));
 
-   uint32_t  value = 0xFF5AA5C1;
+   uint32_t value = 0xFF5AA5C1;
 
    report.enabled[SimplePowerMeter::ENERGY_ATTR]             = true;
    report.energy.unit                                        = Precision::BASE;
@@ -312,13 +312,13 @@ TEST (SimplePowerMeter_Report, Pack)
    report.frequency.unit                                     = Precision::TERA;
    report.frequency.value                                    = value++;
 
-   ByteArray array (report.size () + 6);
+   ByteArray array(report.size() + 6);
 
-   uint16_t  wsize = report.pack (array, 3);
+   uint16_t wsize = report.pack(array, 3);
 
-   LONGS_EQUAL (report.size (), wsize);
+   LONGS_EQUAL(report.size(), wsize);
 
-   CHECK_EQUAL (expected, array);
+   CHECK_EQUAL(expected, array);
 }
 
 /* *INDENT-OFF* */
@@ -372,43 +372,43 @@ static const uint8_t unpack_data[] =
 /* *INDENT-ON* */
 
 //! @test Should unpack the report correctly.
-TEST (SimplePowerMeter_Report, Unpack)
+TEST(SimplePowerMeter_Report, Unpack)
 {
-   ByteArray array (unpack_data, sizeof(unpack_data));
+   ByteArray array(unpack_data, sizeof(unpack_data));
 
-   uint16_t  rsize = report.unpack (array, 3);
+   uint16_t rsize = report.unpack(array, 3);
 
-   LONGS_EQUAL (report.size (), rsize);
+   LONGS_EQUAL(report.size(), rsize);
 
    uint32_t value = 0xFF5AA5C1;
 
-   LONGS_EQUAL (Precision::BASE, report.energy.unit);
-   LONGS_EQUAL (value++, report.energy.value);
+   LONGS_EQUAL(Precision::BASE, report.energy.unit);
+   LONGS_EQUAL(value++, report.energy.value);
 
-   LONGS_EQUAL (Precision::MILI, report.last_energy.unit);
-   LONGS_EQUAL (value++, report.last_energy.value);
+   LONGS_EQUAL(Precision::MILI, report.last_energy.unit);
+   LONGS_EQUAL(value++, report.last_energy.value);
 
-   LONGS_EQUAL (Time::UPTIME, report.last_time.unit);
-   LONGS_EQUAL (value++, report.last_time.value);
+   LONGS_EQUAL(Time::UPTIME, report.last_time.unit);
+   LONGS_EQUAL(value++, report.last_time.value);
 
-   LONGS_EQUAL (Precision::MICRO, report.power.unit);
-   LONGS_EQUAL (value++, report.power.value);
+   LONGS_EQUAL(Precision::MICRO, report.power.unit);
+   LONGS_EQUAL(value++, report.power.value);
 
-   LONGS_EQUAL (Precision::NANO, report.avg_power.unit);
-   LONGS_EQUAL (value++, report.avg_power.value);
+   LONGS_EQUAL(Precision::NANO, report.avg_power.unit);
+   LONGS_EQUAL(value++, report.avg_power.value);
 
-   LONGS_EQUAL (0x5AA5, report.avg_power_interval);
+   LONGS_EQUAL(0x5AA5, report.avg_power_interval);
 
-   LONGS_EQUAL (0xAA, report.power_factor);
+   LONGS_EQUAL(0xAA, report.power_factor);
 
-   LONGS_EQUAL (Precision::MEGA, report.voltage.unit);
-   LONGS_EQUAL (value++, report.voltage.value);
+   LONGS_EQUAL(Precision::MEGA, report.voltage.unit);
+   LONGS_EQUAL(value++, report.voltage.value);
 
-   LONGS_EQUAL (Precision::GIGA, report.current.unit);
-   LONGS_EQUAL (value++, report.current.value);
+   LONGS_EQUAL(Precision::GIGA, report.current.unit);
+   LONGS_EQUAL(value++, report.current.value);
 
-   LONGS_EQUAL (Precision::TERA, report.frequency.unit);
-   LONGS_EQUAL (value, report.frequency.value);
+   LONGS_EQUAL(Precision::TERA, report.frequency.unit);
+   LONGS_EQUAL(value, report.frequency.value);
 }
 
 // =============================================================================
@@ -416,9 +416,9 @@ TEST (SimplePowerMeter_Report, Unpack)
 // =============================================================================
 
 //! Test Group for SimplePowerMeterServer interface class.
-TEST_GROUP (SimplePowerMeterServer)
+TEST_GROUP(SimplePowerMeterServer)
 {
-   class TestSimplePowerMeterServer:public InterfaceHelper <SimplePowerMeter::Server>
+   class TestSimplePowerMeterServer: public InterfaceHelper<SimplePowerMeter::Server>
    {
       public:
 
@@ -431,9 +431,9 @@ TEST_GROUP (SimplePowerMeterServer)
    SimplePowerMeter::Measurement other;
    SimplePowerMeter::Measurement temp;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      server        = new TestSimplePowerMeterServer ();
+      server        = new TestSimplePowerMeterServer();
 
       initial.unit  = Precision::BASE;
       initial.value = 0;
@@ -443,205 +443,205 @@ TEST_GROUP (SimplePowerMeterServer)
 
       temp          = other;
 
-      mock ().ignoreOtherCalls ();
+      mock().ignoreOtherCalls();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
-      mock ().clear ();
+      mock().clear();
 
       delete server;
    }
 
-   void check_equal (SimplePowerMeter::Measurement expected,
-                     SimplePowerMeter::Measurement actual, uint32_t line)
+   void check_equal(SimplePowerMeter::Measurement expected,
+                    SimplePowerMeter::Measurement actual, uint32_t line)
    {
-      CHECK_EQUAL_LOCATION (expected.unit, actual.unit, __FILE__, line);
-      CHECK_EQUAL_LOCATION (expected.value, actual.value, __FILE__, line);
+      CHECK_EQUAL_LOCATION(expected.unit, actual.unit, __FILE__, line);
+      CHECK_EQUAL_LOCATION(expected.value, actual.value, __FILE__, line);
    }
 
-   void check_not_equal (SimplePowerMeter::Measurement &expected,
-                         SimplePowerMeter::Measurement actual, uint32_t line)
+   void check_not_equal(SimplePowerMeter::Measurement &expected,
+                        SimplePowerMeter::Measurement actual, uint32_t line)
    {
-      CHECK_LOCATION_FALSE (expected.unit == actual.unit, "CHECK_NOT_EQUAL",
-                            "expected.unit == actual.unit", __FILE__, line);
-      CHECK_LOCATION_FALSE (expected.value == actual.value, "CHECK_NOT_EQUAL",
-                            "expected.value == actual.value", __FILE__, line);
+      CHECK_LOCATION_FALSE(expected.unit == actual.unit, "CHECK_NOT_EQUAL",
+                           "expected.unit == actual.unit", __FILE__, line);
+      CHECK_LOCATION_FALSE(expected.value == actual.value, "CHECK_NOT_EQUAL",
+                           "expected.value == actual.value", __FILE__, line);
    }
 };
 
-#define check_equal(_expected, _actual)       check_equal (_expected, _actual, __LINE__)
-#define check_not_equal(_expected, _actual)   check_not_equal (_expected, _actual, __LINE__)
+#define check_equal(_expected, _actual)       check_equal(_expected, _actual, __LINE__)
+#define check_not_equal(_expected, _actual)   check_not_equal(_expected, _actual, __LINE__)
 
 // =============================================================================
 // SimplePowerMeterServer : Getter/Setter
 // =============================================================================
 
-TEST (SimplePowerMeterServer, energy)
+TEST(SimplePowerMeterServer, energy)
 {
-   check_equal (initial, server->energy ());
+   check_equal(initial, server->energy());
 
-   mock ("Interface").expectOneCall ("notify");
+   mock("Interface").expectOneCall("notify");
 
-   server->energy (other);
+   server->energy(other);
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->energy ());
+   check_not_equal(other, server->energy());
 
-   check_equal (temp, server->energy ());
+   check_equal(temp, server->energy());
 }
 
-TEST (SimplePowerMeterServer, last_energy)
+TEST(SimplePowerMeterServer, last_energy)
 {
-   check_equal (initial, server->last_energy ());
+   check_equal(initial, server->last_energy());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->last_energy (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->last_energy(other);
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->last_energy ());
+   check_not_equal(other, server->last_energy());
 
-   check_equal (temp, server->last_energy ());
+   check_equal(temp, server->last_energy());
 }
 
-TEST (SimplePowerMeterServer, last_time)
+TEST(SimplePowerMeterServer, last_time)
 {
    initial.unit = Time::UPTIME;
    other.unit   = Time::UPTIME;
    temp         = other;
 
-   check_equal (initial, server->last_time ());
+   check_equal(initial, server->last_time());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->last_time (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->last_time(other);
+   mock("Interface").checkExpectations();
 
    other.unit   = Time::UTC;
    other.value += 42;
 
-   check_not_equal (other, server->last_time ());
+   check_not_equal(other, server->last_time());
 
-   check_equal (temp, server->last_time ());
+   check_equal(temp, server->last_time());
 }
 
-TEST (SimplePowerMeterServer, power)
+TEST(SimplePowerMeterServer, power)
 {
-   check_equal (initial, server->power ());
+   check_equal(initial, server->power());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->power (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->power(other);
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->power ());
+   check_not_equal(other, server->power());
 
-   check_equal (temp, server->power ());
+   check_equal(temp, server->power());
 }
 
-TEST (SimplePowerMeterServer, avg_power)
+TEST(SimplePowerMeterServer, avg_power)
 {
-   check_equal (initial, server->avg_power ());
+   check_equal(initial, server->avg_power());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->avg_power (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->avg_power(other);
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->avg_power ());
+   check_not_equal(other, server->avg_power());
 
-   check_equal (temp, server->avg_power ());
+   check_equal(temp, server->avg_power());
 }
 
-TEST (SimplePowerMeterServer, avg_power_interval)
+TEST(SimplePowerMeterServer, avg_power_interval)
 {
-   CHECK_EQUAL (0, server->avg_power_interval ());
+   CHECK_EQUAL(0, server->avg_power_interval());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->avg_power_interval (42);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->avg_power_interval(42);
+   mock("Interface").checkExpectations();
 
-   CHECK_EQUAL (42, server->avg_power_interval ());
+   CHECK_EQUAL(42, server->avg_power_interval());
 }
 
-TEST (SimplePowerMeterServer, voltage)
+TEST(SimplePowerMeterServer, voltage)
 {
-   check_equal (initial, server->voltage ());
+   check_equal(initial, server->voltage());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->voltage (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->voltage(other);
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->voltage ());
+   check_not_equal(other, server->voltage());
 
-   check_equal (temp, server->voltage ());
+   check_equal(temp, server->voltage());
 }
 
-TEST (SimplePowerMeterServer, current)
+TEST(SimplePowerMeterServer, current)
 {
-   check_equal (initial, server->current ());
+   check_equal(initial, server->current());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->current (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->current(other);
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->current ());
+   check_not_equal(other, server->current());
 
-   check_equal (temp, server->current ());
+   check_equal(temp, server->current());
 }
 
-TEST (SimplePowerMeterServer, frequency)
+TEST(SimplePowerMeterServer, frequency)
 {
-   check_equal (initial, server->frequency ());
+   check_equal(initial, server->frequency());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->frequency (other);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->frequency(other);
+   mock("Interface").checkExpectations();
 
    other.unit  += 1;
    other.value += 42;
 
-   check_not_equal (other, server->frequency ());
+   check_not_equal(other, server->frequency());
 
-   check_equal (temp, server->frequency ());
+   check_equal(temp, server->frequency());
 }
 
-TEST (SimplePowerMeterServer, power_factor)
+TEST(SimplePowerMeterServer, power_factor)
 {
-   CHECK_EQUAL (0, server->power_factor ());
+   CHECK_EQUAL(0, server->power_factor());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->power_factor (42);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->power_factor(42);
+   mock("Interface").checkExpectations();
 
-   CHECK_EQUAL (42, server->power_factor ());
+   CHECK_EQUAL(42, server->power_factor());
 }
 
-TEST (SimplePowerMeterServer, report_interval)
+TEST(SimplePowerMeterServer, report_interval)
 {
-   CHECK_EQUAL (0, server->report_interval ());
+   CHECK_EQUAL(0, server->report_interval());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->report_interval (42);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->report_interval(42);
+   mock("Interface").checkExpectations();
 
-   CHECK_EQUAL (42, server->report_interval ());
+   CHECK_EQUAL(42, server->report_interval());
 }
 
 // =============================================================================
@@ -649,7 +649,7 @@ TEST (SimplePowerMeterServer, report_interval)
 // =============================================================================
 
 //! @test Should create a report with the correct values.
-TEST (SimplePowerMeterServer, report)
+TEST(SimplePowerMeterServer, report)
 {
    SimplePowerMeter::Measurement energy;
    SimplePowerMeter::Measurement last_energy;
@@ -661,11 +661,11 @@ TEST (SimplePowerMeterServer, report)
    SimplePowerMeter::Measurement current;
    SimplePowerMeter::Measurement frequency;
 
-   uint8_t  power_factor;
+   uint8_t power_factor;
    uint16_t report_interval;
 
    uint32_t value = 1;
-   uint8_t  unit  = Precision::MILI;
+   uint8_t unit   = Precision::MILI;
 
    last_time.value   = value++;
    last_time.unit    = Time::UPTIME;
@@ -696,123 +696,123 @@ TEST (SimplePowerMeterServer, report)
    power_factor      = value++;
    report_interval   = value;
 
-   server->energy (energy);
-   server->last_energy (last_energy);
-   server->last_time (last_time);
+   server->energy(energy);
+   server->last_energy(last_energy);
+   server->last_time(last_time);
 
-   server->power (power);
-   server->avg_power (avg_power);
-   server->avg_power_interval (power_interval);
+   server->power(power);
+   server->avg_power(avg_power);
+   server->avg_power_interval(power_interval);
 
-   server->voltage (voltage);
-   server->current (current);
-   server->frequency (frequency);
+   server->voltage(voltage);
+   server->current(current);
+   server->frequency(frequency);
 
-   server->power_factor (power_factor);
-   server->report_interval (report_interval);
+   server->power_factor(power_factor);
+   server->report_interval(report_interval);
 
-   SimplePowerMeter::Report *report = server->report ();
+   SimplePowerMeter::Report *report = server->report();
 
-   CHECK (report != nullptr);
+   CHECK(report != nullptr);
 
-   check_equal (server->energy (), report->energy);                // Energy.
+   check_equal(server->energy(), report->energy);                  // Energy.
 
-   check_equal (server->last_energy (), report->last_energy);      // Energy at Last Reset.
-   check_equal (server->last_time (), report->last_time);          // Time at Last Reset.
+   check_equal(server->last_energy(), report->last_energy);        // Energy at Last Reset.
+   check_equal(server->last_time(), report->last_time);            // Time at Last Reset.
 
-   check_equal (server->power (), report->power);                  // Instantaneous Power.
-   check_equal (server->avg_power (), report->avg_power);          // Average Power.
+   check_equal(server->power(), report->power);                    // Instantaneous Power.
+   check_equal(server->avg_power(), report->avg_power);            // Average Power.
 
    // Average Power Interval.
-   CHECK_EQUAL (server->avg_power_interval (), report->avg_power_interval);
+   CHECK_EQUAL(server->avg_power_interval(), report->avg_power_interval);
 
-   check_equal (server->voltage (), report->voltage);              // Voltage.
-   check_equal (server->current (), report->current);              // Current.
-   check_equal (server->frequency (), report->frequency);          // Frequency.
+   check_equal(server->voltage(), report->voltage);                // Voltage.
+   check_equal(server->current(), report->current);                // Current.
+   check_equal(server->frequency(), report->frequency);            // Frequency.
 
-   CHECK_EQUAL (server->power_factor (), report->power_factor);    // Power Factor.
+   CHECK_EQUAL(server->power_factor(), report->power_factor);      // Power Factor.
 
    delete report;
 }
 
 //! @test Should send message on periodic event.
-TEST (SimplePowerMeterServer, periodic)
+TEST(SimplePowerMeterServer, periodic)
 {
    uint16_t time = 1234;
 
-   mock ("Interface").expectOneCall ("notify");
-   server->report_interval (13);
+   mock("Interface").expectOneCall("notify");
+   server->report_interval(13);
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   server->periodic (time);
+   server->periodic(time);
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 
-   CHECK_EQUAL (HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
-   CHECK_EQUAL (server->uid (), server->sendMsg.itf.id);
-   CHECK_EQUAL (SimplePowerMeter::REPORT_CMD, server->sendMsg.itf.member);
+   CHECK_EQUAL(HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
+   CHECK_EQUAL(server->uid(), server->sendMsg.itf.id);
+   CHECK_EQUAL(SimplePowerMeter::REPORT_CMD, server->sendMsg.itf.member);
 
-   server->sendMsg.payload.clear ();
-
-   time += 10;
-   server->periodic (time);
-
-   LONGS_EQUAL (0, server->sendMsg.payload.size ());
-
-   mock ("Interface").expectOneCall ("send");
+   server->sendMsg.payload.clear();
 
    time += 10;
-   server->periodic (time);
+   server->periodic(time);
 
-   CHECK_TRUE (server->sendMsg.payload.size () != 0);
+   LONGS_EQUAL(0, server->sendMsg.payload.size());
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("send");
+
+   time += 10;
+   server->periodic(time);
+
+   CHECK_TRUE(server->sendMsg.payload.size() != 0);
+
+   mock("Interface").checkExpectations();
 }
 
 //! @test Should not send message on periodic event disabled.
-TEST (SimplePowerMeterServer, periodic_disabled)
+TEST(SimplePowerMeterServer, periodic_disabled)
 {
    uint16_t time = 1234;
 
-   mock ("Interface").expectOneCall ("notify");
-   server->report_interval (0);
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   server->report_interval(0);
+   mock("Interface").checkExpectations();
 
-   server->periodic (time);
-   LONGS_EQUAL (0, server->sendMsg.payload.size ());
+   server->periodic(time);
+   LONGS_EQUAL(0, server->sendMsg.payload.size());
 
    time += 10;
-   server->periodic (time);
-   LONGS_EQUAL (0, server->sendMsg.payload.size ());
+   server->periodic(time);
+   LONGS_EQUAL(0, server->sendMsg.payload.size());
 }
 
 //! @test Should return attribute.
-TEST (SimplePowerMeterServer, Attribute)
+TEST(SimplePowerMeterServer, Attribute)
 {
-   HF::Attributes::IAttribute *attr = server->attribute (SimplePowerMeter::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr = server->attribute(SimplePowerMeter::__LAST_ATTR__ + 1);
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 
    for (uint8_t uid = SimplePowerMeter::ENERGY_ATTR; uid <= SimplePowerMeter::__LAST_ATTR__; uid++)
    {
-      attr = server->attribute (uid);
+      attr = server->attribute(uid);
 
-      CHECK_TRUE (attr != nullptr);
+      CHECK_TRUE(attr != nullptr);
 
-      LONGS_EQUAL (uid, attr->uid ());
+      LONGS_EQUAL(uid, attr->uid());
 
       if (uid == SimplePowerMeter::AVG_POWER_INTERVAL_ATTR ||
           uid == SimplePowerMeter::REPORT_INTERVAL_ATTR)
       {
-         CHECK_TRUE (attr->isWritable ());
+         CHECK_TRUE(attr->isWritable());
       }
       else
       {
-         CHECK_FALSE (attr->isWritable ());
+         CHECK_FALSE(attr->isWritable());
       }
 
-      LONGS_EQUAL (server->uid (), attr->interface ());
+      LONGS_EQUAL(server->uid(), attr->interface());
 
       delete attr;
    }
@@ -823,16 +823,16 @@ TEST (SimplePowerMeterServer, Attribute)
 // =============================================================================
 
 //! Test Group for SimplePowerMeterClient interface class.
-TEST_GROUP (SimplePowerMeterClient)
+TEST_GROUP(SimplePowerMeterClient)
 {
-   class TestSimplePowerMeterClient:public InterfaceHelper <SimplePowerMeter::Client>
+   class TestSimplePowerMeterClient: public InterfaceHelper<SimplePowerMeter::Client>
    {
       public:
 
-      void report (HF::Protocol::Address &source, SimplePowerMeter::Report &report)
+      void report(HF::Protocol::Address &source, SimplePowerMeter::Report &report)
       {
-         mock ("SimplePowerMeterClient").actualCall ("report");
-         InterfaceHelper <SimplePowerMeter::Client>::report (source, report);
+         mock("SimplePowerMeterClient").actualCall("report");
+         InterfaceHelper<SimplePowerMeter::Client>::report(source, report);
       }
    };
 
@@ -841,48 +841,48 @@ TEST_GROUP (SimplePowerMeterClient)
 
    Protocol::Packet packet;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      client                    = TestSimplePowerMeterClient ();
+      client                    = TestSimplePowerMeterClient();
 
-      expected                  = ByteArray (unpack_data, sizeof(unpack_data));
+      expected                  = ByteArray(unpack_data, sizeof(unpack_data));
 
       packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
-      packet.message.itf.id     = client.uid ();
+      packet.message.itf.id     = client.uid();
       packet.message.itf.member = SimplePowerMeter::REPORT_CMD;
 
-      packet.message.length     = expected.size ();
+      packet.message.length     = expected.size();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
-      mock ().clear ();
+      mock().clear();
    }
 };
 
 //! @test Should handle valid message.
-TEST (SimplePowerMeterClient, Handle_Valid_Message)
+TEST(SimplePowerMeterClient, Handle_Valid_Message)
 {
-   mock ("SimplePowerMeterClient").expectOneCall ("report");
+   mock("SimplePowerMeterClient").expectOneCall("report");
 
-   Result result = client.handle (packet, expected, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = client.handle(packet, expected, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   mock ("SimplePowerMeterClient").checkExpectations ();
+   mock("SimplePowerMeterClient").checkExpectations();
 }
 
 //! @test Should not handle message from invalid role.
-TEST (SimplePowerMeterClient, Handle_Invalid_Role)
+TEST(SimplePowerMeterClient, Handle_Invalid_Role)
 {
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, client.handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_SUPPORT, client.handle(packet, expected, 3));
 }
 
 //! @test Should not handle message from invalid interface UID.
-TEST (SimplePowerMeterClient, Handle_Invalid_UID)
+TEST(SimplePowerMeterClient, Handle_Invalid_UID)
 {
-   packet.message.itf.id = client.uid () + 1;
+   packet.message.itf.id = client.uid() + 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, client.handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_ARG, client.handle(packet, expected, 3));
 }

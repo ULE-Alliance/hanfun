@@ -42,37 +42,37 @@
  *
  */
 // =============================================================================
-void Node::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
+void Node::receive(HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
 {
-   LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
+   LOG(DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
 
-   LOG (TRACE) << "Payload : " << payload << NL;
+   LOG(TRACE) << "Payload : " << payload << NL;
 
-   LOG (DEBUG) << packet << NL;
+   LOG(DEBUG) << packet << NL;
 
-   HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>::receive (packet, payload, offset);
+   HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>::receive(packet, payload, offset);
 }
 
 // =============================================================================
 // Simple Light
 // =============================================================================
 
-void SimpleLight::on (HF::Protocol::Address &source)
+void SimpleLight::on(HF::Protocol::Address &source)
 {
-   HF::Units::Unit <HF::Profiles::SimpleLight>::on (source);
-   LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << NL;
+   HF::Units::Unit<HF::Profiles::SimpleLight>::on(source);
+   LOG(INFO) << ">>>>>>>>>>>>> SimpleLight : ON <<<<<<<<<<<<<" << NL;
 }
 
-void SimpleLight::off (HF::Protocol::Address &source)
+void SimpleLight::off(HF::Protocol::Address &source)
 {
-   HF::Units::Unit <HF::Profiles::SimpleLight>::off (source);
-   LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << NL;
+   HF::Units::Unit<HF::Profiles::SimpleLight>::off(source);
+   LOG(INFO) << ">>>>>>>>>>>>> SimpleLight : OFF <<<<<<<<<<<<<" << NL;
 }
 
-void SimpleLight::toggle (HF::Protocol::Address &source)
+void SimpleLight::toggle(HF::Protocol::Address &source)
 {
-   HF::Units::Unit <HF::Profiles::SimpleLight>::toggle (source);
-   LOG (INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
+   HF::Units::Unit<HF::Profiles::SimpleLight>::toggle(source);
+   LOG(INFO) << ">>>>>>>>>>>>> SimpleLight : TOGGLE <<<<<<<<<<<<<" << NL;
 }
 
 /*! @} */

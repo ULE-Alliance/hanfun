@@ -53,7 +53,7 @@ Server::~Server()
  *
  */
 // =============================================================================
-uint32_t Server::state ()
+uint32_t Server::state()
 {
    return this->_state;
 }
@@ -65,7 +65,7 @@ uint32_t Server::state ()
  *
  */
 // =============================================================================
-void Server::set_state (uint32_t value)
+void Server::set_state(uint32_t value)
 {
    this->_state = value;
 }
@@ -77,14 +77,14 @@ void Server::set_state (uint32_t value)
  *
  */
 // =============================================================================
-bool Server::state (uint8_t index, bool state)
+bool Server::state(uint8_t index, bool state)
 {
    if (index >= STATE_SIZE_BITS)
    {
       return false;
    }
 
-   bool res = enabled (index);
+   bool res = enabled(index);
 
    if (res)
    {
@@ -101,10 +101,10 @@ bool Server::state (uint8_t index, bool state)
          this->_state &= ~mask;
       }
 
-      State old_value (old, this);
-      State new_value (this->_state, this);
+      State old_value(old, this);
+      State new_value(this->_state, this);
 
-      this->notify (old_value, new_value);
+      this->notify(old_value, new_value);
    }
 
    return res;
@@ -117,7 +117,7 @@ bool Server::state (uint8_t index, bool state)
  *
  */
 // =============================================================================
-bool Server::state (uint8_t index)
+bool Server::state(uint8_t index)
 {
    if (index >= STATE_SIZE_BITS)
    {
@@ -134,16 +134,16 @@ bool Server::state (uint8_t index)
  *
  */
 // =============================================================================
-void Server::clear ()
+void Server::clear()
 {
    uint32_t old = this->_state;
 
    this->_state = 0;
 
-   State old_value (old, this);
-   State new_value (this->_state, this);
+   State old_value(old, this);
+   State new_value(this->_state, this);
 
-   notify (old_value, new_value);
+   notify(old_value, new_value);
 }
 
 // =============================================================================
@@ -153,7 +153,7 @@ void Server::clear ()
  *
  */
 // =============================================================================
-void Server::enable (uint8_t index)
+void Server::enable(uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -164,10 +164,10 @@ void Server::enable (uint8_t index)
 
    this->_enabled |= (1U << index);
 
-   Enable old_value (old, this);
-   Enable new_value (this->_enabled, this);
+   Enable old_value(old, this);
+   Enable new_value(this->_enabled, this);
 
-   notify (old_value, new_value);
+   notify(old_value, new_value);
 }
 
 // =============================================================================
@@ -177,16 +177,16 @@ void Server::enable (uint8_t index)
  *
  */
 // =============================================================================
-void Server::enableAll ()
+void Server::enableAll()
 {
    uint32_t old = this->_enabled;
 
    this->_enabled = UINT32_MAX;
 
-   Enable old_value (old, this);
-   Enable new_value (this->_enabled, this);
+   Enable old_value(old, this);
+   Enable new_value(this->_enabled, this);
 
-   notify (old_value, new_value);
+   notify(old_value, new_value);
 }
 
 // =============================================================================
@@ -196,7 +196,7 @@ void Server::enableAll ()
  *
  */
 // =============================================================================
-uint32_t Server::enabled ()
+uint32_t Server::enabled()
 {
    return this->_enabled;
 }
@@ -208,7 +208,7 @@ uint32_t Server::enabled ()
  *
  */
 // =============================================================================
-void Server::set_enabled (uint32_t value)
+void Server::set_enabled(uint32_t value)
 {
    this->_enabled = value;
 }
@@ -220,7 +220,7 @@ void Server::set_enabled (uint32_t value)
  *
  */
 // =============================================================================
-bool Server::enabled (uint8_t index)
+bool Server::enabled(uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -237,7 +237,7 @@ bool Server::enabled (uint8_t index)
  *
  */
 // =============================================================================
-void Server::disable (uint8_t index)
+void Server::disable(uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -248,10 +248,10 @@ void Server::disable (uint8_t index)
 
    this->_enabled &= (~(1U << index));
 
-   Enable old_value (old, this);
-   Enable new_value (this->_enabled, this);
+   Enable old_value(old, this);
+   Enable new_value(this->_enabled, this);
 
-   notify (old_value, new_value);
+   notify(old_value, new_value);
 }
 
 // =============================================================================
@@ -261,16 +261,16 @@ void Server::disable (uint8_t index)
  *
  */
 // =============================================================================
-void Server::disableAll ()
+void Server::disableAll()
 {
    uint32_t old = this->_enabled;
 
    this->_enabled = 0;
 
-   Enable old_value (old, this);
-   Enable new_value (this->_enabled, this);
+   Enable old_value(old, this);
+   Enable new_value(this->_enabled, this);
 
-   notify (old_value, new_value);
+   notify(old_value, new_value);
 }
 
 // =============================================================================
@@ -280,7 +280,7 @@ void Server::disableAll ()
  *
  */
 // =============================================================================
-bool Server::disabled (uint8_t index)
+bool Server::disabled(uint8_t index)
 {
    if (index > STATE_SIZE_BITS)
    {
@@ -297,9 +297,9 @@ bool Server::disabled (uint8_t index)
  *
  */
 // =============================================================================
-Alert::Message *Server::create_status (uint16_t profile_uid)
+Alert::Message *Server::create_status(uint16_t profile_uid)
 {
-   return new Message (profile_uid, this->_state);
+   return new Message(profile_uid, this->_state);
 }
 
 // =============================================================================
@@ -309,17 +309,17 @@ Alert::Message *Server::create_status (uint16_t profile_uid)
  *
  */
 // =============================================================================
-void Server::status (Protocol::Address &addr, uint16_t profile_uid)
+void Server::status(Protocol::Address &addr, uint16_t profile_uid)
 {
-   Message alert_msg (profile_uid, this->_state);
+   Message alert_msg(profile_uid, this->_state);
 
-   Protocol::Message message (alert_msg.size ());
+   Protocol::Message message(alert_msg.size());
 
    message.itf.role   = CLIENT_ROLE;
-   message.itf.id     = Server::uid ();
+   message.itf.id     = Server::uid();
    message.itf.member = STATUS_CMD;
 
-   alert_msg.pack (message.payload);
+   alert_msg.pack(message.payload);
 
-   send (addr, message);
+   send(addr, message);
 }

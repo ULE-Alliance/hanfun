@@ -32,7 +32,7 @@ using namespace HF::Interfaces::LevelControl;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *LevelControl::create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *LevelControl::create_attribute(uint8_t uid)
 {
-   return Interfaces::create_attribute ((LevelControl::Server *) nullptr, uid);
+   return Interfaces::create_attribute((LevelControl::Server *) nullptr, uid);
 }

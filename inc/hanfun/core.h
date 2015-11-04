@@ -59,7 +59,7 @@ namespace HF
       /*!
        * This represent the special unit with ID/UID = 0.
        */
-      struct Unit0:public Units::AbstractUnit
+      struct Unit0: public Units::AbstractUnit
       {
          virtual ~Unit0() {}
 
@@ -68,28 +68,28 @@ namespace HF
           *
           * @param [in] device   reference to the device that holds this unit.
           */
-         Unit0(IDevice &device):Units::AbstractUnit (device)
+         Unit0(IDevice &device): Units::AbstractUnit(device)
          {}
 
-         uint8_t id () const
+         uint8_t id() const
          {
             return 0;
          }
 
-         uint16_t uid () const
+         uint16_t uid() const
          {
             return 0;
          }
 
          using Units::AbstractUnit::send;
 
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (itf);
-            UNUSED (pack_id);
-            UNUSED (uids);
-            return HF::Attributes::List ();
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
+            return HF::Attributes::List();
          }
 
       };
@@ -97,35 +97,35 @@ namespace HF
       /*!
        * This is the interface common to all Services.
        */
-      struct IService:virtual public HF::Interface
+      struct IService: virtual public HF::Interface
       {
          virtual ~IService() {}
 
          //! The device this unit is associated with.
-         virtual Unit0 &unit () const = 0;
+         virtual Unit0 &unit() const = 0;
       };
 
       /*!
        * This is the parent class for all services implementations.
        */
-      struct AbstractService:virtual public IService,
+      struct AbstractService: virtual public IService,
          virtual public HF::Interfaces::AbstractInterface
       {
          virtual ~AbstractService() {}
 
-         Unit0 &unit () const
+         Unit0 &unit() const
          {
             return _unit;
          }
 
-         HF::Attributes::IAttribute *attribute (uint8_t uid)
+         HF::Attributes::IAttribute *attribute(uint8_t uid)
          {
-            return AbstractInterface::attribute (uid);
+            return AbstractInterface::attribute(uid);
          }
 
-         HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+         HF::Attributes::UIDS attributes(uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
          {
-            return AbstractInterface::attributes (pack_id);
+            return AbstractInterface::attributes(pack_id);
          }
 
          protected:
@@ -138,20 +138,20 @@ namespace HF
           *
           * @param [in] unit  reference to the unit that holds this service.
           */
-         AbstractService(Unit0 &unit):_unit (unit)
+         AbstractService(Unit0 &unit): _unit(unit)
          {}
 
          //! @copydoc HF::Interfaces::AbstractInterface::send
-         void send (const Protocol::Address &addr, Protocol::Message &message)
+         void send(const Protocol::Address &addr, Protocol::Message &message)
          {
-            unit ().send (addr, message, nullptr);
+            unit().send(addr, message, nullptr);
          }
 
          //! @copydoc HF::Units::IUnit::send
-         void send (const Protocol::Address &addr, Protocol::Message &message,
-                    Transport::Link *link)
+         void send(const Protocol::Address &addr, Protocol::Message &message,
+                   Transport::Link *link)
          {
-            unit ().send (addr, message, link);
+            unit().send(addr, message, link);
          }
       };
 
@@ -159,10 +159,10 @@ namespace HF
        * Class template for all core services implementations.
        */
       template<Interface::UID _uid>
-      struct Service:public AbstractService
+      struct Service: public AbstractService
       {
          //! @copydoc HF::Interface::uid
-         uint16_t uid () const
+         uint16_t uid() const
          {
             return _uid;
          }
@@ -175,7 +175,7 @@ namespace HF
           * @param [in] unit  reference to the unit that holds this service.
           */
          Service(Unit0 &unit):
-            AbstractService (unit)
+            AbstractService(unit)
          {}
 
          /*!
@@ -186,9 +186,9 @@ namespace HF
           * @retval  true     if the values match.
           * @retval  false    otherwise.
           */
-         bool check_uid (uint16_t uid) const
+         bool check_uid(uint16_t uid) const
          {
-            return Service::uid () == uid;
+            return Service::uid() == uid;
          }
       };
 
@@ -196,13 +196,13 @@ namespace HF
        * Class template for all interfaces role implementations.
        */
       template<class Parent, Interface::Role _role>
-      struct ServiceRole:public Parent
+      struct ServiceRole: public Parent
       {
-         static_assert (std::is_base_of <HF::Core::AbstractService, Parent>::value,
-                        "Parent must be of type HF::Core::AbstractService");
+         static_assert(std::is_base_of<HF::Core::AbstractService, Parent>::value,
+                       "Parent must be of type HF::Core::AbstractService");
 
          //! @copydoc HF::Interface::role
-         Interface::Role role () const
+         Interface::Role role() const
          {
             return _role;
          }
@@ -215,7 +215,7 @@ namespace HF
           * @param [in] unit  reference to the unit that holds this service.
           */
          ServiceRole(Unit0 &unit):
-            Parent (unit)
+            Parent(unit)
          {}
       };
 
@@ -235,14 +235,14 @@ namespace HF
     * @tparam  ITF   custom classes implementing the required services.
     */
    template<typename Base, typename... ITF>
-   class Unit0:public Base
+   class Unit0: public Base
    {
-      static_assert (std::is_base_of <HF::Core::Unit0, Base>::value,
-                     "Base must be of type HF::Core::Unit0");
+      static_assert(std::is_base_of<HF::Core::Unit0, Base>::value,
+                    "Base must be of type HF::Core::Unit0");
 
       public:
 
-      typedef std::tuple <ITF...> interfaces_t;
+      typedef std::tuple<ITF...> interfaces_t;
 
       interfaces_t interfaces;
 
@@ -250,17 +250,17 @@ namespace HF
       static constexpr uint8_t DEV_MGT  = 1;    //!< Device Management service index.
       static constexpr uint8_t ATTR_RPT = 2;    //!< Attribute Reporting service index.
 
-      typedef typename std::tuple_element <DEV_INFO, decltype (interfaces)>::type DeviceInfo;
+      typedef typename std::tuple_element<DEV_INFO, decltype(interfaces)>::type DeviceInfo;
 
-      typedef typename std::tuple_element <DEV_MGT, decltype (interfaces)>::type DeviceMgt;
+      typedef typename std::tuple_element<DEV_MGT, decltype(interfaces)>::type DeviceMgt;
 
-      typedef typename std::tuple_element <ATTR_RPT, decltype (interfaces)>::type AttrReporting;
+      typedef typename std::tuple_element<ATTR_RPT, decltype(interfaces)>::type AttrReporting;
 
-      static_assert (std::is_base_of <HF::Core::DeviceInformation::Server, DeviceInfo>::value,
-                     "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
+      static_assert(std::is_base_of<HF::Core::DeviceInformation::Server, DeviceInfo>::value,
+                    "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
 
-      static_assert (std::is_base_of <HF::Core::AttributeReporting::IServer, AttrReporting>::value,
-                     "AttrReporting must be of type HF::Core::AttributeReporting::Server");
+      static_assert(std::is_base_of<HF::Core::AttributeReporting::IServer, AttrReporting>::value,
+                    "AttrReporting must be of type HF::Core::AttributeReporting::Server");
 
       /*!
        * Constructor.
@@ -268,7 +268,7 @@ namespace HF
        * @param [in] device   reference to the device that this unit belongs to.
        */
       Unit0(HF::IDevice &device):
-         Base (device), interfaces (ITF (*this) ...)
+         Base(device), interfaces(ITF(*this) ...)
       {}
 
       // =============================================================================
@@ -278,9 +278,9 @@ namespace HF
        *
        * @return  pointer to the Device Information service
        */
-      DeviceInfo *device_info () const
+      DeviceInfo *device_info() const
       {
-         return const_cast <DeviceInfo *>(&std::get <DEV_INFO>(interfaces));
+         return const_cast<DeviceInfo *>(&std::get<DEV_INFO>(interfaces));
       }
 
       /*!
@@ -288,9 +288,9 @@ namespace HF
        *
        * @return  pointer to the Device Information service
        */
-      DeviceInfo *device_info ()
+      DeviceInfo *device_info()
       {
-         return &std::get <DEV_INFO>(interfaces);
+         return &std::get<DEV_INFO>(interfaces);
       }
 
       /*!
@@ -298,9 +298,9 @@ namespace HF
        *
        * @return  pointer to the Device Management service
        */
-      DeviceMgt *device_management () const
+      DeviceMgt *device_management() const
       {
-         return const_cast <DeviceMgt *>(&std::get <DEV_MGT>(interfaces));
+         return const_cast<DeviceMgt *>(&std::get<DEV_MGT>(interfaces));
       }
 
       /*!
@@ -308,9 +308,9 @@ namespace HF
        *
        * @return  pointer to the Device Management service
        */
-      DeviceMgt *device_management ()
+      DeviceMgt *device_management()
       {
-         return &std::get <DEV_MGT>(interfaces);
+         return &std::get<DEV_MGT>(interfaces);
       }
 
       /*!
@@ -318,9 +318,9 @@ namespace HF
        *
        * @return  pointer to the Attribute Reporting service
        */
-      AttrReporting *attribute_reporting () const
+      AttrReporting *attribute_reporting() const
       {
-         return const_cast <AttrReporting *>(&std::get <ATTR_RPT>(interfaces));
+         return const_cast<AttrReporting *>(&std::get<ATTR_RPT>(interfaces));
       }
 
       /*!
@@ -328,9 +328,9 @@ namespace HF
        *
        * @return  pointer to the Attribute Reporting service
        */
-      AttrReporting *attribute_reporting ()
+      AttrReporting *attribute_reporting()
       {
-         return &std::get <ATTR_RPT>(interfaces);
+         return &std::get<ATTR_RPT>(interfaces);
       }
 
       // =============================================================================
@@ -338,13 +338,15 @@ namespace HF
       // =============================================================================
 
       //! @copydoc HF::Interface::handle
-      Common::Result handle (HF::Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+      Common::Result handle(HF::Protocol::Packet &packet,
+                            Common::ByteArray &payload,
+                            uint16_t offset)
       {
-         Core::IService *service = find <0, ITF...>(packet.message.itf.id);
+         Core::IService *service = find<0, ITF...>(packet.message.itf.id);
 
          if (service != nullptr)
          {
-            return service->handle (packet, payload, offset);
+            return service->handle(packet, payload, offset);
          }
          else
          {
@@ -353,19 +355,19 @@ namespace HF
       }
 
       //! @copydoc HF::Profiles::IProfile::attributes
-      HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                       const HF::Attributes::UIDS &uids) const
+      HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                      const HF::Attributes::UIDS &uids) const
       {
-         UNUSED (itf);
-         UNUSED (pack_id);
-         UNUSED (uids);
-         return HF::Attributes::List ();
+         UNUSED(itf);
+         UNUSED(pack_id);
+         UNUSED(uids);
+         return HF::Attributes::List();
       }
 
-      void periodic (uint32_t time)
+      void periodic(uint32_t time)
       {
-         Base::periodic (time);
-         periodic <0, ITF...>(time);
+         Base::periodic(time);
+         periodic<0, ITF...>(time);
       }
 
       // =============================================================================
@@ -380,43 +382,43 @@ namespace HF
        * @return  pointer to the service object if found, @c nullptr otherwise.
        */
       template<uint8_t N, typename Head, typename... Tail>
-      Core::IService *find (uint16_t itf_uid) const
+      Core::IService *find(uint16_t itf_uid) const
       {
-         static_assert (std::is_base_of <HF::Core::IService, Head>::value,
-                        "Head must be of type HF::Core::IService");
+         static_assert(std::is_base_of<HF::Core::IService, Head>::value,
+                       "Head must be of type HF::Core::IService");
 
-         const Head &head = std::get <N>(interfaces);
+         const Head &head = std::get<N>(interfaces);
 
-         if (head.uid () == itf_uid)
+         if (head.uid() == itf_uid)
          {
-            return const_cast <Head *>(&head);
+            return const_cast<Head *>(&head);
          }
          else
          {
-            return find <N + 1, Tail...>(itf_uid);
+            return find<N + 1, Tail...>(itf_uid);
          }
       }
 
       template<uint8_t N>
-      Core::IService *find (uint16_t itf_uid) const
+      Core::IService *find(uint16_t itf_uid) const
       {
-         UNUSED (itf_uid);
+         UNUSED(itf_uid);
          return nullptr;
       }
 
       template<uint8_t N, typename Head, typename... Tail>
-      void periodic (uint32_t time)
+      void periodic(uint32_t time)
       {
-         Head &head = std::get <N>(interfaces);
-         head.periodic (time);
+         Head &head = std::get<N>(interfaces);
+         head.periodic(time);
 
-         periodic <N + 1, Tail...>(time);
+         periodic<N + 1, Tail...>(time);
       }
 
       template<uint8_t N>
-      void periodic (uint32_t time)
+      void periodic(uint32_t time)
       {
-         UNUSED (time);
+         UNUSED(time);
       }
    };
 

@@ -47,24 +47,24 @@ using namespace HF::Interfaces;
  * @retval Common::Result::FAIL_UNKNOWN  otherwise.
  */
 // =============================================================================
-static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::ByteArray &payload,
-                                        uint16_t &offset, bool nop = false)
+static Common::Result update_attribute(Interface &itf, uint8_t uid, Common::ByteArray &payload,
+                                       uint16_t &offset, bool nop = false)
 {
    Common::Result result            = Common::Result::FAIL_UNKNOWN;
 
-   HF::Attributes::IAttribute *attr = itf.attribute (uid);
+   HF::Attributes::IAttribute *attr = itf.attribute(uid);
 
    if (attr == nullptr)
    {
       result = Common::Result::FAIL_SUPPORT;
    }
-   else if (attr->isWritable ())
+   else if (attr->isWritable())
    {
-      if (payload.available (offset, attr->size ()))
+      if (payload.available(offset, attr->size()))
       {
          if (!nop)
          {
-            offset += attr->unpack (payload, offset);
+            offset += attr->unpack(payload, offset);
          }
 
          result = Common::Result::OK;
@@ -76,7 +76,7 @@ static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::Byt
    }
    else
    {
-      offset += attr->size ();
+      offset += attr->size();
 
       result  = Common::Result::FAIL_RO_ATTR;
    }
@@ -103,26 +103,26 @@ static Common::Result update_attribute (Interface &itf, uint8_t uid, Common::Byt
  *          is necessary, @c nullptr otherwise.
  */
 // =============================================================================
-static SetAttributePack::Response *update_attributes (Interface &itf, Common::ByteArray &payload,
-                                                      uint16_t &offset, bool resp, bool nop = false)
+static SetAttributePack::Response *update_attributes(Interface &itf, Common::ByteArray &payload,
+                                                     uint16_t &offset, bool resp, bool nop = false)
 {
    SetAttributePack::Request request;
 
-   offset += request.unpack (payload, offset);
+   offset += request.unpack(payload, offset);
 
-   SetAttributePack::Response *result = (resp ? new SetAttributePack::Response () : nullptr);
+   SetAttributePack::Response *result = (resp ? new SetAttributePack::Response() : nullptr);
 
    for (uint8_t i = 0; i < request.count; i++)
    {
       SetAttributePack::Response::Result attr_res;
 
-      offset       += payload.read (offset, attr_res.uid);
+      offset       += payload.read(offset, attr_res.uid);
 
-      attr_res.code = update_attribute (itf, attr_res.uid, payload, offset, nop);
+      attr_res.code = update_attribute(itf, attr_res.uid, payload, offset, nop);
 
       if (resp)
       {
-         result->results.push_back (attr_res);
+         result->results.push_back(attr_res);
       }
 
       if (attr_res.code == Common::Result::FAIL_SUPPORT ||
@@ -150,16 +150,16 @@ static SetAttributePack::Response *update_attributes (Interface &itf, Common::By
  * @return  pointer to a HF::Response instance if a response is necessary, @c nullptr otherwise.
  */
 // =============================================================================
-static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &payload,
-                                           uint16_t &offset, bool resp)
+static Response *update_attributes_atomic(Interface &itf, Common::ByteArray &payload,
+                                          uint16_t &offset, bool resp)
 {
    uint16_t start                       = offset;
 
-   SetAttributePack::Response *attr_res = update_attributes (itf, payload, offset, true, true);
+   SetAttributePack::Response *attr_res = update_attributes(itf, payload, offset, true, true);
 
    Common::Result result                = Common::Result::OK;
 
-   for (auto it = attr_res->results.begin (); it != attr_res->results.end (); ++it)
+   for (auto it = attr_res->results.begin(); it != attr_res->results.end(); ++it)
    {
       result = it->code;
 
@@ -174,12 +174,12 @@ static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &pa
    if (result == Common::Result::OK)
    {
       offset = start;
-      update_attributes (itf, payload, offset, false);
+      update_attributes(itf, payload, offset, false);
    }
 
    if (resp)
    {
-      return new Response (result);
+      return new Response(result);
    }
    else
    {
@@ -198,16 +198,17 @@ static Response *update_attributes_atomic (Interface &itf, Common::ByteArray &pa
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &payload, uint16_t offset)
+Common::Result AbstractInterface::handle(Packet &packet, Common::ByteArray &payload,
+                                         uint16_t offset)
 {
-   Common::Result result = check (packet.message, payload, offset);
+   Common::Result result = check(packet.message, payload, offset);
 
    if (result != Common::Result::OK)
    {
       return result;
    }
 
-   result = check_payload_size (packet.message, payload, offset);
+   result = check_payload_size(packet.message, payload, offset);
 
    if (result != Common::Result::OK)
    {
@@ -216,12 +217,12 @@ Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &pay
 
    if (packet.message.type >= Message::COMMAND_REQ && packet.message.type <= Message::COMMAND_RES)
    {
-      return handle_command (packet, payload, offset);
+      return handle_command(packet, payload, offset);
    }
    else if (packet.message.type >= Message::GET_ATTR_REQ &&
             packet.message.type <= Message::ATOMIC_SET_ATTR_PACK_RES)
    {
-      return handle_attribute (packet, payload, offset);
+      return handle_attribute(packet, payload, offset);
    }
 
    return Common::Result::FAIL_UNKNOWN;
@@ -234,12 +235,13 @@ Common::Result AbstractInterface::handle (Packet &packet, Common::ByteArray &pay
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::check (Message &message, Common::ByteArray &payload, uint16_t offset)
+Common::Result AbstractInterface::check(Message &message, Common::ByteArray &payload,
+                                        uint16_t offset)
 {
-   UNUSED (payload);
-   UNUSED (offset);
+   UNUSED(payload);
+   UNUSED(offset);
 
-   if (!check_uid (message.itf.id))
+   if (!check_uid(message.itf.id))
    {
       return Common::Result::FAIL_ARG;
    }
@@ -254,7 +256,7 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
       case Message::SET_ATTR_PACK_REQ:
       case Message::SET_ATTR_PACK_RESP_REQ:
       {
-         if (role () != message.itf.role)
+         if (role() != message.itf.role)
          {
             return Common::Result::FAIL_SUPPORT;
          }
@@ -263,7 +265,7 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
       }
       case Message::COMMAND_RES:
       {
-         if (role () == message.itf.role)
+         if (role() == message.itf.role)
          {
             return Common::Result::FAIL_SUPPORT;
          }
@@ -284,15 +286,15 @@ Common::Result AbstractInterface::check (Message &message, Common::ByteArray &pa
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::check_payload_size (Message &message, Common::ByteArray &payload,
-                                                      uint16_t offset)
+Common::Result AbstractInterface::check_payload_size(Message &message, Common::ByteArray &payload,
+                                                     uint16_t offset)
 {
-   uint16_t _payload_size = payload_size (message);
+   uint16_t _payload_size = payload_size(message);
 
    if (_payload_size != 0)
    {
-      if (message.length < _payload_size || payload.size () < offset ||
-          (payload.size () - offset) < _payload_size)
+      if (message.length < _payload_size || payload.size() < offset ||
+          (payload.size() - offset) < _payload_size)
       {
          return Common::Result::FAIL_ARG;
       }
@@ -308,9 +310,9 @@ Common::Result AbstractInterface::check_payload_size (Message &message, Common::
  *
  */
 // =============================================================================
-uint16_t AbstractInterface::payload_size (Message &message) const
+uint16_t AbstractInterface::payload_size(Message &message) const
 {
-   return payload_size (message.itf);
+   return payload_size(message.itf);
 }
 
 // =============================================================================
@@ -320,12 +322,12 @@ uint16_t AbstractInterface::payload_size (Message &message) const
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteArray &payload,
-                                                  uint16_t offset)
+Common::Result AbstractInterface::handle_command(Packet &packet, Common::ByteArray &payload,
+                                                 uint16_t offset)
 {
-   UNUSED (packet);
-   UNUSED (payload);
-   UNUSED (offset);
+   UNUSED(packet);
+   UNUSED(payload);
+   UNUSED(offset);
 
    return Common::Result::FAIL_UNKNOWN;
 }
@@ -338,8 +340,8 @@ Common::Result AbstractInterface::handle_command (Packet &packet, Common::ByteAr
  *
  */
 // =============================================================================
-Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::ByteArray &payload,
-                                                    uint16_t offset)
+Common::Result AbstractInterface::handle_attribute(Packet &packet, Common::ByteArray &payload,
+                                                   uint16_t offset)
 {
    Common::Result result = Common::Result::OK;
 
@@ -347,15 +349,15 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
    {
       case Message::GET_ATTR_REQ:
       {
-         auto *attr_res = new HF::Attributes::Response (attribute (packet.message.itf.member));
+         auto *attr_res = new HF::Attributes::Response(attribute(packet.message.itf.member));
          attr_res->code = (attr_res->attribute != nullptr ? Common::Result::OK :
                            Common::Result::FAIL_SUPPORT);
 
-         Message response (packet.message, attr_res->size ());
+         Message response(packet.message, attr_res->size());
 
-         attr_res->pack (response.payload);
+         attr_res->pack(response.payload);
 
-         send (packet.source, response);
+         send(packet.source, response);
 
          delete attr_res;
 
@@ -368,18 +370,19 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_REQ:
       {
-         result = update_attribute (*this, packet.message.itf.member, payload, offset);
+         result = update_attribute(*this, packet.message.itf.member, payload, offset);
          break;
       }
       case Message::SET_ATTR_RESP_REQ:
       {
-         Common::Result result = update_attribute (*this, packet.message.itf.member, payload, offset);
-         Response resp (result);
+         Common::Result result =
+            update_attribute(*this, packet.message.itf.member, payload, offset);
+         Response resp(result);
 
-         Message  response (packet.message, resp.size ());
-         resp.pack (response.payload);
+         Message response(packet.message, resp.size());
+         resp.pack(response.payload);
 
-         send (packet.source, response);
+         send(packet.source, response);
 
          break;
       }
@@ -391,15 +394,15 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          if (packet.message.itf.member == HF::Attributes::Pack::DYNAMIC)
          {
-            offset    += request.unpack (payload, offset);
+            offset    += request.unpack(payload, offset);
             attributes = request.attributes;
          }
          else
          {
-            attributes = this->attributes (packet.message.itf.member);
+            attributes = this->attributes(packet.message.itf.member);
          }
 
-         GetAttributePack::Response *attr_response = new GetAttributePack::Response ();
+         GetAttributePack::Response *attr_response = new GetAttributePack::Response();
 
          if (result == Common::Result::OK)
          {
@@ -422,11 +425,11 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
 
          attr_response->code = result;
 
-         Message response (packet.message, attr_response->size ());
+         Message response(packet.message, attr_response->size());
 
-         attr_response->pack (response.payload);
+         attr_response->pack(response.payload);
 
-         send (packet.source, response);
+         send(packet.source, response);
 
          delete attr_response;
 
@@ -439,18 +442,19 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::SET_ATTR_PACK_REQ:
       {
-         update_attributes (*this, payload, offset, false);
+         update_attributes(*this, payload, offset, false);
          break;
       }
       case Message::SET_ATTR_PACK_RESP_REQ:
       {
-         SetAttributePack::Response *attr_response = update_attributes (*this, payload, offset, true);
+         SetAttributePack::Response *attr_response =
+            update_attributes(*this, payload, offset, true);
 
-         Message response (packet.message, attr_response->size ());
+         Message response(packet.message, attr_response->size());
 
-         attr_response->pack (response.payload);
+         attr_response->pack(response.payload);
 
-         send (packet.source, response);
+         send(packet.source, response);
 
          delete attr_response;
 
@@ -463,18 +467,18 @@ Common::Result AbstractInterface::handle_attribute (Packet &packet, Common::Byte
       }
       case Message::ATOMIC_SET_ATTR_PACK_REQ:
       {
-         update_attributes_atomic (*this, payload, offset, false);
+         update_attributes_atomic(*this, payload, offset, false);
          break;
       }
       case Message::ATOMIC_SET_ATTR_PACK_RESP_REQ:
       {
-         Protocol::Response *resp = update_attributes_atomic (*this, payload, offset, true);
+         Protocol::Response *resp = update_attributes_atomic(*this, payload, offset, true);
 
-         Message response (packet.message, resp->size ());
+         Message response(packet.message, resp->size());
 
-         resp->pack (response.payload);
+         resp->pack(response.payload);
 
-         send (packet.source, response);
+         send(packet.source, response);
 
          delete resp;
 

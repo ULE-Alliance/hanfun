@@ -55,21 +55,21 @@ namespace HF
           *
           * @return  the address of the device for this link.
           */
-         virtual uint16_t address () const = 0;
+         virtual uint16_t address() const = 0;
 
          /*!
           * Set the address of this link corresponds to.
           *
           * @param [in] addr  the address value to set.
           */
-         virtual void address (uint16_t addr) = 0;
+         virtual void address(uint16_t addr) = 0;
 
          /*!
           * Send the data in the given @c ByteArray using the link to the remote end-point.
           *
           * @param [in] array   reference to the ByteArray containing the data to send.
           */
-         virtual void send (Common::ByteArray &array) = 0;
+         virtual void send(Common::ByteArray &array) = 0;
 
          /*!
           * Return the end-point UID associated with this link.
@@ -79,7 +79,7 @@ namespace HF
           *
           * @return  the UID of the remote device of this link.
           */
-         virtual const HF::UID::UID uid () const = 0;
+         virtual const HF::UID::UID uid() const = 0;
       };
 
       /*!
@@ -103,7 +103,7 @@ namespace HF
           *
           * @param [in] link    pointer to the created link.
           */
-         virtual void connected (Link *link) = 0;
+         virtual void connected(Link *link) = 0;
 
          /*!
           * Callback to the report that the given transport @c link no longer is
@@ -114,7 +114,7 @@ namespace HF
           *
           * @param [in] link    pointer to the link disconnected.
           */
-         virtual void disconnected (Link *link) = 0;
+         virtual void disconnected(Link *link) = 0;
 
          /*!
           * Callback to deliver a packet received from the transport layer.
@@ -124,8 +124,8 @@ namespace HF
           * @param [in] offset   offset from where the received data starts on the @c payload
           *                      byte array buffer.
           */
-         virtual void receive (Protocol::Packet &packet, Common::ByteArray &payload,
-                               uint16_t offset) = 0;
+         virtual void receive(Protocol::Packet &packet, Common::ByteArray &payload,
+                              uint16_t offset) = 0;
 
          //! @}
          // ======================================================================
@@ -147,7 +147,7 @@ namespace HF
           *
           * This method should initialize the transport layer using it's default values.
           */
-         virtual void initialize () = 0;
+         virtual void initialize() = 0;
 
          /*!
           * Register the given @c Endpoint to receive events.
@@ -157,7 +157,7 @@ namespace HF
           *
           * @param [in] ep    pointer to the end-point to register in the transport layer.
           */
-         virtual void add (Endpoint *ep) = 0;
+         virtual void add(Endpoint *ep) = 0;
 
          /*!
           * Free the system resources associated with the given @c Endpoint,
@@ -170,12 +170,12 @@ namespace HF
           *
           * @param ep   pointer to the endpoint to remove from the transport layer.
           */
-         virtual void remove (Endpoint *ep = nullptr) = 0;
+         virtual void remove(Endpoint *ep = nullptr) = 0;
 
          /*!
           * Free the system resources associated with this transport layer.
           */
-         virtual void destroy () = 0;
+         virtual void destroy() = 0;
 
          /*!
           * Return the UID of the local device on this transport layer.
@@ -184,7 +184,7 @@ namespace HF
           *
           * @return  the UID of the local device on this transport layer.
           */
-         virtual const HF::UID::UID uid () const = 0;
+         virtual const HF::UID::UID uid() const = 0;
 
          //! @}
          // ======================================================================
@@ -193,7 +193,7 @@ namespace HF
       /*!
        * Parent class for all HF::Transport::Link implementations.
        */
-      class AbstractLink:public Link
+      class AbstractLink: public Link
       {
          protected:
 
@@ -207,27 +207,27 @@ namespace HF
 
          AbstractLink(UID::UID_T *__uid = nullptr,
                       uint16_t _address = Protocol::BROADCAST_ADDR):
-            _uid (__uid), _address (_address)
+            _uid(__uid), _address(_address)
          {}
 
          virtual ~AbstractLink() {}
 
-         uint16_t address () const
+         uint16_t address() const
          {
             return _address;
          }
 
-         void address (uint16_t addr)
+         void address(uint16_t addr)
          {
             _address = addr;
          }
 
-         const HF::UID::UID uid () const
+         const HF::UID::UID uid() const
          {
             return HF::UID::UID(_uid);
          }
 
-         void uid (HF::UID::UID_T *_uid)
+         void uid(HF::UID::UID_T *_uid)
          {
             this->_uid = _uid;
          }
@@ -236,19 +236,19 @@ namespace HF
       /*!
        * Parent class for all HF::Transport::Layer implementations.
        */
-      class AbstractLayer:public Layer
+      class AbstractLayer: public Layer
       {
          protected:
 
          //! List of registered end-points for this layer.
-         Common::SimpleList <HF::Transport::Endpoint *> endpoints;
+         Common::SimpleList<HF::Transport::Endpoint *> endpoints;
 
          //! UID associated with the local transport layer.
          HF::UID::UID_T *_uid;
 
          public:
 
-         AbstractLayer(UID::UID_T *__uid = nullptr):_uid (__uid)
+         AbstractLayer(UID::UID_T *__uid = nullptr): _uid(__uid)
          {}
 
          virtual ~AbstractLayer()
@@ -256,19 +256,19 @@ namespace HF
             delete _uid;
          }
 
-         void initialize () {}
+         void initialize() {}
 
-         void destroy () {}
+         void destroy() {}
 
          /*!
           * Add an entry to the list of end-points connected to the transport layer.
           *
           * @param [in] ep pointer to the end-point to add.
           */
-         void add (HF::Transport::Endpoint *ep)
+         void add(HF::Transport::Endpoint *ep)
          {
-            assert (ep != nullptr);
-            endpoints.push_front (ep);
+            assert(ep != nullptr);
+            endpoints.push_front(ep);
          }
 
          /*!
@@ -280,15 +280,15 @@ namespace HF
           * @param [in] ep pointer to the end-point entry to remove or @c nullptr to
           *             remove all entries.
           */
-         void remove (HF::Transport::Endpoint *ep = nullptr)
+         void remove(HF::Transport::Endpoint *ep = nullptr)
          {
             if (ep != nullptr)
             {
-               endpoints.remove (ep);
+               endpoints.remove(ep);
             }
             else
             {
-               endpoints.clear ();
+               endpoints.clear();
             }
          }
 
@@ -299,13 +299,13 @@ namespace HF
           * @param [in] link     pointer to the link the incoming data was received.
           * @param [in] payload  reference to the ByteArray containing the data received.
           */
-         void receive (HF::Transport::Link *link, HF::Common::ByteArray &payload)
+         void receive(HF::Transport::Link *link, HF::Common::ByteArray &payload)
          {
-            assert (link != nullptr);
-            Protocol::Packet *packet = new Protocol::Packet ();
+            assert(link != nullptr);
+            Protocol::Packet *packet = new Protocol::Packet();
             packet->link = link;
 
-            uint16_t offset = packet->unpack (payload);
+            uint16_t offset = packet->unpack(payload);
 
             /* *INDENT-OFF* */
             std::for_each (endpoints.begin (), endpoints.end (),
@@ -318,7 +318,7 @@ namespace HF
             delete packet;
          }
 
-         const HF::UID::UID uid () const
+         const HF::UID::UID uid() const
          {
             return HF::UID::UID(_uid);
          }
@@ -328,7 +328,7 @@ namespace HF
           *
           * @param [in] _uid  pointer to the UID to use.
           */
-         void uid (HF::UID::UID_T *_uid)
+         void uid(HF::UID::UID_T *_uid)
          {
             this->_uid = _uid;
          }
@@ -339,9 +339,9 @@ namespace HF
           *
           * @param [in] link  pointer to the link to call the @c connected method with.
           */
-         void connected (HF::Transport::Link *link)
+         void connected(HF::Transport::Link *link)
          {
-            assert (link != nullptr);
+            assert(link != nullptr);
 
             /* *INDENT-OFF* */
             std::for_each (endpoints.begin (), endpoints.end (),
@@ -358,9 +358,9 @@ namespace HF
           *
           * @param [in] link  pointer to the link to call the @c disconnected method with.
           */
-         void disconnected (HF::Transport::Link *link)
+         void disconnected(HF::Transport::Link *link)
          {
-            assert (link != nullptr);
+            assert(link != nullptr);
 
             /* *INDENT-OFF* */
             std::for_each (endpoints.begin (), endpoints.end (),

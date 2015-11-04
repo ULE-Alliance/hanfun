@@ -35,7 +35,7 @@
 // Commands API
 // =============================================================================
 
-std::map <std::string, ICommand *> ICommand::registry;
+std::map<std::string, ICommand *> ICommand::registry;
 
 // =============================================================================
 // ICommand::add
@@ -44,9 +44,9 @@ std::map <std::string, ICommand *> ICommand::registry;
  *
  */
 // =============================================================================
-void ICommand::add (ICommand *command)
+void ICommand::add(ICommand *command)
 {
-   registry.insert (std::pair <std::string, ICommand *>(command->key (), command));
+   registry.insert(std::pair<std::string, ICommand *>(command->key(), command));
 }
 
 // =============================================================================
@@ -56,9 +56,9 @@ void ICommand::add (ICommand *command)
  *
  */
 // =============================================================================
-void ICommand::remove (ICommand *command)
+void ICommand::remove(ICommand *command)
 {
-   registry.erase (command->key ());
+   registry.erase(command->key());
 }
 
 // =============================================================================
@@ -68,7 +68,7 @@ void ICommand::remove (ICommand *command)
  *
  */
 // =============================================================================
-std::ostream &ICommand::help (std::ostream &_stream)
+std::ostream &ICommand::help(std::ostream &_stream)
 {
    struct entry
    {
@@ -88,7 +88,7 @@ std::ostream &ICommand::help (std::ostream &_stream)
    std::stringstream stream;
 
    uint16_t size = 0;
-   std::vector <entry> entries;
+   std::vector<entry> entries;
 
    /* *INDENT-OFF* */
    std::for_each (ICommand::registry.begin (), ICommand::registry.end (),
@@ -139,10 +139,10 @@ std::ostream &ICommand::help (std::ostream &_stream)
    stream << std::endl;
 
    stream << "================================================" << std::endl;
-   stream << "HAN-FUN Example Application : v" << HF_VERSION << std::endl ;
+   stream << "HAN-FUN Example Application : v" << HF_VERSION << std::endl;
    stream << "================================================" << std::endl << std::endl;
 
-   stream << std::setfill (' ');
+   stream << std::setfill(' ');
    /* *INDENT-OFF* */
    std::for_each (entries.begin (), entries.end (), [&stream, size](entry &e)
    {
@@ -150,7 +150,7 @@ std::ostream &ICommand::help (std::ostream &_stream)
    });
    /* *INDENT-ON* */
 
-   stream << std::left << std::setw (size) << "h/?" << "\t: " << "this help menu."
+   stream << std::left << std::setw(size) << "h/?" << "\t: " << "this help menu."
           << std::endl << std::endl;
    stream << "Select an Option (Q/q to exit): " << std::endl;
 
@@ -168,18 +168,18 @@ std::ostream &ICommand::help (std::ostream &_stream)
  *
  */
 // =============================================================================
-void ICommand::run (std::string &key, std::vector <std::string> &args)
+void ICommand::run(std::string &key, std::vector<std::string> &args)
 {
-   auto it = registry.find (key);
+   auto it = registry.find(key);
 
-   if (it == registry.end ())
+   if (it == registry.end())
    {
-      LOG (ERROR) << "Command '" << key << "' not found !" << NL;
-      ICommand::help (std::cout);
+      LOG(ERROR) << "Command '" << key << "' not found !" << NL;
+      ICommand::help(std::cout);
    }
    else
    {
-      it->second->run (args);
+      it->second->run(args);
    }
 }
 
@@ -194,24 +194,24 @@ void ICommand::run (std::string &key, std::vector <std::string> &args)
  *
  */
 // =============================================================================
-bool HF::Application::Handle (std::string command)
+bool HF::Application::Handle(std::string command)
 {
-   LOG (TRACE) << __PRETTY_FUNCTION__ << NL;
+   LOG(TRACE) << __PRETTY_FUNCTION__ << NL;
 
-   if (command.empty () || (command.size () == 1 && command[0] == '\n'))
+   if (command.empty() || (command.size() == 1 && command[0] == '\n'))
    {
-      ICommand::help (std::cout);
+      ICommand::help(std::cout);
       return false;
    }
 
-   std::istringstream buf (command);
-   std::istream_iterator <std::string> beg (buf), end;
+   std::istringstream buf(command);
+   std::istream_iterator<std::string> beg(buf), end;
 
-   std::vector <std::string> tokens (beg, end);
+   std::vector<std::string> tokens(beg, end);
 
-   std::string cmd = *tokens.begin ();
+   std::string cmd = *tokens.begin();
 
-   std::vector <std::string> args (tokens.begin () + 1, tokens.end ());
+   std::vector<std::string> args(tokens.begin() + 1, tokens.end());
 
    if (cmd == "q" || cmd == "Q")
    {
@@ -219,15 +219,15 @@ bool HF::Application::Handle (std::string command)
    }
    else if (cmd == "h" || cmd == "?")
    {
-      LOG (APP) << "";
-      ICommand::help (std::cout);
+      LOG(APP) << "";
+      ICommand::help(std::cout);
    }
    else
    {
-      ICommand::run (cmd, args);
+      ICommand::run(cmd, args);
    }
 
-   LOG (APP) << "> " << std::flush;
+   LOG(APP) << "> " << std::flush;
 
    return false;
 }

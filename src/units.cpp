@@ -31,17 +31,17 @@ using namespace HF::Units;
  *
  */
 // =============================================================================
-void AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &message,
-                         Transport::Link *link)
+void AbstractUnit::send(const Protocol::Address &addr, Protocol::Message &message,
+                        Transport::Link *link)
 {
-   Protocol::Packet *packet = new Protocol::Packet (message);
+   Protocol::Packet *packet = new Protocol::Packet(message);
 
    packet->destination   = addr;
-   packet->source.device = device ().address ();
-   packet->source.unit   = id ();
+   packet->source.device = device().address();
+   packet->source.unit   = id();
    packet->link          = link;
 
-   device ().send (*packet);
+   device().send(*packet);
 
    message.reference = packet->message.reference;
 
@@ -55,8 +55,8 @@ void AbstractUnit::send (const Protocol::Address &addr, Protocol::Message &messa
  *
  */
 // =============================================================================
-void AbstractUnit::notify (const HF::Attributes::IAttribute &old_value,
-                           const HF::Attributes::IAttribute &new_value) const
+void AbstractUnit::notify(const HF::Attributes::IAttribute &old_value,
+                          const HF::Attributes::IAttribute &new_value) const
 {
-   device ().unit0 ()->attribute_reporting ()->notify (this->id (), old_value, new_value);
+   device().unit0()->attribute_reporting()->notify(this->id(), old_value, new_value);
 }

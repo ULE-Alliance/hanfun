@@ -29,108 +29,109 @@ using namespace HF::Testing;
 // SimpleHumidity
 // =============================================================================
 
-TEST_GROUP (SimpleHumidity)
+TEST_GROUP(SimpleHumidity)
 {
-   class TestSimpleHumidity:public InterfaceParentHelper <SimpleHumidity::Base>
+   class TestSimpleHumidity: public InterfaceParentHelper<SimpleHumidity::Base>
    {};
 
    TestSimpleHumidity interface;
 };
 
-TEST (SimpleHumidity, UID)
+TEST(SimpleHumidity, UID)
 {
-   CHECK_EQUAL (HF::Interface::SIMPLE_HUMIDITY, interface.uid ());
+   CHECK_EQUAL(HF::Interface::SIMPLE_HUMIDITY, interface.uid());
 }
 
 // =============================================================================
 // SimpleHumidity Client API
 // =============================================================================
 
-TEST_GROUP (SimpleHumidityClient)
+TEST_GROUP(SimpleHumidityClient)
 {
-   class TestSimpleHumidityClient:public InterfaceHelper <SimpleHumidity::Client>
+   class TestSimpleHumidityClient: public InterfaceHelper<SimpleHumidity::Client>
    {
-      void read_resp (const Protocol::Address &addr, const HF::Attributes::Attribute <uint16_t> &attr)
+      void read_resp(const Protocol::Address &addr,
+                     const HF::Attributes::Attribute<uint16_t> &attr)
       {
-         UNUSED (addr);
+         UNUSED(addr);
 
-         unsigned int value = (unsigned int) attr.value ();
+         unsigned int value = (unsigned int) attr.value();
 
-         auto &call         = mock ("SimpleHumidity::Client").actualCall ("read_resp");
-         call.withParameter ("attr_uid", attr.uid ());
-         call.withParameter ("attr_value", value);
+         auto &call         = mock("SimpleHumidity::Client").actualCall("read_resp");
+         call.withParameter("attr_uid", attr.uid());
+         call.withParameter("attr_value", value);
       }
    };
 
    TestSimpleHumidityClient client;
    Protocol::Address addr;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      mock ().ignoreOtherCalls ();
+      mock().ignoreOtherCalls();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
-      mock ().clear ();
+      mock().clear();
    }
 };
 
 /*!
  * @test Check if a GET_ATTR_PACK_REQ message is sent.
  */
-TEST (SimpleHumidityClient, ReadAll_Request)
+TEST(SimpleHumidityClient, ReadAll_Request)
 {
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   client.read_all (addr);
+   client.read_all(addr);
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 
-   LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
-   LONGS_EQUAL (Attributes::Pack::ALL, client.sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::GET_ATTR_PACK_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
+   LONGS_EQUAL(Attributes::Pack::ALL, client.sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::GET_ATTR_PACK_REQ, client.sendMsg.type);
 }
 
 /*!
  * @test Check if a GET_ATTR_REQ message is sent for the measured humidity attribute.
  */
-TEST (SimpleHumidityClient, Read_Humidity_Request)
+TEST(SimpleHumidityClient, Read_Humidity_Request)
 {
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   client.read <SimpleHumidity::VALUE_ATTR>(addr);
+   client.read<SimpleHumidity::VALUE_ATTR>(addr);
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 
-   LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
-   LONGS_EQUAL (SimpleHumidity::VALUE_ATTR, client.sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::GET_ATTR_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
+   LONGS_EQUAL(SimpleHumidity::VALUE_ATTR, client.sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::GET_ATTR_REQ, client.sendMsg.type);
 }
 
 /*!
  * @test Check if a GET_ATTR_REQ message is sent for the tolerance attribute.
  */
-TEST (SimpleHumidityClient, Read_Tolerance_Request)
+TEST(SimpleHumidityClient, Read_Tolerance_Request)
 {
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   client.read <SimpleHumidity::TOLERANCE_ATTR>(addr);
+   client.read<SimpleHumidity::TOLERANCE_ATTR>(addr);
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 
-   LONGS_EQUAL (HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL (client.uid (), client.sendMsg.itf.id);
-   LONGS_EQUAL (SimpleHumidity::TOLERANCE_ATTR, client.sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::GET_ATTR_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
+   LONGS_EQUAL(SimpleHumidity::TOLERANCE_ATTR, client.sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::GET_ATTR_REQ, client.sendMsg.type);
 }
 
 /*!
  * @test Check if a GET_ATTR_PACK_RES/Pack::ALL message is correctly parsed.
  */
-TEST (SimpleHumidityClient, ReadAll_Response)
+TEST(SimpleHumidityClient, ReadAll_Response)
 {
    Protocol::Packet packet;
 
@@ -153,23 +154,23 @@ TEST (SimpleHumidityClient, ReadAll_Response)
 
                                   0x00, 0x00, 0x00};
 
-   auto &call = mock ("SimpleHumidity::Client").expectOneCall ("read_resp");
-   call.withParameter ("attr_uid", (uint8_t) SimpleHumidity::VALUE_ATTR);
-   call.withParameter ("attr_value", (uint16_t) 0x1234);
+   auto &call = mock("SimpleHumidity::Client").expectOneCall("read_resp");
+   call.withParameter("attr_uid", (uint8_t) SimpleHumidity::VALUE_ATTR);
+   call.withParameter("attr_value", (uint16_t) 0x1234);
 
-   auto &call2 = mock ("SimpleHumidity::Client").expectOneCall ("read_resp");
-   call2.withParameter ("attr_uid", (uint8_t) SimpleHumidity::TOLERANCE_ATTR);
-   call2.withParameter ("attr_value", (uint16_t) 0xCDEF);
+   auto &call2 = mock("SimpleHumidity::Client").expectOneCall("read_resp");
+   call2.withParameter("attr_uid", (uint8_t) SimpleHumidity::TOLERANCE_ATTR);
+   call2.withParameter("attr_value", (uint16_t) 0xCDEF);
 
-   CHECK_EQUAL (Result::OK, client.handle (packet, payload, 3));
+   CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
-   mock ("SimpleHumidity::Client").checkExpectations ();
+   mock("SimpleHumidity::Client").checkExpectations();
 }
 
 /*!
  * @test Check if a GET_ATTR_RES message for the measured humidity is correctly parsed.
  */
-TEST (SimpleHumidityClient, Read_Humidity_Response)
+TEST(SimpleHumidityClient, Read_Humidity_Response)
 {
    Protocol::Packet packet;
 
@@ -183,19 +184,19 @@ TEST (SimpleHumidityClient, Read_Humidity_Response)
                                   0x12, 0x34,
                                   0x00, 0x00, 0x00};
 
-   auto &call = mock ("SimpleHumidity::Client").expectOneCall ("read_resp");
-   call.withParameter ("attr_uid", SimpleHumidity::VALUE_ATTR);
-   call.withParameter ("attr_value", (int16_t) 0x1234);
+   auto &call = mock("SimpleHumidity::Client").expectOneCall("read_resp");
+   call.withParameter("attr_uid", SimpleHumidity::VALUE_ATTR);
+   call.withParameter("attr_value", (int16_t) 0x1234);
 
-   CHECK_EQUAL (Result::OK, client.handle (packet, payload, 3));
+   CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
-   mock ("SimpleHumidity::Client").checkExpectations ();
+   mock("SimpleHumidity::Client").checkExpectations();
 }
 
 /*!
  * @test Check if a GET_ATTR_RES message for the tolerance is correctly parsed.
  */
-TEST (SimpleHumidityClient, Read_Tolerance_Response)
+TEST(SimpleHumidityClient, Read_Tolerance_Response)
 {
    Protocol::Packet packet;
 
@@ -209,22 +210,22 @@ TEST (SimpleHumidityClient, Read_Tolerance_Response)
                                   0xCD, 0xEF,
                                   0x00, 0x00, 0x00};
 
-   auto &call = mock ("SimpleHumidity::Client").expectOneCall ("read_resp");
-   call.withParameter ("attr_uid", SimpleHumidity::TOLERANCE_ATTR);
-   call.withParameter ("attr_value", (uint16_t) 0xCDEF);
+   auto &call = mock("SimpleHumidity::Client").expectOneCall("read_resp");
+   call.withParameter("attr_uid", SimpleHumidity::TOLERANCE_ATTR);
+   call.withParameter("attr_value", (uint16_t) 0xCDEF);
 
-   CHECK_EQUAL (Result::OK, client.handle (packet, payload, 3));
+   CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
-   mock ("SimpleHumidity::Client").checkExpectations ();
+   mock("SimpleHumidity::Client").checkExpectations();
 }
 
 // =============================================================================
 // SimpleHumidity Server API
 // =============================================================================
 
-TEST_GROUP (SimpleHumidityServer)
+TEST_GROUP(SimpleHumidityServer)
 {
-   struct TestSimpleHumidityServer:public InterfaceHelper <SimpleHumidity::Server>
+   struct TestSimpleHumidityServer: public InterfaceHelper<SimpleHumidity::Server>
    {};
 
    TestSimpleHumidityServer *server;
@@ -232,134 +233,134 @@ TEST_GROUP (SimpleHumidityServer)
    Protocol::Packet packet;
    ByteArray expected;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      server = new TestSimpleHumidityServer ();
+      server = new TestSimpleHumidityServer();
 
-      mock ("Interface").ignoreOtherCalls ();
+      mock("Interface").ignoreOtherCalls();
 
       expected = ByteArray {0x00, 0x00, 0x00,
                             0x56, 0x78, // Humidity value.
                             0x00, 0x00, 0x00};
 
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
-      packet.message.itf.id     = server->uid ();
+      packet.message.itf.id     = server->uid();
       packet.message.itf.member = SimpleHumidity::VALUE_ATTR;
 
       packet.message.type       = Protocol::Message::SET_ATTR_REQ;
 
-      packet.message.length     = expected.size ();
+      packet.message.length     = expected.size();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
-      mock ().clear ();
+      mock().clear();
       delete server;
    }
 };
 
-TEST (SimpleHumidityServer, Notification_Humidity)
+TEST(SimpleHumidityServer, Notification_Humidity)
 {
-   CHECK_EQUAL (0, server->humidity ());
-   mock ("Interface").expectOneCall ("notify");
-   server->humidity (42);
-   mock ("Interface").checkExpectations ();
-   CHECK_EQUAL (42, server->humidity ());
+   CHECK_EQUAL(0, server->humidity());
+   mock("Interface").expectOneCall("notify");
+   server->humidity(42);
+   mock("Interface").checkExpectations();
+   CHECK_EQUAL(42, server->humidity());
 }
 
 //! @test Should not change humidity value.
-TEST (SimpleHumidityServer, SetAttribute_Humidity)
+TEST(SimpleHumidityServer, SetAttribute_Humidity)
 {
    packet.message.itf.member = SimpleHumidity::VALUE_ATTR;
 
-   server->humidity (0x1234);
+   server->humidity(0x1234);
 
-   Result result = server->handle (packet, expected, 3);
-   CHECK_EQUAL (Result::FAIL_RO_ATTR, result);
+   Result result = server->handle(packet, expected, 3);
+   CHECK_EQUAL(Result::FAIL_RO_ATTR, result);
 
-   LONGS_EQUAL (0x1234, server->humidity ());
+   LONGS_EQUAL(0x1234, server->humidity());
 }
 
 //! @test Should not handle message from invalid role.
-TEST (SimpleHumidityServer, Handle_Invalid_Role)
+TEST(SimpleHumidityServer, Handle_Invalid_Role)
 {
    packet.message.itf.role = HF::Interface::CLIENT_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, server->handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_SUPPORT, server->handle(packet, expected, 3));
 }
 
 //! @test Should not handle message from invalid interface UID.
-TEST (SimpleHumidityServer, Handle_Invalid_UID)
+TEST(SimpleHumidityServer, Handle_Invalid_UID)
 {
-   packet.message.itf.id = server->uid () + 1;
+   packet.message.itf.id = server->uid() + 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, server->handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_ARG, server->handle(packet, expected, 3));
 }
 
 //! @test Should not handle message with not enough payload / offset.
-TEST (SimpleHumidityServer, Handle_Invalid_Payload)
+TEST(SimpleHumidityServer, Handle_Invalid_Payload)
 {
-   CHECK_EQUAL (Result::FAIL_RO_ATTR, server->handle (packet, expected, 10));
+   CHECK_EQUAL(Result::FAIL_RO_ATTR, server->handle(packet, expected, 10));
 }
 
 //! @test Should not return valid attribute.
-TEST (SimpleHumidityServer, InvalidAttribute)
+TEST(SimpleHumidityServer, InvalidAttribute)
 {
-   auto attr = server->attribute (SimpleHumidity::__LAST_ATTR__ + 1);
+   auto attr = server->attribute(SimpleHumidity::__LAST_ATTR__ + 1);
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 }
 
 //! @test Should return humidity attribute.
-TEST (SimpleHumidityServer, Humidity_Attribute)
+TEST(SimpleHumidityServer, Humidity_Attribute)
 {
    using namespace HF::Attributes;
 
-   server->humidity (0x1234);
+   server->humidity(0x1234);
 
-   auto attr = server->attribute (SimpleHumidity::VALUE_ATTR);
+   auto attr = server->attribute(SimpleHumidity::VALUE_ATTR);
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
-   LONGS_EQUAL (SimpleHumidity::VALUE_ATTR, attr->uid ());
-   CHECK_FALSE (attr->isWritable ());
+   LONGS_EQUAL(SimpleHumidity::VALUE_ATTR, attr->uid());
+   CHECK_FALSE(attr->isWritable());
 
-   LONGS_EQUAL (server->uid (), attr->interface ());
+   LONGS_EQUAL(server->uid(), attr->interface());
 
-   POINTERS_EQUAL (server, attr->owner ());
+   POINTERS_EQUAL(server, attr->owner());
 
-   auto temp = static_cast <Attribute <int16_t, SimpleHumidity::Server> *>(attr);
-   LONGS_EQUAL (server->humidity (), temp->value ());
+   auto temp = static_cast<Attribute<int16_t, SimpleHumidity::Server> *>(attr);
+   LONGS_EQUAL(server->humidity(), temp->value());
 
-   temp->value ((int16_t) 0x5678);
-   LONGS_EQUAL (0x5678, server->humidity ());
+   temp->value((int16_t) 0x5678);
+   LONGS_EQUAL(0x5678, server->humidity());
 
    delete attr;
 }
 
 //! @test Should return maximum humidity attribute.
-TEST (SimpleHumidityServer, Tolerance_Attribute)
+TEST(SimpleHumidityServer, Tolerance_Attribute)
 {
    using namespace HF::Attributes;
 
-   auto attr = server->attribute (SimpleHumidity::TOLERANCE_ATTR);
+   auto attr = server->attribute(SimpleHumidity::TOLERANCE_ATTR);
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
-   LONGS_EQUAL (SimpleHumidity::TOLERANCE_ATTR, attr->uid ());
-   CHECK_FALSE (attr->isWritable ());
+   LONGS_EQUAL(SimpleHumidity::TOLERANCE_ATTR, attr->uid());
+   CHECK_FALSE(attr->isWritable());
 
-   LONGS_EQUAL (server->uid (), attr->interface ());
+   LONGS_EQUAL(server->uid(), attr->interface());
 
-   POINTERS_EQUAL (server, attr->owner ());
+   POINTERS_EQUAL(server, attr->owner());
 
-   auto temp     = static_cast <Attribute <uint16_t, SimpleHumidity::Server> *>(attr);
+   auto temp     = static_cast<Attribute<uint16_t, SimpleHumidity::Server> *>(attr);
 
-   int16_t value = server->tolerance ();
-   LONGS_EQUAL (value, temp->value ());
+   int16_t value = server->tolerance();
+   LONGS_EQUAL(value, temp->value());
 
-   temp->value ((int16_t) 0x5678);
-   LONGS_EQUAL (value, server->tolerance ());
+   temp->value((int16_t) 0x5678);
+   LONGS_EQUAL(value, server->tolerance());
 
    delete attr;
 }

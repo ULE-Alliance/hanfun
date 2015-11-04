@@ -47,16 +47,16 @@ static int8_t log_width = -1;
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
+std::ostream &operator<<(std::ostream &stream, const uint8_t byte)
 {
    if (stream == std::cout || stream == std::cerr)
    {
-      std::ios_base::fmtflags ff = stream.flags ();
-      char f                     = stream.fill ('0');
+      std::ios_base::fmtflags ff = stream.flags();
+      char f                     = stream.fill('0');
 
-      stream << Hex <uint8_t>(byte);
+      stream << Hex<uint8_t>(byte);
 
-      stream << std::setfill (f) << std::setiosflags (ff);
+      stream << std::setfill(f) << std::setiosflags(ff);
    }
    else
    {
@@ -77,15 +77,15 @@ std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array)
+std::ostream &operator<<(std::ostream &stream, const HF::Common::ByteArray &array)
 {
    if (stream == std::cout || stream == std::cerr)
    {
-      std::ios_base::fmtflags ff = stream.flags ();
-      char f                     = stream.fill ('0');
+      std::ios_base::fmtflags ff = stream.flags();
+      char f                     = stream.fill('0');
 
       stream << std::left;
-      stream << "(" << Hex <uint16_t>(array.size ()) << ") ";
+      stream << "(" << Hex<uint16_t>(array.size()) << ") ";
 
       /* *INDENT-OFF* */
       std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
@@ -94,7 +94,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &arr
       });
       /* *INDENT-ON* */
 
-      stream << std::setfill (f) << std::setiosflags (ff);
+      stream << std::setfill(f) << std::setiosflags(ff);
    }
    else
    {
@@ -116,15 +116,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &arr
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface interface)
+std::ostream &operator<<(std::ostream &stream, const HF::Common::Interface interface)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
-   stream << "R:" << static_cast <HF::Interface::Role>(interface.role)
-          << " UID:" << static_cast <HF::Interface::UID>(interface.id);
+   stream << "R:" << static_cast<HF::Interface::Role>(interface.role)
+          << " UID:" << static_cast<HF::Interface::UID>(interface.id);
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -136,12 +136,12 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface inte
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
+std::ostream &operator<<(std::ostream &stream, const HF::UID::UID &uid)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill ('0');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill('0');
 
-   switch (uid.raw ()->type ())
+   switch (uid.raw()->type())
    {
       case HF::UID::NONE_UID:
       {
@@ -150,35 +150,35 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
       }
       case HF::UID::DECT_UID:
       {
-         HF::UID::DECT *dect = (HF::UID::DECT *) uid.raw ();
+         HF::UID::DECT *dect = (HF::UID::DECT *) uid.raw();
          stream << "dect: ";
 
-         for (uint8_t i = 0; i < HF::UID::DECT::length (); i++)
+         for (uint8_t i = 0; i < HF::UID::DECT::length(); i++)
          {
-            stream << Hex <uint8_t>((*dect)[i]);
+            stream << Hex<uint8_t>((*dect)[i]);
          }
 
          break;
       }
       case HF::UID::MAC_UID:
       {
-         HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw ();
+         HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw();
          stream << "mac: ";
 
-         for (uint8_t i = 0; i < HF::UID::MAC::length () - 1; i++)
+         for (uint8_t i = 0; i < HF::UID::MAC::length() - 1; i++)
          {
-            stream << Hex <uint8_t>((*mac)[i]) << ":";
+            stream << Hex<uint8_t>((*mac)[i]) << ":";
          }
 
-         stream << Hex <uint8_t>((*mac)[HF::UID::MAC::length () - 1]);
+         stream << Hex<uint8_t>((*mac)[HF::UID::MAC::length() - 1]);
 
          break;
       }
 
       case HF::UID::URI_UID:
       {
-         HF::UID::URI *uri = (HF::UID::URI *) uid.raw ();
-         stream << "uri: " << uri->str ();
+         HF::UID::URI *uri = (HF::UID::URI *) uid.raw();
+         stream << "uri: " << uri->str();
          break;
       }
 
@@ -186,7 +186,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
          break;
    }
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -202,11 +202,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Address &address)
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Address &address)
 {
    stream << "M:" << address.mod << " "
-          << "D:" << Hex <uint16_t>(address.device) << " "
-          << "U:" << Hex <uint8_t>(address.unit);
+          << "D:" << Hex<uint16_t>(address.device) << " "
+          << "U:" << Hex<uint8_t>(address.unit);
 
    return stream;
 }
@@ -218,10 +218,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Address &add
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Type type)
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message::Type type)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    using namespace HF::Protocol;
 
@@ -313,9 +313,9 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Typ
          break;
    }
 
-   stream << Hex <uint8_t>((uint8_t) type) << " (" << result << ")";
+   stream << Hex<uint8_t>((uint8_t) type) << " (" << result << ")";
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -327,7 +327,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Typ
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &message)
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &message)
 {
    int8_t old_width = log_width;
 
@@ -340,10 +340,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
    using namespace HF::Interfaces;
    using namespace HF::Core;
 
-   stream << ALIGN ();
-   stream << "Reference | " << Hex <uint8_t>(message.reference) << NL_ALIGN ()
-          << "Type | " << static_cast <HF::Protocol::Message::Type>(message.type) << NL_ALIGN ()
-          << "Interface | " << message.itf << " M:" << Hex <uint8_t>(message.itf.member) << " (";
+   stream << ALIGN();
+   stream << "Reference | " << Hex<uint8_t>(message.reference) << NL_ALIGN()
+          << "Type | " << static_cast<HF::Protocol::Message::Type>(message.type) << NL_ALIGN()
+          << "Interface | " << message.itf << " M:" << Hex<uint8_t>(message.itf.member) << " (";
 
    switch (message.type)
    {
@@ -354,25 +354,25 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
          switch (message.itf.id)
          {
             case HF::Interface::ATTRIBUTE_REPORTING:
-               stream << static_cast <AttributeReporting::CMD>(message.itf.member);
+               stream << static_cast<AttributeReporting::CMD>(message.itf.member);
                break;
             case HF::Interface::BIND_MANAGEMENT:
-               stream << static_cast <BindManagement::CMD>(message.itf.member);
+               stream << static_cast<BindManagement::CMD>(message.itf.member);
                break;
             case HF::Interface::DEVICE_MANAGEMENT:
-               stream << static_cast <DeviceManagement::CMD>(message.itf.member);
+               stream << static_cast<DeviceManagement::CMD>(message.itf.member);
                break;
             case HF::Interface::ALERT:
-               stream << static_cast <Alert::CMD>(message.itf.member);
+               stream << static_cast<Alert::CMD>(message.itf.member);
                break;
             case HF::Interface::LEVEL_CONTROL:
-               stream << static_cast <LevelControl::CMD>(message.itf.member);
+               stream << static_cast<LevelControl::CMD>(message.itf.member);
                break;
             case HF::Interface::ON_OFF:
-               stream << static_cast <OnOff::CMD>(message.itf.member);
+               stream << static_cast<OnOff::CMD>(message.itf.member);
                break;
             case HF::Interface::SIMPLE_POWER_METER:
-               stream << static_cast <SimplePowerMeter::CMD>(message.itf.member);
+               stream << static_cast<SimplePowerMeter::CMD>(message.itf.member);
                break;
             default:
                stream << "Unknown";
@@ -392,28 +392,28 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
          switch (message.itf.id)
          {
             case HF::Interface::ATTRIBUTE_REPORTING:
-               stream << static_cast <AttributeReporting::Attributes>(message.itf.member);
+               stream << static_cast<AttributeReporting::Attributes>(message.itf.member);
                break;
             case HF::Interface::BIND_MANAGEMENT:
-               stream << static_cast <BindManagement::Attributes>(message.itf.member);
+               stream << static_cast<BindManagement::Attributes>(message.itf.member);
                break;
             case HF::Interface::DEVICE_INFORMATION:
-               stream << static_cast <DeviceInformation::Attributes>(message.itf.member);
+               stream << static_cast<DeviceInformation::Attributes>(message.itf.member);
                break;
             case HF::Interface::DEVICE_MANAGEMENT:
-               stream << static_cast <DeviceManagement::Attributes>(message.itf.member);
+               stream << static_cast<DeviceManagement::Attributes>(message.itf.member);
                break;
             case HF::Interface::ALERT:
-               stream << static_cast <Alert::Attributes>(message.itf.member);
+               stream << static_cast<Alert::Attributes>(message.itf.member);
                break;
             case HF::Interface::LEVEL_CONTROL:
-               stream << static_cast <LevelControl::Attributes>(message.itf.member);
+               stream << static_cast<LevelControl::Attributes>(message.itf.member);
                break;
             case HF::Interface::ON_OFF:
-               stream << static_cast <OnOff::Attributes>(message.itf.member);
+               stream << static_cast<OnOff::Attributes>(message.itf.member);
                break;
             case HF::Interface::SIMPLE_POWER_METER:
-               stream << static_cast <SimplePowerMeter::Attributes>(message.itf.member);
+               stream << static_cast<SimplePowerMeter::Attributes>(message.itf.member);
                break;
             default:
                break;
@@ -458,7 +458,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
          break;
    }
 
-   stream << ")" << NL_ALIGN () << "Payload | " << message.payload;
+   stream << ")" << NL_ALIGN() << "Payload | " << message.payload;
 
    log_width = old_width;
 
@@ -472,10 +472,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &mes
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet)
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Packet &packet)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (0);
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(0);
 
    int8_t old_width           = log_width;
 
@@ -484,17 +484,17 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &pack
       log_width = 15;
    }
 
-   stream << std::right << std::setfill (' ') << std::setw (log_width);
-   stream << "Packet | " << NL_ALIGN ();
+   stream << std::right << std::setfill(' ') << std::setw(log_width);
+   stream << "Packet | " << NL_ALIGN();
 
-   stream << "Source | " << packet.source << NL_ALIGN ();
+   stream << "Source | " << packet.source << NL_ALIGN();
 
-   stream << "Destination | " << packet.destination << NL_ALIGN ();
+   stream << "Destination | " << packet.destination << NL_ALIGN();
 
-   stream << "Message | " << NL_ALIGN ();
+   stream << "Message | " << NL_ALIGN();
    stream << packet.message;
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
 
    log_width = old_width;
 
@@ -512,10 +512,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &pack
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, HF::Interface::Role role)
+std::ostream &operator<<(std::ostream &stream, HF::Interface::Role role)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -533,9 +533,9 @@ std::ostream &operator <<(std::ostream &stream, HF::Interface::Role role)
       }
    }
 
-   stream << Hex <uint8_t>((uint8_t) role) << " (" << result << ")";
+   stream << Hex<uint8_t>((uint8_t) role) << " (" << result << ")";
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -546,10 +546,10 @@ std::ostream &operator <<(std::ostream &stream, HF::Interface::Role role)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
+std::ostream &operator<<(std::ostream &stream, const HF::Interface::UID uid)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -641,9 +641,9 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
       }
    }
 
-   stream << Hex <uint16_t>((uint16_t) uid) << " (" << result << ")";
+   stream << Hex<uint16_t>((uint16_t) uid) << " (" << result << ")";
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -654,10 +654,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -672,7 +672,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -684,10 +684,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -705,7 +705,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Att
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -717,10 +717,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Att
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -735,7 +735,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -746,10 +746,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::LevelControl::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -764,7 +765,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -775,10 +776,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -799,7 +800,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -810,10 +811,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -828,7 +829,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Att
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -839,10 +840,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Att
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -857,7 +858,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -868,10 +869,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimplePowerMeter::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -938,7 +940,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -949,14 +951,14 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
-   stream << Hex <uint8_t>((uint8_t) command) << " (" << result << " [C])";
+   stream << Hex<uint8_t>((uint8_t) command) << " (" << result << " [C])";
 
    using namespace HF::Core::AttributeReporting;
 
@@ -1003,7 +1005,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1014,10 +1016,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporting::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::AttributeReporting::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1044,7 +1047,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1055,10 +1058,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1095,7 +1098,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1106,10 +1109,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1126,7 +1129,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1137,10 +1140,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformation::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceInformation::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1232,7 +1236,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformatio
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1243,10 +1247,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformatio
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1283,7 +1287,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1294,10 +1298,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceManagement::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1314,6 +1319,6 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }

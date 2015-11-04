@@ -35,7 +35,7 @@ using namespace HF::Protocol;
  *
  */
 // =============================================================================
-uint16_t Address::size () const
+uint16_t Address::size() const
 {
    return min_size;
 }
@@ -47,15 +47,15 @@ uint16_t Address::size () const
  *
  */
 // =============================================================================
-uint16_t Address::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Address::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t dev = ((this->mod & 0x01) << 15) | (this->device & BROADCAST_ADDR);
 
-   offset += array.write (offset, dev);
+   offset += array.write(offset, dev);
 
-   array.write (offset, unit);
+   array.write(offset, unit);
 
    return min_size;
 }
@@ -67,18 +67,18 @@ uint16_t Address::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t Address::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Address::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t dev;
 
-   offset      += array.read (offset, dev);
+   offset      += array.read(offset, dev);
 
    this->mod    = (dev & ~BROADCAST_ADDR) >> 15;
    this->device = dev & BROADCAST_ADDR;
 
-   array.read (offset, this->unit);
+   array.read(offset, this->unit);
 
    return min_size;
 }
@@ -94,7 +94,7 @@ uint16_t Address::unpack (const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t Message::Interface::size () const
+uint16_t Message::Interface::size() const
 {
    return min_size;
 }
@@ -106,13 +106,13 @@ uint16_t Message::Interface::size () const
  *
  */
 // =============================================================================
-uint16_t Message::Interface::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Message::Interface::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += Common::Interface::pack (array, offset);
+   offset += Common::Interface::pack(array, offset);
 
-   array.write (offset, this->member);
+   array.write(offset, this->member);
 
    return min_size;
 }
@@ -124,13 +124,13 @@ uint16_t Message::Interface::pack (Common::ByteArray &array, uint16_t offset) co
  *
  */
 // =============================================================================
-uint16_t Message::Interface::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Message::Interface::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += Common::Interface::unpack (array, offset);
+   offset += Common::Interface::unpack(array, offset);
 
-   array.read (offset, this->member);
+   array.read(offset, this->member);
 
    return min_size;
 }
@@ -139,10 +139,10 @@ uint16_t Message::Interface::unpack (const Common::ByteArray &array, uint16_t of
 // Message
 // =============================================================================
 
-Message::Message(const Message &parent, uint16_t size):reference (parent.reference),
-   itf (parent.itf), payload (Common::ByteArray (size)), length (0)
+Message::Message(const Message &parent, uint16_t size): reference(parent.reference),
+   itf(parent.itf), payload(Common::ByteArray(size)), length(0)
 {
-   assert (size <= MAX_PAYLOAD);
+   assert(size <= MAX_PAYLOAD);
 
    switch (parent.type)
    {
@@ -187,10 +187,10 @@ Message::Message(const Message &parent, uint16_t size):reference (parent.referen
  *
  */
 // =============================================================================
-uint16_t Message::size () const
+uint16_t Message::size() const
 {
-   assert (payload.size () <= MAX_PAYLOAD);
-   return min_size + payload.size ();  // Payload Length.
+   assert(payload.size() <= MAX_PAYLOAD);
+   return min_size + payload.size();   // Payload Length.
 }
 
 // =============================================================================
@@ -200,30 +200,30 @@ uint16_t Message::size () const
  *
  */
 // =============================================================================
-uint16_t Message::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Message::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
    // Application Reference.
-   offset += array.write (offset, this->reference);
+   offset += array.write(offset, this->reference);
 
    // Message Type.
-   offset += array.write (offset, static_cast <uint8_t>(this->type));
+   offset += array.write(offset, static_cast<uint8_t>(this->type));
 
    // Interface Address.
-   offset += itf.pack (array, offset);
+   offset += itf.pack(array, offset);
 
    // Payload Length.
-   assert (payload.size () <= MAX_PAYLOAD);
-   offset += array.write (offset, (uint16_t) payload.size ());
+   assert(payload.size() <= MAX_PAYLOAD);
+   offset += array.write(offset, (uint16_t) payload.size());
 
-   assert (array.available (offset, payload.size ()));
+   assert(array.available(offset, payload.size()));
 
-   std::copy (payload.begin (), payload.end (), array.begin () + offset);
+   std::copy(payload.begin(), payload.end(), array.begin() + offset);
 
-   offset += payload.size ();
+   offset += payload.size();
 
    return offset - start;
 }
@@ -235,28 +235,28 @@ uint16_t Message::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t Message::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Message::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
 
    // Application Reference.
-   offset += array.read (offset, this->reference);
+   offset += array.read(offset, this->reference);
 
    // Message Type.
    uint8_t type = 0;
-   offset    += array.read (offset, type);
-   this->type = static_cast <Type>(type);
+   offset    += array.read(offset, type);
+   this->type = static_cast<Type>(type);
 
    // Interface Address
-   offset += itf.unpack (array, offset);
+   offset += itf.unpack(array, offset);
 
    // Payload Length.
-   offset += array.read (offset, this->length);
-   assert (this->length <= MAX_PAYLOAD);
+   offset += array.read(offset, this->length);
+   assert(this->length <= MAX_PAYLOAD);
 
-   assert (array.available (offset, this->length));
+   assert(array.available(offset, this->length));
 
    return offset - start;
 }
@@ -272,7 +272,7 @@ uint16_t Message::unpack (const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t Response::size () const
+uint16_t Response::size() const
 {
    return min_size;
 }
@@ -284,11 +284,11 @@ uint16_t Response::size () const
  *
  */
 // =============================================================================
-uint16_t Response::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Response::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   array.write (offset, static_cast <uint8_t>(this->code));
+   array.write(offset, static_cast<uint8_t>(this->code));
 
    return min_size;
 }
@@ -300,14 +300,14 @@ uint16_t Response::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t Response::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Response::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint8_t code = 0;
-   offset    += array.read (offset, code);
+   offset    += array.read(offset, code);
 
-   this->code = static_cast <Common::Result>(code);
+   this->code = static_cast<Common::Result>(code);
 
    return min_size;
 }
@@ -323,10 +323,10 @@ uint16_t Response::unpack (const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t Packet::size () const
+uint16_t Packet::size() const
 {
    return header_min_size +    // Protocol header size.
-          message.size ();     // Message payload size.
+          message.size();      // Message payload size.
 }
 
 // =============================================================================
@@ -336,19 +336,19 @@ uint16_t Packet::size () const
  *
  */
 // =============================================================================
-uint16_t Packet::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Packet::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   offset += source.pack (array, offset);
-   offset += destination.pack (array, offset);
+   offset += source.pack(array, offset);
+   offset += destination.pack(array, offset);
 
    uint16_t transport = 0;
-   offset += array.write (offset, transport);
+   offset += array.write(offset, transport);
 
-   offset += message.pack (array, offset);
+   offset += message.pack(array, offset);
 
    return offset - start;
 }
@@ -360,19 +360,19 @@ uint16_t Packet::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t Packet::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Packet::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
 
-   offset += source.unpack (array, offset);
-   offset += destination.unpack (array, offset);
+   offset += source.unpack(array, offset);
+   offset += destination.unpack(array, offset);
 
    uint16_t transport = 0;
-   offset += array.read (offset, transport);
+   offset += array.read(offset, transport);
 
-   offset += message.unpack (array, offset);
+   offset += message.unpack(array, offset);
 
    return offset - start;
 }
@@ -392,7 +392,7 @@ uint16_t Packet::unpack (const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t GetAttributePack::Response::size () const
+uint16_t GetAttributePack::Response::size() const
 {
    uint16_t result = min_size;
 
@@ -414,15 +414,15 @@ uint16_t GetAttributePack::Response::size () const
  *
  */
 // =============================================================================
-uint16_t GetAttributePack::Response::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t GetAttributePack::Response::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   offset += Protocol::Response::pack (array, offset);
+   offset += Protocol::Response::pack(array, offset);
 
-   offset += array.write (offset, (uint8_t) attributes.size ());
+   offset += array.write(offset, (uint8_t) attributes.size());
 
    /* *INDENT-OFF* */
    std::for_each (attributes.begin(), attributes.end(),
@@ -442,49 +442,49 @@ uint16_t GetAttributePack::Response::pack (Common::ByteArray &array, uint16_t of
  *
  */
 // =============================================================================
-uint16_t GetAttributePack::Response::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t GetAttributePack::Response::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    // Attribute factory MUST be present for unpacking to happen.
-   assert (attribute_factory != nullptr);
+   assert(attribute_factory != nullptr);
 
    if (attribute_factory == nullptr)
    {
       return 0;
    }
 
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
 
-   offset += Protocol::Response::unpack (array, offset);
-   offset += array.read (offset, count);
+   offset += Protocol::Response::unpack(array, offset);
+   offset += array.read(offset, count);
 
    for (uint8_t i = 0; i < count; i++)
    {
       uint8_t uid;
 
-      if (!array.available (offset, sizeof(uid)))
+      if (!array.available(offset, sizeof(uid)))
       {
          break;
       }
 
-      offset += array.read (offset, uid);
+      offset += array.read(offset, uid);
 
-      HF::Attributes::IAttribute *attr = attribute_factory (uid);
+      HF::Attributes::IAttribute *attr = attribute_factory(uid);
 
       if (attr == nullptr)
       {
          break;
       }
 
-      if (!array.available (offset, attr->size ()))
+      if (!array.available(offset, attr->size()))
       {
          break;
       }
 
-      offset += attr->unpack (array, offset);
+      offset += attr->unpack(array, offset);
 
-      attributes.push_back (attr);
+      attributes.push_back(attr);
    }
 
    return offset - start;
@@ -512,7 +512,7 @@ SetAttributePack::Request::~Request()
  *
  */
 // =============================================================================
-uint16_t SetAttributePack::Request::size () const
+uint16_t SetAttributePack::Request::size() const
 {
    uint16_t result = min_size;
 
@@ -534,13 +534,13 @@ uint16_t SetAttributePack::Request::size () const
  *
  */
 // =============================================================================
-uint16_t SetAttributePack::Request::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t SetAttributePack::Request::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   offset += array.write (offset, (uint8_t) attributes.size ());
+   offset += array.write(offset, (uint8_t) attributes.size());
 
    /* *INDENT-OFF* */
    std::for_each (attributes.begin (), attributes.end (),
@@ -560,11 +560,11 @@ uint16_t SetAttributePack::Request::pack (Common::ByteArray &array, uint16_t off
  *
  */
 // =============================================================================
-uint16_t SetAttributePack::Request::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t SetAttributePack::Request::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   array.read (offset, count);
+   array.read(offset, count);
 
    return min_size;
 }
@@ -576,13 +576,13 @@ uint16_t SetAttributePack::Request::unpack (const Common::ByteArray &array, uint
  *
  */
 // =============================================================================
-uint16_t SetAttributePack::Response::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t SetAttributePack::Response::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   offset += array.write (offset, (uint8_t) results.size ());
+   offset += array.write(offset, (uint8_t) results.size());
 
    /* *INDENT-OFF* */
    std::for_each (results.begin (), results.end (), [&array,&offset](Result result)
@@ -601,26 +601,26 @@ uint16_t SetAttributePack::Response::pack (Common::ByteArray &array, uint16_t of
  *
  */
 // =============================================================================
-uint16_t SetAttributePack::Response::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t SetAttributePack::Response::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
 
-   offset += array.read (offset, count);
+   offset += array.read(offset, count);
 
    Result result;
 
    for (int i = 0; i < count; i++)
    {
-      if (!array.available (offset, Result::min_size))
+      if (!array.available(offset, Result::min_size))
       {
          break;
       }
 
-      offset += result.unpack (array, offset);
+      offset += result.unpack(array, offset);
 
-      results.push_back (result);
+      results.push_back(result);
    }
 
    return offset - start;
@@ -637,21 +637,21 @@ uint16_t SetAttributePack::Response::unpack (const Common::ByteArray &array, uin
  *
  */
 // =============================================================================
-bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
+bool Filters::ResponseRequired::operator()(const HF::Protocol::Packet &packet)
 {
-   if (response (packet.message.type))
+   if (response(packet.message.type))
    {
-      Entry temp (packet);
-      db.push_front (temp);
+      Entry temp(packet);
+      db.push_front(temp);
       return false;
    }
 
-   assert (packet.link != nullptr);
+   assert(packet.link != nullptr);
 
-   uint16_t address = (packet.source.device == Protocol::BROADCAST_ADDR ? packet.link->address () :
-                                                                          packet.source.device);
+   uint16_t address = (packet.source.device == Protocol::BROADCAST_ADDR ? packet.link->address() :
+                       packet.source.device);
 
-   assert (address != Protocol::BROADCAST_ADDR);
+   assert(address != Protocol::BROADCAST_ADDR);
 
    /* *INDENT-OFF* */
    auto it = std::find_if (db.begin(), db.end(), [address, &packet](const Entry entry)
@@ -661,13 +661,13 @@ bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
    });
    /* *INDENT-ON* */
 
-   if (it != db.end ())
+   if (it != db.end())
    {
-      db.erase (it);
+      db.erase(it);
       return false;
    }
 
-   if (request (packet.message.type, true))
+   if (request(packet.message.type, true))
    {
       return true;
    }
@@ -686,7 +686,7 @@ bool Filters::ResponseRequired::operator ()(const HF::Protocol::Packet &packet)
  *
  */
 // =============================================================================
-bool Protocol::request (Message::Type type, bool response)
+bool Protocol::request(Message::Type type, bool response)
 {
    switch (type)
    {
@@ -724,7 +724,7 @@ bool Protocol::request (Message::Type type, bool response)
  *
  */
 // =============================================================================
-bool Protocol::response (Message::Type type)
+bool Protocol::response(Message::Type type)
 {
    switch (type)
    {
@@ -763,7 +763,7 @@ bool Protocol::response (Message::Type type)
  *
  */
 // =============================================================================
-bool Protocol::matches (Message::Type lhs, Message::Type rhs)
+bool Protocol::matches(Message::Type lhs, Message::Type rhs)
 {
    if (lhs == rhs)
    {

@@ -31,12 +31,12 @@ using namespace HF::UID;
  *
  */
 // =============================================================================
-uint16_t UID::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t UID::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, sizeof(uint8_t));
+   SERIALIZABLE_CHECK(array, offset, sizeof(uint8_t));
 
    uint8_t type = Type::NONE_UID;
-   array.read (offset, type);
+   array.read(offset, type);
 
    if (owner)
    {
@@ -52,23 +52,23 @@ uint16_t UID::unpack (const Common::ByteArray &array, uint16_t offset)
    switch (type)
    {
       case HF::UID::NONE_UID:
-         _raw = new HF::UID::NONE ();
+         _raw = new HF::UID::NONE();
          break;
 
       case HF::UID::DECT_UID:
-         _raw = new HF::UID::DECT ();
+         _raw = new HF::UID::DECT();
          break;
 
       case HF::UID::MAC_UID:
-         _raw = new HF::UID::MAC ();
+         _raw = new HF::UID::MAC();
          break;
 
       case HF::UID::URI_UID:
-         _raw = new HF::UID::URI ();
+         _raw = new HF::UID::URI();
          break;
    }
 
-   offset = _raw->unpack (array, offset);
+   offset = _raw->unpack(array, offset);
 
    return offset;
 }

@@ -31,9 +31,9 @@ using namespace HF::Core::DeviceInformation;
  *
  */
 // =============================================================================
-uint16_t FriendlyName::Unit::size () const
+uint16_t FriendlyName::Unit::size() const
 {
-   return sizeof(uint8_t) + HF::Common::SerializableHelper <std::string>::size (name);
+   return sizeof(uint8_t) + HF::Common::SerializableHelper<std::string>::size(name);
 }
 
 // =============================================================================
@@ -43,14 +43,14 @@ uint16_t FriendlyName::Unit::size () const
  *
  */
 // =============================================================================
-uint16_t FriendlyName::Unit::pack (HF::Common::ByteArray &array, uint16_t offset) const
+uint16_t FriendlyName::Unit::pack(HF::Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
-   offset += array.write (offset, id);
-   HF::Common::SerializableHelper <std::string>(name).pack (array, offset);
+   offset += array.write(offset, id);
+   HF::Common::SerializableHelper<std::string>(name).pack(array, offset);
 
-   return size ();
+   return size();
 }
 
 // =============================================================================
@@ -60,21 +60,21 @@ uint16_t FriendlyName::Unit::pack (HF::Common::ByteArray &array, uint16_t offset
  *
  */
 // =============================================================================
-uint16_t FriendlyName::Unit::unpack (const HF::Common::ByteArray &array, uint16_t offset)
+uint16_t FriendlyName::Unit::unpack(const HF::Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += array.read (offset, id);
-   HF::Common::SerializableHelper <std::string> temp;
+   offset += array.read(offset, id);
+   HF::Common::SerializableHelper<std::string> temp;
 
-   if (temp.unpack (array, offset) == 0)
+   if (temp.unpack(array, offset) == 0)
    {
       return 0;
    }
 
    name = temp.data;
 
-   return size ();
+   return size();
 }
 
 // =============================================================================
@@ -84,7 +84,7 @@ uint16_t FriendlyName::Unit::unpack (const HF::Common::ByteArray &array, uint16_
  *
  */
 // =============================================================================
-uint16_t FriendlyName::size () const
+uint16_t FriendlyName::size() const
 {
    uint16_t result = min_size;
 
@@ -105,12 +105,12 @@ uint16_t FriendlyName::size () const
  *
  */
 // =============================================================================
-uint16_t FriendlyName::pack (HF::Common::ByteArray &array, uint16_t offset) const
+uint16_t FriendlyName::pack(HF::Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
-   uint8_t _size = units.size ();
-   offset += array.write (offset, _size);
+   uint8_t _size = units.size();
+   offset += array.write(offset, _size);
 
    /* *INDENT-OFF* */
    std::for_each (units.begin(), units.end(), [&array, &offset](const Unit &unit)
@@ -119,7 +119,7 @@ uint16_t FriendlyName::pack (HF::Common::ByteArray &array, uint16_t offset) cons
    });
    /* *INDENT-ON* */
 
-   return size ();
+   return size();
 }
 
 // =============================================================================
@@ -129,33 +129,33 @@ uint16_t FriendlyName::pack (HF::Common::ByteArray &array, uint16_t offset) cons
  *
  */
 // =============================================================================
-uint16_t FriendlyName::unpack (const HF::Common::ByteArray &array, uint16_t offset)
+uint16_t FriendlyName::unpack(const HF::Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, size ());
+   SERIALIZABLE_CHECK(array, offset, size());
 
    uint8_t _count = 0;
-   offset += array.read (offset, _count);
+   offset += array.read(offset, _count);
 
-   SERIALIZABLE_CHECK (array, offset, (_count * Unit::min_size));
+   SERIALIZABLE_CHECK(array, offset, (_count * Unit::min_size));
 
-   units.reserve (_count);
+   units.reserve(_count);
 
    Unit unit;
 
    for (uint8_t i = 0; i < _count; ++i)
    {
-      uint16_t res = unit.unpack (array, offset);
+      uint16_t res = unit.unpack(array, offset);
 
       if (res == 0)
       {
          return 0;
       }
 
-      units.push_back (unit);
+      units.push_back(unit);
       offset += res;
    }
 
-   return size ();
+   return size();
 }
 
 // =============================================================================
@@ -165,18 +165,18 @@ uint16_t FriendlyName::unpack (const HF::Common::ByteArray &array, uint16_t offs
  *
  */
 // =============================================================================
-int FriendlyName::compare (const FriendlyName &other) const
+int FriendlyName::compare(const FriendlyName &other) const
 {
-   int  result = units.size () - other.units.size ();
+   int result = units.size() - other.units.size();
 
-   auto it     = units.begin ();
-   auto ito    = other.units.begin ();
+   auto it    = units.begin();
+   auto ito   = other.units.begin();
 
-   for (; result == 0 && it != units.end (); ++it, ++ito)
+   for (; result == 0 && it != units.end(); ++it, ++ito)
    {
       if ((result = it->id - ito->id) == 0)
       {
-         result = it->name.compare (ito->name);
+         result = it->name.compare(ito->name);
       }
    }
 
@@ -190,9 +190,9 @@ int FriendlyName::compare (const FriendlyName &other) const
  *
  */
 // =============================================================================
-Protocol::Message *DeviceInformation::mandatory ()
+Protocol::Message *DeviceInformation::mandatory()
 {
-   Protocol::Message *result = new Protocol::Message ();
+   Protocol::Message *result = new Protocol::Message();
 
    result->type       = Protocol::Message::GET_ATTR_PACK_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
@@ -209,9 +209,9 @@ Protocol::Message *DeviceInformation::mandatory ()
  *
  */
 // =============================================================================
-Protocol::Message *DeviceInformation::all ()
+Protocol::Message *DeviceInformation::all()
 {
-   Protocol::Message *result = new Protocol::Message ();
+   Protocol::Message *result = new Protocol::Message();
 
 
    result->type       = Protocol::Message::GET_ATTR_PACK_REQ;
@@ -229,18 +229,18 @@ Protocol::Message *DeviceInformation::all ()
  *
  */
 // =============================================================================
-Protocol::Message *DeviceInformation::get (HF::Attributes::UIDS &uids)
+Protocol::Message *DeviceInformation::get(HF::Attributes::UIDS &uids)
 {
-   auto *req                 = new HF::Protocol::GetAttributePack::Request (uids);
+   auto *req                 = new HF::Protocol::GetAttributePack::Request(uids);
 
-   Protocol::Message *result = new Protocol::Message ();
+   Protocol::Message *result = new Protocol::Message();
 
    result->type       = Protocol::Message::GET_ATTR_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
    result->itf.role   = HF::Interface::SERVER_ROLE;
    result->itf.member = HF::Attributes::DYNAMIC;
 
-   req->pack (result->payload);
+   req->pack(result->payload);
 
    delete req;
 
@@ -254,9 +254,9 @@ Protocol::Message *DeviceInformation::get (HF::Attributes::UIDS &uids)
  *
  */
 // =============================================================================
-Protocol::Message *DeviceInformation::get (uint8_t uid)
+Protocol::Message *DeviceInformation::get(uint8_t uid)
 {
-   Protocol::Message *result = new Protocol::Message ();
+   Protocol::Message *result = new Protocol::Message();
 
    result->type       = Protocol::Message::GET_ATTR_REQ;
    result->itf.id     = HF::Interface::DEVICE_INFORMATION;
@@ -273,13 +273,14 @@ Protocol::Message *DeviceInformation::get (uint8_t uid)
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *DeviceInformation::Server::attribute (uint8_t uid)
+HF::Attributes::IAttribute *DeviceInformation::Server::attribute(uint8_t uid)
 {
    HF::Attributes::UIDS uids = attributes(HF::Attributes::Pack::ALL);
-   if (std::any_of (uids.begin(), uids.end(),
-                    [uid] (uint8_t attr_uid) { return uid == attr_uid; }))
+
+   if (std::any_of(uids.begin(), uids.end(),
+                   [uid](uint8_t attr_uid) {return uid == attr_uid;}))
    {
-      return Core::create_attribute (this, uid);
+      return Core::create_attribute(this, uid);
    }
    else
    {
@@ -294,7 +295,7 @@ HF::Attributes::IAttribute *DeviceInformation::Server::attribute (uint8_t uid)
  *
  */
 // =============================================================================
-HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS DeviceInformation::Server::attributes(uint8_t pack_id) const
 {
    HF::Attributes::UIDS result;
 
@@ -302,22 +303,22 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) con
    {
       case HF::Attributes::Pack::ALL:
       {
-         result.push_back (UID_ATTR);
-         result.push_back (EMC_ATTR);
+         result.push_back(UID_ATTR);
+         result.push_back(EMC_ATTR);
       }
       case HF::Attributes::Pack::MANDATORY:
       {
-         result.push_back (EXTRA_CAP_ATTR);
-         result.push_back (INTERFACE_VERSION_ATTR);
-         result.push_back (PROFILE_VERSION_ATTR);
-         result.push_back (CORE_VERSION_ATTR);
+         result.push_back(EXTRA_CAP_ATTR);
+         result.push_back(INTERFACE_VERSION_ATTR);
+         result.push_back(PROFILE_VERSION_ATTR);
+         result.push_back(CORE_VERSION_ATTR);
          break;
       }
       default:
          break;
    }
 
-   std::reverse (result.begin (), result.end ());
+   std::reverse(result.begin(), result.end());
 
    return result;
 }
@@ -329,9 +330,9 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes (uint8_t pack_id) con
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *DeviceInformation::create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *DeviceInformation::create_attribute(uint8_t uid)
 {
-   return Core::create_attribute ((DeviceInformation::Server *) nullptr, uid);
+   return Core::create_attribute((DeviceInformation::Server *) nullptr, uid);
 }
 
 // =============================================================================
@@ -341,15 +342,15 @@ HF::Attributes::IAttribute *DeviceInformation::create_attribute (uint8_t uid)
  *
  */
 // =============================================================================
-void DeviceInformation::Server::paging (bool value)
+void DeviceInformation::Server::paging(bool value)
 {
    if (value)
    {
-      capabilities (capabilities () | (value << 0));
+      capabilities(capabilities() | (value << 0));
    }
    else
    {
-      capabilities (capabilities () & (~(1 << 0)));
+      capabilities(capabilities() & (~(1 << 0)));
    }
 }
 
@@ -360,7 +361,7 @@ void DeviceInformation::Server::paging (bool value)
  *
  */
 // =============================================================================
-bool DeviceInformation::Server::has_paging () const
+bool DeviceInformation::Server::has_paging() const
 {
    return (_capabilities & (1 << 0)) != 0;
 }
@@ -372,15 +373,15 @@ bool DeviceInformation::Server::has_paging () const
  *
  */
 // =============================================================================
-void DeviceInformation::Server::broadcast (bool value)
+void DeviceInformation::Server::broadcast(bool value)
 {
    if (value)
    {
-      capabilities (capabilities () | (value << 1));
+      capabilities(capabilities() | (value << 1));
    }
    else
    {
-      capabilities (capabilities () & (~(1 << 1)));
+      capabilities(capabilities() & (~(1 << 1)));
    }
 }
 
@@ -391,7 +392,7 @@ void DeviceInformation::Server::broadcast (bool value)
  *
  */
 // =============================================================================
-bool DeviceInformation::Server::has_broadcast () const
+bool DeviceInformation::Server::has_broadcast() const
 {
    return (_capabilities & (1 << 1)) != 0;
 }
@@ -403,16 +404,16 @@ bool DeviceInformation::Server::has_broadcast () const
  *
  */
 // =============================================================================
-void DeviceInformation::Server::capabilities (uint8_t value)
+void DeviceInformation::Server::capabilities(uint8_t value)
 {
-   auto old_value = new HF::Attributes::Attribute <uint8_t>(HF::Interface::DEVICE_INFORMATION,
-                                                            EXTRA_CAP_ATTR, this, _capabilities);
+   auto old_value = new HF::Attributes::Attribute<uint8_t>(HF::Interface::DEVICE_INFORMATION,
+                                                           EXTRA_CAP_ATTR, this, _capabilities);
 
    this->_capabilities = value;
 
-   auto new_value = create_attribute (EXTRA_CAP_ATTR);
+   auto new_value = create_attribute(EXTRA_CAP_ATTR);
 
-   notify (*old_value, *new_value);
+   notify(*old_value, *new_value);
 
    delete old_value;
    delete new_value;
@@ -425,7 +426,7 @@ void DeviceInformation::Server::capabilities (uint8_t value)
  *
  */
 // =============================================================================
-uint8_t DeviceInformation::Server::capabilities ()
+uint8_t DeviceInformation::Server::capabilities()
 {
    return _capabilities;
 }

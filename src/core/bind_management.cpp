@@ -33,9 +33,9 @@ using namespace HF::Core::BindManagement;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *BindManagement::create_attribute(uint8_t uid)
 {
-   return Core::create_attribute ((BindManagement::IServer *) nullptr, uid);
+   return Core::create_attribute((BindManagement::IServer *) nullptr, uid);
 }
 
 // =============================================================================
@@ -49,7 +49,7 @@ HF::Attributes::IAttribute *BindManagement::create_attribute (uint8_t uid)
  *
  */
 // =============================================================================
-uint16_t Entry::size () const
+uint16_t Entry::size() const
 {
    return min_size;
 }
@@ -61,15 +61,15 @@ uint16_t Entry::size () const
  *
  */
 // =============================================================================
-uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += this->source.pack (array, offset);
+   offset += this->source.pack(array, offset);
 
-   offset += this->itf.pack (array, offset);
+   offset += this->itf.pack(array, offset);
 
-   this->destination.pack (array, offset);
+   this->destination.pack(array, offset);
 
    return min_size;
 }
@@ -81,15 +81,15 @@ uint16_t Entry::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += this->source.unpack (array, offset);
+   offset += this->source.unpack(array, offset);
 
-   offset += this->itf.unpack (array, offset);
+   offset += this->itf.unpack(array, offset);
 
-   this->destination.unpack (array, offset);
+   this->destination.unpack(array, offset);
 
    return min_size;
 }
@@ -105,9 +105,9 @@ uint16_t Entry::unpack (const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t Entries::size () const
+uint16_t Entries::size() const
 {
-   return this->db.size ();
+   return this->db.size();
 }
 
 // =============================================================================
@@ -117,9 +117,9 @@ uint16_t Entries::size () const
  *
  */
 // =============================================================================
-Common::Result Entries::save (const Entry &entry)
+Common::Result Entries::save(const Entry &entry)
 {
-   auto res              = this->db.insert (entry);
+   auto res              = this->db.insert(entry);
 
    Common::Result result = Common::Result::FAIL_ARG;
 
@@ -138,7 +138,7 @@ Common::Result Entries::save (const Entry &entry)
  *
  */
 // =============================================================================
-Common::Result Entries::destroy (uint16_t address, Protocol::Address::Type type)
+Common::Result Entries::destroy(uint16_t address, Protocol::Address::Type type)
 {
    /* *INDENT-OFF* */
    return destroy ([address, type](BindManagement::Entry const &entry)
@@ -163,9 +163,9 @@ Common::Result Entries::destroy (uint16_t address, Protocol::Address::Type type)
  *
  */
 // =============================================================================
-Common::Result Entries::destroy (const Entry &entry)
+Common::Result Entries::destroy(const Entry &entry)
 {
-   if (this->db.erase (entry) == 1)
+   if (this->db.erase(entry) == 1)
    {
       return Common::Result::OK;
    }
@@ -184,20 +184,20 @@ Common::Result Entries::destroy (const Entry &entry)
  *
  */
 // =============================================================================
-EntryPtr Entries::find (const Protocol::Address &source, const Common::Interface &itf,
-                        const Protocol::Address &destination) const
+EntryPtr Entries::find(const Protocol::Address &source, const Common::Interface &itf,
+                       const Protocol::Address &destination) const
 {
-   Entry temp (source, itf, destination);
+   Entry temp(source, itf, destination);
 
-   auto  it = this->db.find (temp);
+   auto it = this->db.find(temp);
 
-   if (it == this->db.end ())
+   if (it == this->db.end())
    {
-      return EntryPtr ();
+      return EntryPtr();
    }
    else
    {
-      return EntryPtr (&(*it));
+      return EntryPtr(&(*it));
    }
 }
 
@@ -208,11 +208,11 @@ EntryPtr Entries::find (const Protocol::Address &source, const Common::Interface
  *
  */
 // =============================================================================
-bool Entries::any_of (Protocol::Address const &source, Common::Interface const &itf) const
+bool Entries::any_of(Protocol::Address const &source, Common::Interface const &itf) const
 {
-   auto range = find (source, itf);
+   auto range = find(source, itf);
 
-   return range.first != db.end () || range.second != db.end ();
+   return range.first != db.end() || range.second != db.end();
 }
 
 // =============================================================================
@@ -222,11 +222,11 @@ bool Entries::any_of (Protocol::Address const &source, Common::Interface const &
  *
  */
 // =============================================================================
-void Entries::for_each (Protocol::Address const &source, Common::Interface const &itf,
-                        std::function <void(const Entry &)> func) const
+void Entries::for_each(Protocol::Address const &source, Common::Interface const &itf,
+                       std::function<void(const Entry &)> func) const
 {
-   auto range = find (source, itf);
-   std::for_each (range.first, range.second, func);
+   auto range = find(source, itf);
+   std::for_each(range.first, range.second, func);
 }
 
 // =============================================================================
@@ -236,14 +236,14 @@ void Entries::for_each (Protocol::Address const &source, Common::Interface const
  *
  */
 // =============================================================================
-std::pair <Entries::iterator, Entries::iterator> Entries::find (Protocol::Address const &source,
-                                                                Common::Interface const &itf) const
+std::pair<Entries::iterator, Entries::iterator> Entries::find(Protocol::Address const &source,
+                                                              Common::Interface const &itf) const
 {
-   Entry _begin (source, itf);
-   Entry _end (source, itf);
+   Entry _begin(source, itf);
+   Entry _end(source, itf);
 
-   memset (&(_begin.destination), 0x00, sizeof(Protocol::Address));
-   memset (&(_end.destination), 0xFF, sizeof(Protocol::Address));
+   memset(&(_begin.destination), 0x00, sizeof(Protocol::Address));
+   memset(&(_end.destination), 0xFF, sizeof(Protocol::Address));
 
-   return std::make_pair (db.lower_bound (_begin), db.upper_bound (_end));
+   return std::make_pair(db.lower_bound(_begin), db.upper_bound(_end));
 }

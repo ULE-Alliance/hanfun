@@ -36,8 +36,8 @@ using namespace HF::Interfaces::SimplePowerMeter;
  * @todo This needs more validation when reading a report received.
  */
 // =============================================================================
-Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
    if (packet.message.itf.member != REPORT_CMD)
    {
@@ -46,9 +46,9 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
 
    Report report;
 
-   offset += report.unpack (payload, offset);
+   offset += report.unpack(payload, offset);
 
-   this->report (packet.source, report);
+   this->report(packet.source, report);
 
    return Common::Result::OK;
 }

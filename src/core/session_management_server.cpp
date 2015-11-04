@@ -32,8 +32,8 @@ using namespace HF::Core::SessionManagement;
  *
  */
 // =============================================================================
-Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet,
-                                               Common::ByteArray &payload, uint16_t offset)
+Common::Result AbstractServer::handle_command(CMD cmd, Protocol::Packet &packet,
+                                              Common::ByteArray &payload, uint16_t offset)
 {
    // Don't process group address.
    if (packet.source.mod == HF::Protocol::Address::GROUP)
@@ -43,44 +43,44 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
 
    Result result = Result::OK;
 
-   Protocol::Message resp_msg (packet.message, 0);
+   Protocol::Message resp_msg(packet.message, 0);
 
    switch (cmd)
    {
       case START:
       {
-         start_session (packet.source.device);
+         start_session(packet.source.device);
 
          StartResponse resp;
          result           = resp.code = Result::OK;
-         resp.count       = entries_size ();
+         resp.count       = entries_size();
 
-         resp_msg.payload = Common::ByteArray (resp.size ());
-         resp.pack (resp_msg.payload);
+         resp_msg.payload = Common::ByteArray(resp.size());
+         resp.pack(resp_msg.payload);
 
          break;
       }
       case GET:
       {
-         result = check_session (packet.source.device, resp_msg.payload);
+         result = check_session(packet.source.device, resp_msg.payload);
 
          if (result == Result::OK)
          {
             GetEntriesMessage msg;
-            msg.unpack (payload, offset);
-            result = entries (msg.offset, msg.count, resp_msg.payload);
+            msg.unpack(payload, offset);
+            result = entries(msg.offset, msg.count, resp_msg.payload);
          }
 
          break;
       }
       case END:
       {
-         end_session (packet.source.device);
+         end_session(packet.source.device);
 
          Protocol::Response resp;
          result           = resp.code = Result::OK;
-         resp_msg.payload = Common::ByteArray (resp.size ());
-         resp.pack (resp_msg.payload);
+         resp_msg.payload = Common::ByteArray(resp.size());
+         resp.pack(resp_msg.payload);
 
          break;
       }
@@ -88,7 +88,7 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
          return Result::FAIL_SUPPORT;
    }
 
-   send (packet.source, resp_msg);
+   send(packet.source, resp_msg);
 
    return result;
 }
@@ -100,15 +100,15 @@ Common::Result AbstractServer::handle_command (CMD cmd, Protocol::Packet &packet
  *
  */
 // =============================================================================
-Common::Result AbstractServer::check_session (uint16_t address, Common::ByteArray &payload) const
+Common::Result AbstractServer::check_session(uint16_t address, Common::ByteArray &payload) const
 {
    Result result = Result::OK;
 
-   if (!exists (address))
+   if (!exists(address))
    {
       result = Result::FAIL_READ_SESSION;
    }
-   else if (!is_valid (address))
+   else if (!is_valid(address))
    {
       result = Result::FAIL_MODIFIED;
    }
@@ -117,8 +117,8 @@ Common::Result AbstractServer::check_session (uint16_t address, Common::ByteArra
    {
       GetEntriesEmptyResponse resp;
       resp.code = result;
-      payload   = Common::ByteArray (resp.size ());
-      resp.pack (payload);
+      payload   = Common::ByteArray(resp.size());
+      resp.pack(payload);
    }
 
    return result;
@@ -131,7 +131,7 @@ Common::Result AbstractServer::check_session (uint16_t address, Common::ByteArra
  *
  */
 // =============================================================================
-Common::Result AbstractServer::check_offset (uint16_t offset, uint8_t &count, uint16_t size) const
+Common::Result AbstractServer::check_offset(uint16_t offset, uint8_t &count, uint16_t size) const
 {
    if (offset >= size)
    {
@@ -152,7 +152,7 @@ Common::Result AbstractServer::check_offset (uint16_t offset, uint8_t &count, ui
  *
  */
 // =============================================================================
-uint16_t AbstractServer::payload_size (CMD cmd) const
+uint16_t AbstractServer::payload_size(CMD cmd) const
 {
    switch (cmd)
    {

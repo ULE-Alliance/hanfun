@@ -35,7 +35,7 @@ using namespace HF::Interfaces::SimpleTemperature;
  *
  */
 // =============================================================================
-int16_t Server::temperature ()
+int16_t Server::temperature()
 {
    return _value;
 }
@@ -47,16 +47,16 @@ int16_t Server::temperature ()
  *
  */
 // =============================================================================
-void Server::temperature (int16_t __value)
+void Server::temperature(int16_t __value)
 {
    uint8_t old = this->_value;
 
    this->_value = __value;
 
-   Temperature old_attr (old, this);
-   Temperature new_attr (this->_value, this);
+   Temperature old_attr(old, this);
+   Temperature new_attr(this->_value, this);
 
-   notify (old_attr, new_attr);
+   notify(old_attr, new_attr);
 }
 
 // =============================================================================
@@ -66,7 +66,7 @@ void Server::temperature (int16_t __value)
  *
  */
 // =============================================================================
-int16_t Server::minimum_temperature ()
+int16_t Server::minimum_temperature()
 {
    return _minimum;
 }
@@ -78,7 +78,7 @@ int16_t Server::minimum_temperature ()
  *
  */
 // =============================================================================
-int16_t Server::maximum_temperature ()
+int16_t Server::maximum_temperature()
 {
    return _maximum;
 }
@@ -90,7 +90,7 @@ int16_t Server::maximum_temperature ()
  *
  */
 // =============================================================================
-uint16_t Server::tolerance ()
+uint16_t Server::tolerance()
 {
    return _tolerance;
 }
@@ -102,9 +102,9 @@ uint16_t Server::tolerance ()
  *
  */
 // =============================================================================
-HF::Attributes::UIDS Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
-   UNUSED (pack_id);
+   UNUSED(pack_id);
    /* *INDENT-OFF* */
    return HF::Attributes::UIDS({
       SimpleTemperature::VALUE_ATTR,

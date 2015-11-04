@@ -43,7 +43,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (SimpleHumidity::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(SimpleHumidity::Server *server, uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Humidity interface
@@ -71,26 +71,26 @@ namespace HF
           * Helper class to handle the Measured Humidity attribute for the
           * Simple Humidity interface.
           */
-         struct Humidity:public HF::Attributes::Attribute <uint16_t>
+         struct Humidity: public HF::Attributes::Attribute<uint16_t>
          {
             static constexpr uint8_t ID        = VALUE_ATTR;
             static constexpr bool    WRITABBLE = false;
 
             Humidity(uint16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute <uint16_t>(Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
+               Attribute<uint16_t>(Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
             {}
          };
 
          /*!
           * Helper class to handle the Tolerance attribute for the Simple Humidity interface.
           */
-         struct Tolerance:public HF::Attributes::Attribute <uint16_t>
+         struct Tolerance: public HF::Attributes::Attribute<uint16_t>
          {
             static constexpr uint8_t ID        = TOLERANCE_ATTR;
             static constexpr bool    WRITABBLE = false;
 
             Tolerance(uint16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute <uint16_t>(Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
+               Attribute<uint16_t>(Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -104,9 +104,10 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         inline HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+         inline HF::Attributes::IAttribute *create_attribute(uint8_t uid)
          {
-            return Interfaces::create_attribute (static_cast <SimpleHumidity::Server *>(nullptr), uid);
+            return Interfaces::create_attribute(static_cast<SimpleHumidity::Server *>(nullptr),
+                                                uid);
          }
 
          /*!
@@ -114,7 +115,7 @@ namespace HF
           *
           * This is the parent class for the Simple Humidity interface implementation.
           */
-         struct Base:public Interfaces::Base <Interface::SIMPLE_HUMIDITY>
+         struct Base: public Interfaces::Base<Interface::SIMPLE_HUMIDITY>
          {
             protected:
 
@@ -127,7 +128,7 @@ namespace HF
           *
           * This class provides the API for server side of the Simple Humidity interface.
           */
-         class Server:public InterfaceRole <SimpleHumidity::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimpleHumidity::Base, Interface::SERVER_ROLE>
          {
             protected:
 
@@ -139,7 +140,7 @@ namespace HF
             public:
 
             //! Constructor
-            Server(uint16_t tolerance = 0):_value (0), _tolerance (tolerance)
+            Server(uint16_t tolerance = 0): _value(0), _tolerance(tolerance)
             {}
 
             virtual ~Server() {}
@@ -153,34 +154,35 @@ namespace HF
              *
              * @return  the current measured humidity.
              */
-            uint16_t humidity ();
+            uint16_t humidity();
 
             /*!
              * Setter for the current measured humidity.
              *
              * @param [in] __value  the new humidity value to use.
              */
-            void humidity (uint16_t __value);
+            void humidity(uint16_t __value);
 
             /*!
              * Getter for the tolerance attribute.
              *
              * @return  the tolerance value.
              */
-            uint16_t tolerance ();
+            uint16_t tolerance();
 
             // =============================================================================
             // Attributes API
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            HF::Attributes::IAttribute *attribute(uint8_t uid)
             {
-               return Interfaces::create_attribute (this, uid);
+               return Interfaces::create_attribute(this, uid);
             }
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute (
+            friend HF::Attributes::IAttribute *Interfaces::create_attribute(
                SimpleHumidity::Server *, uint8_t);
          };
 
@@ -189,7 +191,7 @@ namespace HF
           *
           * This class provides the client side of the %Level Control interface.
           */
-         class Client:public InterfaceRole <SimpleHumidity::Base, Interface::CLIENT_ROLE>
+         class Client: public InterfaceRole<SimpleHumidity::Base, Interface::CLIENT_ROLE>
          {
             public:
 
@@ -205,7 +207,7 @@ namespace HF
              *
              * @param [in] addr        network address to send the message to.
              */
-            void read_all (Protocol::Address &addr);
+            void read_all(Protocol::Address &addr);
 
             /*!
              * Send a @c GET_ATTR_REQ to the given address to get the current humidity.
@@ -214,16 +216,16 @@ namespace HF
              * @param  [in] addr        network address to send the message to.
              */
             template<Attributes _Attribute>
-            void read (Protocol::Address &addr)
+            void read(Protocol::Address &addr)
             {
                Protocol::Message message;
 
                message.itf.role   = SERVER_ROLE;
-               message.itf.id     = SimpleHumidity::Client::uid ();
+               message.itf.id     = SimpleHumidity::Client::uid();
                message.itf.member = _Attribute;
                message.type       = Protocol::Message::GET_ATTR_REQ;
 
-               send (addr, message);
+               send(addr, message);
             }
 
             //! @}
@@ -235,11 +237,11 @@ namespace HF
             //! @name Events
             //! @{
 
-            virtual void read_resp (const Protocol::Address &addr,
-                                    const HF::Attributes::Attribute <uint16_t> &attr)
+            virtual void read_resp(const Protocol::Address &addr,
+                                   const HF::Attributes::Attribute<uint16_t> &attr)
             {
-               UNUSED (addr);
-               UNUSED (attr);
+               UNUSED(addr);
+               UNUSED(attr);
             }
 
             //! @}
@@ -247,8 +249,8 @@ namespace HF
 
             protected:
 
-            Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                             uint16_t offset);
+            Common::Result handle_attribute(Protocol::Packet &packet, Common::ByteArray &payload,
+                                            uint16_t offset);
 
          };
 
