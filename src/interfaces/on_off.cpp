@@ -26,7 +26,7 @@ using namespace HF::Interfaces;
 using namespace HF::Interfaces::OnOff;
 
 // =============================================================================
-// create_attribute
+// OnOff::create_attribute
 // =============================================================================
 /*!
  *

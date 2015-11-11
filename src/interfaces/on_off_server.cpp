@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/on_off_client.cpp
+ * @file       src/interfaces/on_off_server.cpp
  *
  * This file contains the implementation of the On-Off interface : Server role.
  *

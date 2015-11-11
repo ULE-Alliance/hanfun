@@ -617,8 +617,7 @@ namespace HF
                                                HF::Attributes::Pack::MANDATORY) const;
 
             friend HF::Attributes::IAttribute *Interfaces::create_attribute(
-               SimplePowerMeter::Server *,
-               uint8_t);
+               SimplePowerMeter::Server *, uint8_t);
 
             protected:
 
