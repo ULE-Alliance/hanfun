@@ -55,6 +55,35 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
    UNUSED (pack_id);
 
-   // TODO Implement SimpleThermostat::Server::attributes
-   return HF::Attributes::UIDS();
+   return HF::Attributes::UIDS({SUPPORTED_MODES_ATTR});
+}
+
+// =============================================================================
+
+// =============================================================================
+// Get/Set Attributes
+// =============================================================================
+
+// =============================================================================
+// Server::supported_modes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint8_t Server::supported_modes() const
+{
+   return _supported_modes;
+}
+
+// =============================================================================
+// Server::supported_modes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::supported_modes(uint8_t __supported_modes)
+{
+   SETTER_HELPER(SupportedModes, _supported_modes, __supported_modes);
 }

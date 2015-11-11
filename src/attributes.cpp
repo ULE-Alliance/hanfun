@@ -669,11 +669,34 @@ IAttribute *Interfaces::create_attribute(SimpleHumidity::Server *server, uint8_t
 // =============================================================================
 IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8_t uid)
 {
-   UNUSED(server);
-   UNUSED(uid);
+   using namespace HF::Interfaces::SimpleThermostat;
 
-   // TODO Interfaces::create_attribute(SimpleThermostat::Server *, uint8_t)
-   return nullptr;
+   SimpleThermostat::Attributes attr = static_cast<SimpleThermostat::Attributes>(uid);
+
+   uint16_t itf_uid                  = Interface::SIMPLE_THERMOSTAT;
+
+   switch (attr)
+   {
+      case SUPPORTED_MODES_ATTR:
+      {
+         bool writabble = SupportedModes::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::supported_modes;
+            auto setter = (void (Server::*)(uint8_t)) & Server::supported_modes;
+
+            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      default:
+         return nullptr;
+   }
 }
 
 // =============================================================================

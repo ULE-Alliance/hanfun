@@ -213,10 +213,14 @@ namespace HF
          {
             protected:
 
+            uint8_t _supported_modes;              //!< Supported modes
+
             public:
 
             //! Constructor
-            Server() {}
+            Server(const uint8_t __supported_modes = ALL_MODES_MASK):
+               _supported_modes(__supported_modes)
+            {}
 
             //! Destructor
             virtual ~Server() {}
@@ -232,6 +236,24 @@ namespace HF
             // =============================================================================
             // Get/Set API.
             // =============================================================================
+
+            /*!
+             * Get the supported modes for the Simple Thermostat server.
+             *
+             * @see HF::Interfaces::SimpleThermostat::SupportedModesMasks
+             *
+             * @return  a mask of the supported modes.
+             */
+            uint8_t supported_modes() const;
+
+            /*!
+             * Set the supported modes for the Simple Thermostat server.
+             *
+             * @see HF::Interfaces::SimpleThermostat::SupportedModesMasks
+             *
+             * @param [in] __supported_modes mask of modes supported by the server.
+             */
+            void supported_modes(uint8_t __supported_modes);
 
             // =============================================================================
             // Attribute API.
