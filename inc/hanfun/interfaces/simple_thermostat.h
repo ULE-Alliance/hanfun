@@ -214,6 +214,7 @@ namespace HF
             protected:
 
             uint8_t _supported_modes;              //!< Supported modes
+            uint8_t _mode;                         //!< Current mode.
 
             public:
 
@@ -254,6 +255,24 @@ namespace HF
              * @param [in] __supported_modes mask of modes supported by the server.
              */
             void supported_modes(uint8_t __supported_modes);
+
+            /*!
+             * Get the current Heat/Cool mode for the Simple Thermostat server.
+             *
+             * @see HF::Interfaces::SimpleThermostat::SupportedModesMasks
+             *
+             * @return  the current Heat/Cool mode.
+             */
+            uint8_t mode() const;
+
+            /*!
+             * Set the current mode for the Simple Thermostat server.
+             *
+             * @see HF::Interfaces::SimpleThermostat::SupportedModesMasks
+             *
+             * @param [in] __mode the current mode value to set the server to.
+             */
+            virtual void mode(uint8_t __mode);
 
             // =============================================================================
             // Attribute API.

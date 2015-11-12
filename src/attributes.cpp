@@ -694,6 +694,23 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
          }
       }
 
+      case HEAT_COOL_MODE_ATTR:
+      {
+         bool writabble = HeatCoolMode::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::mode;
+            auto setter = (void (Server::*)(uint8_t)) & Server::mode;
+
+            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
+         }
+      }
+
       default:
          return nullptr;
    }

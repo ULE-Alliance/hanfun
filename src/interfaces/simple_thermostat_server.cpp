@@ -55,7 +55,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
    UNUSED (pack_id);
 
-   return HF::Attributes::UIDS({SUPPORTED_MODES_ATTR});
+   return HF::Attributes::UIDS({SUPPORTED_MODES_ATTR, HEAT_COOL_MODE_ATTR});
 }
 
 // =============================================================================
@@ -86,4 +86,28 @@ uint8_t Server::supported_modes() const
 void Server::supported_modes(uint8_t __supported_modes)
 {
    SETTER_HELPER(SupportedModes, _supported_modes, __supported_modes);
+}
+
+// =============================================================================
+// Server::mode
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint8_t Server::mode() const
+{
+   return _mode;
+}
+
+// =============================================================================
+// Server::mode
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::mode(uint8_t __mode)
+{
+   SETTER_HELPER(HeatCoolMode, _mode, __mode);
 }

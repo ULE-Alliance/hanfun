@@ -136,3 +136,36 @@ TEST(SimpleThermostatServer, SupportedModes)
 
    delete attr;
 }
+
+//! @test Heat/Cool Mode support.
+TEST(SimpleThermostatServer, Mode)
+{
+   auto attrs = server.attributes(HF::Attributes::Pack::MANDATORY);
+
+   CHECK_TRUE(std::any_of(attrs.begin(), attrs.end(),
+                          [](uint8_t uid) {return uid == HEAT_COOL_MODE_ATTR;}));
+
+   mock("Interface").expectNCalls(2, "notify");
+
+   server.mode(HEAT_MODE);
+
+   LONGS_EQUAL(HEAT_MODE, server.mode());
+
+   typedef HF::Attributes::Attribute<uint8_t, Server> HeatCoolModeAttr;
+
+   auto attr = static_cast<HeatCoolModeAttr *>(server.attribute(HEAT_COOL_MODE_ATTR));
+   CHECK_TRUE(attr != nullptr);
+
+   CHECK_TRUE(attr->isWritable());
+   POINTERS_EQUAL(&server, attr->owner());
+   LONGS_EQUAL(server.uid(), attr->interface());
+
+   LONGS_EQUAL(server.mode(), attr->value());
+
+   attr->value(COOL_MODE);
+   LONGS_EQUAL(COOL_MODE, attr->value());
+
+   mock("Interface").checkExpectations();
+
+   delete attr;
+}
