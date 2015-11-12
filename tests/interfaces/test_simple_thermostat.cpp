@@ -93,6 +93,7 @@ TEST_GROUP(SimpleThermostatServer)
    TEST_SETUP()
    {
       server = TestSimpleThermostat();
+
       mock().ignoreOtherCalls();
    }
 
@@ -224,4 +225,10 @@ TEST(SimpleThermostatServer, Mode)
 TEST(SimpleThermostatServer, FanMode)
 {
    CHECK_ATTRIBUTE(FanMode, fan_mode, FAN_OFF_MODE, FAN_AUTO_MODE);
+}
+
+//! @test Check temperature attributes support.
+TEST(SimpleThermostatServer, TemperatureAttributes)
+{
+   CHECK_TEMPERATURE_ATTRIBUTE(HeatModeTemperature, heat_mode_temperature);
 }

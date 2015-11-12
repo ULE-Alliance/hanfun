@@ -219,6 +219,9 @@ namespace HF
 #if HF_ITF_STS_FAN_MODE
             uint8_t _fan_mode;                     //!< Current Fan Mode.
 #endif
+#if HF_ITF_STS_HEAT_MODE
+            int16_t _heat_mode_temperature;        //!< Heat Mode temperature.
+#endif
             public:
 
             //! Constructor
@@ -295,6 +298,22 @@ namespace HF
              * @param [in] __fan_mode     the FAN mode value to set the server to.
              */
             virtual void fan_mode(uint8_t __fan_mode);
+#endif
+
+#if HF_ITF_STS_HEAT_MODE
+            /*!
+             * Get the current temperature for the Heat mode.
+             *
+             * @return  the current temperature for the Heat mode.
+             */
+            int16_t heat_mode_temperature() const;
+
+            /*!
+             * Set the current temperature for the Heat mode.
+             *
+             * @param [in] __temperature  the temperature value to set for the Heat Mode.
+             */
+            virtual void heat_mode_temperature(int16_t __temperature);
 #endif
             // =============================================================================
             // Attribute API.
