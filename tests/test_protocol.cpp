@@ -252,6 +252,70 @@ TEST(Message, Unpack)
    CHECK_EQUAL(payload.data, temp.data);
 }
 
+TEST(Message, isCommand)
+{
+   message.type = Message::Type::COMMAND_REQ;
+   CHECK_TRUE(message.isCommand())
+
+   message.type = Message::Type::COMMAND_RESP_REQ;
+   CHECK_TRUE(message.isCommand())
+
+   const std::vector<Message::Type> types =
+   {
+      Message::Type::COMMAND_RES,
+      Message::Type::GET_ATTR_REQ,
+      Message::Type::GET_ATTR_RES,
+      Message::Type::SET_ATTR_REQ,
+      Message::Type::SET_ATTR_RESP_REQ,
+      Message::Type::SET_ATTR_RES,
+      Message::Type::GET_ATTR_PACK_REQ,
+      Message::Type::GET_ATTR_PACK_RES,
+      Message::Type::SET_ATTR_PACK_REQ,
+      Message::Type::SET_ATTR_PACK_RESP_REQ,
+      Message::Type::SET_ATTR_PACK_RES,
+      Message::Type::ATOMIC_SET_ATTR_PACK_REQ,
+      Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ,
+      Message::Type::ATOMIC_SET_ATTR_PACK_RES,
+   };
+
+   for (auto type:types)
+   {
+      message.type = type;
+      CHECK_FALSE(message.isCommand())
+   }
+}
+
+TEST(Message, isCommandResponse)
+{
+   message.type = Message::Type::COMMAND_RES;
+   CHECK_TRUE(message.isCommandResponse())
+
+   const std::vector<Message::Type> types =
+   {
+      Message::Type::COMMAND_REQ,
+      Message::Type::COMMAND_RESP_REQ,
+      Message::Type::GET_ATTR_REQ,
+      Message::Type::GET_ATTR_RES,
+      Message::Type::SET_ATTR_REQ,
+      Message::Type::SET_ATTR_RESP_REQ,
+      Message::Type::SET_ATTR_RES,
+      Message::Type::GET_ATTR_PACK_REQ,
+      Message::Type::GET_ATTR_PACK_RES,
+      Message::Type::SET_ATTR_PACK_REQ,
+      Message::Type::SET_ATTR_PACK_RESP_REQ,
+      Message::Type::SET_ATTR_PACK_RES,
+      Message::Type::ATOMIC_SET_ATTR_PACK_REQ,
+      Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ,
+      Message::Type::ATOMIC_SET_ATTR_PACK_RES,
+   };
+
+   for (auto type:types)
+   {
+      message.type = type;
+      CHECK_FALSE(message.isCommandResponse())
+   }
+}
+
 // =============================================================================
 // Packet
 // =============================================================================

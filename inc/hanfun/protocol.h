@@ -177,6 +177,22 @@ namespace HF
           * the @c payload field in this object.
           */
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+
+         /*!
+          * Check if message type is equal to @c COMMAND_REQ or to @c COMMAND_RESP_REQ.
+          *
+          * @retval true if message type is equal to @c COMMAND_REQ or to @c COMMAND_RESP_REQ.
+          * @retval false otherwise.
+          */
+         bool isCommand() const;
+
+         /*!
+          * Check if message type is equal to @c COMMAND_RES.
+          *
+          * @retval true if message type is equal to @c COMMAND_RES..
+          * @retval false otherwise.
+          */
+         bool isCommandResponse() const;
       };
 
       /*!
