@@ -686,11 +686,11 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::supported_modes;
             auto setter = (void (Server::*)(uint8_t)) & Server::supported_modes;
 
-            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
+            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -703,11 +703,11 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::mode;
             auto setter = (void (Server::*)(uint8_t)) & Server::mode;
 
-            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
+            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -721,12 +721,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::fan_mode;
             auto setter = (void (Server::*)(uint8_t)) & Server::fan_mode;
 
-            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
+            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
          }
       }
 

@@ -966,7 +966,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleTherm
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleThermostat::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleThermostat::Attributes attribute)
 {
    UNUSED(attribute);
 
