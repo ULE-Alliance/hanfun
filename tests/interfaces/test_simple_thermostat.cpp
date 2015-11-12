@@ -232,4 +232,6 @@ TEST(SimpleThermostatServer, TemperatureAttributes)
 {
    CHECK_TEMPERATURE_ATTRIBUTE(HeatModeTemperature, heat_mode_temperature);
    CHECK_TEMPERATURE_ATTRIBUTE(CoolModeTemperature, cool_mode_temperature);
+   CHECK_TEMPERATURE_ATTRIBUTE(AutoModeHeatTemperature, auto_mode_heat_temperature);
+   CHECK_TEMPERATURE_ATTRIBUTE(AutoModeCoolTemperature, auto_mode_cool_temperature);
 }

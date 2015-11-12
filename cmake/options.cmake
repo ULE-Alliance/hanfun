@@ -93,3 +93,4 @@ option(HF_ITF_SPM_RESET_CMD                "Interface - Simple Power Meter - Rea
 option(HF_ITF_STS_FAN_MODE           "Interface - Simple Thermostat - Fan Mode Support")
 option(HF_ITF_STS_HEAT_MODE          "Interface - Simple Thermostat - Heat Mode Support")
 option(HF_ITF_STS_COOL_MODE          "Interface - Simple Thermostat - Cool Mode Support")
+option(HF_ITF_STS_AUTO_MODE          "Interface - Simple Thermostat - Heat/Cool Mode Support")

@@ -66,6 +66,10 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 #if HF_ITF_STS_COOL_MODE
       result.push_back(COOL_MODE_TEMP_ATTR);
 #endif
+#if HF_ITF_STS_AUTO_MODE
+      result.push_back(AUTO_MODE_HEAT_TEMP_ATTR);
+      result.push_back(AUTO_MODE_COOL_TEMP_ATTR);
+#endif
    }
 
    return std::move(result);
@@ -201,5 +205,55 @@ int16_t Server::cool_mode_temperature() const
 void Server::cool_mode_temperature(int16_t __temperature)
 {
    SETTER_HELPER(HeatModeTemperature, _cool_mode_temperature, __temperature);
+}
+#endif
+
+#if HF_ITF_STS_AUTO_MODE
+// =============================================================================
+// Server::auto_mode_heat_temperature
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int16_t Server::auto_mode_heat_temperature() const
+{
+   return _auto_mode_heat_temperature;
+}
+
+// =============================================================================
+// Server::auto_mode_heat_temperature
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::auto_mode_heat_temperature(int16_t __temperature)
+{
+   SETTER_HELPER(AutoModeHeatTemperature, _auto_mode_heat_temperature, __temperature);
+}
+
+// =============================================================================
+// Server::auto_mode_heat_temperature
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int16_t Server::auto_mode_cool_temperature() const
+{
+   return _auto_mode_cool_temperature;
+}
+
+// =============================================================================
+// Server::auto_mode_cool_temperature
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::auto_mode_cool_temperature(int16_t __temperature)
+{
+   SETTER_HELPER(AutoModeCoolTemperature, _auto_mode_cool_temperature, __temperature);
 }
 #endif

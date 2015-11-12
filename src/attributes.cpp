@@ -767,6 +767,44 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             return new::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
+
+      case AUTO_MODE_HEAT_TEMP_ATTR:
+      {
+         bool writabble = AutoModeHeatTemperature::WRITABBLE;
+#if HF_ITF_STS_AUTO_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::auto_mode_heat_temperature;
+            auto setter = (void (Server::*)(int16_t)) & Server::auto_mode_heat_temperature;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case AUTO_MODE_COOL_TEMP_ATTR:
+      {
+         bool writabble = AutoModeCoolTemperature::WRITABBLE;
+#if HF_ITF_STS_AUTO_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::auto_mode_cool_temperature;
+            auto setter = (void (Server::*)(int16_t)) & Server::auto_mode_cool_temperature;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
       default:
          return nullptr;
    }
