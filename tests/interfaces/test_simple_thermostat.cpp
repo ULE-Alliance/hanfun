@@ -235,3 +235,9 @@ TEST(SimpleThermostatServer, TemperatureAttributes)
    CHECK_TEMPERATURE_ATTRIBUTE(AutoModeHeatTemperature, auto_mode_heat_temperature);
    CHECK_TEMPERATURE_ATTRIBUTE(AutoModeCoolTemperature, auto_mode_cool_temperature);
 }
+
+//! @test Check temperature offset attributes support.
+TEST(SimpleThermostatServer, TemperatureOffsetAttributes)
+{
+   CHECK_TEMPERATURE_ATTRIBUTE(HeatModeTemperatureOffset, heat_mode_temperature_offset);
+}

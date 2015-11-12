@@ -70,6 +70,9 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
       result.push_back(AUTO_MODE_HEAT_TEMP_ATTR);
       result.push_back(AUTO_MODE_COOL_TEMP_ATTR);
 #endif
+#if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
+      result.push_back(HEAT_MODE_TEMP_OFFSET_ATTR);
+#endif
    }
 
    return std::move(result);
@@ -255,5 +258,31 @@ int16_t Server::auto_mode_cool_temperature() const
 void Server::auto_mode_cool_temperature(int16_t __temperature)
 {
    SETTER_HELPER(AutoModeCoolTemperature, _auto_mode_cool_temperature, __temperature);
+}
+#endif
+
+#if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
+// =============================================================================
+// Server::heat_mode_temperature_offset
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int16_t Server::heat_mode_temperature_offset() const
+{
+   return _heat_mode_temperature_offset;
+}
+
+// =============================================================================
+// Server::heat_mode_temperature_offset
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::heat_mode_temperature_offset(int16_t __offset)
+{
+   SETTER_HELPER(HeatModeTemperatureOffset, _heat_mode_temperature_offset, __offset);
 }
 #endif

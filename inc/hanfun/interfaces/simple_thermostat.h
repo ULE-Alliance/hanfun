@@ -229,6 +229,9 @@ namespace HF
             int16_t _auto_mode_heat_temperature;   //!< Heat/Cool Mode Heat Temperature.
             int16_t _auto_mode_cool_temperature;   //!< Heat/Cool Mode Cool Temperature.
 #endif
+#if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
+            int16_t _heat_mode_temperature_offset; //!< Heat Mode Temperature Offset.
+#endif
             public:
 
             //! Constructor
@@ -367,6 +370,22 @@ namespace HF
              * @param [in] __temperature  the cool temperature value to set for the Heat/Cool Mode.
              */
             virtual void auto_mode_cool_temperature(int16_t __temperature);
+#endif
+
+#if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
+            /*!
+             * Get the current temperature offset for the Heat mode.
+             *
+             * @return  the current temperature offset for the Heat mode.
+             */
+            int16_t heat_mode_temperature_offset() const;
+
+            /*!
+             * Set the current temperature for the Heat mode.
+             *
+             * @param [in] __offset  the temperature offset value to set for the Heat Mode.
+             */
+            virtual void heat_mode_temperature_offset(int16_t __offset);
 #endif
             // =============================================================================
             // Attribute API.

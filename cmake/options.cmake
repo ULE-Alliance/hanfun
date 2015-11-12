@@ -20,6 +20,8 @@
 # Project Configuration
 # =============================================================================
 
+include(CMakeDependentOption)
+
 option(HF_BUILD_TESTS "Build project's unit tests.")
 option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
 
@@ -94,3 +96,9 @@ option(HF_ITF_STS_FAN_MODE           "Interface - Simple Thermostat - Fan Mode S
 option(HF_ITF_STS_HEAT_MODE          "Interface - Simple Thermostat - Heat Mode Support")
 option(HF_ITF_STS_COOL_MODE          "Interface - Simple Thermostat - Cool Mode Support")
 option(HF_ITF_STS_AUTO_MODE          "Interface - Simple Thermostat - Heat/Cool Mode Support")
+
+cmake_dependent_option(HF_ITF_STS_HEAT_OFFSET_ATTR
+                       "Interface - Simple Thermostat - Heat Mode Temperature Offset Attribute Support"
+                       OFF
+                       "HF_ITF_STS_HEAT_MODE"
+                       OFF)
