@@ -41,7 +41,10 @@ set(HF_INTERFACES_SRCS interfaces.cpp
                        interfaces/simple_temperature_client.cpp
                        interfaces/simple_temperature_server.cpp
                        interfaces/simple_humidity_client.cpp
-                       interfaces/simple_humidity_server.cpp )
+                       interfaces/simple_humidity_server.cpp
+                       interfaces/simple_thermostat.cpp
+                       interfaces/simple_thermostat_server.cpp
+                       interfaces/simple_thermostat_client.cpp)
 
 set(HF_CORE_SRCS       core/device_management.cpp
                        core/device_management_client.cpp

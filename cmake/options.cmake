@@ -20,6 +20,8 @@
 # Project Configuration
 # =============================================================================
 
+include(CMakeDependentOption)
+
 option(HF_BUILD_TESTS "Build project's unit tests.")
 option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
 
@@ -85,3 +87,26 @@ option(HF_ITF_SPM_REPORT_INTERVAL_ATTR     "Interface - Simple Power Meter - Rep
 
 option(HF_ITF_SPM_REPORT_CMD               "Interface - Simple Power Meter - Periodic Report Command Support")
 option(HF_ITF_SPM_RESET_CMD                "Interface - Simple Power Meter - Reading Values Reset Command Support")
+
+# =============================================================================
+# SimpleThermostat Configuration
+# =============================================================================
+
+option(HF_ITF_STS_FAN_MODE      "Interface - Simple Thermostat - Fan Mode Support")
+option(HF_ITF_STS_HEAT_MODE     "Interface - Simple Thermostat - Heat Mode Support")
+option(HF_ITF_STS_COOL_MODE     "Interface - Simple Thermostat - Cool Mode Support")
+option(HF_ITF_STS_AUTO_MODE     "Interface - Simple Thermostat - Heat/Cool Mode Support")
+
+cmake_dependent_option(HF_ITF_STS_HEAT_OFFSET_ATTR
+                       "Interface - Simple Thermostat - Heat Mode Temperature Offset Attribute Support"
+                       OFF
+                       "HF_ITF_STS_HEAT_MODE"
+                       OFF)
+
+cmake_dependent_option(HF_ITF_STS_COOL_OFFSET_ATTR
+                       "Interface - Simple Thermostat - Cool Mode Temperature Offset Attribute Support"
+                       OFF
+                       "HF_ITF_STS_COOL_MODE"
+                       OFF)
+
+option(HF_ITF_STS_BOOST_CMD          "Interface - Simple Thermostat - Boost Command Support")

@@ -951,6 +951,41 @@ std::ostream &operator<<(std::ostream &stream,
  *
  */
 // =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleThermostat::CMD command)
+{
+   UNUSED(command);
+
+   // TODO Implement SimpleThermostat::CMD stream operator.
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleThermostat::Attributes attribute)
+{
+   UNUSED(attribute);
+
+   // TODO Implement SimpleThermostat::Attributes stream operator.
+   return stream;
+}
+
+// =============================================================================
+// Core Services & Interfaces
+// =============================================================================
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 std::ostream &operator<<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
 {
    std::ios_base::fmtflags ff = stream.flags();

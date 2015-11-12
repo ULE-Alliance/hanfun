@@ -8,7 +8,7 @@
 #define HF_DEVICE_MANUFACTURER_CODE             0x1234
 
 // =============================================================================
-// SimplePowerMeter Configuration
+// Simple Power Meter Configuration
 // =============================================================================
 
 // In testing mode support all attributes.
@@ -29,6 +29,24 @@
 
 #define HF_ITF_SPM_REPORT_CMD                   1
 #define HF_ITF_SPM_RESET_CMD                    1
+
+// =============================================================================
+// Simple Thermostat Configuration
+// =============================================================================
+
+#define HF_ITF_STS_HEAT_MODE                    1
+#define HF_ITF_STS_COOL_MODE                    1
+#define HF_ITF_STS_AUTO_MODE                    1
+#define HF_ITF_STS_FAN_MODE                     1
+
+#define HF_ITF_STS_HEAT_OFFSET_ATTR             1
+#define HF_ITF_STS_COOL_OFFSET_ATTR             1
+
+#define HF_ITF_STS_BOOST_CMD                    1
+
+// =============================================================================
+// Other Configuration
+// =============================================================================
 
 #cmakedefine Backtrace_FOUND  1
 #ifdef Backtrace_FOUND

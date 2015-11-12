@@ -23,6 +23,7 @@
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
+#include "hanfun/interfaces/simple_thermostat.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -89,6 +90,10 @@ static const Entry factories[] =
    {
       HF::Interface::SIMPLE_TEMPERATURE,
       HF::Interfaces::SimpleTemperature::create_attribute
+   },
+   {
+      HF::Interface::SIMPLE_THERMOSTAT,
+      HF::Interfaces::SimpleThermostat::create_attribute
    },
 };
 
@@ -647,6 +652,214 @@ IAttribute *Interfaces::create_attribute(SimpleHumidity::Server *server, uint8_t
          else
          {
             return new Attribute<uint16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// Interfaces::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8_t uid)
+{
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   SimpleThermostat::Attributes attr = static_cast<SimpleThermostat::Attributes>(uid);
+
+   uint16_t itf_uid                  = Interface::SIMPLE_THERMOSTAT;
+
+   switch (attr)
+   {
+      case SUPPORTED_MODES_ATTR:
+      {
+         bool writabble = SupportedModes::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::supported_modes;
+            auto setter = (void (Server::*)(uint8_t)) & Server::supported_modes;
+
+            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case HEAT_COOL_MODE_ATTR:
+      {
+         bool writabble = HeatCoolMode::WRITABBLE;
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::mode;
+            auto setter = (void (Server::*)(uint8_t)) & Server::mode;
+
+            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+         {
+            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case FAN_MODE_ATTR:
+      {
+         bool writabble = FanMode::WRITABBLE;
+#if HF_ITF_STS_FAN_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::fan_mode;
+            auto setter = (void (Server::*)(uint8_t)) & Server::fan_mode;
+
+            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case HEAT_MODE_TEMP_ATTR:
+      {
+         bool writabble = HeatModeTemperature::WRITABBLE;
+#if HF_ITF_STS_HEAT_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::heat_mode_temperature;
+            auto setter = (void (Server::*)(int16_t)) & Server::heat_mode_temperature;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case COOL_MODE_TEMP_ATTR:
+      {
+         bool writabble = CoolModeTemperature::WRITABBLE;
+#if HF_ITF_STS_COOL_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::cool_mode_temperature;
+            auto setter = (void (Server::*)(int16_t)) & Server::cool_mode_temperature;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case AUTO_MODE_HEAT_TEMP_ATTR:
+      {
+         bool writabble = AutoModeHeatTemperature::WRITABBLE;
+#if HF_ITF_STS_AUTO_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::auto_mode_heat_temperature;
+            auto setter = (void (Server::*)(int16_t)) & Server::auto_mode_heat_temperature;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case AUTO_MODE_COOL_TEMP_ATTR:
+      {
+         bool writabble = AutoModeCoolTemperature::WRITABBLE;
+#if HF_ITF_STS_AUTO_MODE
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::auto_mode_cool_temperature;
+            auto setter = (void (Server::*)(int16_t)) & Server::auto_mode_cool_temperature;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case HEAT_MODE_TEMP_OFFSET_ATTR:
+      {
+         bool writabble = HeatModeTemperatureOffset::WRITABBLE;
+#if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::heat_mode_temperature_offset;
+            auto setter = (void (Server::*)(int16_t)) & Server::heat_mode_temperature_offset;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case COOL_MODE_TEMP_OFFSET_ATTR:
+      {
+         bool writabble = HeatModeTemperatureOffset::WRITABBLE;
+#if HF_ITF_STS_COOL_MODE && HF_ITF_STS_COOL_OFFSET_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (int16_t (Server::*)(void) const) & Server::cool_mode_temperature_offset;
+            auto setter = (void (Server::*)(int16_t)) & Server::cool_mode_temperature_offset;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
+      case BOOST_DURATION_ATTR:
+      {
+         bool writabble = BoostDuration::WRITABBLE;
+#if HF_ITF_STS_BOOST_CMD
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::boost_duration;
+            auto setter = (void (Server::*)(uint8_t)) & Server::boost_duration;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 

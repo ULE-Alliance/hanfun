@@ -77,6 +77,12 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
+#define CHECK_TRUE_LOCATION(condition, file, line) \
+   CHECK_LOCATION_TRUE(condition, "CHECK_TRUE", #condition, file, line)
+
+#define CHECK_FALSE_LOCATION(condition, file, line) \
+   CHECK_LOCATION_FALSE(condition, "CHECK_FALSE", #condition, file, line)
+
 // =============================================================================
 // Helper Test Classes
 // =============================================================================

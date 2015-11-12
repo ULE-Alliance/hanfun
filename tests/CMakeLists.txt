@@ -58,7 +58,8 @@ set(TESTS_INTERFACES_SRCS "test_interfaces.cpp"
                           "interfaces/test_level_control.cpp"
                           "interfaces/test_simple_power_meter.cpp"
                           "interfaces/test_simple_temperature.cpp"
-                          "interfaces/test_simple_humidity.cpp")
+                          "interfaces/test_simple_humidity.cpp"
+                          "interfaces/test_simple_thermostat.cpp")
 
 set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 
