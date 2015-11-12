@@ -23,6 +23,7 @@
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
+#include "hanfun/interfaces/simple_thermostat.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -89,6 +90,10 @@ static const Entry factories[] =
    {
       HF::Interface::SIMPLE_TEMPERATURE,
       HF::Interfaces::SimpleTemperature::create_attribute
+   },
+   {
+      HF::Interface::SIMPLE_THERMOSTAT,
+      HF::Interfaces::SimpleThermostat::create_attribute
    },
 };
 
@@ -653,6 +658,22 @@ IAttribute *Interfaces::create_attribute(SimpleHumidity::Server *server, uint8_t
       default:
          return nullptr;
    }
+}
+
+// =============================================================================
+// Interfaces::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8_t uid)
+{
+   UNUSED(server);
+   UNUSED(uid);
+
+   // TODO Interfaces::create_attribute(SimpleThermostat::Server *, uint8_t)
+   return nullptr;
 }
 
 // =============================================================================

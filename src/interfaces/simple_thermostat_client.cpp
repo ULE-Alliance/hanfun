@@ -1,0 +1,30 @@
+// =============================================================================
+/*!
+ * @file       src/interfaces/simple_thermostat_client.cpp
+ *
+ * This file contains the implementation of the Simple Thermostat interface :
+ * Client role.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#include "hanfun/interfaces/simple_thermostat.h"
+
+// =============================================================================
+// API
+// =============================================================================
+
+using namespace HF;
+using namespace HF::Interfaces;
+using namespace HF::Interfaces::SimpleThermostat;
+
+// =============================================================================
+// Simple Thermostat Interface : Client Role
+// =============================================================================
