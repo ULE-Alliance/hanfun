@@ -843,6 +843,26 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             return new::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
+
+      case BOOST_DURATION_ATTR:
+      {
+         bool writabble = BoostDuration::WRITABBLE;
+#if HF_ITF_STS_BOOST_CMD
+
+         if (server != nullptr)
+         {
+            auto getter = (uint8_t (Server::*)(void) const) & Server::boost_duration;
+            auto setter = (void (Server::*)(uint8_t)) & Server::boost_duration;
+
+            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+         }
+         else
+#endif
+         {
+            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+         }
+      }
+
       default:
          return nullptr;
    }

@@ -108,3 +108,5 @@ cmake_dependent_option(HF_ITF_STS_COOL_OFFSET_ATTR
                        OFF
                        "HF_ITF_STS_COOL_MODE"
                        OFF)
+
+option(HF_ITF_STS_BOOST_CMD          "Interface - Simple Thermostat - Boost Command Support")

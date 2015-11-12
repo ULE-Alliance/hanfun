@@ -76,12 +76,64 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 #if HF_ITF_STS_COOL_MODE && HF_ITF_STS_COOL_OFFSET_ATTR
       result.push_back(COOL_MODE_TEMP_OFFSET_ATTR);
 #endif
+#if HF_ITF_STS_BOOST_CMD
+      result.push_back(BOOST_DURATION_ATTR);
+#endif
    }
 
    return std::move(result);
 }
 
+#if HF_ITF_STS_BOOST_CMD
 // =============================================================================
+// Server::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
+{
+   UNUSED(payload);
+   UNUSED(offset);
+
+   CMD cmd               = static_cast<CMD>(packet.message.itf.member);
+
+   Common::Result result = Common::Result::FAIL_SUPPORT;
+
+   if (!packet.message.isCommand())
+   {
+      return Common::Result::FAIL_SUPPORT;
+   }
+
+   switch (cmd)
+   {
+      case BOOST_START_CMD:
+         result = boost_start(packet.source);
+         break;
+      case BOOST_STOP_CMD:
+         result = boost_stop(packet.source);
+         break;
+      default:
+         return Common::Result::FAIL_ARG;
+   }
+
+   Protocol::Response resp(result);
+
+   Protocol::Message response(packet.message, resp.size());
+
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = Server::uid();
+   response.itf.member = cmd;
+
+   resp.pack(response.payload);
+
+   send(packet.source, response);
+
+   return Common::OK;
+}
+#endif
 
 // =============================================================================
 // Get/Set Attributes
@@ -313,5 +365,31 @@ int16_t Server::cool_mode_temperature_offset() const
 void Server::cool_mode_temperature_offset(int16_t __offset)
 {
    SETTER_HELPER(CoolModeTemperatureOffset, _cool_mode_temperature_offset, __offset);
+}
+#endif
+
+#if HF_ITF_STS_BOOST_CMD
+// =============================================================================
+// Server::boost_duration
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint8_t Server::boost_duration() const
+{
+   return _boost_duration;
+}
+
+// =============================================================================
+// Server::boost_duration
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::boost_duration(uint8_t __duration)
+{
+   SETTER_HELPER(BoostDuration, _boost_duration, __duration);
 }
 #endif

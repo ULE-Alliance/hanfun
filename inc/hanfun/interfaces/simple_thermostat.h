@@ -235,6 +235,9 @@ namespace HF
 #if HF_ITF_STS_COOL_MODE && HF_ITF_STS_COOL_OFFSET_ATTR
             int16_t _cool_mode_temperature_offset; //!< Cool Mode Temperature Offset.
 #endif
+#if HF_ITF_STS_BOOST_CMD
+            uint8_t _boost_duration;               //!< Boost Duration (min.)
+#endif
             public:
 
             //! Constructor
@@ -250,7 +253,29 @@ namespace HF
             // ======================================================================
             //! @name Events
             //! @{
+#if HF_ITF_STS_BOOST_CMD
+            /*!
+             * This method is called when a @c BOOST_START_CMD is received.
+             *
+             * @param [in] address  the HAN-FUN device address that initiated the command.
+             */
+            virtual Common::Result boost_start(const Protocol::Address &source)
+            {
+               UNUSED(source);
+               return Common::Result::OK;
+            }
 
+            /*!
+             * This method is called when a @c BOOST_STOP_CMD is received.
+             *
+             * @param [in] address  the HAN-FUN device address that initiated the command.
+             */
+            virtual Common::Result boost_stop(const Protocol::Address &source)
+            {
+               UNUSED(source);
+               return Common::Result::OK;
+            }
+#endif
             //! @}
 
             // =============================================================================
@@ -406,6 +431,23 @@ namespace HF
              */
             virtual void cool_mode_temperature_offset(int16_t __offset);
 #endif
+
+#if HF_ITF_STS_BOOST_CMD
+            /*!
+             * Get the boost duration for the Boost command.
+             *
+             * @return  the current temperature offset for the Heat mode.
+             */
+            uint8_t boost_duration() const;
+
+            /*!
+             * Set the boost duration for the Boost command.
+             *
+             * @param [in] __duration  the duration in minutes for the boost command.
+             */
+            virtual void boost_duration(uint8_t __duration);
+#endif
+
             // =============================================================================
             // Attribute API.
             // =============================================================================
@@ -417,7 +459,12 @@ namespace HF
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
+#if HF_ITF_STS_BOOST_CMD
+            protected:
 
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+#endif
          };
 
          /*!
@@ -432,7 +479,23 @@ namespace HF
             // ======================================================================
             //! @name Commands
             //! @{
+#if HF_ITF_STS_BOOST_CMD
+            /*!
+             * This method sends a @c BOOST_START_CMD is message to the device with the given
+             * address.
+             *
+             * @param [in] address  the HAN-FUN device address to send the message to.
+             */
+            void boost_start(const Protocol::Address &address);
 
+            /*!
+             * This method sends a @c BOOST_STOP_CMD is message to the device with the given
+             * address.
+             *
+             * @param [in] address  the HAN-FUN device address to send the message to.
+             */
+            void boost_stop(const Protocol::Address &address);
+#endif
             //! @}
             // ======================================================================
 
@@ -441,9 +504,42 @@ namespace HF
             // ======================================================================
             //! @name Events
             //! @{
+            //!
 
+#if HF_ITF_STS_BOOST_CMD
+            /*!
+             * This method is called when a @c BOOST_START_CMD response is received.
+             *
+             * @param [in] address  the HAN-FUN device address that responded to the command.
+             * @param [in] result   the result of the command.
+             */
+            virtual void boost_start(const Protocol::Address &source, Common::Result result)
+            {
+               UNUSED(source);
+               UNUSED(result);
+            }
+
+            /*!
+             * This method is called when a @c BOOST_STOP_CMD response is received.
+             *
+             * @param [in] address  the HAN-FUN device address that responded to the command.
+             * @param [in] result   the result of the command.
+             */
+            virtual void boost_stop(const Protocol::Address &source, Common::Result result)
+            {
+               UNUSED(source);
+               UNUSED(result);
+            }
+#endif
             //! @}
             // =============================================================================
+
+#if HF_ITF_STS_BOOST_CMD
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+#endif
          };
 
          /*! @} */
