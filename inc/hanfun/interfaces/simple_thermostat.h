@@ -222,6 +222,9 @@ namespace HF
 #if HF_ITF_STS_HEAT_MODE
             int16_t _heat_mode_temperature;        //!< Heat Mode temperature.
 #endif
+#if HF_ITF_STS_COOL_MODE
+            int16_t _cool_mode_temperature;        //!< Cool Mode temperature.
+#endif
             public:
 
             //! Constructor
@@ -314,6 +317,22 @@ namespace HF
              * @param [in] __temperature  the temperature value to set for the Heat Mode.
              */
             virtual void heat_mode_temperature(int16_t __temperature);
+#endif
+
+#if HF_ITF_STS_COOL_MODE
+            /*!
+             * Get the current temperature for the Cool mode.
+             *
+             * @return  the current temperature for the Cool mode.
+             */
+            int16_t cool_mode_temperature() const;
+
+            /*!
+             * Set the current temperature for the Cool mode.
+             *
+             * @param [in] __temperature  the temperature value to set for the Cool Mode.
+             */
+            virtual void cool_mode_temperature(int16_t __temperature);
 #endif
             // =============================================================================
             // Attribute API.

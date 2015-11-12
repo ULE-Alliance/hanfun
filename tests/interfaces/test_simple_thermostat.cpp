@@ -231,4 +231,5 @@ TEST(SimpleThermostatServer, FanMode)
 TEST(SimpleThermostatServer, TemperatureAttributes)
 {
    CHECK_TEMPERATURE_ATTRIBUTE(HeatModeTemperature, heat_mode_temperature);
+   CHECK_TEMPERATURE_ATTRIBUTE(CoolModeTemperature, cool_mode_temperature);
 }
