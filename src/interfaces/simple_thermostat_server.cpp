@@ -53,9 +53,16 @@ using namespace HF::Interfaces::SimpleThermostat;
 // =============================================================================
 HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
-   UNUSED (pack_id);
+   HF::Attributes::UIDS result({SUPPORTED_MODES_ATTR, HEAT_COOL_MODE_ATTR});
 
-   return HF::Attributes::UIDS({SUPPORTED_MODES_ATTR, HEAT_COOL_MODE_ATTR});
+   if (pack_id == HF::Attributes::ALL)
+   {
+#if HF_ITF_STS_FAN_MODE
+      result.push_back(FAN_MODE_ATTR);
+#endif
+   }
+
+   return std::move(result);
 }
 
 // =============================================================================
@@ -111,3 +118,29 @@ void Server::mode(uint8_t __mode)
 {
    SETTER_HELPER(HeatCoolMode, _mode, __mode);
 }
+
+#if HF_ITF_STS_FAN_MODE
+// =============================================================================
+// Server::fan_mode
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint8_t Server::fan_mode() const
+{
+   return _fan_mode;
+}
+
+// =============================================================================
+// Server::fan_mode
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::fan_mode(uint8_t __fan_mode)
+{
+   SETTER_HELPER(FanMode, _fan_mode, __fan_mode);
+}
+#endif

@@ -216,6 +216,9 @@ namespace HF
             uint8_t _supported_modes;              //!< Supported modes
             uint8_t _mode;                         //!< Current mode.
 
+#if HF_ITF_STS_FAN_MODE
+            uint8_t _fan_mode;                     //!< Current Fan Mode.
+#endif
             public:
 
             //! Constructor
@@ -274,6 +277,25 @@ namespace HF
              */
             virtual void mode(uint8_t __mode);
 
+#if HF_ITF_STS_FAN_MODE
+            /*!
+             * Get the current FAN mode for the Simple Thermostat server.
+             *
+             * @see HF::Interfaces::SimpleThermostat::SupportedModesMasks
+             *
+             * @return  the current FAN mode.
+             */
+            uint8_t fan_mode() const;
+
+            /*!
+             * Set the current FAN mode for the Simple Thermostat server.
+             *
+             * @see HF::Interfaces::SimpleThermostat::SupportedModesMasks
+             *
+             * @param [in] __fan_mode     the FAN mode value to set the server to.
+             */
+            virtual void fan_mode(uint8_t __fan_mode);
+#endif
             // =============================================================================
             // Attribute API.
             // =============================================================================
