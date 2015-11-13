@@ -546,11 +546,11 @@ DevicePtr Entries::find(uint16_t address) const
 
    if (it == db.end())
    {
-      return std::move(DevicePtr());
+      return DevicePtr();
    }
    else
    {
-      return std::move(DevicePtr(*(it.base())));
+      return DevicePtr(*(it.base()));
    }
 }
 
@@ -572,11 +572,11 @@ DevicePtr Entries::find(const HF::UID::UID &uid) const
 
    if (it == db.end())
    {
-      return std::move(DevicePtr());
+      return DevicePtr();
    }
    else
    {
-      return std::move(DevicePtr(*(it.base())));
+      return DevicePtr(*(it.base()));
    }
 }
 

@@ -81,7 +81,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 #endif
    }
 
-   return std::move(result);
+   return result;
 }
 
 #if HF_ITF_STS_BOOST_CMD
