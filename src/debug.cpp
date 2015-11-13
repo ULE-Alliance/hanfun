@@ -953,9 +953,26 @@ std::ostream &operator<<(std::ostream &stream,
 // =============================================================================
 std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleThermostat::CMD command)
 {
-   UNUSED(command);
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
-   // TODO Implement SimpleThermostat::CMD stream operator.
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   switch (command)
+   {
+      case BOOST_START_CMD:
+         result = "Boost Start";
+         break;
+      case BOOST_STOP_CMD:
+         result = "Boost Stop";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -969,9 +986,50 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleTherm
 std::ostream &operator<<(std::ostream &stream,
                          const HF::Interfaces::SimpleThermostat::Attributes attribute)
 {
-   UNUSED(attribute);
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
-   // TODO Implement SimpleThermostat::Attributes stream operator.
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   switch (attribute)
+   {
+      case SUPPORTED_MODES_ATTR:
+         result = "Supported Modes";
+         break;
+      case HEAT_COOL_MODE_ATTR:
+         result = "Heat/Cool Mode";
+         break;
+      case FAN_MODE_ATTR:
+         result = "Fan Mode";
+         break;
+      case HEAT_MODE_TEMP_ATTR:
+         result = "Heat Mode Temperature";
+         break;
+      case COOL_MODE_TEMP_ATTR:
+         result = "Cool Mode Temperature";
+         break;
+      case AUTO_MODE_HEAT_TEMP_ATTR:
+         result = "Heat/Cool Mode - Heat Temperature";
+         break;
+      case AUTO_MODE_COOL_TEMP_ATTR:
+         result = "Heat/Cool Mode - Cool Temperature";
+         break;
+      case HEAT_MODE_TEMP_OFFSET_ATTR:
+         result = "Heat Mode Temperature Offset";
+         break;
+      case COOL_MODE_TEMP_OFFSET_ATTR:
+         result = "Cool Mode Temperature Offset";
+         break;
+      case BOOST_DURATION_ATTR:
+         result = "Boost Duration";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
