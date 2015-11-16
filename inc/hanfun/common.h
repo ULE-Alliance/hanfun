@@ -71,14 +71,14 @@
  * @param [in] __offset    offset index to check available data from.
  * @param [in] __size      number of bytes required.
  */
-#define SERIALIZABLE_CHECK(__array, __offset, __size) \
-   {                                                  \
-      assert(__array.available(__offset, __size));    \
-                                                      \
-      if (!__array.available(__offset, __size))       \
-      {                                               \
-         return 0;                                    \
-      }                                               \
+#define HF_SERIALIZABLE_CHECK(__array, __offset, __size) \
+   {                                                     \
+      assert(__array.available(__offset, __size));       \
+                                                         \
+      if (!__array.available(__offset, __size))          \
+      {                                                  \
+         return 0;                                       \
+      }                                                  \
    }
 
 /*!
@@ -90,16 +90,16 @@
  * @param [in] _name    name of the attribute to generate the setter for.
  * @param [in] _value   name of the variable containing the new value.
  */
-#define SETTER_HELPER(_Type, _name, _value) \
-   {                                        \
-      int16_t old = this->_name;            \
-                                            \
-      this->_name = _value;                 \
-                                            \
-      _Type old_attr(old, this);            \
-      _Type new_attr(this->_name, this);    \
-                                            \
-      notify(old_attr, new_attr);           \
+#define HF_SETTER_HELPER(_Type, _name, _value) \
+   {                                           \
+      int16_t old = this->_name;               \
+                                               \
+      this->_name = _value;                    \
+                                               \
+      _Type old_attr(old, this);               \
+      _Type new_attr(this->_name, this);       \
+                                               \
+      notify(old_attr, new_attr);              \
    }
 
 // =============================================================================
@@ -452,13 +452,13 @@ namespace HF
 
          uint16_t pack(ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
             return data.pack(array, offset);
          }
 
          uint16_t unpack(const ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
             return data.unpack(array, offset);
          }
 
@@ -502,13 +502,13 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
             return data->pack(array, offset);
          }
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
             return data->unpack(array, offset);
          }
 
@@ -554,7 +554,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             array.write(offset, data);
 
@@ -563,7 +563,7 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             array.read(offset, data);
 
@@ -607,7 +607,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
@@ -625,14 +625,14 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
             uint8_t _size  = 0;
             offset += array.read(offset, _size);
 
-            SERIALIZABLE_CHECK(array, offset, _size);
+            HF_SERIALIZABLE_CHECK(array, offset, _size);
 
             auto it = array.begin();
             std::advance(it, offset);
@@ -694,7 +694,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
@@ -712,14 +712,14 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
             uint8_t _size  = 0;
             offset += array.read(offset, _size);
 
-            SERIALIZABLE_CHECK(array, offset, _size);
+            HF_SERIALIZABLE_CHECK(array, offset, _size);
 
             auto it = array.begin();
             std::advance(it, offset);
@@ -771,7 +771,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
@@ -787,7 +787,7 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 

@@ -63,7 +63,7 @@ uint16_t Entry::size() const
 // =============================================================================
 uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    offset += this->source.pack(array, offset);
 
@@ -83,7 +83,7 @@ uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    offset += this->source.unpack(array, offset);
 

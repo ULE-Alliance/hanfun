@@ -103,7 +103,7 @@ namespace HF
          //! @copydoc HF::Common::Serializable::pack
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             array.write(offset, this->type());
 
@@ -113,7 +113,7 @@ namespace HF
          //! @copydoc HF::Common::Serializable::unpack
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint8_t type;
             array.read(offset, type);
@@ -145,7 +145,7 @@ namespace HF
       {
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             offset += UID_T::pack(array, offset);
 
@@ -156,7 +156,7 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t res = UID_T::unpack(array, offset);
 
@@ -229,7 +229,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             offset += Abstract<_type>::pack(array, offset);
 
@@ -245,7 +245,7 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             offset += Abstract<_type>::unpack(array, offset);
 
@@ -445,7 +445,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
@@ -464,7 +464,7 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK(array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
@@ -473,7 +473,7 @@ namespace HF
             uint8_t size;
             offset += array.read(offset, size);
 
-            SERIALIZABLE_CHECK(array, offset, size);
+            HF_SERIALIZABLE_CHECK(array, offset, size);
 
             value = std::string(size, 0);
 

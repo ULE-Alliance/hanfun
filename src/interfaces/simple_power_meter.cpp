@@ -123,7 +123,7 @@ uint16_t Report::size() const
 // =============================================================================
 uint16_t Report::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK(array, offset, size());
+   HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
@@ -233,7 +233,7 @@ uint16_t Report::pack(Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Report::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start     = offset;
 

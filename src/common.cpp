@@ -164,7 +164,7 @@ uint16_t Common::Interface::size() const
 // =============================================================================
 uint16_t Common::Interface::pack(ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t uid = ((this->role & 0x01) << 15) | (this->id & HF::Interface::ANY_UID);
 
@@ -182,7 +182,7 @@ uint16_t Common::Interface::pack(ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Common::Interface::unpack(const ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t uid = 0;
    array.read(offset, uid);

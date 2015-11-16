@@ -45,7 +45,7 @@ uint16_t FriendlyName::Unit::size() const
 // =============================================================================
 uint16_t FriendlyName::Unit::pack(HF::Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK(array, offset, size());
+   HF_SERIALIZABLE_CHECK(array, offset, size());
 
    offset += array.write(offset, id);
    HF::Common::SerializableHelper<std::string>(name).pack(array, offset);
@@ -62,7 +62,7 @@ uint16_t FriendlyName::Unit::pack(HF::Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t FriendlyName::Unit::unpack(const HF::Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    offset += array.read(offset, id);
    HF::Common::SerializableHelper<std::string> temp;
@@ -107,7 +107,7 @@ uint16_t FriendlyName::size() const
 // =============================================================================
 uint16_t FriendlyName::pack(HF::Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK(array, offset, size());
+   HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint8_t _size = units.size();
    offset += array.write(offset, _size);
@@ -131,12 +131,12 @@ uint16_t FriendlyName::pack(HF::Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t FriendlyName::unpack(const HF::Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, size());
+   HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint8_t _count = 0;
    offset += array.read(offset, _count);
 
-   SERIALIZABLE_CHECK(array, offset, (_count * Unit::min_size));
+   HF_SERIALIZABLE_CHECK(array, offset, (_count * Unit::min_size));
 
    units.reserve(_count);
 

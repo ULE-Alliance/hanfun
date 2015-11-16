@@ -93,7 +93,7 @@ namespace HF
             //! \see HF::Serializable::pack.
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                array.write(offset, level);
 
@@ -103,7 +103,7 @@ namespace HF
             //! \see HF::Serializable::unpack.
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                array.read(offset, level);
 

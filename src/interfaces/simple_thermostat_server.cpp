@@ -144,7 +144,7 @@ uint8_t Server::supported_modes() const
 // =============================================================================
 void Server::supported_modes(uint8_t __supported_modes)
 {
-   SETTER_HELPER(SupportedModes, _supported_modes, __supported_modes);
+   HF_SETTER_HELPER(SupportedModes, _supported_modes, __supported_modes);
 }
 
 // =============================================================================
@@ -168,7 +168,7 @@ uint8_t Server::mode() const
 // =============================================================================
 void Server::mode(uint8_t __mode)
 {
-   SETTER_HELPER(HeatCoolMode, _mode, __mode);
+   HF_SETTER_HELPER(HeatCoolMode, _mode, __mode);
 }
 
 #if HF_ITF_STS_FAN_MODE
@@ -193,7 +193,7 @@ uint8_t Server::fan_mode() const
 // =============================================================================
 void Server::fan_mode(uint8_t __fan_mode)
 {
-   SETTER_HELPER(FanMode, _fan_mode, __fan_mode);
+   HF_SETTER_HELPER(FanMode, _fan_mode, __fan_mode);
 }
 #endif
 
@@ -220,7 +220,7 @@ int16_t Server::heat_mode_temperature() const
 // =============================================================================
 void Server::heat_mode_temperature(int16_t __temperature)
 {
-   SETTER_HELPER(HeatModeTemperature, _heat_mode_temperature, __temperature);
+   HF_SETTER_HELPER(HeatModeTemperature, _heat_mode_temperature, __temperature);
 }
 #endif
 
@@ -246,7 +246,7 @@ int16_t Server::cool_mode_temperature() const
 // =============================================================================
 void Server::cool_mode_temperature(int16_t __temperature)
 {
-   SETTER_HELPER(HeatModeTemperature, _cool_mode_temperature, __temperature);
+   HF_SETTER_HELPER(HeatModeTemperature, _cool_mode_temperature, __temperature);
 }
 #endif
 
@@ -272,7 +272,7 @@ int16_t Server::auto_mode_heat_temperature() const
 // =============================================================================
 void Server::auto_mode_heat_temperature(int16_t __temperature)
 {
-   SETTER_HELPER(AutoModeHeatTemperature, _auto_mode_heat_temperature, __temperature);
+   HF_SETTER_HELPER(AutoModeHeatTemperature, _auto_mode_heat_temperature, __temperature);
 }
 
 // =============================================================================
@@ -296,7 +296,7 @@ int16_t Server::auto_mode_cool_temperature() const
 // =============================================================================
 void Server::auto_mode_cool_temperature(int16_t __temperature)
 {
-   SETTER_HELPER(AutoModeCoolTemperature, _auto_mode_cool_temperature, __temperature);
+   HF_SETTER_HELPER(AutoModeCoolTemperature, _auto_mode_cool_temperature, __temperature);
 }
 #endif
 
@@ -322,7 +322,7 @@ int16_t Server::heat_mode_temperature_offset() const
 // =============================================================================
 void Server::heat_mode_temperature_offset(int16_t __offset)
 {
-   SETTER_HELPER(HeatModeTemperatureOffset, _heat_mode_temperature_offset, __offset);
+   HF_SETTER_HELPER(HeatModeTemperatureOffset, _heat_mode_temperature_offset, __offset);
 }
 #endif
 
@@ -348,7 +348,7 @@ int16_t Server::cool_mode_temperature_offset() const
 // =============================================================================
 void Server::cool_mode_temperature_offset(int16_t __offset)
 {
-   SETTER_HELPER(CoolModeTemperatureOffset, _cool_mode_temperature_offset, __offset);
+   HF_SETTER_HELPER(CoolModeTemperatureOffset, _cool_mode_temperature_offset, __offset);
 }
 #endif
 
@@ -374,6 +374,6 @@ uint8_t Server::boost_duration() const
 // =============================================================================
 void Server::boost_duration(uint8_t __duration)
 {
-   SETTER_HELPER(BoostDuration, _boost_duration, __duration);
+   HF_SETTER_HELPER(BoostDuration, _boost_duration, __duration);
 }
 #endif
