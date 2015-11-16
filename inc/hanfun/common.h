@@ -81,6 +81,27 @@
       }                                               \
    }
 
+/*!
+ * @ingroup
+ *
+ * Helper macro to implement attribute setters.
+ *
+ * @param [in] _Type    helper class that wraps the attribute.
+ * @param [in] _name    name of the attribute to generate the setter for.
+ * @param [in] _value   name of the variable containing the new value.
+ */
+#define SETTER_HELPER(_Type, _name, _value) \
+   {                                        \
+      int16_t old = this->_name;            \
+                                            \
+      this->_name = _value;                 \
+                                            \
+      _Type old_attr(old, this);            \
+      _Type new_attr(this->_name, this);    \
+                                            \
+      notify(old_attr, new_attr);           \
+   }
+
 // =============================================================================
 // API
 // =============================================================================
