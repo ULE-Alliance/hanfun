@@ -152,7 +152,7 @@ TEST_GROUP(SimpleThermostat)
 #define CHECK_INVALID_UID(_itf, _uid) \
    check_invalid_uid(_itf, _uid, __FILE__, __LINE__)
 
-//! @test SimpleThermostat::uid should return @c Interface::ON_OFF.
+//! @test SimpleThermostat::uid should return @c Interface::SIMPLE_THERMOSTAT.
 TEST(SimpleThermostat, UID)
 {
    CHECK_EQUAL(Interface::SIMPLE_THERMOSTAT, interface.uid());

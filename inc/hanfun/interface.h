@@ -61,7 +61,7 @@ namespace HF
          BIND_MANAGEMENT     = 0x0002,   //!< Bind Management interface %UID.
          GROUP_MANGEMENT     = 0x0003,   //!< Group Management interface %UID. __Not implemented__
          IDENTIFY            = 0x0004,   //!< Identify interface %UID. __Not implemented__
-         DEVICE_INFORMATION  = 0x0005,   //!< %Device information Interface UID. __Not implemented__
+         DEVICE_INFORMATION  = 0x0005,   //!< %Device information interface UID. __Not implemented__
          ATTRIBUTE_REPORTING = 0x0006,   //!< %Attribute Reporting interface UID. __Not implemented__
          TAMPER_ALERT        = 0x0101,   //!< Tamper %Alert interface UID. __Not implemented__
          TIME                = 0x0102,   //!< %Time interface UID. __Not implemented__
@@ -69,12 +69,12 @@ namespace HF
          KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
 
          /* Functional Interfaces. */
-         ALERT              = 0x0100,    //!< Alert Interface UID
-         ON_OFF             = 0x0200,    //!< ON-OFF Interface UID
-         LEVEL_CONTROL      = 0x0201,    //!< Level Control Interface UID
-         SIMPLE_POWER_METER = 0x0300,    //!< Simple Power Meter Interface UID
-         SIMPLE_TEMPERATURE = 0x0301,    //!< Simple Temperature Interface UID
-         SIMPLE_HUMIDITY    = 0x0302,    //!< Simple Humidity Interface UID
+         ALERT              = 0x0100,    //!< Alert interface UID
+         ON_OFF             = 0x0200,    //!< ON-OFF interface UID
+         LEVEL_CONTROL      = 0x0201,    //!< Level Control interface UID
+         SIMPLE_POWER_METER = 0x0300,    //!< Simple Power Meter interface UID
+         SIMPLE_TEMPERATURE = 0x0301,    //!< Simple Temperature interface UID
+         SIMPLE_HUMIDITY    = 0x0302,    //!< Simple Humidity interface UID
          SIMPLE_THERMOSTAT  = 0x0303,    //!< Simple Thermostat interface UID
 
          /* Reserved */
