@@ -83,6 +83,88 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
 #define CHECK_FALSE_LOCATION(condition, file, line) \
    CHECK_LOCATION_FALSE(condition, "CHECK_FALSE", #condition, file, line)
 
+template<typename Attribute, typename Interface, typename Getter, typename Setter,
+         typename Value = typename Attribute::value_type>
+void check_attribute_common(Interface &itf, bool writable, Value first, Value second,
+                            Getter getter, Setter setter, const char *file, int lineno)
+{
+   mock("Interface").expectNCalls(2, "notify");
+
+   (itf.*setter)(first);
+
+   LONGS_EQUAL_LOCATION(first, (itf.*getter)(), file, lineno);
+
+   typedef HF::Attributes::Attribute<int16_t, Interface> __Attribute;
+
+   auto attr = static_cast<__Attribute *>(itf.attribute(Attribute::ID));
+   CHECK_TRUE_LOCATION(attr != nullptr, file, lineno);
+
+   CHECK_EQUAL_LOCATION(writable, attr->isWritable(), file, lineno);
+   POINTERS_EQUAL_LOCATION(&itf, attr->owner(), file, lineno);
+   LONGS_EQUAL_LOCATION(itf.uid(), attr->interface(), file, lineno);
+
+   LONGS_EQUAL_LOCATION(first, attr->value(), file, lineno);
+
+   attr->value(second);
+   LONGS_EQUAL_LOCATION(second, attr->value(), file, lineno);
+
+   mock("Interface").checkExpectations();
+
+   delete attr;
+}
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter,
+         typename Value = typename Attribute::value_type>
+void check_attribute(Interface &itf, bool writable, Value first, Value second,
+                     Getter getter, Setter setter, const char *file, int lineno)
+{
+   auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
+
+   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+                                   [](uint8_t uid) {return uid == Attribute::ID;}),
+                       file, lineno);
+
+   attrs = itf.attributes(HF::Attributes::Pack::ALL);
+
+   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+                                   [](uint8_t uid) {return uid == Attribute::ID;}),
+                       file, lineno);
+
+   check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
+}
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter,
+         typename Value = typename Attribute::value_type>
+void check_optional_attribute(Interface &itf, bool writable, Value first, Value second,
+                              Getter getter, Setter setter, const char *file, int lineno)
+{
+   auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
+
+   CHECK_TRUE_LOCATION(std::none_of(attrs.begin(), attrs.end(),
+                                    [](uint8_t uid) {return uid == Attribute::ID;}),
+                       file, lineno);
+
+   attrs = itf.attributes(HF::Attributes::Pack::ALL);
+
+   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+                                   [](uint8_t uid) {return uid == Attribute::ID;}),
+                       file, lineno);
+
+   check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
+}
+
+#define CHECK_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                \
+   check_attribute<Type>(server, _writable, _first, _second,                               \
+                         (Type::value_type (Interface::*)(void) const) & Interface::_name, \
+                         (void (Interface::*)(Type::value_type)) & Interface::_name,       \
+                         __FILE__, __LINE__)
+
+#define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
+   check_optional_attribute<Type>(server, _writable, _first, _second,                               \
+                                  (Type::value_type (Interface::*)(void) const) & Interface::_name, \
+                                  (void (Interface::*)(Type::value_type)) & Interface::_name,       \
+                                  __FILE__, __LINE__)
+
 // =============================================================================
 // Helper Test Classes
 // =============================================================================
