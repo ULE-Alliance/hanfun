@@ -104,3 +104,16 @@ TEST_GROUP(<%= @interface.to_class %>Server)
       mock().clear();
    }
 };
+<%- @attributes.each do |attr| -%>
+
+//! @test <%= attr.to_doc %> support.
+TEST(<%= @interface.to_class %>Server, <%= attr.to_class %>)
+{
+  // FIXME Check values for test.
+<%- if attr.mandatory -%>
+  CHECK_ATTRIBUTE(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, -42);
+<%- else -%>
+  CHECK_OPT_ATTRIBUTE(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, -42);
+<%- end -%>
+}
+<%- end -%>

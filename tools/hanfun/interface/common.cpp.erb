@@ -53,6 +53,20 @@ HF::Attributes::IAttribute *Interfaces::create_attribute(Server * server, uint8_
 // =============================================================================
 HF::Attributes::IAttribute *<%= @interface.to_class %>::create_attribute(uint8_t uid)
 {
-   UNUSED(uid);
-   return nullptr;  // FIXME Create an attribute for the given uid.
+   using namespace HF::Interfaces::<%= @interface.to_class %>;
+
+   <%= @interface.to_class %>::Attributes attr = static_cast<<%= @interface.to_class %>::Attributes>(uid);
+
+   switch (attr)
+   {
+     <%- @attributes.each do |attr| -%>
+     case <%= attr.to_uid %>:
+     {
+       return new HF::Attributes::Attribute<<%= attr.type %> >(Interface::<%= @interface.to_uid %>, attr, <%= attr.to_class %>::WRITABLE);
+     }
+
+     <%- end -%>
+     default:
+        return nullptr;
+   }
 }

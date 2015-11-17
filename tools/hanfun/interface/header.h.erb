@@ -67,13 +67,31 @@ namespace HF
          //! Attributes
          typedef enum _Attributes
          {
-            __LAST_ATTR__ = 0xFF
+         <%- @attributes.each do |attr| -%>
+            <%= attr.to_uid %> = <%= attr.uid %>,   //!< <%= attr.to_doc %> attribute UID.
+         <%- end -%>
+            __LAST_ATTR__ = <%= @attributes.last.to_uid %>
          } Attributes;
 
          // =============================================================================
          // Attribute Helper classes
          // =============================================================================
 
+         <%- @attributes.each do |attr| -%>
+         /*!
+          * Helper class to handle the <%= attr.to_doc %> attribute for the <%= @interface.to_doc %> interface.
+          */
+         struct <%= attr.to_class %>: public HF::Attributes::Attribute<<%= attr.type %>>
+         {
+            static constexpr uint8_t ID       = <%= attr.to_uid %>;  //!< Attribute UID.
+            static constexpr bool    WRITABLE = <%= attr.writable ? "true" : "false" %>;   //!< Attribute Read/Write
+
+            <%= attr.to_class %>(<%= attr.type %> value = 0, HF::Interface *owner = nullptr):
+               Attribute<<%= attr.type %>>(Interface::<%= @interface.to_uid %>, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         <%- end -%>
          /*!
           * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
           *
@@ -103,6 +121,17 @@ namespace HF
          {
             protected:
 
+            <%- @attributes.each do |attr| -%>
+              <%- unless attr.mandatory -%>
+
+#ifdef HF_ITF_<%= "#{@interface.to_uid}_#{attr.to_uid}" %>
+              <%- end -%>
+            <%= attr.type %> _<%= attr.name %>;   //!< <%= attr.to_doc %>
+              <%- unless attr.mandatory -%>
+#endif
+              <%- end -%>
+            <%- end -%>
+
             public:
 
             //! Constructor
@@ -123,6 +152,28 @@ namespace HF
             // Get/Set API.
             // =============================================================================
 
+            <%- @attributes.each do |attr| -%>
+              <%- unless attr.mandatory -%>
+#ifdef HF_ITF_<%= "#{@interface.to_uid}_#{attr.to_uid}" %>
+              <%- end -%>
+            /*!
+             * Get the <%= attr.to_doc %> for the <%= @interface.to_doc %> server.
+             *
+             * @return  the current <%= attr.to_doc %>.
+             */
+            <%= attr.type %> <%= attr.name %>() const;
+
+            /*!
+             * Set the <%= attr.to_doc %> for the <%= @interface.to_doc %> server.
+             *
+             * @param [in] __value the  <%= attr.to_doc %> value to set the server to.
+             */
+            <%= attr.writable ? "virtual" : "" %> void <%= attr.name %>(<%= attr.type %> __value);
+              <%- unless attr.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
             // =============================================================================
             // Attribute API.
             // =============================================================================

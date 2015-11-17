@@ -37,11 +37,15 @@ using namespace HF::Interfaces::<%= @interface.to_class %>;
 // =============================================================================
 HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
-  HF::Attributes::UIDS result;   // FIXME Add mandatory attributes.
+   HF::Attributes::UIDS result({<%= @attributes.select { |attr| attr.mandatory }.map { |attr| attr.to_uid }.join (", ") %>});
 
    if (pack_id == HF::Attributes::ALL)
    {
-     // FIXME Add optional attributes.
+     <%- @attributes.select {|attr| !attr.mandatory }.each do |attr| -%>
+#ifdef HF_ITF_<%= "#{@interface.to_uid}_#{attr.to_uid}" %>
+     result.push_back(<%= attr.to_uid %>);
+#endif
+     <%- end -%>
    }
 
    return result;
@@ -56,8 +60,33 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 // =============================================================================
 HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 {
-   UNUSED(uid);
-   return nullptr;  // FIXME Return the attribute for the given uid.
+   using namespace HF::Interfaces::<%= @interface.to_class %>;
+
+   <%= @interface.to_class %>::Attributes attr = static_cast<<%= @interface.to_class %>::Attributes>(uid);
+
+   switch (attr)
+   {
+     <%- @attributes.each do |attr| -%>
+         <%- unless attr.mandatory -%>
+#ifdef HF_ITF_<%= "#{@interface.to_uid}_#{attr.to_uid}" %>
+         <%- end -%>
+     case <%= attr.to_uid %>:
+     {
+       typedef HF::Attributes::Attribute<<%= attr.type %>, Server> Attribute;
+
+       auto getter = (<%= attr.type %> (Server::*)(void) const) & Server::<%= attr.name %>;
+       auto setter = (void (Server::*)(<%= attr.type %>))       & Server::<%= attr.name %>;
+
+       return new Attribute(*this, attr, getter, setter, <%= attr.to_class %>::WRITABLE);
+     }
+         <%- unless attr.mandatory -%>
+#endif
+         <%- end -%>
+
+   <%- end -%>
+      default:
+         return nullptr;
+   }
 }
 
 #if 0 // FIXME Remove this code or implement if required.
@@ -84,3 +113,36 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 // Get/Set Attributes
 // =============================================================================
 
+<%- @attributes.each do |attr| -%>
+  <%- unless attr.mandatory -%>
+
+#ifdef HF_ITF_<%= "#{@interface.to_uid}_#{attr.to_uid}" %>
+  <%- end -%>
+// =============================================================================
+// Server::<%= attr.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+<%= attr.type %> Server::<%= attr.name %>() const
+{
+  return _<%= attr.name %>;
+}
+
+// =============================================================================
+// Server::<%= attr.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::<%= attr.name %>(<%= attr.type %> __value)
+{
+   HF_SETTER_HELPER(<%= attr.to_class %>, _<%= attr.name %>, __value);
+}
+<%- unless attr.mandatory -%>
+#endif
+<%- end -%>
+
+<%- end -%>
