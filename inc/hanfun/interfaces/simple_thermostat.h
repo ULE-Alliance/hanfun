@@ -105,10 +105,10 @@ namespace HF
          struct SupportedModes: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = SUPPORTED_MODES_ATTR;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = false;                 //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = false;                 //!< Attribute Read/Write
 
             SupportedModes(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -118,10 +118,10 @@ namespace HF
          struct HeatCoolMode: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = HEAT_COOL_MODE_ATTR;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true;                 //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true;                 //!< Attribute Read/Write
 
             HeatCoolMode(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -131,10 +131,10 @@ namespace HF
          struct FanMode: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = FAN_MODE_ATTR;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true;           //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true;           //!< Attribute Read/Write
 
             FanMode(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -145,11 +145,11 @@ namespace HF
          struct Attribute: public HF::Attributes::Attribute<int16_t>
          {
             static constexpr uint8_t ID        = _ID;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true; //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true; //!< Attribute Read/Write
 
             Attribute(int16_t value = 0, HF::Interface *owner = nullptr):
                HF::Attributes::Attribute<int16_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, value,
-                                                  WRITABBLE)
+                                                  WRITABLE)
             {}
          };
 
@@ -177,10 +177,10 @@ namespace HF
          struct BoostDuration: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = BOOST_DURATION_ATTR; //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true;                //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true;                //!< Attribute Read/Write
 
             BoostDuration(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 

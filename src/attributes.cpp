@@ -679,7 +679,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
    {
       case SUPPORTED_MODES_ATTR:
       {
-         bool writabble = SupportedModes::WRITABBLE;
+         bool writabble = SupportedModes::WRITABLE;
 
          if (server != nullptr)
          {
@@ -696,7 +696,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case HEAT_COOL_MODE_ATTR:
       {
-         bool writabble = HeatCoolMode::WRITABBLE;
+         bool writabble = HeatCoolMode::WRITABLE;
 
          if (server != nullptr)
          {
@@ -713,7 +713,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case FAN_MODE_ATTR:
       {
-         bool writabble = FanMode::WRITABBLE;
+         bool writabble = FanMode::WRITABLE;
 #if HF_ITF_STS_FAN_MODE
 
          if (server != nullptr)
@@ -732,7 +732,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case HEAT_MODE_TEMP_ATTR:
       {
-         bool writabble = HeatModeTemperature::WRITABBLE;
+         bool writabble = HeatModeTemperature::WRITABLE;
 #if HF_ITF_STS_HEAT_MODE
 
          if (server != nullptr)
@@ -751,7 +751,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case COOL_MODE_TEMP_ATTR:
       {
-         bool writabble = CoolModeTemperature::WRITABBLE;
+         bool writabble = CoolModeTemperature::WRITABLE;
 #if HF_ITF_STS_COOL_MODE
 
          if (server != nullptr)
@@ -770,7 +770,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case AUTO_MODE_HEAT_TEMP_ATTR:
       {
-         bool writabble = AutoModeHeatTemperature::WRITABBLE;
+         bool writabble = AutoModeHeatTemperature::WRITABLE;
 #if HF_ITF_STS_AUTO_MODE
 
          if (server != nullptr)
@@ -789,7 +789,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case AUTO_MODE_COOL_TEMP_ATTR:
       {
-         bool writabble = AutoModeCoolTemperature::WRITABBLE;
+         bool writabble = AutoModeCoolTemperature::WRITABLE;
 #if HF_ITF_STS_AUTO_MODE
 
          if (server != nullptr)
@@ -808,7 +808,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case HEAT_MODE_TEMP_OFFSET_ATTR:
       {
-         bool writabble = HeatModeTemperatureOffset::WRITABBLE;
+         bool writabble = HeatModeTemperatureOffset::WRITABLE;
 #if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
 
          if (server != nullptr)
@@ -827,7 +827,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case COOL_MODE_TEMP_OFFSET_ATTR:
       {
-         bool writabble = HeatModeTemperatureOffset::WRITABBLE;
+         bool writabble = HeatModeTemperatureOffset::WRITABLE;
 #if HF_ITF_STS_COOL_MODE && HF_ITF_STS_COOL_OFFSET_ATTR
 
          if (server != nullptr)
@@ -846,7 +846,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case BOOST_DURATION_ATTR:
       {
-         bool writabble = BoostDuration::WRITABBLE;
+         bool writabble = BoostDuration::WRITABLE;
 #if HF_ITF_STS_BOOST_CMD
 
          if (server != nullptr)
