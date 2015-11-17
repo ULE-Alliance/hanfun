@@ -1,0 +1,50 @@
+// =============================================================================
+/*!
+ * @file       src/interfaces/<%= @interface.name %>_client.cpp
+ *
+ * This file contains the implementation of the <%= @interface.to_doc %> interface :
+ * Client role.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#include "hanfun/interfaces/<%= @interface.name %>.h"
+
+// =============================================================================
+// API
+// =============================================================================
+
+using namespace HF;
+using namespace HF::Interfaces;
+using namespace HF::Interfaces::<%= @interface.to_class %>;
+
+// =============================================================================
+// <%= @interface.to_doc %> Interface : Client Role
+// =============================================================================
+
+#if 0 // FIXME Remove this or implement it if required.
+// =============================================================================
+// Client::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
+{
+  UNUSED(payload);
+  UNUSED(offset);
+
+  CMD cmd = static_cast<CMD>(packet.message.itf.member);
+
+  return Common::Result::OK;
+}
+#endif

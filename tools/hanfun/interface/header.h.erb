@@ -1,0 +1,215 @@
+// =============================================================================
+/*!
+ * @file       inc/hanfun/interfaces/<%= @interface.name %>.h
+ *
+ * This file contains the definitions for the <%= @interface.to_doc %> interface.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#ifndef HF_ITF_<%= @interface.to_uid %>_H
+#define HF_ITF_<%= @interface.to_uid %>_H
+
+#include "hanfun/protocol.h"
+#include "hanfun/interface.h"
+
+namespace HF
+{
+   namespace Interfaces
+   {
+      // Forward declaration.
+      namespace <%= @interface.to_class %>
+      {
+         class Server;
+      }
+
+      /*!
+       * @ingroup <%= @interface.name %>_itf
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       *          exist.
+       */
+      HF::Attributes::IAttribute *create_attribute(<%= @interface.to_class %>::Server *server, uint8_t uid);
+
+      /*!
+       * This namespace contains the implementation of the Simple Thermostat interface.
+       */
+      namespace <%= @interface.to_class %>
+      {
+         /*!
+         * @addtogroup <%= @interface.name %>_itf  <%= @interface.to_doc %> interface
+          * @ingroup interfaces
+          *
+          * This module contains the classes that define and implement the <%= @interface.to_doc %> interface API.
+          * @{
+          */
+         //! Command IDs.
+         typedef enum _CMD
+         {
+            __LAST_CMD__ = 0xFF,
+         } CMD;
+
+         //! Attributes
+         typedef enum _Attributes
+         {
+            __LAST_ATTR__ = 0xFF
+         } Attributes;
+
+         // =============================================================================
+         // Attribute Helper classes
+         // =============================================================================
+
+         /*!
+          * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
+          *
+          * @see HF::Interfaces::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
+
+         /*!
+          * <%= @interface.to_doc %> %Interface : Parent.
+          *
+          * This is the parent class for the <%= @interface.to_doc %> interface implementation.
+          */
+         struct Base: public Interfaces::Base<Interface::<%= @interface.to_uid %>>
+         {};
+
+         /*!
+          * <%= @interface.to_doc %> %Interface : %Server side implementation.
+          *
+          * This class provides the server side of the <%= @interface.to_doc %> interface.
+          */
+         class Server: public InterfaceRole<<%= @interface.to_class %>::Base, Interface::SERVER_ROLE>
+         {
+            protected:
+
+            public:
+
+            //! Constructor
+            Server() {}
+
+            //! Destructor
+            virtual ~Server() {}
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @interface.name Events
+            //! @{
+
+            //! @}
+
+            // =============================================================================
+            // Get/Set API.
+            // =============================================================================
+
+            // =============================================================================
+            // Attribute API.
+            // =============================================================================
+
+            HF::Attributes::IAttribute *attribute(uint8_t uid);
+
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
+#if 0
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+#endif
+         };
+
+         /*!
+          * <%= @interface.to_doc %> %Interface : %Client side implementation.
+          *
+          * This class provides the client side of the <%= @interface.to_doc %> interface.
+          */
+         struct Client: public InterfaceRole<<%= @interface.to_class %>::Base, Interface::CLIENT_ROLE>
+         {
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            //! @interface.name Commands
+            //! @{
+
+            //! @}
+            // ======================================================================
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @interface.name Events
+            //! @{
+            //!
+
+            //! @}
+            // =============================================================================
+#if 0
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+#endif
+         };
+
+         /*! @} */
+
+      }  // namespace <%= @interface.to_class %>
+
+   }  // namespace Interfaces
+
+}   // namespace HF
+
+/*!
+ * @addtogroup <%= @interface.name %>_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::<%= @interface.to_class %>::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::<%= @interface.to_class %>::Attributes attribute);
+
+/*! @} */
+
+#endif /* HF_ITF_<%= @interface.to_uid %>_H */

@@ -1,0 +1,106 @@
+// =============================================================================
+/*!
+ * @file       tests/interfaces/test_<%= @interface.name %>.cpp
+ *
+ * This is file contains the unit tests for the <%= @interface.to_doc %> Interface
+ * implementation.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ */
+// =============================================================================
+
+#include "hanfun/interfaces/<%= @interface.name %>.h"
+
+#include "test_helper.h"
+
+using namespace HF;
+using namespace HF::Interfaces;
+
+using namespace HF::Testing;
+
+using namespace HF::Interfaces::<%= @interface.to_class %>;
+
+// =============================================================================
+// <%= @interface.to_doc %>
+// =============================================================================
+
+//! Test Group for <%= @interface.to_class %> interface parent class.
+TEST_GROUP(<%= @interface.to_class %>)
+{
+   class <%= @interface.to_class %>Base: public InterfaceParentHelper<<%= @interface.to_class %>::Base>
+   {};
+
+   <%= @interface.to_class %>Base interface;
+
+   TEST_SETUP()
+   {
+      interface = <%= @interface.to_class %>Base();
+
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+
+//! @test <%= @interface.to_class %>::uid should return @c Interface::<%= @interface.name.upcase %>.
+TEST(<%= @interface.to_class %>, UID)
+{
+   CHECK_EQUAL(Interface::<%= @interface.name.upcase %>, interface.uid());
+}
+
+// =============================================================================
+// <%= @interface.to_doc %> Client
+// =============================================================================
+
+//! Test Group for <%= @interface.to_doc %> Client interface class.
+TEST_GROUP(<%= @interface.to_class %>Client)
+{
+   // TODO Add required unit tests.
+   struct <%= @interface.to_class %>Client: public InterfaceHelper<<%= @interface.to_class %>::Client>
+   {};
+
+   <%= @interface.to_class %>Client client;
+
+   TEST_SETUP()
+   {
+      client = <%= @interface.to_class %>Client();
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+
+// =============================================================================
+// <%= @interface.to_doc %> Server
+// =============================================================================
+
+//! Test Group for <%= @interface.to_doc %> Server interface class.
+TEST_GROUP(<%= @interface.to_class %>Server)
+{
+   // TODO Add required unit tests.
+   struct <%= @interface.to_class %>Server: public InterfaceHelper<<%= @interface.to_class %>::Server>
+   {};
+
+   <%= @interface.to_class %>Server server;
+
+   TEST_SETUP()
+   {
+      server = <%= @interface.to_class %>Server();
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
