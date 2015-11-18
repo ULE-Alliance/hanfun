@@ -55,8 +55,12 @@ module Hanfun
 
   class Interface < Option
 
-    def initialize(name)
-      super
+    attr_reader :short
+
+    def initialize(name, short)
+      super(name)
+      @short = short
+      @short = @to_uid unless short
     end
 
   end
@@ -100,8 +104,9 @@ module Hanfun
       end
 
       # Define arguments and options
-      argument :name
-      argument :uid
+      argument :name,  required: true, type: :string
+      argument :uid,   required: true, type: :string
+      argument :short, optional: true, type: :string
 
       protected
 
@@ -142,7 +147,7 @@ module Hanfun
 
       def __initialize__
         super("interfaces")
-        @interface = Hanfun::Interface.new(name)
+        @interface = Hanfun::Interface.new(name, short)
         @attributes = []
         options[:attributes].each do |key,value|
           @attributes << Attribute.new(key, @interface, value)
@@ -164,7 +169,7 @@ module Hanfun
         code_opts = []
         code_defs = []
         @attributes.select { |attr| !attr.mandatory }.each do |attr|
-          name = "HF_ITF_#{@interface.to_uid}_#{attr.to_uid}"
+          name = "HF_ITF_#{@interface.short}_#{attr.to_uid}"
           code_opts << "option(#{name} \"Interface - #{@interface.to_doc} - #{attr.to_doc}\")"
           code_defs << "#define #{name}  @#{name}@"
         end
@@ -213,7 +218,7 @@ module Hanfun
 
         code = []
         @attributes.select { |attr| !attr.mandatory }.each do |attr|
-          code << "#define HF_ITF_#{@interface.to_uid}_#{attr.to_uid}  1"
+          code << "#define HF_ITF_#{@interface.short}_#{attr.to_uid}  1"
         end
         inject_into_file test_path("config.h.in", false), header + code.join('\n'),
                          :before => /\s+\/\/\s+=+\n\/\/\s+Other/
