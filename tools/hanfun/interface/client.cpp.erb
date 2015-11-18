@@ -29,7 +29,7 @@ using namespace HF::Interfaces::<%= @interface.to_class %>;
 // <%= @interface.to_doc %> Interface : Client Role
 // =============================================================================
 
-#if 0 // FIXME Remove this or implement it if required.
+<%- if @commands.any? { |c| c.event } -%>
 // =============================================================================
 // Client::handle_command
 // =============================================================================
@@ -44,7 +44,55 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
   UNUSED(offset);
 
   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+  switch (cmd)
+  {
+    <%- @commands.select { |c| c.event }.each do |cmd| -%>
+    case <%= cmd.to_uid %>:
+    {
+      <%= cmd.name %>(packet.source);
+      break;
+    }
+    <%- end -%>
+    default:
+      return Common::Result::FAIL_SUPPORT;
+  }
 
   return Common::Result::OK;
 }
+<%- end -%>
+
+// =============================================================================
+// Commands
+// =============================================================================
+
+<%- @commands.each do |cmd| -%>
+<%- unless cmd.client.mandatory -%>
+#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+<%- end -%>
+// =============================================================================
+// Client::<%= cmd.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::<%= cmd.name %>(const Protocol::Address &addr)
+{
+  // FIXME Generated Stub.
+  <%- if !cmd.event -%>
+  Protocol::Message message;
+
+  message.itf.role   = CLIENT_ROLE;
+  message.itf.id     = Interface::<%= @interface.to_uid %>;
+  message.itf.member = <%= cmd.to_uid %>;
+
+  send(addr, message);
+  <%- else -%>
+  UNUSED(addr);
+  <%- end -%>
+}
+<%- unless cmd.client.mandatory -%>
 #endif
+<%- end -%>
+
+<%- end -%>

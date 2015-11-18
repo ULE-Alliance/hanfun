@@ -61,7 +61,10 @@ namespace HF
          //! Command IDs.
          typedef enum _CMD
          {
-            __LAST_CMD__ = 0xFF,
+         <%- @commands.each do |cmd| -%>
+           <%= cmd.to_uid %> = <%= cmd.uid %>,   //!< <%= cmd.to_doc %> command UID.
+         <%- end -%>
+            __LAST_CMD__ = <%= @commands.last.to_uid %>
          } CMD;
 
          //! Attributes
@@ -141,12 +144,64 @@ namespace HF
             virtual ~Server() {}
 
             // ======================================================================
-            // Events
+            // Commands
             // ======================================================================
-            //! @interface.name Events
+            //! @name Commands
             //! @{
 
+            <%- @commands.select { |c| c.event }.each do |cmd| -%>
+              <%- unless cmd.server.mandatory -%>
+#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void <%= cmd.name %>(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the broadcast
+             * network address.
+             */
+            void <%= cmd.name %>()
+            {
+              Protocol::Address addr;
+              <%= cmd.name %>(addr);
+            }
+              <%- unless cmd.server.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
             //! @}
+            // ======================================================================
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            <%- @commands.select { |c| !c.event }.each do |cmd| -%>
+              <%- unless cmd.server.mandatory -%>
+#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Callback that is called when a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void <%= cmd.name %>(const Protocol::Address &addr);
+              <%- unless cmd.server.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
+            //! @}
+            // ======================================================================
 
             // =============================================================================
             // Get/Set API.
@@ -182,12 +237,13 @@ namespace HF
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
-#if 0
+
+            <%- if @commands.any? { |c| !c.event } -%>
             protected:
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
-#endif
+            <%- end -%>
          };
 
          /*!
@@ -200,27 +256,69 @@ namespace HF
             // ======================================================================
             // Commands
             // ======================================================================
-            //! @interface.name Commands
+            //! @name Commands
             //! @{
 
+            <%- @commands.select { |c| !c.event }.each do |cmd| -%>
+              <%- unless cmd.client.mandatory -%>
+#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void <%= cmd.name %>(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the broadcast
+             * network address.
+             */
+            void <%= cmd.name %>()
+            {
+              Protocol::Address addr;
+              <%= cmd.name %>(addr);
+            }
+              <%- unless cmd.client.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
             //! @}
             // ======================================================================
 
             // ======================================================================
             // Events
             // ======================================================================
-            //! @interface.name Events
+            //! @name Events
             //! @{
             //!
 
+            <%- @commands.select { |c| c.event }.each do |cmd| -%>
+              <%- unless cmd.client.mandatory -%>
+#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Callback that is called when a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void <%= cmd.name %>(const Protocol::Address &addr);
+              <%- unless cmd.client.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
             //! @}
             // =============================================================================
-#if 0
+            <%- if @commands.any? { |c| c.event } -%>
             protected:
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
-#endif
+            <%- end -%>
          };
 
          /*! @} */
