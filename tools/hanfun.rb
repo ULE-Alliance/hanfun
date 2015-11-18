@@ -90,6 +90,7 @@ module Hanfun
     end
 
   end
+
   module Generators
 
     # =============================================================================
@@ -157,8 +158,9 @@ module Hanfun
 
       desc "Add interface UID."
       def add_uid
-        code = "#{@interface.to_uid} = #{uid},  //!< FIXME #{@interface.to_doc} interface UID.\n"
-        inject_into_file include_path("interface.h", false), "         #{code}", :before => /^\s+\/\*\s+Reserved/
+        path = include_path("interface.h", false)
+        code = create_uid_line(path, /\bALERT\b/, @interface.to_uid, uid, "//!< FIXME #{@interface.to_doc} interface UID.\n")
+        inject_into_file(path, code, :before => /^\s+\/\*\s+Reserved/)
       end
 
       desc "Add configuration options"
@@ -184,22 +186,30 @@ module Hanfun
 
       desc "Generate include file."
       def include_file
-        template("interface/header.h.erb", include_path("#{name}.h"))
+        template("interface/header.h.erb", include_path("#{name}.h")) do |content|
+          format_code(content)
+        end
       end
 
       desc "Generate common code file."
       def common_file
-        template("interface/common.cpp.erb", source_path("#{name}.cpp"))
+        template("interface/common.cpp.erb", source_path("#{name}.cpp")) do |content|
+          format_code(content)
+        end
       end
 
       desc "Generate server side code file."
       def server_file
-        template("interface/server.cpp.erb", source_path("#{name}_server.cpp"))
+        template("interface/server.cpp.erb", source_path("#{name}_server.cpp")) do |content|
+          format_code(content)
+        end
       end
 
       desc "Generate client side code file."
       def client_file
-        template("interface/client.cpp.erb", source_path("#{name}_client.cpp"))
+        template("interface/client.cpp.erb", source_path("#{name}_client.cpp")) do |content|
+          format_code(content)
+        end
       end
 
       desc "Add interface files to build."
@@ -211,7 +221,9 @@ module Hanfun
       desc "Generate test code file and add it to the build."
       def test_file
         # Generate test code.
-        template("interface/test.cpp.erb", test_path("test_#{name}.cpp"))
+        template("interface/test.cpp.erb", test_path("test_#{name}.cpp")) do |content|
+          format_code(content)
+        end
 
         # Add optional attributes for test config.h.in
         header = CHeader.gsub(/<header>/, "#{@interface.to_doc} Configuration")
@@ -227,6 +239,51 @@ module Hanfun
         code = "add_interface(\"#{name}\")\n"
         inject_into_file test_path("CMakeLists.txt", false), code,
                          :before => /^\s+##\s+Profiles/
+      end
+
+      protected
+
+      def create_uid_line(path, match, uid, value, comment)
+        baseline = nil
+        IO.foreach(path) do |line|
+          if (line[match])
+            baseline = line
+            break
+          end
+        end
+
+        uid_col     = baseline.index(/\w/)
+        value_col   = baseline.index('=')
+        comment_col = baseline.index(/\/\//)
+
+        code = ' ' * uid_col
+        code += uid + ' '
+
+        padding = value_col - code.size
+        code += ' ' * padding if padding > 0
+
+        code += "= " + value + ","
+
+        padding = comment_col - (code.size + 1)
+        code += ' ' * padding if padding > 0
+
+        code + ' ' + comment
+      end
+
+      def format_code(content)
+        file = Tempfile.new("hanfun_#{@interface.name}_")
+        begin
+          file.write(content)
+          file.flush
+          res = run("uncrustify -q -c scripts/uncrustify.cfg -l CPP -f #{file.path}",
+                    capture: true, verbose: false)
+        rescue Errno::ENOENT
+          res = content
+        ensure
+          file.close
+          file.unlink   # deletes the temp file
+        end
+        res
       end
 
     end
