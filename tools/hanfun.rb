@@ -72,10 +72,9 @@ module Hanfun
     attr_reader :writable
     attr_reader :mandatory
 
-    def initialize(name, interface, options)
+    def initialize(name, options)
       super(name)
       @to_uid = @name.upcase + "_ATTR"
-      @interface = interface
       if options =~ /(\w+):(\d+):(rw?):(m|o)/i
         @type      = $1
         @uid       = $2.to_i
@@ -151,7 +150,7 @@ module Hanfun
         @interface = Hanfun::Interface.new(name, short)
         @attributes = []
         options[:attributes].each do |key,value|
-          @attributes << Attribute.new(key, @interface, value)
+          @attributes << Attribute.new(key, value)
         end
         @attributes.sort! { |a,b| a.uid <=> b.uid }
       end
