@@ -58,6 +58,7 @@ namespace HF
           * This module contains the classes that define and implement the <%= @interface.to_doc %> <%= @type %> API.
           * @{
           */
+         <%- unless @commands.empty? -%>
          //! Command IDs.
          typedef enum _CMD
          {
@@ -66,7 +67,9 @@ namespace HF
          <%- end -%>
             __LAST_CMD__ = <%= @commands.last.to_uid %>
          } CMD;
+         <%- end -%>
 
+         <%- unless @attributes.empty? -%>
          //! Attributes
          typedef enum _Attributes
          {
@@ -76,6 +79,7 @@ namespace HF
             __LAST_ATTR__ = <%= @attributes.last.to_uid %>
          } Attributes;
 
+         <%- end -%>
          // =============================================================================
          // Attribute Helper classes
          // =============================================================================
@@ -122,6 +126,7 @@ namespace HF
           */
          class Server: public <%= @type.capitalize %>Role<<%= @interface.to_class %>::Base, Interface::SERVER_ROLE>
          {
+         <%- unless @attributes.empty? -%>
             protected:
 
             <%- @attributes.each do |attr| -%>
@@ -134,6 +139,7 @@ namespace HF
 #endif
               <%- end -%>
             <%- end -%>
+          <%- end -%>
 
             public:
 
@@ -203,6 +209,7 @@ namespace HF
             //! @}
             // ======================================================================
 
+            <%- unless @attributes.empty? -%>
             // =============================================================================
             // Get/Set API.
             // =============================================================================
@@ -228,6 +235,7 @@ namespace HF
 #endif
               <%- end -%>
 
+            <%- end -%>
             <%- end -%>
             // =============================================================================
             // Attribute API.
@@ -329,6 +337,7 @@ namespace HF
 
 }   // namespace HF
 
+<%- unless @attributes.empty? && @commands.empty? -%>
 /*!
  * @addtogroup <%= @interface.name %>_itf
  * @{
@@ -338,6 +347,7 @@ namespace HF
 // Stream Helpers
 // =============================================================================
 
+<%- unless @commands.empty? -%>
 /*!
  * Convert the given @c command into a string and write it to the given @c stream.
  *
@@ -347,7 +357,9 @@ namespace HF
  * @return   <tt>stream</tt>
  */
 std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>::<%= @interface.to_class %>::CMD command);
+<%- end -%>
 
+<%- unless @attributes.empty? -%>
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
  *
@@ -358,7 +370,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>:
  */
 std::ostream &operator<<(std::ostream &stream,
                          const HF::<%= @namespace.name %>::<%= @interface.to_class %>::Attributes attribute);
-
+<%- end -%>
 /*! @} */
+<%- end -%>
 
 #endif /* HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H */

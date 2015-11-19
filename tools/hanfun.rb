@@ -205,17 +205,18 @@ module Hanfun
         @attributes = []
         options[:attributes].each do |key,value|
           @attributes << Attribute.new(key, value)
-        end
+        end if options[:attributes]
         @attributes.sort! { |a,b| a.uid <=> b.uid }
 
         # Handle commands
         @commands = []
         options[:commands].each do |key,value|
           @commands << Command.new(key, value)
-        end
+        end if options[:commands]
         @commands.sort! { |a,b| a.uid <=> b.uid }
 
-        sizes = @commands.map { |c| c.to_uid.size }
+        sizes = [0]
+        sizes += @commands.map { |c| c.to_uid.size }
         sizes += @attributes.map { |a| a.to_uid.size }
         @uid_align = sizes.max
       end

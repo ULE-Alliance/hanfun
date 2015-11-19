@@ -60,6 +60,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 }
 <%- end -%>
 
+<%- unless @commands.empty? -%>
 // =============================================================================
 // Commands
 // =============================================================================
@@ -94,4 +95,5 @@ void Client::<%= cmd.name %>(const Protocol::Address &addr)
 #endif
 <%- end -%>
 
+<%- end -%>
 <%- end -%>

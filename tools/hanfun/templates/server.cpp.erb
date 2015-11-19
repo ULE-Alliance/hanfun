@@ -37,6 +37,7 @@ using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 // =============================================================================
 HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
+<%- unless @attributes.empty? -%>
    HF::Attributes::UIDS result({<%= @attributes.select { |attr| attr.mandatory }.map { |attr| attr.to_uid }.join (", ") %>});
 
    if (pack_id == HF::Attributes::ALL)
@@ -49,6 +50,10 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
    }
 
    return result;
+<%- else -%>
+   UNUSED(pack_id);
+   return HF::Attributes::UIDS();
+<%- end -%>
 }
 
 // =============================================================================
@@ -60,6 +65,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 // =============================================================================
 HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 {
+<%- unless @attributes.empty? -%>
    using namespace HF::Interfaces::<%= @interface.to_class %>;
 
    <%= @interface.to_class %>::Attributes attr = static_cast<<%= @interface.to_class %>::Attributes>(uid);
@@ -87,6 +93,10 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
       default:
          return nullptr;
    }
+<%- else -%>
+   UNUSED(uid);
+   return nullptr;
+<%- end -%>
 }
 
 <%- if @commands.any? { |c| !c.event } -%>
@@ -121,6 +131,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 }
 <%- end -%>
 
+<%- unless @commands.empty? -%>
 // =============================================================================
 // Commands
 // =============================================================================
@@ -156,6 +167,8 @@ void Server::<%= cmd.name %>(const Protocol::Address &addr)
 <%- end -%>
 
 <%- end -%>
+<%- end -%>
+<%- unless @attributes.empty? -%>
 // =============================================================================
 // Get/Set Attributes
 // =============================================================================
@@ -192,4 +205,5 @@ void Server::<%= attr.name %>(<%= attr.type %> __value)
 #endif
 <%- end -%>
 
+<%- end -%>
 <%- end -%>
