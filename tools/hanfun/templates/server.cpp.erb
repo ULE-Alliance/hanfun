@@ -117,11 +117,18 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
    switch (cmd)
    {
      <%- @commands.select { |c| !c.event }.each do |cmd| -%>
+      <%- unless cmd.server.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+      <%- end -%>
      case <%= cmd.to_uid %>:
      {
        <%= cmd.name %>(packet.source);
        break;
      }
+      <%- unless cmd.server.mandatory -%>
+#endif
+      <%- end -%>
+
      <%- end -%>
      default:
        return Common::Result::FAIL_SUPPORT;

@@ -46,11 +46,18 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
   switch (cmd)
   {
     <%- @commands.select { |c| c.event }.each do |cmd| -%>
+      <%- unless cmd.client.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+      <%- end -%>
     case <%= cmd.to_uid %>:
     {
       <%= cmd.name %>(packet.source);
       break;
     }
+      <%- unless cmd.client.mandatory -%>
+#endif
+      <%- end -%>
+
     <%- end -%>
     default:
       return Common::Result::FAIL_SUPPORT;
