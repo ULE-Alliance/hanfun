@@ -1,9 +1,8 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/<%= @interface.name %>_client.cpp
+ * @file       src/<%= @namespace.path %>/<%= @interface.name %>_client.cpp
  *
- * This file contains the implementation of the <%= @interface.to_doc %> interface :
- * Client role.
+ * This file contains the implementation of the <%= @interface.to_doc %> <%= @type %> : Client role.
  *
  * @version    x.x.x
  *
@@ -15,15 +14,15 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/<%= @interface.name %>.h"
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
 
 // =============================================================================
 // API
 // =============================================================================
 
 using namespace HF;
-using namespace HF::Interfaces;
-using namespace HF::Interfaces::<%= @interface.to_class %>;
+using namespace HF::<%= @namespace.name %>;
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 
 // =============================================================================
 // <%= @interface.to_doc %> Interface : Client Role
@@ -67,7 +66,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 
 <%- @commands.each do |cmd| -%>
 <%- unless cmd.client.mandatory -%>
-#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
 <%- end -%>
 // =============================================================================
 // Client::<%= cmd.name %>

@@ -1,9 +1,9 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/<%= @interface.name %>.cpp
+ * @file       src/<%= @namespace.path %>/<%= @interface.name %>.cpp
  *
  * This file contains the implementation of the common functionality for the
- * <%= @interface.to_doc %> interface.
+ * <%= @interface.to_doc %> <%= @type %>.
  *
  * @version    x.x.x
  *
@@ -15,15 +15,15 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/<%= @interface.name %>.h"
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
 
 // =============================================================================
 // API
 // =============================================================================
 
 using namespace HF;
-using namespace HF::Interfaces;
-using namespace HF::Interfaces::<%= @interface.to_class %>;
+using namespace HF::<%= @namespace.name %>;
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 
 // =============================================================================
 // Interfaces::create_attribute
@@ -32,7 +32,7 @@ using namespace HF::Interfaces::<%= @interface.to_class %>;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Interfaces::create_attribute(Server * server, uint8_t uid)
+HF::Attributes::IAttribute *<%= @namespace.name %>::create_attribute(Server * server, uint8_t uid)
 {
   if (server != nullptr)
   {

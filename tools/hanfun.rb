@@ -25,7 +25,7 @@ require File.join('hanfun', 'extended.rb')
 
 module Hanfun
 
-  TemplateRoot = File.join(HAN_FUN_ROOT, 'hanfun')
+  TemplateRoot = File.join(HAN_FUN_ROOT, 'hanfun', 'templates')
   CodeRoot     = File.expand_path(File.join(HAN_FUN_ROOT, '..'))
 
   CHeader = %q{
@@ -122,6 +122,24 @@ module Hanfun
 
   end
 
+  class Namespace < Option
+
+    attr_reader :path
+    attr_reader :short
+    attr_reader :include
+    attr_reader :parent
+
+    def initialize(name, short, parent)
+      @name    = name
+      @parent  = parent
+      @short   = short
+      @short   = @to_uid unless short
+
+      @path    = name.downcase
+      @include = @path.gsub(/s$/, '')
+    end
+  end
+
   module Generators
 
     # =============================================================================
@@ -140,46 +158,47 @@ module Hanfun
       argument :uid,   required: true, type: :string
       argument :short, optional: true, type: :string
 
-      protected
-
-      def __initialize__(namespace)
-        @namespace = namespace
-      end
-
-      def top_path(name)
-        File.join(CodeRoot, name)
-      end
-
-      def include_path(name, append = true)
-        file = File.join(CodeRoot, "inc", "hanfun")
-        file = File.join(file, @namespace) if append
-        return File.join(file, name)
-      end
-
-      def source_path(name, append = true)
-        file = File.join(CodeRoot, "src")
-        file = File.join(file, @namespace) if append
-        return File.join(file, name)
-      end
-
-      def test_path(name, append = true)
-        file = File.join(CodeRoot, "tests")
-        file = File.join(file, @namespace) if append
-        return File.join(file, name)
-      end
-
-      def cmake_path(name)
-        File.join(CodeRoot, "cmake", name)
-      end
-    end
-
-    class Interface < Abstract
-
       class_option "attributes", desc: "Attributes for the interface", aliases: "-a", type: :hash
       class_option "commands", desc: "Commands for the interface", aliases: "-c", type: :hash
 
-      def __initialize__
-        super("interfaces")
+      # Configure generator.
+      #
+      # This method expects that the following instance variables to be defined.
+      #
+      #  - @type      : "interface" or "service"
+      #  - @namespace : Namespace.new(...)
+      #  - @generator : Hash
+      #     - uid: { reference: ..., insert_at: ... }
+      #     - build: { insert_at: ...}
+      #     - tests: { insert_config_at: ..., insert_cmake_at: ...}
+      #
+      #  The generator hash fields have the following usage.
+      #
+      #  - uid.reference   : Interface/Service UID regular expression to use as formatting base.
+      #                      E.g: /\bALERT\b/
+      #
+      #  - uid.insert_at   : Regular expression used to locate the point to insert the new UID definition
+      #                      on inc/hanfun/interface.h
+      #
+      #  - build.insert_at : Regular expression used to locate the point to insert the build configuration
+      #                      for the new interface/service in src/CMakeLists.txt
+      #
+      #  - tests.insert_at : Regular expression used to locate the point to insert the build configuration
+      #                      for the new interface/service tests in tests/CMakeLists.txt
+      #
+      #  - tests.insert_config_at : Regular expression used to locate the point to insert the build configuration
+      #                             options for the new interface/service tests in tests/config.in.h
+      #
+      #  - tests.insert_cmake_at : Regular expression used to locate the point to insert the build configuration
+      #                            for the new interface/service tests in tests/CMakeLists.txt
+      #
+      def configure
+        raise RuntimeError, "Invalid generator configuration (@generator)" unless @namespace
+        @generator[:build][:macro] = "add_#{@type}"
+
+        raise RuntimeError, "Invalid namespace configuration (@namespace)" unless @namespace && @namespace.is_a?(Namespace)
+
+        raise RuntimeError, "Invalid type configuration (@type)" unless @type && @type.is_a?(String)
         @interface = Hanfun::Interface.new(name, short)
 
         # Handle attributes.
@@ -201,23 +220,25 @@ module Hanfun
         @uid_align = sizes.max
       end
 
-      desc "Add interface UID."
+      # Add interface UID.
       def add_uid
         path = include_path("interface.h", false)
-        code = create_uid_line(path, /\bALERT\b/, @interface.to_uid, uid, "//!< FIXME #{@interface.to_doc} interface UID.\n")
-        inject_into_file(path, code, :before => /^\s+\/\*\s+Reserved/)
+        code = create_uid_line(path, @generator[:uid][:reference], @interface.to_uid, uid,
+                               "//!< FIXME #{@interface.to_doc} interface UID.\n")
+        inject_into_file(path, code, :before => @generator[:uid][:insert_at])
       end
 
-      desc "Add configuration options"
+      # Add configuration options
       def config_files
 
         header = CHeader.gsub(/<header>/, "#{@interface.to_doc} Configuration")
 
         code_opts = []
         code_defs = []
+        prefix = "HF_#{@namespace.short}_#{@interface.short}"
         @commands.select { |cmd| !cmd.server.mandatory || !cmd.client.mandatory}.each do |cmd|
-          name = "HF_ITF_#{@interface.short}_#{cmd.to_uid.ljust(@uid_align)}"
-          code_opts << "option(#{name} \"Interface - #{@interface.to_doc} - #{cmd.to_doc}\")"
+          name = "#{prefix}_#{cmd.to_uid.ljust(@uid_align)}"
+          code_opts << "option(#{name} \"#{@type.capitalize} - #{@interface.to_doc} - #{cmd.to_doc}\")"
           code_defs << "#define #{name}  @#{name.strip}@"
         end
 
@@ -226,8 +247,8 @@ module Hanfun
         code_defs << ""
 
         @attributes.select { |attr| !attr.mandatory }.each do |attr|
-          name = "HF_ITF_#{@interface.short}_#{attr.to_uid.ljust(@uid_align)}"
-          code_opts << "option(#{name} \"Interface - #{@interface.to_doc} - #{attr.to_doc}\")"
+          name = "#{prefix}_#{attr.to_uid.ljust(@uid_align)}"
+          code_opts << "option(#{name} \"#{@type.capitalize} - #{@interface.to_doc} - #{attr.to_doc}\")"
           code_defs << "#define #{name}  @#{name.strip}@"
         end
 
@@ -242,44 +263,45 @@ module Hanfun
         end
       end
 
-      desc "Generate include file."
+      # Generate include file.
       def include_file
-        template("templates/header.h.erb", include_path("#{name}.h")) do |content|
+        template("header.h.erb", include_path("#{name}.h")) do |content|
           format_code(content)
         end
       end
 
-      desc "Generate common code file."
+      # Generate common code file.
       def common_file
-        template("templates/common.cpp.erb", source_path("#{name}.cpp")) do |content|
+        template("common.cpp.erb", source_path("#{name}.cpp")) do |content|
           format_code(content)
         end
       end
 
-      desc "Generate server side code file."
+      # Generate server side code file.
       def server_file
-        template("templates/server.cpp.erb", source_path("#{name}_server.cpp")) do |content|
+        template("server.cpp.erb", source_path("#{name}_server.cpp")) do |content|
           format_code(content)
         end
       end
 
-      desc "Generate client side code file."
+      # Generate client side code file.
       def client_file
-        template("templates/client.cpp.erb", source_path("#{name}_client.cpp")) do |content|
+        template("client.cpp.erb", source_path("#{name}_client.cpp")) do |content|
           format_code(content)
         end
       end
 
-      desc "Add interface files to build."
+      # Add interface files to build.
       def add_files_to_build
-        code = "add_interface(\"#{name}\")\n"
-        inject_into_file source_path("CMakeLists.txt", false), code, :before => /^\s+##\s+Core/
+        code = "#{@generator[:build][:macro]}(\"#{name}\")\n"
+        inject_into_file(source_path("CMakeLists.txt", false), code,
+                         :before => @generator[:build][:insert_at])
       end
 
-      desc "Generate test code file and add it to the build."
+      # Generate test code file and add it to the build.
       def test_file
         # Generate test code.
-        template("templates/test.cpp.erb", test_path("test_#{name}.cpp")) do |content|
+        template("test.cpp.erb", test_path("test_#{name}.cpp")) do |content|
           format_code(content)
         end
 
@@ -287,28 +309,54 @@ module Hanfun
         header = CHeader.gsub(/<header>/, "#{@interface.to_doc} Configuration")
 
         code = []
+        prefix = "HF_#{@namespace.short}"
         @commands.select { |cmd| !cmd.server.mandatory || !cmd.client.mandatory }.each do |cmd|
-          code << "#define HF_ITF_#{@interface.short}_#{cmd.to_uid.ljust(@uid_align)}  1"
+          code << "#define #{prefix}_#{@interface.short}_#{cmd.to_uid.ljust(@uid_align)}  1"
         end
 
         # Put empty line between commands and attributes
         code << ""
 
         @attributes.select { |attr| !attr.mandatory }.each do |attr|
-          code << "#define HF_ITF_#{@interface.short}_#{attr.to_uid.ljust(@uid_align)}  1"
+          code << "#define #{prefix}_#{@interface.short}_#{attr.to_uid.ljust(@uid_align)}  1"
         end
 
-        inject_into_file test_path("config.h.in", false), :before => /\s+\/\/\s+=+\n\/\/\s+Other/ do
+        inject_into_file test_path("config.h.in", false), :before => @generator[:tests][:insert_config_at] do
           header + code.join("\n")
         end
 
         # Add test code to file.
-        code = "add_interface(\"#{name}\")\n"
-        inject_into_file test_path("CMakeLists.txt", false), code,
-                         :before => /^\s+##\s+Profiles/
+        code = "#{@generator[:build][:macro]}(\"#{name}\")\n"
+        inject_into_file test_path("CMakeLists.txt", false), code, :before => @generator[:tests][:insert_cmake_at]
       end
 
       protected
+
+      def top_path(name)
+        File.join(CodeRoot, name)
+      end
+
+      def include_path(name, append = true)
+        file = File.join(CodeRoot, "inc", "hanfun")
+        file = File.join(file, @namespace.path) if append
+        return File.join(file, name)
+      end
+
+      def source_path(name, append = true)
+        file = File.join(CodeRoot, "src")
+        file = File.join(file, @namespace.path) if append
+        return File.join(file, name)
+      end
+
+      def test_path(name, append = true)
+        file = File.join(CodeRoot, "tests")
+        file = File.join(file, @namespace.path) if append
+        return File.join(file, name)
+      end
+
+      def cmake_path(name)
+        File.join(CodeRoot, "cmake", name)
+      end
 
       def create_uid_line(path, match, uid, value, comment)
         baseline = nil
@@ -351,6 +399,29 @@ module Hanfun
           file.unlink   # deletes the temp file
         end
         res
+      end
+
+    end
+
+    class Interface < Abstract
+
+      def configure
+        @type = "interface"
+        @namespace = Namespace.new("Interfaces", "ITF", "Interfaces::Base")
+
+        @generator = {}
+        @generator[:uid] = {
+          reference: /\bALERT\b/,
+          insert_at: /^\s+\/\*\s+Reserved/,
+        }
+
+        @generator[:build] = { insert_at: /^\s+##\s+Core/ }
+
+        @generator[:tests] = {
+          insert_config_at: /\s+\/\/\s+=+\n\/\/\s+Other/,
+          insert_cmake_at: /^\s+##\s+Profiles/,
+        }
+        super
       end
 
     end

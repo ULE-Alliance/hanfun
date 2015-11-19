@@ -1,8 +1,8 @@
 // =============================================================================
 /*!
- * @file       tests/interfaces/test_<%= @interface.name %>.cpp
+ * @file       tests/<%= @namespace.path %>/test_<%= @interface.name %>.cpp
  *
- * This is file contains the unit tests for the <%= @interface.to_doc %> Interface
+ * This is file contains the unit tests for the <%= @interface.to_doc %> <%= @type %>
  * implementation.
  *
  * @version    x.x.x
@@ -13,22 +13,22 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/<%= @interface.name %>.h"
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
 
 #include "test_helper.h"
 
 using namespace HF;
-using namespace HF::Interfaces;
+using namespace HF::<%= @namespace.name %>;
 
 using namespace HF::Testing;
 
-using namespace HF::Interfaces::<%= @interface.to_class %>;
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 
 // =============================================================================
 // <%= @interface.to_doc %>
 // =============================================================================
 
-//! Test Group for <%= @interface.to_class %> interface parent class.
+//! Test Group for <%= @interface.to_class %> <%= @type %> parent class.
 TEST_GROUP(<%= @interface.to_class %>)
 {
    class <%= @interface.to_class %>Base: public InterfaceParentHelper<<%= @interface.to_class %>::Base>

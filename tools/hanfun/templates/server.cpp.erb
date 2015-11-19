@@ -1,8 +1,8 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/<%= @interface.name %>_server.cpp
+ * @file       src/<%= @namespace.path %>/<%= @interface.name %>_server.cpp
  *
- * This file contains the implementation of the <%= @interface.to_doc %> interface : Server role.
+ * This file contains the implementation of the <%= @interface.to_doc %> <%= @type %> : Server role.
  *
  * @version    x.x.x
  *
@@ -14,15 +14,15 @@
  */
 // =============================================================================
 
-#include "hanfun/interfaces/<%= @interface.name %>.h"
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
 
 // =============================================================================
 // API
 // =============================================================================
 
 using namespace HF;
-using namespace HF::Interfaces;
-using namespace HF::Interfaces::<%= @interface.to_class %>;
+using namespace HF::<%= @namespace.name %>;
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 
 // =============================================================================
 // <%= @interface.to_doc %> Interface : Server Role
@@ -42,7 +42,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
    if (pack_id == HF::Attributes::ALL)
    {
      <%- @attributes.select {|attr| !attr.mandatory }.each do |attr| -%>
-#ifdef HF_ITF_<%= "#{@interface.short}_#{attr.to_uid}" %>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
      result.push_back(<%= attr.to_uid %>);
 #endif
      <%- end -%>
@@ -68,7 +68,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    {
      <%- @attributes.each do |attr| -%>
          <%- unless attr.mandatory -%>
-#ifdef HF_ITF_<%= "#{@interface.short}_#{attr.to_uid}" %>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
          <%- end -%>
      case <%= attr.to_uid %>:
      {
@@ -127,7 +127,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 
 <%- @commands.each do |cmd| -%>
 <%- unless cmd.server.mandatory -%>
-#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
 <%- end -%>
 // =============================================================================
 // Server::<%= cmd.name %>
@@ -163,7 +163,7 @@ void Server::<%= cmd.name %>(const Protocol::Address &addr)
 <%- @attributes.each do |attr| -%>
   <%- unless attr.mandatory -%>
 
-#ifdef HF_ITF_<%= "#{@interface.short}_#{attr.to_uid}" %>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
   <%- end -%>
 // =============================================================================
 // Server::<%= attr.name %>

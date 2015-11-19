@@ -1,8 +1,8 @@
 // =============================================================================
 /*!
- * @file       inc/hanfun/interfaces/<%= @interface.name %>.h
+ * @file       inc/hanfun/<%= @namespace.path %>/<%= @interface.name %>.h
  *
- * This file contains the definitions for the <%= @interface.to_doc %> interface.
+ * This file contains the definitions for the <%= @interface.to_doc %> <%= @type %>.
  *
  * @version    x.x.x
  *
@@ -14,15 +14,15 @@
  */
 // =============================================================================
 
-#ifndef HF_ITF_<%= @interface.to_uid %>_H
-#define HF_ITF_<%= @interface.to_uid %>_H
+#ifndef HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H
+#define HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H
 
 #include "hanfun/protocol.h"
-#include "hanfun/interface.h"
+#include "hanfun/<%= @namespace.include %>.h"
 
 namespace HF
 {
-   namespace Interfaces
+   namespace <%= @namespace.name %>
    {
       // Forward declaration.
       namespace <%= @interface.to_class %>
@@ -47,15 +47,15 @@ namespace HF
       HF::Attributes::IAttribute *create_attribute(<%= @interface.to_class %>::Server *server, uint8_t uid);
 
       /*!
-       * This namespace contains the implementation of the Simple Thermostat interface.
+       * This namespace contains the implementation of the <%= @interface.to_doc %> <%= @type %>.
        */
       namespace <%= @interface.to_class %>
       {
          /*!
-         * @addtogroup <%= @interface.name %>_itf  <%= @interface.to_doc %> interface
+         * @addtogroup <%= @interface.name %>_itf  <%= @interface.to_doc %> <%= @type %>
           * @ingroup interfaces
           *
-          * This module contains the classes that define and implement the <%= @interface.to_doc %> interface API.
+          * This module contains the classes that define and implement the <%= @interface.to_doc %> <%= @type %> API.
           * @{
           */
          //! Command IDs.
@@ -82,7 +82,7 @@ namespace HF
 
          <%- @attributes.each do |attr| -%>
          /*!
-          * Helper class to handle the <%= attr.to_doc %> attribute for the <%= @interface.to_doc %> interface.
+          * Helper class to handle the <%= attr.to_doc %> attribute for the <%= @interface.to_doc %> <%= @type %>.
           */
          struct <%= attr.to_class %>: public HF::Attributes::Attribute<<%= attr.type %>>
          {
@@ -96,9 +96,9 @@ namespace HF
 
          <%- end -%>
          /*!
-          * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
+          * @copybrief HF::<%= @namespace.name %>::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
           *
-          * @see HF::Interfaces::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
+          * @see HF::<%= @namespace.name %>::create_attribute (HF::<%= @namespace.name %>::<%= @interface.to_class %>::Server *,uint8_t)
           *
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
@@ -108,26 +108,26 @@ namespace HF
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
-          * <%= @interface.to_doc %> %Interface : Parent.
+          * <%= @interface.to_doc %> %<%= @type.capitalize %> : Parent.
           *
-          * This is the parent class for the <%= @interface.to_doc %> interface implementation.
+          * This is the parent class for the <%= @interface.to_doc %> <%= @type %> implementation.
           */
-         struct Base: public Interfaces::Base<Interface::<%= @interface.to_uid %>>
+         struct Base: public <%= @namespace.parent %><Interface::<%= @interface.to_uid %>>
          {};
 
          /*!
-          * <%= @interface.to_doc %> %Interface : %Server side implementation.
+          * <%= @interface.to_doc %> %<%= @type.capitalize %> : %Server side implementation.
           *
           * This class provides the server side of the <%= @interface.to_doc %> interface.
           */
-         class Server: public InterfaceRole<<%= @interface.to_class %>::Base, Interface::SERVER_ROLE>
+         class Server: public <%= @type.capitalize %>Role<<%= @interface.to_class %>::Base, Interface::SERVER_ROLE>
          {
             protected:
 
             <%- @attributes.each do |attr| -%>
               <%- unless attr.mandatory -%>
 
-#ifdef HF_ITF_<%= "#{@interface.short}_#{attr.to_uid}" %>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
               <%- end -%>
             <%= attr.type %> _<%= attr.name %>;   //!< <%= attr.to_doc %>
               <%- unless attr.mandatory -%>
@@ -151,7 +151,7 @@ namespace HF
 
             <%- @commands.select { |c| c.event }.each do |cmd| -%>
               <%- unless cmd.server.mandatory -%>
-#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
               <%- end -%>
             /*!
              * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the given
@@ -186,7 +186,7 @@ namespace HF
 
             <%- @commands.select { |c| !c.event }.each do |cmd| -%>
               <%- unless cmd.server.mandatory -%>
-#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
               <%- end -%>
             /*!
              * Callback that is called when a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
@@ -209,7 +209,7 @@ namespace HF
 
             <%- @attributes.each do |attr| -%>
               <%- unless attr.mandatory -%>
-#ifdef HF_ITF_<%= "#{@interface.short}_#{attr.to_uid}" %>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
               <%- end -%>
             /*!
              * Get the <%= attr.to_doc %> for the <%= @interface.to_doc %> server.
@@ -247,11 +247,11 @@ namespace HF
          };
 
          /*!
-          * <%= @interface.to_doc %> %Interface : %Client side implementation.
+          * <%= @interface.to_doc %> %<%= @type.capitalize %> : %Client side implementation.
           *
           * This class provides the client side of the <%= @interface.to_doc %> interface.
           */
-         struct Client: public InterfaceRole<<%= @interface.to_class %>::Base, Interface::CLIENT_ROLE>
+         struct Client: public <%= @type.capitalize %>Role<<%= @interface.to_class %>::Base, Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Commands
@@ -261,7 +261,7 @@ namespace HF
 
             <%- @commands.select { |c| !c.event }.each do |cmd| -%>
               <%- unless cmd.client.mandatory -%>
-#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
               <%- end -%>
             /*!
              * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the given
@@ -297,7 +297,7 @@ namespace HF
 
             <%- @commands.select { |c| c.event }.each do |cmd| -%>
               <%- unless cmd.client.mandatory -%>
-#ifdef HF_ITF_<%= @interface.short %>_<%= cmd.to_uid %>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
               <%- end -%>
             /*!
              * Callback that is called when a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
@@ -325,7 +325,7 @@ namespace HF
 
       }  // namespace <%= @interface.to_class %>
 
-   }  // namespace Interfaces
+   }  // namespace <%= @namespace.name %>
 
 }   // namespace HF
 
@@ -346,7 +346,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::<%= @interface.to_class %>::CMD command);
+std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>::<%= @interface.to_class %>::CMD command);
 
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
@@ -357,8 +357,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::<%= @interf
  * @return   <tt>stream</tt>
  */
 std::ostream &operator<<(std::ostream &stream,
-                         const HF::Interfaces::<%= @interface.to_class %>::Attributes attribute);
+                         const HF::<%= @namespace.name %>::<%= @interface.to_class %>::Attributes attribute);
 
 /*! @} */
 
-#endif /* HF_ITF_<%= @interface.to_uid %>_H */
+#endif /* HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H */
