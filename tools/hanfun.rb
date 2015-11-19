@@ -244,28 +244,28 @@ module Hanfun
 
       desc "Generate include file."
       def include_file
-        template("interface/header.h.erb", include_path("#{name}.h")) do |content|
+        template("templates/header.h.erb", include_path("#{name}.h")) do |content|
           format_code(content)
         end
       end
 
       desc "Generate common code file."
       def common_file
-        template("interface/common.cpp.erb", source_path("#{name}.cpp")) do |content|
+        template("templates/common.cpp.erb", source_path("#{name}.cpp")) do |content|
           format_code(content)
         end
       end
 
       desc "Generate server side code file."
       def server_file
-        template("interface/server.cpp.erb", source_path("#{name}_server.cpp")) do |content|
+        template("templates/server.cpp.erb", source_path("#{name}_server.cpp")) do |content|
           format_code(content)
         end
       end
 
       desc "Generate client side code file."
       def client_file
-        template("interface/client.cpp.erb", source_path("#{name}_client.cpp")) do |content|
+        template("templates/client.cpp.erb", source_path("#{name}_client.cpp")) do |content|
           format_code(content)
         end
       end
@@ -279,7 +279,7 @@ module Hanfun
       desc "Generate test code file and add it to the build."
       def test_file
         # Generate test code.
-        template("interface/test.cpp.erb", test_path("test_#{name}.cpp")) do |content|
+        template("templates/test.cpp.erb", test_path("test_#{name}.cpp")) do |content|
           format_code(content)
         end
 
