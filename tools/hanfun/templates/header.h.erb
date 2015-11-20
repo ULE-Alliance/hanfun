@@ -237,6 +237,7 @@ namespace HF
 
             <%- end -%>
             <%- end -%>
+            <%- unless @attributes.empty? -%>
             // =============================================================================
             // Attribute API.
             // =============================================================================
@@ -246,6 +247,7 @@ namespace HF
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
 
+            <%- end -%>
             <%- if @commands.any? { |c| !c.event } -%>
             protected:
 

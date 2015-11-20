@@ -28,6 +28,7 @@ using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 // <%= @interface.to_doc %> Interface : Server Role
 // =============================================================================
 
+<%- unless @attributes.empty? -%>
 // =============================================================================
 // Server::attributes
 // =============================================================================
@@ -98,6 +99,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    return nullptr;
 <%- end -%>
 }
+<%- end -%>
 
 <%- if @commands.any? { |c| !c.event } -%>
 // =============================================================================
