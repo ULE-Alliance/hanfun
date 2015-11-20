@@ -106,7 +106,7 @@ TEST_GROUP(SimpleThermostat)
    }
 
    void check_invalid_message(HF::Interface &interface, const Message::Type type,
-                              uint8_t uid, const Interface::Role role, const char *file, int lineno)
+                              uint8_t uid, const HF::Interface::Role role, const char *file, int lineno)
    {
       Protocol::Packet packet;
       packet.message.itf.role   = role;
@@ -119,13 +119,13 @@ TEST_GROUP(SimpleThermostat)
                            interface.handle(packet, expected, 3), file, lineno);
    }
 
-   void check_invalid_role(SimpleThermostat::Server &server, Interface::Role role,
+   void check_invalid_role(SimpleThermostat::Server &server, HF::Interface::Role role,
                            const char *file, int lineno)
    {
       check_invalid_message(server, Message::Type::COMMAND_REQ, server.uid(), role, file, lineno);
    }
 
-   void check_invalid_role(SimpleThermostat::Client &client, Interface::Role role,
+   void check_invalid_role(SimpleThermostat::Client &client, HF::Interface::Role role,
                            const char *file, int lineno)
    {
       check_invalid_message(client, Message::Type::COMMAND_RES, client.uid(), role, file, lineno);
@@ -134,14 +134,14 @@ TEST_GROUP(SimpleThermostat)
    void check_invalid_uid(SimpleThermostat::Server &server, uint8_t uid, const char *file,
                           int lineno)
    {
-      check_invalid_message(server, Message::Type::COMMAND_REQ, uid, Interface::CLIENT_ROLE, file,
+      check_invalid_message(server, Message::Type::COMMAND_REQ, uid, HF::Interface::CLIENT_ROLE, file,
                             lineno);
    }
 
    void check_invalid_uid(SimpleThermostat::Client &client, uint8_t uid, const char *file,
                           int lineno)
    {
-      check_invalid_message(client, Message::Type::COMMAND_RES, uid, Interface::SERVER_ROLE, file,
+      check_invalid_message(client, Message::Type::COMMAND_RES, uid, HF::Interface::SERVER_ROLE, file,
                             lineno);
    }
 };
@@ -152,10 +152,10 @@ TEST_GROUP(SimpleThermostat)
 #define CHECK_INVALID_UID(_itf, _uid) \
    check_invalid_uid(_itf, _uid, __FILE__, __LINE__)
 
-//! @test SimpleThermostat::uid should return @c Interface::SIMPLE_THERMOSTAT.
+//! @test SimpleThermostat::uid should return @c HF::Interface::SIMPLE_THERMOSTAT.
 TEST(SimpleThermostat, UID)
 {
-   CHECK_EQUAL(Interface::SIMPLE_THERMOSTAT, interface.uid());
+   CHECK_EQUAL(HF::Interface::SIMPLE_THERMOSTAT, interface.uid());
 }
 
 //! @test Should send a BOOST_START_CMD message/response correctly.
@@ -168,7 +168,7 @@ TEST(SimpleThermostat, BoostStart)
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SimpleThermostat::BOOST_START_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -189,7 +189,7 @@ TEST(SimpleThermostat, BoostStart)
    mock("SimpleThermostatServer").checkExpectations();
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, server.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, server.sendMsg.itf.role);
    LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
    LONGS_EQUAL(SimpleThermostat::BOOST_START_CMD, server.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_RES, server.sendMsg.type);
@@ -215,7 +215,7 @@ TEST(SimpleThermostat, BoostStop)
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SimpleThermostat::BOOST_STOP_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -236,7 +236,7 @@ TEST(SimpleThermostat, BoostStop)
    mock("SimpleThermostatServer").checkExpectations();
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, server.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, server.sendMsg.itf.role);
    LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
    LONGS_EQUAL(SimpleThermostat::BOOST_STOP_CMD, server.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_RES, server.sendMsg.type);
@@ -255,8 +255,8 @@ TEST(SimpleThermostat, BoostStop)
 //! @test Should not handle message from invalid role.
 TEST(SimpleThermostat, Handle_Invalid_Role)
 {
-   CHECK_INVALID_ROLE(server, Interface::SERVER_ROLE);
-   CHECK_INVALID_ROLE(client, Interface::CLIENT_ROLE);
+   CHECK_INVALID_ROLE(server, HF::Interface::SERVER_ROLE);
+   CHECK_INVALID_ROLE(client, HF::Interface::CLIENT_ROLE);
 }
 
 //! @test Should not handle message from invalid interface UID.

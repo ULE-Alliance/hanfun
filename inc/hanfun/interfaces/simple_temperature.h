@@ -79,7 +79,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;
 
             Temperature(int16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<int16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<int16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -93,7 +93,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;
 
             MininumTemperature(int16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<int16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<int16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -107,7 +107,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;
 
             MaximumTemperature(int16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<int16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<int16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -120,7 +120,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;
 
             Tolerance(uint16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<uint16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<uint16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -145,12 +145,11 @@ namespace HF
           *
           * This is the parent class for the Simple Temperature interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::SIMPLE_TEMPERATURE>
+         struct Base: public Interface<HF::Interface::SIMPLE_TEMPERATURE>
          {
             protected:
 
-            Base()
-            {}
+            Base() {}
          };
 
          /*!
@@ -158,7 +157,7 @@ namespace HF
           *
           * This class provides the API for server side of the Simple Temperature interface.
           */
-         class Server: public InterfaceRole<SimpleTemperature::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimpleTemperature::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -247,7 +246,7 @@ namespace HF
           *
           * This class provides the client side of the %Level Control interface.
           */
-         class Client: public InterfaceRole<SimpleTemperature::Base, Interface::CLIENT_ROLE>
+         class Client: public InterfaceRole<SimpleTemperature::Base, HF::Interface::CLIENT_ROLE>
          {
             public:
 

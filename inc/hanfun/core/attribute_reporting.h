@@ -1303,7 +1303,7 @@ namespace HF
          /*!
           * Attribute Reporting - Client Role.
           */
-         struct Client: public HF::Interfaces::Base<HF::Interface::ATTRIBUTE_REPORTING>
+         struct Client: public HF::Interfaces::Interface<HF::Interface::ATTRIBUTE_REPORTING>
          {
             // =============================================================================
             // Interface API

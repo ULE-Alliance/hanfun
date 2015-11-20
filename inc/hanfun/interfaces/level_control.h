@@ -120,7 +120,7 @@ namespace HF
             static constexpr bool    WRITABBLE = true;
 
             Level(uint8_t level = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::LEVEL_CONTROL, ID, owner, level, WRITABBLE)
+               Attribute<uint8_t>(HF::Interface::LEVEL_CONTROL, ID, owner, level, WRITABBLE)
             {}
          };
 
@@ -141,13 +141,13 @@ namespace HF
           *
           * This is the parent class for the Level Control interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::LEVEL_CONTROL>
+         struct Base: public Interface<HF::Interface::LEVEL_CONTROL>
          {
             protected:
 
             Base() {}
 
-            using Interfaces::Base<Interface::LEVEL_CONTROL>::payload_size;
+            using Interface<HF::Interface::LEVEL_CONTROL>::payload_size;
 
             uint16_t payload_size(Protocol::Message::Interface &itf) const
             {
@@ -186,7 +186,7 @@ namespace HF
           * Use the overloaded level functions with float attributes to send the values
           * in the [0,100] range and have them converted into the proper range.
           */
-         class Server: public InterfaceRole<LevelControl::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<LevelControl::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -285,7 +285,7 @@ namespace HF
           *
           * This class provides the client side of the %Level Control interface.
           */
-         class Client: public InterfaceRole<LevelControl::Base, Interface::CLIENT_ROLE>
+         class Client: public InterfaceRole<LevelControl::Base, HF::Interface::CLIENT_ROLE>
          {
             public:
 

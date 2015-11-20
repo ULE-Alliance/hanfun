@@ -275,13 +275,13 @@ namespace HF
           *
           * This is the parent class for the Simple Power Meter interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::SIMPLE_POWER_METER>
+         struct Base: public Interface<HF::Interface::SIMPLE_POWER_METER>
          {
             protected:
 
             Base() {}
 
-            using Interfaces::Base<Interface::SIMPLE_POWER_METER>::payload_size;
+            using Interface<HF::Interface::SIMPLE_POWER_METER>::payload_size;
 
             uint16_t payload_size(Protocol::Message::Interface &itf) const
             {
@@ -295,7 +295,7 @@ namespace HF
           *
           * This class provides the server side of the Simple Power Meter interface.
           */
-         class Server: public InterfaceRole<SimplePowerMeter::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimplePowerMeter::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -634,7 +634,7 @@ namespace HF
           *
           * This class provides the client side of the Simple Power Meter interface.
           */
-         struct Client: public InterfaceRole<SimplePowerMeter::Base, Interface::CLIENT_ROLE>
+         struct Client: public InterfaceRole<SimplePowerMeter::Base, HF::Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Events

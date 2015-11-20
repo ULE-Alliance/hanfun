@@ -179,7 +179,7 @@ namespace HF
        * This class provides the implementation of the common functionality present in
        * all interfaces implementations.
        */
-      struct AbstractInterface: virtual public Interface
+      struct AbstractInterface: virtual public HF::Interface
       {
          virtual ~AbstractInterface() {}
 
@@ -346,14 +346,13 @@ namespace HF
          virtual bool check_uid(uint16_t uid) const = 0;
       };
 
-
       /*!
        * Helper class template for parent class implementation of the interfaces.
        *
        * @tparam _uid   interface UID to be used by the interface.
        */
-      template<Interface::UID _uid>
-      struct Base: public AbstractInterface
+      template<HF::Interface::UID _uid>
+      struct Interface: public AbstractInterface
       {
          //! @copydoc HF::Interface::uid
          uint16_t uid() const
@@ -363,19 +362,19 @@ namespace HF
 
          protected:
 
-         /*!
-          * Check if the given @c uid value matches the interface's @c %UID value.
-          *
-          * @param [in] uid   %UID value to check against.
-          *
-          * @retval  true     if the values match.
-          * @retval  false    otherwise.
-          */
          bool check_uid(uint16_t uid) const
          {
-            return Base::uid() == uid;
+            return Interface::uid() == uid;
          }
       };
+
+      /*!
+       * @copydoc HF::Interfaces::Interface
+       *
+       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface.
+       */
+      template<HF::Interface::UID _uid>
+      struct __attribute__((deprecated)) Base: public Interface<_uid>{};
 
       /*!
        * Helper class template for implementing a given interface role.
@@ -383,11 +382,11 @@ namespace HF
        * @tparam Itf    parent interface class.
        * @tparam _role  interface role implemented.
        */
-      template<typename Itf, Interface::Role _role>
+      template<typename Itf, HF::Interface::Role _role>
       struct InterfaceRole: public Itf
       {
          //! @copydoc Interface::role
-         Interface::Role role() const
+         HF::Interface::Role role() const
          {
             return _role;
          }

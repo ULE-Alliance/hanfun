@@ -119,7 +119,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;      //!< Attribute Read/Write
 
             State(uint32_t data = 0, const HF::Interface *owner = nullptr):
-               Attribute<uint32_t>(Interface::ALERT, ID, owner, data, WRITABBLE)
+               Attribute<uint32_t>(HF::Interface::ALERT, ID, owner, data, WRITABBLE)
             {}
          };
 
@@ -132,7 +132,7 @@ namespace HF
             static constexpr bool    WRITABBLE = true;        //!< Attribute Read/Write
 
             Enable(uint32_t data = 0, const HF::Interface *owner = nullptr):
-               Attribute<uint32_t>(Interface::ALERT, ID, owner, data, WRITABBLE)
+               Attribute<uint32_t>(HF::Interface::ALERT, ID, owner, data, WRITABBLE)
             {}
          };
 
@@ -153,11 +153,13 @@ namespace HF
           *
           * This is the parent class for the %Alert interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::ALERT>
+         struct Base: public Interface<HF::Interface::ALERT>
          {
             protected:
 
-            using Interfaces::Base<Interface::ALERT>::payload_size;
+            Base() {}
+
+            using Interface<HF::Interface::ALERT>::payload_size;
 
             uint16_t payload_size(Protocol::Message::Interface &itf) const
             {
@@ -171,7 +173,7 @@ namespace HF
           *
           * This class provides the server side of the %Alert interface.
           */
-         class Server: public InterfaceRole<Alert::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<Alert::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -365,7 +367,7 @@ namespace HF
           *
           * This class provides the client side of the %Alert interface.
           */
-         struct Client: public InterfaceRole<Alert::Base, Interface::CLIENT_ROLE>
+         struct Client: public InterfaceRole<Alert::Base, HF::Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Events
