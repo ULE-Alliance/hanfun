@@ -111,11 +111,6 @@ namespace HF
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
-         <%-
-           parent = @type.capitalize
-           # Extract argument names.
-           arguments = @arguments.split(',').map { |arg| arg.strip.split(' ').last.gsub(/[*&]|\[[^\]]*\]/, '') }.join(', ') if @arguments
-         -%>
          /*!
           * <%= @interface.to_doc %> %<%= parent %> : Parent.
           *

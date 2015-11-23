@@ -404,6 +404,18 @@ module Hanfun
         super
       end
 
+      def parent
+        @type.capitalize
+      end
+
+      # Extract argument names.
+      def arguments
+       if @arguments
+         return @arguments.split(',').map { |arg| arg.strip.split(' ').last.gsub(/[*&]|\[[^\]]*\]/, '') }.join(', ')
+       else
+         return nil
+       end
+      end
     end
 
     #
@@ -442,11 +454,14 @@ module Hanfun
     #
     class Service < Abstract
 
+      class_option "interface", desc: "Generate a core interface, NOT a service", aliases: "-i",
+                   type: :boolean, default: false
+
       desc "Generator for new HAN-FUN services."
 
       def configure
-        @type = "service"
-        @arguments = "Unit0 &unit"
+        @type = options[:interface] ? "interface" : "service"
+        @arguments = options[:interface] ? nil : "Unit0 &unit"
         @namespace = Namespace.new("Core", "CORE")
 
         @generator = {}
@@ -470,7 +485,13 @@ module Hanfun
       protected
 
       def service?
-        true
+        @type == "service"
+      end
+
+      def parent
+        result = super
+        result = "Interfaces::#{result}" unless service?
+        return result
       end
 
     end
