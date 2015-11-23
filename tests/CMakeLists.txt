@@ -56,17 +56,17 @@ set(TESTS_PROTOCOL_SRCS test_protocol.cpp)
 ## Interfaces ##
 set(TESTS_INTERFACES_SRCS "test_interfaces.cpp")
 
-macro(add_interface __name)
+macro(add_interface_tests __name)
    list(APPEND TESTS_INTERFACES_SRCS "interfaces/test_${__name}.cpp")
 endmacro()
 
-add_interface("alert")
-add_interface("on_off")
-add_interface("level_control")
-add_interface("simple_power_meter")
-add_interface("simple_temperature")
-add_interface("simple_humidity")
-add_interface("simple_thermostat")
+add_interface_tests("alert")
+add_interface_tests("on_off")
+add_interface_tests("level_control")
+add_interface_tests("simple_power_meter")
+add_interface_tests("simple_temperature")
+add_interface_tests("simple_humidity")
+add_interface_tests("simple_thermostat")
 
 ## Profiles ##
 set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
@@ -75,11 +75,15 @@ set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
 ## Core Services & Interfaces ##
-set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
-                         "core/test_bind_management.cpp"
-                         "core/test_device_information.cpp"
-                         "core/test_attribute_reporting.cpp"
-                         "core/test_session_management.cpp")
+macro(add_core_tests __name)
+   list(APPEND TESTS_CORE_SRCS "core/test_${__name}.cpp")
+endmacro()
+
+add_core_tests("device_management")
+add_core_tests("bind_management")
+add_core_tests("device_information")
+add_core_tests("attribute_reporting")
+add_core_tests("session_management")
 
 ## Transport Layer ##
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")

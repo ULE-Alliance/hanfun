@@ -86,7 +86,14 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 void Client::<%= cmd.name %>(const Protocol::Address &addr)
 {
   // FIXME Generated Stub.
-  <%- if !cmd.event -%>
+  <%- unless cmd.event -%>
+  <%- if service? -%>
+  assert (addr.unit == 0);
+  if(addr.unit != 0)
+  {
+    return;
+  }
+  <%- end -%>
   Protocol::Message message;
 
   message.itf.role   = CLIENT_ROLE;

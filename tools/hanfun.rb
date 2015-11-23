@@ -127,11 +127,9 @@ module Hanfun
     attr_reader :path
     attr_reader :short
     attr_reader :include
-    attr_reader :parent
 
-    def initialize(name, short, parent)
+    def initialize(name, short)
       @name    = name
-      @parent  = parent
       @short   = short
       @short   = @to_uid unless short
 
@@ -194,7 +192,6 @@ module Hanfun
       #
       def configure
         raise RuntimeError, "Invalid generator configuration (@generator)" unless @namespace
-        @generator[:build][:macro] = "add_#{@type}"
 
         raise RuntimeError, "Invalid namespace configuration (@namespace)" unless @namespace && @namespace.is_a?(Namespace)
 
@@ -302,7 +299,7 @@ module Hanfun
       # Generate test code file and add it to the build.
       def test_file
         # Generate test code.
-        template("test.cpp.erb", test_path("test_#{name}.cpp")) do |content|
+        template("test_#{@type}.cpp.erb", test_path("test_#{name}.cpp")) do |content|
           format_code(content)
         end
 
@@ -327,7 +324,7 @@ module Hanfun
         end
 
         # Add test code to file.
-        code = "#{@generator[:build][:macro]}(\"#{name}\")\n"
+        code = "#{@generator[:build][:macro]}_tests(\"#{name}\")\n"
         inject_into_file test_path("CMakeLists.txt", false), code, :before => @generator[:tests][:insert_cmake_at]
       end
 
@@ -402,13 +399,23 @@ module Hanfun
         res
       end
 
+      def method_missing(symbol)
+        return false if symbol.to_s =~ /\?$/
+        super
+      end
+
     end
 
+    #
+    # This class is responsible for the generation of new HAN-FUN interfaces.
+    #
     class Interface < Abstract
+
+      desc "Generator for new HAN-FUN interfaces."
 
       def configure
         @type = "interface"
-        @namespace = Namespace.new("Interfaces", "ITF", "Interfaces::Base")
+        @namespace = Namespace.new("Interfaces", "ITF")
 
         @generator = {}
         @generator[:uid] = {
@@ -416,7 +423,10 @@ module Hanfun
           insert_at: /^\s+\/\*\s+Reserved/,
         }
 
-        @generator[:build] = { insert_at: /^\s+##\s+Core/ }
+        @generator[:build] = {
+          insert_at: /^\s+##\s+Core/,
+          macro: "add_interface"
+        }
 
         @generator[:tests] = {
           insert_config_at: /\s+\/\/\s+=+\n\/\/\s+Other/,
@@ -427,10 +437,49 @@ module Hanfun
 
     end
 
+    #
+    # This class is responsible for the generation of new HAN-FUN services/core interfaces.
+    #
+    class Service < Abstract
+
+      desc "Generator for new HAN-FUN services."
+
+      def configure
+        @type = "service"
+        @arguments = "Unit0 &unit"
+        @namespace = Namespace.new("Core", "CORE")
+
+        @generator = {}
+        @generator[:uid] = {
+          reference: /\bDEVICE_MANAGEMENT\b/,
+          insert_at: /^\s+\/\*\s+Functional Interfaces/,
+        }
+
+        @generator[:build] = {
+          insert_at: /^\s+##\s+Units/,
+          macro: "add_core"
+        }
+
+        @generator[:tests] = {
+          insert_config_at: /\s+\/\/\s+=+\n\/\/\s+Other/,
+          insert_cmake_at: /^\s+##\s+Transport/,
+        }
+        super
+      end
+
+      protected
+
+      def service?
+        true
+      end
+
+    end
+
   end
 
   class Generator < Thor
     register(Hanfun::Generators::Interface, "interface", "interface", "Generate a new interface scaffolding.")
+    register(Hanfun::Generators::Service, "service", "service", "Generate a new service scaffolding.")
   end
 
 end

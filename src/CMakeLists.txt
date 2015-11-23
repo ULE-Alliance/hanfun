@@ -33,10 +33,14 @@ set(HF_INTERFACES_SRCS interfaces.cpp)
 
 macro(add_interface __name)
    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/interfaces/${__name}.cpp")
-     list(APPEND HF_INTERFACES_SRCS "interfaces/${__name}.cpp")
+     list(APPEND HF_CORE_SRCS "interfaces/${__name}.cpp")
    endif ()
-   list(APPEND HF_INTERFACES_SRCS "interfaces/${__name}_server.cpp"
-                                  "interfaces/${__name}_client.cpp")
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/interfaces/${__name}_server.cpp")
+     list(APPEND HF_CORE_SRCS "interfaces/${__name}_server.cpp")
+   endif ()
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/interfaces/${__name}_client.cpp")
+     list(APPEND HF_CORE_SRCS "interfaces/${__name}_client.cpp")
+   endif ()
 endmacro()
 
 add_interface("alert")
@@ -48,18 +52,23 @@ add_interface("simple_humidity")
 add_interface("simple_thermostat")
 
 ## Core Services & Interfaces
-set(HF_CORE_SRCS       core/device_management.cpp
-                       core/device_management_client.cpp
-                       core/device_management_server.cpp
-                       core/bind_management.cpp
-                       core/bind_management_client.cpp
-                       core/bind_management_server.cpp
-                       core/device_information.cpp
-                       core/attribute_reporting.cpp
-                       core/attribute_reporting_server.cpp
-                       core/attribute_reporting_client.cpp
-                       core/session_management_server.cpp
-                       core/session_management_client.cpp)
+macro(add_core __name)
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/core/${__name}.cpp")
+     list(APPEND HF_CORE_SRCS "core/${__name}.cpp")
+   endif ()
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/core/${__name}_server.cpp")
+     list(APPEND HF_CORE_SRCS "core/${__name}_server.cpp")
+   endif ()
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/core/${__name}_client.cpp")
+     list(APPEND HF_CORE_SRCS "core/${__name}_client.cpp")
+   endif ()
+endmacro()
+
+add_core("device_management")
+add_core("bind_management")
+add_core("device_information")
+add_core("attribute_reporting")
+add_core("session_management")
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)

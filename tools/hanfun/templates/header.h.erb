@@ -111,20 +111,30 @@ namespace HF
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
+         <%-
+           parent = @type.capitalize
+           # Extract argument names.
+           arguments = @arguments.split(',').map { |arg| arg.strip.split(' ').last.gsub(/[*&]|\[[^\]]*\]/, '') }.join(', ') if @arguments
+         -%>
          /*!
-          * <%= @interface.to_doc %> %<%= @type.capitalize %> : Parent.
+          * <%= @interface.to_doc %> %<%= parent %> : Parent.
           *
           * This is the parent class for the <%= @interface.to_doc %> <%= @type %> implementation.
           */
-         struct Base: public <%= @namespace.parent %><Interface::<%= @interface.to_uid %>>
-         {};
+         struct Base: public <%= parent %><HF::Interface::<%= @interface.to_uid %>>
+         {
+            protected:
+
+            //! Constructor
+            Base(<%= @arguments -%>):<%= parent %><HF::Interface::<%= @interface.to_uid %>>(<%= arguments -%>) {}
+         };
 
          /*!
-          * <%= @interface.to_doc %> %<%= @type.capitalize %> : %Server side implementation.
+          * <%= @interface.to_doc %> %<%= parent %> : %Server side implementation.
           *
           * This class provides the server side of the <%= @interface.to_doc %> interface.
           */
-         class Server: public <%= @type.capitalize %>Role<<%= @interface.to_class %>::Base, Interface::SERVER_ROLE>
+         class Server: public <%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::SERVER_ROLE>
          {
          <%- unless @attributes.empty? -%>
             protected:
@@ -144,7 +154,7 @@ namespace HF
             public:
 
             //! Constructor
-            Server() {}
+            Server(<%= @arguments -%>):<%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::SERVER_ROLE>(<%= arguments -%>) {}
 
             //! Destructor
             virtual ~Server() {}
@@ -168,12 +178,16 @@ namespace HF
             void <%= cmd.name %>(const Protocol::Address &addr);
 
             /*!
-             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the broadcast
-             * network address.
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, 
+             * to the <%= service? ? "D:0/U:0" : "broadcast" %> network address.
              */
             void <%= cmd.name %>()
             {
-              Protocol::Address addr;
+              <%- unless service? -%>
+                Protocol::Address addr;
+              <%- else -%>
+                Protocol::Address addr(0,0);
+              <%- end -%>
               <%= cmd.name %>(addr);
             }
               <%- unless cmd.server.mandatory -%>
@@ -257,12 +271,16 @@ namespace HF
          };
 
          /*!
-          * <%= @interface.to_doc %> %<%= @type.capitalize %> : %Client side implementation.
+          * <%= @interface.to_doc %> %<%= parent %> : %Client side implementation.
           *
           * This class provides the client side of the <%= @interface.to_doc %> interface.
           */
-         struct Client: public <%= @type.capitalize %>Role<<%= @interface.to_class %>::Base, Interface::CLIENT_ROLE>
+         struct Client: public <%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::CLIENT_ROLE>
          {
+            Client(<%= @arguments -%>):<%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::CLIENT_ROLE>(<%= arguments -%>) {}
+
+            virtual ~Client() {}
+
             // ======================================================================
             // Commands
             // ======================================================================
@@ -282,12 +300,16 @@ namespace HF
             void <%= cmd.name %>(const Protocol::Address &addr);
 
             /*!
-             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the broadcast
-             * network address.
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
+             * to the <%= service? ? "D:0/U:0" : "broadcast" %> network address.
              */
             void <%= cmd.name %>()
             {
-              Protocol::Address addr;
+              <%- unless service? -%>
+                Protocol::Address addr;
+              <%- else -%>
+                Protocol::Address addr(0,0);
+              <%- end -%>
               <%= cmd.name %>(addr);
             }
               <%- unless cmd.client.mandatory -%>

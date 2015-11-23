@@ -2,7 +2,7 @@
 #define HF_CONFIG_H
 
 // =============================================================================
-// DeviceInformation Configuration
+// Device Information Configuration
 // =============================================================================
 
 #define HF_DEVICE_MANUFACTURER_CODE             0x1234
