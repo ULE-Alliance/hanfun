@@ -1,7 +1,6 @@
-#!/usr/bin/env ruby
 # =============================================================================
 #
-# @file       tools/hanfun.rb
+# @file       tools/hanfun/lib/hanfun.rb
 #
 # This file implements a helper generator tool for implementing HAN-FUN interfaces,
 # profiles and services.
@@ -16,17 +15,16 @@
 #
 # =============================================================================
 
-HAN_FUN_ROOT = File.expand_path(File.dirname(__FILE__))
-
-$:.unshift(HAN_FUN_ROOT) unless $:.include?(File.dirname(__FILE__)) || $:.include?(HAN_FUN_ROOT)
-
-require 'thor'
-require File.join('hanfun', 'extended.rb')
+require "thor"
+require "hanfun/version"
+require "extended"
 
 module Hanfun
 
-  TemplateRoot = File.join(HAN_FUN_ROOT, 'hanfun', 'templates')
-  CodeRoot     = File.expand_path(File.join(HAN_FUN_ROOT, '..'))
+  Root = File.dirname __dir__
+
+  TemplateRoot = File.join(Root, 'templates')
+  CodeRoot     = File.expand_path(File.join(Root, '../..'))
 
   CHeader = %q{
 
@@ -35,6 +33,7 @@ module Hanfun
 // =============================================================================
 
 }
+
   # =============================================================================
   # Helper classes
   # =============================================================================
@@ -452,12 +451,12 @@ module Hanfun
     #
     # This class is responsible for the generation of new HAN-FUN services/core interfaces.
     #
-    class Service < Abstract
+    class Core < Abstract
 
       class_option "interface", desc: "Generate a core interface, NOT a service", aliases: "-i",
                    type: :boolean, default: false
 
-      desc "Generator for new HAN-FUN services."
+      desc "Generator for new HAN-FUN services/core interfaces."
 
       def configure
         @type = options[:interface] ? "interface" : "service"
@@ -499,15 +498,8 @@ module Hanfun
   end
 
   class Generator < Thor
-    register(Hanfun::Generators::Interface, "interface", "interface", "Generate a new interface scaffolding.")
-    register(Hanfun::Generators::Service, "service", "service", "Generate a new service scaffolding.")
+    register(Hanfun::Generators::Interface, "interface", "interface [arguments]", "Generate a new interface scaffolding.")
+    register(Hanfun::Generators::Core, "core", "core [arguments]", "Generate a new service scaffolding.")
   end
 
 end
-
-# =============================================================================
-# MAIN
-# =============================================================================
-
-Hanfun::Generator.start(ARGV)
-
