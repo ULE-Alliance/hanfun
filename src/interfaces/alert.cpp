@@ -59,7 +59,7 @@ uint16_t Alert::Message::size() const
 // =============================================================================
 uint16_t Alert::Message::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    offset += array.write(offset, this->type);
 
@@ -77,7 +77,7 @@ uint16_t Alert::Message::pack(Common::ByteArray &array, uint16_t offset) const
 // =============================================================================
 uint16_t Alert::Message::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    offset += array.read(offset, this->type);
 

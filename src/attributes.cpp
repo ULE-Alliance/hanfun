@@ -137,7 +137,7 @@ IAttribute *Interfaces::create_attribute(Alert::Server *server, uint8_t uid)
 
    Alert::Attributes attr = static_cast<Alert::Attributes>(uid);
 
-   uint16_t itf_uid       = Interface::ALERT;
+   uint16_t itf_uid       = HF::Interface::ALERT;
 
    switch (attr)
    {
@@ -193,7 +193,7 @@ IAttribute *Interfaces::create_attribute(LevelControl::Server *server, uint8_t u
 
    LevelControl::Attributes attr = static_cast<LevelControl::Attributes>(uid);
 
-   uint16_t itf_uid              = Interface::LEVEL_CONTROL;
+   uint16_t itf_uid              = HF::Interface::LEVEL_CONTROL;
 
    switch (attr)
    {
@@ -232,7 +232,7 @@ IAttribute *Interfaces::create_attribute(OnOff::Server *server, uint8_t uid)
 
    OnOff::Attributes attr = static_cast<OnOff::Attributes>(uid);
 
-   uint16_t itf_uid       = Interface::ON_OFF;
+   uint16_t itf_uid       = HF::Interface::ON_OFF;
 
    switch (attr)
    {
@@ -271,7 +271,7 @@ IAttribute *Interfaces::create_attribute(SimplePowerMeter::Server *server, uint8
 
    SimplePowerMeter::Attributes attr = static_cast<SimplePowerMeter::Attributes>(uid);
 
-   uint16_t itf_uid                  = Interface::SIMPLE_POWER_METER;
+   uint16_t itf_uid                  = HF::Interface::SIMPLE_POWER_METER;
    bool writabble                    = false;
 
    switch (attr)
@@ -531,7 +531,7 @@ IAttribute *Interfaces::create_attribute(SimpleTemperature::Server *server, uint
 
    SimpleTemperature::Attributes attr = static_cast<SimpleTemperature::Attributes>(uid);
 
-   uint16_t itf_uid                   = Interface::SIMPLE_TEMPERATURE;
+   uint16_t itf_uid                   = HF::Interface::SIMPLE_TEMPERATURE;
 
    switch (attr)
    {
@@ -618,7 +618,7 @@ IAttribute *Interfaces::create_attribute(SimpleHumidity::Server *server, uint8_t
 
    SimpleHumidity::Attributes attr = static_cast<SimpleHumidity::Attributes>(uid);
 
-   uint16_t itf_uid                = Interface::SIMPLE_HUMIDITY;
+   uint16_t itf_uid                = HF::Interface::SIMPLE_HUMIDITY;
 
    switch (attr)
    {
@@ -673,13 +673,13 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
    SimpleThermostat::Attributes attr = static_cast<SimpleThermostat::Attributes>(uid);
 
-   uint16_t itf_uid                  = Interface::SIMPLE_THERMOSTAT;
+   uint16_t itf_uid                  = HF::Interface::SIMPLE_THERMOSTAT;
 
    switch (attr)
    {
       case SUPPORTED_MODES_ATTR:
       {
-         bool writabble = SupportedModes::WRITABBLE;
+         bool writabble = SupportedModes::WRITABLE;
 
          if (server != nullptr)
          {
@@ -696,7 +696,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case HEAT_COOL_MODE_ATTR:
       {
-         bool writabble = HeatCoolMode::WRITABBLE;
+         bool writabble = HeatCoolMode::WRITABLE;
 
          if (server != nullptr)
          {
@@ -713,7 +713,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case FAN_MODE_ATTR:
       {
-         bool writabble = FanMode::WRITABBLE;
+         bool writabble = FanMode::WRITABLE;
 #if HF_ITF_STS_FAN_MODE
 
          if (server != nullptr)
@@ -732,7 +732,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case HEAT_MODE_TEMP_ATTR:
       {
-         bool writabble = HeatModeTemperature::WRITABBLE;
+         bool writabble = HeatModeTemperature::WRITABLE;
 #if HF_ITF_STS_HEAT_MODE
 
          if (server != nullptr)
@@ -751,7 +751,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case COOL_MODE_TEMP_ATTR:
       {
-         bool writabble = CoolModeTemperature::WRITABBLE;
+         bool writabble = CoolModeTemperature::WRITABLE;
 #if HF_ITF_STS_COOL_MODE
 
          if (server != nullptr)
@@ -770,7 +770,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case AUTO_MODE_HEAT_TEMP_ATTR:
       {
-         bool writabble = AutoModeHeatTemperature::WRITABBLE;
+         bool writabble = AutoModeHeatTemperature::WRITABLE;
 #if HF_ITF_STS_AUTO_MODE
 
          if (server != nullptr)
@@ -789,7 +789,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case AUTO_MODE_COOL_TEMP_ATTR:
       {
-         bool writabble = AutoModeCoolTemperature::WRITABBLE;
+         bool writabble = AutoModeCoolTemperature::WRITABLE;
 #if HF_ITF_STS_AUTO_MODE
 
          if (server != nullptr)
@@ -808,7 +808,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case HEAT_MODE_TEMP_OFFSET_ATTR:
       {
-         bool writabble = HeatModeTemperatureOffset::WRITABBLE;
+         bool writabble = HeatModeTemperatureOffset::WRITABLE;
 #if HF_ITF_STS_HEAT_MODE && HF_ITF_STS_HEAT_OFFSET_ATTR
 
          if (server != nullptr)
@@ -827,7 +827,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case COOL_MODE_TEMP_OFFSET_ATTR:
       {
-         bool writabble = HeatModeTemperatureOffset::WRITABBLE;
+         bool writabble = HeatModeTemperatureOffset::WRITABLE;
 #if HF_ITF_STS_COOL_MODE && HF_ITF_STS_COOL_OFFSET_ATTR
 
          if (server != nullptr)
@@ -846,7 +846,7 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
 
       case BOOST_DURATION_ATTR:
       {
-         bool writabble = BoostDuration::WRITABBLE;
+         bool writabble = BoostDuration::WRITABLE;
 #if HF_ITF_STS_BOOST_CMD
 
          if (server != nullptr)
@@ -890,17 +890,17 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       case CORE_VERSION_ATTR:
       {
          uint8_t value = (server != nullptr ? CORE_VERSION : 0xFF);
-         return new Attribute<uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
+         return new Attribute<uint8_t>(HF::Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case PROFILE_VERSION_ATTR:
       {
          uint8_t value = (server != nullptr ? PROFILE_VERSION : 0xFF);
-         return new Attribute<uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
+         return new Attribute<uint8_t>(HF::Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case INTERFACE_VERSION_ATTR:
       {
          uint8_t value = (server != nullptr ? INTERFACE_VERSION : 0xFF);
-         return new Attribute<uint8_t>(Interface::DEVICE_INFORMATION, attr, server, value);
+         return new Attribute<uint8_t>(HF::Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case EXTRA_CAP_ATTR:
       {
@@ -913,50 +913,50 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
          }
          else
          {
-            return new Attribute<uint8_t>(Interface::DEVICE_INFORMATION, attr);
+            return new Attribute<uint8_t>(HF::Interface::DEVICE_INFORMATION, attr);
          }
       }
       case MIN_SLEEP_TIME_ATTR:
       {
-         return new Attribute<uint32_t>(Interface::DEVICE_INFORMATION, attr, (uint32_t) 0);
+         return new Attribute<uint32_t>(HF::Interface::DEVICE_INFORMATION, attr, (uint32_t) 0);
       }
       case ACTUAL_RESP_TIME_ATTR:
       {
-         return new Attribute<uint32_t>(Interface::DEVICE_INFORMATION, attr, (uint32_t) 0);
+         return new Attribute<uint32_t>(HF::Interface::DEVICE_INFORMATION, attr, (uint32_t) 0);
       }
       case APP_VERSION_ATTR:
       {
-         return new Attribute<std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
       }
       case HW_VERSION_ATTR:
       {
-         return new Attribute<std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
       }
       case EMC_ATTR:
       {
          uint16_t value = (server != nullptr ? EMC : 0x0000);
-         return new Attribute<uint16_t>(Interface::DEVICE_INFORMATION, attr, server, value);
+         return new Attribute<uint16_t>(HF::Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case DECT_ID_ATTR:
       {
          std::vector<uint8_t> temp(5);
-         return new Attribute<std::vector<uint8_t>>(Interface::DEVICE_INFORMATION, attr, temp);
+         return new Attribute<std::vector<uint8_t>>(HF::Interface::DEVICE_INFORMATION, attr, temp);
       }
       case MANUFACTURE_NAME_ATTR:
       {
-         return new Attribute<std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
       }
       case LOCATION_ATTR:
       {
-         return new Attribute<std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
       }
       case ENABLED_ATTR:
       {
-         return new Attribute<uint8_t>(Interface::DEVICE_INFORMATION, attr, (uint8_t) 0xFF);
+         return new Attribute<uint8_t>(HF::Interface::DEVICE_INFORMATION, attr, (uint8_t) 0xFF);
       }
       case FRIENDLY_NAME_ATTR:
       {
-         return new Attribute<FriendlyName>(Interface::DEVICE_INFORMATION, attr);
+         return new Attribute<FriendlyName>(HF::Interface::DEVICE_INFORMATION, attr);
       }
       case UID_ATTR:
       {
@@ -967,11 +967,11 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
             value = server->device_uid;
          }
 
-         return new Attribute<HF::UID::UID>(Interface::DEVICE_INFORMATION, attr, server, value);
+         return new Attribute<HF::UID::UID>(HF::Interface::DEVICE_INFORMATION, attr, server, value);
       }
       case SERIAL_NUMBER_ATTR:
       {
-         return new Attribute<std::string>(Interface::DEVICE_INFORMATION, attr, "");
+         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
       }
       default:
          return nullptr;
@@ -994,7 +994,7 @@ IAttribute *Core::create_attribute(DeviceManagement::IServer *server, uint8_t ui
       case DeviceManagement::NUMBER_OF_ENTRIES_ATTR:
       {
          uint16_t value = (server != nullptr ? server->entries().size() : 0);
-         return new Attribute<uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+         return new Attribute<uint16_t>(HF::Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:
          return nullptr;
@@ -1017,7 +1017,7 @@ IAttribute *Core::create_attribute(BindManagement::IServer *server, uint8_t uid)
       case BindManagement::NUMBER_OF_ENTRIES_ATTR:
       {
          uint16_t value = (server != nullptr ? server->entries().size() : 0);
-         return new Attribute<uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+         return new Attribute<uint16_t>(HF::Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:
          return nullptr;
@@ -1042,18 +1042,18 @@ IAttribute *Core::create_attribute(AttributeReporting::IServer *server, uint8_t 
          uint16_t value = (server != nullptr ?
                            server->count(AttributeReporting::Type::PERIODIC) +
                            server->count(AttributeReporting::Type::EVENT) : 0);
-         return new Attribute<uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+         return new Attribute<uint16_t>(HF::Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       case AttributeReporting::PERIODIC_REPORT_COUNT_ATTR:
       {
          uint16_t value = (server != nullptr ?
                            server->count(AttributeReporting::Type::PERIODIC) : 0);
-         return new Attribute<uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+         return new Attribute<uint16_t>(HF::Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       case AttributeReporting::EVENT_REPORT_COUNT_ATTR:
       {
          uint16_t value = (server != nullptr ? server->count(AttributeReporting::Type::EVENT) : 0);
-         return new Attribute<uint16_t>(Interface::DEVICE_MANAGEMENT, attr, server, value);
+         return new Attribute<uint16_t>(HF::Interface::DEVICE_MANAGEMENT, attr, server, value);
       }
       default:
          return nullptr;

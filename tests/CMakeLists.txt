@@ -47,34 +47,51 @@ enable_testing()
 # Tests Build
 # ==============================================================================
 
+## Common ##
 set(TESTS_HELPER_SRCS test_helper.cpp)
 
 set(TESTS_COMMON_SRCS test_common.cpp)
 set(TESTS_PROTOCOL_SRCS test_protocol.cpp)
 
-set(TESTS_INTERFACES_SRCS "test_interfaces.cpp"
-                          "interfaces/test_alert.cpp"
-                          "interfaces/test_on_off.cpp"
-                          "interfaces/test_level_control.cpp"
-                          "interfaces/test_simple_power_meter.cpp"
-                          "interfaces/test_simple_temperature.cpp"
-                          "interfaces/test_simple_humidity.cpp"
-                          "interfaces/test_simple_thermostat.cpp")
+## Interfaces ##
+set(TESTS_INTERFACES_SRCS "test_interfaces.cpp")
 
+macro(add_interface_tests __name)
+   list(APPEND TESTS_INTERFACES_SRCS "interfaces/test_${__name}.cpp")
+endmacro()
+
+add_interface_tests("alert")
+add_interface_tests("on_off")
+add_interface_tests("level_control")
+add_interface_tests("simple_power_meter")
+add_interface_tests("simple_temperature")
+add_interface_tests("simple_humidity")
+add_interface_tests("simple_thermostat")
+
+## Profiles ##
 set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 
+## Devices ##
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
-set(TESTS_CORE_SRCS      "core/test_device_management.cpp"
-                         "core/test_bind_management.cpp"
-                         "core/test_device_information.cpp"
-                         "core/test_attribute_reporting.cpp"
-                         "core/test_session_management.cpp")
+## Core Services & Interfaces ##
+macro(add_core_tests __name)
+   list(APPEND TESTS_CORE_SRCS "core/test_${__name}.cpp")
+endmacro()
 
+add_core_tests("device_management")
+add_core_tests("bind_management")
+add_core_tests("device_information")
+add_core_tests("attribute_reporting")
+add_core_tests("session_management")
+
+## Transport Layer ##
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
 
+## Unit ##
 set(TESTS_UNITS_SRCS     "test_units.cpp")
 
+## Test Executable ##
 add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
                             ${TESTS_PROTOCOL_SRCS}
                             ${TESTS_INTERFACES_SRCS}
@@ -92,5 +109,3 @@ endif()
 if(NOT CMAKE_CROSSCOMPILING)
   add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
 endif()
-
-# add_test(hanfun_all test_hanfun)

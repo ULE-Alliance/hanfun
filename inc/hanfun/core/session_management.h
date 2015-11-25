@@ -76,7 +76,7 @@ namespace HF
 
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                offset += Protocol::Response::pack(array, offset);
                array.write(offset, count);
@@ -86,7 +86,7 @@ namespace HF
 
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                offset += Protocol::Response::unpack(array, offset);
                array.read(offset, count);
@@ -120,7 +120,7 @@ namespace HF
             //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                offset += array.write(offset, this->offset);
                array.write(offset, this->count);
@@ -131,7 +131,7 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                offset += array.read(offset, this->offset);
                array.read(offset, this->count);
@@ -165,7 +165,7 @@ namespace HF
 
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK(array, offset, size());
+               HF_SERIALIZABLE_CHECK(array, offset, size());
 
                uint16_t start = offset;
 
@@ -187,7 +187,7 @@ namespace HF
 
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                uint16_t start = offset;
 
@@ -229,7 +229,7 @@ namespace HF
 
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                offset += Protocol::Response::pack(array, offset);
 
@@ -241,7 +241,7 @@ namespace HF
 
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK(array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                offset += Protocol::Response::unpack(array, offset);
 

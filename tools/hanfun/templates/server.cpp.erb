@@ -1,0 +1,225 @@
+// =============================================================================
+/*!
+ * @file       src/<%= @namespace.path %>/<%= @interface.name %>_server.cpp
+ *
+ * This file contains the implementation of the <%= @interface.to_doc %> <%= @type %> : Server role.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
+
+// =============================================================================
+// API
+// =============================================================================
+
+using namespace HF;
+using namespace HF::<%= @namespace.name %>;
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
+
+// =============================================================================
+// <%= @interface.to_doc %> Interface : Server Role
+// =============================================================================
+
+<%- unless @attributes.empty? -%>
+// =============================================================================
+// Server::attributes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
+{
+<%- unless @attributes.empty? -%>
+   HF::Attributes::UIDS result({<%= @attributes.select { |attr| attr.mandatory }.map { |attr| attr.to_uid }.join (", ") %>});
+
+   if (pack_id == HF::Attributes::ALL)
+   {
+     <%- @attributes.select {|attr| !attr.mandatory }.each do |attr| -%>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
+     result.push_back(<%= attr.to_uid %>);
+#endif
+     <%- end -%>
+   }
+
+   return result;
+<%- else -%>
+   UNUSED(pack_id);
+   return HF::Attributes::UIDS();
+<%- end -%>
+}
+
+// =============================================================================
+// Server::attributes
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
+{
+<%- unless @attributes.empty? -%>
+   using namespace HF::Interfaces::<%= @interface.to_class %>;
+
+   <%= @interface.to_class %>::Attributes attr = static_cast<<%= @interface.to_class %>::Attributes>(uid);
+
+   switch (attr)
+   {
+     <%- @attributes.each do |attr| -%>
+         <%- unless attr.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
+         <%- end -%>
+     case <%= attr.to_uid %>:
+     {
+       typedef HF::Attributes::Attribute<<%= attr.type %>, Server> Attribute;
+
+       auto getter = (<%= attr.type %> (Server::*)(void) const) & Server::<%= attr.name %>;
+       auto setter = (void (Server::*)(<%= attr.type %>))       & Server::<%= attr.name %>;
+
+       return new Attribute(*this, attr, getter, setter, <%= attr.to_class %>::WRITABLE);
+     }
+         <%- unless attr.mandatory -%>
+#endif
+         <%- end -%>
+
+   <%- end -%>
+      default:
+         return nullptr;
+   }
+<%- else -%>
+   UNUSED(uid);
+   return nullptr;
+<%- end -%>
+}
+<%- end -%>
+
+<%- if @commands.any? { |c| !c.event } -%>
+// =============================================================================
+// Server::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
+{
+   UNUSED(payload);
+   UNUSED(offset);
+
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+   switch (cmd)
+   {
+     <%- @commands.select { |c| !c.event }.each do |cmd| -%>
+      <%- unless cmd.server.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+      <%- end -%>
+     case <%= cmd.to_uid %>:
+     {
+       <%= cmd.name %>(packet.source);
+       break;
+     }
+      <%- unless cmd.server.mandatory -%>
+#endif
+      <%- end -%>
+
+     <%- end -%>
+     default:
+       return Common::Result::FAIL_SUPPORT;
+   }
+
+   return Common::Result::OK;
+}
+<%- end -%>
+
+<%- unless @commands.empty? -%>
+// =============================================================================
+// Commands
+// =============================================================================
+
+<%- @commands.each do |cmd| -%>
+<%- unless cmd.server.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+<%- end -%>
+// =============================================================================
+// Server::<%= cmd.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::<%= cmd.name %>(const Protocol::Address &addr)
+{
+  // FIXME Generated Stub.
+  <%- if cmd.event -%>
+  <%- if service? -%>
+  assert (addr.unit == 0);
+  if(addr.unit != 0)
+  {
+    return;
+  }
+  <%- end -%>
+  Protocol::Message message;
+
+  message.itf.role   = CLIENT_ROLE;
+  message.itf.id     = Interface::<%= @interface.to_uid %>;
+  message.itf.member = <%= cmd.to_uid %>;
+
+  send(addr, message);
+  <%- else -%>
+  UNUSED(addr);
+  <%- end -%>
+}
+<%- unless cmd.server.mandatory -%>
+#endif
+<%- end -%>
+
+<%- end -%>
+<%- end -%>
+<%- unless @attributes.empty? -%>
+// =============================================================================
+// Get/Set Attributes
+// =============================================================================
+
+<%- @attributes.each do |attr| -%>
+  <%- unless attr.mandatory -%>
+
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
+  <%- end -%>
+// =============================================================================
+// Server::<%= attr.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+<%= attr.type %> Server::<%= attr.name %>() const
+{
+  return _<%= attr.name %>;
+}
+
+// =============================================================================
+// Server::<%= attr.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::<%= attr.name %>(<%= attr.type %> __value)
+{
+   HF_SETTER_HELPER(<%= attr.to_class %>, _<%= attr.name %>, __value);
+}
+<%- unless attr.mandatory -%>
+#endif
+<%- end -%>
+
+<%- end -%>
+<%- end -%>

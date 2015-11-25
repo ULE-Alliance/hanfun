@@ -77,7 +77,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;
 
             Humidity(uint16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<uint16_t>(Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
+               Attribute<uint16_t>(HF::Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -90,7 +90,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;
 
             Tolerance(uint16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<uint16_t>(Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
+               Attribute<uint16_t>(HF::Interface::SIMPLE_HUMIDITY, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -115,12 +115,11 @@ namespace HF
           *
           * This is the parent class for the Simple Humidity interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::SIMPLE_HUMIDITY>
+         struct Base: public Interface<HF::Interface::SIMPLE_HUMIDITY>
          {
             protected:
 
-            Base()
-            {}
+            Base() {}
          };
 
          /*!
@@ -128,7 +127,7 @@ namespace HF
           *
           * This class provides the API for server side of the Simple Humidity interface.
           */
-         class Server: public InterfaceRole<SimpleHumidity::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimpleHumidity::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -191,7 +190,7 @@ namespace HF
           *
           * This class provides the client side of the %Level Control interface.
           */
-         class Client: public InterfaceRole<SimpleHumidity::Base, Interface::CLIENT_ROLE>
+         class Client: public InterfaceRole<SimpleHumidity::Base, HF::Interface::CLIENT_ROLE>
          {
             public:
 

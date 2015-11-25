@@ -105,10 +105,10 @@ namespace HF
          struct SupportedModes: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = SUPPORTED_MODES_ATTR;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = false;                 //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = false;                 //!< Attribute Read/Write
 
             SupportedModes(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -118,10 +118,10 @@ namespace HF
          struct HeatCoolMode: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = HEAT_COOL_MODE_ATTR;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true;                 //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true;                 //!< Attribute Read/Write
 
             HeatCoolMode(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -131,10 +131,10 @@ namespace HF
          struct FanMode: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = FAN_MODE_ATTR;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true;           //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true;           //!< Attribute Read/Write
 
             FanMode(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -145,11 +145,11 @@ namespace HF
          struct Attribute: public HF::Attributes::Attribute<int16_t>
          {
             static constexpr uint8_t ID        = _ID;  //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true; //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true; //!< Attribute Read/Write
 
             Attribute(int16_t value = 0, HF::Interface *owner = nullptr):
-               HF::Attributes::Attribute<int16_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, value,
-                                                  WRITABBLE)
+               HF::Attributes::Attribute<int16_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner, value,
+                                                  WRITABLE)
             {}
          };
 
@@ -177,10 +177,10 @@ namespace HF
          struct BoostDuration: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = BOOST_DURATION_ATTR; //!< Attribute UID.
-            static constexpr bool    WRITABBLE = true;                //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = true;                //!< Attribute Read/Write
 
             BoostDuration(uint8_t mode = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABBLE)
+               Attribute<uint8_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner, mode, WRITABLE)
             {}
          };
 
@@ -201,15 +201,19 @@ namespace HF
           *
           * This is the parent class for the Simple Thermostat interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::SIMPLE_THERMOSTAT>
-         {};
+         struct Base: public Interface<HF::Interface::SIMPLE_THERMOSTAT>
+         {
+            protected:
+
+            Base() {}
+         };
 
          /*!
           * Simple Thermostat %Interface : %Server side implementation.
           *
           * This class provides the server side of the Simple Thermostat interface.
           */
-         class Server: public InterfaceRole<SimpleThermostat::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimpleThermostat::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -472,7 +476,7 @@ namespace HF
           *
           * This class provides the client side of the Simple Thermostat interface.
           */
-         struct Client: public InterfaceRole<SimpleThermostat::Base, Interface::CLIENT_ROLE>
+         struct Client: public InterfaceRole<SimpleThermostat::Base, HF::Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Commands

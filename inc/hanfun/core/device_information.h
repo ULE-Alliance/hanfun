@@ -171,7 +171,7 @@ namespace HF
          /*!
           * Parent class for the Device Information interface implementation.
           */
-         class Abstract: public Service<HF::Interface::DEVICE_INFORMATION>
+         class Base: public Service<HF::Interface::DEVICE_INFORMATION>
          {
             protected:
 
@@ -180,15 +180,20 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Abstract(Unit0 &unit):
-               Service(unit)
-            {}
+            Base(Unit0 &unit): Service<HF::Interface::DEVICE_INFORMATION>(unit) {}
          };
+
+         /*!
+          * @copydoc HF::Core::DeviceInformation::Base
+          *
+          * @deprecated This class is deprecated please use HF::Core::DeviceInformation::Base instead.
+          */
+         typedef Base __attribute__((deprecated)) Abstract;
 
          /*!
           * Device Information interface : Server side.
           */
-         struct Server: public ServiceRole<Abstract, HF::Interface::SERVER_ROLE>
+         struct Server: public ServiceRole<Base, HF::Interface::SERVER_ROLE>
          {
             HF::UID::UID device_uid;   //! Device UID.
 
@@ -198,7 +203,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Server(HF::Core::Unit0 &unit):
-               ServiceRole<Abstract, HF::Interface::SERVER_ROLE>(unit), _capabilities(0)
+               ServiceRole<Base, HF::Interface::SERVER_ROLE>(unit), _capabilities(0)
             {}
 
             virtual ~Server() {}

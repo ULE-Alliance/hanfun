@@ -94,7 +94,7 @@ struct msg_t
    //! @copydoc HF::Common::Serializable::pack
    uint16_t pack(HF::Common::ByteArray &array, uint16_t offset = 0) const
    {
-      SERIALIZABLE_CHECK(array, offset, size());
+      HF_SERIALIZABLE_CHECK(array, offset, size());
 
       uint16_t start = offset;
 
@@ -112,7 +112,7 @@ struct msg_t
    //! @copydoc HF::Common::Serializable::unpack
    uint16_t unpack(HF::Common::ByteArray &array, uint16_t offset = 0)
    {
-      SERIALIZABLE_CHECK(array, offset, min_size);
+      HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
       uint16_t start = offset;
 
@@ -163,7 +163,7 @@ struct hello_msg_t
    //! @copydoc HF::Common::Serializable::pack
    uint16_t pack(HF::Common::ByteArray &array, uint16_t offset = 0) const
    {
-      SERIALIZABLE_CHECK(array, offset, size());
+      HF_SERIALIZABLE_CHECK(array, offset, size());
 
       uint16_t start = offset;
 
@@ -179,7 +179,7 @@ struct hello_msg_t
    //! @copydoc HF::Common::Serializable::unpack
    uint16_t unpack(HF::Common::ByteArray &array, uint16_t offset = 0)
    {
-      SERIALIZABLE_CHECK(array, offset, min_size);
+      HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
       uint16_t start = offset;
 

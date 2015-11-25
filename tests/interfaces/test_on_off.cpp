@@ -34,10 +34,10 @@ TEST_GROUP(OnOff)
    TestOnOff interface;
 };
 
-//! @test OnOff::uid should return @c Interface::ON_OFF.
+//! @test OnOff::uid should return @c HF::Interface::ON_OFF.
 TEST(OnOff, UID)
 {
-   CHECK_EQUAL(Interface::ON_OFF, interface.uid());
+   CHECK_EQUAL(HF::Interface::ON_OFF, interface.uid());
 }
 
 // =============================================================================
@@ -73,7 +73,7 @@ TEST(OnOffClient, On)
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(OnOff::ON_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -88,7 +88,7 @@ TEST(OnOffClient, Off)
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(OnOff::OFF_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -103,7 +103,7 @@ TEST(OnOffClient, Toggle)
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(OnOff::TOGGLE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
@@ -149,7 +149,7 @@ TEST_GROUP(OnOffServer)
 
    TEST_SETUP()
    {
-      packet.message.itf.role   = Interface::SERVER_ROLE;
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
       packet.message.itf.id     = server.uid();
       packet.message.itf.member = 0xFF;
 
@@ -241,7 +241,7 @@ TEST(OnOffServer, Handle_Valid_Toggle_Message)
 //! @test Should not handle message from invalid role.
 TEST(OnOffServer, Handle_Invalid_Role)
 {
-   packet.message.itf.role = Interface::SERVER_ROLE;
+   packet.message.itf.role = HF::Interface::SERVER_ROLE;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, expected, 3));
 }

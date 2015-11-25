@@ -47,7 +47,7 @@ using namespace HF::Interfaces;
  * @retval Common::Result::FAIL_UNKNOWN  otherwise.
  */
 // =============================================================================
-static Common::Result update_attribute(Interface &itf, uint8_t uid, Common::ByteArray &payload,
+static Common::Result update_attribute(HF::Interface &itf, uint8_t uid, Common::ByteArray &payload,
                                        uint16_t &offset, bool nop = false)
 {
    Common::Result result            = Common::Result::FAIL_UNKNOWN;
@@ -103,7 +103,7 @@ static Common::Result update_attribute(Interface &itf, uint8_t uid, Common::Byte
  *          is necessary, @c nullptr otherwise.
  */
 // =============================================================================
-static SetAttributePack::Response *update_attributes(Interface &itf, Common::ByteArray &payload,
+static SetAttributePack::Response *update_attributes(HF::Interface &itf, Common::ByteArray &payload,
                                                      uint16_t &offset, bool resp, bool nop = false)
 {
    SetAttributePack::Request request;
@@ -150,7 +150,7 @@ static SetAttributePack::Response *update_attributes(Interface &itf, Common::Byt
  * @return  pointer to a HF::Response instance if a response is necessary, @c nullptr otherwise.
  */
 // =============================================================================
-static Response *update_attributes_atomic(Interface &itf, Common::ByteArray &payload,
+static Response *update_attributes_atomic(HF::Interface &itf, Common::ByteArray &payload,
                                           uint16_t &offset, bool resp)
 {
    uint16_t start                       = offset;

@@ -83,7 +83,7 @@ namespace HF
             static constexpr bool    WRITABBLE = false;       //!< Attribute Read/Write
 
             State(bool state = false, HF::Interface *owner = nullptr):
-               Attribute<bool>(Interface::ON_OFF, ID, owner, state, WRITABBLE)
+               Attribute<bool>(HF::Interface::ON_OFF, ID, owner, state, WRITABBLE)
             {}
          };
 
@@ -104,15 +104,19 @@ namespace HF
           *
           * This is the parent class for the On-Off interface implementation.
           */
-         struct Base: public Interfaces::Base<Interface::ON_OFF>
-         {};
+         struct Base: public Interface<HF::Interface::ON_OFF>
+         {
+            protected:
+
+            Base() {}
+         };
 
          /*!
           * On-Off %Interface : %Server side implementation.
           *
           * This class provides the server side of the On-Off interface.
           */
-         class Server: public InterfaceRole<OnOff::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<OnOff::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -214,7 +218,7 @@ namespace HF
           *
           * This class provides the client side of the On-Off interface.
           */
-         struct Client: public InterfaceRole<OnOff::Base, Interface::CLIENT_ROLE>
+         struct Client: public InterfaceRole<OnOff::Base, HF::Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Commands

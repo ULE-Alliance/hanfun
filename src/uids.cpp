@@ -33,7 +33,7 @@ using namespace HF::UID;
 // =============================================================================
 uint16_t UID::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK(array, offset, sizeof(uint8_t));
+   HF_SERIALIZABLE_CHECK(array, offset, sizeof(uint8_t));
 
    uint8_t type = Type::NONE_UID;
    array.read(offset, type);

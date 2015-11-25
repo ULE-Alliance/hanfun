@@ -363,7 +363,7 @@ namespace HF
          /*!
           * Parent class for the Device Management interface implementation.
           */
-         class Abstract: public Service<HF::Interface::DEVICE_MANAGEMENT>
+         class Base: public Service<HF::Interface::DEVICE_MANAGEMENT>
          {
             protected:
 
@@ -372,18 +372,23 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Abstract(Unit0 &unit):
-               Service(unit)
-            {}
+            Base(Unit0 &unit): Service(unit) {}
          };
+
+         /*!
+          * @copydoc HF::Core::BindManagement::Base
+          *
+          * @deprecated This class is deprecated please use HF::Core::BindManagement::Base instead.
+          */
+         typedef Base __attribute__((deprecated)) Abstract;
 
          /*!
           * Device Management interface : Client side.
           */
-         class Client: public ServiceRole<Abstract, HF::Interface::CLIENT_ROLE>,
+         class Client: public ServiceRole<Base, HF::Interface::CLIENT_ROLE>,
             protected SessionManagement::Client<Device>
          {
-            typedef ServiceRole<Abstract, HF::Interface::CLIENT_ROLE> Service;
+            typedef ServiceRole<Base, HF::Interface::CLIENT_ROLE> Service;
 
             protected:
 
@@ -399,7 +404,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Client(Unit0 &unit):
-               ServiceRole(unit), _address(Protocol::BROADCAST_ADDR)
+               Service(unit), SessionMgr(), _address(Protocol::BROADCAST_ADDR)
             {}
 
             virtual ~Client() {}
@@ -534,7 +539,7 @@ namespace HF
          /*!
           * Device Management interface : Server side API.
           */
-         struct IServer: public ServiceRole<Abstract, HF::Interface::SERVER_ROLE>
+         struct IServer: public ServiceRole<Base, HF::Interface::SERVER_ROLE>
          {
             virtual ~IServer() {}
 
@@ -735,7 +740,7 @@ namespace HF
             //! @}
             // ======================================================================
 
-            using ServiceRole<Abstract, HF::Interface::SERVER_ROLE>::payload_size;
+            using ServiceRole<Base, HF::Interface::SERVER_ROLE>::payload_size;
 
             uint16_t payload_size(Protocol::Message::Interface &itf) const;
 

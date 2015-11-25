@@ -1,0 +1,237 @@
+// =============================================================================
+/*!
+ * @file       tests/<%= @namespace.path %>/test_<%= @interface.name %>.cpp
+ *
+ * This is file contains the unit tests for the <%= @interface.to_doc %> <%= @type %>
+ * implementation.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ */
+// =============================================================================
+
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
+
+#include "test_helper.h"
+
+using namespace HF;
+using namespace HF::<%= @namespace.name %>;
+
+using namespace HF::Testing;
+
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
+
+// =============================================================================
+// <%= @interface.to_doc %>
+// =============================================================================
+
+//! Test Group for <%= @interface.to_class %> <%= @type %> parent class.
+TEST_GROUP(<%= @interface.to_class %>)
+{
+   class <%= @interface.to_class %>Base: public InterfaceParentHelper<<%= @interface.to_class %>::Base>
+   {};
+
+   <%= @interface.to_class %>Base interface;
+
+   TEST_SETUP()
+   {
+      interface = <%= @interface.to_class %>Base();
+
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+
+//! @test <%= @interface.to_class %>::uid should return @c HF::Interface::<%= @interface.name.upcase %>.
+TEST(<%= @interface.to_class %>, UID)
+{
+   LONGS_EQUAL(HF::Interface::<%= @interface.name.upcase %>, interface.uid());
+}
+
+// =============================================================================
+// <%= @interface.to_doc %> Client
+// =============================================================================
+
+//! Test Group for <%= @interface.to_doc %> Client interface class.
+TEST_GROUP(<%= @interface.to_class %>Client)
+{
+   // TODO Add required unit tests.
+   struct <%= @interface.to_class %>Client: public InterfaceHelper<<%= @interface.to_class %>::Client>
+   {
+      <%- @commands.select { |c| c.event }.each do |cmd| -%>
+      void <%= cmd.name %>(const Protocol::Address &addr)
+      {
+         UNUSED(addr);
+         mock("<%= @interface.to_class %>::Client").actualCall("<%= cmd.name %>");
+      }
+
+      <%- end -%>
+   };
+
+   <%= @interface.to_class %>Client client;
+   <%- if @commands.any? { |c| !c.event } -%>
+   Protocol::Address addr;
+
+   <%- end -%>
+   <%- if @commands.any? { |c| c.event } -%>
+   Protocol::Packet  packet;
+   Common::ByteArray payload;
+   <%- end -%>
+
+   TEST_SETUP()
+   {
+      client = <%= @interface.to_class %>Client();
+      <%- if @commands.any? { |c| !c.event } -%>
+      addr = Protocol::Address(42);
+
+      <%- end -%>
+      <%- if @commands.any? { |c| c.event } -%>
+      packet = Protocol::Packet();
+      packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
+      packet.message.itf.id     = client.uid();
+      packet.message.itf.member = 0xFF;
+
+      <%- end -%>
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+<%- unless @commands.empty? -%>
+<%- @commands.each do |cmd| -%>
+
+//! @test <%= cmd.to_doc %> support.
+TEST(<%= @interface.to_class %>Client, <%= cmd.to_class %>)
+{
+  // FIXME Generated Stub.
+  <%- unless cmd.event -%>
+  mock("Interface").expectOneCall("send");
+
+  client.<%= cmd.name %>(addr);
+
+  mock("Interface").checkExpectations();
+
+  LONGS_EQUAL(HF::Interface::CLIENT_ROLE, client.sendMsg.itf.role);
+  LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
+  LONGS_EQUAL(<%= @interface.to_class %>::<%= cmd.to_uid %>, client.sendMsg.itf.member);
+  LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+  <%- else -%>
+  mock("<%= @interface.to_class %>::Client").expectOneCall("<%= cmd.name %>");
+
+  packet.message.itf.member = <%= @interface.to_class %>::<%= cmd.to_uid %>;
+
+  CHECK_EQUAL(Common::Result::OK,client.handle(packet, payload, 3));
+
+  mock("<%= @interface.to_class %>::Client").checkExpectations();
+  <%- end -%>
+}
+<%- end -%>
+<%- end -%>
+
+// =============================================================================
+// <%= @interface.to_doc %> Server
+// =============================================================================
+
+//! Test Group for <%= @interface.to_doc %> Server interface class.
+TEST_GROUP(<%= @interface.to_class %>Server)
+{
+   // TODO Add required unit tests.
+   struct <%= @interface.to_class %>Server: public InterfaceHelper<<%= @interface.to_class %>::Server>
+   {
+      <%- @commands.select { |c| !c.event }.each do |cmd| -%>
+      void <%= cmd.name %>(const Protocol::Address &addr)
+      {
+         UNUSED(addr);
+         mock("<%= @interface.to_class %>::Server").actualCall("<%= cmd.name %>");
+      }
+
+      <%- end -%>
+   };
+
+   <%= @interface.to_class %>Server server;
+   <%- if @commands.any? { |c| c.event } -%>
+   Protocol::Address addr;
+   <%- end -%>
+
+   <%- if @commands.any? { |c| !c.event } -%>
+   Protocol::Packet  packet;
+   Common::ByteArray payload;
+   <%- end -%>
+
+   TEST_SETUP()
+   {
+      server = <%= @interface.to_class %>Server();
+      <%- if @commands.any? { |c| c.event } -%>
+      addr = Protocol::Address(42);
+
+      <%- end -%>
+      <%- if @commands.any? { |c| !c.event } -%>
+      packet = Protocol::Packet();
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id     = server.uid();
+      packet.message.itf.member = 0xFF;
+
+      <%- end -%>
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+<%- unless @attributes.empty? -%>
+<%- @attributes.each do |attr| -%>
+
+//! @test <%= attr.to_doc %> support.
+TEST(<%= @interface.to_class %>Server, <%= attr.to_class %>)
+{
+  // FIXME Generated Stub.
+<%- if attr.mandatory -%>
+  CHECK_ATTRIBUTE(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, -42);
+<%- else -%>
+  CHECK_OPT_ATTRIBUTE(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, -42);
+<%- end -%>
+}
+<%- end -%>
+<%- end -%>
+<%- unless @commands.empty? -%>
+<%- @commands.each do |cmd| -%>
+
+//! @test <%= cmd.to_doc %> support.
+TEST(<%= @interface.to_class %>Server, <%= cmd.to_class %>)
+{
+  // FIXME Generated Stub.
+  <%- if cmd.event -%>
+  mock("Interface").expectOneCall("send");
+
+  server.<%= cmd.name %>(addr);
+
+  mock("Interface").checkExpectations();
+
+  LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
+  LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
+  LONGS_EQUAL(<%= @interface.to_class %>::<%= cmd.to_uid %>, server.sendMsg.itf.member);
+  LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+  <%- else -%>
+  mock("<%= @interface.to_class %>::Server").expectOneCall("<%= cmd.name %>");
+
+  packet.message.itf.member = <%= @interface.to_class %>::<%= cmd.to_uid %>;
+
+  CHECK_EQUAL(Common::Result::OK,server.handle(packet, payload, 3));
+
+  mock("<%= @interface.to_class %>::Server").checkExpectations();
+  <%- end -%>
+}
+<%- end -%>
+<%- end -%>

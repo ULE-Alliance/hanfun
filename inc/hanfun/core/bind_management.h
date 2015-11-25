@@ -251,7 +251,7 @@ namespace HF
          /*!
           * Parent class for the Bind Management interface implementation.
           */
-         class Abstract: public Service<HF::Interface::BIND_MANAGEMENT>
+         class Base: public Service<HF::Interface::BIND_MANAGEMENT>
          {
             protected:
 
@@ -260,18 +260,25 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Abstract(HF::Core::Unit0 &unit):
+            Base(HF::Core::Unit0 &unit):
                Service(unit)
             {}
          };
 
          /*!
+          * @copydoc HF::Core::BindManagement::Base
+          *
+          * @deprecated This class is deprecated please use HF::Core::BindManagement::Base instead.
+          */
+         typedef Base __attribute__((deprecated)) Abstract;
+
+         /*!
           * Bind Management interface : Client side.
           */
-         class Client: public ServiceRole<Abstract, HF::Interface::CLIENT_ROLE>,
+         class Client: public ServiceRole<Base, HF::Interface::CLIENT_ROLE>,
             protected SessionManagement::Client<Entry>
          {
-            typedef ServiceRole<Abstract, HF::Interface::CLIENT_ROLE> Service;
+            typedef ServiceRole<Base, HF::Interface::CLIENT_ROLE> Service;
 
             public:
 
@@ -282,9 +289,7 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Client(HF::Core::Unit0 &unit):
-               ServiceRole(unit)
-            {}
+            Client(HF::Core::Unit0 &unit): Service(unit), SessionMgr() {}
 
             virtual ~Client() {}
 
@@ -399,7 +404,7 @@ namespace HF
          /*!
           * Bind Management interface : Server side API.
           */
-         struct IServer: public ServiceRole<Abstract, HF::Interface::SERVER_ROLE>
+         struct IServer: public ServiceRole<Base, HF::Interface::SERVER_ROLE>
          {
             virtual ~IServer() {}
 
@@ -476,7 +481,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             IServer(Unit0 &unit):
-               ServiceRole<Abstract, HF::Interface::SERVER_ROLE>(unit)
+               ServiceRole<Base, HF::Interface::SERVER_ROLE>(unit)
             {}
          };
 
@@ -651,8 +656,7 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Server(Unit0 &unit): AbstractServer(unit)
-            {}
+            Server(Unit0 &unit): AbstractServer(unit), SessionMgr() {}
 
             virtual ~Server()
             {}

@@ -1,0 +1,113 @@
+// =============================================================================
+/*!
+ * @file       src/<%= @namespace.path %>/<%= @interface.name %>_client.cpp
+ *
+ * This file contains the implementation of the <%= @interface.to_doc %> <%= @type %> : Client role.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
+
+// =============================================================================
+// API
+// =============================================================================
+
+using namespace HF;
+using namespace HF::<%= @namespace.name %>;
+using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
+
+// =============================================================================
+// <%= @interface.to_doc %> Interface : Client Role
+// =============================================================================
+
+<%- if @commands.any? { |c| c.event } -%>
+// =============================================================================
+// Client::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
+{
+  UNUSED(payload);
+  UNUSED(offset);
+
+  CMD cmd = static_cast<CMD>(packet.message.itf.member);
+  switch (cmd)
+  {
+    <%- @commands.select { |c| c.event }.each do |cmd| -%>
+      <%- unless cmd.client.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+      <%- end -%>
+    case <%= cmd.to_uid %>:
+    {
+      <%= cmd.name %>(packet.source);
+      break;
+    }
+      <%- unless cmd.client.mandatory -%>
+#endif
+      <%- end -%>
+
+    <%- end -%>
+    default:
+      return Common::Result::FAIL_SUPPORT;
+  }
+
+  return Common::Result::OK;
+}
+<%- end -%>
+
+<%- unless @commands.empty? -%>
+// =============================================================================
+// Commands
+// =============================================================================
+
+<%- @commands.each do |cmd| -%>
+<%- unless cmd.client.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+<%- end -%>
+// =============================================================================
+// Client::<%= cmd.name %>
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::<%= cmd.name %>(const Protocol::Address &addr)
+{
+  // FIXME Generated Stub.
+  <%- unless cmd.event -%>
+  <%- if service? -%>
+  assert (addr.unit == 0);
+  if(addr.unit != 0)
+  {
+    return;
+  }
+  <%- end -%>
+  Protocol::Message message;
+
+  message.itf.role   = CLIENT_ROLE;
+  message.itf.id     = Interface::<%= @interface.to_uid %>;
+  message.itf.member = <%= cmd.to_uid %>;
+
+  send(addr, message);
+  <%- else -%>
+  UNUSED(addr);
+  <%- end -%>
+}
+<%- unless cmd.client.mandatory -%>
+#endif
+<%- end -%>
+
+<%- end -%>
+<%- end -%>
