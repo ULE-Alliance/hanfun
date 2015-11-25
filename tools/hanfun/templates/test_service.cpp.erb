@@ -28,34 +28,44 @@ using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 // <%= @interface.to_doc %>
 // =============================================================================
 
-#if 0
 //! Test Group for <%= @interface.to_class %> <%= @type %> parent class.
 TEST_GROUP(<%= @interface.to_class %>)
 {
-   class <%= @interface.to_class %>Base: public InterfaceParentHelper<<%= @interface.to_class %>::Base>
-   {};
+   <%- class_name = "#{@interface.to_class}Base" -%>
+   struct <%= class_name %>: public <%= @interface.to_class %>::Base
+   {
+     <%= class_name %>(HF::Core::Unit0 &unit): <%= @interface.to_class %>::Base(unit) {}
 
-   <%= @interface.to_class %>Base interface;
+     Interface::Role role() const
+     {
+       return Interface::SERVER_ROLE;
+     }
+   };
+
+   Testing::Device *device;
+   <%= class_name %> *service;
 
    TEST_SETUP()
    {
-      interface = <%= @interface.to_class %>Base();
+     device  = new Testing::Device();
+     service = new <%= class_name %>(*(device->unit0()));
 
-      mock().ignoreOtherCalls();
+     mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
-      mock().clear();
+     delete service;
+     delete device;
+     mock().clear();
    }
 };
 
-//! @test <%= @interface.to_class %>::uid should return @c HF::Interface::<%= @interface.name.upcase %>.
+//! @test <%= @interface.to_class %>::uid should return @c HF::Interface::<%= @interface.to_uid %>.
 TEST(<%= @interface.to_class %>, UID)
 {
-   CHECK_EQUAL(HF::Interface::<%= @interface.name.upcase %>, interface.uid());
+   LONGS_EQUAL(HF::Interface::<%= @interface.to_uid %>, service->uid());
 }
-#endif
 
 // =============================================================================
 // <%= @interface.to_doc %> Client

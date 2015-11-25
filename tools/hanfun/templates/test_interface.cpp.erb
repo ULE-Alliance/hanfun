@@ -52,7 +52,7 @@ TEST_GROUP(<%= @interface.to_class %>)
 //! @test <%= @interface.to_class %>::uid should return @c HF::Interface::<%= @interface.name.upcase %>.
 TEST(<%= @interface.to_class %>, UID)
 {
-   CHECK_EQUAL(HF::Interface::<%= @interface.name.upcase %>, interface.uid());
+   LONGS_EQUAL(HF::Interface::<%= @interface.name.upcase %>, interface.uid());
 }
 
 // =============================================================================
