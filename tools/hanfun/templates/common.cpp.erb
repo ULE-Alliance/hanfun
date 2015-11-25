@@ -66,7 +66,7 @@ HF::Attributes::IAttribute *<%= @interface.to_class %>::create_attribute(uint8_t
      <%- @attributes.each do |attr| -%>
      case <%= attr.to_uid %>:
      {
-       return new HF::Attributes::Attribute<<%= attr.type %> >(Interface::<%= @interface.to_uid %>, attr, <%= attr.to_class %>::WRITABLE);
+       return new HF::Attributes::Attribute<<%= attr.type %> >(HF::Interface::<%= @interface.to_uid %>, attr, <%= attr.to_class %>::WRITABLE);
      }
 
      <%- end -%>
