@@ -76,6 +76,7 @@ namespace HF
          SIMPLE_TEMPERATURE = 0x0301,    //!< Simple Temperature interface UID
          SIMPLE_HUMIDITY    = 0x0302,    //!< Simple Humidity interface UID
          SIMPLE_THERMOSTAT  = 0x0303,    //!< Simple Thermostat interface UID
+         SIMPLE_BUTTON      = 0x0304,    //!< FIXME Simple Button interface UID.
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.
