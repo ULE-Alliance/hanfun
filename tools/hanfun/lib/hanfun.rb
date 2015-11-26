@@ -288,11 +288,16 @@ module Hanfun
         end
       end
 
+      # Add interface to general include
+      def general_header
+        file = File.join(CodeRoot, "inc", "hanfun.h")
+        add_import(file, @generator[:include][:insert_at])
+      end
+
       # Add attribute configuration
       def attributes
         file = source_path("attributes.cpp", false)
-        content = %Q{#include "hanfun/#{@namespace.path}/#{@interface.name}.h"\n}
-        inject_into_file(file, content, before: @generator[:attributes][:insert_at][:include])
+        add_import(file, @generator[:attributes][:insert_at][:include])
 
         # Factory definition.
         content = %Q{{
@@ -422,6 +427,11 @@ module Hanfun
         res
       end
 
+      def add_import(file, where)
+        content = %Q{#include "hanfun/#{@namespace.path}/#{@interface.name}.h"\n}
+        inject_into_file(file, content, before: where)
+      end
+
       def method_missing(symbol)
         return false if symbol.to_s =~ /\?$/
         super
@@ -459,6 +469,10 @@ module Hanfun
         }
 
         @generator[:debug] = {
+          insert_at: /^\s+\/\/\s+=+\n\/\/\s+Core/,
+        }
+
+        @generator[:include] = {
           insert_at: /^\s+\/\/\s+=+\n\/\/\s+Core/,
         }
 
@@ -508,13 +522,16 @@ module Hanfun
           insert_at: /\z/,
         }
 
+        @generator[:include] = {
+          insert_at: /^\s+\/\/\s+=+\n\/\/\s+Profiles/,
+        }
+
         @generator[:attributes] = {
           insert_at: {
             include: /^\susing/,
             factory: /^\s+\/\*\s+Functional/
           }
         }
-
         @generator[:build] = {
           insert_at: /^\s+##\s+Units/,
           macro: "add_core"

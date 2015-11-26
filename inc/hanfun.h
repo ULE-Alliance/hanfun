@@ -47,6 +47,7 @@
 #include "hanfun/interfaces/level_control.h"
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_button.h"
 
 // =============================================================================
 // Core Services & Interfaces.
