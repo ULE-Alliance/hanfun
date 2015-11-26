@@ -288,6 +288,22 @@ module Hanfun
         end
       end
 
+      # Add attribute configuration
+      def attributes
+        file = source_path("attributes.cpp", false)
+        content = %Q{#include "hanfun/#{@namespace.path}/#{@interface.name}.h"\n}
+        inject_into_file(file, content, before: @generator[:attributes][:insert_at][:include])
+
+        # Factory definition.
+        content = %Q{{
+          HF::Interface::#{@interface.to_uid},
+          HF::#{@namespace.name}::#{@interface.to_class}::create_attribute,
+        },
+        }.gsub(/^\s*/, '').gsub(/\A/, ' ' * 3)
+        content = format_code(content, true)
+        inject_into_file(file, content, before: @generator[:attributes][:insert_at][:factory])
+      end
+
       # Add debug strings
       def debug_support
         source  = File.expand_path(find_in_source_paths("debug.cpp.erb"))
@@ -390,12 +406,12 @@ module Hanfun
         code + ' ' + comment
       end
 
-      def format_code(content)
+      def format_code(content, frag=false)
         file = Tempfile.new("hanfun_#{@interface.name}_")
         begin
           file.write(content)
           file.flush
-          res = run("uncrustify -q -c scripts/uncrustify.cfg -l CPP -f #{file.path}",
+          res = run("uncrustify -q -c scripts/uncrustify.cfg -l CPP #{frag ? "--frag" : ""} -f #{file.path}",
                     capture: true, verbose: false)
         rescue Errno::ENOENT
           res = content
@@ -446,6 +462,13 @@ module Hanfun
           insert_at: /^\s+\/\/\s+=+\n\/\/\s+Core/,
         }
 
+        @generator[:attributes] = {
+          insert_at: {
+            include: /^\s.+core/,
+            factory: /};\s+\/\/\s+=+\s+\/\/\s+Attributes::get_factory/
+          }
+        }
+
         @generator[:build] = {
           insert_at: /^\s+##\s+Core/,
           macro: "add_interface"
@@ -483,6 +506,13 @@ module Hanfun
 
         @generator[:debug] = {
           insert_at: /\z/,
+        }
+
+        @generator[:attributes] = {
+          insert_at: {
+            include: /^\susing/,
+            factory: /^\s+\/\*\s+Functional/
+          }
         }
 
         @generator[:build] = {
