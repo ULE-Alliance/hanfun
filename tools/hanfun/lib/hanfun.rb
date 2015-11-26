@@ -288,6 +288,14 @@ module Hanfun
         end
       end
 
+      # Add debug strings
+      def debug_support
+        source  = File.expand_path(find_in_source_paths("debug.cpp.erb"))
+        context = instance_eval("binding")
+        content = ERB.new(::File.binread(source), nil, "-", "@output_buffer").result(context)
+        inject_into_file(source_path("debug.cpp", false), content, before: @generator[:debug][:insert_at])
+      end
+
       # Add interface files to build.
       def add_files_to_build
         code = "#{@generator[:build][:macro]}(\"#{name}\")\n"
@@ -434,6 +442,10 @@ module Hanfun
           insert_at: /^\s+\/\*\s+Reserved/,
         }
 
+        @generator[:debug] = {
+          insert_at: /^\s+\/\/\s+=+\n\/\/\s+Core/,
+        }
+
         @generator[:build] = {
           insert_at: /^\s+##\s+Core/,
           macro: "add_interface"
@@ -467,6 +479,10 @@ module Hanfun
         @generator[:uid] = {
           reference: /\bDEVICE_MANAGEMENT\b/,
           insert_at: /^\s+\/\*\s+Functional Interfaces/,
+        }
+
+        @generator[:debug] = {
+          insert_at: /\z/,
         }
 
         @generator[:build] = {

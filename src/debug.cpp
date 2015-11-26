@@ -1034,6 +1034,85 @@ std::ostream &operator<<(std::ostream &stream,
 }
 
 // =============================================================================
+// HF::Interfaces::SimpleButton
+// =============================================================================
+
+#include "hanfun/interfaces/simple_button.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleButton;
+
+   switch (command)
+   {
+      case SHORT_PRESS_CMD:
+         result = "Short Press";
+         break;
+      case LONG_PRESS_CMD:
+         result = "Long Press";
+         break;
+      case EXTRA_LONG_PRESS_CMD:
+         result = "Extra Long Press";
+         break;
+      case DOUBLE_CLICK_PRESS_CMD:
+         result = "Double Click Press";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleButton;
+
+   switch (attribute)
+   {
+      case SHORT_PRESS_MAX_DURATION_ATTR:
+         result = "Short Press Max Duration";
+         break;
+      case EXTRA_LONG_PRESS_MIN_DURATION_ATTR:
+         result = "Extra Long Press Min Duration";
+         break;
+      case DOUBLE_CLICK_GAP_DURATION_ATTR:
+         result = "Double Click Gap Duration";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Core Services & Interfaces
 // =============================================================================
 
