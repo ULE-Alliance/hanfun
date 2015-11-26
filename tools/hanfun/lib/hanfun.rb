@@ -519,7 +519,7 @@ module Hanfun
         }
 
         @generator[:debug] = {
-          insert_at: /\z/,
+          insert_at: /^\s+\/\/\s+=+\n\/\/\s+Protocol/,
         }
 
         @generator[:include] = {

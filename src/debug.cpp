@@ -16,7 +16,6 @@
 
 #include <iomanip>
 
-#include "hanfun.h"
 #include "hanfun/debug.h"
 
 using namespace HF::Debug;
@@ -69,6 +68,10 @@ std::ostream &operator<<(std::ostream &stream, const uint8_t byte)
 // =============================================================================
 // Common
 // =============================================================================
+
+#include "hanfun/common.h"
+#include "hanfun/uids.h"
+#include "hanfun/interface.h"
 
 // =============================================================================
 // operator <<
@@ -192,8 +195,1062 @@ std::ostream &operator<<(std::ostream &stream, const HF::UID::UID &uid)
 }
 
 // =============================================================================
+// Interfaces
+// =============================================================================
+
+#include "hanfun/interface.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, HF::Interface::Role role)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   switch (role)
+   {
+      case HF::Interface::Role::SERVER_ROLE:
+      {
+         result = "Server";
+         break;
+      }
+      case HF::Interface::Role::CLIENT_ROLE:
+      {
+         result = "Client";
+         break;
+      }
+   }
+
+   stream << Hex<uint8_t>((uint8_t) role) << " (" << result << ")";
+
+   stream << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interface::UID uid)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   switch (uid)
+   {
+      case HF::Interface::UID::DEVICE_MANAGEMENT:
+      {
+         result = "Device Management";
+         break;
+      }
+      case HF::Interface::UID::BIND_MANAGEMENT:
+      {
+         result = "Bind Management";
+         break;
+      }
+      case HF::Interface::UID::GROUP_MANGEMENT:
+      {
+         result = "Group Management";
+         break;
+      }
+      case HF::Interface::UID::IDENTIFY:
+      {
+         result = "Identify";
+         break;
+      }
+      case HF::Interface::UID::DEVICE_INFORMATION:
+      {
+         result = "Device Information";
+         break;
+      }
+      case HF::Interface::UID::ATTRIBUTE_REPORTING:
+      {
+         result = "Attribute Reporting";
+         break;
+      }
+      case HF::Interface::UID::TAMPER_ALERT:
+      {
+         result = "Tamper Alert";
+         break;
+      }
+      case HF::Interface::UID::TIME:
+      {
+         result = "Time";
+         break;
+      }
+      case HF::Interface::UID::POWER:
+      {
+         result = "Power";
+         break;
+      }
+      case HF::Interface::UID::KEEP_ALIVE:
+      {
+         result = "Keep Alive";
+         break;
+      }
+      case HF::Interface::UID::ALERT:
+      {
+         result = "Alert";
+         break;
+      }
+      case HF::Interface::UID::ON_OFF:
+      {
+         result = "On-Off";
+         break;
+      }
+      case HF::Interface::UID::LEVEL_CONTROL:
+      {
+         result = "Level Control";
+         break;
+      }
+      case HF::Interface::UID::SIMPLE_POWER_METER:
+      {
+         result = "Simple Power Meter";
+         break;
+      }
+      case HF::Interface::UID::ANY_UID:
+      {
+         result = "Any";
+         break;
+      }
+      default:
+      {
+         if (uid >= HF::Interface::UID::RESERVED && uid <= HF::Interface::UID::MAX_UID)
+         {
+            result = "Proprietary";
+         }
+
+         break;
+      }
+   }
+
+   stream << Hex<uint16_t>((uint16_t) uid) << " (" << result << ")";
+
+   stream << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::Alert
+// =============================================================================
+
+#include "hanfun/interfaces/alert.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::Alert;
+
+   switch (command)
+   {
+      case STATUS_CMD:
+         result = "Status";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::Alert;
+
+   switch (attribute)
+   {
+      case STATE_ATTR:
+         result = "State";
+         break;
+      case ENABLE_ATTR:
+         result = "Enabled";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::LevelControl
+// =============================================================================
+
+#include "hanfun/interfaces/level_control.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::LevelControl;
+
+   switch (command)
+   {
+      case SET_LEVEL_CMD:
+         result = "Set Level";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::LevelControl::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::LevelControl;
+
+   switch (attribute)
+   {
+      case LEVEL_ATTR:
+         result = "Level";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::OnOff
+// =============================================================================
+
+#include "hanfun/interfaces/on_off.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::OnOff;
+
+   switch (command)
+   {
+      case ON_CMD:
+         result = "On";
+         break;
+      case OFF_CMD:
+         result = "Off";
+         break;
+      case TOGGLE_CMD:
+         result = "Toggle";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::OnOff;
+
+   switch (attribute)
+   {
+      case STATE_ATTR:
+         result = "State";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimplePowerMeter
+// =============================================================================
+
+#include "hanfun/interfaces/simple_power_meter.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimplePowerMeter;
+
+   switch (command)
+   {
+      case REPORT_CMD:
+         result = "Report/Measurement Reset";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimplePowerMeter::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimplePowerMeter;
+
+   switch (attribute)
+   {
+      case ENERGY_ATTR:
+      {
+         result = "Energy";
+         break;
+      }
+      case ENERGY_AT_RESET_ATTR:
+      {
+         result = "Energy at reset";
+         break;
+      }
+      case TIME_AT_RESET_ATTR:
+      {
+         result = "Time at reset";
+         break;
+      }
+      case POWER_ATTR:
+      {
+         result = "Power";
+         break;
+      }
+      case AVG_POWER_ATTR:
+      {
+         result = "Avg. Power";
+         break;
+      }
+      case AVG_POWER_INTERVAL_ATTR:
+      {
+         result = "Avg. Power Interval";
+         break;
+      }
+      case VOLTAGE_ATTR:
+      {
+         result = "Voltage";
+         break;
+      }
+      case CURRENT_ATTR:
+      {
+         result = "Current";
+         break;
+      }
+      case FREQUENCY_ATTR:
+      {
+         result = "Frequency";
+         break;
+      }
+      case POWER_FACTOR_ATTR:
+      {
+         result = "Power Factor";
+         break;
+      }
+      case REPORT_INTERVAL_ATTR:
+      {
+         result = "Report Interval";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimpleThermostat
+// =============================================================================
+
+#include "hanfun/interfaces/simple_thermostat.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleThermostat::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   switch (command)
+   {
+      case BOOST_START_CMD:
+         result = "Boost Start";
+         break;
+      case BOOST_STOP_CMD:
+         result = "Boost Stop";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleThermostat::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   switch (attribute)
+   {
+      case SUPPORTED_MODES_ATTR:
+         result = "Supported Modes";
+         break;
+      case HEAT_COOL_MODE_ATTR:
+         result = "Heat/Cool Mode";
+         break;
+      case FAN_MODE_ATTR:
+         result = "Fan Mode";
+         break;
+      case HEAT_MODE_TEMP_ATTR:
+         result = "Heat Mode Temperature";
+         break;
+      case COOL_MODE_TEMP_ATTR:
+         result = "Cool Mode Temperature";
+         break;
+      case AUTO_MODE_HEAT_TEMP_ATTR:
+         result = "Heat/Cool Mode - Heat Temperature";
+         break;
+      case AUTO_MODE_COOL_TEMP_ATTR:
+         result = "Heat/Cool Mode - Cool Temperature";
+         break;
+      case HEAT_MODE_TEMP_OFFSET_ATTR:
+         result = "Heat Mode Temperature Offset";
+         break;
+      case COOL_MODE_TEMP_OFFSET_ATTR:
+         result = "Cool Mode Temperature Offset";
+         break;
+      case BOOST_DURATION_ATTR:
+         result = "Boost Duration";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimpleButton
+// =============================================================================
+
+#include "hanfun/interfaces/simple_button.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleButton;
+
+   switch (command)
+   {
+      case SHORT_PRESS_CMD:
+         result = "Short Press";
+         break;
+      case LONG_PRESS_CMD:
+         result = "Long Press";
+         break;
+      case EXTRA_LONG_PRESS_CMD:
+         result = "Extra Long Press";
+         break;
+      case DOUBLE_CLICK_PRESS_CMD:
+         result = "Double Click Press";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleButton;
+
+   switch (attribute)
+   {
+      case SHORT_PRESS_MAX_DURATION_ATTR:
+         result = "Short Press Max Duration";
+         break;
+      case EXTRA_LONG_PRESS_MIN_DURATION_ATTR:
+         result = "Extra Long Press Min Duration";
+         break;
+      case DOUBLE_CLICK_GAP_DURATION_ATTR:
+         result = "Double Click Gap Duration";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// Core Services & Interfaces
+// =============================================================================
+
+#include "hanfun/core.h"
+
+// =============================================================================
+// HF::Core::AttributeReporting
+// =============================================================================
+
+#include "hanfun/core/attribute_reporting.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   stream << Hex<uint8_t>((uint8_t) command) << " (" << result << " [C])";
+
+   using namespace HF::Core::AttributeReporting;
+
+   switch (command)
+   {
+      // case PERIODIC_REPORT_CMD:
+      case CREATE_PERIODIC_CMD:
+      {
+         result = "<Create> Periodic Report";
+         break;
+      }
+      // case EVENT_REPORT_CMD:
+      case CREATE_EVENT_CMD:
+      {
+         result = "<Create> Event Report";
+         break;
+      }
+      case ADD_PERIODIC_ENTRY_CMD:
+      {
+         result = "Add periodic report entry";
+         break;
+      }
+      case ADD_EVENT_ENTRY_CMD:
+      {
+         result = "Add event report entry";
+         break;
+      }
+      case DELETE_REPORT_CMD:
+      {
+         result = "Delete report";
+         break;
+      }
+      case GET_PERIODIC_ENTRIES:
+      {
+         result = "Get periodic entries";
+         break;
+      }
+      case GET_EVENT_ENTRIES:
+      {
+         result = "Get event entries";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::AttributeReporting::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::AttributeReporting;
+
+   switch (attribute)
+   {
+      case REPORT_COUNT_ATTR:
+      {
+         result = "Report entries count";
+         break;
+      }
+      case PERIODIC_REPORT_COUNT_ATTR:
+      {
+         result = "Periodic report entries count";
+         break;
+      }
+      case EVENT_REPORT_COUNT_ATTR:
+      {
+         result = "Event report entries count";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Core::BindManagement
+// =============================================================================
+
+#include "hanfun/core/bind_management.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::BindManagement;
+
+   switch (command)
+   {
+      case ADD_BIND_CMD:
+      {
+         result = "Add bind entry";
+         break;
+      }
+      case REMOVE_BIND_CMD:
+      {
+         result = "Remove bind entry";
+         break;
+      }
+      case START_SESSION_CMD:
+      {
+         result = "Start Session - Read Registration Info";
+         break;
+      }
+      case END_SESSION_CMD:
+      {
+         result = "End Session - Read Registration Info";
+         break;
+      }
+      case GET_ENTRIES_CMD:
+      {
+         result = "Get Entries";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::BindManagement;
+
+   switch (attribute)
+   {
+      case NUMBER_OF_ENTRIES_ATTR:
+      {
+         result = "Number of entries";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Core::DeviceInformation
+// =============================================================================
+
+#include "hanfun/core/device_information.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceInformation::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::DeviceInformation;
+
+   switch (attribute)
+   {
+      case CORE_VERSION_ATTR:
+      {
+         result = "HF Core version";
+         break;
+      }
+      case PROFILE_VERSION_ATTR:
+      {
+         result = "HF Profile version";
+         break;
+      }
+      case INTERFACE_VERSION_ATTR:
+      {
+         result = "HF Interface version";
+         break;
+      }
+      case EXTRA_CAP_ATTR:
+      {
+         result = "Extra capabilities";
+         break;
+      }
+      case MIN_SLEEP_TIME_ATTR:
+      {
+         result = "Minimum sleep time";
+         break;
+      }
+      case ACTUAL_RESP_TIME_ATTR:
+      {
+         result = "Actual response time";
+         break;
+      }
+      case APP_VERSION_ATTR:
+      {
+         result = "Hardware version";
+         break;
+      }
+      case HW_VERSION_ATTR:
+      {
+         result = "Hardware version";
+         break;
+      }
+      case EMC_ATTR:
+      {
+         result = "Electronic Manufacture Code";
+         break;
+      }
+      case DECT_ID_ATTR:
+      {
+         result = "RFPI / IPUI";
+         break;
+      }
+      case MANUFACTURE_NAME_ATTR:
+      {
+         result = "Manufacture's name";
+         break;
+      }
+      case LOCATION_ATTR:
+      {
+         result = "Location";
+         break;
+      }
+      case ENABLED_ATTR:
+      {
+         result = "Device enabled";
+         break;
+      }
+      case FRIENDLY_NAME_ATTR:
+      {
+         result = "Device friendly";
+         break;
+      }
+      case UID_ATTR:
+      {
+         result = "Device UID";
+         break;
+      }
+      case SERIAL_NUMBER_ATTR:
+      {
+         result = "Serial number";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Core::DeviceManagement
+// =============================================================================
+
+#include "hanfun/core/device_management.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::DeviceManagement;
+
+   switch (command)
+   {
+      case REGISTER_CMD:
+      {
+         result = "Register device";
+         break;
+      }
+      case DEREGISTER_CMD:
+      {
+         result = "De-register device";
+         break;
+      }
+      case START_SESSION_CMD:
+      {
+         result = "Start Session";
+         break;
+      }
+      case END_SESSION_CMD:
+      {
+         result = "End Session";
+         break;
+      }
+      case GET_ENTRIES_CMD:
+      {
+         result = "Get Entries";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceManagement::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::DeviceManagement;
+
+   switch (attribute)
+   {
+      case NUMBER_OF_ENTRIES_ATTR:
+      {
+         result = "Number of entries";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
+
+#include "hanfun/protocol.h"
 
 // =============================================================================
 // operator <<
@@ -498,999 +1555,5 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Packet &packe
 
    log_width = old_width;
 
-   return stream;
-}
-
-// =============================================================================
-// Interfaces
-// =============================================================================
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, HF::Interface::Role role)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   switch (role)
-   {
-      case HF::Interface::Role::SERVER_ROLE:
-      {
-         result = "Server";
-         break;
-      }
-      case HF::Interface::Role::CLIENT_ROLE:
-      {
-         result = "Client";
-         break;
-      }
-   }
-
-   stream << Hex<uint8_t>((uint8_t) role) << " (" << result << ")";
-
-   stream << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interface::UID uid)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   switch (uid)
-   {
-      case HF::Interface::UID::DEVICE_MANAGEMENT:
-      {
-         result = "Device Management";
-         break;
-      }
-      case HF::Interface::UID::BIND_MANAGEMENT:
-      {
-         result = "Bind Management";
-         break;
-      }
-      case HF::Interface::UID::GROUP_MANGEMENT:
-      {
-         result = "Group Management";
-         break;
-      }
-      case HF::Interface::UID::IDENTIFY:
-      {
-         result = "Identify";
-         break;
-      }
-      case HF::Interface::UID::DEVICE_INFORMATION:
-      {
-         result = "Device Information";
-         break;
-      }
-      case HF::Interface::UID::ATTRIBUTE_REPORTING:
-      {
-         result = "Attribute Reporting";
-         break;
-      }
-      case HF::Interface::UID::TAMPER_ALERT:
-      {
-         result = "Tamper Alert";
-         break;
-      }
-      case HF::Interface::UID::TIME:
-      {
-         result = "Time";
-         break;
-      }
-      case HF::Interface::UID::POWER:
-      {
-         result = "Power";
-         break;
-      }
-      case HF::Interface::UID::KEEP_ALIVE:
-      {
-         result = "Keep Alive";
-         break;
-      }
-      case HF::Interface::UID::ALERT:
-      {
-         result = "Alert";
-         break;
-      }
-      case HF::Interface::UID::ON_OFF:
-      {
-         result = "On-Off";
-         break;
-      }
-      case HF::Interface::UID::LEVEL_CONTROL:
-      {
-         result = "Level Control";
-         break;
-      }
-      case HF::Interface::UID::SIMPLE_POWER_METER:
-      {
-         result = "Simple Power Meter";
-         break;
-      }
-      case HF::Interface::UID::ANY_UID:
-      {
-         result = "Any";
-         break;
-      }
-      default:
-      {
-         if (uid >= HF::Interface::UID::RESERVED && uid <= HF::Interface::UID::MAX_UID)
-         {
-            result = "Proprietary";
-         }
-
-         break;
-      }
-   }
-
-   stream << Hex<uint16_t>((uint16_t) uid) << " (" << result << ")";
-
-   stream << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::Alert;
-
-   switch (command)
-   {
-      case STATUS_CMD:
-         result = "Status";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::Alert;
-
-   switch (attribute)
-   {
-      case STATE_ATTR:
-         result = "State";
-         break;
-      case ENABLE_ATTR:
-         result = "Enabled";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::LevelControl;
-
-   switch (command)
-   {
-      case SET_LEVEL_CMD:
-         result = "Set Level";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream,
-                         const HF::Interfaces::LevelControl::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::LevelControl;
-
-   switch (attribute)
-   {
-      case LEVEL_ATTR:
-         result = "Level";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::OnOff;
-
-   switch (command)
-   {
-      case ON_CMD:
-         result = "On";
-         break;
-      case OFF_CMD:
-         result = "Off";
-         break;
-      case TOGGLE_CMD:
-         result = "Toggle";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::OnOff;
-
-   switch (attribute)
-   {
-      case STATE_ATTR:
-         result = "State";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::SimplePowerMeter;
-
-   switch (command)
-   {
-      case REPORT_CMD:
-         result = "Report/Measurement Reset";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream,
-                         const HF::Interfaces::SimplePowerMeter::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::SimplePowerMeter;
-
-   switch (attribute)
-   {
-      case ENERGY_ATTR:
-      {
-         result = "Energy";
-         break;
-      }
-      case ENERGY_AT_RESET_ATTR:
-      {
-         result = "Energy at reset";
-         break;
-      }
-      case TIME_AT_RESET_ATTR:
-      {
-         result = "Time at reset";
-         break;
-      }
-      case POWER_ATTR:
-      {
-         result = "Power";
-         break;
-      }
-      case AVG_POWER_ATTR:
-      {
-         result = "Avg. Power";
-         break;
-      }
-      case AVG_POWER_INTERVAL_ATTR:
-      {
-         result = "Avg. Power Interval";
-         break;
-      }
-      case VOLTAGE_ATTR:
-      {
-         result = "Voltage";
-         break;
-      }
-      case CURRENT_ATTR:
-      {
-         result = "Current";
-         break;
-      }
-      case FREQUENCY_ATTR:
-      {
-         result = "Frequency";
-         break;
-      }
-      case POWER_FACTOR_ATTR:
-      {
-         result = "Power Factor";
-         break;
-      }
-      case REPORT_INTERVAL_ATTR:
-      {
-         result = "Report Interval";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleThermostat::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::SimpleThermostat;
-
-   switch (command)
-   {
-      case BOOST_START_CMD:
-         result = "Boost Start";
-         break;
-      case BOOST_STOP_CMD:
-         result = "Boost Stop";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream,
-                         const HF::Interfaces::SimpleThermostat::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::SimpleThermostat;
-
-   switch (attribute)
-   {
-      case SUPPORTED_MODES_ATTR:
-         result = "Supported Modes";
-         break;
-      case HEAT_COOL_MODE_ATTR:
-         result = "Heat/Cool Mode";
-         break;
-      case FAN_MODE_ATTR:
-         result = "Fan Mode";
-         break;
-      case HEAT_MODE_TEMP_ATTR:
-         result = "Heat Mode Temperature";
-         break;
-      case COOL_MODE_TEMP_ATTR:
-         result = "Cool Mode Temperature";
-         break;
-      case AUTO_MODE_HEAT_TEMP_ATTR:
-         result = "Heat/Cool Mode - Heat Temperature";
-         break;
-      case AUTO_MODE_COOL_TEMP_ATTR:
-         result = "Heat/Cool Mode - Cool Temperature";
-         break;
-      case HEAT_MODE_TEMP_OFFSET_ATTR:
-         result = "Heat Mode Temperature Offset";
-         break;
-      case COOL_MODE_TEMP_OFFSET_ATTR:
-         result = "Cool Mode Temperature Offset";
-         break;
-      case BOOST_DURATION_ATTR:
-         result = "Boost Duration";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// HF::Interfaces::SimpleButton
-// =============================================================================
-
-#include "hanfun/interfaces/simple_button.h"
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::SimpleButton;
-
-   switch (command)
-   {
-      case SHORT_PRESS_CMD:
-         result = "Short Press";
-         break;
-      case LONG_PRESS_CMD:
-         result = "Long Press";
-         break;
-      case EXTRA_LONG_PRESS_CMD:
-         result = "Extra Long Press";
-         break;
-      case DOUBLE_CLICK_PRESS_CMD:
-         result = "Double Click Press";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Interfaces::SimpleButton;
-
-   switch (attribute)
-   {
-      case SHORT_PRESS_MAX_DURATION_ATTR:
-         result = "Short Press Max Duration";
-         break;
-      case EXTRA_LONG_PRESS_MIN_DURATION_ATTR:
-         result = "Extra Long Press Min Duration";
-         break;
-      case DOUBLE_CLICK_GAP_DURATION_ATTR:
-         result = "Double Click Gap Duration";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// Core Services & Interfaces
-// =============================================================================
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   stream << Hex<uint8_t>((uint8_t) command) << " (" << result << " [C])";
-
-   using namespace HF::Core::AttributeReporting;
-
-   switch (command)
-   {
-      // case PERIODIC_REPORT_CMD:
-      case CREATE_PERIODIC_CMD:
-      {
-         result = "<Create> Periodic Report";
-         break;
-      }
-      // case EVENT_REPORT_CMD:
-      case CREATE_EVENT_CMD:
-      {
-         result = "<Create> Event Report";
-         break;
-      }
-      case ADD_PERIODIC_ENTRY_CMD:
-      {
-         result = "Add periodic report entry";
-         break;
-      }
-      case ADD_EVENT_ENTRY_CMD:
-      {
-         result = "Add event report entry";
-         break;
-      }
-      case DELETE_REPORT_CMD:
-      {
-         result = "Delete report";
-         break;
-      }
-      case GET_PERIODIC_ENTRIES:
-      {
-         result = "Get periodic entries";
-         break;
-      }
-      case GET_EVENT_ENTRIES:
-      {
-         result = "Get event entries";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream,
-                         const HF::Core::AttributeReporting::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::AttributeReporting;
-
-   switch (attribute)
-   {
-      case REPORT_COUNT_ATTR:
-      {
-         result = "Report entries count";
-         break;
-      }
-      case PERIODIC_REPORT_COUNT_ATTR:
-      {
-         result = "Periodic report entries count";
-         break;
-      }
-      case EVENT_REPORT_COUNT_ATTR:
-      {
-         result = "Event report entries count";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::BindManagement;
-
-   switch (command)
-   {
-      case ADD_BIND_CMD:
-      {
-         result = "Add bind entry";
-         break;
-      }
-      case REMOVE_BIND_CMD:
-      {
-         result = "Remove bind entry";
-         break;
-      }
-      case START_SESSION_CMD:
-      {
-         result = "Start Session - Read Registration Info";
-         break;
-      }
-      case END_SESSION_CMD:
-      {
-         result = "End Session - Read Registration Info";
-         break;
-      }
-      case GET_ENTRIES_CMD:
-      {
-         result = "Get Entries";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::BindManagement;
-
-   switch (attribute)
-   {
-      case NUMBER_OF_ENTRIES_ATTR:
-      {
-         result = "Number of entries";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream,
-                         const HF::Core::DeviceInformation::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::DeviceInformation;
-
-   switch (attribute)
-   {
-      case CORE_VERSION_ATTR:
-      {
-         result = "HF Core version";
-         break;
-      }
-      case PROFILE_VERSION_ATTR:
-      {
-         result = "HF Profile version";
-         break;
-      }
-      case INTERFACE_VERSION_ATTR:
-      {
-         result = "HF Interface version";
-         break;
-      }
-      case EXTRA_CAP_ATTR:
-      {
-         result = "Extra capabilities";
-         break;
-      }
-      case MIN_SLEEP_TIME_ATTR:
-      {
-         result = "Minimum sleep time";
-         break;
-      }
-      case ACTUAL_RESP_TIME_ATTR:
-      {
-         result = "Actual response time";
-         break;
-      }
-      case APP_VERSION_ATTR:
-      {
-         result = "Hardware version";
-         break;
-      }
-      case HW_VERSION_ATTR:
-      {
-         result = "Hardware version";
-         break;
-      }
-      case EMC_ATTR:
-      {
-         result = "Electronic Manufacture Code";
-         break;
-      }
-      case DECT_ID_ATTR:
-      {
-         result = "RFPI / IPUI";
-         break;
-      }
-      case MANUFACTURE_NAME_ATTR:
-      {
-         result = "Manufacture's name";
-         break;
-      }
-      case LOCATION_ATTR:
-      {
-         result = "Location";
-         break;
-      }
-      case ENABLED_ATTR:
-      {
-         result = "Device enabled";
-         break;
-      }
-      case FRIENDLY_NAME_ATTR:
-      {
-         result = "Device friendly";
-         break;
-      }
-      case UID_ATTR:
-      {
-         result = "Device UID";
-         break;
-      }
-      case SERIAL_NUMBER_ATTR:
-      {
-         result = "Serial number";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::DeviceManagement;
-
-   switch (command)
-   {
-      case REGISTER_CMD:
-      {
-         result = "Register device";
-         break;
-      }
-      case DEREGISTER_CMD:
-      {
-         result = "De-register device";
-         break;
-      }
-      case START_SESSION_CMD:
-      {
-         result = "Start Session";
-         break;
-      }
-      case END_SESSION_CMD:
-      {
-         result = "End Session";
-         break;
-      }
-      case GET_ENTRIES_CMD:
-      {
-         result = "Get Entries";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream,
-                         const HF::Core::DeviceManagement::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::DeviceManagement;
-
-   switch (attribute)
-   {
-      case NUMBER_OF_ENTRIES_ATTR:
-      {
-         result = "Number of entries";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
