@@ -1410,6 +1410,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
       {
          switch (message.itf.id)
          {
+            /* Core Service & Interface [C] */
             case HF::Interface::ATTRIBUTE_REPORTING:
                stream << static_cast<AttributeReporting::CMD>(message.itf.member);
                break;
@@ -1419,6 +1420,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::CMD>(message.itf.member);
                break;
+            /* Interfaces [C] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::CMD>(message.itf.member);
                break;
@@ -1431,6 +1433,11 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SIMPLE_POWER_METER:
                stream << static_cast<SimplePowerMeter::CMD>(message.itf.member);
                break;
+            case HF::Interface::SIMPLE_BUTTON:
+               stream << static_cast<SimpleButton::CMD>(message.itf.member);
+               break;
+
+            /* Unknown [C] */
             default:
                stream << "Unknown";
                break;
@@ -1448,6 +1455,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
       {
          switch (message.itf.id)
          {
+            /* Core Service & Interface [A] */
             case HF::Interface::ATTRIBUTE_REPORTING:
                stream << static_cast<AttributeReporting::Attributes>(message.itf.member);
                break;
@@ -1460,6 +1468,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::Attributes>(message.itf.member);
                break;
+            /* Interfaces [A] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::Attributes>(message.itf.member);
                break;
@@ -1472,6 +1481,11 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SIMPLE_POWER_METER:
                stream << static_cast<SimplePowerMeter::Attributes>(message.itf.member);
                break;
+            case HF::Interface::SIMPLE_BUTTON:
+               stream << static_cast<SimpleButton::Attributes>(message.itf.member);
+               break;
+
+            /* Unknown [A] */
             default:
                break;
          }

@@ -311,10 +311,36 @@ module Hanfun
 
       # Add debug strings
       def debug_support
+        file    = source_path("debug.cpp", false)
+
+        # Add commands & attribute to string conversion.
         source  = File.expand_path(find_in_source_paths("debug.cpp.erb"))
         context = instance_eval("binding")
         content = ERB.new(::File.binread(source), nil, "-", "@output_buffer").result(context)
-        inject_into_file(source_path("debug.cpp", false), content, before: @generator[:debug][:insert_at])
+        inject_into_file(file, content, before: @generator[:debug][:insert_at])
+
+        # Add support for protocol message to string conversion.
+
+        # For commands
+        type = "C"
+        pattern = lambda { |type| /^\s+\/\*\s+#{@generator[:debug][:protocol]}\s+\[#{type}\]/ }
+        content = %Q{
+        case HF::Interface::#{@interface.to_uid}:
+          stream << static_cast<#{@interface.to_class}::CMD>(message.itf.member);
+          break;
+        }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
+        content = format_code(content, true)
+        inject_into_file(file, content, before: pattern.call(type))
+
+        # For attributes
+        type = "A"
+        content = %Q{
+        case HF::Interface::#{@interface.to_uid}:
+         stream << static_cast<#{@interface.to_class}::Attributes>(message.itf.member);
+         break;
+        }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
+        content = format_code(content, true)
+        inject_into_file(file, content, before: pattern.call(type))
       end
 
       # Add interface files to build.
@@ -432,6 +458,19 @@ module Hanfun
         inject_into_file(file, content, before: where)
       end
 
+      def find_indent(file, pattern)
+        baseline = nil
+        IO.foreach(file) do |line|
+          if (line[pattern])
+            baseline = line
+            break
+          end
+        end
+
+        return baseline.index(/\S/) unless baseline.nil?
+        return 0
+      end
+
       def method_missing(symbol)
         return false if symbol.to_s =~ /\?$/
         super
@@ -470,6 +509,7 @@ module Hanfun
 
         @generator[:debug] = {
           insert_at: /^\s+\/\/\s+=+\n\/\/\s+Core/,
+          protocol: "Unknown",
         }
 
         @generator[:include] = {
@@ -520,6 +560,7 @@ module Hanfun
 
         @generator[:debug] = {
           insert_at: /^\s+\/\/\s+=+\n\/\/\s+Protocol/,
+          protocol: "Interfaces",
         }
 
         @generator[:include] = {
