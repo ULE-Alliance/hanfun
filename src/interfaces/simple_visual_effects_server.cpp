@@ -24,6 +24,20 @@ using namespace HF;
 using namespace HF::Interfaces;
 using namespace HF::Interfaces::SimpleVisualEffects;
 
+#define CALL_EFFECT(_param, _method)                  \
+   {                                                  \
+      _param effect;                                  \
+      uint16_t size = effect.unpack(payload, offset); \
+      if (size != 0)                                  \
+      {                                               \
+         _method(packet.source, effect);              \
+      }                                               \
+      else                                            \
+      {                                               \
+         return Common::Result::FAIL_ARG;             \
+      }                                               \
+   }
+
 // =============================================================================
 // Simple Visual Effects Interface : Server Role
 // =============================================================================
@@ -39,16 +53,13 @@ using namespace HF::Interfaces::SimpleVisualEffects;
 Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
-
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
       case ON_CMD:
       {
-         on(packet.source);
+         CALL_EFFECT(OnEffect, on);
          break;
       }
 
@@ -100,10 +111,10 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Server::on(const Protocol::Address &addr)
+void Server::on(const Protocol::Address &addr, const OnEffect &effect)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(effect);
 }
 
 // =============================================================================
@@ -115,7 +126,6 @@ void Server::on(const Protocol::Address &addr)
 // =============================================================================
 void Server::off(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
 }
 

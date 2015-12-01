@@ -55,6 +55,60 @@ TEST(SimpleVisualEffects, UID)
    LONGS_EQUAL(HF::Interface::SIMPLE_VISUAL_EFFECTS, interface.uid());
 }
 
+TEST(SimpleVisualEffects, OnEffect_Size)
+{
+   OnEffect effect;
+   LONGS_EQUAL(sizeof(uint16_t), OnEffect::min_size);
+   LONGS_EQUAL(sizeof(uint16_t), effect.size());
+}
+
+TEST(SimpleVisualEffects, OnEffect_Pack)
+{
+   const Common::ByteArray expected({
+      0x00, 0x00, 0x00,
+      0x5A, 0x5A,
+      0x00, 0x00, 0x00,
+   });
+
+   Common::ByteArray payload(3 + OnEffect::min_size + 3);
+
+   OnEffect effect(0x5A5A);
+   LONGS_EQUAL(OnEffect::min_size, effect.pack(payload, 3));
+
+   CHECK_EQUAL(expected, payload);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, effect.pack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+}
+
+TEST(SimpleVisualEffects, OnEffect_Unpack)
+{
+   const Common::ByteArray payload({
+      0x00, 0x00, 0x00,
+      0x5A, 0x5A,
+      0x00, 0x00, 0x00,
+   });
+
+   OnEffect effect;
+   LONGS_EQUAL(0, effect.duration);
+
+   LONGS_EQUAL(OnEffect::min_size, effect.unpack(payload, 3));
+
+   LONGS_EQUAL(0x5A5A, effect.duration);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect.duration = 0;
+   LONGS_EQUAL(0, effect.unpack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   LONGS_EQUAL(0, effect.duration);
+}
+
 // =============================================================================
 // Simple Visual Effects Client
 // =============================================================================
@@ -62,13 +116,11 @@ TEST(SimpleVisualEffects, UID)
 //! Test Group for Simple Visual Effects Client interface class.
 TEST_GROUP(SimpleVisualEffectsClient)
 {
-   // TODO Add required unit tests.
    struct SimpleVisualEffectsClient: public InterfaceHelper<SimpleVisualEffects::Client>
    {};
 
    SimpleVisualEffectsClient client;
    Protocol::Address addr;
-
 
    TEST_SETUP()
    {
@@ -87,10 +139,9 @@ TEST_GROUP(SimpleVisualEffectsClient)
 //! @test On support.
 TEST(SimpleVisualEffectsClient, On)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.on(addr);
+   client.on(addr, 42);
 
    mock("Interface").checkExpectations();
 
@@ -98,12 +149,16 @@ TEST(SimpleVisualEffectsClient, On)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SimpleVisualEffects::ON_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   OnEffect effect;
+   effect.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(42, effect.duration);
 }
 
 //! @test Off support.
 TEST(SimpleVisualEffectsClient, Off)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client.off(addr);
@@ -171,13 +226,12 @@ TEST(SimpleVisualEffectsClient, Breathe)
 //! Test Group for Simple Visual Effects Server interface class.
 TEST_GROUP(SimpleVisualEffectsServer)
 {
-   // TODO Add required unit tests.
    struct SimpleVisualEffectsServer: public InterfaceHelper<SimpleVisualEffects::Server>
    {
-      void on(const Protocol::Address &addr)
+      void on(const Protocol::Address &addr, const OnEffect &effect)
       {
          UNUSED(addr);
-         mock("SimpleVisualEffects::Server").actualCall("on");
+         mock("SimpleVisualEffects::Server").actualCall("on").withParameter("duration", effect.duration);
       }
 
       void off(const Protocol::Address &addr)
@@ -231,14 +285,25 @@ TEST_GROUP(SimpleVisualEffectsServer)
 //! @test On support.
 TEST(SimpleVisualEffectsServer, On)
 {
-   // FIXME Generated Stub.
-   mock("SimpleVisualEffects::Server").expectOneCall("on");
+   mock("SimpleVisualEffects::Server").expectOneCall("on").withParameter("duration", 0x5AA5);
+
+   payload = Common::ByteArray({ 0x00, 0x00, 0x00,
+                                 0x5A, 0xA5, // Duration value.
+                                 0x00, 0x00, 0x00});
 
    packet.message.itf.member = SimpleVisualEffects::ON_CMD;
 
    CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
 
    mock("SimpleVisualEffects::Server").checkExpectations();
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   payload = Common::ByteArray({ 0x00, 0x00, 0x00});
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, 2));
+
+   mock("support").checkExpectations();
 }
 
 //! @test Off support.

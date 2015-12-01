@@ -71,8 +71,52 @@ namespace HF
          } CMD;
 
          // =============================================================================
-         // Attribute Helper classes
+         // Helper classes
          // =============================================================================
+
+         /*!
+          * This structure represents the parameters required for the @c ON_CMD effect.
+          */
+         struct OnEffect
+         {
+            uint16_t duration;   //!< How long to keep the visual indicator @c ON in miliseconds.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _duration   number of miliseconds for the @c ON_CMD
+             */
+            OnEffect(uint16_t _duration = 0): duration(_duration) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t);
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const
+            {
+               return min_size;
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               array.write(offset, duration);
+
+               return min_size;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               array.read(offset, duration);
+
+               return min_size;
+            }
+         };
 
          /*!
           * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
@@ -134,8 +178,9 @@ namespace HF
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            virtual void on(const Protocol::Address &addr);
+            virtual void on(const Protocol::Address &addr, const OnEffect &effect);
 
             /*!
              * Callback that is called when a @c SimpleVisualEffects::OFF_CMD,
@@ -207,17 +252,20 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] duration   number of milliseconds to keep the visual effect @c ON.
              */
-            void on(const Protocol::Address &addr);
+            void on(const Protocol::Address &addr, uint16_t duration);
 
             /*!
              * Send a HAN-FUN message containing a @c SimpleVisualEffects::ON_CMD,
              * to the broadcast network address.
+             *
+             * @param [in] duration   number of milliseconds to keep the visual effect @c ON.
              */
-            void on()
+            void on(uint16_t duration)
             {
                Protocol::Address addr;
-               on(addr);
+               on(addr, duration);
             }
 #endif
 
