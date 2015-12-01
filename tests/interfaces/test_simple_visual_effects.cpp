@@ -55,6 +55,10 @@ TEST(SimpleVisualEffects, UID)
    LONGS_EQUAL(HF::Interface::SIMPLE_VISUAL_EFFECTS, interface.uid());
 }
 
+// =============================================================================
+// On Effect
+// =============================================================================
+
 TEST(SimpleVisualEffects, OnEffect_Size)
 {
    OnEffect effect;
@@ -108,6 +112,10 @@ TEST(SimpleVisualEffects, OnEffect_Unpack)
 
    LONGS_EQUAL(0, effect.duration);
 }
+
+// =============================================================================
+// Blink Effect
+// =============================================================================
 
 TEST(SimpleVisualEffects, BlinkEffect_Size)
 {
@@ -187,6 +195,10 @@ TEST(SimpleVisualEffects, BlinkEffect_Unpack)
    mock("support").checkExpectations();
 }
 
+// =============================================================================
+// Fade Effect
+// =============================================================================
+
 TEST(SimpleVisualEffects, FadeEffect_Size)
 {
    FadeEffect effect;
@@ -246,6 +258,10 @@ TEST(SimpleVisualEffects, FadeEffect_Unpack)
    LONGS_EQUAL(0, effect.end);
    LONGS_EQUAL(0, effect.duration);
 }
+
+// =============================================================================
+// Breathe Effect
+// =============================================================================
 
 TEST(SimpleVisualEffects, BreatheEffect_Size)
 {
@@ -493,7 +509,8 @@ TEST_GROUP(SimpleVisualEffectsServer)
       void on(const Protocol::Address &addr, const OnEffect &effect)
       {
          UNUSED(addr);
-         mock("SimpleVisualEffects::Server").actualCall("on").withParameter("duration", effect.duration);
+         mock("SimpleVisualEffects::Server").actualCall("on")
+            .withParameter("duration", effect.duration);
       }
 
       void off(const Protocol::Address &addr)
@@ -562,9 +579,9 @@ TEST(SimpleVisualEffectsServer, On)
 {
    mock("SimpleVisualEffects::Server").expectOneCall("on").withParameter("duration", 0x5AA5);
 
-   payload = Common::ByteArray({ 0x00, 0x00, 0x00,
-                                 0x5A, 0xA5, // Duration value.
-                                 0x00, 0x00, 0x00});
+   payload = Common::ByteArray({0x00, 0x00, 0x00,
+                                0x5A, 0xA5,  // Duration value.
+                                0x00, 0x00, 0x00});
 
    packet.message.itf.member = SimpleVisualEffects::ON_CMD;
 
@@ -574,7 +591,7 @@ TEST(SimpleVisualEffectsServer, On)
 
    mock("support").expectOneCall("assert").ignoreOtherParameters();
 
-   payload = Common::ByteArray({ 0x00, 0x00, 0x00});
+   payload = Common::ByteArray({0x00, 0x00, 0x00});
 
    CHECK_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, 2));
 
