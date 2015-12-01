@@ -110,3 +110,12 @@ cmake_dependent_option(HF_ITF_STS_COOL_OFFSET_ATTR
                        OFF)
 
 option(HF_ITF_STS_BOOST_CMD          "Interface - Simple Thermostat - Boost Command Support")
+
+# =============================================================================
+# Simple Button Configuration
+# =============================================================================
+
+option(HF_ITF_SIMPLE_BUTTON_SHORT_PRESS_CMD                    "Interface - Simple Button - Short Press")
+option(HF_ITF_SIMPLE_BUTTON_LONG_PRESS_CMD                     "Interface - Simple Button - Long Press")
+option(HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD               "Interface - Simple Button - Extra Long Press")
+option(HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD             "Interface - Simple Button - Double Click Press")

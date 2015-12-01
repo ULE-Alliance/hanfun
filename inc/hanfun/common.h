@@ -82,7 +82,7 @@
    }
 
 /*!
- * @ingroup
+ * @ingroup common
  *
  * Helper macro to implement attribute setters.
  *
@@ -101,6 +101,21 @@
                                                \
       notify(old_attr, new_attr);              \
    }
+
+#ifndef HF_ASSERT // Allow macro to be replaced for testing.
+/*!
+ * @ingroup common
+ *
+ * Helper macro to check for correct assumptions.
+ *
+ * @param [in] _expr    helper class that wraps the attribute.
+ */
+#define HF_ASSERT(_expr, _block) \
+{                                \
+   assert(_expr);                \
+   if (!(_expr)) _block          \
+}
+#endif
 
 // =============================================================================
 // API

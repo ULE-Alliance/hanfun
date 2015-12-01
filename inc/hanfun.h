@@ -47,6 +47,7 @@
 #include "hanfun/interfaces/level_control.h"
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_button.h"
 
 // =============================================================================
 // Core Services & Interfaces.
@@ -55,6 +56,8 @@
 #include "hanfun/core.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/device_information.h"
+#include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/bind_management.h"
 
 // =============================================================================
 // Profiles

@@ -43,7 +43,7 @@ using namespace HF::Interfaces;
  *
  * @retval Common::Result::OK            if the attribute was updated;
  * @retval Common::Result::FAIL_SUPPORT  if the attribute does not exist;
- * @retval Common::Result::FAIL_RO_ATTR  if the attribute does not exist;
+ * @retval Common::Result::FAIL_RO_ATTR  if the attribute is read-only;
  * @retval Common::Result::FAIL_UNKNOWN  otherwise.
  */
 // =============================================================================

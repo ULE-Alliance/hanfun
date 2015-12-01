@@ -50,6 +50,7 @@ add_interface("simple_power_meter")
 add_interface("simple_temperature")
 add_interface("simple_humidity")
 add_interface("simple_thermostat")
+add_interface("simple_button")
 
 ## Core Services & Interfaces
 macro(add_core __name)

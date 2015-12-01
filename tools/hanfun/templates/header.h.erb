@@ -94,7 +94,7 @@ namespace HF
             static constexpr bool    WRITABLE = <%= attr.writable ? "true" : "false" %>;   //!< Attribute Read/Write
 
             <%= attr.to_class %>(<%= attr.type %> value = 0, HF::Interface *owner = nullptr):
-               Attribute<<%= attr.type %>>(Interface::<%= @interface.to_uid %>, ID, owner, value, WRITABLE)
+               Attribute<<%= attr.type %>>(HF::Interface::<%= @interface.to_uid %>, ID, owner, value, WRITABLE)
             {}
          };
 

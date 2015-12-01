@@ -40,4 +40,15 @@
 
 #define HF_ITF_STS_BOOST_CMD            @HF_ITF_STS_BOOST_CMD@
 
+// =============================================================================
+// Simple Button Configuration
+// =============================================================================
+
+#define HF_ITF_SIMPLE_BUTTON_SHORT_PRESS_CMD                     @HF_ITF_SIMPLE_BUTTON_SHORT_PRESS_CMD@
+#define HF_ITF_SIMPLE_BUTTON_LONG_PRESS_CMD                      @HF_ITF_SIMPLE_BUTTON_LONG_PRESS_CMD@
+#define HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD                @HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD@
+#define HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD              @HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD@
+
+#define HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR      @HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR@
+
 #endif  /* HF_CONFIG_H */

@@ -24,6 +24,7 @@
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
 #include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_button.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -94,6 +95,10 @@ static const Entry factories[] =
    {
       HF::Interface::SIMPLE_THERMOSTAT,
       HF::Interfaces::SimpleThermostat::create_attribute
+   },
+   {
+      HF::Interface::SIMPLE_BUTTON,
+      HF::Interfaces::SimpleButton::create_attribute,
    },
 };
 
