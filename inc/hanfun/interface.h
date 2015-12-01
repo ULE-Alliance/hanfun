@@ -69,14 +69,15 @@ namespace HF
          KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
 
          /* Functional Interfaces. */
-         ALERT              = 0x0100,    //!< Alert interface UID
-         ON_OFF             = 0x0200,    //!< ON-OFF interface UID
-         LEVEL_CONTROL      = 0x0201,    //!< Level Control interface UID
-         SIMPLE_POWER_METER = 0x0300,    //!< Simple Power Meter interface UID
-         SIMPLE_TEMPERATURE = 0x0301,    //!< Simple Temperature interface UID
-         SIMPLE_HUMIDITY    = 0x0302,    //!< Simple Humidity interface UID
-         SIMPLE_THERMOSTAT  = 0x0303,    //!< Simple Thermostat interface UID
-         SIMPLE_BUTTON      = 0x0304,    //!< FIXME Simple Button interface UID.
+         ALERT                 = 0x0100, //!< Alert interface UID
+         ON_OFF                = 0x0200, //!< ON-OFF interface UID
+         LEVEL_CONTROL         = 0x0201, //!< Level Control interface UID
+         SIMPLE_POWER_METER    = 0x0300, //!< Simple Power Meter interface UID
+         SIMPLE_TEMPERATURE    = 0x0301, //!< Simple Temperature interface UID
+         SIMPLE_HUMIDITY       = 0x0302, //!< Simple Humidity interface UID
+         SIMPLE_THERMOSTAT     = 0x0303, //!< Simple Thermostat interface UID
+         SIMPLE_BUTTON         = 0x0304, //!< FIXME Simple Button interface UID.
+         SIMPLE_VISUAL_EFFECTS = 0x0305, //!< FIXME Simple Visual Effects interface UID.
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.

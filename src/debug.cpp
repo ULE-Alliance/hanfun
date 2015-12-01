@@ -838,6 +838,54 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButto
 }
 
 // =============================================================================
+// HF::Interfaces::SimpleVisualEffects
+// =============================================================================
+
+#include "hanfun/interfaces/simple_visual_effects.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleVisualEffects::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleVisualEffects;
+
+   switch (command)
+   {
+      case ON_CMD:
+         result = "On";
+         break;
+      case OFF_CMD:
+         result = "Off";
+         break;
+      case BLINK_CMD:
+         result = "Blink";
+         break;
+      case FADE_CMD:
+         result = "Fade";
+         break;
+      case BREATHE_CMD:
+         result = "Breathe";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Core Services & Interfaces
 // =============================================================================
 
@@ -1435,6 +1483,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::SIMPLE_BUTTON:
                stream << static_cast<SimpleButton::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_VISUAL_EFFECTS:
+               stream << static_cast<SimpleVisualEffects::CMD>(message.itf.member);
                break;
 
             /* Unknown [C] */

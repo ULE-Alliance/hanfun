@@ -68,6 +68,7 @@ add_interface_tests("simple_temperature")
 add_interface_tests("simple_humidity")
 add_interface_tests("simple_thermostat")
 add_interface_tests("simple_button")
+add_interface_tests("simple_visual_effects")
 
 ## Profiles ##
 set(TESTS_PROFILES_SRCS  "test_profiles.cpp")

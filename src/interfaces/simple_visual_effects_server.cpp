@@ -1,0 +1,165 @@
+// =============================================================================
+/*!
+ * @file       src/interfaces/simple_visual_effects_server.cpp
+ *
+ * This file contains the implementation of the Simple Visual Effects interface : Server role.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#include "hanfun/interfaces/simple_visual_effects.h"
+
+// =============================================================================
+// API
+// =============================================================================
+
+using namespace HF;
+using namespace HF::Interfaces;
+using namespace HF::Interfaces::SimpleVisualEffects;
+
+// =============================================================================
+// Simple Visual Effects Interface : Server Role
+// =============================================================================
+
+
+// =============================================================================
+// Server::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
+{
+   UNUSED(payload);
+   UNUSED(offset);
+
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+
+   switch (cmd)
+   {
+      case ON_CMD:
+      {
+         on(packet.source);
+         break;
+      }
+
+      case OFF_CMD:
+      {
+         off(packet.source);
+         break;
+      }
+
+#ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD
+      case BLINK_CMD:
+      {
+         blink(packet.source);
+         break;
+      }
+#endif
+
+#ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD
+      case FADE_CMD:
+      {
+         fade(packet.source);
+         break;
+      }
+#endif
+
+#ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD
+      case BREATHE_CMD:
+      {
+         breathe(packet.source);
+         break;
+      }
+#endif
+
+      default:
+         return Common::Result::FAIL_SUPPORT;
+   }
+
+   return Common::Result::OK;
+}
+
+// =============================================================================
+// Commands
+// =============================================================================
+
+// =============================================================================
+// Server::on
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::on(const Protocol::Address &addr)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+}
+
+// =============================================================================
+// Server::off
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::off(const Protocol::Address &addr)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+}
+
+#ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD
+// =============================================================================
+// Server::blink
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::blink(const Protocol::Address &addr)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+}
+#endif
+
+#ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD
+// =============================================================================
+// Server::fade
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::fade(const Protocol::Address &addr)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+}
+#endif
+
+#ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD
+// =============================================================================
+// Server::breathe
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::breathe(const Protocol::Address &addr)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+}
+#endif
