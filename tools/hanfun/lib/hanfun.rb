@@ -320,11 +320,11 @@ module Hanfun
         inject_into_file(file, content, before: @generator[:debug][:insert_at])
 
         # Add support for protocol message to string conversion.
+        pattern = lambda { |type| /^\s+\/\*\s+#{@generator[:debug][:protocol]}\s+\[#{type}\]/ }
 
         # For commands
         unless @commands.empty?
           type = "C"
-          pattern = lambda { |type| /^\s+\/\*\s+#{@generator[:debug][:protocol]}\s+\[#{type}\]/ }
           content = %Q{
             case HF::Interface::#{@interface.to_uid}:
               stream << static_cast<#{@interface.to_class}::CMD>(message.itf.member);
