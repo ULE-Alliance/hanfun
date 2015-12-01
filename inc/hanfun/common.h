@@ -82,7 +82,7 @@
    }
 
 /*!
- * @ingroup
+ * @ingroup common
  *
  * Helper macro to implement attribute setters.
  *

@@ -115,7 +115,6 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 // =============================================================================
 void Server::short_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    Protocol::Message message;
 
    message.itf.role   = CLIENT_ROLE;
@@ -134,7 +133,6 @@ void Server::short_press(const Protocol::Address &addr)
 // =============================================================================
 void Server::long_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    Protocol::Message message;
 
    message.itf.role   = CLIENT_ROLE;
@@ -154,7 +152,6 @@ void Server::long_press(const Protocol::Address &addr)
 // =============================================================================
 void Server::extra_long_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    Protocol::Message message;
 
    message.itf.role   = CLIENT_ROLE;
@@ -175,7 +172,6 @@ void Server::extra_long_press(const Protocol::Address &addr)
 // =============================================================================
 void Server::double_click_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    Protocol::Message message;
 
    message.itf.role   = CLIENT_ROLE;

@@ -98,7 +98,6 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 // =============================================================================
 void Client::short_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
 }
 #endif
@@ -113,7 +112,6 @@ void Client::short_press(const Protocol::Address &addr)
 // =============================================================================
 void Client::long_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
 }
 #endif
@@ -128,7 +126,6 @@ void Client::long_press(const Protocol::Address &addr)
 // =============================================================================
 void Client::extra_long_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
 }
 #endif
@@ -143,7 +140,6 @@ void Client::extra_long_press(const Protocol::Address &addr)
 // =============================================================================
 void Client::double_click_press(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
 }
 #endif

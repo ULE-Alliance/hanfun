@@ -62,7 +62,6 @@ TEST(SimpleButton, UID)
 //! Test Group for Simple Button Client interface class.
 TEST_GROUP(SimpleButtonClient)
 {
-   // TODO Add required unit tests.
    struct SimpleButtonClient: public InterfaceHelper<SimpleButton::Client>
    {
       void short_press(const Protocol::Address &addr)
@@ -115,7 +114,6 @@ TEST_GROUP(SimpleButtonClient)
 //! @test Short Press support.
 TEST(SimpleButtonClient, ShortPress)
 {
-   // FIXME Generated Stub.
    mock("SimpleButton::Client").expectOneCall("short_press");
 
    packet.message.itf.member = SimpleButton::SHORT_PRESS_CMD;
@@ -128,7 +126,6 @@ TEST(SimpleButtonClient, ShortPress)
 //! @test Long Press support.
 TEST(SimpleButtonClient, LongPress)
 {
-   // FIXME Generated Stub.
    mock("SimpleButton::Client").expectOneCall("long_press");
 
    packet.message.itf.member = SimpleButton::LONG_PRESS_CMD;
@@ -141,7 +138,6 @@ TEST(SimpleButtonClient, LongPress)
 //! @test Extra Long Press support.
 TEST(SimpleButtonClient, ExtraLongPress)
 {
-   // FIXME Generated Stub.
    mock("SimpleButton::Client").expectOneCall("extra_long_press");
 
    packet.message.itf.member = SimpleButton::EXTRA_LONG_PRESS_CMD;
@@ -154,7 +150,6 @@ TEST(SimpleButtonClient, ExtraLongPress)
 //! @test Double Click Press support.
 TEST(SimpleButtonClient, DoubleClickPress)
 {
-   // FIXME Generated Stub.
    mock("SimpleButton::Client").expectOneCall("double_click_press");
 
    packet.message.itf.member = SimpleButton::DOUBLE_CLICK_PRESS_CMD;
@@ -191,12 +186,21 @@ TEST_GROUP(SimpleButtonServer)
    {
       mock().clear();
    }
+
+   void check_message(SimpleButton::CMD cmd, const char *file, int line)
+   {
+      LONGS_EQUAL_LOCATION(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role, file, line);
+      LONGS_EQUAL_LOCATION(server.uid(), server.sendMsg.itf.id, file, line);
+      LONGS_EQUAL_LOCATION(cmd, server.sendMsg.itf.member, file, line);
+      LONGS_EQUAL_LOCATION(Protocol::Message::COMMAND_REQ, server.sendMsg.type, file, line);
+   }
 };
+
+#define CHECK_MESSAGE(_cmd)   check_message(_cmd, __FILE__, __LINE__)
 
 //! @test Short Press Max Duration support.
 TEST(SimpleButtonServer, ShortPressMaxDuration)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleButtonServer, ShortPressMaxDuration, true, short_press_max_duration, 42,
                    -42);
 }
@@ -204,7 +208,6 @@ TEST(SimpleButtonServer, ShortPressMaxDuration)
 //! @test Extra Long Press Min Duration support.
 TEST(SimpleButtonServer, ExtraLongPressMinDuration)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleButtonServer, ExtraLongPressMinDuration, true,
                    extra_long_press_min_duration, 42, -42);
 }
@@ -212,7 +215,6 @@ TEST(SimpleButtonServer, ExtraLongPressMinDuration)
 //! @test Double Click Gap Duration support.
 TEST(SimpleButtonServer, DoubleClickGapDuration)
 {
-   // FIXME Generated Stub.
    CHECK_OPT_ATTRIBUTE(SimpleButtonServer, DoubleClickGapDuration, true, double_click_gap_duration,
                        42, -42);
 }
@@ -220,63 +222,47 @@ TEST(SimpleButtonServer, DoubleClickGapDuration)
 //! @test Short Press support.
 TEST(SimpleButtonServer, ShortPress)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    server.short_press(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
-   LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
-   LONGS_EQUAL(SimpleButton::SHORT_PRESS_CMD, server.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+   CHECK_MESSAGE(SimpleButton::SHORT_PRESS_CMD);
 }
 
 //! @test Long Press support.
 TEST(SimpleButtonServer, LongPress)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    server.long_press(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
-   LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
-   LONGS_EQUAL(SimpleButton::LONG_PRESS_CMD, server.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+   CHECK_MESSAGE(SimpleButton::LONG_PRESS_CMD);
 }
 
 //! @test Extra Long Press support.
 TEST(SimpleButtonServer, ExtraLongPress)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    server.extra_long_press(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
-   LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
-   LONGS_EQUAL(SimpleButton::EXTRA_LONG_PRESS_CMD, server.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+   CHECK_MESSAGE(SimpleButton::EXTRA_LONG_PRESS_CMD);
 }
 
 //! @test Double Click Press support.
 TEST(SimpleButtonServer, DoubleClickPress)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    server.double_click_press(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
-   LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
-   LONGS_EQUAL(SimpleButton::DOUBLE_CLICK_PRESS_CMD, server.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+   CHECK_MESSAGE(SimpleButton::DOUBLE_CLICK_PRESS_CMD);
 }
