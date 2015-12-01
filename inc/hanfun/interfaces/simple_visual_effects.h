@@ -186,6 +186,52 @@ namespace HF
          };
 
          /*!
+          * This structure represents the parameters required for the @c FADE_CMD effect.
+          */
+         struct FadeEffect
+         {
+            uint8_t  start    = 0;  //!< Start brightness in percentage.
+            uint8_t  end      = 0;  //!< End brightness in percentage.
+            uint16_t duration = 0;  //!< Time in miliseconds to go from @c start to @c end brightness.
+
+            FadeEffect(uint8_t _start = 0, uint8_t _end = 0, uint16_t _duration = 0):
+               start(_start), end(_end), duration(_duration) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = 2 * sizeof(uint8_t) + sizeof(uint16_t);
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const
+            {
+               return min_size;
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               offset += array.write(offset, start);
+               offset += array.write(offset, end);
+               offset += array.write(offset, duration);
+
+               return min_size;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               offset += array.read(offset, start);
+               offset += array.read(offset, end);
+               offset += array.read(offset, duration);
+
+               return min_size;
+            }
+         };
+
+         /*!
           * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
           *
           * @see HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
@@ -274,8 +320,9 @@ namespace HF
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            virtual void fade(const Protocol::Address &addr);
+            virtual void fade(const Protocol::Address &addr, const FadeEffect &effect);
 #endif
 
 #ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD
@@ -386,17 +433,18 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            void fade(const Protocol::Address &addr);
+            void fade(const Protocol::Address &addr, const FadeEffect &effect);
 
             /*!
              * Send a HAN-FUN message containing a @c SimpleVisualEffects::FADE_CMD,
              * to the broadcast network address.
              */
-            void fade()
+            void fade(const FadeEffect &effect)
             {
                Protocol::Address addr;
-               fade(addr);
+               fade(addr, effect);
             }
 #endif
 

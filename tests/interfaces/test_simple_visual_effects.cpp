@@ -187,6 +187,66 @@ TEST(SimpleVisualEffects, BlinkEffect_Unpack)
    mock("support").checkExpectations();
 }
 
+TEST(SimpleVisualEffects, FadeEffect_Size)
+{
+   FadeEffect effect;
+   LONGS_EQUAL(2 * sizeof(uint8_t) + sizeof(uint16_t), FadeEffect::min_size);
+   LONGS_EQUAL(2 * sizeof(uint8_t) + sizeof(uint16_t), effect.size());
+}
+
+TEST(SimpleVisualEffects, FadeEffect_Pack)
+{
+   const Common::ByteArray expected({0x00, 0x00, 0x00,
+                                     0x12,         // Start brightness.
+                                     0x34,         // End brightness
+                                     0x56, 0x78,   // Duration.
+                                     0x00, 0x00, 0x00});
+
+   Common::ByteArray payload(3 + FadeEffect::min_size + 3);
+
+   FadeEffect effect(0x12, 0x34, 0x5678);
+   LONGS_EQUAL(FadeEffect::min_size, effect.pack(payload, 3));
+
+   CHECK_EQUAL(expected, payload);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, effect.pack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+}
+
+TEST(SimpleVisualEffects, FadeEffect_Unpack)
+{
+   const Common::ByteArray payload({0x00, 0x00, 0x00,
+                                    0x12,          // Start brightness.
+                                    0x34,          // End brightness
+                                    0x56, 0x78,    // Duration.
+                                    0x00, 0x00, 0x00});
+
+   FadeEffect effect;
+   LONGS_EQUAL(0, effect.start);
+   LONGS_EQUAL(0, effect.end);
+   LONGS_EQUAL(0, effect.duration);
+
+   LONGS_EQUAL(FadeEffect::min_size, effect.unpack(payload, 3));
+
+   LONGS_EQUAL(0x12, effect.start);
+   LONGS_EQUAL(0x34, effect.end);
+   LONGS_EQUAL(0x5678, effect.duration);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect = FadeEffect();
+   LONGS_EQUAL(0, effect.unpack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   LONGS_EQUAL(0, effect.start);
+   LONGS_EQUAL(0, effect.end);
+   LONGS_EQUAL(0, effect.duration);
+}
+
 // =============================================================================
 // Simple Visual Effects Client
 // =============================================================================
@@ -275,10 +335,10 @@ TEST(SimpleVisualEffectsClient, Blink)
 //! @test Fade support.
 TEST(SimpleVisualEffectsClient, Fade)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.fade(addr);
+   FadeEffect expected(0x12, 0x34, 0x5678);
+   client.fade(addr, expected);
 
    mock("Interface").checkExpectations();
 
@@ -286,6 +346,13 @@ TEST(SimpleVisualEffectsClient, Fade)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SimpleVisualEffects::FADE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   FadeEffect effect;
+   effect.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(0x12, effect.start);
+   LONGS_EQUAL(0x34, effect.end);
+   LONGS_EQUAL(0x5678, effect.duration);
 }
 
 //! @test Breathe support.
@@ -334,10 +401,13 @@ TEST_GROUP(SimpleVisualEffectsServer)
             .withParameter("number_of_cycles", effect.number_of_cycles);
       }
 
-      void fade(const Protocol::Address &addr)
+      void fade(const Protocol::Address &addr, const FadeEffect &effect)
       {
          UNUSED(addr);
-         mock("SimpleVisualEffects::Server").actualCall("fade");
+         mock("SimpleVisualEffects::Server").actualCall("fade")
+            .withParameter("start", effect.start)
+            .withParameter("end", effect.end)
+            .withParameter("duration", effect.duration);
       }
 
       void breathe(const Protocol::Address &addr)
@@ -438,8 +508,16 @@ TEST(SimpleVisualEffectsServer, Blink)
 //! @test Fade support.
 TEST(SimpleVisualEffectsServer, Fade)
 {
-   // FIXME Generated Stub.
-   mock("SimpleVisualEffects::Server").expectOneCall("fade");
+   mock("SimpleVisualEffects::Server").expectOneCall("fade")
+      .withParameter("start", 0x12)
+      .withParameter("end", 0x34)
+      .withParameter("duration", 0x5678);
+
+   payload = Common::ByteArray({0x00, 0x00, 0x00,
+                                0x12,        // Start brightness.
+                                0x34,        // End brightness.
+                                0x56, 0x78,  // Duration.
+                                0x00, 0x00, 0x00});
 
    packet.message.itf.member = SimpleVisualEffects::FADE_CMD;
 

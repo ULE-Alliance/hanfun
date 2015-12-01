@@ -79,7 +79,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 #ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD
       case FADE_CMD:
       {
-         fade(packet.source);
+         CALL_EFFECT(FadeEffect, fade);
          break;
       }
 #endif
@@ -151,10 +151,10 @@ void Server::blink(const Protocol::Address &addr, const BlinkEffect &effect)
  *
  */
 // =============================================================================
-void Server::fade(const Protocol::Address &addr)
+void Server::fade(const Protocol::Address &addr, const FadeEffect &effect)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(effect);
 }
 #endif
 
