@@ -41,7 +41,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 
    if (pack_id == HF::Attributes::ALL)
    {
-#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
       result.push_back(DOUBLE_CLICK_GAP_DURATION_ATTR);
 #endif
    }
@@ -84,7 +84,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
          return new Attribute(*this, attr, getter, setter, ExtraLongPressMinDuration::WRITABLE);
       }
 
-#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
       case DOUBLE_CLICK_GAP_DURATION_ATTR:
       {
          typedef HF::Attributes::Attribute<uint16_t, Server> Attribute;

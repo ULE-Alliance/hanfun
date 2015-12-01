@@ -20,6 +20,10 @@
 #include "hanfun/protocol.h"
 #include "hanfun/interface.h"
 
+// =============================================================================
+// API
+// =============================================================================
+
 namespace HF
 {
    namespace Interfaces
@@ -157,8 +161,10 @@ namespace HF
             uint16_t _short_press_max_duration;      //!< Short Press Max Duration
             uint16_t _extra_long_press_min_duration; //!< Extra Long Press Min Duration
 
-#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR
-            uint16_t _double_click_gap_duration;   //!< Double Click Gap Duration
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
+            //! Double Click Gap Duration
+            uint16_t _double_click_gap_duration = DOUBLE_CLICK_GAP_DURATION_MIN_VALUE;
+#endif
 #endif
 
             public:
@@ -287,7 +293,7 @@ namespace HF
              */
             virtual void extra_long_press_min_duration(uint16_t __value);
 
-#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
             /*!
              * Get the Double Click Gap Duration for the Simple Button server.
              *

@@ -119,5 +119,3 @@ option(HF_ITF_SIMPLE_BUTTON_SHORT_PRESS_CMD                    "Interface - Simp
 option(HF_ITF_SIMPLE_BUTTON_LONG_PRESS_CMD                     "Interface - Simple Button - Long Press")
 option(HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD               "Interface - Simple Button - Extra Long Press")
 option(HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD             "Interface - Simple Button - Double Click Press")
-
-option(HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR     "Interface - Simple Button - Double Click Gap Duration")
