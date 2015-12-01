@@ -249,15 +249,18 @@ module Hanfun
           code_defs << "#define #{name}  @#{name.strip}@"
         end
 
+        @has_opt_attr = !@attributes.select { |attr| !attr.mandatory }.empty?
+        @has_opt_cmds = !@commands.select { |cmd| !cmd.server.mandatory || !cmd.client.mandatory}.empty?
+
         # Add options for options attributes to cmake/options.cmake
         append_to_file cmake_path("options.cmake") do
           header.gsub(/^\/\//, "#") + code_opts.join("\n") + "\n"
-        end
+        end if(@has_opt_cmds || @has_opt_attr)
 
         # Add optional attributes to config.h.in
         inject_into_file top_path("config.h.in"), :before => /\s+#endif/ do
           header + code_defs.join("\n")
-        end
+        end if(@has_opt_cmds || @has_opt_attr)
       end
 
       # Generate include file.
@@ -379,7 +382,7 @@ module Hanfun
 
         inject_into_file test_path("config.h.in", false), :before => @generator[:tests][:insert_config_at] do
           header + code.join("\n")
-        end
+        end if (@has_opt_cmds || @has_opt_attr)
 
         # Add test code to file.
         code = "#{@generator[:build][:macro]}_tests(\"#{name}\")\n"
