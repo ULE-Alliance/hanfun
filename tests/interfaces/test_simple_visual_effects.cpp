@@ -109,6 +109,84 @@ TEST(SimpleVisualEffects, OnEffect_Unpack)
    LONGS_EQUAL(0, effect.duration);
 }
 
+TEST(SimpleVisualEffects, BlinkEffect_Size)
+{
+   BlinkEffect effect;
+   LONGS_EQUAL(3 * sizeof(uint16_t), BlinkEffect::min_size);
+   LONGS_EQUAL(3 * sizeof(uint16_t), effect.size());
+}
+
+TEST(SimpleVisualEffects, BlinkEffect_Pack)
+{
+   const Common::ByteArray expected({0x00, 0x00, 0x00,
+                                     0x12, 0x34, // Duty cycle ON.
+                                     0x56, 0x78, // Duty cycle OFF.
+                                     0x9A, 0xBC, // Number of cycles.
+                                     0x00, 0x00, 0x00});
+
+   Common::ByteArray payload(3 + BlinkEffect::min_size + 3);
+
+   BlinkEffect effect(0x1234, 0x5678, 0x9ABC);
+   LONGS_EQUAL(BlinkEffect::min_size, effect.pack(payload, 3));
+
+   CHECK_EQUAL(expected, payload);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, effect.pack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect.number_of_cycles = 0;
+   LONGS_EQUAL(0, effect.pack(payload, 3));
+
+   mock("support").checkExpectations();
+}
+
+TEST(SimpleVisualEffects, BlinkEffect_Unpack)
+{
+   Common::ByteArray payload({0x00, 0x00, 0x00,
+                              0x12, 0x34,           // Duty cycle ON.
+                              0x56, 0x78,           // Duty cycle OFF.
+                              0x9A, 0xBC,           // Number of cycles.
+                              0x00, 0x00, 0x00});
+
+   BlinkEffect effect;
+   LONGS_EQUAL(0, effect.duty_cycle_on);
+   LONGS_EQUAL(0, effect.duty_cycle_off);
+   LONGS_EQUAL(1, effect.number_of_cycles);
+
+   LONGS_EQUAL(BlinkEffect::min_size, effect.unpack(payload, 3));
+
+   LONGS_EQUAL(0x1234, effect.duty_cycle_on);
+   LONGS_EQUAL(0x5678, effect.duty_cycle_off);
+   LONGS_EQUAL(0x9ABC, effect.number_of_cycles);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect = BlinkEffect();
+   LONGS_EQUAL(0, effect.unpack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   LONGS_EQUAL(0, effect.duty_cycle_on);
+   LONGS_EQUAL(0, effect.duty_cycle_off);
+   LONGS_EQUAL(1, effect.number_of_cycles);
+
+   // Number of cycles can't be zero.
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect                 = BlinkEffect();
+   payload[3 + 2 + 2]     = 0x00;
+   payload[3 + 2 + 2 + 1] = 0x00;
+
+   LONGS_EQUAL(0, effect.unpack(payload, 3));
+
+   mock("support").checkExpectations();
+}
+
 // =============================================================================
 // Simple Visual Effects Client
 // =============================================================================
@@ -174,10 +252,10 @@ TEST(SimpleVisualEffectsClient, Off)
 //! @test Blink support.
 TEST(SimpleVisualEffectsClient, Blink)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.blink(addr);
+   BlinkEffect expected(0x1234, 0x5678, 0x9ABC);
+   client.blink(addr, expected);
 
    mock("Interface").checkExpectations();
 
@@ -185,6 +263,13 @@ TEST(SimpleVisualEffectsClient, Blink)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SimpleVisualEffects::BLINK_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   BlinkEffect effect;
+   effect.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(0x1234, effect.duty_cycle_on);
+   LONGS_EQUAL(0x5678, effect.duty_cycle_off);
+   LONGS_EQUAL(0x9ABC, effect.number_of_cycles);
 }
 
 //! @test Fade support.
@@ -240,10 +325,13 @@ TEST_GROUP(SimpleVisualEffectsServer)
          mock("SimpleVisualEffects::Server").actualCall("off");
       }
 
-      void blink(const Protocol::Address &addr)
+      void blink(const Protocol::Address &addr, const BlinkEffect &effect)
       {
          UNUSED(addr);
-         mock("SimpleVisualEffects::Server").actualCall("blink");
+         mock("SimpleVisualEffects::Server").actualCall("blink")
+            .withParameter("duty_cycle_on", effect.duty_cycle_on)
+            .withParameter("duty_cycle_off", effect.duty_cycle_off)
+            .withParameter("number_of_cycles", effect.number_of_cycles);
       }
 
       void fade(const Protocol::Address &addr)
@@ -309,7 +397,6 @@ TEST(SimpleVisualEffectsServer, On)
 //! @test Off support.
 TEST(SimpleVisualEffectsServer, Off)
 {
-   // FIXME Generated Stub.
    mock("SimpleVisualEffects::Server").expectOneCall("off");
 
    packet.message.itf.member = SimpleVisualEffects::OFF_CMD;
@@ -322,14 +409,30 @@ TEST(SimpleVisualEffectsServer, Off)
 //! @test Blink support.
 TEST(SimpleVisualEffectsServer, Blink)
 {
-   // FIXME Generated Stub.
-   mock("SimpleVisualEffects::Server").expectOneCall("blink");
+   mock("SimpleVisualEffects::Server").expectOneCall("blink")
+      .withParameter("duty_cycle_on", 0x1234)
+      .withParameter("duty_cycle_off", 0x5678)
+      .withParameter("number_of_cycles", 0x9ABC);
+
+   payload = Common::ByteArray({0x00, 0x00, 0x00,
+                                0x12, 0x34,     // Duty cycle ON.
+                                0x56, 0x78,     // Duty cycle OFF.
+                                0x9A, 0xBC,     // Number of cycles.
+                                0x00, 0x00, 0x00});
 
    packet.message.itf.member = SimpleVisualEffects::BLINK_CMD;
 
    CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
 
    mock("SimpleVisualEffects::Server").checkExpectations();
+
+   payload = Common::ByteArray({0x00, 0x00, 0x00});
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, 2));
+
+   mock("support").checkExpectations();
 }
 
 //! @test Fade support.

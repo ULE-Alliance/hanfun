@@ -85,10 +85,11 @@ void Client::off(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::blink(const Protocol::Address &addr)
+void Client::blink(const Protocol::Address &addr, const BlinkEffect &effect)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   Protocol::Message message(effect.size());
+
+   effect.pack(message.payload);
 
    message.itf.role   = CLIENT_ROLE;
    message.itf.id     = Interface::SIMPLE_VISUAL_EFFECTS;

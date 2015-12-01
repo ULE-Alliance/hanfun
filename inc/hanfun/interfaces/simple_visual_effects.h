@@ -119,6 +119,73 @@ namespace HF
          };
 
          /*!
+          * This structure represents the parameters required for the @c BLICK_CMD effect.
+          */
+         struct BlinkEffect
+         {
+            uint16_t duty_cycle_on    = 0;   //!< Number of miliseconds to keep visual indicator @c ON.
+            uint16_t duty_cycle_off   = 0;   //!< Number of miliseconds to keep visual indicator @c OFF.
+            uint16_t number_of_cycles = 1;   //!< Number of times to repeat the ON-OFF cycle.
+
+            /*!
+             * Constructor
+             *
+             * @param [in] _duty_cycle_on      Number of miliseconds to keep visual indicator @c ON.
+             * @param [in] _duty_cycle_off     Number of miliseconds to keep visual indicator @c OFF
+             * @param [in] _number_of_cycles   Number of times to repeat the ON-OFF cycle.
+             */
+            BlinkEffect(uint16_t _duty_cycle_on = 0, uint16_t _duty_cycle_off = 0,
+                        uint16_t _number_of_cycles = 1): duty_cycle_on(_duty_cycle_on),
+               duty_cycle_off(_duty_cycle_off), number_of_cycles(_number_of_cycles) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = 3 * sizeof(uint16_t);
+
+            //! Minimum value for @c number_of_cycles parameter.
+            static constexpr uint16_t min_number_of_cycles = 1;
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const
+            {
+               return min_size;
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               HF_ASSERT(number_of_cycles >= min_number_of_cycles,
+               {
+                  return 0;
+               });
+
+               offset += array.write(offset, duty_cycle_on);
+               offset += array.write(offset, duty_cycle_off);
+               offset += array.write(offset, number_of_cycles);
+
+               return min_size;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               offset += array.read(offset, duty_cycle_on);
+               offset += array.read(offset, duty_cycle_off);
+               offset += array.read(offset, number_of_cycles);
+
+               HF_ASSERT(number_of_cycles >= min_number_of_cycles,
+               {
+                  return 0;
+               })
+
+               return min_size;
+            }
+         };
+
+         /*!
           * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
           *
           * @see HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
@@ -196,8 +263,9 @@ namespace HF
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            virtual void blink(const Protocol::Address &addr);
+            virtual void blink(const Protocol::Address &addr, const BlinkEffect &effect);
 #endif
 
 #ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD
@@ -295,17 +363,20 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            void blink(const Protocol::Address &addr);
+            void blink(const Protocol::Address &addr, const BlinkEffect &effect);
 
             /*!
              * Send a HAN-FUN message containing a @c SimpleVisualEffects::BLINK_CMD,
              * to the broadcast network address.
+             *
+             * @param [in] effect     the parameters for the visual effect.
              */
-            void blink()
+            void blink(const BlinkEffect &effect)
             {
                Protocol::Address addr;
-               blink(addr);
+               blink(addr, effect);
             }
 #endif
 

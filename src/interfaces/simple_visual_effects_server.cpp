@@ -42,7 +42,6 @@ using namespace HF::Interfaces::SimpleVisualEffects;
 // Simple Visual Effects Interface : Server Role
 // =============================================================================
 
-
 // =============================================================================
 // Server::handle_command
 // =============================================================================
@@ -72,7 +71,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 #ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD
       case BLINK_CMD:
       {
-         blink(packet.source);
+         CALL_EFFECT(BlinkEffect, blink);
          break;
       }
 #endif
@@ -137,10 +136,10 @@ void Server::off(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Server::blink(const Protocol::Address &addr)
+void Server::blink(const Protocol::Address &addr, const BlinkEffect &effect)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(effect);
 }
 #endif
 
