@@ -201,22 +201,72 @@ TEST_GROUP(SimpleButtonServer)
 //! @test Short Press Max Duration support.
 TEST(SimpleButtonServer, ShortPressMaxDuration)
 {
-   CHECK_ATTRIBUTE(SimpleButtonServer, ShortPressMaxDuration, true, short_press_max_duration, 42,
-                   -42);
+   CHECK_ATTRIBUTE(SimpleButtonServer, ShortPressMaxDuration, true,
+                   short_press_max_duration, 42, 142);
+
+   mock("Interface").expectNCalls(3, "notify");
+
+   server.extra_long_press_min_duration(200);
+   server.short_press_max_duration(242);
+
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(242, server.extra_long_press_min_duration());
+
+   mock("Interface").expectNCalls(2, "notify");
+
+   server.extra_long_press_min_duration(0);
+   server.short_press_max_duration(42);
+
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.extra_long_press_min_duration());
 }
 
 //! @test Extra Long Press Min Duration support.
 TEST(SimpleButtonServer, ExtraLongPressMinDuration)
 {
    CHECK_ATTRIBUTE(SimpleButtonServer, ExtraLongPressMinDuration, true,
-                   extra_long_press_min_duration, 42, -42);
+                   extra_long_press_min_duration, 42, 142);
+
+   mock("Interface").expectNCalls(2, "notify");
+
+   server.extra_long_press_min_duration(200);
+
+   server.short_press_max_duration(100);
+
+   mock("Interface").checkExpectations();
+
+   // Check lower bound.
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   server.extra_long_press_min_duration(server.short_press_max_duration() - 1);
+
+   mock("support").checkExpectations();
+
+   LONGS_EQUAL(200, server.extra_long_press_min_duration());
+
+   // Disable lower bound.
+   mock("Interface").expectOneCall("notify");
+
+   server.extra_long_press_min_duration(0);
+
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.extra_long_press_min_duration());
 }
 
 //! @test Double Click Gap Duration support.
 TEST(SimpleButtonServer, DoubleClickGapDuration)
 {
-   CHECK_OPT_ATTRIBUTE(SimpleButtonServer, DoubleClickGapDuration, true, double_click_gap_duration,
-                       42, -42);
+   CHECK_OPT_ATTRIBUTE(SimpleButtonServer, DoubleClickGapDuration, true,
+                       double_click_gap_duration, 0x100, 0x200);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   server.double_click_gap_duration(Server::DOUBLE_CLICK_GAP_DURATION_MIN_VALUE - 1);
+
+   mock("support").checkExpectations();
 }
 
 //! @test Short Press support.

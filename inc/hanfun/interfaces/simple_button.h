@@ -169,6 +169,9 @@ namespace HF
 
             public:
 
+            //! This is the minimum value that the Double Click Gap Duration can have.
+            static constexpr uint16_t DOUBLE_CLICK_GAP_DURATION_MIN_VALUE = 0x0064;
+
             //! Constructor
             Server(): InterfaceRole<SimpleButton::Base, HF::Interface::SERVER_ROLE>() {}
 

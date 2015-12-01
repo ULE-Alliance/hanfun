@@ -208,6 +208,14 @@ uint16_t Server::short_press_max_duration() const
 void Server::short_press_max_duration(uint16_t __value)
 {
    HF_SETTER_HELPER(ShortPressMaxDuration, _short_press_max_duration, __value);
+
+   // Ensure extra long press minimum duration attribute is equal or greater than
+   // short press maximum duration.
+   if (_extra_long_press_min_duration != 0 &&
+       _extra_long_press_min_duration < _short_press_max_duration)
+   {
+      extra_long_press_min_duration(_short_press_max_duration);
+   }
 }
 
 // =============================================================================
@@ -231,9 +239,13 @@ uint16_t Server::extra_long_press_min_duration() const
 // =============================================================================
 void Server::extra_long_press_min_duration(uint16_t __value)
 {
+   HF_ASSERT((__value == 0 || __value >= _short_press_max_duration),
+   {
+      return;
+   });
+
    HF_SETTER_HELPER(ExtraLongPressMinDuration, _extra_long_press_min_duration, __value);
 }
-
 
 #ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR
 // =============================================================================
@@ -257,6 +269,11 @@ uint16_t Server::double_click_gap_duration() const
 // =============================================================================
 void Server::double_click_gap_duration(uint16_t __value)
 {
+   HF_ASSERT(__value >= DOUBLE_CLICK_GAP_DURATION_MIN_VALUE,
+   {
+      return;
+   });
+
    HF_SETTER_HELPER(DoubleClickGapDuration, _double_click_gap_duration, __value);
 }
 #endif
