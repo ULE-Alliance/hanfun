@@ -65,6 +65,14 @@ HF::Attributes::Factory HF::Testing::FactoryGetter(HF::Common::Interface itf)
    return result;
 }
 
+void HF::Testing::Assert(const char *expr, const char *file, int line)
+{
+   mock("support").actualCall("assert")
+      .withParameter("expr", expr)
+      .withParameter("file", file)
+      .withParameter("line", line);
+}
+
 // =============================================================================
 // Library Overrides
 // =============================================================================
