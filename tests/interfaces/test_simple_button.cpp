@@ -166,13 +166,16 @@ TEST(SimpleButtonClient, DoubleClickPress)
 //! Test Group for Simple Button Server interface class.
 TEST_GROUP(SimpleButtonServer)
 {
-   // TODO Add required unit tests.
    struct SimpleButtonServer: public InterfaceHelper<SimpleButton::Server>
-   {};
+   {
+      using InterfaceHelper<SimpleButton::Server>::short_press;
+      using InterfaceHelper<SimpleButton::Server>::long_press;
+      using InterfaceHelper<SimpleButton::Server>::extra_long_press;
+      using InterfaceHelper<SimpleButton::Server>::double_click_press;
+   };
 
    SimpleButtonServer server;
    Protocol::Address addr;
-
 
    TEST_SETUP()
    {
@@ -313,6 +316,116 @@ TEST(SimpleButtonServer, DoubleClickPress)
    server.double_click_press(addr);
 
    mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::DOUBLE_CLICK_PRESS_CMD);
+}
+
+//! @test Button Press handling.
+TEST(SimpleButtonServer, PressDetection)
+{
+   server.short_press_max_duration(500);
+
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(200);
+
+   // Should send a short press message.
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::SHORT_PRESS_CMD);
+
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(100 + 500);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::SHORT_PRESS_CMD);
+
+   // Should send a long press message.
+   server.extra_long_press_min_duration(0);
+
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(100 + 500 + 1);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::LONG_PRESS_CMD);
+
+   server.extra_long_press_min_duration(1000);
+
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(100 + 500 + 100);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::LONG_PRESS_CMD);
+
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(100 + 1000 - 1);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::LONG_PRESS_CMD);
+
+   // Should send an extra long press.
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(100 + 1000);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::EXTRA_LONG_PRESS_CMD);
+
+   mock("Interface").expectOneCall("send");
+
+   server.pressed(100);
+   server.released(100 + 1000 + 42);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::EXTRA_LONG_PRESS_CMD);
+}
+
+//! @test Double Press handling.
+TEST(SimpleButtonServer, DoublePressDetection)
+{
+   server.short_press_max_duration(500);
+   server.double_click_gap_duration(300);
+
+   uint16_t timestamp = 100;
+
+   mock("Interface").expectOneCall("send");
+
+   // Short press. #1
+   server.pressed(timestamp);
+   timestamp += 200;
+   server.released(timestamp);
+
+   mock("Interface").checkExpectations();
+
+   CHECK_MESSAGE(SimpleButton::SHORT_PRESS_CMD);
+
+   timestamp += 200;
+
+   mock("Interface").expectOneCall("send");
+
+   // Double click.
+   server.pressed(timestamp);
+
+   mock("Interface").checkExpectations();
+
+   timestamp += 200;
+   server.released(timestamp);
 
    CHECK_MESSAGE(SimpleButton::DOUBLE_CLICK_PRESS_CMD);
 }

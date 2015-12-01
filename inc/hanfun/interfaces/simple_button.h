@@ -158,13 +158,18 @@ namespace HF
          {
             protected:
 
-            uint16_t _short_press_max_duration;      //!< Short Press Max Duration
-            uint16_t _extra_long_press_min_duration; //!< Extra Long Press Min Duration
+            uint16_t _short_press_max_duration      = 0;  //!< Short Press Max Duration
+            uint16_t _extra_long_press_min_duration = 0;  //!< Extra Long Press Minimum Duration
 
 #ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
             //! Double Click Gap Duration
             uint16_t _double_click_gap_duration = DOUBLE_CLICK_GAP_DURATION_MIN_VALUE;
 #endif
+
+            uint16_t _timestamp = 0;         //!< Timestamp of last call.
+
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
+            bool _short_click_cmd  = false;  //!< Indicate if last click detected was a short click.
 #endif
 
             public:
@@ -177,6 +182,58 @@ namespace HF
 
             //! Destructor
             virtual ~Server() {}
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * This method is used to indicate that the button was pressed and generate the
+             * appropriate message, to the given address.
+             *
+             * @param [in] addr      the network address to send any generated message to.
+             * @param [in] timestamp time in milliseconds the button was released.
+             */
+            void pressed(const Protocol::Address &addr, uint16_t timestamp);
+
+            /*!
+             * This method is used to indicate that the button was pressed.
+             *
+             * @param [in] timestamp time in milliseconds the button was pressed.
+             */
+            void pressed(uint16_t timestamp)
+            {
+               Protocol::Address addr;
+               pressed(addr, timestamp);
+            }
+
+            /*!
+             * This method is used to indicate that the button was released and generate the
+             * appropriate message, to the given address.
+             *
+             * @warning Calling this method without calling @c pressed before has undefined behavior.
+             *
+             * @param [in] addr      the network address to send any generated message to.
+             * @param [in] timestamp time in milliseconds the button was released.
+             */
+            void released(const Protocol::Address &addr, uint16_t timestamp);
+
+            /*!
+             * This method is used to indicate that the button was released and generate the
+             * appropriate message, to the given broadcast address based on the difference between
+             * the @timestamp of the last call to @c pressed and the given @c timestamp.
+             *
+             * @warning Calling this method without calling @c pressed before has undefined behavior.
+             *
+             * @param [in] timestamp time in milliseconds the button was released.
+             */
+            void released(uint16_t timestamp)
+            {
+               Protocol::Address addr;
+               released(addr, timestamp);
+            }
+
+            protected:
 
             // ======================================================================
             // Commands
@@ -263,6 +320,7 @@ namespace HF
             //! @}
             // ======================================================================
 
+            public:
 
             // =============================================================================
             // Get/Set API.

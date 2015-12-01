@@ -14,6 +14,8 @@
  */
 // =============================================================================
 
+#include <cstdlib>
+
 #include "hanfun/interfaces/simple_button.h"
 
 // =============================================================================
@@ -101,10 +103,84 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    }
 }
 
-
 // =============================================================================
 // Commands
 // =============================================================================
+
+// =============================================================================
+// Server::pressed
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::pressed(const Protocol::Address &addr, uint16_t timestamp)
+{
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
+
+   if (_short_click_cmd)
+   {
+      uint16_t diff = std::abs(((int32_t) timestamp - (int32_t) _timestamp));
+
+      if (diff < _double_click_gap_duration) // Double-Click detected.
+      {
+         double_click_press(addr);
+      }
+      else
+      {
+         short_press(addr);
+      }
+   }
+   else
+#endif
+   {
+      _timestamp = timestamp;
+   }
+}
+
+// =============================================================================
+// Server::released
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::released(const Protocol::Address &addr, uint16_t timestamp)
+{
+   uint16_t diff = std::abs(((int32_t) timestamp - (int32_t) _timestamp));
+
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
+
+   if (_short_click_cmd)
+   {
+      _short_click_cmd = false;
+      return;
+   }
+
+#endif
+
+   if (diff <= _short_press_max_duration)
+   {
+      short_press(addr);
+      _short_click_cmd = true;
+      _timestamp       = timestamp;
+   }
+   else
+   {
+      _short_click_cmd = false;
+#ifdef HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD
+
+      if (_extra_long_press_min_duration != 0 && diff >= _extra_long_press_min_duration)
+      {
+         extra_long_press(addr);
+      }
+      else
+#endif
+      {
+         long_press(addr);
+      }
+   }
+}
 
 // =============================================================================
 // Server::short_press
