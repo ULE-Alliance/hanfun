@@ -119,3 +119,13 @@ option(HF_ITF_SIMPLE_BUTTON_SHORT_PRESS_CMD                    "Interface - Simp
 option(HF_ITF_SIMPLE_BUTTON_LONG_PRESS_CMD                     "Interface - Simple Button - Long Press")
 option(HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD               "Interface - Simple Button - Extra Long Press")
 option(HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD             "Interface - Simple Button - Double Click Press")
+
+# =============================================================================
+# Simple Visual Effects Configuration
+# =============================================================================
+
+option(HF_ITF_SIMPLE_VISUAL_EFFECTS_ON_CMD      "Interface - Simple Visual Effects - On")
+option(HF_ITF_SIMPLE_VISUAL_EFFECTS_OFF_CMD     "Interface - Simple Visual Effects - Off")
+option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD   "Interface - Simple Visual Effects - Blink")
+option(HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD    "Interface - Simple Visual Effects - Fade")
+option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD "Interface - Simple Visual Effects - Breathe")

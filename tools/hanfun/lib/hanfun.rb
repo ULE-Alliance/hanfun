@@ -322,25 +322,29 @@ module Hanfun
         # Add support for protocol message to string conversion.
 
         # For commands
-        type = "C"
-        pattern = lambda { |type| /^\s+\/\*\s+#{@generator[:debug][:protocol]}\s+\[#{type}\]/ }
-        content = %Q{
-        case HF::Interface::#{@interface.to_uid}:
-          stream << static_cast<#{@interface.to_class}::CMD>(message.itf.member);
-          break;
-        }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
-        content = format_code(content, true)
-        inject_into_file(file, content, before: pattern.call(type))
+        unless @commands.empty?
+          type = "C"
+          pattern = lambda { |type| /^\s+\/\*\s+#{@generator[:debug][:protocol]}\s+\[#{type}\]/ }
+          content = %Q{
+            case HF::Interface::#{@interface.to_uid}:
+              stream << static_cast<#{@interface.to_class}::CMD>(message.itf.member);
+              break;
+          }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
+          content = format_code(content, true)
+          inject_into_file(file, content, before: pattern.call(type))
+        end
 
         # For attributes
-        type = "A"
-        content = %Q{
-        case HF::Interface::#{@interface.to_uid}:
-         stream << static_cast<#{@interface.to_class}::Attributes>(message.itf.member);
-         break;
-        }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
-        content = format_code(content, true)
-        inject_into_file(file, content, before: pattern.call(type))
+        unless @attributes.empty?
+          type = "A"
+          content = %Q{
+            case HF::Interface::#{@interface.to_uid}:
+              stream << static_cast<#{@interface.to_class}::Attributes>(message.itf.member);
+              break;
+          }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
+          content = format_code(content, true)
+          inject_into_file(file, content, before: pattern.call(type))
+        end
       end
 
       # Add interface files to build.

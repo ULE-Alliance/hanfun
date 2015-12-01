@@ -71,14 +71,9 @@
  * @param [in] __offset    offset index to check available data from.
  * @param [in] __size      number of bytes required.
  */
-#define HF_SERIALIZABLE_CHECK(__array, __offset, __size) \
-   {                                                     \
-      assert(__array.available(__offset, __size));       \
-                                                         \
-      if (!__array.available(__offset, __size))          \
-      {                                                  \
-         return 0;                                       \
-      }                                                  \
+#define HF_SERIALIZABLE_CHECK(__array, __offset, __size)           \
+   {                                                               \
+      HF_ASSERT(__array.available(__offset, __size), {return 0;}); \
    }
 
 /*!
@@ -110,11 +105,11 @@
  *
  * @param [in] _expr    helper class that wraps the attribute.
  */
-#define HF_ASSERT(_expr, _block) \
-{                                \
-   assert(_expr);                \
-   if (!(_expr)) _block          \
-}
+   #define HF_ASSERT(_expr, _block) \
+   {                                \
+      assert(_expr);                \
+      if (!(_expr)) {_block}        \
+   }
 #endif
 
 // =============================================================================
