@@ -87,7 +87,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 #ifdef HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD
       case BREATHE_CMD:
       {
-         breathe(packet.source);
+         CALL_EFFECT(BreatheEffect, breathe);
          break;
       }
 #endif
@@ -166,9 +166,9 @@ void Server::fade(const Protocol::Address &addr, const FadeEffect &effect)
  *
  */
 // =============================================================================
-void Server::breathe(const Protocol::Address &addr)
+void Server::breathe(const Protocol::Address &addr, const BreatheEffect &effect)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(effect);
 }
 #endif

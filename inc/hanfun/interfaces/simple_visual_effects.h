@@ -232,6 +232,84 @@ namespace HF
          };
 
          /*!
+          * This structure represents the parameters required for the @c BREATHE_CMD effect.
+          */
+         struct BreatheEffect
+         {
+            uint8_t  start            = 0; //!< Start brightness in percentage.
+            uint16_t start_hold       = 0; //!< Number of miliseconds to hold @c start brightness.
+            uint16_t ste_duration     = 0; //!< Number of miliseconds to go from @c start to @c end brightness.
+
+            uint8_t  end              = 0; //!< End brightness in percentage.
+            uint16_t end_hold         = 0; //!< Number of miliseconds to hold @c end brightness.
+            uint16_t ets_duration     = 0; //!< Number of miliseconds to go from @c end to @c start brightness.
+
+            uint16_t number_of_cycles = 1;      //!< Number of times to repeat the Start-End-Start cycle.
+
+            BreatheEffect(uint8_t _start = 0, uint16_t _start_hold = 0,
+                          uint16_t _ste_duration = 0,
+                          uint8_t _end = 0, uint16_t _end_hold = 0, uint16_t _ets_duration = 0,
+                          uint16_t _number_of_cycles = 1):
+               start(_start), start_hold(_start_hold), ste_duration(_ste_duration),
+               end(_end), end_hold(_end_hold), ets_duration(_ets_duration),
+               number_of_cycles(_number_of_cycles) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = 2 * sizeof(uint8_t) + 5 * sizeof(uint16_t);
+
+            //! Minimum value for @c number_of_cycles parameter.
+            static constexpr uint16_t min_number_of_cycles = 1;
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const
+            {
+               return min_size;
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               HF_ASSERT(number_of_cycles >= min_number_of_cycles,
+               {
+                  return 0;
+               });
+
+               offset += array.write(offset, start);
+               offset += array.write(offset, start_hold);
+               offset += array.write(offset, ste_duration);
+               offset += array.write(offset, end);
+               offset += array.write(offset, end_hold);
+               offset += array.write(offset, ets_duration);
+               offset += array.write(offset, number_of_cycles);
+
+               return min_size;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               offset += array.read(offset, start);
+               offset += array.read(offset, start_hold);
+               offset += array.read(offset, ste_duration);
+               offset += array.read(offset, end);
+               offset += array.read(offset, end_hold);
+               offset += array.read(offset, ets_duration);
+               offset += array.read(offset, number_of_cycles);
+
+               HF_ASSERT(number_of_cycles >= min_number_of_cycles,
+               {
+                  return 0;
+               });
+
+               return min_size;
+            }
+         };
+
+         /*!
           * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
           *
           * @see HF::Interfaces::create_attribute (HF::Interfaces::SimpleVisualEffects::Server *,uint8_t)
@@ -331,8 +409,9 @@ namespace HF
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            virtual void breathe(const Protocol::Address &addr);
+            virtual void breathe(const Protocol::Address &addr, const BreatheEffect &effect);
 #endif
 
             //! @}
@@ -454,17 +533,20 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] effect     the parameters for the visual effect.
              */
-            void breathe(const Protocol::Address &addr);
+            void breathe(const Protocol::Address &addr, const BreatheEffect &effect);
 
             /*!
              * Send a HAN-FUN message containing a @c SimpleVisualEffects::BREATHE_CMD,
              * to the broadcast network address.
+             *
+             * @param [in] effect     the parameters for the visual effect.
              */
-            void breathe()
+            void breathe(const BreatheEffect &effect)
             {
                Protocol::Address addr;
-               breathe(addr);
+               breathe(addr, effect);
             }
 #endif
 

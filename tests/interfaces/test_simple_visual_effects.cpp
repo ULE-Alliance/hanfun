@@ -247,6 +247,103 @@ TEST(SimpleVisualEffects, FadeEffect_Unpack)
    LONGS_EQUAL(0, effect.duration);
 }
 
+TEST(SimpleVisualEffects, BreatheEffect_Size)
+{
+   BreatheEffect effect;
+   LONGS_EQUAL(2 * sizeof(uint8_t) + 5 * sizeof(uint16_t), BreatheEffect::min_size);
+   LONGS_EQUAL(2 * sizeof(uint8_t) + 5 * sizeof(uint16_t), effect.size());
+}
+
+TEST(SimpleVisualEffects, BreatheEffect_Pack)
+{
+   const Common::ByteArray expected({0x00, 0x00, 0x00,
+                                     0x12,       // Start brightness.
+                                     0x34, 0x56, // Start brightness hold time.
+                                     0x78, 0x9A, // Start to End time.
+
+                                     0xBC,       // End brightness.
+                                     0xDE, 0xF1, // End brightness hold time.
+                                     0x23, 0x45, // End to Start time.
+
+                                     0x67, 0x89, // Number of cycles.
+                                     0x00, 0x00, 0x00});
+
+   Common::ByteArray payload(3 + BreatheEffect::min_size + 3);
+
+   BreatheEffect effect(0x12, 0x3456, 0x789A, 0xBC, 0xDEF1, 0x2345, 0x6789);
+   LONGS_EQUAL(BreatheEffect::min_size, effect.pack(payload, 3));
+
+   CHECK_EQUAL(expected, payload);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, effect.pack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect.number_of_cycles = 0;
+   LONGS_EQUAL(0, effect.pack(payload, 3));
+
+   mock("support").checkExpectations();
+}
+
+TEST(SimpleVisualEffects, BreatheEffect_Unpack)
+{
+   Common::ByteArray payload({0x00, 0x00, 0x00,
+                              0x12,             // Start brightness.
+                              0x34, 0x56,       // Start brightness hold time.
+                              0x78, 0x9A,       // Start to End time.
+
+                              0xBC,             // End brightness.
+                              0xDE, 0xF1,       // End brightness hold time.
+                              0x23, 0x45,       // End to Start time.
+
+                              0x67, 0x89,       // Number of cycles.
+                              0x00, 0x00, 0x00});
+
+   BreatheEffect effect;
+   LONGS_EQUAL(0, effect.start);
+   LONGS_EQUAL(0, effect.start_hold);
+   LONGS_EQUAL(0, effect.ste_duration);
+   LONGS_EQUAL(0, effect.end);
+   LONGS_EQUAL(0, effect.end_hold);
+   LONGS_EQUAL(0, effect.ets_duration);
+   LONGS_EQUAL(1, effect.number_of_cycles);
+
+   LONGS_EQUAL(BreatheEffect::min_size, effect.unpack(payload, 3));
+
+   LONGS_EQUAL(0x12, effect.start);
+   LONGS_EQUAL(0x3456, effect.start_hold);
+   LONGS_EQUAL(0x789A, effect.ste_duration);
+
+   LONGS_EQUAL(0xBC, effect.end);
+   LONGS_EQUAL(0xDEF1, effect.end_hold);
+   LONGS_EQUAL(0x2345, effect.ets_duration);
+
+   LONGS_EQUAL(0x6789, effect.number_of_cycles);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect = BreatheEffect();
+   LONGS_EQUAL(0, effect.unpack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   // Number of cycles can't be zero.
+   effect = BreatheEffect();
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   effect                           = BreatheEffect();
+   payload[3 + 2 * (1 + 2 + 2)]     = 0x00;
+   payload[3 + 2 * (1 + 2 + 2) + 1] = 0x00;
+
+   LONGS_EQUAL(0, effect.unpack(payload, 3));
+
+   mock("support").checkExpectations();
+}
+
 // =============================================================================
 // Simple Visual Effects Client
 // =============================================================================
@@ -358,10 +455,10 @@ TEST(SimpleVisualEffectsClient, Fade)
 //! @test Breathe support.
 TEST(SimpleVisualEffectsClient, Breathe)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.breathe(addr);
+   BreatheEffect expected(0x12, 0x3456, 0x789A, 0xBC, 0xDEF1, 0x2345, 0x6789);
+   client.breathe(addr, expected);
 
    mock("Interface").checkExpectations();
 
@@ -369,6 +466,19 @@ TEST(SimpleVisualEffectsClient, Breathe)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SimpleVisualEffects::BREATHE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   BreatheEffect effect;
+   effect.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(0x12, effect.start);
+   LONGS_EQUAL(0x3456, effect.start_hold);
+   LONGS_EQUAL(0x789A, effect.ste_duration);
+
+   LONGS_EQUAL(0xBC, effect.end);
+   LONGS_EQUAL(0xDEF1, effect.end_hold);
+   LONGS_EQUAL(0x2345, effect.ets_duration);
+
+   LONGS_EQUAL(0x6789, effect.number_of_cycles);
 }
 
 // =============================================================================
@@ -410,10 +520,17 @@ TEST_GROUP(SimpleVisualEffectsServer)
             .withParameter("duration", effect.duration);
       }
 
-      void breathe(const Protocol::Address &addr)
+      void breathe(const Protocol::Address &addr, const BreatheEffect &effect)
       {
          UNUSED(addr);
-         mock("SimpleVisualEffects::Server").actualCall("breathe");
+         mock("SimpleVisualEffects::Server").actualCall("breathe")
+            .withParameter("start", effect.start)
+            .withParameter("start_hold", effect.start_hold)
+            .withParameter("ste_duration", effect.ste_duration)
+            .withParameter("end", effect.end)
+            .withParameter("end_hold", effect.end_hold)
+            .withParameter("ets_duration", effect.ets_duration)
+            .withParameter("number_of_cycles", effect.number_of_cycles);
       }
 
    };
@@ -529,12 +646,38 @@ TEST(SimpleVisualEffectsServer, Fade)
 //! @test Breathe support.
 TEST(SimpleVisualEffectsServer, Breathe)
 {
-   // FIXME Generated Stub.
-   mock("SimpleVisualEffects::Server").expectOneCall("breathe");
+   mock("SimpleVisualEffects::Server").expectOneCall("breathe")
+      .withParameter("start", 0x12)
+      .withParameter("start_hold", 0x3456)
+      .withParameter("ste_duration", 0x789A)
+      .withParameter("end", 0xBC)
+      .withParameter("end_hold", 0xDEF1)
+      .withParameter("ets_duration", 0x2345)
+      .withParameter("number_of_cycles", 0x6789);
+
+   payload = Common::ByteArray({0x00, 0x00, 0x00,
+                                0x12,        // Start brightness.
+                                0x34, 0x56,  // Start brightness hold time.
+                                0x78, 0x9A,  // Start to End time.
+
+                                0xBC,        // End brightness.
+                                0xDE, 0xF1,  // End brightness hold time.
+                                0x23, 0x45,  // End to Start time.
+
+                                0x67, 0x89,  // Number of cycles.
+                                0x00, 0x00, 0x00});
 
    packet.message.itf.member = SimpleVisualEffects::BREATHE_CMD;
 
    CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
 
    mock("SimpleVisualEffects::Server").checkExpectations();
+
+   payload = Common::ByteArray({0x00, 0x00, 0x00});
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, 2));
+
+   mock("support").checkExpectations();
 }

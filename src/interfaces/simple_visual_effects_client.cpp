@@ -129,10 +129,11 @@ void Client::fade(const Protocol::Address &addr, const FadeEffect &effect)
  *
  */
 // =============================================================================
-void Client::breathe(const Protocol::Address &addr)
+void Client::breathe(const Protocol::Address &addr, const BreatheEffect &effect)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   Protocol::Message message(effect.size());
+
+   effect.pack(message.payload);
 
    message.itf.role   = CLIENT_ROLE;
    message.itf.id     = Interface::SIMPLE_VISUAL_EFFECTS;
