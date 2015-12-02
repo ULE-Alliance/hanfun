@@ -67,7 +67,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 {
 <%- unless @attributes.empty? -%>
-   using namespace HF::Interfaces::<%= @interface.to_class %>;
+   using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 
    <%= @interface.to_class %>::Attributes attr = static_cast<<%= @interface.to_class %>::Attributes>(uid);
 
