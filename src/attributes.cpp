@@ -33,6 +33,7 @@
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/rssi.h"
+#include "hanfun/core/suota.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -77,6 +78,10 @@ static const Entry factories[] =
    {
       HF::Interface::RSSI,
       HF::Core::RSSI::create_attribute,
+   },
+   {
+      HF::Interface::SUOTA,
+      HF::Core::SUOTA::create_attribute,
    },
    /* Functional Interfaces. */
    {

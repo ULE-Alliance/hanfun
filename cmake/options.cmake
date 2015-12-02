@@ -129,3 +129,9 @@ option(HF_ITF_SIMPLE_VISUAL_EFFECTS_OFF_CMD     "Interface - Simple Visual Effec
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD   "Interface - Simple Visual Effects - Blink")
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD    "Interface - Simple Visual Effects - Fade")
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD "Interface - Simple Visual Effects - Breathe")
+
+# =============================================================================
+# SUOTA Configuration
+# =============================================================================
+
+option(HF_CORE_SUOTA_CHECK_VERSION_CMD         "Interface - SUOTA - Check Version")

@@ -68,6 +68,7 @@ namespace HF
          POWER               = 0x0110,   //!< Power interface UID. __Not implemented__
          KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
          RSSI                = 0x0111,   //!< %RSSI interface UID.
+         SUOTA               = 0x0400,   //!< FIXME SUOTA interface UID.
 
          /* Functional Interfaces. */
          ALERT                 = 0x0100, //!< Alert interface UID

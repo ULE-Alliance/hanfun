@@ -88,6 +88,7 @@ add_core_tests("device_information")
 add_core_tests("attribute_reporting")
 add_core_tests("session_management")
 add_core_tests("rssi")
+add_core_tests("suota")
 
 ## Transport Layer ##
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
