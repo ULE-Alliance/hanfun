@@ -62,7 +62,6 @@ TEST(SimpleAirPressure, UID)
 //! Test Group for Simple Air Pressure Client interface class.
 TEST_GROUP(SimpleAirPressureClient)
 {
-   // TODO Add required unit tests.
    struct SimpleAirPressureClient: public InterfaceHelper<SimpleAirPressure::Client>
    {};
 
@@ -87,7 +86,6 @@ TEST_GROUP(SimpleAirPressureClient)
 //! Test Group for Simple Air Pressure Server interface class.
 TEST_GROUP(SimpleAirPressureServer)
 {
-   // TODO Add required unit tests.
    struct SimpleAirPressureServer: public InterfaceHelper<SimpleAirPressure::Server>
    {};
 
@@ -109,27 +107,23 @@ TEST_GROUP(SimpleAirPressureServer)
 //! @test Value support.
 TEST(SimpleAirPressureServer, Value)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleAirPressureServer, Value, false, value, 42, -42);
 }
 
 //! @test Maximum support.
 TEST(SimpleAirPressureServer, Maximum)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleAirPressureServer, Maximum, false, maximum, 42, -42);
 }
 
 //! @test Minimum support.
 TEST(SimpleAirPressureServer, Minimum)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleAirPressureServer, Minimum, false, minimum, 42, -42);
 }
 
 //! @test Tolerance support.
 TEST(SimpleAirPressureServer, Tolerance)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleAirPressureServer, Tolerance, false, tolerance, 42, -42);
 }
