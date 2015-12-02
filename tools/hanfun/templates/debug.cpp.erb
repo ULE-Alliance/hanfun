@@ -60,7 +60,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>:
    {
       <%- @attributes.each do |arg| -%>
       case <%= arg.to_uid %>:
-         result = "<%= arg.name.split('_').map { |p| p.capitalize }.join(' ') %>";
+         result = "<%= arg.to_doc %>";
          break;
       <%- end -%>
       default:
