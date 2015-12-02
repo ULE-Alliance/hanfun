@@ -52,6 +52,7 @@ add_interface("simple_humidity")
 add_interface("simple_thermostat")
 add_interface("simple_button")
 add_interface("simple_visual_effects")
+add_interface("simple_air_pressure")
 
 ## Core Services & Interfaces
 macro(add_core __name)

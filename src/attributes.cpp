@@ -26,6 +26,7 @@
 #include "hanfun/interfaces/simple_thermostat.h"
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
+#include "hanfun/interfaces/simple_air_pressure.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -104,6 +105,10 @@ static const Entry factories[] =
    {
       HF::Interface::SIMPLE_VISUAL_EFFECTS,
       HF::Interfaces::SimpleVisualEffects::create_attribute,
+   },
+   {
+      HF::Interface::SIMPLE_AIR_PRESSURE,
+      HF::Interfaces::SimpleAirPressure::create_attribute,
    },
 };
 

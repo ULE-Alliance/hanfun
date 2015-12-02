@@ -49,6 +49,7 @@
 #include "hanfun/interfaces/simple_thermostat.h"
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
+#include "hanfun/interfaces/simple_air_pressure.h"
 
 // =============================================================================
 // Core Services & Interfaces.
