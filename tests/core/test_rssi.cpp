@@ -62,7 +62,6 @@ TEST(RSSI, UID)
 //! Test Group for RSSI Client interface class.
 TEST_GROUP(RSSIClient)
 {
-   // TODO Add required unit tests.
    struct RSSIClient: public InterfaceHelper<RSSI::Client>
    {};
 
@@ -87,12 +86,10 @@ TEST_GROUP(RSSIClient)
 //! Test Group for RSSI Server interface class.
 TEST_GROUP(RSSIServer)
 {
-   // TODO Add required unit tests.
    struct RSSIServer: public InterfaceHelper<RSSI::Server>
    {};
 
    RSSIServer server;
-
 
    TEST_SETUP()
    {
@@ -109,6 +106,5 @@ TEST_GROUP(RSSIServer)
 //! @test RSSI support.
 TEST(RSSIServer, Value)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(RSSIServer, Value, false, value, 42, -42);
 }
