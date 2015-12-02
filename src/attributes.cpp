@@ -32,6 +32,7 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/rssi.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -72,6 +73,10 @@ static const Entry factories[] =
    {
       HF::Interface::ATTRIBUTE_REPORTING,
       HF::Core::AttributeReporting::create_attribute,
+   },
+   {
+      HF::Interface::RSSI,
+      HF::Core::RSSI::create_attribute,
    },
    /* Functional Interfaces. */
    {

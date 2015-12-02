@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * @file       src/<%= @namespace.path %>/<%= @interface.name %>_server.cpp
+ * @file       src/<%= @namespace.path %>/<%= @interface.path %>_server.cpp
  *
  * This file contains the implementation of the <%= @interface.to_doc %> <%= @type %> : Server role.
  *
@@ -14,7 +14,7 @@
  */
 // =============================================================================
 
-#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
+#include "hanfun/<%= @namespace.path %>/<%= @interface.path %>.h"
 
 // =============================================================================
 // API
@@ -38,7 +38,6 @@ using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 // =============================================================================
 HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
-<%- unless @attributes.empty? -%>
    HF::Attributes::UIDS result({<%= @attributes.select { |attr| attr.mandatory }.map { |attr| attr.to_uid }.join (", ") %>});
 
    if (pack_id == HF::Attributes::ALL)
@@ -51,10 +50,6 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
    }
 
    return result;
-<%- else -%>
-   UNUSED(pack_id);
-   return HF::Attributes::UIDS();
-<%- end -%>
 }
 
 // =============================================================================
@@ -66,8 +61,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 // =============================================================================
 HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 {
-<%- unless @attributes.empty? -%>
-   using namespace HF::Interfaces::<%= @interface.to_class %>;
+   using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
 
    <%= @interface.to_class %>::Attributes attr = static_cast<<%= @interface.to_class %>::Attributes>(uid);
 
@@ -94,10 +88,6 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
       default:
          return nullptr;
    }
-<%- else -%>
-   UNUSED(uid);
-   return nullptr;
-<%- end -%>
 }
 <%- end -%>
 

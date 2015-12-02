@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * @file       inc/hanfun/<%= @namespace.path %>/<%= @interface.name %>.h
+ * @file       inc/hanfun/<%= @namespace.path %>/<%= @interface.path %>.h
  *
  * This file contains the definitions for the <%= @interface.to_doc %> <%= @type %>.
  *
@@ -31,7 +31,7 @@ namespace HF
       }
 
       /*!
-       * @ingroup <%= @interface.name %>_itf
+       * @ingroup <%= @interface.path %>_itf
        *
        * Create an attribute object that can hold the attribute with the given @c uid.
        *
@@ -52,7 +52,7 @@ namespace HF
       namespace <%= @interface.to_class %>
       {
          /*!
-         * @addtogroup <%= @interface.name %>_itf  <%= @interface.to_doc %> <%= @type %>
+          * @addtogroup <%= @interface.path %>_itf  <%= @interface.to_doc %> <%= @type %>
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the <%= @interface.to_doc %> <%= @type %> API.
@@ -377,7 +377,7 @@ namespace HF
 
 <%- unless @attributes.empty? && @commands.empty? -%>
 /*!
- * @addtogroup <%= @interface.name %>_itf
+ * @addtogroup <%= @interface.path %>_itf
  * @{
  */
 

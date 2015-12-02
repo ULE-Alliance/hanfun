@@ -55,11 +55,14 @@ module Hanfun
   class Interface < Option
 
     attr_reader :short
+    attr_reader :path
 
     def initialize(name, short)
       super(name)
+      @name = @to_class = @to_doc = name if name =~ /\A[A-Z]+\z/
       @short = short
       @short = @to_uid unless short
+      @path  = @name.underscore
     end
 
   end
@@ -74,14 +77,20 @@ module Hanfun
     def initialize(name, options)
       super(name)
       @to_uid = @name.upcase + "_ATTR"
-      if options =~ /(\w+):(\d+):(rw?):(m|o)/i
-        @type      = $1
-        @uid       = $2.to_i
-        @writable  = $3
-        @mandatory = $4
+      if options =~ /(\w+):(\d+):(rw?):(m|o)(:(\w+))?/i
+        @type         = $1
+        @uid          = $2.to_i
+        @writable     = $3
+        @mandatory    = $4
+        name_override = $6
 
         @writable  = @writable =~ /w/i ? true : false
-        @mandatory  = @mandatory =~ /m/i ? true : false
+        @mandatory = @mandatory =~ /m/i ? true : false
+
+        @name     = name_override if name_override
+        @to_class = @name.camelize if name_override
+
+        @to_doc   = name if name =~ /\A[A-Z]+\z/
       else
         raise ArgumentError, "Invalid option string '#{options}'"
       end
@@ -265,28 +274,28 @@ module Hanfun
 
       # Generate include file.
       def include_file
-        template("header.h.erb", include_path("#{name}.h")) do |content|
+        template("header.h.erb", include_path("#{@interface.path}.h")) do |content|
           format_code(content)
         end
       end
 
       # Generate common code file.
       def common_file
-        template("common.cpp.erb", source_path("#{name}.cpp")) do |content|
+        template("common.cpp.erb", source_path("#{@interface.path}.cpp")) do |content|
           format_code(content)
         end
       end
 
       # Generate server side code file.
       def server_file
-        template("server.cpp.erb", source_path("#{name}_server.cpp")) do |content|
+        template("server.cpp.erb", source_path("#{@interface.path}_server.cpp")) do |content|
           format_code(content)
         end
       end
 
       # Generate client side code file.
       def client_file
-        template("client.cpp.erb", source_path("#{name}_client.cpp")) do |content|
+        template("client.cpp.erb", source_path("#{@interface.path}_client.cpp")) do |content|
           format_code(content)
         end
       end
@@ -352,7 +361,7 @@ module Hanfun
 
       # Add interface files to build.
       def add_files_to_build
-        code = "#{@generator[:build][:macro]}(\"#{name}\")\n"
+        code = "#{@generator[:build][:macro]}(\"#{@interface.path}\")\n"
         inject_into_file(source_path("CMakeLists.txt", false), code,
                          :before => @generator[:build][:insert_at])
       end
@@ -360,7 +369,7 @@ module Hanfun
       # Generate test code file and add it to the build.
       def test_file
         # Generate test code.
-        template("test_#{@type}.cpp.erb", test_path("test_#{name}.cpp")) do |content|
+        template("test_#{@type}.cpp.erb", test_path("test_#{@interface.path}.cpp")) do |content|
           format_code(content)
         end
 
@@ -385,7 +394,7 @@ module Hanfun
         end if (@has_opt_cmds || @has_opt_attr)
 
         # Add test code to file.
-        code = "#{@generator[:build][:macro]}_tests(\"#{name}\")\n"
+        code = "#{@generator[:build][:macro]}_tests(\"#{@interface.path}\")\n"
         inject_into_file test_path("CMakeLists.txt", false), code, :before => @generator[:tests][:insert_cmake_at]
       end
 
@@ -445,7 +454,7 @@ module Hanfun
       end
 
       def format_code(content, frag=false)
-        file = Tempfile.new("hanfun_#{@interface.name}_")
+        file = Tempfile.new("hanfun_#{@interface.path}_")
         begin
           file.write(content)
           file.flush
@@ -461,7 +470,7 @@ module Hanfun
       end
 
       def add_import(file, where)
-        content = %Q{#include "hanfun/#{@namespace.path}/#{@interface.name}.h"\n}
+        content = %Q{#include "hanfun/#{@namespace.path}/#{@interface.path}.h"\n}
         inject_into_file(file, content, before: where)
       end
 

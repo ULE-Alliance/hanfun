@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * @file       tests/<%= @namespace.path %>/test_<%= @interface.name %>.cpp
+ * @file       tests/<%= @namespace.path %>/test_<%= @interface.path %>.cpp
  *
  * This is file contains the unit tests for the <%= @interface.to_doc %> <%= @type %>
  * implementation.
@@ -13,7 +13,7 @@
  */
 // =============================================================================
 
-#include "hanfun/<%= @namespace.path %>/<%= @interface.name %>.h"
+#include "hanfun/<%= @namespace.path %>/<%= @interface.path %>.h"
 
 #include "test_helper.h"
 
@@ -49,10 +49,10 @@ TEST_GROUP(<%= @interface.to_class %>)
    }
 };
 
-//! @test <%= @interface.to_class %>::uid should return @c HF::Interface::<%= @interface.name.upcase %>.
+//! @test <%= @interface.to_class %>::uid should return @c HF::Interface::<%= @interface.to_uid %>.
 TEST(<%= @interface.to_class %>, UID)
 {
-   LONGS_EQUAL(HF::Interface::<%= @interface.name.upcase %>, interface.uid());
+   LONGS_EQUAL(HF::Interface::<%= @interface.to_uid %>, interface.uid());
 }
 
 // =============================================================================
@@ -197,11 +197,11 @@ TEST_GROUP(<%= @interface.to_class %>Server)
 TEST(<%= @interface.to_class %>Server, <%= attr.to_class %>)
 {
   // FIXME Generated Stub.
-<%- if attr.mandatory -%>
-  CHECK_ATTRIBUTE(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, -42);
-<%- else -%>
-  CHECK_OPT_ATTRIBUTE(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, -42);
-<%- end -%>
+<%-
+   macro = attr.mandatory ? "" : "_OPT"
+   macro = "CHECK#{macro}_ATTRIBUTE"
+-%>
+  <%= macro %>(<%= @interface.to_class %>Server, <%= attr.to_class %>, <%= attr.writable ? "true" : "false" %>, <%= attr.name %>, 42, <%= attr.type =~ /^u/ ? "142" : "-42" %>);
 }
 <%- end -%>
 <%- end -%>

@@ -107,23 +107,23 @@ TEST_GROUP(SimpleAirPressureServer)
 //! @test Value support.
 TEST(SimpleAirPressureServer, Value)
 {
-   CHECK_ATTRIBUTE(SimpleAirPressureServer, Value, false, value, 42, -42);
+   CHECK_ATTRIBUTE(SimpleAirPressureServer, Value, false, value, 42, 142);
 }
 
 //! @test Maximum support.
 TEST(SimpleAirPressureServer, Maximum)
 {
-   CHECK_ATTRIBUTE(SimpleAirPressureServer, Maximum, false, maximum, 42, -42);
+   CHECK_ATTRIBUTE(SimpleAirPressureServer, Maximum, false, maximum, 42, 142);
 }
 
 //! @test Minimum support.
 TEST(SimpleAirPressureServer, Minimum)
 {
-   CHECK_ATTRIBUTE(SimpleAirPressureServer, Minimum, false, minimum, 42, -42);
+   CHECK_ATTRIBUTE(SimpleAirPressureServer, Minimum, false, minimum, 42, 142);
 }
 
 //! @test Tolerance support.
 TEST(SimpleAirPressureServer, Tolerance)
 {
-   CHECK_ATTRIBUTE(SimpleAirPressureServer, Tolerance, false, tolerance, 42, -42);
+   CHECK_ATTRIBUTE(SimpleAirPressureServer, Tolerance, false, tolerance, 42, 142);
 }

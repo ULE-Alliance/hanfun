@@ -60,6 +60,7 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/bind_management.h"
+#include "hanfun/core/rssi.h"
 
 // =============================================================================
 // Profiles

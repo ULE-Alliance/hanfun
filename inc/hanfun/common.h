@@ -87,7 +87,7 @@
  */
 #define HF_SETTER_HELPER(_Type, _name, _value) \
    {                                           \
-      int16_t old = this->_name;               \
+      _Type::value_type old = this->_name;     \
                                                \
       this->_name = _value;                    \
                                                \

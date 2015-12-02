@@ -1339,6 +1339,41 @@ std::ostream &operator<<(std::ostream &stream,
 }
 
 // =============================================================================
+// HF::Core::RSSI
+// =============================================================================
+
+#include "hanfun/core/rssi.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::RSSI::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::RSSI;
+
+   switch (attribute)
+   {
+      case RSSI_ATTR:
+         result = "RSSI";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1562,6 +1597,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::RSSI:
+               stream << static_cast<RSSI::Attributes>(message.itf.member);
                break;
             /* Interfaces [A] */
             case HF::Interface::ALERT:
