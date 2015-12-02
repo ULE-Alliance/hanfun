@@ -38,16 +38,25 @@ using namespace HF::Core::SUOTA;
 Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
-
+   Common::Result result = Common::Result::OK;
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
       case NEW_VERSION_AVAILABLE_CMD:
       {
-         new_version_available(packet.source);
+         Version version;
+         uint16_t size = version.unpack(payload, offset);
+         HF_ASSERT(size != 0, { result = Common::Result::FAIL_ARG; });
+
+         auto code = new_version_available(packet.source, version);
+
+         Protocol::Response response;
+         response.code = static_cast<Common::Result>(code);
+         Protocol::Message message(packet.message, response.size());
+         response.pack(message.payload);
+
+         send(packet.source, message);
          break;
       }
 
@@ -55,7 +64,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          return Common::Result::FAIL_SUPPORT;
    }
 
-   return Common::Result::OK;
+   return result;
 }
 
 // =============================================================================
@@ -69,10 +78,12 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Client::new_version_available(const Protocol::Address &addr)
+NewVersionResponse Client::new_version_available(const Protocol::Address &addr, const Version &version)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(version);
+
+   return NewVersionResponse::FAIL_UNKNOWN;
 }
 
 #ifdef HF_CORE_SUOTA_CHECK_VERSION_CMD

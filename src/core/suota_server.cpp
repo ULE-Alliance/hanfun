@@ -38,16 +38,25 @@ using namespace HF::Core::SUOTA;
 Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
-
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
-      case CHECK_VERSION_CMD:
+      case CHECK_VERSION_CMD /* NEW_VERSION_AVAILABLE_CMD */:
       {
-         check_version(packet.source);
+         if (packet.message.isCommandResponse())
+         {
+            Protocol::Response response;
+            if (response.unpack(payload, offset) == 0)
+            {
+               return Common::Result::FAIL_ARG;
+            }
+            new_version_available(packet.source, static_cast<NewVersionResponse>(response.code));
+         }
+         else
+         {
+            check_version(packet.source);
+         }
          break;
       }
 
@@ -75,16 +84,34 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Server::new_version_available(const Protocol::Address &addr)
+void Server::new_version_available(const Protocol::Address &addr, const Version &version)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   Protocol::Message message(version.size());
+
+   version.pack(message.payload);
 
    message.itf.role   = CLIENT_ROLE;
    message.itf.id     = Interface::SUOTA;
    message.itf.member = NEW_VERSION_AVAILABLE_CMD;
 
    send(addr, message);
+}
+
+// =============================================================================
+// Events
+// =============================================================================
+
+// =============================================================================
+// Server::new_version_available
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Server::new_version_available(const Protocol::Address &addr, NewVersionResponse result)
+{
+   UNUSED(addr);
+   UNUSED(result);
 }
 
 // =============================================================================

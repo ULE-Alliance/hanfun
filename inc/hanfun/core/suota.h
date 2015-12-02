@@ -67,6 +67,53 @@ namespace HF
             __LAST_CMD__              = UPGRADE_COMPLETE_CMD
          } CMD;
 
+         // =============================================================================
+         // Helper Classes
+         // =============================================================================
+
+         typedef enum _NewVersionResponse
+         {
+            UPGRADE_INITIATED    = 0x00, //!< Upgrade initiated
+            INVALID_SOFTWARE     = 0x11, //!< Invalid software
+            UNSUPPORTED_HARDWARE = 0x12, //!< Unsupported hardware
+            BATTERY_TOO_LOW      = 0x13, //!< Battery too low
+            FAIL_UNKNOWN         = Common::FAIL_UNKNOWN,
+         } NewVersionResponse;
+
+         struct Version
+         {
+            std::string sw_version;
+            std::string hw_version;
+            std::string url;
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _duration   number of miliseconds for the @c ON_CMD
+             */
+            Version(const std::string _sw_version = "",
+                    const std::string _hw_version = "",
+                    const std::string _url = ""):
+               sw_version(_sw_version), hw_version(_hw_version), url(_url)
+            {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = 2 * sizeof(uint8_t);
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const;
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+         };
+
+         // =============================================================================
+         // Attributes API
+         // =============================================================================
+
          /*!
           * @copybrief HF::Core::create_attribute (HF::Interfaces::SUOTA::Server *,uint8_t)
           *
@@ -119,16 +166,16 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            void new_version_available(const Protocol::Address &addr);
+            void new_version_available(const Protocol::Address &addr, const Version &version);
 
             /*!
              * Send a HAN-FUN message containing a @c SUOTA::NEW_VERSION_AVAILABLE_CMD,
              * to the broadcast network address.
              */
-            void new_version_available()
+            void new_version_available(const Version &version)
             {
                Protocol::Address addr;
-               new_version_available(addr);
+               new_version_available(addr, version);
             }
 
             //! @}
@@ -139,6 +186,16 @@ namespace HF
             // ======================================================================
             //! @name Events
             //! @{
+
+            /*!
+             * Callback that is called when a @c SUOTA::NEW_VERSION_AVAILABLE_CMD,
+             * response is received.
+             *
+             * @param [in] addr     the network address received the message from.
+             * @param [in] result   the result code for command.
+             */
+            virtual void new_version_available(const Protocol::Address &addr,
+                                               NewVersionResponse result);
 
             /*!
              * Callback that is called when a @c SUOTA::CHECK_VERSION_CMD,
@@ -233,9 +290,18 @@ namespace HF
              * Callback that is called when a @c SUOTA::NEW_VERSION_AVAILABLE_CMD,
              * is received.
              *
+             * @warning  by default this method simply returns NewVersionResponse::FAIL_UNKNOWN
+             *
+             * @note Implementing classes should override this method to actually do something.
+             *
+             *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] version    the version parameters for the command.
+             *
+             * @returns    the response code for the command. @see NewVersionResponse
              */
-            virtual void new_version_available(const Protocol::Address &addr);
+            virtual NewVersionResponse new_version_available(const Protocol::Address &addr,
+                                                             const Version &version);
 
             //! @}
             // =============================================================================
