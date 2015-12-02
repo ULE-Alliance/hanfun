@@ -77,14 +77,18 @@ module Hanfun
     def initialize(name, options)
       super(name)
       @to_uid = @name.upcase + "_ATTR"
-      if options =~ /(\w+):(\d+):(rw?):(m|o)/i
-        @type      = $1
-        @uid       = $2.to_i
-        @writable  = $3
-        @mandatory = $4
+      if options =~ /(\w+):(\d+):(rw?):(m|o)(:(\w+))?/i
+        @type         = $1
+        @uid          = $2.to_i
+        @writable     = $3
+        @mandatory    = $4
+        name_override = $6
 
         @writable  = @writable =~ /w/i ? true : false
-        @mandatory  = @mandatory =~ /m/i ? true : false
+        @mandatory = @mandatory =~ /m/i ? true : false
+
+        @name     = name_override if name_override
+        @to_class = @name.camelize if name_override
       else
         raise ArgumentError, "Invalid option string '#{options}'"
       end
