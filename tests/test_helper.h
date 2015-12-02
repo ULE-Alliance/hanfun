@@ -94,7 +94,7 @@ void check_attribute_common(Interface &itf, bool writable, Value first, Value se
 
    LONGS_EQUAL_LOCATION(first, (itf.*getter)(), file, lineno);
 
-   typedef HF::Attributes::Attribute<int16_t, Interface> __Attribute;
+   typedef HF::Attributes::Attribute<typename Attribute::value_type, Interface> __Attribute;
 
    auto attr = static_cast<__Attribute *>(itf.attribute(Attribute::ID));
    CHECK_TRUE_LOCATION(attr != nullptr, file, lineno);
