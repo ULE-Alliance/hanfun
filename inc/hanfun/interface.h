@@ -78,6 +78,7 @@ namespace HF
          SIMPLE_THERMOSTAT     = 0x0303, //!< Simple Thermostat interface UID
          SIMPLE_BUTTON         = 0x0304, //!< FIXME Simple Button interface UID.
          SIMPLE_VISUAL_EFFECTS = 0x0305, //!< FIXME Simple Visual Effects interface UID.
+         SIMPLE_AIR_PRESSURE   = 0x0306, //!< FIXME Simple Air Pressure interface UID.
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.

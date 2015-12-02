@@ -886,6 +886,50 @@ std::ostream &operator<<(std::ostream &stream,
 }
 
 // =============================================================================
+// HF::Interfaces::SimpleAirPressure
+// =============================================================================
+
+#include "hanfun/interfaces/simple_air_pressure.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleAirPressure::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleAirPressure;
+
+   switch (attribute)
+   {
+      case VALUE_ATTR:
+         result = "Value";
+         break;
+      case MAXIMUM_ATTR:
+         result = "Maximum";
+         break;
+      case MINIMUM_ATTR:
+         result = "Minimum";
+         break;
+      case TOLERANCE_ATTR:
+         result = "Tolerance";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Core Services & Interfaces
 // =============================================================================
 
@@ -1534,6 +1578,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::SIMPLE_BUTTON:
                stream << static_cast<SimpleButton::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_AIR_PRESSURE:
+               stream << static_cast<SimpleAirPressure::Attributes>(message.itf.member);
                break;
 
             /* Unknown [A] */
