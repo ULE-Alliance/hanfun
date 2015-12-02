@@ -89,6 +89,8 @@ module Hanfun
 
         @name     = name_override if name_override
         @to_class = @name.camelize if name_override
+
+        @to_doc   = name if name =~ /\A[A-Z]+\z/
       else
         raise ArgumentError, "Invalid option string '#{options}'"
       end
