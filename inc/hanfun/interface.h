@@ -67,6 +67,7 @@ namespace HF
          TIME                = 0x0102,   //!< %Time interface UID. __Not implemented__
          POWER               = 0x0110,   //!< Power interface UID. __Not implemented__
          KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
+         RSSI                = 0x0111,   //!< FIXME RSSI interface UID.
 
          /* Functional Interfaces. */
          ALERT                 = 0x0100, //!< Alert interface UID
