@@ -27,7 +27,6 @@ module Hanfun
   CodeRoot     = File.expand_path(File.join(Root, '../..'))
 
   CHeader = %q{
-
 // =============================================================================
 // <header>
 // =============================================================================
@@ -224,6 +223,9 @@ module Hanfun
         sizes += @commands.map { |c| c.to_uid.size }
         sizes += @attributes.map { |a| a.to_uid.size }
         @uid_align = sizes.max
+
+        @has_opt_attr = !@attributes.select { |attr| !attr.mandatory }.empty?
+        @has_opt_cmds = !@commands.select { |cmd| !cmd.server.mandatory || !cmd.client.mandatory}.empty?
       end
 
       # Add interface UID.
@@ -237,6 +239,8 @@ module Hanfun
       # Add configuration options
       def config_files
 
+        return unless (@has_opt_cmds || @has_opt_attr)
+
         header = CHeader.gsub(/<header>/, "#{@interface.to_doc} Configuration")
 
         code_opts = []
@@ -249,8 +253,8 @@ module Hanfun
         end
 
         # Add empty line between commands and attributes
-        code_opts << ""
-        code_defs << ""
+        code_opts << "" if @has_opt_attr && @has_opt_cmds
+        code_defs << "" if @has_opt_attr && @has_opt_cmds
 
         @attributes.select { |attr| !attr.mandatory }.each do |attr|
           name = "#{prefix}_#{attr.to_uid.ljust(@uid_align)}"
@@ -258,18 +262,15 @@ module Hanfun
           code_defs << "#define #{name}  @#{name.strip}@"
         end
 
-        @has_opt_attr = !@attributes.select { |attr| !attr.mandatory }.empty?
-        @has_opt_cmds = !@commands.select { |cmd| !cmd.server.mandatory || !cmd.client.mandatory}.empty?
-
         # Add options for options attributes to cmake/options.cmake
         append_to_file cmake_path("options.cmake") do
           header.gsub(/^\/\//, "#") + code_opts.join("\n") + "\n"
-        end if(@has_opt_cmds || @has_opt_attr)
+        end
 
         # Add optional attributes to config.h.in
-        inject_into_file top_path("config.h.in"), :before => /\s+#endif/ do
-          header + code_defs.join("\n")
-        end if(@has_opt_cmds || @has_opt_attr)
+        inject_into_file top_path("config.h.in"), :before => /\s#endif/ do
+          header + code_defs.join("\n") + "\n"
+        end
       end
 
       # Generate include file.
@@ -373,6 +374,12 @@ module Hanfun
           format_code(content)
         end
 
+        # Add test code to file.
+        code = "#{@generator[:build][:macro]}_tests(\"#{@interface.path}\")\n"
+        inject_into_file test_path("CMakeLists.txt", false), code, :before => @generator[:tests][:insert_cmake_at]
+
+        return unless (@has_opt_cmds || @has_opt_attr)
+
         # Add optional attributes for test config.h.in
         header = CHeader.gsub(/<header>/, "#{@interface.to_doc} Configuration")
 
@@ -383,19 +390,16 @@ module Hanfun
         end
 
         # Put empty line between commands and attributes
-        code << ""
+        code << "" if @has_opt_attr && @has_opt_cmds
 
         @attributes.select { |attr| !attr.mandatory }.each do |attr|
           code << "#define #{prefix}_#{@interface.short}_#{attr.to_uid.ljust(@uid_align)}  1"
         end
 
         inject_into_file test_path("config.h.in", false), :before => @generator[:tests][:insert_config_at] do
-          header + code.join("\n")
-        end if (@has_opt_cmds || @has_opt_attr)
+          "\n" + header + code.join("\n")
+        end
 
-        # Add test code to file.
-        code = "#{@generator[:build][:macro]}_tests(\"#{@interface.path}\")\n"
-        inject_into_file test_path("CMakeLists.txt", false), code, :before => @generator[:tests][:insert_cmake_at]
       end
 
       protected

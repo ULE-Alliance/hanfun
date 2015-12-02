@@ -95,7 +95,6 @@ TEST_GROUP(<%= @interface.to_class %>Client)
    <%= @interface.to_class %>Client *client;
    <%- if @commands.any? { |c| !c.event } -%>
    Protocol::Address addr;
-
    <%- end -%>
    <%- if @commands.any? { |c| c.event } -%>
 
@@ -200,8 +199,8 @@ TEST_GROUP(<%= @interface.to_class %>Server)
    <%- if @commands.any? { |c| c.event } -%>
    Protocol::Address addr;
    <%- end -%>
-
    <%- if @commands.any? { |c| !c.event } -%>
+
    Protocol::Packet  packet;
    Common::ByteArray payload;
    <%- end -%>
