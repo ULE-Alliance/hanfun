@@ -142,7 +142,7 @@ namespace HF
              * @param [in] _url           update URL (O)
              */
             CheckVersionResponse(Status _status = FAIL_UNKNOWN, const std::string _sw_version = "",
-                            const std::string _hw_version = "", const std::string _url = ""):
+                                 const std::string _hw_version = "", const std::string _url = ""):
                Protocol::Response(_status),
                Version(_sw_version, _hw_version, _url) {}
 
@@ -188,6 +188,84 @@ namespace HF
                HF_ASSERT(size != 0, { return 0; });
                /* *INDENT-ON* */
                offset += size;
+
+               return offset - start;
+            }
+         };
+
+         /*!
+          * This class contains the required parameters for a
+          * @c SUOTA::UPGRADE_COMPLETE_CMD command.
+          */
+         struct UpgradeStatus
+         {
+            /*!
+             * Possible status in a
+             */
+            typedef enum _Status
+            {
+               UPGRADE_SUCCESSFUL  = 0x00,                 //!< Upgrade successful
+               UPGRADE_ABORTED     = 0x11,                 //!< Upgrade aborted
+               GMEP_SESSION_ERROR  = 0x12,                 //!< GMEP session error
+               INVALID_IMAGE       = 0x13,                 //!< Invalid image
+               MEMORY_ACCESS_ERROR = 0x14,                 //!< Memory access error
+               BATTERY_TOO_LOW     = 0x15,                 //!< Battery too low
+               FAIL_UNKNOWN        = Common::FAIL_UNKNOWN, //!< Fail: Unknown Error
+            } Code;
+
+            Code        code;       //! Update status
+            std::string sw_version; //! Software version after update.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _status     update status to send in the command.
+             * @param [in] _sw_version new software version of the update.
+             */
+            UpgradeStatus(Code _code = FAIL_UNKNOWN, std::string _sw_version = ""):
+               code(_code), sw_version(_sw_version) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const
+            {
+               return sizeof(uint8_t) +
+                      (sw_version.empty() ? 0 :
+                       Common::SerializableHelper<std::string>::size(sw_version));
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, size());
+
+               uint16_t start = offset;
+
+               offset += array.write(offset, static_cast<uint8_t>(code));
+
+               if (!sw_version.empty())
+               {
+                  offset +=
+                     Common::SerializableHelper<std::string>::pack(sw_version, array, offset);
+               }
+
+               return offset - start;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               uint16_t start = offset;
+
+               uint8_t temp;
+               offset += array.read(offset, temp);
+               code    = static_cast<Code>(temp);
+
+               offset += Common::SerializableHelper<std::string>::unpack(sw_version, array, offset);
 
                return offset - start;
             }
@@ -287,7 +365,7 @@ namespace HF
              * @warning the default implementation always responds with a
              *          @c CheckVersionResponse::NO_VERSION_AVAILABLE
              *
-             * @param [in] addr     the network address to send the message to.
+             * @param [in] addr     the network address received the message from.
              * @param [in] version  the version information for this command.
              *
              * @returns a structure containing the check version response.
@@ -299,9 +377,11 @@ namespace HF
              * Callback that is called when a @c SUOTA::UPGRADE_COMPLETE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr     the network address received the message from.
+             * @param [in] status   the status for the upgrade procedure.
              */
-            virtual void upgrade_complete(const Protocol::Address &addr);
+            virtual void upgrade_complete(const Protocol::Address &addr,
+                                          const UpgradeStatus &status);
 
             //! @}
             // ======================================================================
@@ -352,18 +432,24 @@ namespace HF
              * Send a HAN-FUN message containing a @c SUOTA::UPGRADE_COMPLETE_CMD, to the given
              * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] status   upgrade operation status.
+             * @param [in] version  version of the new software.
              */
-            void upgrade_complete(const Protocol::Address &addr);
+            void upgrade_complete(const Protocol::Address &addr, UpgradeStatus::Code status,
+                                  std::string version = "");
 
             /*!
              * Send a HAN-FUN message containing a @c SUOTA::UPGRADE_COMPLETE_CMD,
              * to the broadcast network address.
+             *
+             * @param [in] status   upgrade operation status.
+             * @param [in] version  version of the new software.
              */
-            void upgrade_complete()
+            void upgrade_complete(UpgradeStatus::Code status, std::string version = "")
             {
                Protocol::Address addr;
-               upgrade_complete(addr);
+               upgrade_complete(addr, status, version);
             }
 
             //! @}
@@ -400,7 +486,8 @@ namespace HF
              * @param [in] addr       the network address the message was received from.
              * @param [in] response   the response received.
              */
-            virtual void check_version(const Protocol::Address &addr, const CheckVersionResponse &response);
+            virtual void check_version(const Protocol::Address &addr,
+                                       const CheckVersionResponse &response);
 
             //! @}
             // =============================================================================

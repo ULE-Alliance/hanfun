@@ -72,6 +72,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 
             check_version(packet.source, response);
          }
+
          break;
       }
 
@@ -152,14 +153,18 @@ void Client::check_version(const Protocol::Address &addr, const Version &version
  *
  */
 // =============================================================================
-void Client::upgrade_complete(const Protocol::Address &addr)
+void Client::upgrade_complete(const Protocol::Address &addr, UpgradeStatus::Code status,
+                              std::string version)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   UpgradeStatus upgrade(status, version);
+
+   Protocol::Message message(upgrade.size());
 
    message.itf.role   = CLIENT_ROLE;
    message.itf.id     = Interface::SUOTA;
    message.itf.member = UPGRADE_COMPLETE_CMD;
+
+   upgrade.pack(message.payload);
 
    send(addr, message);
 }

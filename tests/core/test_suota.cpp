@@ -224,6 +224,80 @@ TEST(SUOTA, CheckVersionResponse_Unpack)
 }
 
 // =============================================================================
+// Upgrade Status
+// =============================================================================
+
+TEST(SUOTA, UpgradeStatus_Size)
+{
+   UpgradeStatus status;
+   LONGS_EQUAL(sizeof(uint8_t), UpgradeStatus::min_size);
+   LONGS_EQUAL(sizeof(uint8_t), status.size());
+
+   status = UpgradeStatus(UpgradeStatus::GMEP_SESSION_ERROR, "v1.2.3");
+
+   LONGS_EQUAL((1 + 1 + 6) * sizeof(uint8_t), status.size());
+}
+
+TEST(SUOTA, UpgradeStatus_Pack)
+{
+   UpgradeStatus status(UpgradeStatus::GMEP_SESSION_ERROR, "v1.2.3");
+
+   const Common::ByteArray expected({
+      0x00, 0x00, 0x00,
+      UpgradeStatus::GMEP_SESSION_ERROR,
+      0x06, 'v', '1', '.', '2', '.', '3',
+      0x00, 0x00, 0x00,
+   });
+
+   Common::ByteArray payload(3 + status.size() + 3);
+
+   LONGS_EQUAL(status.size(), status.pack(payload, 3));
+
+   CHECK_EQUAL(expected, payload);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, status.pack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+}
+
+TEST(SUOTA, UpgradeStatus_Unpack)
+{
+   Common::ByteArray payload({
+      0x00, 0x00, 0x00,
+      UpgradeStatus::GMEP_SESSION_ERROR,
+   });
+
+   UpgradeStatus status;
+   LONGS_EQUAL(status.size(), status.unpack(payload, 3));
+
+   LONGS_EQUAL(UpgradeStatus::GMEP_SESSION_ERROR, status.code);
+   CHECK_TRUE(status.sw_version.empty());
+
+   payload = Common::ByteArray({
+      0x00, 0x00, 0x00,
+      UpgradeStatus::GMEP_SESSION_ERROR,
+      0x06, 'v', '1', '.', '2', '.', '3',    // Software version string.
+      0x00, 0x00, 0x00,
+   });
+
+   status = UpgradeStatus();
+   LONGS_EQUAL(UpgradeStatus::min_size + 7 * sizeof(uint8_t), status.unpack(payload, 3));
+
+   LONGS_EQUAL(UpgradeStatus::GMEP_SESSION_ERROR, status.code);
+   CHECK_FALSE(status.sw_version.empty());
+
+   STRCMP_EQUAL("v1.2.3", status.sw_version.c_str());
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, status.unpack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+}
+
+// =============================================================================
 // SUOTA Client
 // =============================================================================
 
@@ -387,10 +461,9 @@ TEST(SUOTAClient, CheckVersionResponse)
 //! @test Upgrade Complete support.
 TEST(SUOTAClient, UpgradeComplete)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.upgrade_complete(addr);
+   client.upgrade_complete(addr, UpgradeStatus::INVALID_IMAGE, "v1.2.3");
 
    mock("Interface").checkExpectations();
 
@@ -398,6 +471,13 @@ TEST(SUOTAClient, UpgradeComplete)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SUOTA::UPGRADE_COMPLETE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   UpgradeStatus upgrade;
+   CHECK_TRUE(upgrade.unpack(client.sendMsg.payload) != 0);
+
+   LONGS_EQUAL(UpgradeStatus::INVALID_IMAGE, upgrade.code);
+
+   STRCMP_EQUAL("v1.2.3", upgrade.sw_version.c_str());
 }
 
 // =============================================================================
@@ -428,12 +508,13 @@ TEST_GROUP(SUOTAServer)
                      .returnPointerValue());
       }
 
-      void upgrade_complete(const Protocol::Address &addr)
+      void upgrade_complete(const Protocol::Address &addr, const UpgradeStatus &status)
       {
          UNUSED(addr);
-         mock("SUOTA::Server").actualCall("upgrade_complete");
+         mock("SUOTA::Server").actualCall("upgrade_complete")
+            .withParameter("status", status.code)
+            .withParameter("sw_version", status.sw_version.c_str());
       }
-
    };
 
    SUOTAServer server;
@@ -547,12 +628,25 @@ TEST(SUOTAServer, CheckVersion)
 //! @test Upgrade Complete support.
 TEST(SUOTAServer, UpgradeComplete)
 {
-   // FIXME Generated Stub.
-   mock("SUOTA::Server").expectOneCall("upgrade_complete");
-
    packet.message.itf.member = SUOTA::UPGRADE_COMPLETE_CMD;
+
+   payload = Common::ByteArray({
+      0x00, 0x00, 0x00,
+      UpgradeStatus::GMEP_SESSION_ERROR,
+      0x06, 'v', '1', '.', '2', '.', '3',     // Software version string.
+      0x00, 0x00, 0x00,
+   });
+
+   mock("SUOTA::Server").expectOneCall("upgrade_complete")
+      .withParameter("status", UpgradeStatus::GMEP_SESSION_ERROR)
+      .withParameter("sw_version", "v1.2.3");
 
    CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
 
    mock("SUOTA::Server").checkExpectations();
+
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
+   auto res = server.handle(packet, payload, payload.size());
+   CHECK_EQUAL(Common::Result::FAIL_ARG, res);
+   mock("support").checkExpectations();
 }

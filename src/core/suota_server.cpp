@@ -82,7 +82,14 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 
       case UPGRADE_COMPLETE_CMD:
       {
-         upgrade_complete(packet.source);
+         UpgradeStatus status;
+         uint16_t size = status.unpack(payload, offset);
+         /* *INDENT-OFF* */
+         HF_ASSERT(size != 0, { return Common::Result::FAIL_ARG; });
+         /* *INDENT-ON* */
+
+         upgrade_complete(packet.source, status);
+
          break;
       }
 
@@ -156,8 +163,8 @@ CheckVersionResponse Server::check_version(const Protocol::Address &addr, const 
  *
  */
 // =============================================================================
-void Server::upgrade_complete(const Protocol::Address &addr)
+void Server::upgrade_complete(const Protocol::Address &addr, const UpgradeStatus &status)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(status);
 }
