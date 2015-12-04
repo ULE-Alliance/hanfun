@@ -90,16 +90,12 @@ uint16_t Version::pack(Common::ByteArray &array, uint16_t offset) const
    typedef Common::SerializableHelper<std::string> Helper;
    uint16_t start = offset;
 
-   Helper helper(sw_version);
-   offset += helper.pack(array, offset);
-
-   helper  = Helper(hw_version);
-   offset += helper.pack(array, offset);
+   offset += Helper::pack(sw_version, array, offset);
+   offset += Helper::pack(hw_version, array, offset);
 
    if (!url.empty())
    {
-      helper  = Helper(url);
-      offset += helper.pack(array, offset);
+      offset += Helper::pack(url, array, offset);
    }
 
    return offset - start;
@@ -119,29 +115,21 @@ uint16_t Version::unpack(const Common::ByteArray &array, uint16_t offset)
    typedef Common::SerializableHelper<std::string> Helper;
    uint16_t start = offset;
 
-   Helper helper(sw_version);
-   uint16_t size = helper.unpack(array, offset);
-
-   /* *INDENT-OFF* */
-   HF_ASSERT(size != 0, {return 0;});
-   /* *INDENT-ON* */
-
-   offset += size;
-   sw_version = helper.data;
-
-   helper  = Helper(hw_version);
-   size    = helper.unpack(array, offset);
+   uint16_t size = Helper::unpack(sw_version, array, offset);
 
    /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
    /* *INDENT-ON* */
    offset += size;
-   hw_version = helper.data;
 
-   helper  = Helper(url);
-   offset += helper.unpack(array, offset);
+   size    = Helper::unpack(hw_version, array, offset);
 
-   url = helper.data;
+   /* *INDENT-OFF* */
+   HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+   offset += size;
+
+   offset += Helper::unpack(url, array, offset);
 
    return offset - start;
 }
