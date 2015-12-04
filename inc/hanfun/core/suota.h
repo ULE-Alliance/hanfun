@@ -110,6 +110,83 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
+         /*!
+          * This class represents the message for the response of a
+          * @c SUOTA::CHECK_VERSION_CMD.
+          */
+         struct CheckVersionResponse: public Protocol::Response, Version
+         {
+            /*!
+             * Possible result codes for a SUOTA::CHECK_VERSION_CMD
+             */
+            typedef enum _Status
+            {
+               VERSION_AVAILABLE    = 0x00,                 //!< New version available.
+               NO_VERSION_AVAILABLE = 0x11,                 //!< No newer version available.
+               FAIL_INFRASTUCTURE   = 0x12,                 //!< Server or Network are down.
+               FAIL_UNKNOWN         = Common::FAIL_UNKNOWN, //!< Fail: Unknown Error
+            } Status;
+
+            /*!
+             * Constructor
+             *
+             * @param [in] _status        response status to send  (M)
+             * @param [in] _sw_version    software version to send (M)
+             * @param [in] _hw_version    hardware version to send (M)
+             * @param [in] _url           update URL (O)
+             */
+            CheckVersionResponse(Status _status = FAIL_UNKNOWN, const std::string _sw_version = "",
+                            const std::string _hw_version = "", const std::string _url = ""):
+               Protocol::Response(_status),
+               Version(_sw_version, _hw_version, _url) {}
+
+            CheckVersionResponse(Common::Result _status):
+               Protocol::Response(_status), Version() {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Protocol::Response::min_size + Version::min_size;
+
+            //! \see HF::Serializable::size.
+            uint16_t size() const
+            {
+               return Protocol::Response::size() + Version::size();
+            }
+
+            //! \see HF::Serializable::pack.
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, size());
+
+               uint16_t start = offset;
+
+               offset += Protocol::Response::pack(array, offset);
+               offset += Version::pack(array, offset);
+
+               return offset - start;
+            }
+
+            //! \see HF::Serializable::unpack.
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               uint16_t start = offset;
+
+               uint16_t size  = Protocol::Response::unpack(array, offset);
+               /* *INDENT-OFF* */
+               HF_ASSERT(size != 0, { return 0; });
+               /* *INDENT-ON* */
+               offset += size;
+               size    = Version::unpack(array, offset);
+               /* *INDENT-OFF* */
+               HF_ASSERT(size != 0, { return 0; });
+               /* *INDENT-ON* */
+               offset += size;
+
+               return offset - start;
+            }
+         };
+
          // =============================================================================
          // Attributes API
          // =============================================================================
@@ -201,9 +278,16 @@ namespace HF
              * Callback that is called when a @c SUOTA::CHECK_VERSION_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @warning the default implementation always responds with a
+             *          @c CheckVersionResponse::NO_VERSION_AVAILABLE
+             *
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] version  the version information for this command.
+             *
+             * @returns a structure containing the check version response.
              */
-            virtual void check_version(const Protocol::Address &addr);
+            virtual CheckVersionResponse check_version(const Protocol::Address &addr,
+                                                       const Version &version);
 
             /*!
              * Callback that is called when a @c SUOTA::UPGRADE_COMPLETE_CMD,
@@ -245,16 +329,16 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            void check_version(const Protocol::Address &addr);
+            void check_version(const Protocol::Address &addr, const Version &version);
 
             /*!
              * Send a HAN-FUN message containing a @c SUOTA::CHECK_VERSION_CMD,
              * to the broadcast network address.
              */
-            void check_version()
+            void check_version(const Version &version)
             {
                Protocol::Address addr;
-               check_version(addr);
+               check_version(addr, version);
             }
 #endif
 
@@ -295,13 +379,22 @@ namespace HF
              * @note Implementing classes should override this method to actually do something.
              *
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr       the network address the message was received from.
              * @param [in] version    the version parameters for the command.
              *
              * @returns    the response code for the command. @see NewVersionResponse
              */
             virtual NewVersionResponse new_version_available(const Protocol::Address &addr,
                                                              const Version &version);
+
+            /*!
+             * Callback that is called when a response to a @c SUOTA::CHECK_VERSION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address the message was received from.
+             * @param [in] response   the response received.
+             */
+            virtual void check_version(const Protocol::Address &addr, const CheckVersionResponse &response);
 
             //! @}
             // =============================================================================

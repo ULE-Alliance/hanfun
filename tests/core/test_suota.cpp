@@ -159,6 +159,71 @@ TEST(SUOTA, Version_Unpack)
 }
 
 // =============================================================================
+// Check Version Response Message
+// =============================================================================
+
+TEST(SUOTA, CheckVersionResponse_Size)
+{
+   CheckVersionResponse response(CheckVersionResponse::FAIL_INFRASTUCTURE);
+   LONGS_EQUAL(3 * sizeof(uint8_t), CheckVersionResponse::min_size);
+   LONGS_EQUAL(3 * sizeof(uint8_t), response.size());
+
+   response = CheckVersionResponse(CheckVersionResponse::FAIL_INFRASTUCTURE, "v1.2.3");
+
+   LONGS_EQUAL((1 + 1 + 6 + 1) * sizeof(uint8_t), response.size());
+
+   response = CheckVersionResponse(CheckVersionResponse::FAIL_INFRASTUCTURE, "v1.2.3", "revA",
+                                   "https");
+
+   LONGS_EQUAL((1 + 1 + 6 + 1 + 4 + 1 + 5) * sizeof(uint8_t), response.size());
+}
+
+TEST(SUOTA, CheckVersionResponse_Pack)
+{
+   CheckVersionResponse response(CheckVersionResponse::FAIL_INFRASTUCTURE, "v1.2.3", "revA",
+                                 "https");
+
+   Common::ByteArray expected = g_version_payload;
+   expected[2] = CheckVersionResponse::FAIL_INFRASTUCTURE;
+
+   Common::ByteArray payload(2 + response.size() + 3);
+
+   LONGS_EQUAL(response.size(), response.pack(payload, 2));
+
+   CHECK_EQUAL(expected, payload);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, response.pack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+}
+
+TEST(SUOTA, CheckVersionResponse_Unpack)
+{
+   Common::ByteArray payload = g_version_payload;
+   payload[2] = CheckVersionResponse::FAIL_INFRASTUCTURE;
+
+   CheckVersionResponse response;
+   LONGS_EQUAL(response.size(), response.unpack(payload, 2));
+
+   LONGS_EQUAL(CheckVersionResponse::FAIL_INFRASTUCTURE, response.code);
+   CHECK_VERSION(response);
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+   response = CheckVersionResponse();
+
+   LONGS_EQUAL(0, response.unpack(payload, payload.size()));
+
+   mock("support").checkExpectations();
+
+   LONGS_EQUAL(CheckVersionResponse::FAIL_UNKNOWN, response.code);
+   STRCMP_EQUAL("", response.sw_version.c_str());
+   STRCMP_EQUAL("", response.hw_version.c_str());
+   STRCMP_EQUAL("", response.url.c_str());
+}
+
+// =============================================================================
 // SUOTA Client
 // =============================================================================
 
@@ -176,6 +241,19 @@ TEST_GROUP(SUOTAClient)
                    .withParameter("hw", version.hw_version.c_str())
                    .withParameter("url", version.url.c_str())
                    .returnIntValueOrDefault(NewVersionResponse::FAIL_UNKNOWN);
+      }
+
+      using InterfaceHelper<SUOTA::Client>::check_version;
+
+      void check_version(const Protocol::Address &addr, const CheckVersionResponse &response)
+      {
+         UNUSED(addr);
+         UNUSED(response);
+         mock("SUOTA::Client").actualCall("check_version")
+            .withParameter("code", (int) response.code)
+            .withParameter("sw", response.sw_version.c_str())
+            .withParameter("hw", response.hw_version.c_str())
+            .withParameter("url", response.url.c_str());
       }
    };
 
@@ -255,13 +333,12 @@ TEST(SUOTAClient, NewVersionAvailable)
    mock("SUOTA::Client").checkExpectations();
 }
 
-//! @test Check Version support.
+//! @test Check Version command support.
 TEST(SUOTAClient, CheckVersion)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.check_version(addr);
+   client.check_version(addr, g_version);
 
    mock("Interface").checkExpectations();
 
@@ -269,6 +346,42 @@ TEST(SUOTAClient, CheckVersion)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(SUOTA::CHECK_VERSION_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   CHECK_VERSION(client.sendMsg.payload);
+}
+
+//! @test Check Version response support.
+TEST(SUOTAClient, CheckVersionResponse)
+{
+   Common::ByteArray payload = g_version_payload;
+   payload[2]              = CheckVersionResponse::FAIL_INFRASTUCTURE;
+
+   packet.message.itf.role = HF::Interface::SERVER_ROLE;
+
+   auto res = client.handle(packet, payload, 2);
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, res);
+
+   mock("SUOTA::Client").expectOneCall("check_version")
+      .withParameter("code", CheckVersionResponse::FAIL_INFRASTUCTURE)
+      .withParameter("sw", "v1.2.3")
+      .withParameter("hw", "revA")
+      .withParameter("url", "https");
+
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+   packet.message.itf.member = CHECK_VERSION_CMD;
+   packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+
+   res                       = client.handle(packet, payload, 2);
+   LONGS_EQUAL(Common::Result::OK, res);
+
+   mock("SUOTA::Client").checkExpectations();
+
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
+
+   res = client.handle(packet, payload, payload.size());
+   LONGS_EQUAL(Common::Result::FAIL_ARG, res);
+
+   mock("support").checkExpectations();
 }
 
 //! @test Upgrade Complete support.
@@ -301,13 +414,18 @@ TEST_GROUP(SUOTAServer)
       void new_version_available(const Protocol::Address &addr, NewVersionResponse result)
       {
          UNUSED(addr);
-         mock("SUOTA::Server").actualCall("new_version_available").withParameter("result", (int) result);
+         mock("SUOTA::Server").actualCall("new_version_available").withParameter("result",
+                                                                                 (int) result);
       }
 
-      void check_version(const Protocol::Address &addr)
+      CheckVersionResponse check_version(const Protocol::Address &addr, const Version &version)
       {
          UNUSED(addr);
-         mock("SUOTA::Server").actualCall("check_version");
+         return *((CheckVersionResponse *) mock("SUOTA::Server").actualCall("check_version")
+                     .withParameter("sw", version.sw_version.c_str())
+                     .withParameter("hw", version.hw_version.c_str())
+                     .withParameter("url", version.url.c_str())
+                     .returnPointerValue());
       }
 
       void upgrade_complete(const Protocol::Address &addr)
@@ -387,14 +505,43 @@ TEST(SUOTAServer, NewVersionAvailableResponse)
 //! @test Check Version support.
 TEST(SUOTAServer, CheckVersion)
 {
-   // FIXME Generated Stub.
-   mock("SUOTA::Server").expectOneCall("check_version");
+   payload = g_version_payload;
+
+   CheckVersionResponse expected(CheckVersionResponse::FAIL_INFRASTUCTURE, "v3.2.1", "revB", "ftp");
+
+   mock("Interface").expectOneCall("send");
+   mock("SUOTA::Server").expectOneCall("check_version")
+      .withParameter("sw", "v1.2.3")
+      .withParameter("hw", "revA")
+      .withParameter("url", "https")
+      .andReturnValue(&expected);
 
    packet.message.itf.member = SUOTA::CHECK_VERSION_CMD;
 
    CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
 
    mock("SUOTA::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   CheckVersionResponse actual;
+   LONGS_EQUAL(expected.size(), actual.unpack(server.sendMsg.payload));
+
+   LONGS_EQUAL(expected.code, actual.code);
+
+   STRCMP_EQUAL(expected.sw_version.c_str(), actual.sw_version.c_str());
+   STRCMP_EQUAL(expected.hw_version.c_str(), actual.hw_version.c_str());
+   STRCMP_EQUAL(expected.url.c_str(), actual.url.c_str());
+
+   mock("Interface").expectOneCall("send");
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, payload.size()));
+
+   mock("Interface").checkExpectations();
+
+   actual = CheckVersionResponse();
+   LONGS_EQUAL(CheckVersionResponse::min_size, actual.unpack(server.sendMsg.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, actual.code);
 }
 
 //! @test Upgrade Complete support.

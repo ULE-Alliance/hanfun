@@ -38,7 +38,9 @@ using namespace HF::Core::SUOTA;
 Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+   Common::Result result = Common::Result::OK;
+
+   CMD cmd               = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
@@ -47,16 +49,34 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
          if (packet.message.isCommandResponse())
          {
             Protocol::Response response;
+
             if (response.unpack(payload, offset) == 0)
             {
                return Common::Result::FAIL_ARG;
             }
+
             new_version_available(packet.source, static_cast<NewVersionResponse>(response.code));
          }
          else
          {
-            check_version(packet.source);
+            Version version;
+            CheckVersionResponse response;
+
+            if (version.unpack(payload, offset) != 0)
+            {
+               response = check_version(packet.source, version);
+            }
+            else
+            {
+               result   = Common::Result::FAIL_ARG;
+               response = CheckVersionResponse(result);
+            }
+
+            Protocol::Message message(response.size());
+            response.pack(message.payload);
+            send(packet.source, message);
          }
+
          break;
       }
 
@@ -70,7 +90,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
          return Common::Result::FAIL_SUPPORT;
    }
 
-   return Common::Result::OK;
+   return result;
 }
 
 // =============================================================================
@@ -121,10 +141,12 @@ void Server::new_version_available(const Protocol::Address &addr, NewVersionResp
  *
  */
 // =============================================================================
-void Server::check_version(const Protocol::Address &addr)
+CheckVersionResponse Server::check_version(const Protocol::Address &addr, const Version &version)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+   UNUSED(version);
+
+   return CheckVersionResponse(CheckVersionResponse::NO_VERSION_AVAILABLE);
 }
 
 // =============================================================================

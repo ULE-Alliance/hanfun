@@ -39,24 +39,39 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
                                       uint16_t offset)
 {
    Common::Result result = Common::Result::OK;
-   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+   CMD cmd               = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
-      case NEW_VERSION_AVAILABLE_CMD:
+      case NEW_VERSION_AVAILABLE_CMD /* CHECK_VERSION_CMD */:
       {
-         Version version;
-         uint16_t size = version.unpack(payload, offset);
-         HF_ASSERT(size != 0, { result = Common::Result::FAIL_ARG; });
+         if (packet.message.isCommand())
+         {
+            Version version;
+            uint16_t size = version.unpack(payload, offset);
+            /* *INDENT-OFF* */
+            HF_ASSERT(size != 0, {result = Common::Result::FAIL_ARG;});
+            /* *INDENT-ON* */
 
-         auto code = new_version_available(packet.source, version);
+            auto code = new_version_available(packet.source, version);
 
-         Protocol::Response response;
-         response.code = static_cast<Common::Result>(code);
-         Protocol::Message message(packet.message, response.size());
-         response.pack(message.payload);
+            Protocol::Response response;
+            response.code = static_cast<Common::Result>(code);
+            Protocol::Message message(packet.message, response.size());
+            response.pack(message.payload);
 
-         send(packet.source, message);
+            send(packet.source, message);
+         }
+         else
+         {
+            CheckVersionResponse response;
+            uint16_t size = response.unpack(payload, offset);
+            /* *INDENT-OFF* */
+            HF_ASSERT(size != 0, {return Common::Result::FAIL_ARG;});
+            /* *INDENT-ON* */
+
+            check_version(packet.source, response);
+         }
          break;
       }
 
@@ -68,7 +83,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 }
 
 // =============================================================================
-// Commands
+// Events
 // =============================================================================
 
 // =============================================================================
@@ -78,13 +93,31 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-NewVersionResponse Client::new_version_available(const Protocol::Address &addr, const Version &version)
+NewVersionResponse Client::new_version_available(const Protocol::Address &addr,
+                                                 const Version &version)
 {
    UNUSED(addr);
    UNUSED(version);
 
    return NewVersionResponse::FAIL_UNKNOWN;
 }
+
+// =============================================================================
+// Client::check_version
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::check_version(const Protocol::Address &addr, const CheckVersionResponse &response)
+{
+   UNUSED(addr);
+   UNUSED(response);
+}
+
+// =============================================================================
+// Commands
+// =============================================================================
 
 #ifdef HF_CORE_SUOTA_CHECK_VERSION_CMD
 // =============================================================================
@@ -94,10 +127,15 @@ NewVersionResponse Client::new_version_available(const Protocol::Address &addr, 
  *
  */
 // =============================================================================
-void Client::check_version(const Protocol::Address &addr)
+void Client::check_version(const Protocol::Address &addr, const Version &version)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   Protocol::Message message(version.size());
+
+   uint16_t size = version.pack(message.payload);
+
+   /* *INDENT-OFF* */
+   HF_ASSERT(size != 0, {return;});
+   /* *INDENT-ON* */
 
    message.itf.role   = CLIENT_ROLE;
    message.itf.id     = Interface::SUOTA;
