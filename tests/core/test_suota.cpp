@@ -25,6 +25,39 @@ using namespace HF::Testing;
 using namespace HF::Core::SUOTA;
 
 // =============================================================================
+// Helper Functions
+// =============================================================================
+
+static const Version g_version("v1.2.3", "revA", "https");
+
+static const Common::ByteArray g_version_payload({
+   0x00, 0x00, 0x00,
+   0x06, 'v', '1', '.', '2', '.', '3', // Software version string.
+   0x04, 'r', 'e', 'v', 'A',           // Hardware version string.
+   0x05, 'h', 't', 't', 'p', 's',      // URL string.
+   0x00, 0x00, 0x00,
+});
+
+static void check_version(const Version &version, const char *file, int line)
+{
+   STRCMP_EQUAL_LOCATION("v1.2.3", version.sw_version.c_str(), file, line);
+   STRCMP_EQUAL_LOCATION("revA", version.hw_version.c_str(), file, line);
+   STRCMP_EQUAL_LOCATION("https", version.url.c_str(), file, line);
+}
+
+static void check_version(const HF::Common::ByteArray &payload, const char *file, int line,
+                          uint16_t offset = 0)
+{
+   Version version;
+   LONGS_EQUAL_LOCATION(18, version.unpack(payload, offset), file, line);
+
+   check_version(version, file, line);
+}
+
+#define CHECK_VERSION(_arg, ...) \
+   check_version(_arg, __FILE__, __LINE__,##__VA_ARGS__)
+
+// =============================================================================
 // SUOTA
 // =============================================================================
 
@@ -88,21 +121,13 @@ TEST(SUOTA, Version_Size)
 
 TEST(SUOTA, Version_Pack)
 {
-   const Common::ByteArray expected({
-      0x00, 0x00, 0x00,
-      0x06, 'v', '1', '.', '2', '.', '3', // Software version string.
-      0x04, 'r', 'e', 'v', 'A',           // Hardware version string.
-      0x05, 'h', 't', 't', 'p', 's',      // URL string.
-      0x00, 0x00, 0x00,
-   });
-
    Version version("v1.2.3", "revA", "https");
 
    Common::ByteArray payload(3 + version.size() + 3);
 
    LONGS_EQUAL(version.size(), version.pack(payload, 3));
 
-   CHECK_EQUAL(expected, payload);
+   CHECK_EQUAL(g_version_payload, payload);
 
    mock("support").expectOneCall("assert").ignoreOtherParameters();
 
@@ -113,30 +138,18 @@ TEST(SUOTA, Version_Pack)
 
 TEST(SUOTA, Version_Unpack)
 {
-   const Common::ByteArray payload({
-      0x00, 0x00, 0x00,
-      0x06, 'v', '1', '.', '2', '.', '3', // Software version string.
-      0x04, 'r', 'e', 'v', 'A',           // Hardware version string.
-      0x05, 'h', 't', 't', 'p', 's',      // URL string.
-      0x00, 0x00, 0x00,
-   });
-
    Version version;
 
    STRCMP_EQUAL("", version.sw_version.c_str());
    STRCMP_EQUAL("", version.hw_version.c_str());
    STRCMP_EQUAL("", version.url.c_str());
 
-   LONGS_EQUAL(18, version.unpack(payload, 3));
-
-   STRCMP_EQUAL("v1.2.3", version.sw_version.c_str());
-   STRCMP_EQUAL("revA", version.hw_version.c_str());
-   STRCMP_EQUAL("https", version.url.c_str());
+   CHECK_VERSION(g_version_payload, 3);
 
    mock("support").expectOneCall("assert").ignoreOtherParameters();
    version = Version();
 
-   LONGS_EQUAL(0, version.unpack(payload, payload.size()));
+   LONGS_EQUAL(0, version.unpack(g_version_payload, g_version_payload.size()));
 
    mock("support").checkExpectations();
 
@@ -200,7 +213,6 @@ TEST_GROUP(SUOTAClient)
 //! @test New Version Available support.
 TEST(SUOTAClient, NewVersionAvailable)
 {
-   mock().strictOrder();
    mock("Interface").expectOneCall("send");
    mock("SUOTA::Client").expectOneCall("new_version_available")
       .withParameter("sw", "v1.2.3")
@@ -210,13 +222,7 @@ TEST(SUOTAClient, NewVersionAvailable)
 
    packet.message.itf.member = SUOTA::NEW_VERSION_AVAILABLE_CMD;
 
-   payload                   = Common::ByteArray({
-      0x00, 0x00, 0x00,
-      0x06, 'v', '1', '.', '2', '.', '3', // Software version string.
-      0x04, 'r', 'e', 'v', 'A',           // Hardware version string.
-      0x05, 'h', 't', 't', 'p', 's',      // URL string.
-      0x00, 0x00, 0x00,
-   });
+   payload                   = g_version_payload;
 
    auto res = client.handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, res);
@@ -342,8 +348,7 @@ TEST(SUOTAServer, NewVersionAvailable)
 {
    mock("Interface").expectOneCall("send");
 
-   Version expected("v1.2.3", "revA", "https");
-   server.new_version_available(addr, expected);
+   server.new_version_available(addr, g_version);
 
    mock("Interface").checkExpectations();
 
@@ -352,12 +357,7 @@ TEST(SUOTAServer, NewVersionAvailable)
    LONGS_EQUAL(SUOTA::NEW_VERSION_AVAILABLE_CMD, server.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
 
-   Version version;
-   LONGS_EQUAL(18, version.unpack(server.sendMsg.payload));
-
-   STRCMP_EQUAL("v1.2.3", version.sw_version.c_str());
-   STRCMP_EQUAL("revA", version.hw_version.c_str());
-   STRCMP_EQUAL("https", version.url.c_str());
+   CHECK_VERSION(server.sendMsg.payload);
 }
 
 //! @test New Version Available response support.
