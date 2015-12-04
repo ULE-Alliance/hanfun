@@ -71,20 +71,26 @@ namespace HF
          // Helper Classes
          // =============================================================================
 
+         /*!
+          * Result codes for a @c SUOTA::NEW_VERSION_AVAILABLE_CMD
+          */
          typedef enum _NewVersionResponse
          {
-            UPGRADE_INITIATED    = 0x00, //!< Upgrade initiated
-            INVALID_SOFTWARE     = 0x11, //!< Invalid software
-            UNSUPPORTED_HARDWARE = 0x12, //!< Unsupported hardware
-            BATTERY_TOO_LOW      = 0x13, //!< Battery too low
-            FAIL_UNKNOWN         = Common::FAIL_UNKNOWN,
+            UPGRADE_INITIATED    = 0x00,                 //!< Upgrade initiated
+            INVALID_SOFTWARE     = 0x11,                 //!< Invalid software
+            UNSUPPORTED_HARDWARE = 0x12,                 //!< Unsupported hardware
+            BATTERY_TOO_LOW      = 0x13,                 //!< Battery too low
+            FAIL_UNKNOWN         = Common::FAIL_UNKNOWN, //!< FAIL_UNKNOWN
          } NewVersionResponse;
 
+         /*!
+          * Helper class that represents the information of a particular version.
+          */
          struct Version
          {
-            std::string sw_version;
-            std::string hw_version;
-            std::string url;
+            std::string sw_version;    //!< Current/Available software version.
+            std::string hw_version;    //!< Current/Minimum required hardware version.
+            std::string url;           //!< Update URL.
 
             /*!
              * Constructor.
