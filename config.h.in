@@ -9,8 +9,31 @@
 #define ON      1
 
 // =============================================================================
+// Core Services and Interfaces
+// =============================================================================
+
+// =============================================================================
+// Device Information
+// =============================================================================
+
+#define HF_CORE_DEV_INFO_APP_VERSION_ATTR           @HF_CORE_DEV_INFO_APP_VERSION_ATTR@
+#define HF_CORE_DEV_INFO_HW_VERSION_ATTR            @HF_CORE_DEV_INFO_HW_VERSION_ATTR@
+#define HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR     @HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR@
+
+// =============================================================================
+// SUOTA Configuration
+// =============================================================================
+
+#define HF_CORE_SUOTA_CHECK_VERSION_CMD          @HF_CORE_SUOTA_CHECK_VERSION_CMD@
+
+// =============================================================================
+// Interfaces
+// =============================================================================
+
+// =============================================================================
 // Simple Power Meter Configuration
 // =============================================================================
+
 #define HF_ITF_SPM_ENERGY_ATTR                  @HF_ITF_SPM_ENERGY_ATTR@
 #define HF_ITF_SPM_POWER_ATTR                   @HF_ITF_SPM_POWER_ATTR@
 #define HF_ITF_SPM_ENERGY_AT_RESET_ATTR         @HF_ITF_SPM_ENERGY_AT_RESET_ATTR@
@@ -60,11 +83,5 @@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD    @HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD     @HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD  @HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD@
-
-// =============================================================================
-// SUOTA Configuration
-// =============================================================================
-
-#define HF_CORE_SUOTA_CHECK_VERSION_CMD          @HF_CORE_SUOTA_CHECK_VERSION_CMD@
 
 #endif  /* HF_CONFIG_H */

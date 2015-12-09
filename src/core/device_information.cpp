@@ -306,6 +306,16 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes(uint8_t pack_id) cons
       {
          result.push_back(UID_ATTR);
          result.push_back(EMC_ATTR);
+#if HF_CORE_DEV_INFO_APP_VERSION_ATTR
+         result.push_back(APP_VERSION_ATTR);
+#endif
+#if HF_CORE_DEV_INFO_HW_VERSION_ATTR
+         result.push_back(HW_VERSION_ATTR);
+#endif
+#if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+         result.push_back(MANUFACTURE_NAME_ATTR);
+#endif
+
       }
       case HF::Attributes::Pack::MANDATORY:
       {
@@ -319,7 +329,7 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes(uint8_t pack_id) cons
          break;
    }
 
-   std::reverse(result.begin(), result.end());
+   std::sort(result.begin(), result.end());
 
    return result;
 }

@@ -951,11 +951,35 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case APP_VERSION_ATTR:
       {
-         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+#ifdef HF_CORE_DEV_INFO_APP_VERSION_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (const std::string (Server::*)(void)) & Server::application_version;
+
+            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+         }
+         else
+#endif
+         {
+            return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+         }
       }
       case HW_VERSION_ATTR:
       {
-         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+#ifdef HF_CORE_DEV_INFO_HW_VERSION_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (const std::string (Server::*)(void)) & Server::hardware_version;
+
+            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+         }
+         else
+#endif
+         {
+            return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+         }
       }
       case EMC_ATTR:
       {
@@ -969,7 +993,19 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case MANUFACTURE_NAME_ATTR:
       {
-         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+#ifdef HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (const std::string (Server::*)(void)) & Server::manufacturer_name;
+
+            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+         }
+         else
+#endif
+         {
+            return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+         }
       }
       case LOCATION_ATTR:
       {

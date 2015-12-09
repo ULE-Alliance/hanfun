@@ -133,7 +133,7 @@ TEST(DeviceInformation, All)
    resp.unpack(packet_resp->message.payload);
 
    LONGS_EQUAL(Result::OK, resp.code);
-   LONGS_EQUAL(6, resp.attributes.size())
+   LONGS_EQUAL(8, resp.attributes.size())
 }
 
 TEST(DeviceInformation, ExtraCapabilities)
@@ -168,10 +168,58 @@ TEST(DeviceInformation, ExtraCapabilities)
    CHECK_FALSE(dev_info->has_broadcast());
 }
 
+TEST(DeviceInformation, ApplicationVersion)
+{
+   STRCMP_EQUAL(HF_APPLICATION_VERSION, dev_info->application_version().c_str());
+
+   auto attr = dev_info->attribute(DeviceInformation::APP_VERSION_ATTR);
+   CHECK_TRUE(attr != nullptr);
+
+   typedef HF::Attributes::Attribute<std::string, DeviceInformation::Server> __Attribute;
+
+   auto attr_impl = static_cast<__Attribute *>(attr);
+
+   STRCMP_EQUAL(HF_APPLICATION_VERSION, attr_impl->value().c_str());
+
+   delete attr;
+}
+
+TEST(DeviceInformation, HardwareVersion)
+{
+   STRCMP_EQUAL(HF_HARDWARE_VERSION, dev_info->hardware_version().c_str());
+
+   auto attr = dev_info->attribute(DeviceInformation::HW_VERSION_ATTR);
+   CHECK_TRUE(attr != nullptr);
+
+   typedef HF::Attributes::Attribute<std::string, DeviceInformation::Server> __Attribute;
+
+   auto attr_impl = static_cast<__Attribute *>(attr);
+
+   STRCMP_EQUAL(HF_HARDWARE_VERSION, attr_impl->value().c_str());
+
+   delete attr;
+}
+
+TEST(DeviceInformation, ManufacturerName)
+{
+   STRCMP_EQUAL(HF_MANUFACTURER_NAME, dev_info->manufacturer_name().c_str());
+
+   auto attr = dev_info->attribute(DeviceInformation::MANUFACTURER_NAME_ATTR);
+   CHECK_TRUE(attr != nullptr);
+
+   typedef HF::Attributes::Attribute<std::string, DeviceInformation::Server> __Attribute;
+
+   auto attr_impl = static_cast<__Attribute *>(attr);
+
+   STRCMP_EQUAL(HF_MANUFACTURER_NAME, attr_impl->value().c_str());
+
+   delete attr;
+}
+
 TEST(DeviceInformation, Not_Supported_Attr)
 {
    using namespace HF::Core::DeviceInformation;
-   Protocol::Message *msg = get(MANUFACTURE_NAME_ATTR);
+   Protocol::Message *msg = get(__LAST_ATTR__ + 1);
 
    CHECK_FALSE(msg == nullptr);
 

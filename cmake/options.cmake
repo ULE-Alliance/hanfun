@@ -70,7 +70,33 @@ endif()
 option(HF_APP_EXT_REG "Build example application with external registration support." OFF)
 
 # =============================================================================
-# SimplePowerMeter Configuration
+# Library Configuration
+# =============================================================================
+
+# =============================================================================
+# Core Services & Interfaces Configuration
+# =============================================================================
+
+# =============================================================================
+# Device Information Service
+# =============================================================================
+
+option(HF_CORE_DEV_INFO_APP_VERSION_ATTR        "Service - Device Information - Application Version Attribute Support" OFF)
+option(HF_CORE_DEV_INFO_HW_VERSION_ATTR         "Service - Device Information - Hardware Version Attribute Support" OFF)
+option(HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR  "Service - Device Information - Manufacture Attribute Support" OFF)
+
+# =============================================================================
+# SUOTA Configuration
+# =============================================================================
+
+option(HF_CORE_SUOTA_CHECK_VERSION_CMD         "Interface - SUOTA - Check Version")
+
+# =============================================================================
+# Interfaces Configuration
+# =============================================================================
+
+# =============================================================================
+# Simple Power Meter Configuration
 # =============================================================================
 
 option(HF_ITF_SPM_ENERGY_ATTR              "Interface - Simple Power Meter - Energy Attribute Support")
@@ -89,7 +115,7 @@ option(HF_ITF_SPM_REPORT_CMD               "Interface - Simple Power Meter - Per
 option(HF_ITF_SPM_RESET_CMD                "Interface - Simple Power Meter - Reading Values Reset Command Support")
 
 # =============================================================================
-# SimpleThermostat Configuration
+# Simple Thermostat Configuration
 # =============================================================================
 
 option(HF_ITF_STS_FAN_MODE      "Interface - Simple Thermostat - Fan Mode Support")
@@ -129,9 +155,3 @@ option(HF_ITF_SIMPLE_VISUAL_EFFECTS_OFF_CMD     "Interface - Simple Visual Effec
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD   "Interface - Simple Visual Effects - Blink")
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD    "Interface - Simple Visual Effects - Fade")
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD "Interface - Simple Visual Effects - Breathe")
-
-# =============================================================================
-# SUOTA Configuration
-# =============================================================================
-
-option(HF_CORE_SUOTA_CHECK_VERSION_CMD         "Interface - SUOTA - Check Version")
