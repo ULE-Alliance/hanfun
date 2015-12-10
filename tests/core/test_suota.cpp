@@ -64,20 +64,31 @@ static void check_version(const HF::Common::ByteArray &payload, const char *file
 //! Test Group for SUOTA interface parent class.
 TEST_GROUP(SUOTA)
 {
-   class SUOTABase: public InterfaceParentHelper<SUOTA::Base>
-   {};
+   struct SOUTABase: public Base
+   {
+      SOUTABase(HF::Core::Unit0 &unit): Base(unit) {}
 
-   SUOTABase interface;
+      Interface::Role role() const
+      {
+         return Interface::SERVER_ROLE;
+      }
+   };
+
+   Testing::Device *device;
+   SOUTABase *service;
 
    TEST_SETUP()
    {
-      interface = SUOTABase();
+      device  = new Testing::Device();
+      service = new SOUTABase(*(device->unit0()));
 
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      delete service;
+      delete device;
       mock().clear();
    }
 };
@@ -85,7 +96,7 @@ TEST_GROUP(SUOTA)
 //! @test SUOTA::uid should return @c HF::Interface::SUOTA.
 TEST(SUOTA, UID)
 {
-   LONGS_EQUAL(HF::Interface::SUOTA, interface.uid());
+   LONGS_EQUAL(HF::Interface::SUOTA, service->uid());
 }
 
 // =============================================================================
@@ -304,8 +315,10 @@ TEST(SUOTA, UpgradeStatus_Unpack)
 //! Test Group for SUOTA Client interface class.
 TEST_GROUP(SUOTAClient)
 {
-   struct SUOTAClient: public InterfaceHelper<SUOTA::Client>
+   struct SUOTAClient: public SUOTA::Client
    {
+      SUOTAClient(HF::Core::Unit0 &unit): SUOTA::Client(unit) {}
+
       NewVersionResponse new_version_available(const Protocol::Address &addr,
                                                const Version &version)
       {
@@ -317,7 +330,7 @@ TEST_GROUP(SUOTAClient)
                    .returnIntValueOrDefault(NewVersionResponse::FAIL_UNKNOWN);
       }
 
-      using InterfaceHelper<SUOTA::Client>::check_version;
+      using SUOTA::Client::check_version;
 
       void check_version(const Protocol::Address &addr, const CheckVersionResponse &response)
       {
@@ -331,7 +344,8 @@ TEST_GROUP(SUOTAClient)
       }
    };
 
-   SUOTAClient client;
+   Testing::Device *device;
+   SUOTAClient *client;
    Protocol::Address addr;
 
    Protocol::Packet packet;
@@ -339,7 +353,9 @@ TEST_GROUP(SUOTAClient)
 
    TEST_SETUP()
    {
-      client                    = SUOTAClient();
+      device                    = new Testing::Device();
+
+      client                    = new SUOTAClient(*(device->unit0()));
       addr                      = Protocol::Address(42);
 
       packet                    = Protocol::Packet();
@@ -350,7 +366,7 @@ TEST_GROUP(SUOTAClient)
       packet.destination.unit   = 4;
 
       packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
-      packet.message.itf.id     = client.uid();
+      packet.message.itf.id     = client->uid();
       packet.message.itf.member = 0xFF;
 
       mock().ignoreOtherCalls();
@@ -358,6 +374,9 @@ TEST_GROUP(SUOTAClient)
 
    TEST_TEARDOWN()
    {
+      delete client;
+      delete device;
+
       mock().clear();
    }
 };
@@ -365,7 +384,7 @@ TEST_GROUP(SUOTAClient)
 //! @test New Version Available support.
 TEST(SUOTAClient, NewVersionAvailable)
 {
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
    mock("SUOTA::Client").expectOneCall("new_version_available")
       .withParameter("sw", "v1.2.3")
       .withParameter("hw", "revA")
@@ -376,33 +395,41 @@ TEST(SUOTAClient, NewVersionAvailable)
 
    payload                   = g_version_payload;
 
-   auto res = client.handle(packet, payload, 3);
+   auto res = client->handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, res);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
    mock("SUOTA::Client").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(SUOTA::NEW_VERSION_AVAILABLE_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_RES, client.sendMsg.type);
+   LONGS_EQUAL(1, device->packets.size());
 
-   LONGS_EQUAL(1, client.addr.device);
-   LONGS_EQUAL(2, client.addr.unit);
+   Protocol::Packet *packet_response = device->packets.back();
+
+   CHECK_TRUE(packet_response != nullptr);
+
+   LONGS_EQUAL(1, packet_response->destination.device);
+   LONGS_EQUAL(2, packet_response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, packet_response->destination.mod);
+
+   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, packet_response->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet_response->message.itf.id);
+   LONGS_EQUAL(SUOTA::NEW_VERSION_AVAILABLE_CMD, packet_response->message.itf.member);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_RES, packet_response->message.type);
 
    Protocol::Response response;
-   response.unpack(client.sendMsg.payload);
+   response.unpack(packet_response->message.payload);
 
    LONGS_EQUAL(NewVersionResponse::UNSUPPORTED_HARDWARE, response.code);
 
    mock("SUOTA::Client").expectOneCall("new_version_available").ignoreOtherParameters();
    mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
-   res = client.handle(packet, payload, payload.size());
+   res = client->handle(packet, payload, payload.size());
    CHECK_EQUAL(Common::Result::FAIL_ARG, res);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
    mock("support").checkExpectations();
    mock("SUOTA::Client").checkExpectations();
 }
@@ -410,18 +437,22 @@ TEST(SUOTAClient, NewVersionAvailable)
 //! @test Check Version command support.
 TEST(SUOTAClient, CheckVersion)
 {
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
-   client.check_version(addr, g_version);
+   client->check_version(addr, g_version);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(SUOTA::CHECK_VERSION_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   Protocol::Packet *packet = device->packets.back();
 
-   CHECK_VERSION(client.sendMsg.payload);
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(SUOTA::CHECK_VERSION_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+
+   CHECK_VERSION(packet->message.payload);
 }
 
 //! @test Check Version response support.
@@ -432,7 +463,7 @@ TEST(SUOTAClient, CheckVersionResponse)
 
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
 
-   auto res = client.handle(packet, payload, 2);
+   auto res = client->handle(packet, payload, 2);
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, res);
 
    mock("SUOTA::Client").expectOneCall("check_version")
@@ -445,14 +476,14 @@ TEST(SUOTAClient, CheckVersionResponse)
    packet.message.itf.member = CHECK_VERSION_CMD;
    packet.message.itf.role   = HF::Interface::SERVER_ROLE;
 
-   res                       = client.handle(packet, payload, 2);
+   res                       = client->handle(packet, payload, 2);
    LONGS_EQUAL(Common::Result::OK, res);
 
    mock("SUOTA::Client").checkExpectations();
 
    mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
 
-   res = client.handle(packet, payload, payload.size());
+   res = client->handle(packet, payload, payload.size());
    LONGS_EQUAL(Common::Result::FAIL_ARG, res);
 
    mock("support").checkExpectations();
@@ -461,19 +492,23 @@ TEST(SUOTAClient, CheckVersionResponse)
 //! @test Upgrade Complete support.
 TEST(SUOTAClient, UpgradeComplete)
 {
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
-   client.upgrade_complete(addr, UpgradeStatus::INVALID_IMAGE, "v1.2.3");
+   client->upgrade_complete(addr, UpgradeStatus::INVALID_IMAGE, "v1.2.3");
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(SUOTA::UPGRADE_COMPLETE_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   Protocol::Packet *packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(SUOTA::UPGRADE_COMPLETE_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
 
    UpgradeStatus upgrade;
-   CHECK_TRUE(upgrade.unpack(client.sendMsg.payload) != 0);
+   CHECK_TRUE(upgrade.unpack(packet->message.payload) != 0);
 
    LONGS_EQUAL(UpgradeStatus::INVALID_IMAGE, upgrade.code);
 
@@ -487,9 +522,11 @@ TEST(SUOTAClient, UpgradeComplete)
 //! Test Group for SUOTA Server interface class.
 TEST_GROUP(SUOTAServer)
 {
-   struct SUOTAServer: public InterfaceHelper<SUOTA::Server>
+   struct SUOTAServer: public SUOTA::Server
    {
-      using InterfaceHelper<SUOTA::Server>::new_version_available;
+      SUOTAServer(HF::Core::Unit0 &unit): SUOTA::Server(unit) {}
+
+      using SUOTA::Server::new_version_available;
 
       void new_version_available(const Protocol::Address &addr, NewVersionResponse result)
       {
@@ -517,7 +554,8 @@ TEST_GROUP(SUOTAServer)
       }
    };
 
-   SUOTAServer server;
+   Testing::Device *device;
+   SUOTAServer *server;
    Protocol::Address addr;
 
    Protocol::Packet packet;
@@ -525,12 +563,13 @@ TEST_GROUP(SUOTAServer)
 
    TEST_SETUP()
    {
-      server                    = SUOTAServer();
+      device                    = new Testing::Device();
+      server                    = new SUOTAServer(*(device->unit0()));
       addr                      = Protocol::Address(42);
 
       packet                    = Protocol::Packet();
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
-      packet.message.itf.id     = server.uid();
+      packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
       mock().ignoreOtherCalls();
@@ -538,6 +577,8 @@ TEST_GROUP(SUOTAServer)
 
    TEST_TEARDOWN()
    {
+      delete server;
+      delete device;
       mock().clear();
    }
 };
@@ -545,18 +586,22 @@ TEST_GROUP(SUOTAServer)
 //! @test New Version Available support.
 TEST(SUOTAServer, NewVersionAvailable)
 {
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
-   server.new_version_available(addr, g_version);
+   server->new_version_available(addr, g_version);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
-   LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
-   LONGS_EQUAL(SUOTA::NEW_VERSION_AVAILABLE_CMD, server.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+   Protocol::Packet *packet = device->packets.back();
 
-   CHECK_VERSION(server.sendMsg.payload);
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(server->uid(), packet->message.itf.id);
+   LONGS_EQUAL(SUOTA::NEW_VERSION_AVAILABLE_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+
+   CHECK_VERSION(packet->message.payload);
 }
 
 //! @test New Version Available response support.
@@ -573,12 +618,12 @@ TEST(SUOTAServer, NewVersionAvailableResponse)
                                                   NewVersionResponse::INVALID_SOFTWARE,
                                                   0x00, 0x00, 0x00});
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("SUOTA::Server").checkExpectations();
 
    mock("support").expectOneCall("assert").ignoreOtherParameters();
-   auto res = server.handle(packet, payload, payload.size());
+   auto res = server->handle(packet, payload, payload.size());
    CHECK_EQUAL(Common::Result::FAIL_ARG, res);
    mock("support").checkExpectations();
 }
@@ -590,7 +635,7 @@ TEST(SUOTAServer, CheckVersion)
 
    CheckVersionResponse expected(CheckVersionResponse::FAIL_INFRASTUCTURE, "v3.2.1", "revB", "ftp");
 
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
    mock("SUOTA::Server").expectOneCall("check_version")
       .withParameter("sw", "v1.2.3")
       .withParameter("hw", "revA")
@@ -599,13 +644,16 @@ TEST(SUOTAServer, CheckVersion)
 
    packet.message.itf.member = SUOTA::CHECK_VERSION_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("SUOTA::Server").checkExpectations();
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *packet_response = device->packets.back();
+   CHECK_TRUE(packet_response != nullptr);
 
    CheckVersionResponse actual;
-   LONGS_EQUAL(expected.size(), actual.unpack(server.sendMsg.payload));
+   LONGS_EQUAL(expected.size(), actual.unpack(packet_response->message.payload));
 
    LONGS_EQUAL(expected.code, actual.code);
 
@@ -613,14 +661,17 @@ TEST(SUOTAServer, CheckVersion)
    STRCMP_EQUAL(expected.hw_version.c_str(), actual.hw_version.c_str());
    STRCMP_EQUAL(expected.url.c_str(), actual.url.c_str());
 
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
-   CHECK_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, payload.size()));
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, payload.size()));
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   packet_response = device->packets.back();
+   CHECK_TRUE(packet_response != nullptr);
 
    actual = CheckVersionResponse();
-   LONGS_EQUAL(CheckVersionResponse::min_size, actual.unpack(server.sendMsg.payload));
+   LONGS_EQUAL(CheckVersionResponse::min_size, actual.unpack(packet_response->message.payload));
 
    LONGS_EQUAL(Common::Result::FAIL_ARG, actual.code);
 }
@@ -630,7 +681,7 @@ TEST(SUOTAServer, UpgradeComplete)
 {
    packet.message.itf.member = SUOTA::UPGRADE_COMPLETE_CMD;
 
-   payload = Common::ByteArray({
+   payload                   = Common::ByteArray({
       0x00, 0x00, 0x00,
       UpgradeStatus::GMEP_SESSION_ERROR,
       0x06, 'v', '1', '.', '2', '.', '3',     // Software version string.
@@ -641,12 +692,12 @@ TEST(SUOTAServer, UpgradeComplete)
       .withParameter("status", UpgradeStatus::GMEP_SESSION_ERROR)
       .withParameter("sw_version", "v1.2.3");
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("SUOTA::Server").checkExpectations();
 
    mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
-   auto res = server.handle(packet, payload, payload.size());
+   auto res = server->handle(packet, payload, payload.size());
    CHECK_EQUAL(Common::Result::FAIL_ARG, res);
    mock("support").checkExpectations();
 }

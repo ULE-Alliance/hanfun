@@ -292,12 +292,12 @@ namespace HF
           *
           * This is the parent class for the SUOTA interface implementation.
           */
-         struct Base: public Interfaces::Interface<HF::Interface::SUOTA>
+         struct Base: public Service<HF::Interface::SUOTA>
          {
             protected:
 
             //! Constructor
-            Base(): Interfaces::Interface<HF::Interface::SUOTA>() {}
+            Base(HF::Core::Unit0 &unit0): Service<HF::Interface::SUOTA>(unit0) {}
          };
 
          /*!
@@ -305,12 +305,13 @@ namespace HF
           *
           * This class provides the server side of the SUOTA interface.
           */
-         class Server: public Interfaces::InterfaceRole<SUOTA::Base, HF::Interface::SERVER_ROLE>
+         class Server: public ServiceRole<SUOTA::Base, HF::Interface::SERVER_ROLE>
          {
             public:
 
             //! Constructor
-            Server(): Interfaces::InterfaceRole<SUOTA::Base, HF::Interface::SERVER_ROLE>() {}
+            Server(HF::Core::Unit0 &unit0):
+               ServiceRole<SUOTA::Base, HF::Interface::SERVER_ROLE>(unit0) {}
 
             //! Destructor
             virtual ~Server() {}
@@ -396,9 +397,10 @@ namespace HF
           *
           * This class provides the client side of the SUOTA interface.
           */
-         struct Client: public Interfaces::InterfaceRole<SUOTA::Base, HF::Interface::CLIENT_ROLE>
+         struct Client: public ServiceRole<SUOTA::Base, HF::Interface::CLIENT_ROLE>
          {
-            Client(): Interfaces::InterfaceRole<SUOTA::Base, HF::Interface::CLIENT_ROLE>() {}
+            Client(HF::Core::Unit0 &unit0):
+               ServiceRole<SUOTA::Base, HF::Interface::CLIENT_ROLE>(unit0) {}
 
             virtual ~Client() {}
 
