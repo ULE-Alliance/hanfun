@@ -79,10 +79,12 @@ static const Entry factories[] =
       HF::Interface::RSSI,
       HF::Core::RSSI::create_attribute,
    },
+#if HF_CORE_SUOTA_SUPPORT
    {
       HF::Interface::SUOTA,
       HF::Core::SUOTA::create_attribute,
    },
+#endif
    /* Functional Interfaces. */
    {
       HF::Interface::ALERT,

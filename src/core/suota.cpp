@@ -18,6 +18,20 @@
 #include "hanfun/core/suota.h"
 
 // =============================================================================
+// Defines
+// =============================================================================
+
+#if !defined(HF_CORE_DEV_INFO_APP_VERSION_ATTR) || \
+   !defined(HF_CORE_DEV_INFO_HW_VERSION_ATTR) ||   \
+   !defined(HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR)
+   #error "In order to use the SUOTA service, the Device Information service MUST                                                 \
+   implement the APP_VERSION, HW_VERSION and MANUFACTURER_NAME attributes !                                                       \
+   Please define HF_CORE_DEV_INFO_APP_VERSION_ATTR, HF_CORE_DEV_INFO_HW_VERSION_ATTR and HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR, \
+   in order to add support for these attributes, to the Device Information service.                                               \
+   "
+#endif
+
+// =============================================================================
 // API
 // =============================================================================
 

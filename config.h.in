@@ -24,6 +24,7 @@
 // SUOTA Configuration
 // =============================================================================
 
+#define HF_CORE_SUOTA_SUPPORT                    @HF_CORE_SUOTA_SUPPORT@
 #define HF_CORE_SUOTA_CHECK_VERSION_CMD          @HF_CORE_SUOTA_CHECK_VERSION_CMD@
 
 // =============================================================================

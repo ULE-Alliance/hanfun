@@ -263,12 +263,12 @@ module Hanfun
         end
 
         # Add options for options attributes to cmake/options.cmake
-        append_to_file cmake_path("options.cmake") do
+        inject_into_file(cmake_path("options.cmake"), :before => @generator[:config][:insert_cmake_at]) do
           header.gsub(/^\/\//, "#") + code_opts.join("\n") + "\n"
         end
 
         # Add optional attributes to config.h.in
-        inject_into_file top_path("config.h.in"), :before => /\s#endif/ do
+        inject_into_file(top_path("config.h.in"), :before => @generator[:config][:insert_config_at]) do
           header + code_defs.join("\n") + "\n"
         end
       end
@@ -527,6 +527,11 @@ module Hanfun
           insert_at: /^\s+\/\*\s+Reserved/,
         }
 
+        @generator[:config] = {
+          insert_config_at: /\s#endif/,
+          insert_cmake_at: /^\s+#\s+=+\n#\s+Dependecies/
+        }
+
         @generator[:debug] = {
           insert_at: /^\s+\/\/\s+=+\n\/\/\s+Core/,
           protocol: "Unknown",
@@ -576,6 +581,11 @@ module Hanfun
         @generator[:uid] = {
           reference: /\bDEVICE_MANAGEMENT\b/,
           insert_at: /^\s+\/\*\s+Functional Interfaces/,
+        }
+
+        @generator[:config] = {
+          insert_config_at: /^\s+\/\/\s+=+\n\/\/\s+Interfaces/,
+          insert_cmake_at: /^\s+#\s+=+\n#\s+Interfaces/
         }
 
         @generator[:debug] = {

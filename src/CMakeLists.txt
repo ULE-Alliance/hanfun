@@ -73,7 +73,9 @@ add_core("device_information")
 add_core("attribute_reporting")
 add_core("session_management")
 add_core("rssi")
-add_core("suota")
+if(HF_CORE_SUOTA_SUPPORT)
+    add_core("suota")
+endif()
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)
