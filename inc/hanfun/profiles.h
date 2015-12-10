@@ -159,6 +159,9 @@ namespace HF
          // Application Unit Types
          // =============================================================================
 
+         //! User Interface Lock.
+         USER_INTERFACE_LOCK = 0x0401,
+
          //! User Interface unit (e.g. keypad, remote control)
          USER_INTERFACE = 0x0410,
 
@@ -737,7 +740,8 @@ namespace HF
        */
       template<typename OnOffServer            = Interfaces::OnOff::Server,
                typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
-      class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer, SimpleThermostatServer>
+      class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer,
+                                                   SimpleThermostatServer>
       {
          static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
                        "OnOffServer MUST be of type Interfaces::OnOff::Server !");
@@ -914,6 +918,16 @@ namespace HF
        * @{
        */
       // =============================================================================
+
+      /*!
+       * User Interface Lock profile implementation.
+       */
+      class UserInterfaceLock: public Profile<USER_INTERFACE_LOCK, Interfaces::OnOff::Server>
+      {
+         public:
+
+         virtual ~UserInterfaceLock() {}
+      };
 
       /*!
        * User Interface profile implementation.

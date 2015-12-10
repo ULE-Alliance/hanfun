@@ -56,7 +56,6 @@ namespace HF
       HELPER_CLASS(SimpleDoorLock);
       HELPER_CLASS(SimpleTemperatureSensor);
       HELPER_CLASS(SimpleHumiditySensor);
-      HELPER_CLASS2(ControlableThermostat);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -75,6 +74,7 @@ namespace HF
 
       HELPER_CLASS(SimplePendant);
 
+      HELPER_CLASS(UserInterfaceLock);
       HELPER_CLASS(UserInterface);
 
       HELPER_CLASS(GenericApplicationLogic);
@@ -84,6 +84,7 @@ namespace HF
       HELPER_CLASS2(AC_OutletWithPowerMetering);
       HELPER_CLASS2(DimmableLight);
       HELPER_CLASS2(DimmerSwitch);
+      HELPER_CLASS2(ControlableThermostat);
 
    }  // namespace Testing
 
@@ -245,6 +246,10 @@ TEST(Profiles, UIDs)
    // =============================================================================
    // Application Unit Types
    // =============================================================================
+
+   profile = new UserInterfaceLock();
+   CHECK_EQUAL(Profiles::USER_INTERFACE_LOCK, profile->uid());
+   delete profile;
 
    profile = new UserInterface();
    CHECK_EQUAL(Profiles::USER_INTERFACE, profile->uid());
@@ -588,6 +593,14 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::USER_INTERFACE_LOCK
+   itf = Profiles::interfaces(HF::Profiles::USER_INTERFACE_LOCK, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::USER_INTERFACE
