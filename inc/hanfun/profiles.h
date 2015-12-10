@@ -25,6 +25,7 @@
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
+#include "hanfun/interfaces/simple_thermostat.h"
 
 // =============================================================================
 // API
@@ -106,6 +107,9 @@ namespace HF
 
          //! Simple sensor to measure the relative humidity.
          SIMPLE_HUMIDITY_SENSOR = 0x010F,
+
+         //! Controllable thermostat.
+         CONTROLABLE_THERMOSTAT = 0x0112,
 
          // =============================================================================
          // Security Unit Types
@@ -726,6 +730,35 @@ namespace HF
          public:
 
          virtual ~SimpleHumiditySensor() {}
+      };
+
+      /*!
+       * Controllable thermostat profile implementation.
+       */
+      template<typename OnOffServer            = Interfaces::OnOff::Server,
+               typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
+      class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer, SimpleThermostatServer>
+      {
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOffServer MUST be of type Interfaces::OnOff::Server !");
+
+         static_assert(std::is_base_of<Interfaces::SimpleThermostat::Server,
+                                       SimpleThermostatServer>::value,
+                       "SimpleThermostatServer MUST be of type Interfaces::SimpleThermostat::Server !");
+
+         public:
+
+         virtual ~ControlableThermostat() {}
+
+         OnOffServer *on_off()
+         {
+            return this->first();
+         }
+
+         SimpleThermostatServer *simple_thermostat()
+         {
+            return this->second();
+         }
       };
 
       // =============================================================================

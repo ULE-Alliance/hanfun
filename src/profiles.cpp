@@ -132,6 +132,10 @@ static const HF::Common::Interface profiles_interfaces[] =
 
    // 32 - HF::Profiles::SIMPLE_HUMIDITY_SENSOR,
    {HF::Interface::SIMPLE_HUMIDITY,    HF::Interface::SERVER_ROLE},
+
+   // 33 - HF::Profiles::CONTROLABLE_THERMOSTAT
+   {HF::Interface::ON_OFF,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_THERMOSTAT,   HF::Interface::SERVER_ROLE},
 };
 
 /*!
@@ -168,6 +172,7 @@ static const Profile profiles[] =
    {HF::Profiles::SIMPLE_PENDANT,                       0x001E, 1},      // 30
    {HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,            0x001F, 1},      // 31
    {HF::Profiles::SIMPLE_HUMIDITY_SENSOR,               0x0020, 1},      // 32
+   {HF::Profiles::CONTROLABLE_THERMOSTAT,               0x0021, 2},      // 33
    {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
    {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };

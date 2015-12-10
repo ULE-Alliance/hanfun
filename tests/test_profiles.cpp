@@ -25,16 +25,16 @@ using namespace HF::Testing;
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS(_name)                           \
-struct _name:public ProfileHelper<Profiles::_name>   \
-{                                                      \
+struct _name:public ProfileHelper<Profiles::_name>    \
+{                                                     \
    virtual ~_name() {}                                \
 }
 /* *INDENT-ON* */
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS2(_name)                            \
-struct _name:public ProfileHelper<Profiles::_name<>>   \
-{                                                        \
+struct _name:public ProfileHelper<Profiles::_name<>>    \
+{                                                       \
    virtual ~_name() {}                                  \
 }
 /* *INDENT-ON* */
@@ -56,6 +56,7 @@ namespace HF
       HELPER_CLASS(SimpleDoorLock);
       HELPER_CLASS(SimpleTemperatureSensor);
       HELPER_CLASS(SimpleHumiditySensor);
+      HELPER_CLASS2(ControlableThermostat);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -179,6 +180,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::SimpleHumiditySensor();
    CHECK_EQUAL(Profiles::SIMPLE_HUMIDITY_SENSOR, profile->uid());
+   delete profile;
+
+   profile = new Testing::ControlableThermostat();
+   CHECK_EQUAL(Profiles::CONTROLABLE_THERMOSTAT, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -474,6 +479,19 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::SIMPLE_HUMIDITY, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::CONTROLABLE_THERMOSTAT
+   itf = Profiles::interfaces(HF::Profiles::CONTROLABLE_THERMOSTAT, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(2, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_THERMOSTAT, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::SIMPLE_DETECTOR
