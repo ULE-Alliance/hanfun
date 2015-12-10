@@ -1374,6 +1374,44 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::RSSI::Attributes 
 }
 
 // =============================================================================
+// HF::Core::SUOTA
+// =============================================================================
+
+#include "hanfun/core/suota.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::SUOTA::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::SUOTA;
+
+   switch (command)
+   {
+      case NEW_VERSION_AVAILABLE_CMD /* CHECK_VERSION_CMD */:
+         result = "New Version Available/Check Version";
+         break;
+      case UPGRADE_COMPLETE_CMD:
+         result = "Upgrade Complete";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1546,6 +1584,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SUOTA:
+               stream << static_cast<SUOTA::CMD>(message.itf.member);
                break;
             /* Interfaces [C] */
             case HF::Interface::ALERT:

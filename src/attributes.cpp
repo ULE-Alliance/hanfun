@@ -33,6 +33,7 @@
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/rssi.h"
+#include "hanfun/core/suota.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -78,6 +79,12 @@ static const Entry factories[] =
       HF::Interface::RSSI,
       HF::Core::RSSI::create_attribute,
    },
+#if HF_CORE_SUOTA_SUPPORT
+   {
+      HF::Interface::SUOTA,
+      HF::Core::SUOTA::create_attribute,
+   },
+#endif
    /* Functional Interfaces. */
    {
       HF::Interface::ALERT,
@@ -946,11 +953,35 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case APP_VERSION_ATTR:
       {
-         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+#ifdef HF_CORE_DEV_INFO_APP_VERSION_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (const std::string (Server::*)(void)) & Server::application_version;
+
+            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+         }
+         else
+#endif
+         {
+            return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+         }
       }
       case HW_VERSION_ATTR:
       {
-         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+#ifdef HF_CORE_DEV_INFO_HW_VERSION_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (const std::string (Server::*)(void)) & Server::hardware_version;
+
+            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+         }
+         else
+#endif
+         {
+            return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+         }
       }
       case EMC_ATTR:
       {
@@ -964,7 +995,19 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case MANUFACTURE_NAME_ATTR:
       {
-         return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+#ifdef HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+
+         if (server != nullptr)
+         {
+            auto getter = (const std::string (Server::*)(void)) & Server::manufacturer_name;
+
+            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+         }
+         else
+#endif
+         {
+            return new Attribute<std::string>(HF::Interface::DEVICE_INFORMATION, attr, "");
+         }
       }
       case LOCATION_ATTR:
       {

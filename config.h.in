@@ -9,8 +9,32 @@
 #define ON      1
 
 // =============================================================================
+// Core Services and Interfaces
+// =============================================================================
+
+// =============================================================================
+// Device Information
+// =============================================================================
+
+#define HF_CORE_DEV_INFO_APP_VERSION_ATTR           @HF_CORE_DEV_INFO_APP_VERSION_ATTR@
+#define HF_CORE_DEV_INFO_HW_VERSION_ATTR            @HF_CORE_DEV_INFO_HW_VERSION_ATTR@
+#define HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR     @HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR@
+
+// =============================================================================
+// SUOTA Configuration
+// =============================================================================
+
+#define HF_CORE_SUOTA_SUPPORT                    @HF_CORE_SUOTA_SUPPORT@
+#define HF_CORE_SUOTA_CHECK_VERSION_CMD          @HF_CORE_SUOTA_CHECK_VERSION_CMD@
+
+// =============================================================================
+// Interfaces
+// =============================================================================
+
+// =============================================================================
 // Simple Power Meter Configuration
 // =============================================================================
+
 #define HF_ITF_SPM_ENERGY_ATTR                  @HF_ITF_SPM_ENERGY_ATTR@
 #define HF_ITF_SPM_POWER_ATTR                   @HF_ITF_SPM_POWER_ATTR@
 #define HF_ITF_SPM_ENERGY_AT_RESET_ATTR         @HF_ITF_SPM_ENERGY_AT_RESET_ATTR@

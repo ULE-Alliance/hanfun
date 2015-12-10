@@ -352,6 +352,10 @@ namespace HF
 
          Response(Common::Result code = Common::Result::OK): code(code) {}
 
+         template<typename T>
+         Response(T code = static_cast<T>(Common::Result::OK)):
+            code(static_cast<Common::Result>(code)) {}
+
          //! @copydoc HF::Common::Serializable::size
          uint16_t size() const;
 

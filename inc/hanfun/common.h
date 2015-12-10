@@ -697,14 +697,9 @@ namespace HF
             return min_size + data.size();
          }
 
-         uint16_t size() const
+         static uint16_t pack(const std::string &data, Common::ByteArray &array, uint16_t offset = 0)
          {
-            return size(data);
-         }
-
-         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
-         {
-            HF_SERIALIZABLE_CHECK(array, offset, size());
+            HF_SERIALIZABLE_CHECK(array, offset, size(data));
 
             uint16_t start = offset;
 
@@ -720,7 +715,7 @@ namespace HF
             return offset - start;
          }
 
-         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+         static uint16_t unpack(std::string &data, const Common::ByteArray &array, uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
@@ -741,6 +736,21 @@ namespace HF
             offset += _size;
 
             return offset - start;
+         }
+
+         uint16_t size() const
+         {
+            return size(data);
+         }
+
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            return pack(data, array, offset);
+         }
+
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+         {
+            return unpack(data, array, offset);
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare

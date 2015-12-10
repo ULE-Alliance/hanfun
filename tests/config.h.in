@@ -2,10 +2,32 @@
 #define HF_CONFIG_H
 
 // =============================================================================
+// Core Services and Interfaces
+// =============================================================================
+
+// =============================================================================
 // Device Information Configuration
 // =============================================================================
 
-#define HF_DEVICE_MANUFACTURER_CODE             0x1234
+#define HF_DEVICE_MANUFACTURER_CODE                 0x1234
+#define HF_APPLICATION_VERSION                      "v1.0.0"
+#define HF_HARDWARE_VERSION                         "revA"
+#define HF_MANUFACTURER_NAME                        "Foobar"
+
+#define HF_CORE_DEV_INFO_APP_VERSION_ATTR           1
+#define HF_CORE_DEV_INFO_HW_VERSION_ATTR            1
+#define HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR     1
+
+// =============================================================================
+// SUOTA Configuration
+// =============================================================================
+
+#define HF_CORE_SUOTA_SUPPORT                       1
+#define HF_CORE_SUOTA_CHECK_VERSION_CMD             1
+
+// =============================================================================
+// Interfaces
+// =============================================================================
 
 // =============================================================================
 // Simple Power Meter Configuration

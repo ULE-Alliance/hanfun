@@ -28,8 +28,27 @@
 // =============================================================================
 
 #ifndef HF_DEVICE_MANUFACTURER_CODE
+   #warning "HF_DEVICE_MANUFACTURER_CODE not defined ! Using default value '0x0000'"
 //! Device Electronic Manufacturer Code
    #define HF_DEVICE_MANUFACTURER_CODE   0x0000
+#endif
+
+#ifndef HF_APPLICATION_VERSION
+   #warning "HF_APPLICATION_VERSION not defined ! Using default empty value !"
+//! Application version.
+   #define HF_APPLICATION_VERSION        ""
+#endif
+
+#ifndef HF_HARDWARE_VERSION
+   #warning "HF_HARDWARE_VERSION not defined ! Using default empty value !"
+//! Hardware Version
+   #define HF_HARDWARE_VERSION           ""
+#endif
+
+#ifndef HF_MANUFACTURER_NAME
+   #warning "HF_MANUFACTURER_NAME not defined ! Using default empty value !"
+//! Manufacturer name.
+   #define HF_MANUFACTURER_NAME          ""
 #endif
 
 // =============================================================================
@@ -74,11 +93,21 @@ namespace HF
           * This module contains the classes that implement the %Device Information service.
           * @{
           */
-         constexpr static uint8_t CORE_VERSION      = HF::CORE_VERSION;        //!< HAN-FUN Core version.
-         constexpr static uint8_t PROFILE_VERSION   = HF::PROFILES_VERSION;    //!< HAN-FUN Profile version.
-         constexpr static uint8_t INTERFACE_VERSION = HF::INTERFACES_VERSION;  //!< HAN-FUN Interface version.
+         constexpr static uint8_t CORE_VERSION      = HF::CORE_VERSION;             //!< HAN-FUN Core version.
+         constexpr static uint8_t PROFILE_VERSION   = HF::PROFILES_VERSION;         //!< HAN-FUN Profile version.
+         constexpr static uint8_t INTERFACE_VERSION = HF::INTERFACES_VERSION;       //!< HAN-FUN Interface version.
 
          constexpr static uint16_t EMC              = HF_DEVICE_MANUFACTURER_CODE;  //!< Electronic Manufacture Code.
+
+#if HF_CORE_DEV_INFO_APP_VERSION_ATTR
+         constexpr static const char *APPLICATION_VERSION = HF_APPLICATION_VERSION; //!< Application Version.
+#endif
+#if HF_CORE_DEV_INFO_HW_VERSION_ATTR
+         constexpr static const char *HARDWARE_VERSION = HF_HARDWARE_VERSION;       //!< Hardware Version.
+#endif
+#if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+         constexpr static const char *MANUFACTURER_NAME = HF_MANUFACTURER_NAME;     //!< Manufacturer Name.
+#endif
 
          //! Attributes.
          typedef enum _Attributes
@@ -93,13 +122,14 @@ namespace HF
             HW_VERSION_ATTR        = 0x08,   //!< Hardware version attribute.             (O)
             EMC_ATTR               = 0x09,   //!< Electronic Manufacture Code attribute.  (O)
             DECT_ID_ATTR           = 0x0A,   //!< RFPI / IPUI                             (0)
-            MANUFACTURE_NAME_ATTR  = 0x0B,   //!< Manufacture's name attribute.           (O)
+            MANUFACTURER_NAME_ATTR = 0x0B,   //!< Manufacture's name attribute.           (O)
             LOCATION_ATTR          = 0x0C,   //!< Location attribute.                     (O)
             ENABLED_ATTR           = 0x0D,   //!< Device enabled attribute.               (O)
             FRIENDLY_NAME_ATTR     = 0x0E,   //!< Device friendly name attribute.         (O)
             UID_ATTR               = 0x0F,   //!< Device UID attribute.                   (O)
             SERIAL_NUMBER_ATTR     = 0x10,   //!< Serial number attribute.                (O)
             __LAST_ATTR__          = SERIAL_NUMBER_ATTR,
+            MANUFACTURE_NAME_ATTR  = MANUFACTURER_NAME_ATTR, //!< @deprecated
          } Attributes;
 
          /*!
@@ -261,6 +291,39 @@ namespace HF
              */
             uint8_t capabilities();
 
+#if HF_CORE_DEV_INFO_APP_VERSION_ATTR
+            /*!
+             * Getter for the @c APP_VERSION_ATTR attribute.
+             *
+             * @return  the application version string.
+             */
+            const std::string application_version() const
+            {
+               return std::string(APPLICATION_VERSION);
+            }
+#endif
+#if HF_CORE_DEV_INFO_HW_VERSION_ATTR
+            /*!
+             * Getter for the @c HW_VERSION_ATTR attribute.
+             *
+             * @return  the hardware version string.
+             */
+            virtual const std::string hardware_version() const
+            {
+               return std::string(HARDWARE_VERSION);
+            }
+#endif
+#if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+            /*!
+             * Getter for the @c MANUFACTURE_NAME_ATTR attribute.
+             *
+             * @return  the manufacturer name string.
+             */
+            const std::string manufacturer_name() const
+            {
+               return std::string(MANUFACTURER_NAME);
+            }
+#endif
             protected:
 
             uint8_t _capabilities;

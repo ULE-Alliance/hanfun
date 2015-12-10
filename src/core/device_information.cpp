@@ -48,7 +48,7 @@ uint16_t FriendlyName::Unit::pack(HF::Common::ByteArray &array, uint16_t offset)
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    offset += array.write(offset, id);
-   HF::Common::SerializableHelper<std::string>(name).pack(array, offset);
+   HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
 
    return size();
 }
@@ -64,17 +64,18 @@ uint16_t FriendlyName::Unit::unpack(const HF::Common::ByteArray &array, uint16_t
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
+   uint16_t start = offset;
+
    offset += array.read(offset, id);
-   HF::Common::SerializableHelper<std::string> temp;
 
-   if (temp.unpack(array, offset) == 0)
-   {
-      return 0;
-   }
+   uint16_t size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
 
-   name = temp.data;
+   /* *INDENT-OFF* */
+   HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+   offset += size;
 
-   return size();
+   return offset - start;
 }
 
 // =============================================================================
@@ -305,6 +306,16 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes(uint8_t pack_id) cons
       {
          result.push_back(UID_ATTR);
          result.push_back(EMC_ATTR);
+#if HF_CORE_DEV_INFO_APP_VERSION_ATTR
+         result.push_back(APP_VERSION_ATTR);
+#endif
+#if HF_CORE_DEV_INFO_HW_VERSION_ATTR
+         result.push_back(HW_VERSION_ATTR);
+#endif
+#if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+         result.push_back(MANUFACTURE_NAME_ATTR);
+#endif
+
       }
       case HF::Attributes::Pack::MANDATORY:
       {
@@ -318,7 +329,7 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes(uint8_t pack_id) cons
          break;
    }
 
-   std::reverse(result.begin(), result.end());
+   std::sort(result.begin(), result.end());
 
    return result;
 }
