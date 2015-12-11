@@ -27,6 +27,7 @@
 #include "hanfun/interfaces/simple_humidity.h"
 #include "hanfun/interfaces/simple_thermostat.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/simple_button.h"
 
 // =============================================================================
 // API
@@ -111,6 +112,9 @@ namespace HF
 
          //! Simple Air Pressure Sensor
          SIMPLE_AIR_PRESSURE_SENSOR = 0x0110,
+
+         //! Simple button.
+         SIMPLE_BUTTON = 0x0111,
 
          //! Controllable thermostat.
          CONTROLABLE_THERMOSTAT = 0x0112,
@@ -778,6 +782,16 @@ namespace HF
          public:
 
          virtual ~SimpleAirPressureSensor() {}
+      };
+
+      /*!
+       * Simple Button profile implementation.
+       */
+      class SimpleButton: public Profile<SIMPLE_BUTTON, Interfaces::SimpleButton::Server>
+      {
+         public:
+
+         virtual ~SimpleButton() {}
       };
 
       // =============================================================================

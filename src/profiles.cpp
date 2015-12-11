@@ -142,6 +142,9 @@ static const HF::Common::Interface profiles_interfaces[] =
 
    // 35 - HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR
    {HF::Interface::SIMPLE_AIR_PRESSURE, HF::Interface::SERVER_ROLE},
+
+   // 36 - HF::Profiles::SIMPLE_BUTTON
+   {HF::Interface::SIMPLE_BUTTON,       HF::Interface::SERVER_ROLE},
 };
 
 /*!
@@ -181,6 +184,7 @@ static const Profile profiles[] =
    {HF::Profiles::CONTROLABLE_THERMOSTAT,               0x0021, 2},      // 33
    {HF::Profiles::USER_INTERFACE_LOCK,                  0x0023, 1},      // 34
    {HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR,           0x0024, 1},      // 35
+   {HF::Profiles::SIMPLE_BUTTON,                        0x0025, 1},      // 36
    {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
    {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };

@@ -57,6 +57,7 @@ namespace HF
       HELPER_CLASS(SimpleTemperatureSensor);
       HELPER_CLASS(SimpleHumiditySensor);
       HELPER_CLASS(SimpleAirPressureSensor);
+      HELPER_CLASS(SimpleButton);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -190,6 +191,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::SimpleAirPressureSensor();
    CHECK_EQUAL(Profiles::SIMPLE_AIR_PRESSURE_SENSOR, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleButton();
+   CHECK_EQUAL(Profiles::SIMPLE_BUTTON, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -514,6 +519,14 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::SIMPLE_AIR_PRESSURE, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_BUTTON
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_BUTTON, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_BUTTON, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // =============================================================================
