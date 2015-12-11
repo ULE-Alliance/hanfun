@@ -28,6 +28,7 @@
 #include "hanfun/interfaces/simple_thermostat.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
 #include "hanfun/interfaces/simple_button.h"
+#include "hanfun/interfaces/simple_visual_effects.h"
 
 // =============================================================================
 // API
@@ -118,6 +119,9 @@ namespace HF
 
          //! Controllable thermostat.
          CONTROLABLE_THERMOSTAT = 0x0112,
+
+         //! Simple LED profile.
+         SIMPLE_LED = 0x0113,
 
          // =============================================================================
          // Security Unit Types
@@ -792,6 +796,16 @@ namespace HF
          public:
 
          virtual ~SimpleButton() {}
+      };
+
+      /*!
+       * Simple LED profile implementation.
+       */
+      class SimpleLED: public Profile<SIMPLE_LED, Interfaces::SimpleVisualEffects::Server>
+      {
+         public:
+
+         virtual ~SimpleLED() {}
       };
 
       // =============================================================================

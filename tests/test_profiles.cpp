@@ -58,6 +58,7 @@ namespace HF
       HELPER_CLASS(SimpleHumiditySensor);
       HELPER_CLASS(SimpleAirPressureSensor);
       HELPER_CLASS(SimpleButton);
+      HELPER_CLASS(SimpleLED);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -195,6 +196,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::SimpleButton();
    CHECK_EQUAL(Profiles::SIMPLE_BUTTON, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleLED();
+   CHECK_EQUAL(Profiles::SIMPLE_LED, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -527,6 +532,14 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::SIMPLE_BUTTON, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LED
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_LED, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_VISUAL_EFFECTS, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // =============================================================================
