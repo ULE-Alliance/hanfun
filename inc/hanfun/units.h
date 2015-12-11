@@ -433,7 +433,7 @@ namespace HF
       {
          uint8_t _id;
 
-         using Base = Unit<Profile, ITF...>;
+         using Base              = Unit<Profile, ITF...>;
          using InterfacesWrapper = Units::InterfacesWrapper<Base, ITF...>;
 
          public:

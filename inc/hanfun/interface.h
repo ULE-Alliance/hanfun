@@ -373,6 +373,7 @@ namespace HF
          }
       };
 
+      /* *INDENT-OFF* */
       /*!
        * @copydoc HF::Interfaces::Interface
        *
@@ -380,6 +381,7 @@ namespace HF
        */
       template<uint16_t _uid>
       struct __attribute__((deprecated)) Base: public Interface<_uid>{};
+      /* *INDENT-ON* */
 
       /*!
        * Helper class template for implementing a given interface role.
