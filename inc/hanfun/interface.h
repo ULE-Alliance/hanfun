@@ -356,7 +356,7 @@ namespace HF
        *
        * @tparam _uid   interface UID to be used by the interface.
        */
-      template<HF::Interface::UID _uid>
+      template<uint16_t _uid>
       struct Interface: public AbstractInterface
       {
          //! @copydoc HF::Interface::uid
@@ -378,7 +378,7 @@ namespace HF
        *
        * @deprecated This template class has been deprecated please use HF::Interfaces::Interface.
        */
-      template<HF::Interface::UID _uid>
+      template<uint16_t _uid>
       struct __attribute__((deprecated)) Base: public Interface<_uid>{};
 
       /*!
