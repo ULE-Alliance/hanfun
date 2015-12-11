@@ -142,18 +142,18 @@ namespace HF
       };
 
       /*!
-       * Helper template class to implement units.
+       * Helper class to handle optional interfaces in units.
        */
-      template<class Profile, typename... ITF>
-      class Unit: public HF::Units::AbstractUnit, public virtual Profile
+      template<typename Base, typename... ITF>
+      class InterfacesWrapper
       {
-         uint8_t _id;
-
-         template<typename _Interface, typename _Proxy>
+         /*!
+          * Proxy class for interface objects.
+          */
+         template<typename _Interface, typename _Proxy, typename = void>
          struct Proxy: public HF::Interfaces::Proxy<_Interface, _Proxy>
          {
-            Proxy(_Proxy &_proxy):
-               HF::Interfaces::Proxy<_Interface, _Proxy>(_proxy)
+            Proxy(_Proxy &_proxy): HF::Interfaces::Proxy<_Interface, _Proxy>(_proxy)
             {}
 
             _Proxy &unit() const
@@ -162,9 +162,9 @@ namespace HF
             }
          };
 
-         typedef std::tuple<Proxy<ITF, Unit>...> interfaces_t;
+         using interfaces_t = std::tuple<Proxy<ITF, Base>...>;
 
-         //! Tuple containing the optional implemented interfaces of this unit.
+         //! Tuple containing the wrapped interfaces/services.
          interfaces_t _interfaces;
 
          public:
@@ -175,78 +175,37 @@ namespace HF
           * @param [in] id       unit identifier.
           * @param [in] device   device that contains this units.
           */
-         Unit(uint8_t id, IDevice &device):
-            Profile(), HF::Units::AbstractUnit(device), _id(id),
-            _interfaces(Proxy<ITF, Unit>(*this) ...)
+         InterfacesWrapper(Base &wrapper): _interfaces(Proxy<ITF, Base>(wrapper) ...)
          {}
-
-         //! @copydoc HF::Units::IUnit::id
-         uint8_t id() const
-         {
-            return _id;
-         }
-
-         //! @copydoc HF::Profiles::IProfile::uid
-         uint16_t uid() const
-         {
-            return Profile::uid();
-         }
 
          //! @copydoc HF::Interface::handle
          Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
                                uint16_t offset)
          {
-            Common::Result result = Profile::handle(packet, payload, offset);
+            HF::Interface *itf = find<0, Proxy<ITF, Base>...>(packet.message.itf.id);
 
-            // Message not handled by base profile, then try extra interfaces.
-            if (result == Common::Result::FAIL_ARG)
+            if (itf != nullptr)
             {
-               Interface *itf = find<0, ITF...>(packet.message.itf.id);
-
-               if (itf != nullptr)
-               {
-                  return itf->handle(packet, payload, offset);
-               }
-               else
-               {
-                  return Common::Result::FAIL_SUPPORT;
-               }
+               return itf->handle(packet, payload, offset);
             }
-
-            return result;
+            else
+            {
+               return Common::Result::FAIL_SUPPORT;
+            }
          }
 
          //! @copydoc HF::Profiles::IProfile::attributes
-         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
-                                         const HF::Attributes::UIDS &uids) const
+         void attributes(HF::Attributes::List &attr_list, Common::Interface itf, uint8_t pack_id,
+                         const HF::Attributes::UIDS &uids) const
          {
-            auto result = Profile::attributes(itf, pack_id, uids);
-
-            attributes_itf<0, ITF...>(result, itf, pack_id, uids);
-
-            return result;
-         }
-
-         using HF::Units::AbstractUnit::send;
-
-         //! @copydoc HF::Interfaces::AbstractInterface::send
-         void send(const Protocol::Address &addr, Protocol::Message &message)
-         {
-            AbstractUnit::send(addr, message, nullptr);
-         }
-
-         //! @copydoc HF::Units::AbstractUnit::notify
-         void notify(const HF::Attributes::IAttribute &old_value,
-                     const HF::Attributes::IAttribute &new_value) const
-         {
-            AbstractUnit::notify(old_value, new_value);
+            attributes_itf<0, Proxy<ITF, Base>...>(attr_list, itf, pack_id, uids);
          }
 
          /*!
-          * Return the list of optional interfaces implemented by this unit.
+          * Return the list of interfaces present in the wrapper.
           *
-          * @return  a vector containing the UIDs for the optional interfaces
-          *          implemented by this unit.
+          * @return  a vector containing the UIDs for the interfaces
+          *          wrapped by this class.
           */
          std::vector<Common::Interface> interfaces() const
          {
@@ -268,14 +227,10 @@ namespace HF
 
          void periodic(uint32_t time)
          {
-            Profile::periodic(time);
-
             /* *INDENT-OFF* */
             for_each ([time](HF::Interface &itf) { itf.periodic (time);});
             /* *INDENT-ON* */
          }
-
-         protected:
 
          /*!
           * Retrieve a pointer to the N optional interface implemented by this unit.
@@ -290,39 +245,40 @@ namespace HF
             return &std::get<N>(_interfaces);
          }
 
+         protected:
+
          /*!
-          * Call the given function for all the implemented optional interfaces.
+          * Call the given function for all the interfaces.
           *
           * @param [in] func  function to call with each of the optional implemented interfaces.
           */
          void for_each(std::function<void(HF::Interface &)> func) const
          {
-            for_each<0, ITF...>(func);
+            for_each<0, Proxy<ITF, Base>...>(func);
          }
 
          /*!
-          * Call the given function for all the implemented optional interfaces.
+          * Call the given function for all the interfaces.
           *
           * @param [in] func  function to call with each of the optional implemented interfaces.
           */
          void for_each(std::function<void(HF::Interface &)> func)
          {
-            for_each<0, ITF...>(func);
+            for_each<0, Proxy<ITF, Base>...>(func);
          }
 
-         private:
+         protected:
 
          /*!
-          * Find the implemented optional interface with the given UID.
+          * Find the interface with the given UID.
           *
-          * @param itf_uid    the interface UID to search for in the optional
-          *                   implemented interface.
+          * @param itf_uid    the interface UID to search for in the wrapped interfaces.
           *
-          * @tparam  N        index in the optional interfaces tuple to check if UID matches.
-          * @tparam  Head     class for the optional interface at the given index.
+          * @tparam  N        index in the interfaces tuple to check if UID matches.
+          * @tparam  Head     class for the interface at the given index.
           * @tparam  Tail     the classes associated with the remaining optional interfaces.
           *
-          * @return           a pointer to the optional interface or @c nullptr if
+          * @return           a pointer to the interface or @c nullptr if
           *                   the interface is not present.
           */
          template<uint8_t N, typename Head, typename... Tail>
@@ -344,13 +300,12 @@ namespace HF
          }
 
          /*!
-          * Final template instantiation that finds the implemented optional interface
+          * Final template instantiation that finds the wrapped interface
           * with the given UID.
           *
-          * @param [in] itf_uid  the interface UID to search for in the optional
-          *                      implemented interface.
+          * @param itf_uid    the interface UID to search for in the wrapped interfaces.
           *
-          * @tparam  N  index in the optional interfaces tuple to check if UID matches.
+          * @tparam  N  index in the interfaces tuple to check if UID matches.
           *
           * @return  @c nullptr, i.e. the interface is not present.
           */
@@ -364,12 +319,12 @@ namespace HF
          /*!
           * Helper template function to implement the HF::Units::Unit::for_each functionality.
           *
-          * @param [in] func  function to call with the reference for the optional implemented
-          *                   interface at index @c N.
+          * @param [in] func  function to call with the reference for the wrapped interface at
+          *                   index @c N.
           *
-          * @tparam  N     index in the optional interfaces tuple to check if UID matches.
-          * @tparam  Head  class for the optional interface at the given index.
-          * @tparam  Tail  the classes associated with the remaining optional interfaces.
+          * @tparam  N     index in the wrapped interfaces tuple to check if UID matches.
+          * @tparam  Head  class for the wrapped interface at the given index.
+          * @tparam  Tail  the classes associated with the remaining wrapped interfaces.
           */
          template<uint8_t N, typename Head, typename... Tail>
          void for_each(std::function<void(HF::Interface &)> func) const
@@ -384,10 +339,10 @@ namespace HF
          /*!
           * Helper template function to implement the HF::Units::Unit::for_each functionality.
           *
-          * @param [in] func  function to call with the reference for the optional implemented
-          *                   interface at index @c N.
+          * @param [in] func  function to call with the reference for the wrapped interface at
+          *                   index @c N.
           *
-          * @tparam  N     index in the optional interfaces tuple to check if UID matches.
+          * @tparam  N     index in the wrapped interfaces tuple to check if UID matches.
           */
          template<uint8_t N>
          void for_each(std::function<void(HF::Interface &)> func) const
@@ -405,9 +360,9 @@ namespace HF
           * @param [in]  uids       list of attribute uids to get attributes for if @c pack_id is
           *                         HF::Attributes::Pack::DYNAMIC.
           *
-          * @tparam  N     index in the optional interfaces tuple to check if UID matches.
-          * @tparam  Head  class for the optional interface at the given index.
-          * @tparam  Tail  the classes associated with the remaining optional interfaces.
+          * @tparam  N     index in the wrapped interfaces tuple to check if UID matches.
+          * @tparam  Head  class for the wrapped interface at the given index.
+          * @tparam  Tail  the classes associated with the remaining wrapped interfaces.
           */
          template<uint8_t N, typename Head, typename... Tail>
          void attributes_itf(HF::Attributes::List &attrs, Common::Interface itf,
@@ -437,7 +392,7 @@ namespace HF
           * @param [in]  uids       list of attribute uids to get attributes for if @c pack_id is
           *                         HF::Attributes::Pack::DYNAMIC.
           *
-          * @tparam N    index in the optional interfaces tuple to check if UID matches.
+          * @tparam N    index in the wrapped interfaces tuple to check if UID matches.
           */
          template<uint8_t N>
          void attributes_itf(HF::Attributes::List &attrs, Common::Interface itf,
@@ -447,6 +402,102 @@ namespace HF
             UNUSED(itf);
             UNUSED(pack_id);
             UNUSED(uids);
+         }
+      };
+
+      /*!
+       * Helper template class to implement units.
+       */
+      template<class Profile, typename... ITF>
+      class Unit: public HF::Units::AbstractUnit, public virtual Profile,
+         public Units::InterfacesWrapper<Unit<Profile, ITF...>, ITF...>
+      {
+         uint8_t _id;
+
+         using Base = Unit<Profile, ITF...>;
+         using InterfacesWrapper = Units::InterfacesWrapper<Base, ITF...>;
+
+         public:
+
+         /*!
+          * Constructor
+          *
+          * @param [in] id       unit identifier.
+          * @param [in] device   device that contains this units.
+          */
+         Unit(uint8_t id, IDevice &device):
+            Profile(), HF::Units::AbstractUnit(device),
+            InterfacesWrapper(*this), _id(id)
+         {}
+
+         //! @copydoc HF::Units::IUnit::id
+         uint8_t id() const
+         {
+            return _id;
+         }
+
+         //! @copydoc HF::Profiles::IProfile::uid
+         uint16_t uid() const
+         {
+            return Profile::uid();
+         }
+
+         //! @copydoc HF::Interface::handle
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
+         {
+            Common::Result result = Profile::handle(packet, payload, offset);
+
+            // Message not handled by base profile, then try extra interfaces.
+            if (result == Common::Result::FAIL_ARG)
+            {
+               return InterfacesWrapper::handle(packet, payload, offset);
+            }
+
+            return result;
+         }
+
+         //! @copydoc HF::Profiles::IProfile::attributes
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
+         {
+            auto result = Profile::attributes(itf, pack_id, uids);
+
+            InterfacesWrapper::attributes(result, itf, pack_id, uids);
+
+            return result;
+         }
+
+         using HF::Units::AbstractUnit::send;
+
+         //! @copydoc HF::Interfaces::AbstractInterface::send
+         void send(const Protocol::Address &addr, Protocol::Message &message)
+         {
+            AbstractUnit::send(addr, message, nullptr);
+         }
+
+         //! @copydoc HF::Units::AbstractUnit::notify
+         void notify(const HF::Attributes::IAttribute &old_value,
+                     const HF::Attributes::IAttribute &new_value) const
+         {
+            AbstractUnit::notify(old_value, new_value);
+         }
+
+         /*!
+          * Return the list of optional interfaces implemented by this unit.
+          *
+          * @return  a vector containing the UIDs for the optional interfaces
+          *          implemented by this unit.
+          */
+         std::vector<Common::Interface> interfaces() const
+         {
+            return InterfacesWrapper::interfaces();
+         }
+
+         void periodic(uint32_t time)
+         {
+            Profile::periodic(time);
+            InterfacesWrapper::periodic(time);
          }
       };
 
