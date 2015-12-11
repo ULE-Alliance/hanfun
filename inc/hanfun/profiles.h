@@ -26,6 +26,7 @@
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
 #include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_air_pressure.h"
 
 // =============================================================================
 // API
@@ -107,6 +108,9 @@ namespace HF
 
          //! Simple sensor to measure the relative humidity.
          SIMPLE_HUMIDITY_SENSOR = 0x010F,
+
+         //! Simple Air Pressure Sensor
+         SIMPLE_AIR_PRESSURE_SENSOR = 0x0110,
 
          //! Controllable thermostat.
          CONTROLABLE_THERMOSTAT = 0x0112,
@@ -763,6 +767,17 @@ namespace HF
          {
             return this->second();
          }
+      };
+
+      /*!
+       * Simple Air Pressure Sensor profile implementation.
+       */
+      class SimpleAirPressureSensor: public Profile<SIMPLE_AIR_PRESSURE_SENSOR,
+                                                    Interfaces::SimpleAirPressure::Server>
+      {
+         public:
+
+         virtual ~SimpleAirPressureSensor() {}
       };
 
       // =============================================================================

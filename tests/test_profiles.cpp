@@ -56,6 +56,7 @@ namespace HF
       HELPER_CLASS(SimpleDoorLock);
       HELPER_CLASS(SimpleTemperatureSensor);
       HELPER_CLASS(SimpleHumiditySensor);
+      HELPER_CLASS(SimpleAirPressureSensor);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -185,6 +186,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::ControlableThermostat();
    CHECK_EQUAL(Profiles::CONTROLABLE_THERMOSTAT, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleAirPressureSensor();
+   CHECK_EQUAL(Profiles::SIMPLE_AIR_PRESSURE_SENSOR, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -332,6 +337,10 @@ TEST(Profiles, InterfaceMapping)
 {
    uint16_t count;
    const HF::Common::Interface *itf;
+
+   // =============================================================================
+   // Home Control
+   // =============================================================================
 
    // HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_ONOFF_SWITCHABLE, count);
@@ -499,6 +508,18 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(HF::Interface::SIMPLE_THERMOSTAT, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
+   // HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_AIR_PRESSURE, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // =============================================================================
+   // Security
+   // =============================================================================
+
    // HF::Profiles::SIMPLE_DETECTOR
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_DETECTOR, count);
    CHECK_FALSE(itf == nullptr);
@@ -587,6 +608,10 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
    LONGS_EQUAL(HF::Interface::CLIENT_ROLE, itf->role);
 
+   // =============================================================================
+   // Home care
+   // =============================================================================
+
    // HF::Profiles::SIMPLE_PENDANT
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_PENDANT, count);
    CHECK_FALSE(itf == nullptr);
@@ -594,6 +619,10 @@ TEST(Profiles, InterfaceMapping)
 
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // =============================================================================
+   // Application Unit Types
+   // =============================================================================
 
    // HF::Profiles::USER_INTERFACE_LOCK
    itf = Profiles::interfaces(HF::Profiles::USER_INTERFACE_LOCK, count);
