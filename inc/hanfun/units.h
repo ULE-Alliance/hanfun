@@ -23,6 +23,12 @@
 
 namespace HF
 {
+   // Forward declaration.
+   namespace Core
+   {
+      struct IService;
+   }
+
    /*!
     * This is the top-level namespace for the HAN-FUN units implementation.
     */
@@ -160,6 +166,19 @@ namespace HF
             {
                return HF::Interfaces::Proxy<_Interface, _Proxy>::proxy;
             }
+         };
+
+         /*!
+          * Proxy class for service objects.
+          */
+         template<typename _Interface, typename _Proxy>
+         struct Proxy<_Interface, _Proxy, EnableIf<Parent<HF::Core::IService, _Interface>>>:
+            public _Interface
+         {
+            typedef _Interface base;
+
+            Proxy(_Proxy &_proxy): _Interface(_proxy)
+            {}
          };
 
          using interfaces_t = std::tuple<Proxy<ITF, Base>...>;

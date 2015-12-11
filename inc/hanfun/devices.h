@@ -515,7 +515,12 @@ namespace HF
             typedef typename _Parent::DeviceMgt DeviceMgt;
             typedef typename _Parent::AttrReporting AttrReporting;
 
-            typedef typename std::tuple_element<3, decltype(_Parent::interfaces)>::type BindMgt;
+            using interfaces_t = std::tuple<ITF...>;
+
+            //! Bind Management service index.
+            static constexpr uint8_t BIND_MGT = _Parent::ATTR_RPT + 1;
+
+            typedef typename std::tuple_element<BIND_MGT, interfaces_t>::type BindMgt;
 
             static_assert(std::is_base_of<HF::Core::BindManagement::IServer, BindMgt>::value,
                           "BindMgt must be of type HF::Core::BindManagement::IServer");
@@ -531,12 +536,12 @@ namespace HF
 
             BindMgt *bind_management() const
             {
-               return const_cast<BindMgt *>(&std::get<3>(_Parent::interfaces));
+               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
             }
 
             BindMgt *bind_management()
             {
-               return &std::get<3>(_Parent::interfaces);
+               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
             }
 
             DeviceInfo *device_info() const
