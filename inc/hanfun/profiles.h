@@ -25,6 +25,10 @@
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
+#include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/simple_button.h"
+#include "hanfun/interfaces/simple_visual_effects.h"
 
 // =============================================================================
 // API
@@ -107,6 +111,18 @@ namespace HF
          //! Simple sensor to measure the relative humidity.
          SIMPLE_HUMIDITY_SENSOR = 0x010F,
 
+         //! Simple Air Pressure Sensor
+         SIMPLE_AIR_PRESSURE_SENSOR = 0x0110,
+
+         //! Simple button.
+         SIMPLE_BUTTON = 0x0111,
+
+         //! Controllable thermostat.
+         CONTROLABLE_THERMOSTAT = 0x0112,
+
+         //! Simple LED profile.
+         SIMPLE_LED = 0x0113,
+
          // =============================================================================
          // Security Unit Types
          // =============================================================================
@@ -154,6 +170,9 @@ namespace HF
          // =============================================================================
          // Application Unit Types
          // =============================================================================
+
+         //! User Interface Lock.
+         USER_INTERFACE_LOCK = 0x0401,
 
          //! User Interface unit (e.g. keypad, remote control)
          USER_INTERFACE = 0x0410,
@@ -728,6 +747,67 @@ namespace HF
          virtual ~SimpleHumiditySensor() {}
       };
 
+      /*!
+       * Controllable thermostat profile implementation.
+       */
+      template<typename OnOffServer            = Interfaces::OnOff::Server,
+               typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
+      class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer,
+                                                   SimpleThermostatServer>
+      {
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOffServer MUST be of type Interfaces::OnOff::Server !");
+
+         static_assert(std::is_base_of<Interfaces::SimpleThermostat::Server,
+                                       SimpleThermostatServer>::value,
+                       "SimpleThermostatServer MUST be of type Interfaces::SimpleThermostat::Server !");
+
+         public:
+
+         virtual ~ControlableThermostat() {}
+
+         OnOffServer *on_off()
+         {
+            return this->first();
+         }
+
+         SimpleThermostatServer *simple_thermostat()
+         {
+            return this->second();
+         }
+      };
+
+      /*!
+       * Simple Air Pressure Sensor profile implementation.
+       */
+      class SimpleAirPressureSensor: public Profile<SIMPLE_AIR_PRESSURE_SENSOR,
+                                                    Interfaces::SimpleAirPressure::Server>
+      {
+         public:
+
+         virtual ~SimpleAirPressureSensor() {}
+      };
+
+      /*!
+       * Simple Button profile implementation.
+       */
+      class SimpleButton: public Profile<SIMPLE_BUTTON, Interfaces::SimpleButton::Server>
+      {
+         public:
+
+         virtual ~SimpleButton() {}
+      };
+
+      /*!
+       * Simple LED profile implementation.
+       */
+      class SimpleLED: public Profile<SIMPLE_LED, Interfaces::SimpleVisualEffects::Server>
+      {
+         public:
+
+         virtual ~SimpleLED() {}
+      };
+
       // =============================================================================
       /*!
        * @}
@@ -881,6 +961,16 @@ namespace HF
        * @{
        */
       // =============================================================================
+
+      /*!
+       * User Interface Lock profile implementation.
+       */
+      class UserInterfaceLock: public Profile<USER_INTERFACE_LOCK, Interfaces::OnOff::Server>
+      {
+         public:
+
+         virtual ~UserInterfaceLock() {}
+      };
 
       /*!
        * User Interface profile implementation.

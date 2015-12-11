@@ -25,16 +25,16 @@ using namespace HF::Testing;
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS(_name)                           \
-struct _name:public ProfileHelper<Profiles::_name>   \
-{                                                      \
+struct _name:public ProfileHelper<Profiles::_name>    \
+{                                                     \
    virtual ~_name() {}                                \
 }
 /* *INDENT-ON* */
 
 /* *INDENT-OFF* */
 #define HELPER_CLASS2(_name)                            \
-struct _name:public ProfileHelper<Profiles::_name<>>   \
-{                                                        \
+struct _name:public ProfileHelper<Profiles::_name<>>    \
+{                                                       \
    virtual ~_name() {}                                  \
 }
 /* *INDENT-ON* */
@@ -56,6 +56,9 @@ namespace HF
       HELPER_CLASS(SimpleDoorLock);
       HELPER_CLASS(SimpleTemperatureSensor);
       HELPER_CLASS(SimpleHumiditySensor);
+      HELPER_CLASS(SimpleAirPressureSensor);
+      HELPER_CLASS(SimpleButton);
+      HELPER_CLASS(SimpleLED);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -74,6 +77,7 @@ namespace HF
 
       HELPER_CLASS(SimplePendant);
 
+      HELPER_CLASS(UserInterfaceLock);
       HELPER_CLASS(UserInterface);
 
       HELPER_CLASS(GenericApplicationLogic);
@@ -83,6 +87,7 @@ namespace HF
       HELPER_CLASS2(AC_OutletWithPowerMetering);
       HELPER_CLASS2(DimmableLight);
       HELPER_CLASS2(DimmerSwitch);
+      HELPER_CLASS2(ControlableThermostat);
 
    }  // namespace Testing
 
@@ -181,6 +186,22 @@ TEST(Profiles, UIDs)
    CHECK_EQUAL(Profiles::SIMPLE_HUMIDITY_SENSOR, profile->uid());
    delete profile;
 
+   profile = new Testing::ControlableThermostat();
+   CHECK_EQUAL(Profiles::CONTROLABLE_THERMOSTAT, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleAirPressureSensor();
+   CHECK_EQUAL(Profiles::SIMPLE_AIR_PRESSURE_SENSOR, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleButton();
+   CHECK_EQUAL(Profiles::SIMPLE_BUTTON, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleLED();
+   CHECK_EQUAL(Profiles::SIMPLE_LED, profile->uid());
+   delete profile;
+
    // =============================================================================
    // Security Unit Types
    // =============================================================================
@@ -240,6 +261,10 @@ TEST(Profiles, UIDs)
    // =============================================================================
    // Application Unit Types
    // =============================================================================
+
+   profile = new UserInterfaceLock();
+   CHECK_EQUAL(Profiles::USER_INTERFACE_LOCK, profile->uid());
+   delete profile;
 
    profile = new UserInterface();
    CHECK_EQUAL(Profiles::USER_INTERFACE, profile->uid());
@@ -322,6 +347,10 @@ TEST(Profiles, InterfaceMapping)
 {
    uint16_t count;
    const HF::Common::Interface *itf;
+
+   // =============================================================================
+   // Home Control
+   // =============================================================================
 
    // HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_ONOFF_SWITCHABLE, count);
@@ -476,6 +505,47 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(HF::Interface::SIMPLE_HUMIDITY, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
+   // HF::Profiles::CONTROLABLE_THERMOSTAT
+   itf = Profiles::interfaces(HF::Profiles::CONTROLABLE_THERMOSTAT, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(2, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   ++itf;
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_THERMOSTAT, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_AIR_PRESSURE, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_BUTTON
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_BUTTON, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_BUTTON, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LED
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_LED, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_VISUAL_EFFECTS, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // =============================================================================
+   // Security
+   // =============================================================================
+
    // HF::Profiles::SIMPLE_DETECTOR
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_DETECTOR, count);
    CHECK_FALSE(itf == nullptr);
@@ -564,12 +634,28 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
    LONGS_EQUAL(HF::Interface::CLIENT_ROLE, itf->role);
 
+   // =============================================================================
+   // Home care
+   // =============================================================================
+
    // HF::Profiles::SIMPLE_PENDANT
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_PENDANT, count);
    CHECK_FALSE(itf == nullptr);
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // =============================================================================
+   // Application Unit Types
+   // =============================================================================
+
+   // HF::Profiles::USER_INTERFACE_LOCK
+   itf = Profiles::interfaces(HF::Profiles::USER_INTERFACE_LOCK, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::USER_INTERFACE
