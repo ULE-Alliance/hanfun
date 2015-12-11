@@ -129,7 +129,7 @@ uint16_t Version::unpack(const Common::ByteArray &array, uint16_t offset)
    typedef Common::SerializableHelper<std::string> Helper;
    uint16_t start = offset;
 
-   uint16_t size = Helper::unpack(sw_version, array, offset);
+   uint16_t size  = Helper::unpack(sw_version, array, offset);
 
    /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});

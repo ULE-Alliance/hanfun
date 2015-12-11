@@ -195,12 +195,12 @@ uint16_t Common::Interface::unpack(const ByteArray &array, uint16_t offset)
 
 #ifdef HF_ASSERT_HELPER_H
 
-#include <cstdio>
+   #include <cstdio>
 
 __attribute__((weak))
 void HF::Testing::Assert(const char *expr, const char *file, int line)
 {
-   fprintf(stderr, "%s:%d: Assertion '%s' failed.\n", file, line,  expr);
+   fprintf(stderr, "%s:%d: Assertion '%s' failed.\n", file, line, expr);
    abort();
 }
 

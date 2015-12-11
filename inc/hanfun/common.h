@@ -697,7 +697,8 @@ namespace HF
             return min_size + data.size();
          }
 
-         static uint16_t pack(const std::string &data, Common::ByteArray &array, uint16_t offset = 0)
+         static uint16_t pack(const std::string &data, Common::ByteArray &array,
+                              uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, size(data));
 
@@ -715,7 +716,8 @@ namespace HF
             return offset - start;
          }
 
-         static uint16_t unpack(std::string &data, const Common::ByteArray &array, uint16_t offset = 0)
+         static uint16_t unpack(std::string &data, const Common::ByteArray &array,
+                                uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, min_size);
 

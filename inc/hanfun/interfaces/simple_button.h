@@ -169,7 +169,7 @@ namespace HF
             uint16_t _timestamp = 0;         //!< Timestamp of last call.
 
 #ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
-            bool _short_click_cmd  = false;  //!< Indicate if last click detected was a short click.
+            bool _short_click_cmd = false;   //!< Indicate if last click detected was a short click.
 #endif
 
             public:

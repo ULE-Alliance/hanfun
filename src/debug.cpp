@@ -809,7 +809,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButto
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleButton::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');
@@ -898,7 +899,8 @@ std::ostream &operator<<(std::ostream &stream,
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleAirPressure::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleAirPressure::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');
