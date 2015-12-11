@@ -789,12 +789,9 @@ namespace HF
          }
       };
 
-      struct Device: public AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>>
-      {};
+      typedef AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>> Device;
 
-      struct Concentrator: public AbstractDevice<HF::Devices::Concentrator::Abstract<
-                                                    ConcentratorUnit0>>
-      {};
+      typedef AbstractDevice<HF::Devices::Concentrator::Abstract<ConcentratorUnit0>> Concentrator;
 
    } // namespace Testing
 

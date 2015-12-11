@@ -247,7 +247,7 @@ namespace HF
              */
             DeviceMgt *device_management()
             {
-               return &std::get<_Parent::DEV_MGT>(_Parent::interfaces);
+               return _Parent::device_management();
             }
 
             /*!
@@ -257,7 +257,7 @@ namespace HF
              */
             DeviceMgt *device_management() const
             {
-               return const_cast<DeviceMgt *>(&std::get<_Parent::DEV_MGT>(_Parent::interfaces));
+               return _Parent::device_management();
             }
          };
 
