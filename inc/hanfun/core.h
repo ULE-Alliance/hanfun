@@ -92,6 +92,21 @@ namespace HF
             return HF::Attributes::List();
          }
 
+         protected:
+
+         static void remove_mandatory(std::vector<Common::Interface> &itfs)
+         {
+            static std::array<uint16_t, 3> const mandatory ({{HF::Interface::DEVICE_INFORMATION,
+                                                              HF::Interface::DEVICE_MANAGEMENT,
+                                                              HF::Interface::ATTRIBUTE_REPORTING}});
+
+            itfs.erase(std::remove_if(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+            {
+               return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid) {
+                  return itf.id == uid;
+               });
+            }), itfs.end());
+         }
       };
 
       /*!
@@ -360,17 +375,8 @@ namespace HF
 
       std::vector<Common::Interface> interfaces() const
       {
-         static std::array<uint16_t, 3> const mandatory({HF::Interface::DEVICE_INFORMATION,
-                                                         HF::Interface::DEVICE_MANAGEMENT,
-                                                         HF::Interface::ATTRIBUTE_REPORTING});
-
          auto result = InterfacesWrapper::interfaces();
-         result.erase(std::remove_if(result.begin(), result.end(), [](const Common::Interface &itf)
-         {
-            return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid) {
-               return itf.id == uid;
-            });
-         }), result.end());
+         Base::remove_mandatory(result);
          return result;
       }
 
