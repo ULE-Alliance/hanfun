@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Button interface.
  *
- * @version    x.x.x
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

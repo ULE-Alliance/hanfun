@@ -5,7 +5,7 @@
  * This file contains the implementation of the Simple Thermostat interface :
  * Client role.
  *
- * @version    x.x.x
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
