@@ -338,8 +338,7 @@ namespace HF
       // =============================================================================
 
       //! @copydoc HF::Interface::handle
-      Common::Result handle(HF::Protocol::Packet &packet,
-                            Common::ByteArray &payload,
+      Common::Result handle(HF::Protocol::Packet &packet, Common::ByteArray &payload,
                             uint16_t offset)
       {
          Core::IService *service = find<0, ITF...>(packet.message.itf.id);
