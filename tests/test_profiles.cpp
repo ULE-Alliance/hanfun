@@ -60,6 +60,8 @@ namespace HF
       HELPER_CLASS(SimpleButton);
       HELPER_CLASS(SimpleLED);
 
+      HELPER_CLASS(EnvironmentMonitor);
+
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
 
@@ -200,6 +202,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::SimpleLED();
    CHECK_EQUAL(Profiles::SIMPLE_LED, profile->uid());
+   delete profile;
+
+   profile = new Testing::EnvironmentMonitor();
+   CHECK_EQUAL(Profiles::ENVIRONMENT_MONITOR, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -540,6 +546,24 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::SIMPLE_VISUAL_EFFECTS, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::ENVIRONMENT_MONITOR
+   itf = Profiles::interfaces(HF::Profiles::ENVIRONMENT_MONITOR, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(3, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_TEMPERATURE, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_HUMIDITY, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_AIR_PRESSURE, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // =============================================================================

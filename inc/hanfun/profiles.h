@@ -123,6 +123,9 @@ namespace HF
          //! Simple LED profile.
          SIMPLE_LED = 0x0113,
 
+         //! Environment Monitoring
+         ENVIRONMENT_MONITOR = 0x0114,
+
          // =============================================================================
          // Security Unit Types
          // =============================================================================
@@ -877,6 +880,19 @@ namespace HF
          public:
 
          virtual ~SimpleLED() {}
+      };
+
+      /*!
+       * Environment Monitoring profile implementation.
+       */
+      class EnvironmentMonitor: public ProfileN<ENVIRONMENT_MONITOR,
+                                                Interfaces::SimpleTemperature::Server,
+                                                Interfaces::SimpleHumidity::Server,
+                                                Interfaces::SimpleAirPressure::Server>
+      {
+         public:
+
+         virtual ~EnvironmentMonitor() {}
       };
 
       // =============================================================================

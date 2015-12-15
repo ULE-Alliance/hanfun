@@ -148,6 +148,11 @@ static const HF::Common::Interface profiles_interfaces[] =
 
    // 37 - HF::Profiles::SIMPLE_LED
    {HF::Interface::SIMPLE_VISUAL_EFFECTS, HF::Interface::SERVER_ROLE},
+
+   // 39 - HF::Profiles::ENVIRONMENT_MONITOR
+   {HF::Interface::SIMPLE_TEMPERATURE,    HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_HUMIDITY,       HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_AIR_PRESSURE,   HF::Interface::SERVER_ROLE},
 };
 
 /*!
@@ -189,6 +194,7 @@ static const Profile profiles[] =
    {HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR,           0x0024, 1},      // 35
    {HF::Profiles::SIMPLE_BUTTON,                        0x0025, 1},      // 36
    {HF::Profiles::SIMPLE_LED,                           0x0026, 1},      // 37
+   {HF::Profiles::ENVIRONMENT_MONITOR,                  0x0027, 3},      // 39
    {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
    {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };
