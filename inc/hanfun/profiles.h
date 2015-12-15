@@ -305,80 +305,37 @@ namespace HF
       };
 
       /*!
-       * Class template for profiles containing two interfaces.
+       * Class template for profiles containing multiple interfaces.
        */
-      template<uint16_t _uid, typename Interface1, typename Interface2>
-      struct Profile2: public AbstractProfile<_uid>
+      template<uint16_t _uid, typename... Interfaces>
+      struct ProfileN: public AbstractProfile<_uid>
       {
-         virtual ~Profile2()
+         virtual ~ProfileN()
          {}
 
-         typedef Profile2<_uid, Interface1, Interface2> profile_t;
-
-         typedef HF::Interfaces::Proxy<Interface1, profile_t> first_itf_t;
-         typedef HF::Interfaces::Proxy<Interface2, profile_t> second_itf_t;
+         using profile_t    = ProfileN<_uid, Interfaces...>;
+         using interfaces_t = std::tuple<HF::Interfaces::Proxy<Interfaces, profile_t>...>;
 
          //! @copydoc HF::Interface::handle
          virtual Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
                                        uint16_t offset)
          {
-            Common::Result result = interfaces.first.handle(packet, payload, offset);
+            HF::Interface *interface = find<0, Interfaces...>(packet.message.itf.id);
 
-            if (result == Common::Result::OK || result == Common::Result::FAIL_SUPPORT)
+            if (interface != nullptr)
             {
-               return result;
+               return interface->handle(packet, payload, offset);
             }
             else
             {
-               return interfaces.second.handle(packet, payload, offset);
+               return Common::Result::FAIL_SUPPORT;
             }
          }
 
          //! @copydoc HF::Interface::periodic
          virtual void periodic(uint32_t time)
          {
-            first()->periodic(time);
-            second()->periodic(time);
-         }
-
-         /*!
-          * Pointer to the first interface instance.
-          *
-          * @return  pointer to the interface instance.
-          */
-         Interface1 *first()
-         {
-            return static_cast<Interface1 *>(&(this->interfaces.first));
-         }
-
-         /*!
-          * Pointer to the second interface instance.
-          *
-          * @return  pointer to the interface instance.
-          */
-         Interface2 *second()
-         {
-            return static_cast<Interface2 *>(&(this->interfaces.second));
-         }
-
-         /*!
-          * Pointer to the first interface instance.
-          *
-          * @return  pointer to the interface instance.
-          */
-         const Interface1 *first() const
-         {
-            return static_cast<const Interface1 *>(&(this->interfaces.first));
-         }
-
-         /*!
-          * Pointer to the second interface instance.
-          *
-          * @return  pointer to the interface instance.
-          */
-         const Interface2 *second() const
-         {
-            return static_cast<const Interface2 *>(&(this->interfaces.second));
+            periodic<0, Interfaces...>(time);
          }
 
          //! @copydoc HF::Interfaces::AbstractInterface::send
@@ -392,13 +349,11 @@ namespace HF
          HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
                                          const HF::Attributes::UIDS &uids) const
          {
-            if (first()->uid() == itf.id)
+            HF::Interface *interface = find<0, Interfaces...>(itf.id);
+
+            if (interface != nullptr)
             {
-               return HF::Attributes::get(*first(), pack_id, uids);
-            }
-            else if (second()->uid() == itf.id)
-            {
-               return HF::Attributes::get(*second(), pack_id, uids);
+               return HF::Attributes::get(*interface, pack_id, uids);
             }
             else
             {
@@ -408,11 +363,127 @@ namespace HF
 
          protected:
 
-         Profile2(): interfaces(first_itf_t(*this), second_itf_t(*this))
+         ProfileN(): _interfaces(HF::Interfaces::Proxy<Interfaces, profile_t>(*this) ...)
          {}
 
-         //! Pair holding the two interface wrappers.
-         std::pair<first_itf_t, second_itf_t> interfaces;
+         //! Tuple holding the two interface wrappers.
+         interfaces_t _interfaces;
+
+         /*!
+          * Retrieve a pointer to the N optional interface implemented by this unit.
+          *
+          * @tparam N   index of the interface to retrieve the pointer to.
+          *
+          * @return  a pointer to the optional implemented interface.
+          */
+         template<uint8_t N>
+         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
+         {
+            return &std::get<N>(_interfaces);
+         }
+
+         private:
+
+         /*!
+          * Find the service for the given @c itf_uid.
+          *
+          * @param itf_uid    service %UID to search for.
+          *
+          * @return  pointer to the service object if found, @c nullptr otherwise.
+          */
+         template<uint8_t N, typename Head, typename... Tail>
+         HF::Interface *find(uint16_t itf_uid) const
+         {
+            static_assert(std::is_base_of<HF::Interface, Head>::value,
+                          "Head must be of type HF::Interface");
+
+            const Head &head = std::get<N>(_interfaces);
+
+            if (head.uid() == itf_uid)
+            {
+               return const_cast<Head *>(&head);
+            }
+            else
+            {
+               return find<N + 1, Tail...>(itf_uid);
+            }
+         }
+
+         template<uint8_t N>
+         HF::Interface *find(uint16_t itf_uid) const
+         {
+            UNUSED(itf_uid);
+            return nullptr;
+         }
+
+         template<uint8_t N, typename Head, typename... Tail>
+         void periodic(uint32_t time)
+         {
+            Head &head = std::get<N>(_interfaces);
+            head.periodic(time);
+
+            periodic<N + 1, Tail...>(time);
+         }
+
+         template<uint8_t N>
+         void periodic(uint32_t time)
+         {
+            UNUSED(time);
+         }
+      };
+
+      /*!
+       * Class template for profiles containing two interfaces.
+       */
+      template<uint16_t _uid, typename Interface1, typename Interface2>
+      struct Profile2: public ProfileN<_uid, Interface1, Interface2>
+      {
+         virtual ~Profile2()
+         {}
+
+         using profile_t    = Profile2<_uid, Interface1, Interface2>;
+         using first_itf_t  = HF::Interfaces::Proxy<Interface1, profile_t>;
+         using second_itf_t = HF::Interfaces::Proxy<Interface2, profile_t>;
+
+         /*!
+          * Pointer to the first interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         Interface1 *first()
+         {
+            return const_cast<Interface1 *>(profile_t::template get<0>());
+         }
+
+         /*!
+          * Pointer to the second interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         Interface2 *second()
+         {
+            return const_cast<Interface2 *>(profile_t::template get<1>());
+         }
+
+         /*!
+          * Pointer to the first interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         const Interface1 *first() const
+         {
+            return const_cast<Interface1 *>(profile_t::template get<0>());
+         }
+
+         /*!
+          * Pointer to the second interface instance.
+          *
+          * @return  pointer to the interface instance.
+          */
+         const Interface2 *second() const
+         {
+            return const_cast<Interface2 *>(profile_t::template get<1>());
+         }
       };
 
       /*!
