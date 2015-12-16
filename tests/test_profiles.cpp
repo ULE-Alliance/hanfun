@@ -349,6 +349,21 @@ TEST(Profiles, Profile2_Handle)
    mock("Interface").checkExpectations();
 }
 
+TEST(Profiles, Profile2_Attributes)
+{
+   TestProfile profile;
+   Common::Interface itf(TestInterface::UID, Interface::SERVER_ROLE);
+   HF::Attributes::UIDS uids;
+
+   auto attributes = profile.attributes(Common::Interface(itf), Attributes::Pack::ALL, uids);
+   CHECK_FALSE(attributes.empty());
+
+   for (auto attr: attributes)
+   {
+      delete attr;
+   }
+}
+
 TEST(Profiles, InterfaceMapping)
 {
    uint16_t count;
