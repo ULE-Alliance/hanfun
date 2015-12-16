@@ -3,14 +3,14 @@
 |             |                            |
 | ---------:  | -------------------------- |
 | __Project__ | HAN-FUN CI                 |
-| __Version__ | v1.3.0                     |
-| __Date__    | 23/06/2015                 |
+| __Version__ | v1.4.0                     |
+| __Date__    | 16/12/2015                 |
 
 ## Overview
 
 This a ULE Alliance's HAN-FUN Common Implementation public release.
 
-This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.2.0.
+This software release allows third-party vendors to easily create devices that are compatible with the ULE Alliance HAN-FUN standard v1.3.0.
 
 Not all of the standard has been implemented so far, please see the *Features* section for further information on what has been implemented and what is missing.
 
@@ -19,20 +19,32 @@ For more information on requirements, building and using this software package, 
 ## Features
 
 * A - Attribute
-* C - Command
+* C - %Command
 
 ### New
 
-  * Simple Temperature interface.
-  * Simple Humidity interface.
-  * Simple Temperature Sensor profile.
-  * Simple Humidity Sensor profile.
+* Core Services & Interfaces (already present in v1.2.0 but not implemented)
+  * RSSI
+  * SOUTA
+
+* Profiles
+  * Simple Air Pressure Sensor
+  * Simple Button
+  * Controllable Thermostat
+  * Simple Led
+  * Environment Monitor
+
+* Interfaces
+  * Simple Thermostat Interface
+  * Simple Button Interface
+  * Simple Visual Control
+  * Air Pressure Interface
 
 ### 1. Protocol [HF-Protocol v1.2.0]
 
 * General support for all defined features has been implemented.
 
-### 2. Core Services & Interfaces [HF-Services v1.2.0]
+### 2. Core Services & Interfaces [HF-Services v1.3.0]
 
 #### 2.1 Device Management Service [6.1]
 
@@ -50,8 +62,8 @@ For more information on requirements, building and using this software package, 
 | __Reference__ | __Commands & Attributes__                          | __Type__ | __Client__      | __Server__      |
 | ------------- | -------------------------------------------------- | :------: | --------------  | -------------   |
 | 6.2.2.1       | Number of Entries                                  | A        | Not Applicable  | Implemented     |
-| 6.2.5.1       | Add Bind                                           | C        | Implemented     | Not Implemented |
-| 6.2.5.2       | Remove Bind                                        | C        | Implemented     | Not Implemented |
+| 6.2.5.1       | Add Bind                                           | C        | Implemented     | Implemented     |
+| 6.2.5.2       | Remove Bind                                        | C        | Implemented     | Implemented     |
 | 6.2.5.3       | Remove Bind by SRC Device Address                  | C        | Not Implemented | Not Implemented |
 | 6.2.5.4       | Remove Bind by SRC Device Address and Unit ID      | C        | Not Implemented | Not Implemented |
 | 6.2.5.5       | Remove Bind by DST Address                         | C        | Not Implemented | Not Implemented |
@@ -91,15 +103,16 @@ For more information on requirements, building and using this software package, 
 | 6.5.1.4       | Extra Capabilities                     | A        | Not Applicable | Implemented     |
 | 6.5.1.5       | Minimum Sleep Time                     | A        | Not Applicable | Not Implemented |
 | 6.5.1.6       | Actual Response Time [Paging Interval] | A        | Not Applicable | Not Implemented |
-| 6.5.1.7       | Application version                    | A        | Not Applicable | Not Implemented |
-| 6.5.1.8       | EMC                                    | A        | Not Applicable | Implemented     |
-| 6.5.1.9       | RFPI/ IPUI                             | A        | Not Applicable | Not Implemented |
-| 6.5.1.10      | Manufacturer Name                      | A        | Not Applicable | Not Implemented |
-| 6.5.1.11      | Location Length                        | A        | Not Applicable | Not Implemented |
-| 6.5.1.12      | Device Enable                          | A        | Not Applicable | Not Implemented |
-| 6.5.1.13      | Friendly Name                          | A        | Not Applicable | Not Implemented |
-| 6.5.1.14      | Device Unique Identifier [UID]         | A        | Not Applicable | Implemented     |
-| 6.5.1.15      | Device Serial Number                   | A        | Not Applicable | Not Implemented |
+| 6.5.1.7       | Application version                    | A        | Not Applicable | Implemented     |
+| 6.5.1.8       | Hardware version                       | A        | Not Applicable | Implemented     |
+| 6.5.1.9       | EMC                                    | A        | Not Applicable | Implemented     |
+| 6.5.1.10      | RFPI/ IPUI                             | A        | Not Applicable | Not Implemented |
+| 6.5.1.11      | Manufacturer Name                      | A        | Not Applicable | Implemented     |
+| 6.5.1.12      | Location                               | A        | Not Applicable | Not Implemented |
+| 6.5.1.13      | Device Enable                          | A        | Not Applicable | Not Implemented |
+| 6.5.1.14      | Friendly Name                          | A        | Not Applicable | Not Implemented |
+| 6.5.1.15      | Device Unique Identifier [UID]         | A        | Not Applicable | Implemented     |
+| 6.5.1.16      | Device Serial Number                   | A        | Not Applicable | Not Implemented |
 
 #### 2.6 Attribute Reporting Service [6.6]
 
@@ -118,66 +131,112 @@ For more information on requirements, building and using this software package, 
 | 6.6.5.6       | Get Periodic Report Entries  | C        | Not Implemented | Not Implemented |
 | 6.6.5.7       | Get Event Report Entries     | C        | Not Implemented | Not Implemented |
 
-#### 2.7 Tamper Interface [6.7]
+#### 2.7 Batch Program Management [6.7]
+
+| __Reference__ | __Commands & Attributes__    | __Type__ | __Client__      | __Server__      |
+| ------------- | ---------------------------- | :------: | --------------- | --------------- |
+| 6.7.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Not Implemented |
+| 6.7.2.2       | Number of Entries            | A        | Not Applicable  | Not Implemented |
+| 6.7.5.1       | Define Program               | C        | Not Implemented | Not Implemented |
+| 6.7.5.2       | Invoke Program               | C        | Not Implemented | Not Implemented |
+| 6.7.5.3       | Delete Program               | C        | Not Implemented | Not Implemented |
+| 6.7.5.4       | Delete All Programs          | C        | Not Implemented | Not Implemented |
+| 6.7.5.5       | Get Program Actions          | C        | Not Implemented | Not Implemented |
+
+### 2.8 Event Scheduling Interface [6.8]
+
+| __Reference__ | __Commands & Attributes__    | __Type__ | __Client__      | __Server__      |
+| ------------- | ---------------------------- | :------: | --------------- | --------------- |
+| 6.8.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Not Implemented |
+| 6.8.2.2       | Number of Entries            | A        | Not Applicable  | Not Implemented |
+| 6.8.2.3       | Scheduler Status             | A        | Not Applicable  | Not Implemented |
+| 6.8.5.1       | Activate Scheduler           | C        | Not Implemented | Not Implemented |
+| 6.8.5.2       | Define Event                 | C        | Not Implemented | Not Implemented |
+| 6.8.5.3       | Update Event Status          | C        | Not Implemented | Not Implemented |
+| 6.8.5.4       | Get Event Entry              | C        | Not Implemented | Not Implemented |
+| 6.8.5.5       | Delete Event                 | C        | Not Implemented | Not Implemented |
+| 6.8.5.6       | Delete All Events            | C        | Not Implemented | Not Implemented |
+
+### 2.9 Event Scheduling Interface [6.9]
+
+| __Reference__ | __Commands & Attributes__    | __Type__ | __Client__      | __Server__      |
+| ------------- | ---------------------------- | :------: | --------------- | --------------- |
+| 6.9.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Not Implemented |
+| 6.9.2.2       | Number of Entries            | A        | Not Applicable  | Not Implemented |
+| 6.9.2.3       | Weekly Scheduler Status      | A        | Not Applicable  | Not Implemented |
+| 6.9.5.1       | Activate Weekly Scheduler    | C        | Not Implemented | Not Implemented |
+| 6.9.5.2       | Define Weekly Event          | C        | Not Implemented | Not Implemented |
+| 6.9.5.3       | Update Weekly Event Status   | C        | Not Implemented | Not Implemented |
+| 6.9.5.4       | Get Weekly Event Entry       | C        | Not Implemented | Not Implemented |
+| 6.9.5.5       | Delete Weekly Event          | C        | Not Implemented | Not Implemented |
+| 6.9.5.6       | Delete All Weekly Events     | C        | Not Implemented | Not Implemented |
+
+#### 2.10 Tamper Interface [6.10]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.7.1.1       | State                     | A        | Not Implemented | Not Implemented |
-| 6.7.3.1       | Tamper Alert On           | C        | Not Implemented | Not Implemented |
-| 6.7.3.2       | Tamper Alert Off          | C        | Not Implemented | Not Implemented |
+| 6.10.1.1      | State                     | A        | Not Implemented | Not Implemented |
+| 6.10.3.1      | Tamper Alert On           | C        | Not Implemented | Not Implemented |
+| 6.10.3.2      | Tamper Alert Off          | C        | Not Implemented | Not Implemented |
 
-#### 2.8 Tamper Interface [6.8]
+#### 2.11 Timer Interface [6.11]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.8.1.1       | Time                      | A        | Not Applicable  | Not Implemented |
+| 6.11.1.1      | Time                      | A        | Not Applicable  | Not Implemented |
 
-#### 2.9 Power Interface [6.9]
+#### 2.12 Power Interface [6.12]
 
 | __Reference__ | __Commands & Attributes__         | __Type__ | __Client__      | __Server__      |
 | ------------- | --------------------------------- | :------: | --------------- | --------------- |
-| 6.9.1.1       | Mains Voltage                     | A        | Not Applicable  | Not Implemented |
-| 6.9.1.2       | Mains Frequency                   | A        | Not Applicable  | Not Implemented |
-| 6.9.1.3       | Mains Alarms                      | A        | Not Applicable  | Not Implemented |
-| 6.9.1.4       | Mains Minimum Voltage Threshold   | A        | Not Applicable  | Not Implemented |
-| 6.9.1.5       | Mains Maximum Voltage Threshold   | A        | Not Applicable  | Not Implemented |
-| 6.9.1.6       | Mains Voltage Dwell Trip Point    | A        | Not Applicable  | Not Implemented |
-| 6.9.1.7       | Battery Voltage                   | A        | Not Applicable  | Not Implemented |
-| 6.9.1.8       | Battery Manufacturer              | A        | Not Applicable  | Not Implemented |
-| 6.9.1.9       | Battery Type                      | A        | Not Applicable  | Not Implemented |
-| 6.9.1.10      | Battery AHr Rating                | A        | Not Applicable  | Not Implemented |
-| 6.9.1.11      | Battery Cell Quantity             | A        | Not Applicable  | Not Implemented |
-| 6.9.1.12      | Battery Rated Voltage             | A        | Not Applicable  | Not Implemented |
-| 6.9.1.13      | Battery Status                    | A        | Not Applicable  | Not Implemented |
-| 6.9.1.14      | Battery Minimum Voltage Threshold | A        | Not Applicable  | Not Implemented |
-| 6.9.1.15      | Battery Maximum Voltage Threshold | A        | Not Applicable  | Not Implemented |
-| 6.9.1.16      | Battery Charge Level              | A        | Not Applicable  | Not Implemented |
-| 6.9.1.17      | Battery Minimum Charge Level      | A        | Not Applicable  | Not Implemented |
-| 6.9.1.18      | Battery Maximum Charge Level      | A        | Not Applicable  | Not Implemented |
-| 6.9.1.19      | Power Source                      | A        | Not Applicable  | Not Implemented |
+| 6.12.1.1      | Mains Voltage                     | A        | Not Applicable  | Not Implemented |
+| 6.12.1.2      | Mains Frequency                   | A        | Not Applicable  | Not Implemented |
+| 6.12.1.3      | Mains Alarms                      | A        | Not Applicable  | Not Implemented |
+| 6.12.1.4      | Mains Minimum Voltage Threshold   | A        | Not Applicable  | Not Implemented |
+| 6.12.1.5      | Mains Maximum Voltage Threshold   | A        | Not Applicable  | Not Implemented |
+| 6.12.1.6      | Mains Voltage Dwell Trip Point    | A        | Not Applicable  | Not Implemented |
+| 6.12.1.7      | Battery Voltage                   | A        | Not Applicable  | Not Implemented |
+| 6.12.1.8      | Battery Manufacturer              | A        | Not Applicable  | Not Implemented |
+| 6.12.1.9      | Battery Type                      | A        | Not Applicable  | Not Implemented |
+| 6.12.1.10     | Battery AHr Rating                | A        | Not Applicable  | Not Implemented |
+| 6.12.1.11     | Battery Cell Quantity             | A        | Not Applicable  | Not Implemented |
+| 6.12.1.12     | Battery Rated Voltage             | A        | Not Applicable  | Not Implemented |
+| 6.12.1.13     | Battery Status                    | A        | Not Applicable  | Not Implemented |
+| 6.12.1.14     | Battery Minimum Voltage Threshold | A        | Not Applicable  | Not Implemented |
+| 6.12.1.15     | Battery Maximum Voltage Threshold | A        | Not Applicable  | Not Implemented |
+| 6.12.1.16     | Battery Charge Level              | A        | Not Applicable  | Not Implemented |
+| 6.12.1.17     | Battery Minimum Charge Level      | A        | Not Applicable  | Not Implemented |
+| 6.12.1.18     | Battery Maximum Charge Level      | A        | Not Applicable  | Not Implemented |
+| 6.12.1.19     | Power Source                      | A        | Not Applicable  | Not Implemented |
+| 6.12.3.1      | Low Mains Voltage Alert           | C        | Not Implemented | Not Implemented |
+| 6.12.3.2      | High Mains Voltage Alert          | C        | Not Implemented | Not Implemented |
+| 6.12.3.3      | Low Battery Voltage Alert         | C        | Not Implemented | Not Implemented |
+| 6.12.3.4      | High Battery Voltage Alert        | C        | Not Implemented | Not Implemented |
+| 6.12.3.5      | Low Battery Charge Alert          | C        | Not Implemented | Not Implemented |
+| 6.12.3.6      | High Battery Charge Alert         | C        | Not Implemented | Not Implemented |
 
-#### 2.10 RSSI [6.10]
-
-| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
-| ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.10.1.1      | RSSI                      | A        | Not Applicable  | Not Implemented |
-
-#### 2.11 Keep Alive Interface [6.11]
-
-| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
-| ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.11.1.1      | Interval                  | A        | Not Applicable  | Not Implemented |
-| 6.11.3.1      | I am Alive                | C        | Not Applicable  | Not Implemented |
-
-#### 2.12 Keep Alive Interface [6.12]
+#### 2.13 RSSI [6.13]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.12.3.1      | New Version Available     | C        | Not Applicable  | Not Implemented |
-| 6.12.4.1      | Check Vesion              | C        | Not Implemented | Not Applicable  |
-| 6.12.4.2      | Upgrade Complete          | C        | Not Implemented | Not Applicable  |
+| 6.13.1.1      | RSSI                      | A        | Not Applicable  | Implemented     |
 
-### 3. Profiles [HF-Profiles v1.2.0]
+#### 2.14 Keep Alive Interface [6.14]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 6.14.1.1      | Interval                  | A        | Not Applicable  | Not Implemented |
+| 6.14.3.1      | I am Alive                | C        | Not Applicable  | Not Implemented |
+
+#### 2.15 SOUTA Interface [6.15]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 6.15.3.1      | New Version Available     | C        | Not Applicable  | Implemented     |
+| 6.15.4.1      | Check Version             | C        | Implemented     | Not Applicable  |
+| 6.15.4.2      | Upgrade Complete          | C        | Implemented     | Not Applicable  |
+
+### 3. Profiles [HF-Profiles v1.3.0]
 
 | __Reference__ | __Profile__                          | __Status__  |
 | ------------- | ------------------------------------ | ----------- |
@@ -197,6 +256,11 @@ For more information on requirements, building and using this software package, 
 | 5.1.14        | Simple Power Meter                   | Implemented |
 | 5.1.15        | Simple Temperature Sensor            | Implemented |
 | 5.1.16        | Simple Humidity Sensor               | Implemented |
+| 5.1.17        | Simple Air Pressure Sensor           | Implemented |
+| 5.1.18        | Simple Button                        | Implemented |
+| 5.1.19        | Controllable Thermostat              | Implemented |
+| 5.1.20        | Simple LED                           | Implemented |
+| 5.1.21        | Environment Monitor                  | Implemented |
 | 5.2.1         | Simple Detector                      | Implemented |
 | 5.2.2         | Door Open Close Detector             | Implemented |
 | 5.2.3         | Window Open Close Detector           | Implemented |
@@ -207,12 +271,13 @@ For more information on requirements, building and using this software package, 
 | 5.2.8         | Glass Break Detector                 | Implemented |
 | 5.2.9         | Vibration Detector                   | Implemented |
 | 5.2.10        | Siren                                | Implemented |
-| 5.1.11        | Alertable                            | Implemented |
+| 5.2.11        | Alertable                            | Implemented |
 | 5.3.1         | Simple Pendant                       | Implemented |
-| 5.4.1         | User Interface                       | Implemented |
-| 5.4.2         | Generic Application Logic            | Implemented |
+| 5.4.1         | User Interface Lock                  | Implemented |
+| 5.4.2         | User Interface                       | Implemented |
+| 5.4.3         | Generic Application Logic            | Implemented |
 
-### 4. Interfaces [HF-Interfaces v1.2.0]
+### 4. Interfaces [HF-Interfaces v1.3.0]
 
 #### 4.1 Alert [5.1]
 
@@ -254,7 +319,7 @@ For more information on requirements, building and using this software package, 
 | 5.4.1.10      | Power Factor              | A        | Not Applicable  | Implemented     |
 | 5.4.1.11      | Report Interval           | A        | Not Applicable  | Implemented     |
 | 5.4.3.1       | Report                    | C        | Implemented     | Implemented     |
-| 5.4.4.1       | Measurment Reset          | C        | Not Implemented | Not Implemented |
+| 5.4.4.1       | Measurement Reset         | C        | Not Implemented | Not Implemented |
 
 #### 4.5 Simple Temperature [5.5]
 
@@ -272,9 +337,57 @@ For more information on requirements, building and using this software package, 
 | 5.6.1.1       | Measured Humidity         | A        | Not Applicable  | Implemented     |
 | 5.6.1.2       | Tolerance                 | A        | Not Applicable  | Implemented     |
 
+#### 4.7 Simple Thermostat [5.7]
+
+| __Reference__ | __Commands & Attributes__          | __Type__ | __Client__      | __Server__      |
+| ------------- | ---------------------------------- | :------: | --------------- | --------------- |
+| 5.7.1.1       | Supported Modes                    | A        | Not Applicable  | Implemented     |
+| 5.7.1.2       | Operating Mode                     | A        | Not Applicable  | Implemented     |
+| 5.7.1.3       | Fan Mode                           | A        | Not Applicable  | Implemented     |
+| 5.7.1.4       | Heating Mode Temperature           | A        | Not Applicable  | Implemented     |
+| 5.7.1.5       | Cooling Mode Temperature           | A        | Not Applicable  | Implemented     |
+| 5.7.1.6       | Automatic Mode Heating Temperature | A        | Not Applicable  | Implemented     |
+| 5.7.1.7       | Automatic Mode Cooling Temperature | A        | Not Applicable  | Implemented     |
+| 5.7.1.8       | Heating Mode Temperature Offset    | A        | Not Applicable  | Implemented     |
+| 5.7.1.9       | Cooling Mode Temperature Offset    | A        | Not Applicable  | Implemented     |
+| 5.7.1.10      | Boost Duration                     | A        | Not Applicable  | Implemented     |
+| 5.7.4.1       | Boost Start                        | C        | Implemented     | Implemented     |
+| 5.7.4.2       | Boost Stop                         | C        | Implemented     | Implemented     |
+
+#### 4.8 Simple Button [5.8]
+
+| __Reference__ | __Commands & Attributes__         | __Type__ | __Client__      | __Server__      |
+| ------------- | --------------------------------- | :------: | --------------- | --------------- |
+| 5.8.1.1       | Short Press Maximum Duration      | A        | Not Applicable  | Implemented     |
+| 5.8.1.2       | Extra Long Press Minimum Duration | A        | Not Applicable  | Implemented     |
+| 5.8.1.3       | Double Press Gap Duration         | A        | Not Applicable  | Implemented     |
+| 5.8.3.1       | Short Press                       | C        | Implemented     | Implemented     |
+| 5.8.3.2       | Long Press                        | C        | Implemented     | Implemented     |
+| 5.8.3.3       | Extra-Long Press                  | C        | Implemented     | Implemented     |
+| 5.8.3.4       | Double Press                      | C        | Implemented     | Implemented     |
+
+#### 4.9 Simple Visual Effects [5.9]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 5.9.4.1       | ON                        | C        | Implemented     | Implemented     |
+| 5.9.4.2       | OFF                       | C        | Implemented     | Implemented     |
+| 5.9.4.3       | Blink                     | C        | Implemented     | Implemented     |
+| 5.9.4.4       | Fade                      | C        | Implemented     | Implemented     |
+| 5.9.4.5       | Breath                    | C        | Implemented     | Implemented     |
+
+#### 4.10 Air Pressure [5.10]
+
+| __Reference__ | __Commands & Attributes__     | __Type__ | __Client__      | __Server__      |
+| ------------- | ----------------------------- | :------: | --------------- | --------------- |
+| 5.10.1.1      | Measured Air Pressure         | A        | Not Applicable  | Implemented     |
+| 5.10.1.2      | Min. Measurable Air Pressure  | A        | Not Applicable  | Implemented     |
+| 5.10.1.3      | Max. Measurable Air Pressure  | A        | Not Applicable  | Implemented     |
+| 5.10.1.4      | Tolerance                     | A        | Not Applicable  | Implemented     |
+
 ## Bug Fixes
 
-  * See Changelog file.
+  * See [Changelog](https://github.com/ULE-Alliance/hanfun/blob/master/Changelog) file.
 
 ## Known Issues and Problems
 
