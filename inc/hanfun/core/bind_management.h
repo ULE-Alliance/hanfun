@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Bind Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -75,6 +75,19 @@ namespace HF
 
       /*!
        * This namespace contains the classes that implement the Bind Management service.
+       *
+       * @todo Add support for Remove Bind by SRC Device Address command.
+       * @todo Add support for Remove Bind by SRC Device Address and Unit ID command.
+       * @todo Add support for Remove Bind by DST Address command.
+       * @todo Add support for Remove Bind by DST Address and Unit ID command.
+       * @todo Add support for Start Session Read Bind Info command.
+       * @todo Add support for End Session Read Bind Info command.
+       * @todo Add support for Get Bind Entries by Index command.
+       * @todo Add support for Get Bind Entries by SRC Device Address command.
+       * @todo Add support for Get Bind Entries by SRC Device Address and Unit ID command.
+       * @todo Add support for Get Bind Entries by DST Address command.
+       * @todo Add support for Get Bind Entries by DST Address and Unit ID command.
+       *
        */
       namespace BindManagement
       {

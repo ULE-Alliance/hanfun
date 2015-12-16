@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Thermostat interface.
  *
- * @version    x.x.x
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -31,7 +31,7 @@ namespace HF
       }
 
       /*!
-       * @ingroup on_off_itf
+       * @ingroup simple_thersmostat_itf
        *
        * Create an attribute object that can hold the attribute with the given @c uid.
        *
@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleThermostat
       {
          /*!
-          * @addtogroup simple_humidity_itf  Simple Thermostat interface
+          * @addtogroup simple_thersmostat_itf  Simple Thermostat interface
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Thermostat interface API.
@@ -104,7 +104,7 @@ namespace HF
           */
          struct SupportedModes: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID        = SUPPORTED_MODES_ATTR;  //!< Attribute UID.
+            static constexpr uint8_t ID       = SUPPORTED_MODES_ATTR;  //!< Attribute UID.
             static constexpr bool    WRITABLE = false;                 //!< Attribute Read/Write
 
             SupportedModes(uint8_t mode = 0, HF::Interface *owner = nullptr):
@@ -117,7 +117,7 @@ namespace HF
           */
          struct HeatCoolMode: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID        = HEAT_COOL_MODE_ATTR;  //!< Attribute UID.
+            static constexpr uint8_t ID       = HEAT_COOL_MODE_ATTR;  //!< Attribute UID.
             static constexpr bool    WRITABLE = true;                 //!< Attribute Read/Write
 
             HeatCoolMode(uint8_t mode = 0, HF::Interface *owner = nullptr):
@@ -130,7 +130,7 @@ namespace HF
           */
          struct FanMode: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID        = FAN_MODE_ATTR;  //!< Attribute UID.
+            static constexpr uint8_t ID       = FAN_MODE_ATTR;  //!< Attribute UID.
             static constexpr bool    WRITABLE = true;           //!< Attribute Read/Write
 
             FanMode(uint8_t mode = 0, HF::Interface *owner = nullptr):
@@ -144,11 +144,12 @@ namespace HF
          template<uint8_t _ID>
          struct Attribute: public HF::Attributes::Attribute<int16_t>
          {
-            static constexpr uint8_t ID        = _ID;  //!< Attribute UID.
+            static constexpr uint8_t ID       = _ID;  //!< Attribute UID.
             static constexpr bool    WRITABLE = true; //!< Attribute Read/Write
 
             Attribute(int16_t value = 0, HF::Interface *owner = nullptr):
-               HF::Attributes::Attribute<int16_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner, value,
+               HF::Attributes::Attribute<int16_t>(HF::Interface::SIMPLE_THERMOSTAT, ID, owner,
+                                                  value,
                                                   WRITABLE)
             {}
          };
@@ -176,7 +177,7 @@ namespace HF
           */
          struct BoostDuration: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID        = BOOST_DURATION_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = BOOST_DURATION_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = true;                //!< Attribute Read/Write
 
             BoostDuration(uint8_t mode = 0, HF::Interface *owner = nullptr):

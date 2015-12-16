@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Power Meter interface.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -294,6 +294,8 @@ namespace HF
           * Simple Power Meter Interface : Server side implementation.
           *
           * This class provides the server side of the Simple Power Meter interface.
+          *
+          * @todo Add support for @ref MEASUREMENT_RESET_CMD command.
           */
          class Server: public InterfaceRole<SimplePowerMeter::Base, HF::Interface::SERVER_ROLE>
          {
@@ -633,6 +635,8 @@ namespace HF
           * Simple Power Meter Interface : Client side implementation.
           *
           * This class provides the client side of the Simple Power Meter interface.
+          *
+          * @todo Add support for @ref MEASUREMENT_RESET_CMD command.
           */
          struct Client: public InterfaceRole<SimplePowerMeter::Base, HF::Interface::CLIENT_ROLE>
          {

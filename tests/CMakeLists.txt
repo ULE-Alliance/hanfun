@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   @version 1.3.0
+#   @version 1.4.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -78,6 +78,8 @@ set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
 set(TESTS_DEVICES_SRCS   "test_devices.cpp")
 
 ## Core Services & Interfaces ##
+set(TESTS_CORE_SRCS "test_core.cpp")
+
 macro(add_core_tests __name)
    list(APPEND TESTS_CORE_SRCS "core/test_${__name}.cpp")
 endmacro()

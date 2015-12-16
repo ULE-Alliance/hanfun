@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -103,7 +103,10 @@
  *
  * Helper macro to check for correct assumptions.
  *
+ * @warning This macro MAY evaluate the @c _expr twice.
+ *
  * @param [in] _expr    helper class that wraps the attribute.
+ * @param [in] _block   code block to run if the condition fails.
  */
    #define HF_ASSERT(_expr, _block) \
    {                                \
@@ -697,7 +700,8 @@ namespace HF
             return min_size + data.size();
          }
 
-         static uint16_t pack(const std::string &data, Common::ByteArray &array, uint16_t offset = 0)
+         static uint16_t pack(const std::string &data, Common::ByteArray &array,
+                              uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, size(data));
 
@@ -715,7 +719,8 @@ namespace HF
             return offset - start;
          }
 
-         static uint16_t unpack(std::string &data, const Common::ByteArray &array, uint16_t offset = 0)
+         static uint16_t unpack(std::string &data, const Common::ByteArray &array,
+                                uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, min_size);
 

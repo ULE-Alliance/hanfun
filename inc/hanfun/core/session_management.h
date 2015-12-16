@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the session management functionality.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -409,7 +409,11 @@ namespace HF
             protected:
 
             /*!
-             * @copydoc HF::Interfaces::AbstractInterface::handle_command.
+             * Handle command request/response messages
+             *
+             *  - Protocol::Message:Type::COMMAND_REQ;
+             *  - Protocol::Message:Type::COMMAND_RESP_REQ;
+             *  - Protocol::Message:Type::COMMAND_RES;
              *
              * @param [in] cmd      the session operation to process.
              * @param [in] packet   the packet receive from the network.
@@ -532,9 +536,12 @@ namespace HF
          /*!
           * Wrapper over persistent storage APIs to invalidate sessions on
           * save and destroy.
+          *
+          * @tparam Parent    the parent class that implements the persistent storage APIs to
+          *                   wrap over.
           */
          template<typename Parent>
-         class Entries: public Parent
+         class EntriesWrapper: public Parent
          {
             AbstractServer &manager;
 
@@ -547,7 +554,7 @@ namespace HF
              *
              * @param [in] _manager    session manager the entries are associated to.
              */
-            Entries(AbstractServer &_manager): Parent(),
+            EntriesWrapper(AbstractServer &_manager): Parent(),
                manager(_manager)
             {}
 
@@ -557,11 +564,11 @@ namespace HF
              * @param [in] other       entries container to wrap.
              * @param [in] _manager    session manager the entries are associated to.
              */
-            Entries(const Entries &other, AbstractServer &_manager):
+            EntriesWrapper(const EntriesWrapper &other, AbstractServer &_manager):
                Parent(other), manager(_manager)
             {}
 
-            virtual ~Entries()
+            virtual ~EntriesWrapper()
             {}
 
             //! @copydoc HF::Common::IEntries::save
@@ -582,13 +589,25 @@ namespace HF
          };
 
          /*!
+          * @copydoc EntriesWrapper
+          *
+          * @deprecated This template class has been deprecated please use
+          *             HF::Core::SessionManagement::EntriesWrapper
+          */
+         template<typename Parent>
+         struct __attribute__((deprecated)) Entries: public EntriesWrapper<Parent>
+         {
+            Entries(AbstractServer & _manager): EntriesWrapper<Parent>(_manager) {}
+         };
+
+         /*!
           * Helper template to inject session management functionality into
           * services requiring it - Server side.
           */
          template<typename _Entries>
          struct Server: public AbstractServer
          {
-            typedef Entries<_Entries> Container;
+            typedef EntriesWrapper<_Entries> Container;
 
             /*!
              * Return the container for the service entries.
@@ -728,7 +747,12 @@ namespace HF
             protected:
 
             /*!
-             * @copydoc HF::Interfaces::AbstractInterface::handle_command.
+             * Handle command request/response messages.
+             *
+             *  - Protocol::Message:Type::COMMAND_REQ;
+             *  - Protocol::Message:Type::COMMAND_RESP_REQ;
+             *  - Protocol::Message:Type::COMMAND_RES;
+             *
              *
              * @param [in] cmd      the session operation to process.
              * @param [in] packet   the packet receive from the network.

@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Button interface.
  *
- * @version    x.x.x
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -169,7 +169,7 @@ namespace HF
             uint16_t _timestamp = 0;         //!< Timestamp of last call.
 
 #ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
-            bool _short_click_cmd  = false;  //!< Indicate if last click detected was a short click.
+            bool _short_click_cmd = false;   //!< Indicate if last click detected was a short click.
 #endif
 
             public:
@@ -221,7 +221,7 @@ namespace HF
             /*!
              * This method is used to indicate that the button was released and generate the
              * appropriate message, to the given broadcast address based on the difference between
-             * the @timestamp of the last call to @c pressed and the given @c timestamp.
+             * the @c timestamp of the last call to @c pressed and the given @c timestamp.
              *
              * @warning Calling this method without calling @c pressed before has undefined behavior.
              *

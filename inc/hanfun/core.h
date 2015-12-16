@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -39,6 +39,16 @@ namespace HF
    /*!
     * This is the top-level namespace for the Core Services and %Interfaces
     * implementation.
+    *
+    * @todo Add support for Group Management service.
+    * @todo Add support for Identify interface.
+    * @todo Add support for Batch Program Management service.
+    * @todo Add support for Event Scheduling service
+    * @todo Add support for Weekly Scheduling service.
+    * @todo Add support for Tamper %Alert interface.
+    * @todo Add support for %Time service.
+    * @todo Add support for Power service.
+    * @todo Add support for Keep Alive service.
     */
    namespace Core
    {
@@ -92,6 +102,23 @@ namespace HF
             return HF::Attributes::List();
          }
 
+         protected:
+
+         static void remove_mandatory(std::vector<Common::Interface> &itfs)
+         {
+            static std::array<uint16_t, 3> const mandatory({
+               {HF::Interface::DEVICE_INFORMATION,
+                HF::Interface::DEVICE_MANAGEMENT,
+                HF::Interface::ATTRIBUTE_REPORTING}
+            });
+
+            itfs.erase(std::remove_if(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+            {
+               return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid) {
+                  return itf.id == uid;
+               });
+            }), itfs.end());
+         }
       };
 
       /*!
@@ -235,26 +262,25 @@ namespace HF
     * @tparam  ITF   custom classes implementing the required services.
     */
    template<typename Base, typename... ITF>
-   class Unit0: public Base
+   class Unit0: public Base, public Units::InterfacesWrapper<Base, ITF...>
    {
       static_assert(std::is_base_of<HF::Core::Unit0, Base>::value,
                     "Base must be of type HF::Core::Unit0");
 
+      using InterfacesWrapper = Units::InterfacesWrapper<Base, ITF...>;
+      using interfaces_t      = std::tuple<ITF...>;
+
       public:
-
-      typedef std::tuple<ITF...> interfaces_t;
-
-      interfaces_t interfaces;
 
       static constexpr uint8_t DEV_INFO = 0;    //!< Device Information service index.
       static constexpr uint8_t DEV_MGT  = 1;    //!< Device Management service index.
       static constexpr uint8_t ATTR_RPT = 2;    //!< Attribute Reporting service index.
 
-      typedef typename std::tuple_element<DEV_INFO, decltype(interfaces)>::type DeviceInfo;
+      typedef typename std::tuple_element<DEV_INFO, interfaces_t>::type DeviceInfo;
 
-      typedef typename std::tuple_element<DEV_MGT, decltype(interfaces)>::type DeviceMgt;
+      typedef typename std::tuple_element<DEV_MGT, interfaces_t>::type DeviceMgt;
 
-      typedef typename std::tuple_element<ATTR_RPT, decltype(interfaces)>::type AttrReporting;
+      typedef typename std::tuple_element<ATTR_RPT, interfaces_t>::type AttrReporting;
 
       static_assert(std::is_base_of<HF::Core::DeviceInformation::Server, DeviceInfo>::value,
                     "DeviceInfo must be of type HF::Core::DeviceInformation::Server");
@@ -268,7 +294,7 @@ namespace HF
        * @param [in] device   reference to the device that this unit belongs to.
        */
       Unit0(HF::IDevice &device):
-         Base(device), interfaces(ITF(*this) ...)
+         Base(device), InterfacesWrapper(*(static_cast<Base *>(this)))
       {}
 
       // =============================================================================
@@ -280,7 +306,7 @@ namespace HF
        */
       DeviceInfo *device_info() const
       {
-         return const_cast<DeviceInfo *>(&std::get<DEV_INFO>(interfaces));
+         return const_cast<DeviceInfo *>(InterfacesWrapper::template get<DEV_INFO>());
       }
 
       /*!
@@ -290,7 +316,7 @@ namespace HF
        */
       DeviceInfo *device_info()
       {
-         return &std::get<DEV_INFO>(interfaces);
+         return const_cast<DeviceInfo *>(InterfacesWrapper::template get<DEV_INFO>());
       }
 
       /*!
@@ -300,7 +326,7 @@ namespace HF
        */
       DeviceMgt *device_management() const
       {
-         return const_cast<DeviceMgt *>(&std::get<DEV_MGT>(interfaces));
+         return const_cast<DeviceMgt *>(InterfacesWrapper::template get<DEV_MGT>());
       }
 
       /*!
@@ -310,7 +336,7 @@ namespace HF
        */
       DeviceMgt *device_management()
       {
-         return &std::get<DEV_MGT>(interfaces);
+         return const_cast<DeviceMgt *>(InterfacesWrapper::template get<DEV_MGT>());
       }
 
       /*!
@@ -320,7 +346,7 @@ namespace HF
        */
       AttrReporting *attribute_reporting() const
       {
-         return const_cast<AttrReporting *>(&std::get<ATTR_RPT>(interfaces));
+         return const_cast<AttrReporting *>(InterfacesWrapper::template get<ATTR_RPT>());
       }
 
       /*!
@@ -330,7 +356,7 @@ namespace HF
        */
       AttrReporting *attribute_reporting()
       {
-         return &std::get<ATTR_RPT>(interfaces);
+         return const_cast<AttrReporting *>(InterfacesWrapper::template get<ATTR_RPT>());
       }
 
       // =============================================================================
@@ -341,84 +367,32 @@ namespace HF
       Common::Result handle(HF::Protocol::Packet &packet, Common::ByteArray &payload,
                             uint16_t offset)
       {
-         Core::IService *service = find<0, ITF...>(packet.message.itf.id);
-
-         if (service != nullptr)
-         {
-            return service->handle(packet, payload, offset);
-         }
-         else
-         {
-            return Common::Result::FAIL_SUPPORT;
-         }
+         return InterfacesWrapper::handle(packet, payload, offset);
       }
 
       //! @copydoc HF::Profiles::IProfile::attributes
       HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
                                       const HF::Attributes::UIDS &uids) const
       {
-         UNUSED(itf);
-         UNUSED(pack_id);
-         UNUSED(uids);
-         return HF::Attributes::List();
+         HF::Attributes::List result;
+         InterfacesWrapper::attributes(result, itf, pack_id, uids);
+         return result;
       }
 
       void periodic(uint32_t time)
       {
          Base::periodic(time);
-         periodic<0, ITF...>(time);
+         InterfacesWrapper::periodic(time);
+      }
+
+      std::vector<Common::Interface> interfaces() const
+      {
+         auto result = InterfacesWrapper::interfaces();
+         Base::remove_mandatory(result);
+         return result;
       }
 
       // =============================================================================
-
-      private:
-
-      /*!
-       * Find the service for the given @c itf_uid.
-       *
-       * @param itf_uid    service %UID to search for.
-       *
-       * @return  pointer to the service object if found, @c nullptr otherwise.
-       */
-      template<uint8_t N, typename Head, typename... Tail>
-      Core::IService *find(uint16_t itf_uid) const
-      {
-         static_assert(std::is_base_of<HF::Core::IService, Head>::value,
-                       "Head must be of type HF::Core::IService");
-
-         const Head &head = std::get<N>(interfaces);
-
-         if (head.uid() == itf_uid)
-         {
-            return const_cast<Head *>(&head);
-         }
-         else
-         {
-            return find<N + 1, Tail...>(itf_uid);
-         }
-      }
-
-      template<uint8_t N>
-      Core::IService *find(uint16_t itf_uid) const
-      {
-         UNUSED(itf_uid);
-         return nullptr;
-      }
-
-      template<uint8_t N, typename Head, typename... Tail>
-      void periodic(uint32_t time)
-      {
-         Head &head = std::get<N>(interfaces);
-         head.periodic(time);
-
-         periodic<N + 1, Tail...>(time);
-      }
-
-      template<uint8_t N>
-      void periodic(uint32_t time)
-      {
-         UNUSED(time);
-      }
    };
 
    /*! @} */

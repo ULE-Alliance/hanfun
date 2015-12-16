@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Thermostat Interface
  * implementation.
  *
- * @version    x.x.x
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 Bithium S.A.
  *
@@ -105,8 +105,8 @@ TEST_GROUP(SimpleThermostat)
       mock().clear();
    }
 
-   void check_invalid_message(HF::Interface &interface, const Message::Type type,
-                              uint8_t uid, const HF::Interface::Role role, const char *file, int lineno)
+   void check_invalid_message(HF::Interface &interface, const Message::Type type, uint8_t uid,
+                              const HF::Interface::Role role, const char *file, int lineno)
    {
       Protocol::Packet packet;
       packet.message.itf.role   = role;
@@ -134,15 +134,15 @@ TEST_GROUP(SimpleThermostat)
    void check_invalid_uid(SimpleThermostat::Server &server, uint8_t uid, const char *file,
                           int lineno)
    {
-      check_invalid_message(server, Message::Type::COMMAND_REQ, uid, HF::Interface::CLIENT_ROLE, file,
-                            lineno);
+      check_invalid_message(server, Message::Type::COMMAND_REQ, uid, HF::Interface::CLIENT_ROLE,
+                            file, lineno);
    }
 
    void check_invalid_uid(SimpleThermostat::Client &client, uint8_t uid, const char *file,
                           int lineno)
    {
-      check_invalid_message(client, Message::Type::COMMAND_RES, uid, HF::Interface::SERVER_ROLE, file,
-                            lineno);
+      check_invalid_message(client, Message::Type::COMMAND_RES, uid, HF::Interface::SERVER_ROLE,
+                            file, lineno);
    }
 };
 
@@ -311,7 +311,7 @@ TEST_GROUP(SimpleThermostatServer)
    }
 };
 
-#define CHECK_TEMPERATURE_ATTRIBUTE(Type, _name)   \
+#define CHECK_TEMPERATURE_ATTRIBUTE(Type, _name) \
    CHECK_OPT_ATTRIBUTE(SimpleThermostatServer, Type, true, _name, -42, 42)
 
 //! @test Supported Modes support.
@@ -330,7 +330,8 @@ TEST(SimpleThermostatServer, Mode)
 //! @test Fan Mode support.
 TEST(SimpleThermostatServer, FanMode)
 {
-   CHECK_OPT_ATTRIBUTE(SimpleThermostatServer, FanMode, true, fan_mode, FAN_OFF_MODE, FAN_AUTO_MODE);
+   CHECK_OPT_ATTRIBUTE(SimpleThermostatServer, FanMode, true, fan_mode, FAN_OFF_MODE,
+                       FAN_AUTO_MODE);
 }
 
 //! @test Check temperature attributes support.

@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the RSSI interface
  * implementation.
  *
- * @version    x.x.x
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

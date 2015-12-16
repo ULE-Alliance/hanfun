@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Attribute Reporting Service
  * in HAN-FUN.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -51,6 +51,9 @@ namespace HF
 
       /*!
        * This namespace contains the classes that implement the Attribute Reporting service.
+       *
+       * @todo Add support for Get Periodic Report Entries command.
+       * @todo Add support for Get Event Report Entries command.
        */
       namespace AttributeReporting
       {

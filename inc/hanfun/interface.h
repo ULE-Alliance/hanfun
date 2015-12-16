@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -57,18 +57,21 @@ namespace HF
       typedef enum _UID
       {
          /* Core Services */
-         DEVICE_MANAGEMENT   = 0x0001,   //!< %Device Management interface %UID.
-         BIND_MANAGEMENT     = 0x0002,   //!< Bind Management interface %UID.
-         GROUP_MANGEMENT     = 0x0003,   //!< Group Management interface %UID. __Not implemented__
-         IDENTIFY            = 0x0004,   //!< Identify interface %UID. __Not implemented__
-         DEVICE_INFORMATION  = 0x0005,   //!< %Device information interface UID. __Not implemented__
-         ATTRIBUTE_REPORTING = 0x0006,   //!< %Attribute Reporting interface UID. __Not implemented__
-         TAMPER_ALERT        = 0x0101,   //!< Tamper %Alert interface UID. __Not implemented__
-         TIME                = 0x0102,   //!< %Time interface UID. __Not implemented__
-         POWER               = 0x0110,   //!< Power interface UID. __Not implemented__
-         KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
-         RSSI                = 0x0111,   //!< %RSSI interface UID.
-         SUOTA               = 0x0400,   //!< FIXME SUOTA interface UID.
+         DEVICE_MANAGEMENT       = 0x0001, //!< %Device Management interface %UID.
+         BIND_MANAGEMENT         = 0x0002, //!< Bind Management interface %UID.
+         GROUP_MANGEMENT         = 0x0003, //!< Group Management interface %UID. __Not implemented__
+         IDENTIFY                = 0x0004, //!< Identify interface %UID. __Not implemented__
+         DEVICE_INFORMATION      = 0x0005, //!< %Device information interface UID.
+         ATTRIBUTE_REPORTING     = 0x0006, //!< %Attribute Reporting interface UID.
+         BATCH_PROGRAM_MANGEMENT = 0x0007, //!< Batch Program Management interface UID. __Not implemented__
+         EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
+         WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
+         TAMPER_ALERT            = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
+         TIME                    = 0x0102, //!< %Time interface UID. __Not implemented__
+         POWER                   = 0x0110, //!< Power interface UID. __Not implemented__
+         KEEP_ALIVE              = 0x0115, //!< Keep Alive interface UID. __Not implemented__
+         RSSI                    = 0x0111, //!< %RSSI interface UID.
+         SUOTA                   = 0x0400, //!< %SUOTA interface UID.
 
          /* Functional Interfaces. */
          ALERT                 = 0x0100, //!< Alert interface UID
@@ -356,7 +359,7 @@ namespace HF
        *
        * @tparam _uid   interface UID to be used by the interface.
        */
-      template<HF::Interface::UID _uid>
+      template<uint16_t _uid>
       struct Interface: public AbstractInterface
       {
          //! @copydoc HF::Interface::uid
@@ -373,13 +376,15 @@ namespace HF
          }
       };
 
+      /* *INDENT-OFF* */
       /*!
        * @copydoc HF::Interfaces::Interface
        *
-       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface.
+       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface
        */
-      template<HF::Interface::UID _uid>
+      template<uint16_t _uid>
       struct __attribute__((deprecated)) Base: public Interface<_uid>{};
+      /* *INDENT-ON* */
 
       /*!
        * Helper class template for implementing a given interface role.
@@ -390,7 +395,7 @@ namespace HF
       template<typename Itf, HF::Interface::Role _role>
       struct InterfaceRole: public Itf
       {
-         //! @copydoc Interface::role
+         //! @copydoc HF::Interface::role
          HF::Interface::Role role() const
          {
             return _role;
@@ -433,6 +438,258 @@ namespace HF
 
          //! Referent to the class providing the required functionality.
          _Proxy &proxy;
+      };
+
+      /*!
+       * Helper class to add optional interfaces to other classes.
+       */
+      template<typename Base, typename... Proxies>
+      class Container
+      {
+         using interfaces_t = std::tuple<Proxies...>;
+
+         //! Tuple containing the interfaces.
+         interfaces_t _interfaces;
+
+         public:
+
+         /*!
+          * Constructor
+          *
+          * @param [in] base  reference to the object containing the interfaces.
+          */
+         Container(Base &base): _interfaces(Proxies(base) ...)
+         {}
+
+         //! @copydoc HF::Interface::handle
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
+         {
+            HF::Interface *itf = find<0, Proxies...>(packet.message.itf.id);
+
+            if (itf != nullptr)
+            {
+               return itf->handle(packet, payload, offset);
+            }
+            else
+            {
+               return Common::Result::FAIL_SUPPORT;
+            }
+         }
+
+         /*!
+          * @copydoc HF::Profiles::IProfile::attributes
+          *
+          * @param [inout] attr_list   list to place the attributes UIDs.
+          */
+         void attributes(HF::Attributes::List &attr_list, Common::Interface itf, uint8_t pack_id,
+                         const HF::Attributes::UIDS &uids) const
+         {
+            attributes_itf<0, Proxies...>(attr_list, itf, pack_id, uids);
+         }
+
+         /*!
+          * Return the list of interfaces present in the wrapper.
+          *
+          * @return  a vector containing the UIDs for the interfaces
+          *          wrapped by this class.
+          */
+         std::vector<Common::Interface> interfaces() const
+         {
+            std::vector<Common::Interface> result;
+            result.reserve(sizeof ... (Proxies));
+
+            Common::Interface temp;
+            /* *INDENT-OFF* */
+            for_each ([&result, &temp](HF::Interface &itf)
+            {
+                temp.id = itf.uid ();
+                temp.role = itf.role ();
+                result.push_back (temp);
+            });
+            /* *INDENT-ON* */
+
+            return result;
+         }
+
+         void periodic(uint32_t time)
+         {
+            /* *INDENT-OFF* */
+            for_each ([time](HF::Interface &itf) { itf.periodic (time);});
+            /* *INDENT-ON* */
+         }
+
+         /*!
+          * Retrieve a pointer to the N optional interface implemented by this unit.
+          *
+          * @tparam N   index of the interface to retrieve the pointer to.
+          *
+          * @return  a pointer to the optional implemented interface.
+          */
+         template<uint8_t N>
+         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
+         {
+            return &std::get<N>(_interfaces);
+         }
+
+         protected:
+
+         /*!
+          * Call the given function for all the interfaces.
+          *
+          * @param [in] func  function to call with each of the optional implemented interfaces.
+          */
+         void for_each(std::function<void(HF::Interface &)> func) const
+         {
+            for_each<0, Proxies...>(func);
+         }
+
+         /*!
+          * Call the given function for all the interfaces.
+          *
+          * @param [in] func  function to call with each of the optional implemented interfaces.
+          */
+         void for_each(std::function<void(HF::Interface &)> func)
+         {
+            for_each<0, Proxies...>(func);
+         }
+
+         protected:
+
+         /*!
+          * Find the interface with the given UID.
+          *
+          * @param itf_uid    the interface UID to search for in the wrapped interfaces.
+          *
+          * @tparam  N        index in the interfaces tuple to check if UID matches.
+          * @tparam  Head     class for the interface at the given index.
+          * @tparam  Tail     the classes associated with the remaining optional interfaces.
+          *
+          * @return           a pointer to the interface or @c nullptr if
+          *                   the interface is not present.
+          */
+         template<uint8_t N, typename Head, typename... Tail>
+         HF::Interface *find(uint16_t itf_uid) const
+         {
+            static_assert(std::is_base_of<HF::Interface, Head>::value,
+                          "Head must be of type HF::Interface");
+
+            const Head &head = std::get<N>(_interfaces);
+
+            if (head.uid() == itf_uid)
+            {
+               return const_cast<Head *>(&head);
+            }
+            else
+            {
+               return find<N + 1, Tail...>(itf_uid);
+            }
+         }
+
+         /*!
+          * Final template instantiation that finds the wrapped interface
+          * with the given UID.
+          *
+          * @param itf_uid    the interface UID to search for in the wrapped interfaces.
+          *
+          * @tparam  N  index in the interfaces tuple to check if UID matches.
+          *
+          * @return  @c nullptr, i.e. the interface is not present.
+          */
+         template<uint8_t N>
+         HF::Interface *find(uint16_t itf_uid) const
+         {
+            UNUSED(itf_uid);
+            return nullptr;
+         }
+
+         /*!
+          * Helper template function to implement the HF::Units::Unit::for_each functionality.
+          *
+          * @param [in] func  function to call with the reference for the wrapped interface at
+          *                   index @c N.
+          *
+          * @tparam  N     index in the wrapped interfaces tuple to check if UID matches.
+          * @tparam  Head  class for the wrapped interface at the given index.
+          * @tparam  Tail  the classes associated with the remaining wrapped interfaces.
+          */
+         template<uint8_t N, typename Head, typename... Tail>
+         void for_each(std::function<void(HF::Interface &)> func) const
+         {
+            const auto &head = std::get<N>(this->_interfaces);
+
+            func(*(const_cast<HF::Interface *>(static_cast<const HF::Interface *>(&head))));
+
+            for_each<N + 1, Tail...>(func);
+         }
+
+         /*!
+          * Helper template function to implement the HF::Units::Unit::for_each functionality.
+          *
+          * @param [in] func  function to call with the reference for the wrapped interface at
+          *                   index @c N.
+          *
+          * @tparam  N     index in the wrapped interfaces tuple to check if UID matches.
+          */
+         template<uint8_t N>
+         void for_each(std::function<void(HF::Interface &)> func) const
+         {
+            UNUSED(func);
+         }
+
+         /*!
+          * Helper function used to provide HF::Units::Unit::attributes functionality.
+          *
+          *
+          * @param [out] attrs      attribute list to append the attributes for the interface to.
+          * @param [in]  itf        interface to get the attributes for.
+          * @param [in]  pack_id    attributes pack id to use when retrieving the attributes.
+          * @param [in]  uids       list of attribute uids to get attributes for if @c pack_id is
+          *                         HF::Attributes::Pack::DYNAMIC.
+          *
+          * @tparam  N     index in the wrapped interfaces tuple to check if UID matches.
+          * @tparam  Head  class for the wrapped interface at the given index.
+          * @tparam  Tail  the classes associated with the remaining wrapped interfaces.
+          */
+         template<uint8_t N, typename Head, typename... Tail>
+         void attributes_itf(HF::Attributes::List &attrs, Common::Interface itf,
+                             uint8_t pack_id, const HF::Attributes::UIDS &uids) const
+         {
+            const auto &head = std::get<N>(this->_interfaces);
+
+            if (head.uid() == itf.id)
+            {
+               auto result = HF::Attributes::get(head, pack_id, uids);
+               attrs.merge(result);
+            }
+            else
+            {
+               attributes_itf<N + 1, Tail...>(attrs, itf, pack_id, uids);
+            }
+         }
+
+         /*!
+          * Helper function used to provide HF::Units::Unit::attributes functionality.
+          *
+          * Template expansion end.
+          *
+          * @param [out] attrs      attribute list to append the attributes for the interface to.
+          * @param [in]  itf        interface to get the attributes for.
+          * @param [in]  pack_id    attributes pack id to use when retrieving the attributes.
+          * @param [in]  uids       list of attribute uids to get attributes for if @c pack_id is
+          *                         HF::Attributes::Pack::DYNAMIC.
+          *
+          * @tparam N    index in the wrapped interfaces tuple to check if UID matches.
+          */
+         template<uint8_t N>
+         void attributes_itf(HF::Attributes::List &attrs, Common::Interface itf,
+                             uint8_t pack_id, const HF::Attributes::UIDS &uids) const
+         {
+            UNUSED(attrs);
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
+         }
       };
 
       /*! @} */

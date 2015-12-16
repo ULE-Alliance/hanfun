@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -958,8 +958,9 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
          if (server != nullptr)
          {
             auto getter = (const std::string (Server::*)(void)) & Server::application_version;
+            auto setter = (void (Server::*)(std::string)) nullptr;
 
-            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+            return new Attribute<std::string, Server>(*server, attr, getter, setter);
          }
          else
 #endif
@@ -974,8 +975,9 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
          if (server != nullptr)
          {
             auto getter = (const std::string (Server::*)(void)) & Server::hardware_version;
+            auto setter = (void (Server::*)(std::string)) nullptr;
 
-            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+            return new Attribute<std::string, Server>(*server, attr, getter, setter);
          }
          else
 #endif
@@ -1000,8 +1002,9 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
          if (server != nullptr)
          {
             auto getter = (const std::string (Server::*)(void)) & Server::manufacturer_name;
+            auto setter = (void (Server::*)(std::string)) nullptr;
 
-            return new Attribute<std::string, Server>(*server, attr, getter, nullptr);
+            return new Attribute<std::string, Server>(*server, attr, getter, setter);
          }
          else
 #endif

@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the debug helper functions.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -809,7 +809,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButto
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleButton::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');
@@ -898,7 +899,8 @@ std::ostream &operator<<(std::ostream &stream,
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleAirPressure::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleAirPressure::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');

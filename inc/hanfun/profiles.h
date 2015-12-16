@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -310,35 +310,28 @@ namespace HF
       /*!
        * Class template for profiles containing multiple interfaces.
        */
-      template<uint16_t _uid, typename... Interfaces>
-      struct ProfileN: public AbstractProfile<_uid>
+      template<uint16_t _uid, typename... _Interfaces>
+      class ProfileN: public AbstractProfile<_uid>,
+         public Interfaces::Container<ProfileN<_uid, _Interfaces...>,
+                                      HF::Interfaces::Proxy<_Interfaces,
+                                                            ProfileN<_uid, _Interfaces...>>...>
       {
+         using profile_t   = ProfileN<_uid, _Interfaces...>;
+         using container_t = Interfaces::Container<ProfileN<_uid, _Interfaces...>,
+                                                   HF::Interfaces::Proxy<_Interfaces,
+                                                                         ProfileN<_uid,
+                                                                                  _Interfaces...>>
+                                                   ...>;
+
+         public:
+
          virtual ~ProfileN()
          {}
 
-         using profile_t    = ProfileN<_uid, Interfaces...>;
-         using interfaces_t = std::tuple<HF::Interfaces::Proxy<Interfaces, profile_t>...>;
-
          //! @copydoc HF::Interface::handle
-         virtual Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
          {
-            HF::Interface *interface = find<0, Interfaces...>(packet.message.itf.id);
-
-            if (interface != nullptr)
-            {
-               return interface->handle(packet, payload, offset);
-            }
-            else
-            {
-               return Common::Result::FAIL_SUPPORT;
-            }
-         }
-
-         //! @copydoc HF::Interface::periodic
-         virtual void periodic(uint32_t time)
-         {
-            periodic<0, Interfaces...>(time);
+            return container_t::handle(packet, payload, offset);
          }
 
          //! @copydoc HF::Interfaces::AbstractInterface::send
@@ -352,87 +345,17 @@ namespace HF
          HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
                                          const HF::Attributes::UIDS &uids) const
          {
-            HF::Interface *interface = find<0, Interfaces...>(itf.id);
+            HF::Attributes::List result;
 
-            if (interface != nullptr)
-            {
-               return HF::Attributes::get(*interface, pack_id, uids);
-            }
-            else
-            {
-               return HF::Attributes::List();
-            }
+            container_t::attributes(result, itf, pack_id, uids);
+
+            return result;
          }
 
          protected:
 
-         ProfileN(): _interfaces(HF::Interfaces::Proxy<Interfaces, profile_t>(*this) ...)
+         ProfileN(): container_t(*this)
          {}
-
-         //! Tuple holding the two interface wrappers.
-         interfaces_t _interfaces;
-
-         /*!
-          * Retrieve a pointer to the N optional interface implemented by this unit.
-          *
-          * @tparam N   index of the interface to retrieve the pointer to.
-          *
-          * @return  a pointer to the optional implemented interface.
-          */
-         template<uint8_t N>
-         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
-         {
-            return &std::get<N>(_interfaces);
-         }
-
-         private:
-
-         /*!
-          * Find the service for the given @c itf_uid.
-          *
-          * @param itf_uid    service %UID to search for.
-          *
-          * @return  pointer to the service object if found, @c nullptr otherwise.
-          */
-         template<uint8_t N, typename Head, typename... Tail>
-         HF::Interface *find(uint16_t itf_uid) const
-         {
-            static_assert(std::is_base_of<HF::Interface, Head>::value,
-                          "Head must be of type HF::Interface");
-
-            const Head &head = std::get<N>(_interfaces);
-
-            if (head.uid() == itf_uid)
-            {
-               return const_cast<Head *>(&head);
-            }
-            else
-            {
-               return find<N + 1, Tail...>(itf_uid);
-            }
-         }
-
-         template<uint8_t N>
-         HF::Interface *find(uint16_t itf_uid) const
-         {
-            UNUSED(itf_uid);
-            return nullptr;
-         }
-
-         template<uint8_t N, typename Head, typename... Tail>
-         void periodic(uint32_t time)
-         {
-            Head &head = std::get<N>(_interfaces);
-            head.periodic(time);
-
-            periodic<N + 1, Tail...>(time);
-         }
-
-         template<uint8_t N>
-         void periodic(uint32_t time)
-         {
-            UNUSED(time);
-         }
       };
 
       /*!

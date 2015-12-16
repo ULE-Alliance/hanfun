@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the profiles.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -347,6 +347,21 @@ TEST(Profiles, Profile2_Handle)
    CHECK_EQUAL(Common::Result::OK, result);
 
    mock("Interface").checkExpectations();
+}
+
+TEST(Profiles, Profile2_Attributes)
+{
+   TestProfile profile;
+   Common::Interface itf(TestInterface::UID, Interface::SERVER_ROLE);
+   HF::Attributes::UIDS uids;
+
+   auto attributes = profile.attributes(Common::Interface(itf), Attributes::Pack::ALL, uids);
+   CHECK_FALSE(attributes.empty());
+
+   for (auto attr: attributes)
+   {
+      delete attr;
+   }
 }
 
 TEST(Profiles, InterfaceMapping)

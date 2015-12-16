@@ -5,7 +5,7 @@
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

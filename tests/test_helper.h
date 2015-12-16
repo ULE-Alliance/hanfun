@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -789,12 +789,9 @@ namespace HF
          }
       };
 
-      struct Device: public AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>>
-      {};
+      typedef AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>> Device;
 
-      struct Concentrator: public AbstractDevice<HF::Devices::Concentrator::Abstract<
-                                                    ConcentratorUnit0>>
-      {};
+      typedef AbstractDevice<HF::Devices::Concentrator::Abstract<ConcentratorUnit0>> Concentrator;
 
    } // namespace Testing
 
