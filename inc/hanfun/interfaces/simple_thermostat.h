@@ -31,7 +31,7 @@ namespace HF
       }
 
       /*!
-       * @ingroup on_off_itf
+       * @ingroup simple_thersmostat_itf
        *
        * Create an attribute object that can hold the attribute with the given @c uid.
        *
@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleThermostat
       {
          /*!
-          * @addtogroup simple_humidity_itf  Simple Thermostat interface
+          * @addtogroup simple_thersmostat_itf  Simple Thermostat interface
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Thermostat interface API.

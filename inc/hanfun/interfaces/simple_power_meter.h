@@ -294,6 +294,8 @@ namespace HF
           * Simple Power Meter Interface : Server side implementation.
           *
           * This class provides the server side of the Simple Power Meter interface.
+          *
+          * @todo Add support for @ref MEASUREMENT_RESET_CMD command.
           */
          class Server: public InterfaceRole<SimplePowerMeter::Base, HF::Interface::SERVER_ROLE>
          {
@@ -633,6 +635,8 @@ namespace HF
           * Simple Power Meter Interface : Client side implementation.
           *
           * This class provides the client side of the Simple Power Meter interface.
+          *
+          * @todo Add support for @ref MEASUREMENT_RESET_CMD command.
           */
          struct Client: public InterfaceRole<SimplePowerMeter::Base, HF::Interface::CLIENT_ROLE>
          {

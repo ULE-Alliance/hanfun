@@ -91,13 +91,13 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint16_t);
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return min_size;
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -107,7 +107,7 @@ namespace HF
                return min_size;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -144,13 +144,13 @@ namespace HF
             //! Minimum value for @c number_of_cycles parameter.
             static constexpr uint16_t min_number_of_cycles = 1;
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return min_size;
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -167,7 +167,7 @@ namespace HF
                return min_size;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -200,13 +200,13 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = 2 * sizeof(uint8_t) + sizeof(uint16_t);
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return min_size;
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -218,7 +218,7 @@ namespace HF
                return min_size;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -260,13 +260,13 @@ namespace HF
             //! Minimum value for @c number_of_cycles parameter.
             static constexpr uint16_t min_number_of_cycles = 1;
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return min_size;
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -287,7 +287,7 @@ namespace HF
                return min_size;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);

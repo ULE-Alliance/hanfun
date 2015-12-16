@@ -103,7 +103,10 @@
  *
  * Helper macro to check for correct assumptions.
  *
+ * @warning This macro MAY evaluate the @c _expr twice.
+ *
  * @param [in] _expr    helper class that wraps the attribute.
+ * @param [in] _block   code block to run if the condition fails.
  */
    #define HF_ASSERT(_expr, _block) \
    {                                \

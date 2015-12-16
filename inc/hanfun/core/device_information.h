@@ -83,6 +83,14 @@ namespace HF
 
       /*!
        * This namespace contains the classes that implement the Device Information service.
+       *
+       * @todo Add support for Minimum Sleep Time attribute.
+       * @todo Add support for Actual %Response Time [Paging Interval] attribute.
+       * @todo Add support for %RFPI/%IPUI attribute.
+       * @todo Add support for Location attribute.
+       * @todo Add support for %Device Enable attribute.
+       * @todo Add support for Friendly Name attribute.
+       * @todo Add support for %Device Serial Number attribute.
        */
       namespace DeviceInformation
       {
@@ -91,6 +99,8 @@ namespace HF
           * @ingroup core
           *
           * This module contains the classes that implement the %Device Information service.
+          *
+          *
           * @{
           */
          constexpr static uint8_t CORE_VERSION      = HF::CORE_VERSION;             //!< HAN-FUN Core version.

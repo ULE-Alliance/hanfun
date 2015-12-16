@@ -17,6 +17,8 @@
 #ifndef HF_CORE_SUOTA_H
 #define HF_CORE_SUOTA_H
 
+#include "hanfun/common.h"
+
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
 
@@ -95,7 +97,9 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] _duration   number of miliseconds for the @c ON_CMD
+             * @param [in] _sw_version    software version string.
+             * @param [in] _hw_version    hardware version string.
+             * @param [in] _url           update URL string.
              */
             Version(const std::string _sw_version = "",
                     const std::string _hw_version = "",
@@ -106,13 +110,13 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = 2 * sizeof(uint8_t);
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
@@ -152,13 +156,13 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = Protocol::Response::min_size + Version::min_size;
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return Protocol::Response::size() + Version::size();
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
                HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -171,7 +175,7 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -219,7 +223,7 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] _status     update status to send in the command.
+             * @param [in] _code       update status to send in the command.
              * @param [in] _sw_version new software version of the update.
              */
             UpgradeStatus(Code _code = FAIL_UNKNOWN, std::string _sw_version = ""):
@@ -228,7 +232,7 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t);
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return sizeof(uint8_t) +
@@ -236,7 +240,7 @@ namespace HF
                        Common::SerializableHelper<std::string>::size(sw_version));
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
                HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -254,7 +258,7 @@ namespace HF
                return offset - start;
             }
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -327,6 +331,7 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] version    the version information to send in the message.
              */
             void new_version_available(const Protocol::Address &addr, const Version &version);
 

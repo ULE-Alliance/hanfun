@@ -57,18 +57,21 @@ namespace HF
       typedef enum _UID
       {
          /* Core Services */
-         DEVICE_MANAGEMENT   = 0x0001,   //!< %Device Management interface %UID.
-         BIND_MANAGEMENT     = 0x0002,   //!< Bind Management interface %UID.
-         GROUP_MANGEMENT     = 0x0003,   //!< Group Management interface %UID. __Not implemented__
-         IDENTIFY            = 0x0004,   //!< Identify interface %UID. __Not implemented__
-         DEVICE_INFORMATION  = 0x0005,   //!< %Device information interface UID. __Not implemented__
-         ATTRIBUTE_REPORTING = 0x0006,   //!< %Attribute Reporting interface UID. __Not implemented__
-         TAMPER_ALERT        = 0x0101,   //!< Tamper %Alert interface UID. __Not implemented__
-         TIME                = 0x0102,   //!< %Time interface UID. __Not implemented__
-         POWER               = 0x0110,   //!< Power interface UID. __Not implemented__
-         KEEP_ALIVE          = 0x0115,   //!< Keep Alive interface UID. __Not implemented__
-         RSSI                = 0x0111,   //!< %RSSI interface UID.
-         SUOTA               = 0x0400,   //!< FIXME SUOTA interface UID.
+         DEVICE_MANAGEMENT       = 0x0001, //!< %Device Management interface %UID.
+         BIND_MANAGEMENT         = 0x0002, //!< Bind Management interface %UID.
+         GROUP_MANGEMENT         = 0x0003, //!< Group Management interface %UID. __Not implemented__
+         IDENTIFY                = 0x0004, //!< Identify interface %UID. __Not implemented__
+         DEVICE_INFORMATION      = 0x0005, //!< %Device information interface UID.
+         ATTRIBUTE_REPORTING     = 0x0006, //!< %Attribute Reporting interface UID.
+         BATCH_PROGRAM_MANGEMENT = 0x0007, //!< Batch Program Management interface UID. __Not implemented__
+         EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
+         WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
+         TAMPER_ALERT            = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
+         TIME                    = 0x0102, //!< %Time interface UID. __Not implemented__
+         POWER                   = 0x0110, //!< Power interface UID. __Not implemented__
+         KEEP_ALIVE              = 0x0115, //!< Keep Alive interface UID. __Not implemented__
+         RSSI                    = 0x0111, //!< %RSSI interface UID.
+         SUOTA                   = 0x0400, //!< %SUOTA interface UID.
 
          /* Functional Interfaces. */
          ALERT                 = 0x0100, //!< Alert interface UID
@@ -377,7 +380,7 @@ namespace HF
       /*!
        * @copydoc HF::Interfaces::Interface
        *
-       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface.
+       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface
        */
       template<uint16_t _uid>
       struct __attribute__((deprecated)) Base: public Interface<_uid>{};
@@ -392,7 +395,7 @@ namespace HF
       template<typename Itf, HF::Interface::Role _role>
       struct InterfaceRole: public Itf
       {
-         //! @copydoc Interface::role
+         //! @copydoc HF::Interface::role
          HF::Interface::Role role() const
          {
             return _role;

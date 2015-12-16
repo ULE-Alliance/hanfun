@@ -39,6 +39,16 @@ namespace HF
    /*!
     * This is the top-level namespace for the Core Services and %Interfaces
     * implementation.
+    *
+    * @todo Add support for Group Management service.
+    * @todo Add support for Identify interface.
+    * @todo Add support for Batch Program Management service.
+    * @todo Add support for Event Scheduling service
+    * @todo Add support for Weekly Scheduling service.
+    * @todo Add support for Tamper %Alert interface.
+    * @todo Add support for %Time service.
+    * @todo Add support for Power service.
+    * @todo Add support for Keep Alive service.
     */
    namespace Core
    {

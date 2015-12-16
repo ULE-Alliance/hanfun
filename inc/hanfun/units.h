@@ -191,8 +191,7 @@ namespace HF
          /*!
           * Constructor
           *
-          * @param [in] id       unit identifier.
-          * @param [in] device   device that contains this units.
+          * @param [in] wrapper  reference to the object containing the interfaces.
           */
          InterfacesWrapper(Base &wrapper): _interfaces(Proxy<ITF, Base>(wrapper) ...)
          {}
@@ -213,7 +212,11 @@ namespace HF
             }
          }
 
-         //! @copydoc HF::Profiles::IProfile::attributes
+         /*!
+          * @copydoc HF::Profiles::IProfile::attributes
+          *
+          * @param [inout] attr_list   list to place the attributes UIDs.
+          */
          void attributes(HF::Attributes::List &attr_list, Common::Interface itf, uint8_t pack_id,
                          const HF::Attributes::UIDS &uids) const
          {

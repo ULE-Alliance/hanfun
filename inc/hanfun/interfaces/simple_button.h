@@ -221,7 +221,7 @@ namespace HF
             /*!
              * This method is used to indicate that the button was released and generate the
              * appropriate message, to the given broadcast address based on the difference between
-             * the @timestamp of the last call to @c pressed and the given @c timestamp.
+             * the @c timestamp of the last call to @c pressed and the given @c timestamp.
              *
              * @warning Calling this method without calling @c pressed before has undefined behavior.
              *

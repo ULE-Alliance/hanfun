@@ -51,6 +51,9 @@ namespace HF
 
       /*!
        * This namespace contains the classes that implement the Attribute Reporting service.
+       *
+       * @todo Add support for Get Periodic Report Entries command.
+       * @todo Add support for Get Event Report Entries command.
        */
       namespace AttributeReporting
       {
