@@ -1,5 +1,7 @@
 <map id="HF::UID::UID_T::pack" name="HF::UID::UID_T::pack">
-<area shape="rect" id="node2" href="$structHF_1_1UID_1_1NONE.html#af04afc4dca05135a84c949105ce9cf39" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="208,5,363,32"/>
-<area shape="rect" id="node3" href="$classHF_1_1UID_1_1UID.html#a09297712c00f2682cdeeb12c1fde8fc4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="215,56,355,83"/>
-<area shape="rect" id="node4" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="411,56,539,83"/>
+<area shape="rect" id="node2" href="$structHF_1_1UID_1_1NONE.html#af04afc4dca05135a84c949105ce9cf39" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="229,5,384,32"/>
+<area shape="rect" id="node3" href="$classHF_1_1UID_1_1ByteArray.html#aa9bbd18bf39d2b61647b767ba4e1643c" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;::pack" alt="" coords="209,57,405,98"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1URI.html#aff63e4946aca336e739d56c3ec4435d5" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="237,123,377,149"/>
+<area shape="rect" id="node5" href="$classHF_1_1UID_1_1UID.html#a09297712c00f2682cdeeb12c1fde8fc4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="237,173,377,200"/>
+<area shape="rect" id="node6" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="453,173,581,200"/>
 </map>

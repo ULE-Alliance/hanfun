@@ -1,0 +1,6 @@
+<map id="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;::pack" name="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;::pack">
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1SerializableHelper.html#a2423e991645b66073fac6cad7fe5f6ff" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="216,5,392,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute.html#aec71673fd2bad3358c7699b2ffa24da5" title="Number bytes needed to serialize the message. " alt="" coords="223,70,385,111"/>
+<area shape="rect" id="node4" href="$classHF_1_1Attributes_1_1AbstractAttribute.html#af161bc1ec0ca8e49ec418c4a343f3125" title="Attribute&#39;s UID. " alt="" coords="223,135,385,177"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="221,201,387,242"/>
+</map>

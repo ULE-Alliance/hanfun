@@ -2,16 +2,16 @@ var group__attributes =
 [
     [ "Packs", "group__attr__packs.html", "group__attr__packs" ],
     [ "IAttribute", "structHF_1_1Attributes_1_1IAttribute.html", [
-      [ "changed", "structHF_1_1Attributes_1_1IAttribute.html#ab1fc02c322da2352956c634c513fcede", null ],
-      [ "compare", "structHF_1_1Attributes_1_1IAttribute.html#aedc2b0b0b87b91b8a5f376633765e3e4", null ],
-      [ "interface", "structHF_1_1Attributes_1_1IAttribute.html#acb205106c9f04179660493b026c77eac", null ],
-      [ "isWritable", "structHF_1_1Attributes_1_1IAttribute.html#ae8cbe7b0b910327db83b979f9ce6f39c", null ],
-      [ "owner", "structHF_1_1Attributes_1_1IAttribute.html#aa951246699d41d357b97891d7ae95ed7", null ],
-      [ "pack", "structHF_1_1Attributes_1_1IAttribute.html#ac4061bf8b91d358878e4929185a79f3f", null ],
-      [ "pack", "structHF_1_1Attributes_1_1IAttribute.html#a9141595ddf11f1b315d81a3f63167065", null ],
-      [ "size", "structHF_1_1Attributes_1_1IAttribute.html#a56132211331d7400b92916dbf14bd800", null ],
-      [ "size", "structHF_1_1Attributes_1_1IAttribute.html#ac97d7f6df42e1133442838709b07d6a4", null ],
-      [ "uid", "structHF_1_1Attributes_1_1IAttribute.html#a4a8d92432eac4e0b9b30bda9f1d87833", null ],
+      [ "changed", "structHF_1_1Attributes_1_1IAttribute.html#ad46bce6e6d9726dc02efd7987921cd54", null ],
+      [ "compare", "structHF_1_1Attributes_1_1IAttribute.html#addecc9f4d030774ec6162c8cabfee4e0", null ],
+      [ "interface", "structHF_1_1Attributes_1_1IAttribute.html#a5c186d943cd3b216bed45e85e34647e8", null ],
+      [ "isWritable", "structHF_1_1Attributes_1_1IAttribute.html#a37540c1a5defca2d7ad66d0120300ba6", null ],
+      [ "owner", "structHF_1_1Attributes_1_1IAttribute.html#a8b33aa3a5cc81ac5f3dabcbf34604d3f", null ],
+      [ "pack", "structHF_1_1Attributes_1_1IAttribute.html#a035db90f09b3098fb96c316504ba655a", null ],
+      [ "pack", "structHF_1_1Attributes_1_1IAttribute.html#abd6596124c89c4547a70c35fadd40aa6", null ],
+      [ "size", "structHF_1_1Attributes_1_1IAttribute.html#af43e0a2155c68a699cb1c546d8233e36", null ],
+      [ "size", "structHF_1_1Attributes_1_1IAttribute.html#ad3d65007dba1a33c9d45cc109bac1e4b", null ],
+      [ "uid", "structHF_1_1Attributes_1_1IAttribute.html#a47aab6577901e32b00c846a0af90a4bb", null ],
       [ "unpack", "structHF_1_1Attributes_1_1IAttribute.html#a74da08fa9eb892a2ed3390f25515520c", null ],
       [ "unpack", "structHF_1_1Attributes_1_1IAttribute.html#aa7a4a35313253b05a26b8af26713c147", null ]
     ] ],
@@ -47,25 +47,25 @@ var group__attributes =
       [ "unpack", "structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c", null ],
       [ "unpack", "structHF_1_1Attributes_1_1Attribute.html#ae10053289e94efcfd187d47619d2cc0b", null ]
     ] ],
-    [ "Attribute< T, _Owner, typename std::enable_if< std::is_base_of< HF::Interface, _Owner >::value >::type >", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html", [
-      [ "Attribute", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a218dca75bec312ec61345d85801d593b", null ],
-      [ "Attribute", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a08d670012a95f9e45ae546d97c79de34", null ],
-      [ "changed", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#ac689a246ec4f768f961e1a78c687a4c4", null ],
-      [ "clone", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a5b7f4c1c41d0c747f3fd7404047a1aec", null ],
-      [ "compare", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a12bc9e9869c8896248cdd31eb9c28eea", null ],
-      [ "owner", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a3e967adc86a290eeecd0ee5db8062560", null ],
-      [ "pack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a5a198dea473c8da6a195f21838a53939", null ],
-      [ "pack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a5197eda52b32f6573cc608dc5f91c13a", null ],
-      [ "size", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a9347229be930db40fe9770924c55132a", null ],
-      [ "size", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#ab8c5f8fc5cf0e60d2bbd56c92710313a", null ],
-      [ "unpack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a6db168cb4800f3cf9d4cb8840f9df968", null ],
-      [ "unpack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a15c7ff745daa92c5b6a4b6744402ad30", null ]
+    [ "Attribute< T, _Owner, EnableIf< Parent< HF::Interface, _Owner > > >", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html", [
+      [ "Attribute", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a19d86717486fcd086cdeed659282f45a", null ],
+      [ "Attribute", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#aab15055a0f30abb81ab1bf3f3dda3657", null ],
+      [ "changed", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a295d00766a5a632d195f47c172675b7c", null ],
+      [ "clone", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#af30a6d988417481da4f79499dbb61fd4", null ],
+      [ "compare", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a408a70a02ed822ccbee00a2ec99d882d", null ],
+      [ "owner", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a7914d8fe9667cd6d467ef9f78fa47eeb", null ],
+      [ "pack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a62e4a76005f3b0ffcc260d59a65fd7f1", null ],
+      [ "pack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a4f4a251246057d933857aea18f4f8697", null ],
+      [ "size", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adb36097e05e0c55b8e4ca8043bb0a972", null ],
+      [ "size", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a00e019bc5db1ab0429dcbbb1199c6b83", null ],
+      [ "unpack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adf061212df3cf04ffe3551f4d169dc93", null ],
+      [ "unpack", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a2790d8e709eeb2a009dce887a5be7771", null ]
     ] ],
     [ "List", "structHF_1_1Attributes_1_1List.html", null ],
     [ "Response", "structHF_1_1Attributes_1_1Response.html", [
       [ "Response", "structHF_1_1Attributes_1_1Response.html#a047d84b704580e2e2a6d037b0cb83e88", null ]
     ] ],
-    [ "Factory", "group__attributes.html#ga9c7adb988a55e92414b3a94c878c962f", null ],
-    [ "FactoryGetter", "group__attributes.html#gaa8209983516ea182b54611cc9be0109d", null ],
+    [ "Factory", "group__attributes.html#ga33d54366257d59af4c9dbccd59c04cb3", null ],
+    [ "FactoryGetter", "group__attributes.html#ga7ef43e4ec37b8d3a54c97519c71fe770", null ],
     [ "get_factory", "group__attributes.html#gae271ba996fe0d158397877c944e55862", null ]
 ];

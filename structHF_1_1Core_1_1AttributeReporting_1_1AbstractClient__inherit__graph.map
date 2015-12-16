@@ -1,7 +1,7 @@
 <map id="HF::Core::AttributeReporting::AbstractClient" name="HF::Core::AttributeReporting::AbstractClient">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html" title="Attribute Reporting &#45; Client Role. " alt="" coords="13,957,203,1211"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; HF::Interface::ATTRIBUTE\l_REPORTING \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="11,785,205,906"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html" title="Attribute Reporting &#45; Client Role. " alt="" coords="16,957,205,1211"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ATTRIBUTE\l_REPORTING \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="13,785,208,906"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,222,168,549"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="108,600,252,707"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="108,600,272,707"/>
 <area shape="rect" id="node5" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
 </map>

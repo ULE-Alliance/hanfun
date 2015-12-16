@@ -1,0 +1,5 @@
+<map id="HF::Core::SUOTA::Version::size" name="HF::Core::SUOTA::Version::size">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a780e28393e12e3f21d66a7aa765a37c9" title="Number bytes needed to serialize the message. " alt="" coords="238,38,458,79"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a61ab5e95ea13b0f2b961e6ae868c6ab3" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="507,5,727,46"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a8c07ab5a4d5be85966bfb28b886672a9" title="Read a message from a ByteArray. " alt="" coords="507,70,727,111"/>
+</map>

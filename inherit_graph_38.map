@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html" title="This represents a measurement for a given attribute. " alt="" coords="6,5,197,46"/>
+<area shape="rect" id="node1" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="HF::Interfaces::Interface\lRole\&lt; RSSI::Base, HF::Interface\l::SERVER_ROLE \&gt;" alt="" coords="5,4,221,60"/>
+<area shape="rect" id="node2" href="$classHF_1_1Core_1_1RSSI_1_1Server.html" title="RSSI Interfaces::Interface : Server side implementation. " alt="" coords="269,19,432,45"/>
 </map>

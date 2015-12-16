@@ -1,0 +1,3 @@
+<map id="HF::Core::SUOTA::Client::upgrade_complete" name="HF::Core::SUOTA::Client::upgrade_complete">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1Client.html#a69423c9333463c22b89b11e58b2a7271" title="Send a HAN&#45;FUN message containing a SUOTA::UPGRADE_COMPLETE_CMD, to the broadcast network address..." alt="" coords="227,5,399,46"/>
+</map>

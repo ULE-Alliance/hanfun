@@ -1,5 +1,5 @@
 <map id="HF::Attributes::Response" name="HF::Attributes::Response">
-<area shape="rect" id="node2" href="$structHF_1_1Protocol_1_1Response.html" title="Parent class for the response messages. " alt="" coords="5,393,168,529"/>
+<area shape="rect" id="node2" href="$structHF_1_1Protocol_1_1Response.html" title="Parent class for the response messages. " alt="" coords="5,386,168,537"/>
 <area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="192,320,356,603"/>
 <area shape="rect" id="node4" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="129,147,305,269"/>
 <area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; IAttribute \&gt;\n||+ clone()\l}" alt="" coords="330,162,496,254"/>

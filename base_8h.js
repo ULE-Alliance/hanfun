@@ -1,7 +1,5 @@
 var base_8h =
 [
-    [ "Entries", "structBindManagement_1_1Entries.html", "structBindManagement_1_1Entries" ],
-    [ "Server", "structBindManagement_1_1Server.html", "structBindManagement_1_1Server" ],
     [ "Unit0", "group__examples.html#ga2f06dbea0ced172baa9d3dbba20ffe5b", null ],
     [ "from_json", "group__examples.html#gae8c1f2a6db6c8ac20b73ea6873027d7a", null ],
     [ "from_json", "group__examples.html#ga0c8c9ef721357e282b2287a769ae95a0", null ],

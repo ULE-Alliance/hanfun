@@ -1,4 +1,4 @@
 <map id="HF::Common::SerializableHelper::changed" name="HF::Common::SerializableHelper::changed">
-<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Attribute.html#a9edf107b790c06b6087e4aeef32ad5a4" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::changed" alt="" coords="242,5,403,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#ac689a246ec4f768f961e1a78c687a4c4" title="This method is used to get the percentage of change that the attribute has in relation to the value p..." alt="" coords="229,71,416,156"/>
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Attribute.html#a9edf107b790c06b6087e4aeef32ad5a4" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::changed" alt="" coords="231,5,393,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a295d00766a5a632d195f47c172675b7c" title="This method is used to get the percentage of change that the attribute has in relation to the value p..." alt="" coords="230,70,394,141"/>
 </map>

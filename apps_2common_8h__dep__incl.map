@@ -1,10 +1,10 @@
-<map id="common.h" name="common.h">
-<area shape="rect" id="node2" href="$base_8h.html" title="This file contains the definition of the Base class that represents the HAN&#45;FUN Concentrator on the a..." alt="" coords="75,80,136,107"/>
-<area shape="rect" id="node3" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="5,155,79,181"/>
-<area shape="rect" id="node4" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="115,155,217,181"/>
-<area shape="rect" id="node5" href="$common_8cpp.html" title="This file contains the implementation of the common functionality for the HAN&#45;FUN example application..." alt="" coords="211,80,308,107"/>
-<area shape="rect" id="node6" href="$main_8cpp.html" title="This file contains the implementation of the main entry point for the HAN&#45;FUN example applications..." alt="" coords="333,80,407,107"/>
-<area shape="rect" id="node7" href="$node_8cpp.html" title="This file contains the implementation of the Node class that represents the HAN&#45;FUN Node on the examp..." alt="" coords="432,80,505,107"/>
-<area shape="rect" id="node8" href="$node__app_8cpp.html" title="This file contains the implementation of the example application for a HAN&#45;FUN Node. " alt="" coords="531,80,633,107"/>
-<area shape="rect" id="node9" href="$transport_8cpp.html" title="This file contains the implementation of the a HAN&#45;FUN transport layer over the libuv library..." alt="" coords="659,80,757,107"/>
+<map id="apps/common.h" name="apps/common.h">
+<area shape="rect" id="node2" href="$base_8h.html" title="This file contains the definition of the Base class that represents the HAN&#45;FUN Concentrator on the a..." alt="" coords="91,80,184,107"/>
+<area shape="rect" id="node3" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="5,155,112,181"/>
+<area shape="rect" id="node4" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="147,155,281,181"/>
+<area shape="rect" id="node5" href="$common_8cpp.html" title="This file contains the implementation of the common functionality for the HAN&#45;FUN example application..." alt="" coords="259,80,388,107"/>
+<area shape="rect" id="node6" href="$main_8cpp.html" title="This file contains the implementation of the main entry point for the HAN&#45;FUN example applications..." alt="" coords="413,80,520,107"/>
+<area shape="rect" id="node7" href="$node_8cpp.html" title="This file contains the implementation of the Node class that represents the HAN&#45;FUN Node on the examp..." alt="" coords="544,80,651,107"/>
+<area shape="rect" id="node8" href="$node__app_8cpp.html" title="This file contains the implementation of the example application for a HAN&#45;FUN Node. " alt="" coords="675,80,809,107"/>
+<area shape="rect" id="node9" href="$transport_8cpp.html" title="This file contains the implementation of the a HAN&#45;FUN transport layer over the libuv library..." alt="" coords="835,80,964,107"/>
 </map>

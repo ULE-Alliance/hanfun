@@ -1,5 +1,10 @@
 var group__dev__info =
 [
+    [ "Unit", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html", [
+      [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a424b7b2c0c6e80cb82cb6b5b2d6971bf", null ],
+      [ "size", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a5f5f70090db239c3a1524924aef88ced", null ],
+      [ "unpack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a4e96577615d8b6e34ef337c1ca6371bd", null ]
+    ] ],
     [ "FriendlyName", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html", [
       [ "changed", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a4961cbb897cb74828e3eafc53f5d08ee", null ],
       [ "compare", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a850cd7d972e3f8655de61cc8c94e48b8", null ],
@@ -8,13 +13,8 @@ var group__dev__info =
       [ "unpack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a440017f8e4f48000ac7f0c124907b45c", null ],
       [ "units", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a5951f27fc8000b08856e0f2f55da3cf4", null ]
     ] ],
-    [ "Unit", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html", [
-      [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a424b7b2c0c6e80cb82cb6b5b2d6971bf", null ],
-      [ "size", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a5f5f70090db239c3a1524924aef88ced", null ],
-      [ "unpack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a4e96577615d8b6e34ef337c1ca6371bd", null ]
-    ] ],
-    [ "Abstract", "classHF_1_1Core_1_1DeviceInformation_1_1Abstract.html", [
-      [ "Abstract", "classHF_1_1Core_1_1DeviceInformation_1_1Abstract.html#a0e29f36669a26a5bc85569f6e41e0f84", null ]
+    [ "Base", "classHF_1_1Core_1_1DeviceInformation_1_1Base.html", [
+      [ "Base", "classHF_1_1Core_1_1DeviceInformation_1_1Base.html#af9d1863098695727585dc50fc41e9fec", null ]
     ] ],
     [ "Server", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html", [
       [ "Server", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a48bf7dd6368876ab6adb540137da6b9a", null ],
@@ -25,6 +25,7 @@ var group__dev__info =
       [ "has_paging", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a58c0031c9fa3ff5dbb18fe28ece4a870", null ],
       [ "paging", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a9d0be3fb63f62b73fb9d42df45d599b4", null ]
     ] ],
+    [ "Abstract", "group__dev__info.html#gaf4719e6226fad766a8ff144107fafc70", null ],
     [ "Attributes", "group__dev__info.html#ga2552fe5efd8a60efd040c5174671b10d", [
       [ "CORE_VERSION_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da5062a6437d755e71b6e960adaa50c67f", null ],
       [ "PROFILE_VERSION_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10dad27655b149e5324d75a2b1e2fe07eae9", null ],
@@ -36,12 +37,13 @@ var group__dev__info =
       [ "HW_VERSION_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da3bfa6eb1752e4553562418bd721e6924", null ],
       [ "EMC_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da8c068b2865f3268365fc354f83a5b243", null ],
       [ "DECT_ID_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da76d802be998480f3f5c11bdfae8663a0", null ],
-      [ "MANUFACTURE_NAME_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10dad01ce1e73a1ef35d3fc99c64921d1334", null ],
+      [ "MANUFACTURER_NAME_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da1d81140364b576f3903a3010edafb1b8", null ],
       [ "LOCATION_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da01bdbd0704db49426f33291e19fb15bf", null ],
       [ "ENABLED_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da96983932b1686b98f4e584570f2b869c", null ],
       [ "FRIENDLY_NAME_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da3014cc97f7581320e1d865b7a683232f", null ],
       [ "UID_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10da348c7ca5d10e7f4bb6edd3ee64416c85", null ],
-      [ "SERIAL_NUMBER_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10dadb44effc9b4045cdf4fa27adb8d442e8", null ]
+      [ "SERIAL_NUMBER_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10dadb44effc9b4045cdf4fa27adb8d442e8", null ],
+      [ "MANUFACTURE_NAME_ATTR", "group__dev__info.html#gga2552fe5efd8a60efd040c5174671b10dad01ce1e73a1ef35d3fc99c64921d1334", null ]
     ] ],
     [ "all", "group__dev__info.html#ga1ce3c4587841a79cb267aca942e859fa", null ],
     [ "create_attribute", "group__dev__info.html#ga47a3750e763c7f9d77304dc711b5dd66", null ],

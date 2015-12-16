@@ -1,9 +1,0 @@
-var structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6 =
-[
-    [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a0e8c4453be1a5134751267d7562a91b3", null ],
-    [ "compare", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a7920b0bdeac2fc654a124204490cedc7", null ],
-    [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#acfe7ecd2ea8a24df4a5b23cf77317c16", null ],
-    [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a8b68a05d35fc2af20448685a6b788109", null ],
-    [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#aa450e351d5e9cd5aa9a9a1d85432be12", null ],
-    [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a73f1d2161db661febc7666ac8064b270", null ]
-];

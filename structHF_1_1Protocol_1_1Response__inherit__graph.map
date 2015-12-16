@@ -1,6 +1,7 @@
 <map id="HF::Protocol::Response" name="HF::Protocol::Response">
-<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Response.html" title="This class represents the response sent when a Protocol::Message::GET_ATTR_REQ request. " alt="" coords="5,233,176,369"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1RegisterResponse.html" title="Register command response. " alt="" coords="200,226,399,377"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SessionManagement_1_1StartResponse.html" title="Start Read Session Command Message. " alt="" coords="425,226,631,377"/>
-<area shape="rect" id="node5" href="$structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html" title="This class represents the payload of a HF::Message::GET_ATTR_PACK_RES message. " alt="" coords="655,189,829,413"/>
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Response.html" title="This class represents the response sent when a Protocol::Message::GET_ATTR_REQ request. " alt="" coords="5,249,176,385"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1RegisterResponse.html" title="Register command response. " alt="" coords="200,242,399,393"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SessionManagement_1_1StartResponse.html" title="Start Read Session Command Message. " alt="" coords="425,242,631,393"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html" title="This class represents the message for the response of a SUOTA::CHECK_VERSION_CMD. ..." alt="" coords="655,242,875,393"/>
+<area shape="rect" id="node6" href="$structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html" title="This class represents the payload of a HF::Message::GET_ATTR_PACK_RES message. " alt="" coords="899,205,1073,429"/>
 </map>

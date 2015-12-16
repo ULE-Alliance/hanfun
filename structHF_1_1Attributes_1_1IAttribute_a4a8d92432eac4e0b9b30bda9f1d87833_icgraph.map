@@ -1,7 +1,0 @@
-<map id="HF::Attributes::IAttribute::uid" name="HF::Attributes::IAttribute::uid">
-<area shape="rect" id="node2" href="$classHF_1_1Attributes_1_1AbstractAttribute.html#adc536e0edd8a3ad304a4844ebca4507f" title="Compare this attribute with the given attribute in other. " alt="" coords="246,137,407,178"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute.html#a9edf107b790c06b6087e4aeef32ad5a4" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::changed" alt="" coords="470,5,631,46"/>
-<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#ac689a246ec4f768f961e1a78c687a4c4" title="This method is used to get the percentage of change that the attribute has in relation to the value p..." alt="" coords="457,71,644,156"/>
-<area shape="rect" id="node5" href="$structHF_1_1Attributes_1_1Attribute.html#a79701730f393e2b8936c98121262edb1" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::compare" alt="" coords="470,181,631,222"/>
-<area shape="rect" id="node6" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01typename_01std_1_1enable__if_3_01std4a7d7cb7c47c9132e865e7ea1d7d95ce.html#a12bc9e9869c8896248cdd31eb9c28eea" title="Compare this attribute with the given attribute in other. " alt="" coords="457,247,645,332"/>
-</map>

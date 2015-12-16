@@ -1,0 +1,7 @@
+<map id="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;" name="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;">
+<area shape="rect" id="node2" href="$classHF_1_1Attributes_1_1AbstractAttribute.html" title="Parent class for Attribute API implementation. " alt="" coords="70,654,231,922"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="68,320,232,603"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,147,181,269"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; IAttribute \&gt;\n||+ clone()\l}" alt="" coords="206,162,372,254"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="190,5,388,83"/>
+</map>

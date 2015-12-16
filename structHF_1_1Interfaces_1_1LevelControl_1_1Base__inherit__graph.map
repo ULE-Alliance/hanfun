@@ -1,14 +1,14 @@
 <map id="HF::Interfaces::LevelControl::Base" name="HF::Interfaces::LevelControl::Base">
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="25,1115,212,1221"/>
-<area shape="rect" id="node10" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="254,1115,449,1221"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::LEVEL_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="71,784,289,891"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="77,222,240,549"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="180,600,324,707"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="97,5,220,171"/>
-<area shape="rect" id="node7" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Client.html" title="Level Control Interface : Client side implementation. " alt="" coords="15,1287,201,1481"/>
-<area shape="rect" id="node8" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROL,\l Interfaces::LevelControl\l::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="5,1547,211,1683"/>
-<area shape="rect" id="node9" href="$classHF_1_1Profiles_1_1SimpleLevelControl.html" title="Simple Level Control profile implementation. " alt="" coords="23,1734,193,1826"/>
-<area shape="rect" id="node11" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Server.html" title="Level Control Interface : Server side implementation. " alt="" coords="265,1272,452,1496"/>
-<area shape="rect" id="node12" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="236,1547,483,1683"/>
-<area shape="rect" id="node13" href="$classHF_1_1Profiles_1_1SimpleLevelControllable.html" title="Simple Level Controllable profile implementation. " alt="" coords="265,1734,455,1826"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="5,1131,219,1237"/>
+<area shape="rect" id="node10" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="247,1131,469,1237"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="97,785,261,906"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="75,222,237,549"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="177,600,341,707"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="95,5,217,171"/>
+<area shape="rect" id="node7" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Client.html" title="Level Control Interface : Client side implementation. " alt="" coords="16,1303,203,1497"/>
+<area shape="rect" id="node8" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROL,\l Interfaces::LevelControl\l::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="6,1563,212,1699"/>
+<area shape="rect" id="node9" href="$classHF_1_1Profiles_1_1SimpleLevelControl.html" title="Simple Level Control profile implementation. " alt="" coords="24,1750,195,1842"/>
+<area shape="rect" id="node11" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Server.html" title="Level Control Interface : Server side implementation. " alt="" coords="267,1288,453,1512"/>
+<area shape="rect" id="node12" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="237,1563,484,1699"/>
+<area shape="rect" id="node13" href="$classHF_1_1Profiles_1_1SimpleLevelControllable.html" title="Simple Level Controllable profile implementation. " alt="" coords="266,1750,456,1842"/>
 </map>

@@ -1,5 +1,6 @@
 var device__management_8h =
 [
+    [ "Abstract", "device__management_8h.html#ga49af8b978faf9a9ca347796e41fc2682", null ],
     [ "Attributes", "device__management_8h.html#gae3570fad96472bdda8ae8d58bf69a03e", [
       [ "NUMBER_OF_ENTRIES_ATTR", "device__management_8h.html#ggae3570fad96472bdda8ae8d58bf69a03ea4d37f059f25aeac618346098846268a7", null ]
     ] ],

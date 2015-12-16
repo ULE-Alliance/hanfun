@@ -1,8 +1,8 @@
 var structHF_1_1Protocol_1_1Address =
 [
-    [ "Type", "group__protocol.html#gab0c5df77b62e94f2474291e28a959941", [
-      [ "DEVICE", "group__protocol.html#ggab0c5df77b62e94f2474291e28a959941a989635a20264cce53c0e4ed68de4ac57", null ],
-      [ "GROUP", "group__protocol.html#ggab0c5df77b62e94f2474291e28a959941aaf6a1d4cf6a3c62d3f0a245c235cc8a7", null ]
+    [ "Type", "structHF_1_1Protocol_1_1Address.html#ab0c5df77b62e94f2474291e28a959941", [
+      [ "DEVICE", "structHF_1_1Protocol_1_1Address.html#ab0c5df77b62e94f2474291e28a959941a989635a20264cce53c0e4ed68de4ac57", null ],
+      [ "GROUP", "structHF_1_1Protocol_1_1Address.html#ab0c5df77b62e94f2474291e28a959941aaf6a1d4cf6a3c62d3f0a245c235cc8a7", null ]
     ] ],
     [ "Address", "structHF_1_1Protocol_1_1Address.html#a1a486e27d6bb025f614c7cb91df68f7d", null ],
     [ "is_broadcast", "structHF_1_1Protocol_1_1Address.html#a0807ac1695c9ab6aca0232ad557db9b3", null ],

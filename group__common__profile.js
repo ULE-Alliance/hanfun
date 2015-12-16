@@ -1,8 +1,8 @@
 var group__common__profile =
 [
     [ "IProfile", "structHF_1_1Profiles_1_1IProfile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1IProfile.html#ad0bf4997cc500bc4fdf64f91c4b13721", null ],
-      [ "uid", "structHF_1_1Profiles_1_1IProfile.html#aa114bf5ebfc35c22e98c8b4d1c8dd555", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1IProfile.html#a99054eab835ceeb55b39297222338168", null ],
+      [ "uid", "structHF_1_1Profiles_1_1IProfile.html#a96dce7da250d858c9b329c2476f7a01a", null ]
     ] ],
     [ "AbstractProfile", "structHF_1_1Profiles_1_1AbstractProfile.html", [
       [ "attributes", "structHF_1_1Profiles_1_1AbstractProfile.html#a32cb08254edaa9e99b754a81e1acc170", null ],
@@ -12,17 +12,17 @@ var group__common__profile =
     [ "Profile", "structHF_1_1Profiles_1_1Profile.html", [
       [ "attributes", "structHF_1_1Profiles_1_1Profile.html#ac9f54d760ca1a6ee80c14ebd5ce54c07", null ]
     ] ],
+    [ "ProfileN", "classHF_1_1Profiles_1_1ProfileN.html", [
+      [ "attributes", "classHF_1_1Profiles_1_1ProfileN.html#ab1c160a7c7e53378e00b9a61ea3df02b", null ],
+      [ "handle", "classHF_1_1Profiles_1_1ProfileN.html#ab016d0ef39c7616883bf90914700d6e8", null ],
+      [ "notify", "classHF_1_1Profiles_1_1ProfileN.html#a4f84307b9f6b6dac163a326feea8b540", null ],
+      [ "send", "classHF_1_1Profiles_1_1ProfileN.html#af87c93600dfddaadae6e26a4103799a8", null ]
+    ] ],
     [ "Profile2", "structHF_1_1Profiles_1_1Profile2.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1Profile2.html#afc1a96d818e4e559f1188fcb65a2ac2a", null ],
       [ "first", "structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492", null ],
       [ "first", "structHF_1_1Profiles_1_1Profile2.html#a9e910c4d956a37991afb8ce8c54ecef0", null ],
-      [ "handle", "structHF_1_1Profiles_1_1Profile2.html#aa1ed72c608685df1580ac4f570df1d65", null ],
-      [ "notify", "structHF_1_1Profiles_1_1Profile2.html#af9d22513fa8635b5b91294cc2e9b86cc", null ],
-      [ "periodic", "structHF_1_1Profiles_1_1Profile2.html#ae75283a540ac4128bf6a253a12160508", null ],
       [ "second", "structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008", null ],
-      [ "second", "structHF_1_1Profiles_1_1Profile2.html#ad4a749c7cca1fbaaf4668eb47ae1cb1d", null ],
-      [ "send", "structHF_1_1Profiles_1_1Profile2.html#a9fe99d86ae3fc4ad408f8a2414560665", null ],
-      [ "interfaces", "structHF_1_1Profiles_1_1Profile2.html#a47b1cbc77d76106e19c5ff02792104f2", null ]
+      [ "second", "structHF_1_1Profiles_1_1Profile2.html#ad4a749c7cca1fbaaf4668eb47ae1cb1d", null ]
     ] ],
     [ "Detector", "structHF_1_1Profiles_1_1Detector.html", [
       [ "alert", "structHF_1_1Profiles_1_1Detector.html#a02724b2e5f83ef4ee472feb61a29d6db", null ],
@@ -46,6 +46,11 @@ var group__common__profile =
       [ "SIMPLE_POWER_METER", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70af47a0fa69f896d1fe2b6fe2e889c79a9", null ],
       [ "SIMPLE_TEMPERATURE_SENSOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a2c7885f2d7d2b7e632c6a3d878a04051", null ],
       [ "SIMPLE_HUMIDITY_SENSOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae9cdf44dcfb58477b78b14f8e0857f96", null ],
+      [ "SIMPLE_AIR_PRESSURE_SENSOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a48706e2496ffeed532eee78c2538ad20", null ],
+      [ "SIMPLE_BUTTON", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a05beba4b984fd75a3ba266c35e51c700", null ],
+      [ "CONTROLABLE_THERMOSTAT", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70abf9761850632273b670c04a3cfca36fe", null ],
+      [ "SIMPLE_LED", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a916099dcbf5a09df5142509350dc56e8", null ],
+      [ "ENVIRONMENT_MONITOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a928b0e632195b210a7443c4b0fdfc87f", null ],
       [ "SIMPLE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70adf8489206c0c4016d174ad741d408fdf", null ],
       [ "DOOR_OPEN_CLOSE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae7a32367bbc0df9ad1f32e4ac2449b50", null ],
       [ "WINDOW_OPEN_CLOSE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a1c68e8fe9b4ec8eff95b8379180ea31d", null ],
@@ -58,6 +63,7 @@ var group__common__profile =
       [ "SIREN", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a7120b90b54c2f5ad551173459496c77a", null ],
       [ "ALERTABLE", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a6e2f1b1381f80ddff2ae541451f68b2d", null ],
       [ "SIMPLE_PENDANT", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70afd7145f3d55a08b408529be513d3aa41", null ],
+      [ "USER_INTERFACE_LOCK", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70aa35834864519bdc796e75df4c5f5859f", null ],
       [ "USER_INTERFACE", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a06efe3fd6b4a3c4a7bf6cdd804f64274", null ],
       [ "GENERIC_APPLICATION", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a2d4450f2690ce78c48aa49468e17c9f8", null ],
       [ "PROPRIETARY_START", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a0720ad8abc5f4bc1bd692ee0c6a2bd61", null ],

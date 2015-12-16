@@ -22,5 +22,7 @@ var group__simple__humidity__itf =
       [ "TOLERANCE_ATTR", "group__simple__humidity__itf.html#ggad773ba81ff1c242e58b702172eac696ea95439cf20357a48b83d806f19ad60e19", null ]
     ] ],
     [ "create_attribute", "group__simple__humidity__itf.html#ga84b748e42f138d6679f867da9f6c1b55", null ],
-    [ "create_attribute", "group__simple__humidity__itf.html#ga18b90ec12d1f077f293c19f6fee6ee7f", null ]
+    [ "create_attribute", "group__simple__humidity__itf.html#ga18b90ec12d1f077f293c19f6fee6ee7f", null ],
+    [ "operator<<", "group__simple__humidity__itf.html#ga6d47a0fd15093d66b29873558bf6d45e", null ],
+    [ "operator<<", "group__simple__humidity__itf.html#ga674fe8b6f4303b49d5c708f746876e07", null ]
 ];

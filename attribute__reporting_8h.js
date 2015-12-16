@@ -1,11 +1,6 @@
 var attribute__reporting_8h =
 [
-    [ "Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry" ],
-    [ "CreateMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1CreateMessage.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1CreateMessage" ],
-    [ "AddEntryMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1AddEntryMessage.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1AddEntryMessage" ],
-    [ "Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Entry.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Entry" ],
     [ "CreateMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1CreateMessage.html", null ],
-    [ "AddEntryMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1AddEntryMessage.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1AddEntryMessage" ],
     [ "Attributes", "attribute__reporting_8h.html#gaeff608a14f4e69f1e77837c3fd7ae865", [
       [ "REPORT_COUNT_ATTR", "attribute__reporting_8h.html#ggaeff608a14f4e69f1e77837c3fd7ae865aa3b1bf3025021c76f8ab947fb2cc7d3c", null ],
       [ "PERIODIC_REPORT_COUNT_ATTR", "attribute__reporting_8h.html#ggaeff608a14f4e69f1e77837c3fd7ae865a0238ebeca1739960fbb786ccdfe5c05e", null ],

@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Interfaces_1_1Alert_1_1Message.html" title="Payload for the Status command. " alt="" coords="5,5,147,46"/>
+<area shape="rect" id="node1" href="$classHF_1_1Interfaces_1_1Container.html" title="HF::Interfaces::Container\l\&lt; IUnit0, Proxy\&lt; ITF, IUnit0 \&gt;... \&gt;" alt="" coords="6,114,229,155"/>
+<area shape="rect" id="node2" href="$classHF_1_1Units_1_1InterfacesWrapper.html" title="HF::Units::InterfacesWrapper\l\&lt; IUnit0, ITF... \&gt;" alt="" coords="277,114,472,155"/>
+<area shape="rect" id="node3" href="$classHF_1_1Unit0.html" title="HF::Unit0\&lt; IUnit0,\l ITF... \&gt;" alt="" coords="520,114,651,155"/>
+<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1Concentrator_1_1Unit0.html" title="Template to create Unit0 for HAN&#45;FUN concentrator devices. " alt="" coords="767,5,945,46"/>
+<area shape="rect" id="node5" href="$structHF_1_1Devices_1_1Node_1_1Unit0.html" title="Template to create Unit 0 for HAN&#45;FUN node devices. " alt="" coords="785,70,927,111"/>
+<area shape="rect" id="node6" href="$structHF_1_1Devices_1_1Concentrator_1_1Unit0.html" title="HF::Devices::Concentrator\l::Unit0\&lt; Core::DeviceInformation\l::Server, Core::DeviceManagement\l::DefaultServer, Core::AttributeReporting\l::Server, Core::BindManagement::DefaultServer \&gt;" alt="" coords="699,136,1013,221"/>
+<area shape="rect" id="node8" href="$structHF_1_1Devices_1_1Node_1_1Unit0.html" title="HF::Devices::Node::\lUnit0\&lt; HF::Core::DeviceInformation\l::Server, HF::Core::DeviceManagement\l::Client, HF::Core::AttributeReporting::Server \&gt;" alt="" coords="707,246,1005,317"/>
+<area shape="rect" id="node7" href="$structHF_1_1Devices_1_1Concentrator_1_1DefaultUnit0.html" title="Unit0 using default classes to provide the core services. " alt="" coords="1061,158,1240,199"/>
+<area shape="rect" id="node9" href="$structHF_1_1Devices_1_1Node_1_1DefaultUnit0.html" title="Unit0 using default classes to provide the core services for node devices. " alt="" coords="1079,261,1222,302"/>
 </map>

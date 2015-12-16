@@ -1,9 +1,0 @@
-var structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea =
-[
-    [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#aa632c4b16ef3b780142ffac15f51a51b", null ],
-    [ "compare", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a03e518b4b3cc5054a02cc1b921b90a14", null ],
-    [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a461cdcd92c5dc2433d1941dbe3231013", null ],
-    [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a6a510328cbdb585c90beadb522fb8804", null ],
-    [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a7fd9afc6231b35e67ed600bb185e1eae", null ],
-    [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a308f5f39fb437a1e5dc1c63e5056fed4", null ]
-];

@@ -1,3 +1,4 @@
 <map id="HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::pack" name="HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::pack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="246,11,413,53"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1SerializableHelper.html#a653b5ade746f301854b8bf7409b4fe60" title="Number bytes needed to serialize the message. " alt="" coords="245,5,421,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="250,70,417,111"/>
 </map>

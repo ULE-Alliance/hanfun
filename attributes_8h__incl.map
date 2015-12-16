@@ -1,4 +1,4 @@
-<map id="attributes.h" name="attributes.h">
+<map id="inc/hanfun/attributes.h" name="inc/hanfun/attributes.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="874,155,1000,181"/>
 <area shape="rect" id="node24" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="925,80,1048,107"/>
 <area shape="rect" id="node21" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,229,1669,256"/>

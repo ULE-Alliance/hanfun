@@ -22,8 +22,8 @@ var group__common =
     ] ],
     [ "Serializable", "structHF_1_1Common_1_1Serializable.html", [
       [ "~Serializable", "structHF_1_1Common_1_1Serializable.html#a1ce13da919dc555beceb288787712185", null ],
-      [ "pack", "structHF_1_1Common_1_1Serializable.html#aa1f1cec7924e345387ebec0793c59856", null ],
-      [ "size", "structHF_1_1Common_1_1Serializable.html#a8f42af5e150e53d8b453f19f718e3ef9", null ],
+      [ "pack", "structHF_1_1Common_1_1Serializable.html#a8f7a1f915e7ac87e14de53c0b09156a0", null ],
+      [ "size", "structHF_1_1Common_1_1Serializable.html#af2bb3f6920a7900aa02c9e3b542757b0", null ],
       [ "unpack", "structHF_1_1Common_1_1Serializable.html#a97b583a90b618f96fa72860628e78467", null ]
     ] ],
     [ "SerializableHelper", "structHF_1_1Common_1_1SerializableHelper.html", [
@@ -34,21 +34,21 @@ var group__common =
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2", null ],
       [ "data", "structHF_1_1Common_1_1SerializableHelper.html#adcd4c900617de660b7c6a87e0d3a5b75", null ]
     ] ],
-    [ "SerializableHelper< T, typename std::enable_if< std::is_pointer< T >::value >::type >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html", [
-      [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a0e8c4453be1a5134751267d7562a91b3", null ],
-      [ "compare", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a7920b0bdeac2fc654a124204490cedc7", null ],
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#acfe7ecd2ea8a24df4a5b23cf77317c16", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a8b68a05d35fc2af20448685a6b788109", null ],
-      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#aa450e351d5e9cd5aa9a9a1d85432be12", null ],
-      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__41117540e11cc5a8157165ce707c6fc6.html#a73f1d2161db661febc7666ac8064b270", null ]
+    [ "SerializableHelper< T, EnableIf< std::is_pointer< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html", [
+      [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html#a164f2d8529b0c45e01b6d78623006233", null ],
+      [ "compare", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html#a9d385dfc28e1d8a5b63ee06b669e564e", null ],
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html#a2cf4494ccc7ea20d58477bc4003b590a", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html#a77f958ec971b093912dedfec55f25ded", null ],
+      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html#ad9be76c2dd5c098ffc158d8103964da5", null ],
+      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html#aab5320f0c12384e055890b1f9041475d", null ]
     ] ],
-    [ "SerializableHelper< T, typename std::enable_if< std::is_integral< typename std::remove_reference< T >::type >::value >::type >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html", [
-      [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#aa632c4b16ef3b780142ffac15f51a51b", null ],
-      [ "compare", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a03e518b4b3cc5054a02cc1b921b90a14", null ],
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a461cdcd92c5dc2433d1941dbe3231013", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a6a510328cbdb585c90beadb522fb8804", null ],
-      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a7fd9afc6231b35e67ed600bb185e1eae", null ],
-      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01typename_01std_1_1enable__if_3_01std_1_1is__5fb1336004f92c24c7453f49bc7c5aea.html#a308f5f39fb437a1e5dc1c63e5056fed4", null ]
+    [ "SerializableHelper< T, EnableIf< IsIntegral< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html", [
+      [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a8c3eb71b2120a395495474e6eef0f42d", null ],
+      [ "compare", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#ab833ef5f1ec92823bc47a19bfae33f56", null ],
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a2c9d8e923c6961147cbff4fef930604f", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a435451208cd40136bcf928cf7b27966a", null ],
+      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a7e21f5c3bfc12df18ddfdccb8f91e064", null ],
+      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a978073bb8eeb470e3d7eec72c3466353", null ]
     ] ],
     [ "SerializableHelper< Common::ByteArray >", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html", [
       [ "changed", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#a2bd9e4e6fcdb0cb12eed4ae75103c8ea", null ],
@@ -72,7 +72,7 @@ var group__common =
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a49bb5c9d3608d0159de8e66ce0dcad86", null ]
     ] ],
     [ "Cloneable", "structHF_1_1Common_1_1Cloneable.html", [
-      [ "clone", "structHF_1_1Common_1_1Cloneable.html#a38395a34874a3f3e733221f797914ebc", null ]
+      [ "clone", "structHF_1_1Common_1_1Cloneable.html#a0f7e70957433d973d1174687ec6ef63d", null ]
     ] ],
     [ "Interface", "structHF_1_1Common_1_1Interface.html", [
       [ "Interface", "structHF_1_1Common_1_1Interface.html#a56b682f6c56f0453289ef5fe7cee4b28", null ],
@@ -92,10 +92,12 @@ var group__common =
     [ "IEntries", "structHF_1_1Common_1_1IEntries.html", [
       [ "destroy", "structHF_1_1Common_1_1IEntries.html#adde4cc8b5a662f40848dea2e9c3daf91", null ],
       [ "save", "structHF_1_1Common_1_1IEntries.html#ac555f5ed32b08129e13616f573b7a8a6", null ],
-      [ "size", "structHF_1_1Common_1_1IEntries.html#a844bd0d263358a9f96df1f76337d02e2", null ]
+      [ "size", "structHF_1_1Common_1_1IEntries.html#abf77e813e0d79086ca30c05bee668b34", null ]
     ] ],
-    [ "SERIALIZABLE_CHECK", "group__common.html#ga14833f4465bd11f4318ad9b8ba4d1676", null ],
-    [ "UNUSED", "group__common.html#ga86d500a34c624c2cae56bc25a31b12f3", null ],
+    [ "HF_ASSERT", "group__common.html#ga97dd3cfb4da2563598a11fe0e0a45c84", null ],
+    [ "HF_SERIALIZABLE_CHECK", "group__common.html#ga3874f9a583d1fe12abb060335cd7fafa", null ],
+    [ "HF_SETTER_HELPER", "group__common.html#ga0ff0b91492aaf1b83cac58aac418fd92", null ],
+    [ "UNUSED", "group__common.html#gaf4e671792630e05ded168d006922d59f", null ],
     [ "Precision", "group__common.html#gad56ba1494114e66754fc2151c1da2f0c", [
       [ "BASE", "group__common.html#ggad56ba1494114e66754fc2151c1da2f0ca3577a90d53a9787f050148d8afdbf4c7", null ],
       [ "MILI", "group__common.html#ggad56ba1494114e66754fc2151c1da2f0cae93c0c9659e35c82a37d61f7a99520fc", null ],

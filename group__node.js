@@ -3,9 +3,17 @@ var group__node =
     [ "IUnit0", "structHF_1_1Devices_1_1Node_1_1IUnit0.html", [
       [ "IUnit0", "structHF_1_1Devices_1_1Node_1_1IUnit0.html#a7f55805f9e0e66f1cfae7b3b426b5276", null ],
       [ "device_management", "structHF_1_1Devices_1_1Node_1_1IUnit0.html#aeedbb25703dff5e5c92ab9335565123a", null ],
-      [ "device_management", "structHF_1_1Devices_1_1Node_1_1IUnit0.html#ac324f3fb7c01123bac4be223989583ee", null ]
+      [ "device_management", "structHF_1_1Devices_1_1Node_1_1IUnit0.html#a63b02bcf30dadf2bbbe81eb57d9b0b88", null ]
     ] ],
-    [ "Unit0", "structHF_1_1Devices_1_1Node_1_1Unit0.html", null ],
+    [ "Unit0", "structHF_1_1Devices_1_1Node_1_1Unit0.html", [
+      [ "Unit0", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a8e67142fd57e4d7822991e6982501f7e", null ],
+      [ "attribute_reporting", "structHF_1_1Devices_1_1Node_1_1Unit0.html#ae1c6899ff510e91e1b900028c0c449d5", null ],
+      [ "attribute_reporting", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a862cfa406fc5e3f3ed139345c2aab5ff", null ],
+      [ "device_info", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a93aa679ddd13f939846f6a2e2329f144", null ],
+      [ "device_info", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a2756a9da62bfa97d34f2bab808213667", null ],
+      [ "device_management", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a27e417cd4b11b433052616771a28201c", null ],
+      [ "device_management", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a708bc876a81d54edc749b5a336313017", null ]
+    ] ],
     [ "DefaultUnit0", "structHF_1_1Devices_1_1Node_1_1DefaultUnit0.html", null ],
     [ "Abstract", "classHF_1_1Devices_1_1Node_1_1Abstract.html", [
       [ "address", "classHF_1_1Devices_1_1Node_1_1Abstract.html#afe828ca56eeb3dc935c98ee75a0a3d6b", null ],

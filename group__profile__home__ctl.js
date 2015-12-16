@@ -15,5 +15,10 @@ var group__profile__home__ctl =
     [ "DoorBell", "classHF_1_1Profiles_1_1DoorBell.html", null ],
     [ "SimplePowerMeter", "classHF_1_1Profiles_1_1SimplePowerMeter.html", null ],
     [ "SimpleTemperatureSensor", "classHF_1_1Profiles_1_1SimpleTemperatureSensor.html", null ],
-    [ "SimpleHumiditySensor", "classHF_1_1Profiles_1_1SimpleHumiditySensor.html", null ]
+    [ "SimpleHumiditySensor", "classHF_1_1Profiles_1_1SimpleHumiditySensor.html", null ],
+    [ "ControlableThermostat", "classHF_1_1Profiles_1_1ControlableThermostat.html", null ],
+    [ "SimpleAirPressureSensor", "classHF_1_1Profiles_1_1SimpleAirPressureSensor.html", null ],
+    [ "SimpleButton", "classHF_1_1Profiles_1_1SimpleButton.html", null ],
+    [ "SimpleLED", "classHF_1_1Profiles_1_1SimpleLED.html", null ],
+    [ "EnvironmentMonitor", "classHF_1_1Profiles_1_1EnvironmentMonitor.html", null ]
 ];

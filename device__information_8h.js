@@ -1,6 +1,10 @@
 var device__information_8h =
 [
+    [ "HF_APPLICATION_VERSION", "device__information_8h.html#a7dbf0b7fc035e95833279204fa8be4e5", null ],
     [ "HF_DEVICE_MANUFACTURER_CODE", "device__information_8h.html#abee22222c15996bb8cd73da86105eaad", null ],
+    [ "HF_HARDWARE_VERSION", "device__information_8h.html#a6a653337f501c59cd76a8b944df4791a", null ],
+    [ "HF_MANUFACTURER_NAME", "device__information_8h.html#a44bc11b4c681db079ba687d89355ce77", null ],
+    [ "Abstract", "device__information_8h.html#gaf4719e6226fad766a8ff144107fafc70", null ],
     [ "Attributes", "device__information_8h.html#ga2552fe5efd8a60efd040c5174671b10d", [
       [ "CORE_VERSION_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da5062a6437d755e71b6e960adaa50c67f", null ],
       [ "PROFILE_VERSION_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dad27655b149e5324d75a2b1e2fe07eae9", null ],
@@ -12,12 +16,13 @@ var device__information_8h =
       [ "HW_VERSION_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da3bfa6eb1752e4553562418bd721e6924", null ],
       [ "EMC_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da8c068b2865f3268365fc354f83a5b243", null ],
       [ "DECT_ID_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da76d802be998480f3f5c11bdfae8663a0", null ],
-      [ "MANUFACTURE_NAME_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dad01ce1e73a1ef35d3fc99c64921d1334", null ],
+      [ "MANUFACTURER_NAME_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da1d81140364b576f3903a3010edafb1b8", null ],
       [ "LOCATION_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da01bdbd0704db49426f33291e19fb15bf", null ],
       [ "ENABLED_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da96983932b1686b98f4e584570f2b869c", null ],
       [ "FRIENDLY_NAME_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da3014cc97f7581320e1d865b7a683232f", null ],
       [ "UID_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da348c7ca5d10e7f4bb6edd3ee64416c85", null ],
-      [ "SERIAL_NUMBER_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dadb44effc9b4045cdf4fa27adb8d442e8", null ]
+      [ "SERIAL_NUMBER_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dadb44effc9b4045cdf4fa27adb8d442e8", null ],
+      [ "MANUFACTURE_NAME_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dad01ce1e73a1ef35d3fc99c64921d1334", null ]
     ] ],
     [ "all", "device__information_8h.html#ga1ce3c4587841a79cb267aca942e859fa", null ],
     [ "create_attribute", "device__information_8h.html#ga47a3750e763c7f9d77304dc711b5dd66", null ],

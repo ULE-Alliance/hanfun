@@ -1,0 +1,9 @@
+<map id="HF::Interfaces::SimpleVisualEffects::Server" name="HF::Interfaces::SimpleVisualEffects::Server">
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleVisualEffects\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="120,1144,384,1251"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1Base.html" title="Simple Visual Effects Interface : Parent. " alt="" coords="5,958,195,1050"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_VISUAL_EFFECTS \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="16,785,184,906"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="35,222,197,549"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="116,600,280,707"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="55,5,177,171"/>
+<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="220,958,384,1050"/>
+</map>

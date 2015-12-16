@@ -1,0 +1,3 @@
+<map id="HF::Common::SerializableHelper&lt; T, EnableIf&lt; std::is_pointer&lt; T &gt; &gt; &gt;::pack" name="HF::Common::SerializableHelper&lt; T, EnableIf&lt; std::is_pointer&lt; T &gt; &gt; &gt;::pack">
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1SerializableHelper.html#a653b5ade746f301854b8bf7409b4fe60" title="Number bytes needed to serialize the message. " alt="" coords="232,11,408,53"/>
+</map>

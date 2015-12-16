@@ -13,5 +13,5 @@ var namespaceHF =
     [ "Units", "namespaceHF_1_1Units.html", "namespaceHF_1_1Units" ],
     [ "IDevice", "structHF_1_1IDevice.html", "structHF_1_1IDevice" ],
     [ "Interface", "structHF_1_1Interface.html", "structHF_1_1Interface" ],
-    [ "Unit0", "classHF_1_1Unit0.html", null ]
+    [ "Unit0", "classHF_1_1Unit0.html", "classHF_1_1Unit0" ]
 ];

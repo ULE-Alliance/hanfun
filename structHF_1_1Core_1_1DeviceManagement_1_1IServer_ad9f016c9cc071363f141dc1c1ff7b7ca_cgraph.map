@@ -1,4 +1,4 @@
 <map id="HF::Core::DeviceManagement::IServer::next_address" name="HF::Core::DeviceManagement::IServer::next_address">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#ab10b8b339531c6f21444ce7beab90dfd" title="Get a reference to the current object implementing the persistence API, for the device information..." alt="" coords="253,5,453,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#afb4d446a129a1a35ac2e567bba52777f" title="Return next available address for registering a device. " alt="" coords="253,70,453,111"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#a32ae8f7c0da6b2af41b32791e6f806c6" title="Get a reference to the current object implementing the persistence API, for the device information..." alt="" coords="253,5,453,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#aa1a8dccb2f4de22ef7a1a9e39161a6eb" title="Return next available address for registering a device. " alt="" coords="253,70,453,111"/>
 </map>

@@ -1,0 +1,4 @@
+<map id="HF::Core::SUOTA::UpgradeStatus::unpack" name="HF::Core::SUOTA::UpgradeStatus::unpack">
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="245,5,411,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2" title="Read a message from a ByteArray. " alt="" coords="240,70,416,111"/>
+</map>

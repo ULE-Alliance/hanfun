@@ -1,0 +1,7 @@
+<map id="inc/hanfun/interfaces/simple_visual_effects.h" name="inc/hanfun/interfaces/simple_visual_effects.h">
+<area shape="rect" id="node2" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="976,245,1099,272"/>
+<area shape="rect" id="node25" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="899,96,1025,123"/>
+<area shape="rect" id="node3" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="874,320,1000,347"/>
+<area shape="rect" id="node22" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,395,1669,421"/>
+<area shape="rect" id="node26" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="872,171,1001,197"/>
+</map>

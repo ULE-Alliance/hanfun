@@ -1,10 +1,10 @@
-<map id="localloop.h" name="localloop.h">
-<area shape="rect" id="node2" href="$example__01_8cpp.html" title="This file contains an example demonstrating basic registration. " alt="" coords="5,80,121,107"/>
-<area shape="rect" id="node3" href="$example__02_8cpp.html" title="This file contains an example demonstrating registration event handling. " alt="" coords="147,80,263,107"/>
-<area shape="rect" id="node4" href="$example__03_8cpp.html" title="This file contains an usage example of the Alert interface. " alt="" coords="288,80,404,107"/>
-<area shape="rect" id="node5" href="$example__04_8cpp.html" title="This file contains an usage example of the On&#45;Off interface. " alt="" coords="429,80,545,107"/>
-<area shape="rect" id="node6" href="$example__05_8cpp.html" title="This file contains an example use of the Level control interface. " alt="" coords="571,80,687,107"/>
-<area shape="rect" id="node7" href="$example__06_8cpp.html" title="This file contains an example demonstrating how to read a custom attribute from the device informatio..." alt="" coords="712,80,828,107"/>
-<area shape="rect" id="node8" href="$example__07_8cpp.html" title="This file contains an example usage of the Attribute reporting service. " alt="" coords="853,80,969,107"/>
-<area shape="rect" id="node9" href="$example__08_8cpp.html" title="This file contains an example demonstrating the catch all bind management functionality. " alt="" coords="995,80,1111,107"/>
+<map id="apps/localloop.h" name="apps/localloop.h">
+<area shape="rect" id="node2" href="$example__01_8cpp.html" title="This file contains an example demonstrating basic registration. " alt="" coords="5,80,153,107"/>
+<area shape="rect" id="node3" href="$example__02_8cpp.html" title="This file contains an example demonstrating registration event handling. " alt="" coords="179,80,327,107"/>
+<area shape="rect" id="node4" href="$example__03_8cpp.html" title="This file contains an usage example of the Alert interface. " alt="" coords="352,80,500,107"/>
+<area shape="rect" id="node5" href="$example__04_8cpp.html" title="This file contains an usage example of the On&#45;Off interface. " alt="" coords="525,80,673,107"/>
+<area shape="rect" id="node6" href="$example__05_8cpp.html" title="This file contains an example use of the Level control interface. " alt="" coords="699,80,847,107"/>
+<area shape="rect" id="node7" href="$example__06_8cpp.html" title="This file contains an example demonstrating how to read a custom attribute from the device informatio..." alt="" coords="872,80,1020,107"/>
+<area shape="rect" id="node8" href="$example__07_8cpp.html" title="This file contains an example usage of the Attribute reporting service. " alt="" coords="1045,80,1193,107"/>
+<area shape="rect" id="node9" href="$example__08_8cpp.html" title="This file contains an example demonstrating the catch all bind management functionality. " alt="" coords="1219,80,1367,107"/>
 </map>

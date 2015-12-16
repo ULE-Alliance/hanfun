@@ -1,13 +1,17 @@
-<map id="profiles.h" name="profiles.h">
-<area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="896,395,977,421"/>
-<area shape="rect" id="node24" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="818,171,944,197"/>
-<area shape="rect" id="node27" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="923,88,1085,115"/>
-<area shape="rect" id="node28" href="$on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="530,81,669,122"/>
-<area shape="rect" id="node29" href="$level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="694,81,847,122"/>
-<area shape="rect" id="node30" href="$simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="342,81,505,122"/>
-<area shape="rect" id="node31" href="$simple__temperature_8h.html" title="This file contains the definitions for the Simple Temperature interface. " alt="" coords="1110,81,1273,122"/>
-<area shape="rect" id="node32" href="$simple__humidity_8h.html" title="This file contains the definitions for the Simple Humidity interface. " alt="" coords="1298,81,1461,122"/>
-<area shape="rect" id="node21" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,469,1669,496"/>
-<area shape="rect" id="node25" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="808,245,937,272"/>
-<area shape="rect" id="node26" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="659,320,781,347"/>
+<map id="inc/hanfun/profiles.h" name="inc/hanfun/profiles.h">
+<area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="1303,395,1384,421"/>
+<area shape="rect" id="node24" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="962,171,1088,197"/>
+<area shape="rect" id="node27" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="45,88,208,115"/>
+<area shape="rect" id="node28" href="$on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="786,81,925,122"/>
+<area shape="rect" id="node29" href="$level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="233,81,385,122"/>
+<area shape="rect" id="node30" href="$simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="1378,81,1541,122"/>
+<area shape="rect" id="node31" href="$simple__temperature_8h.html" title="This file contains the definitions for the Simple Temperature interface. " alt="" coords="1566,81,1729,122"/>
+<area shape="rect" id="node32" href="$simple__humidity_8h.html" title="This file contains the definitions for the Simple Humidity interface. " alt="" coords="1754,81,1917,122"/>
+<area shape="rect" id="node33" href="$simple__thermostat_8h.html" title="This file contains the definitions for the Simple Thermostat interface. " alt="" coords="410,81,573,122"/>
+<area shape="rect" id="node34" href="$simple__air__pressure_8h.html" title="This file contains the definitions for the Simple Air Pressure interface. " alt="" coords="598,81,761,122"/>
+<area shape="rect" id="node35" href="$simple__button_8h.html" title="This file contains the definitions for the Simple Button interface. " alt="" coords="950,81,1113,122"/>
+<area shape="rect" id="node36" href="$simple__visual__effects_8h.html" title="This file contains the definitions for the Simple Visual Effects interface. " alt="" coords="1190,81,1353,122"/>
+<area shape="rect" id="node21" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1979,469,2076,496"/>
+<area shape="rect" id="node25" href="$attributes_8h.html" title="This file contains the definitions for the attribute handling API in HAN&#45;FUN. " alt="" coords="1215,245,1344,272"/>
+<area shape="rect" id="node26" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="863,320,985,347"/>
 </map>

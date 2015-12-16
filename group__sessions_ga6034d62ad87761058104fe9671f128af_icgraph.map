@@ -1,8 +1,4 @@
 <map id="HF::Core::SessionManagement::AbstractClient::send" name="HF::Core::SessionManagement::AbstractClient::send">
-<area shape="rect" id="node2" href="$group__sessions.html#gaf07b6582bfc186274fc1cbe3070a8d63" title="Helper method to send a message to read, count entries starting at offset from the server..." alt="" coords="262,38,469,79"/>
-<area shape="rect" id="node3" href="$group__sessions.html#ga7e81cc663a371a9e560aebd552426e82" title="Helper method to create a session management request. " alt="" coords="262,103,469,145"/>
-<area shape="rect" id="node4" href="$group__bind__mgt.html#ga2111d1e49963dee69a5e2c515e948996" title="End read entries session. " alt="" coords="525,5,710,46"/>
-<area shape="rect" id="node5" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#a1854edcd4d38d067b7282601955c7f10" title="End read entries session. " alt="" coords="517,70,717,111"/>
-<area shape="rect" id="node6" href="$group__bind__mgt.html#ga5ef5dc84df70b20397c3139ac34ffe88" title="Start read entries session. " alt="" coords="525,135,710,177"/>
-<area shape="rect" id="node7" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#a777aabb19b6f6c4e453b801acd3adbd5" title="Start read entries session. " alt="" coords="517,201,717,242"/>
+<area shape="rect" id="node2" href="$group__sessions.html#gaf07b6582bfc186274fc1cbe3070a8d63" title="Helper method to send a message to read, count entries starting at offset from the server..." alt="" coords="262,5,469,46"/>
+<area shape="rect" id="node3" href="$group__sessions.html#ga7e81cc663a371a9e560aebd552426e82" title="Helper method to create a session management request. " alt="" coords="262,70,469,111"/>
 </map>

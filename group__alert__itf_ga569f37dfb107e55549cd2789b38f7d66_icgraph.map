@@ -4,6 +4,7 @@
 <area shape="rect" id="node4" href="$classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a0f5d3867b02050f545e0b0a5af0f3228" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="205,135,432,177"/>
 <area shape="rect" id="node5" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a12438e47bc1bf8172d03479ad4e1e1d5" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="225,201,412,242"/>
 <area shape="rect" id="node6" href="$classHF_1_1Interfaces_1_1Alert_1_1Server.html#a27a69ee2ac60abebf4a46a3714dc4adf" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="248,266,389,307"/>
-<area shape="rect" id="node7" href="$group__simple__temp__itf.html#ga5a5e83175bb7f39a15a89d523f80bc05" title="Create an attribute object that can hold the attribute with the given uid. (HF::Interfaces::SimpleTem..." alt="" coords="205,331,432,373"/>
-<area shape="rect" id="node8" href="$group__spm__itf.html#ga58c9ad14af537434804c9fef88895b32" title="Create an attribute object that can hold the attribute with the given uid. (HF::Interfaces::SimplePow..." alt="" coords="223,397,414,438"/>
+<area shape="rect" id="node7" href="$classHF_1_1Interfaces_1_1SimpleThermostat_1_1Server.html#ab503b2e2f96544fa15e224e16e00b4c1" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="209,331,429,373"/>
+<area shape="rect" id="node8" href="$group__simple__temp__itf.html#ga5a5e83175bb7f39a15a89d523f80bc05" title="Create an attribute object that can hold the attribute with the given uid. (HF::Interfaces::SimpleTem..." alt="" coords="205,397,432,438"/>
+<area shape="rect" id="node9" href="$group__simple__visual__effects__itf.html#ga2a0a7697038b428e65116fa43db2e5ba" title="Create an attribute object that can hold the attribute with the given uid. (HF::Interfaces::SimpleVis..." alt="" coords="223,462,414,503"/>
 </map>

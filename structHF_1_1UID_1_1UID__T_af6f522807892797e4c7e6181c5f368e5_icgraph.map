@@ -1,3 +1,5 @@
 <map id="HF::UID::UID_T::unpack" name="HF::UID::UID_T::unpack">
 <area shape="rect" id="node2" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="225,5,394,32"/>
+<area shape="rect" id="node3" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="229,56,389,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="232,136,387,163"/>
 </map>

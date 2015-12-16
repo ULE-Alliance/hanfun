@@ -13,6 +13,13 @@ var group__examples =
       [ "save", "group__examples.html#gaa24a5abda0fcd09821ecab556dd9a2c0", null ],
       [ "_next_address", "structDeviceManagement_1_1Server.html#aa237ce30fd4b15649a8dec9f75e68adf", null ]
     ] ],
+    [ "Entries", "structBindManagement_1_1Entries.html", [
+      [ "insert", "group__examples.html#gab8f2b8891d8d538eaff0c9fcf0925b14", null ]
+    ] ],
+    [ "Server", "structBindManagement_1_1Server.html", [
+      [ "restore", "group__examples.html#ga8f7c62314e86a932696850abe655df3f", null ],
+      [ "save", "group__examples.html#ga6cbf648c24f17825cc0d5aa7ce5a6bfe", null ]
+    ] ],
     [ "Base", "structBase.html", [
       [ "bind", "group__examples.html#ga3137a5f298f3917d8ecb576f8e76484a", null ],
       [ "has_bind", "group__examples.html#ga09d306e2dfc2ef73731ac0a18ab62a17", null ],
@@ -20,9 +27,9 @@ var group__examples =
       [ "unbind", "group__examples.html#ga6e4478711752b3bf7c55dd2fa9b0ffc4", null ]
     ] ],
     [ "ICommand", "structICommand.html", [
-      [ "key", "structICommand.html#a09bfc38a788046c5e5025ce5fca9381d", null ],
+      [ "key", "structICommand.html#ad3defa724db9bb0e6d6bba2751192729", null ],
       [ "run", "structICommand.html#ac4fc5e7fa0f5c4da91bf743787a68511", null ],
-      [ "usage", "structICommand.html#aae300dc46bb65273e6ce6bc54941d602", null ]
+      [ "usage", "structICommand.html#a40043b30d67bafedc71d12f3ded6b82e", null ]
     ] ],
     [ "Command", "classCommand.html", [
       [ "Command", "classCommand.html#af3e9990348a640356270181983058ee6", null ],
@@ -62,15 +69,15 @@ var group__examples =
       [ "profiles", "structhello__msg__t.html#aa6eace5f038c6e0f031b0b820e591969", null ],
       [ "uid", "structhello__msg__t.html#a8697425074ebd71e1de37912406115f9", null ]
     ] ],
-    [ "CHECK_STATUS", "group__examples.html#gafbd4ca4c02fd751f3abe6d7a36215350", null ],
-    [ "COMMAND", "group__examples.html#gaeeb77e3d333b8c7a61ac683867800daf", null ],
-    [ "COMMAND_ADD", "group__examples.html#gac5754026ff6e285a8d05b4d4d90daaed", null ],
+    [ "CHECK_STATUS", "group__examples.html#gaa86cec7f8f08053053c11faffca34456", null ],
+    [ "COMMAND", "group__examples.html#ga07c276875feef8aa8ab70ae6324b6299", null ],
+    [ "COMMAND_ADD", "group__examples.html#ga4d668e9bc100aa004c43b802085660cb", null ],
     [ "DATA_MSG", "group__examples.html#gaad9b457af2056f44f8a8a92ef203e464", null ],
     [ "HELLO_MSG", "group__examples.html#gac92ac6baad1bd2f98feabdc508af22b8", null ],
     [ "HF_APP_CONFIG_FILE", "group__examples.html#ga569bf395f9d78e4d094f840031e98806", null ],
     [ "NONE_MSG", "group__examples.html#ga9737c714ea9502a6b3701e751e35957e", null ],
-    [ "STRTOL", "group__examples.html#ga2c0313fe7d7bcdbec60950fbc36dd4da", null ],
-    [ "STRTOL_HEX", "group__examples.html#gafd531615607dae0dadb368a2924e1b6d", null ],
+    [ "STRTOL", "group__examples.html#ga9c688c115ef8ec1df9f92a36d3403233", null ],
+    [ "STRTOL_HEX", "group__examples.html#ga31e68f776cc1c711148fc5b7626d14a8", null ],
     [ "Unit0", "group__examples.html#ga2f06dbea0ced172baa9d3dbba20ffe5b", null ],
     [ "alloc_buffer", "group__examples.html#gaba53f17ef5a524395819a215e4a1b89f", null ],
     [ "available", "group__examples.html#ga595ce42fe36ec8f0ca2a56d1432ae325", null ],

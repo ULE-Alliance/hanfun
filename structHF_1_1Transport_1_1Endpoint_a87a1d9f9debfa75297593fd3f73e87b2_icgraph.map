@@ -1,3 +1,0 @@
-<map id="HF::Transport::Endpoint::receive" name="HF::Transport::Endpoint::receive">
-<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLayer.html#a76ee3b31361c1bfe5fdbd2c9cc6dc532" title="Receive the data in payload, coming in in the given link and deliver the decoded packet to all regist..." alt="" coords="216,5,408,46"/>
-</map>

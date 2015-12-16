@@ -1,5 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="6,5,141,32"/>
-<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLink.html" title="Parent class for all HF::Transport::Link implementations. " alt="" coords="189,5,373,32"/>
-<area shape="rect" id="node3" href="$classHF_1_1Application_1_1Link.html" title="Transport Layer link implementation over TCP/IP using libuv. " alt="" coords="421,5,565,32"/>
+<area shape="rect" id="node1" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html" title="Helper class that represents the information of a particular version. " alt="" coords="6,12,189,39"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html" title="This class represents the message for the response of a SUOTA::CHECK_VERSION_CMD. ..." alt="" coords="238,5,458,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Response.html" title="Parent class for the response messages. " alt="" coords="16,129,179,156"/>
+<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Response.html" title="This class represents the response sent when a Protocol::Message::GET_ATTR_REQ request. " alt="" coords="263,71,433,97"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1DeviceManagement_1_1RegisterResponse.html" title="Register command response. " alt="" coords="248,122,448,163"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1SessionManagement_1_1StartResponse.html" title="Start Read Session Command Message. " alt="" coords="245,187,451,229"/>
+<area shape="rect" id="node7" href="$structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html" title="This class represents the payload of a HF::Message::GET_ATTR_PACK_RES message. " alt="" coords="261,253,435,294"/>
 </map>

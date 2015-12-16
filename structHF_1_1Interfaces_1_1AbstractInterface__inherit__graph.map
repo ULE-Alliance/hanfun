@@ -1,50 +1,50 @@
 <map id="HF::Interfaces::AbstractInterface" name="HF::Interfaces::AbstractInterface">
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; HF::Interface::ATTRIBUTE\l_REPORTING \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="917,909,1112,1030"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="502,916,649,1023"/>
-<area shape="rect" id="node12" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::LEVEL_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="675,916,893,1023"/>
-<area shape="rect" id="node18" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::ON_OFF \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="2166,916,2324,1023"/>
-<area shape="rect" id="node24" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::SIMPLE_HUMIDITY \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1624,916,1851,1023"/>
-<area shape="rect" id="node30" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::SIMPLE_POWER\l_METER \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1941,909,2140,1030"/>
-<area shape="rect" id="node35" href="$structHF_1_1Interfaces_1_1Base.html" title="{HF::Interfaces::Base\l\&lt; Interface::SIMPLE_TEMPERATURE \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1303,916,1565,1023"/>
-<area shape="rect" id="node39" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="2935,600,3112,765"/>
-<area shape="rect" id="node49" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="1385,629,1529,736"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="1619,5,1741,171"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html" title="Attribute Reporting &#45; Client Role. " alt="" coords="865,1188,1055,1441"/>
-<area shape="rect" id="node5" href="$structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html" title="Helper class for using the Attribute Reporting service. " alt="" coords="856,1507,1045,1775"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="236,1269,376,1361"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, Interface\l::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="214,1588,399,1695"/>
-<area shape="rect" id="node10" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, Interface\l::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="5,1588,189,1695"/>
-<area shape="rect" id="node9" href="$structHF_1_1Interfaces_1_1Alert_1_1Client.html" title="Alert Interface : Client side implementation. " alt="" coords="235,1930,377,2051"/>
-<area shape="rect" id="node11" href="$classHF_1_1Interfaces_1_1Alert_1_1Server.html" title="Alert Interface : Server side implementation. " alt="" coords="27,1827,167,2154"/>
-<area shape="rect" id="node13" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Base.html" title="Level Control Interface : Parent. " alt="" coords="644,1254,831,1375"/>
-<area shape="rect" id="node14" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="643,1588,831,1695"/>
-<area shape="rect" id="node16" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="423,1588,619,1695"/>
-<area shape="rect" id="node15" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Client.html" title="Level Control Interface : Client side implementation. " alt="" coords="644,1893,831,2088"/>
-<area shape="rect" id="node17" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Server.html" title="Level Control Interface : Server side implementation. " alt="" coords="428,1879,615,2103"/>
-<area shape="rect" id="node19" href="$structHF_1_1Interfaces_1_1OnOff_1_1Base.html" title="On&#45;Off Interface : Parent. " alt="" coords="2567,1269,2715,1361"/>
-<area shape="rect" id="node20" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; OnOff::Base, Interface\l::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="2545,1588,2737,1695"/>
-<area shape="rect" id="node22" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; OnOff::Base, Interface\l::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="2762,1588,2955,1695"/>
-<area shape="rect" id="node21" href="$structHF_1_1Interfaces_1_1OnOff_1_1Client.html" title="On&#45;Off Interface : Client side implementation. " alt="" coords="2567,1864,2715,2117"/>
-<area shape="rect" id="node23" href="$classHF_1_1Interfaces_1_1OnOff_1_1Server.html" title="On&#45;Off Interface : Server side implementation. " alt="" coords="2784,1857,2932,2125"/>
-<area shape="rect" id="node25" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html" title="Simple Humidity Interface : Parent. " alt="" coords="1634,1269,1840,1361"/>
-<area shape="rect" id="node26" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="1588,1588,1783,1695"/>
-<area shape="rect" id="node28" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="1807,1588,2003,1695"/>
-<area shape="rect" id="node27" href="$classHF_1_1Interfaces_1_1SimpleHumidity_1_1Client.html" title="Level Control Interface : Client side implementation. " alt="" coords="1577,1901,1783,2081"/>
-<area shape="rect" id="node29" href="$classHF_1_1Interfaces_1_1SimpleHumidity_1_1Server.html" title="Simple Humidity Interface : Server side interface. " alt="" coords="1807,1893,2013,2088"/>
-<area shape="rect" id="node31" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html" title="Simple Power Meter Interface : Parent. " alt="" coords="2047,1261,2237,1368"/>
-<area shape="rect" id="node32" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimplePowerMeter\l::Base, Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="2027,1588,2257,1695"/>
-<area shape="rect" id="node34" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimplePowerMeter\l::Base, Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="2282,1588,2520,1695"/>
-<area shape="rect" id="node33" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Client.html" title="Simple Power Meter Interface : Client side implementation. " alt="" coords="2047,1930,2237,2051"/>
-<area shape="rect" id="node36" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1Base.html" title="Simple Temperature Interface : Parent. " alt="" coords="1321,1269,1548,1361"/>
-<area shape="rect" id="node37" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleTemperature\l::Base, Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="1070,1588,1300,1695"/>
-<area shape="rect" id="node38" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleTemperature\l::Base, Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="1325,1588,1563,1695"/>
-<area shape="rect" id="node40" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html" title="Attribute Reporting &#45; Server Role. " alt="" coords="2772,843,2961,1096"/>
-<area shape="rect" id="node42" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="3161,909,3296,1030"/>
-<area shape="rect" id="node43" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="2999,1247,3161,1383"/>
-<area shape="rect" id="node45" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::BIND\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="3205,1247,3349,1383"/>
-<area shape="rect" id="node47" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_INFORMATION \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="3475,1247,3637,1383"/>
-<area shape="rect" id="node41" href="$structHF_1_1Core_1_1AttributeReporting_1_1Server.html" title="Attribute Reporting &#45; Server Role. " alt="" coords="2772,1173,2961,1456"/>
-<area shape="rect" id="node44" href="$classHF_1_1Core_1_1DeviceManagement_1_1Abstract.html" title="Parent class for the Device Management interface implementation. " alt="" coords="2980,1595,3179,1687"/>
-<area shape="rect" id="node46" href="$classHF_1_1Core_1_1BindManagement_1_1Abstract.html" title="Parent class for the Bind Management interface implementation. " alt="" coords="3205,1595,3389,1687"/>
-<area shape="rect" id="node48" href="$classHF_1_1Core_1_1DeviceInformation_1_1Abstract.html" title="Parent class for the Device Information interface implementation. " alt="" coords="3461,1595,3651,1687"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="767,600,944,765"/>
+<area shape="rect" id="node15" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="2336,629,2500,736"/>
+<area shape="rect" id="node17" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_BUTTON \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1365,909,1533,1030"/>
+<area shape="rect" id="node19" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_TEMPERATURE \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="2240,909,2408,1030"/>
+<area shape="rect" id="node21" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_AIR_PRESSURE \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="2608,909,2776,1030"/>
+<area shape="rect" id="node25" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ON_OFF \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1157,916,1341,1023"/>
+<area shape="rect" id="node29" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_THERMOSTAT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1804,909,1972,1030"/>
+<area shape="rect" id="node31" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_POWER_METER \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="2033,909,2201,1030"/>
+<area shape="rect" id="node33" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1577,909,1741,1030"/>
+<area shape="rect" id="node37" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::RSSI \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="3088,916,3252,1023"/>
+<area shape="rect" id="node39" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="3285,916,3459,1023"/>
+<area shape="rect" id="node43" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_VISUAL_EFFECTS \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="3499,909,3667,1030"/>
+<area shape="rect" id="node45" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_HUMIDITY \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="3723,909,3891,1030"/>
+<area shape="rect" id="node47" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ATTRIBUTE\l_REPORTING \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="2852,909,3047,1030"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="2153,5,2276,171"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html" title="Attribute Reporting &#45; Server Role. " alt="" coords="944,843,1133,1096"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="400,909,535,1030"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::SUOTA \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="737,1254,905,1375"/>
+<area shape="rect" id="node9" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="245,1247,408,1383"/>
+<area shape="rect" id="node11" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::BIND\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="25,1247,169,1383"/>
+<area shape="rect" id="node13" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_INFORMATION \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="512,1247,675,1383"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1AttributeReporting_1_1Server.html" title="Attribute Reporting &#45; Server Role. " alt="" coords="944,1173,1133,1456"/>
+<area shape="rect" id="node8" href="$structHF_1_1Core_1_1SUOTA_1_1Base.html" title="SUOTA Interfaces::Interface : Parent. " alt="" coords="737,1603,905,1680"/>
+<area shape="rect" id="node10" href="$classHF_1_1Core_1_1DeviceManagement_1_1Base.html" title="Parent class for the Device Management interface implementation. " alt="" coords="227,1595,425,1687"/>
+<area shape="rect" id="node12" href="$classHF_1_1Core_1_1BindManagement_1_1Base.html" title="Parent class for the Bind Management interface implementation. " alt="" coords="5,1595,189,1687"/>
+<area shape="rect" id="node14" href="$classHF_1_1Core_1_1DeviceInformation_1_1Base.html" title="Parent class for the Device Information interface implementation. " alt="" coords="498,1595,688,1687"/>
+<area shape="rect" id="node16" href="$structHF_1_1Interfaces_1_1Base.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="2432,923,2576,1015"/>
+<area shape="rect" id="node18" href="$structHF_1_1Interfaces_1_1SimpleButton_1_1Base.html" title="Simple Button Interface : Parent. " alt="" coords="1351,1269,1543,1361"/>
+<area shape="rect" id="node20" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1Base.html" title="Simple Temperature Interface : Parent. " alt="" coords="2237,1269,2464,1361"/>
+<area shape="rect" id="node22" href="$structHF_1_1Interfaces_1_1SimpleAirPressure_1_1Base.html" title="Simple Air Pressure Interface : Parent. " alt="" coords="2607,1269,2777,1361"/>
+<area shape="rect" id="node23" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleAirPressure\l::Base, HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="2568,1588,2824,1695"/>
+<area shape="rect" id="node24" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleAirPressure\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="2280,1588,2544,1695"/>
+<area shape="rect" id="node26" href="$structHF_1_1Interfaces_1_1OnOff_1_1Base.html" title="On&#45;Off Interface : Parent. " alt="" coords="1175,1269,1323,1361"/>
+<area shape="rect" id="node27" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; OnOff::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="1157,1588,1341,1695"/>
+<area shape="rect" id="node28" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; OnOff::Base, HF::\lInterface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="941,1588,1133,1695"/>
+<area shape="rect" id="node30" href="$structHF_1_1Interfaces_1_1SimpleThermostat_1_1Base.html" title="Simple Thermostat Interface : Parent. " alt="" coords="1778,1269,1997,1361"/>
+<area shape="rect" id="node32" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html" title="Simple Power Meter Interface : Parent. " alt="" coords="2022,1261,2212,1368"/>
+<area shape="rect" id="node34" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Base.html" title="Level Control Interface : Parent. " alt="" coords="1567,1254,1753,1375"/>
+<area shape="rect" id="node35" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="1703,1588,1917,1695"/>
+<area shape="rect" id="node36" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="1457,1588,1679,1695"/>
+<area shape="rect" id="node38" href="$structHF_1_1Core_1_1RSSI_1_1Base.html" title="RSSI Interfaces::Interface : Parent. " alt="" coords="3093,1276,3247,1353"/>
+<area shape="rect" id="node40" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="3301,1261,3441,1368"/>
+<area shape="rect" id="node41" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="3385,1588,3569,1695"/>
+<area shape="rect" id="node42" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="3169,1588,3361,1695"/>
+<area shape="rect" id="node44" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1Base.html" title="Simple Visual Effects Interface : Parent. " alt="" coords="3487,1269,3677,1361"/>
+<area shape="rect" id="node46" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html" title="Simple Humidity Interface : Parent. " alt="" coords="3703,1269,3909,1361"/>
+<area shape="rect" id="node48" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html" title="Attribute Reporting &#45; Client Role. " alt="" coords="2855,1188,3044,1441"/>
+<area shape="rect" id="node49" href="$structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html" title="Helper class for using the Attribute Reporting service. " alt="" coords="2855,1507,3044,1775"/>
 </map>
