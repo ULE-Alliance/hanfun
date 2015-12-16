@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -25,6 +25,10 @@
 #include "hanfun/interfaces/simple_power_meter.h"
 #include "hanfun/interfaces/simple_temperature.h"
 #include "hanfun/interfaces/simple_humidity.h"
+#include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/simple_button.h"
+#include "hanfun/interfaces/simple_visual_effects.h"
 
 // =============================================================================
 // API
@@ -74,7 +78,7 @@ namespace HF
          //! Allows a unit to send both on/off and level control requests.
          SIMPLE_LEVEL_CONTROL_SWITCH = 0x0105,
 
-         //!  This unit will be acting upon some physical AC switch.
+         //! This unit will be acting upon some physical AC switch.
          AC_OUTLET = 0x0106,
 
          /*!
@@ -106,6 +110,21 @@ namespace HF
 
          //! Simple sensor to measure the relative humidity.
          SIMPLE_HUMIDITY_SENSOR = 0x010F,
+
+         //! Simple Air Pressure Sensor
+         SIMPLE_AIR_PRESSURE_SENSOR = 0x0110,
+
+         //! Simple button.
+         SIMPLE_BUTTON = 0x0111,
+
+         //! Controllable thermostat.
+         CONTROLABLE_THERMOSTAT = 0x0112,
+
+         //! Simple LED profile.
+         SIMPLE_LED = 0x0113,
+
+         //! Environment Monitoring
+         ENVIRONMENT_MONITOR = 0x0114,
 
          // =============================================================================
          // Security Unit Types
@@ -155,6 +174,9 @@ namespace HF
          // Application Unit Types
          // =============================================================================
 
+         //! User Interface Lock.
+         USER_INTERFACE_LOCK = 0x0401,
+
          //! User Interface unit (e.g. keypad, remote control)
          USER_INTERFACE = 0x0410,
 
@@ -190,7 +212,7 @@ namespace HF
        *          profile or @c nullptr if the profile is not known or does not use any
        *          of the official interfaces.
        */
-      Common::Interface const *interfaces (uint16_t profile, uint16_t &count);
+      Common::Interface const *interfaces(uint16_t profile, uint16_t &count);
 
       /*!
        * Top level class representing a HAN-FUN profile.
@@ -206,7 +228,7 @@ namespace HF
           *
           * @return  the UID associated with this profile. @see IProfile::UID.
           */
-         virtual uint16_t uid () const = 0;
+         virtual uint16_t uid() const = 0;
 
          /*!
           * Return a list of all the attributes for a given interface, pack id and
@@ -218,41 +240,41 @@ namespace HF
           *
           * @return  attribute list.
           */
-         virtual HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                                  const HF::Attributes::UIDS &uids) const = 0;
+         virtual HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                                 const HF::Attributes::UIDS &uids) const = 0;
       };
 
       /*!
        * Class template for all profile implementations.
        */
       template<uint16_t _uid>
-      struct AbstractProfile:public IProfile
+      struct AbstractProfile: public IProfile
       {
          virtual ~AbstractProfile()
          {}
 
-         uint16_t uid () const
+         uint16_t uid() const
          {
             return _uid;
          }
 
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            UNUSED (itf);
-            UNUSED (pack_id);
-            UNUSED (uids);
+            UNUSED(itf);
+            UNUSED(pack_id);
+            UNUSED(uids);
 
-            return HF::Attributes::List ();
+            return HF::Attributes::List();
          }
 
          //! @copydoc HF::Interface::handle
-         Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                uint16_t offset)
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
          {
-            UNUSED (packet);
-            UNUSED (payload);
-            UNUSED (offset);
+            UNUSED(packet);
+            UNUSED(payload);
+            UNUSED(offset);
 
             return Common::Result::FAIL_ARG;
          }
@@ -262,74 +284,101 @@ namespace HF
        * Class template for profiles containing only one interface.
        */
       template<uint16_t _uid, class Interface>
-      struct Profile:public AbstractProfile <_uid>, public Interface
+      struct Profile: public AbstractProfile<_uid>, public Interface
       {
          virtual ~Profile()
          {}
 
-         using AbstractProfile <_uid>::uid;
+         using AbstractProfile<_uid>::uid;
          using Interface::handle;
          using Interface::attributes;
 
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            if (Interface::uid () == itf.id)
+            if (Interface::uid() == itf.id)
             {
-               return HF::Attributes::get (*this, pack_id, uids);
+               return HF::Attributes::get(*this, pack_id, uids);
             }
             else
             {
-               return HF::Attributes::List ();
+               return HF::Attributes::List();
             }
          }
+      };
+
+      /*!
+       * Class template for profiles containing multiple interfaces.
+       */
+      template<uint16_t _uid, typename... _Interfaces>
+      class ProfileN: public AbstractProfile<_uid>,
+         public Interfaces::Container<ProfileN<_uid, _Interfaces...>,
+                                      HF::Interfaces::Proxy<_Interfaces,
+                                                            ProfileN<_uid, _Interfaces...>>...>
+      {
+         using profile_t   = ProfileN<_uid, _Interfaces...>;
+         using container_t = Interfaces::Container<ProfileN<_uid, _Interfaces...>,
+                                                   HF::Interfaces::Proxy<_Interfaces,
+                                                                         ProfileN<_uid,
+                                                                                  _Interfaces...>>
+                                                   ...>;
+
+         public:
+
+         virtual ~ProfileN()
+         {}
+
+         //! @copydoc HF::Interface::handle
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         {
+            return container_t::handle(packet, payload, offset);
+         }
+
+         //! @copydoc HF::Interfaces::AbstractInterface::send
+         virtual void send(const Protocol::Address &addr, Protocol::Message &message) = 0;
+
+         //! @copydoc HF::Interfaces::AbstractInterface::notify
+         virtual void notify(const HF::Attributes::IAttribute &old_value,
+                             const HF::Attributes::IAttribute &new_value) const = 0;
+
+         //! @copydoc HF::Profiles::IProfile::attributes
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
+         {
+            HF::Attributes::List result;
+
+            container_t::attributes(result, itf, pack_id, uids);
+
+            return result;
+         }
+
+         protected:
+
+         ProfileN(): container_t(*this)
+         {}
       };
 
       /*!
        * Class template for profiles containing two interfaces.
        */
       template<uint16_t _uid, typename Interface1, typename Interface2>
-      struct Profile2:public AbstractProfile <_uid>
+      struct Profile2: public ProfileN<_uid, Interface1, Interface2>
       {
          virtual ~Profile2()
          {}
 
-         typedef Profile2 <_uid, Interface1, Interface2> profile_t;
-
-         typedef HF::Interfaces::Proxy <Interface1, profile_t> first_itf_t;
-         typedef HF::Interfaces::Proxy <Interface2, profile_t> second_itf_t;
-
-         //! @copydoc HF::Interface::handle
-         virtual Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                                        uint16_t offset)
-         {
-            Common::Result result = interfaces.first.handle (packet, payload, offset);
-
-            if (result == Common::Result::OK || result == Common::Result::FAIL_SUPPORT)
-            {
-               return result;
-            }
-            else
-            {
-               return interfaces.second.handle (packet, payload, offset);
-            }
-         }
-
-         //! @copydoc HF::Interface::periodic
-         virtual void periodic (uint32_t time)
-         {
-            first ()->periodic (time);
-            second ()->periodic (time);
-         }
+         using profile_t    = Profile2<_uid, Interface1, Interface2>;
+         using first_itf_t  = HF::Interfaces::Proxy<Interface1, profile_t>;
+         using second_itf_t = HF::Interfaces::Proxy<Interface2, profile_t>;
 
          /*!
           * Pointer to the first interface instance.
           *
           * @return  pointer to the interface instance.
           */
-         Interface1 *first ()
+         Interface1 *first()
          {
-            return static_cast <Interface1 *>(&(this->interfaces.first));
+            return const_cast<Interface1 *>(profile_t::template get<0>());
          }
 
          /*!
@@ -337,9 +386,9 @@ namespace HF
           *
           * @return  pointer to the interface instance.
           */
-         Interface2 *second ()
+         Interface2 *second()
          {
-            return static_cast <Interface2 *>(&(this->interfaces.second));
+            return const_cast<Interface2 *>(profile_t::template get<1>());
          }
 
          /*!
@@ -347,9 +396,9 @@ namespace HF
           *
           * @return  pointer to the interface instance.
           */
-         const Interface1 *first () const
+         const Interface1 *first() const
          {
-            return static_cast <const Interface1 *>(&(this->interfaces.first));
+            return const_cast<Interface1 *>(profile_t::template get<0>());
          }
 
          /*!
@@ -357,61 +406,28 @@ namespace HF
           *
           * @return  pointer to the interface instance.
           */
-         const Interface2 *second () const
+         const Interface2 *second() const
          {
-            return static_cast <const Interface2 *>(&(this->interfaces.second));
+            return const_cast<Interface2 *>(profile_t::template get<1>());
          }
-
-         //! @copydoc HF::Interfaces::AbstractInterface::send
-         virtual void send (const Protocol::Address &addr, Protocol::Message &message) = 0;
-
-         //! @copydoc HF::Interfaces::AbstractInterface::notify
-         virtual void notify (const HF::Attributes::IAttribute &old_value,
-                              const HF::Attributes::IAttribute &new_value) const = 0;
-
-         //! @copydoc HF::Profiles::IProfile::attributes
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
-         {
-            if (first ()->uid () == itf.id)
-            {
-               return HF::Attributes::get (*first (), pack_id, uids);
-            }
-            else if (second ()->uid () == itf.id)
-            {
-               return HF::Attributes::get (*second (), pack_id, uids);
-            }
-            else
-            {
-               return HF::Attributes::List ();
-            }
-         }
-
-         protected:
-
-         Profile2():interfaces (first_itf_t (*this), second_itf_t (*this))
-         {}
-
-         //! Pair holding the two interface wrappers.
-         std::pair <first_itf_t, second_itf_t> interfaces;
       };
 
       /*!
        * Class template for Detector type profiles.
        */
       template<Profiles::UID _uid>
-      struct Detector:public AbstractProfile <_uid>, protected Interfaces::Alert::Server
+      struct Detector: public AbstractProfile<_uid>, protected Interfaces::Alert::Server
       {
          Detector()
          {
-            Interfaces::Alert::Server::disableAll ();
-            Interfaces::Alert::Server::enable (0);
+            Interfaces::Alert::Server::disableAll();
+            Interfaces::Alert::Server::enable(0);
          }
 
          virtual ~Detector()
          {}
 
-         using AbstractProfile <_uid>::uid;
+         using AbstractProfile<_uid>::uid;
          using Interfaces::Alert::Server::handle;
 
          /*!
@@ -420,10 +436,10 @@ namespace HF
           * @param [in] addr     device address to send the message to.
           * @param [in] state    alert state to send.
           */
-         void alert (Protocol::Address &addr, bool state)
+         void alert(Protocol::Address &addr, bool state)
          {
-            Interfaces::Alert::Server::state (0, state);
-            Interfaces::Alert::Server::status (addr, Detector::uid ());
+            Interfaces::Alert::Server::state(0, state);
+            Interfaces::Alert::Server::status(addr, Detector::uid());
          }
 
          /*!
@@ -431,25 +447,25 @@ namespace HF
           *
           * @param [in] state    alert state to send.
           */
-         void alert (bool state)
+         void alert(bool state)
          {
             Protocol::Address addr;
-            this->alert (addr, state);
+            this->alert(addr, state);
          }
 
          using Interfaces::Alert::Server::attributes;
 
          //! @copydoc HF::Profiles::IProfile::attributes
-         HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
-                                          const HF::Attributes::UIDS &uids) const
+         HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
+                                         const HF::Attributes::UIDS &uids) const
          {
-            if (Interfaces::Alert::Server::uid () == itf.id)
+            if (Interfaces::Alert::Server::uid() == itf.id)
             {
-               return HF::Attributes::get (*this, pack_id, uids);
+               return HF::Attributes::get(*this, pack_id, uids);
             }
             else
             {
-               return HF::Attributes::List ();
+               return HF::Attributes::List();
             }
          }
       };
@@ -468,7 +484,8 @@ namespace HF
       /*!
        * Simple On/Off Switchable profile implementation.
        */
-      class SimpleOnOffSwitchable:public Profile <SIMPLE_ONOFF_SWITCHABLE, Interfaces::OnOff::Server>
+      class SimpleOnOffSwitchable: public Profile<SIMPLE_ONOFF_SWITCHABLE,
+                                                  Interfaces::OnOff::Server>
       {
          public:
 
@@ -478,7 +495,7 @@ namespace HF
       /*!
        * Simple On/Off Switch profile implementation.
        */
-      class SimpleOnOffSwitch:public Profile <SIMPLE_ONOFF_SWITCH, Interfaces::OnOff::Client>
+      class SimpleOnOffSwitch: public Profile<SIMPLE_ONOFF_SWITCH, Interfaces::OnOff::Client>
       {
          public:
 
@@ -489,7 +506,7 @@ namespace HF
        * Simple Level Controllable profile implementation.
        */
       class SimpleLevelControllable:
-         public Profile <SIMPLE_LEVEL_CONTROLLABLE, Interfaces::LevelControl::Server>
+         public Profile<SIMPLE_LEVEL_CONTROLLABLE, Interfaces::LevelControl::Server>
       {
          public:
 
@@ -499,7 +516,8 @@ namespace HF
       /*!
        * Simple Level Control profile implementation.
        */
-      class SimpleLevelControl:public Profile <SIMPLE_LEVEL_CONTROL, Interfaces::LevelControl::Client>
+      class SimpleLevelControl: public Profile<SIMPLE_LEVEL_CONTROL,
+                                               Interfaces::LevelControl::Client>
       {
          public:
 
@@ -512,26 +530,27 @@ namespace HF
       template<typename OnOffServer        = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class SimpleLevelControllableSwitchable:
-         public Profile2 <SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
+         public Profile2<SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
       {
-         static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
-                        "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
 
-         static_assert (std::is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
-                        "LevelControl::Server MUST be of type Interfaces::LevelControl::Server !");
+         static_assert(std::is_base_of<Interfaces::LevelControl::Server,
+                                       LevelControlServer>::value,
+                       "LevelControl::Server MUST be of type Interfaces::LevelControl::Server !");
 
          public:
 
          virtual ~SimpleLevelControllableSwitchable() {}
 
-         OnOffServer *on_off ()
+         OnOffServer *on_off()
          {
-            return this->first ();
+            return this->first();
          }
 
-         LevelControlServer *level_control ()
+         LevelControlServer *level_control()
          {
-            return this->second ();
+            return this->second();
          }
       };
 
@@ -541,32 +560,33 @@ namespace HF
       template<typename OnOffClient        = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class SimpleLevelControlSwitch:
-         public Profile2 <SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
+         public Profile2<SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
       {
-         static_assert (std::is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
-                        "OnOff::Client MUST be of type Interfaces::OnOff::Client !");
+         static_assert(std::is_base_of<Interfaces::OnOff::Client, OnOffClient>::value,
+                       "OnOff::Client MUST be of type Interfaces::OnOff::Client !");
 
-         static_assert (std::is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
-                        "LevelControl::Client MUST be of type Interfaces::LevelControl::Client !");
+         static_assert(std::is_base_of<Interfaces::LevelControl::Client,
+                                       LevelControlClient>::value,
+                       "LevelControl::Client MUST be of type Interfaces::LevelControl::Client !");
          public:
 
          virtual ~SimpleLevelControlSwitch() {}
 
-         OnOffClient *on_off ()
+         OnOffClient *on_off()
          {
-            return this->first ();
+            return this->first();
          }
 
-         LevelControlClient *level_control ()
+         LevelControlClient *level_control()
          {
-            return this->second ();
+            return this->second();
          }
       };
 
       /*!
        * AC Outlet profile implementation.
        */
-      class AC_Outlet:public Profile <AC_OUTLET, Interfaces::OnOff::Server>
+      class AC_Outlet: public Profile<AC_OUTLET, Interfaces::OnOff::Server>
       {
          public:
 
@@ -579,33 +599,34 @@ namespace HF
       template<typename OnOffServer            = Interfaces::OnOff::Server,
                typename SimplePowerMeterServer = Interfaces::SimplePowerMeter::Server>
       class AC_OutletWithPowerMetering:
-         public Profile2 <AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
+         public Profile2<AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
       {
-         static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
-                        "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
 
-         static_assert (std::is_base_of <Interfaces::SimplePowerMeter::Server, SimplePowerMeterServer>::value,
-                        "SimplePowerMeterServer MUST be of type Interfaces::SimplePowerMeter::Server !");
+         static_assert(std::is_base_of<Interfaces::SimplePowerMeter::Server,
+                                       SimplePowerMeterServer>::value,
+                       "SimplePowerMeterServer MUST be of type Interfaces::SimplePowerMeter::Server !");
 
          public:
 
          virtual ~AC_OutletWithPowerMetering() {}
 
-         OnOffServer *on_off ()
+         OnOffServer *on_off()
          {
-            return this->first ();
+            return this->first();
          }
 
-         SimplePowerMeterServer *power_meter ()
+         SimplePowerMeterServer *power_meter()
          {
-            return this->second ();
+            return this->second();
          }
       };
 
       /*!
        * Simple Light profile implementation.
        */
-      class SimpleLight:public Profile <SIMPLE_LIGHT, Interfaces::OnOff::Server>
+      class SimpleLight: public Profile<SIMPLE_LIGHT, Interfaces::OnOff::Server>
       {
          public:
 
@@ -617,26 +638,27 @@ namespace HF
        */
       template<typename OnOffServer        = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
-      class DimmableLight:public Profile2 <DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
+      class DimmableLight: public Profile2<DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
       {
-         static_assert (std::is_base_of <Interfaces::OnOff::Server, OnOffServer>::value,
-                        "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOff::Server MUST be of type Interfaces::OnOff::Server !");
 
-         static_assert (std::is_base_of <Interfaces::LevelControl::Server, LevelControlServer>::value,
-                        "LevelControl::Client MUST be of type Interfaces::LevelControl::Server !");
+         static_assert(std::is_base_of<Interfaces::LevelControl::Server,
+                                       LevelControlServer>::value,
+                       "LevelControl::Client MUST be of type Interfaces::LevelControl::Server !");
 
          public:
 
          virtual ~DimmableLight() {}
 
-         OnOffServer *on_off ()
+         OnOffServer *on_off()
          {
-            return this->first ();
+            return this->first();
          }
 
-         LevelControlServer *level_control ()
+         LevelControlServer *level_control()
          {
-            return this->second ();
+            return this->second();
          }
       };
 
@@ -645,33 +667,34 @@ namespace HF
        */
       template<typename OnOffClient        = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
-      class DimmerSwitch:public Profile2 <DIMMER_SWITCH, OnOffClient, LevelControlClient>
+      class DimmerSwitch: public Profile2<DIMMER_SWITCH, OnOffClient, LevelControlClient>
       {
-         static_assert (std::is_base_of <Interfaces::OnOff::Client, OnOffClient>::value,
-                        "OnOff::Server MUST be of type Interfaces::OnOff::Client !");
+         static_assert(std::is_base_of<Interfaces::OnOff::Client, OnOffClient>::value,
+                       "OnOff::Server MUST be of type Interfaces::OnOff::Client !");
 
-         static_assert (std::is_base_of <Interfaces::LevelControl::Client, LevelControlClient>::value,
-                        "LevelControl::Server MUST be of type Interfaces::LevelControl::Client !");
+         static_assert(std::is_base_of<Interfaces::LevelControl::Client,
+                                       LevelControlClient>::value,
+                       "LevelControl::Server MUST be of type Interfaces::LevelControl::Client !");
 
          public:
 
          virtual ~DimmerSwitch() {}
 
-         OnOffClient *on_off ()
+         OnOffClient *on_off()
          {
-            return this->first ();
+            return this->first();
          }
 
-         LevelControlClient *level_control ()
+         LevelControlClient *level_control()
          {
-            return this->second ();
+            return this->second();
          }
       };
 
       /*!
        * Simple Door Lock profile implementation.
        */
-      class SimpleDoorLock:public Profile <SIMPLE_DOOR_LOCK, Interfaces::OnOff::Server>
+      class SimpleDoorLock: public Profile<SIMPLE_DOOR_LOCK, Interfaces::OnOff::Server>
       {
          public:
 
@@ -681,7 +704,7 @@ namespace HF
       /*!
        * Door Bell profile implementation.
        */
-      class DoorBell:public Profile <DOOR_BELL, Interfaces::Alert::Server>
+      class DoorBell: public Profile<DOOR_BELL, Interfaces::Alert::Server>
       {
          public:
 
@@ -691,7 +714,8 @@ namespace HF
       /*!
        * Simple Power Meter profile implementation.
        */
-      class SimplePowerMeter:public Profile <SIMPLE_POWER_METER, Interfaces::SimplePowerMeter::Server>
+      class SimplePowerMeter: public Profile<SIMPLE_POWER_METER,
+                                             Interfaces::SimplePowerMeter::Server>
       {
          public:
 
@@ -701,7 +725,7 @@ namespace HF
       /*!
        * Simple Temperature Sensor profile implementation.
        */
-      class SimpleTemperatureSensor:public Profile <SIMPLE_TEMPERATURE_SENSOR,
+      class SimpleTemperatureSensor: public Profile<SIMPLE_TEMPERATURE_SENSOR,
                                                     Interfaces::SimpleTemperature::Server>
       {
          public:
@@ -712,11 +736,86 @@ namespace HF
       /*!
        * Simple Humidity Sensor profile implementation.
        */
-      class SimpleHumiditySensor:public Profile <SIMPLE_HUMIDITY_SENSOR, Interfaces::SimpleHumidity::Server>
+      class SimpleHumiditySensor: public Profile<SIMPLE_HUMIDITY_SENSOR,
+                                                 Interfaces::SimpleHumidity::Server>
       {
          public:
 
          virtual ~SimpleHumiditySensor() {}
+      };
+
+      /*!
+       * Controllable thermostat profile implementation.
+       */
+      template<typename OnOffServer            = Interfaces::OnOff::Server,
+               typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
+      class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer,
+                                                   SimpleThermostatServer>
+      {
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOffServer MUST be of type Interfaces::OnOff::Server !");
+
+         static_assert(std::is_base_of<Interfaces::SimpleThermostat::Server,
+                                       SimpleThermostatServer>::value,
+                       "SimpleThermostatServer MUST be of type Interfaces::SimpleThermostat::Server !");
+
+         public:
+
+         virtual ~ControlableThermostat() {}
+
+         OnOffServer *on_off()
+         {
+            return this->first();
+         }
+
+         SimpleThermostatServer *simple_thermostat()
+         {
+            return this->second();
+         }
+      };
+
+      /*!
+       * Simple Air Pressure Sensor profile implementation.
+       */
+      class SimpleAirPressureSensor: public Profile<SIMPLE_AIR_PRESSURE_SENSOR,
+                                                    Interfaces::SimpleAirPressure::Server>
+      {
+         public:
+
+         virtual ~SimpleAirPressureSensor() {}
+      };
+
+      /*!
+       * Simple Button profile implementation.
+       */
+      class SimpleButton: public Profile<SIMPLE_BUTTON, Interfaces::SimpleButton::Server>
+      {
+         public:
+
+         virtual ~SimpleButton() {}
+      };
+
+      /*!
+       * Simple LED profile implementation.
+       */
+      class SimpleLED: public Profile<SIMPLE_LED, Interfaces::SimpleVisualEffects::Server>
+      {
+         public:
+
+         virtual ~SimpleLED() {}
+      };
+
+      /*!
+       * Environment Monitoring profile implementation.
+       */
+      class EnvironmentMonitor: public ProfileN<ENVIRONMENT_MONITOR,
+                                                Interfaces::SimpleTemperature::Server,
+                                                Interfaces::SimpleHumidity::Server,
+                                                Interfaces::SimpleAirPressure::Server>
+      {
+         public:
+
+         virtual ~EnvironmentMonitor() {}
       };
 
       // =============================================================================
@@ -733,7 +832,7 @@ namespace HF
       /*!
        * Simple Detector profile implementation.
        */
-      class SimpleDetector:public Detector <SIMPLE_DETECTOR>
+      class SimpleDetector: public Detector<SIMPLE_DETECTOR>
       {
          public:
 
@@ -743,7 +842,7 @@ namespace HF
       /*!
        * Door Open Close Detector profile implementation.
        */
-      class DoorOpenCloseDetector:public Detector <DOOR_OPEN_CLOSE_DETECTOR>
+      class DoorOpenCloseDetector: public Detector<DOOR_OPEN_CLOSE_DETECTOR>
       {
          public:
 
@@ -753,7 +852,7 @@ namespace HF
       /*!
        * Window Open Close Detector profile implementation.
        */
-      class WindowOpenCloseDetector:public Detector <WINDOW_OPEN_CLOSE_DETECTOR>
+      class WindowOpenCloseDetector: public Detector<WINDOW_OPEN_CLOSE_DETECTOR>
       {
          public:
 
@@ -763,7 +862,7 @@ namespace HF
       /*!
        * Motion Detector profile implementation.
        */
-      class MotionDetector:public Detector <MOTION_DETECTOR>
+      class MotionDetector: public Detector<MOTION_DETECTOR>
       {
          public:
 
@@ -773,7 +872,7 @@ namespace HF
       /*!
        * Smoke Detector profile implementation.
        */
-      class SmokeDetector:public Detector <SMOKE_DETECTOR>
+      class SmokeDetector: public Detector<SMOKE_DETECTOR>
       {
          public:
 
@@ -783,7 +882,7 @@ namespace HF
       /*!
        * Gas Detector profile implementation.
        */
-      class GasDetector:public Detector <GAS_DETECTOR>
+      class GasDetector: public Detector<GAS_DETECTOR>
       {
          public:
 
@@ -793,7 +892,7 @@ namespace HF
       /*!
        * Flood Detector profile implementation.
        */
-      class FloodDetector:public Detector <FLOOD_DETECTOR>
+      class FloodDetector: public Detector<FLOOD_DETECTOR>
       {
          public:
 
@@ -803,7 +902,7 @@ namespace HF
       /*!
        * Glass Break Detector profile implementation.
        */
-      class GlassBreakDetector:public Detector <GLASS_BREAK_DETECTOR>
+      class GlassBreakDetector: public Detector<GLASS_BREAK_DETECTOR>
       {
          public:
 
@@ -813,7 +912,7 @@ namespace HF
       /*!
        * Vibration Detector profile implementation.
        */
-      class VibrationDetector:public Detector <VIBRATION_DETECTOR>
+      class VibrationDetector: public Detector<VIBRATION_DETECTOR>
       {
          public:
 
@@ -823,7 +922,7 @@ namespace HF
       /*!
        * Siren profile implementation.
        */
-      class Siren:public Profile <SIREN, Interfaces::OnOff::Server>
+      class Siren: public Profile<SIREN, Interfaces::OnOff::Server>
       {
          public:
 
@@ -833,7 +932,7 @@ namespace HF
       /*!
        * %Alertable profile implementation.
        */
-      class Alertable:public Profile <ALERTABLE, Interfaces::Alert::Client>
+      class Alertable: public Profile<ALERTABLE, Interfaces::Alert::Client>
       {
          public:
 
@@ -854,7 +953,7 @@ namespace HF
       /*!
        * Simple Pendant profile implementation.
        */
-      class SimplePendant:public Detector <SIMPLE_PENDANT>
+      class SimplePendant: public Detector<SIMPLE_PENDANT>
       {
          public:
 
@@ -874,34 +973,44 @@ namespace HF
       // =============================================================================
 
       /*!
+       * User Interface Lock profile implementation.
+       */
+      class UserInterfaceLock: public Profile<USER_INTERFACE_LOCK, Interfaces::OnOff::Server>
+      {
+         public:
+
+         virtual ~UserInterfaceLock() {}
+      };
+
+      /*!
        * User Interface profile implementation.
        */
-      class UserInterface:public AbstractProfile <USER_INTERFACE>
+      class UserInterface: public AbstractProfile<USER_INTERFACE>
       {
          public:
 
          virtual ~UserInterface() {}
 
          //! @copydoc HF::Interface::periodic
-         virtual void periodic (uint32_t time)
+         virtual void periodic(uint32_t time)
          {
-            UNUSED (time);
+            UNUSED(time);
          }
       };
 
       /*!
        * Generic Application Logic profile implementation.
        */
-      class GenericApplicationLogic:public AbstractProfile <GENERIC_APPLICATION>
+      class GenericApplicationLogic: public AbstractProfile<GENERIC_APPLICATION>
       {
          public:
 
          virtual ~GenericApplicationLogic() {}
 
          //! @copydoc HF::Interface::periodic
-         virtual void periodic (uint32_t time)
+         virtual void periodic(uint32_t time)
          {
-            UNUSED (time);
+            UNUSED(time);
          }
       };
       /*! @} @} */

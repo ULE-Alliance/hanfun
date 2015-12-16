@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Alert Interface implementation.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -26,18 +26,18 @@ using namespace HF::Interfaces;
 // =============================================================================
 
 //! Test Group for Alert interface parent class.
-TEST_GROUP (Alert)
+TEST_GROUP(Alert)
 {
-   class TestAlert:public Testing::InterfaceParentHelper <Alert::Base>
+   class TestAlert: public Testing::InterfaceParentHelper<Alert::Base>
    {};
 
    TestAlert interface;
 };
 
 //! @test Alert::uid should return @c HF::Interface::ALERT.
-TEST (Alert, UID)
+TEST(Alert, UID)
 {
-   CHECK_EQUAL (HF::Interface::ALERT, interface.uid ());
+   CHECK_EQUAL(HF::Interface::ALERT, interface.uid());
 }
 
 // =============================================================================
@@ -45,15 +45,15 @@ TEST (Alert, UID)
 // =============================================================================
 
 //! Alert::Message test group.
-TEST_GROUP (AlertMessage)
+TEST_GROUP(AlertMessage)
 {
    Alert::Message *message;
 
    ByteArray expected;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      message  = new Alert::Message ();
+      message  = new Alert::Message();
 
       expected = ByteArray {0x00, 0x00, 0x00,
                             0x5A, 0xA5,              // Unit Type.
@@ -61,7 +61,7 @@ TEST_GROUP (AlertMessage)
                             0x00, 0x00, 0x00};
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
       delete message;
    }
@@ -69,38 +69,38 @@ TEST_GROUP (AlertMessage)
 };
 
 //! @test Alert::Message::size should return the correct value.
-TEST (AlertMessage, Size)
+TEST(AlertMessage, Size)
 {
-   LONGS_EQUAL (6, message->size ());
+   LONGS_EQUAL(6, message->size());
 
-   LONGS_EQUAL (0, message->type);
-   LONGS_EQUAL (0, message->state);
+   LONGS_EQUAL(0, message->type);
+   LONGS_EQUAL(0, message->state);
 }
 
 //! @test Alert::Message::pack should write the correct values to the ByteArray.
-TEST (AlertMessage, Pack)
+TEST(AlertMessage, Pack)
 {
    message->type  = 0x5AA5;
    message->state = 0xFFA55ABB;
 
-   ByteArray array (message->size () + 6);
+   ByteArray array(message->size() + 6);
 
-   uint16_t  wsize = message->pack (array, 3);
+   uint16_t wsize = message->pack(array, 3);
 
-   LONGS_EQUAL (message->size (), wsize);
+   LONGS_EQUAL(message->size(), wsize);
 
-   CHECK_EQUAL (expected, array);
+   CHECK_EQUAL(expected, array);
 }
 
 //! @test Alert::Message::unpack should read the correct values from the ByteArray.
-TEST (AlertMessage, Unpack)
+TEST(AlertMessage, Unpack)
 {
-   uint16_t rsize = message->unpack (expected, 3);
+   uint16_t rsize = message->unpack(expected, 3);
 
-   LONGS_EQUAL (message->size (), rsize);
+   LONGS_EQUAL(message->size(), rsize);
 
-   LONGS_EQUAL (0x5AA5, message->type);
-   LONGS_EQUAL (0xFFA55ABB, message->state);
+   LONGS_EQUAL(0x5AA5, message->type);
+   LONGS_EQUAL(0xFFA55ABB, message->state);
 }
 
 // =============================================================================
@@ -108,236 +108,236 @@ TEST (AlertMessage, Unpack)
 // =============================================================================
 
 //! Test Group for AlertServer interface class.
-TEST_GROUP (AlertServer)
+TEST_GROUP(AlertServer)
 {
-   struct TestAlertServer:public Testing::InterfaceHelper <Alert::Server>
+   struct TestAlertServer: public Testing::InterfaceHelper<Alert::Server>
    {
       using Alert::Server::create_status;
    };
 
    TestAlertServer *server;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      server = new TestAlertServer ();
-      mock ("Interface").ignoreOtherCalls ();
+      server = new TestAlertServer();
+      mock("Interface").ignoreOtherCalls();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
       delete server;
-      mock ().clear ();
+      mock().clear();
    }
 };
 
 #define CHECK_ALARM(_expected, _state, _index) \
-   check_index <bool>(_expected, _state, _index, "Alarm", __FILE__, __LINE__)
+   check_index<bool>(_expected, _state, _index, "Alarm", __FILE__, __LINE__)
 
 //! @test Should disable all alarms.
-TEST (AlertServer, DisableAll)
+TEST(AlertServer, DisableAll)
 {
-   mock ("Interface").expectOneCall ("notify");
-   CHECK_EQUAL (UINT32_MAX, server->enabled ());
-   server->disableAll ();
-   CHECK_EQUAL (0, server->enabled ());
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectOneCall("notify");
+   CHECK_EQUAL(UINT32_MAX, server->enabled());
+   server->disableAll();
+   CHECK_EQUAL(0, server->enabled());
+   mock("Interface").checkExpectations();
 }
 
 //! @test Should enable all alarms.
-TEST (AlertServer, EnableAll)
+TEST(AlertServer, EnableAll)
 {
-   mock ("Interface").expectNCalls (2, "notify");
-   server->disableAll ();
-   server->enableAll ();
-   CHECK_EQUAL (UINT32_MAX, server->enabled ());
-   mock ("Interface").checkExpectations ();
+   mock("Interface").expectNCalls(2, "notify");
+   server->disableAll();
+   server->enableAll();
+   CHECK_EQUAL(UINT32_MAX, server->enabled());
+   mock("Interface").checkExpectations();
 }
 
 //! @test Should enable only the selected alarm.
-TEST (AlertServer, Enable)
+TEST(AlertServer, Enable)
 {
-   mock ("Interface").expectOneCall ("notify");
-   server->disableAll ();
+   mock("Interface").expectOneCall("notify");
+   server->disableAll();
 
-   CHECK_FALSE (server->enabled (42));
+   CHECK_FALSE(server->enabled(42));
 
-   mock ("Interface").expectNCalls (2 * 32, "notify");
+   mock("Interface").expectNCalls(2 * 32, "notify");
 
    for (int i = 0; i < 32; i++)
    {
-      server->enable (i);
+      server->enable(i);
 
-      CHECK_ALARM (true, server->enabled (i), i);
-      CHECK_ALARM (false, server->disabled (i), i);
+      CHECK_ALARM(true, server->enabled(i), i);
+      CHECK_ALARM(false, server->disabled(i), i);
 
       for (int j = 0; j < 32; j++)
       {
          if (j != i)
          {
-            CHECK_ALARM (false, server->enabled (j), j);
-            CHECK_ALARM (true, server->disabled (j), j);
+            CHECK_ALARM(false, server->enabled(j), j);
+            CHECK_ALARM(true, server->disabled(j), j);
          }
       }
 
-      server->disable (i);
+      server->disable(i);
    }
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Should disable only the selected alarm.
-TEST (AlertServer, Disable)
+TEST(AlertServer, Disable)
 {
-   mock ("Interface").expectOneCall ("notify");
-   server->enableAll ();
+   mock("Interface").expectOneCall("notify");
+   server->enableAll();
 
-   CHECK_TRUE (server->disabled (42));
+   CHECK_TRUE(server->disabled(42));
 
-   mock ("Interface").expectNCalls (2 * 32, "notify");
+   mock("Interface").expectNCalls(2 * 32, "notify");
 
    for (int i = 0; i < 32; i++)
    {
-      server->disable (i);
+      server->disable(i);
 
-      CHECK_ALARM (false, server->enabled (i), i);
-      CHECK_ALARM (true, server->disabled (i), i);
+      CHECK_ALARM(false, server->enabled(i), i);
+      CHECK_ALARM(true, server->disabled(i), i);
 
       for (int j = 0; j < 32; j++)
       {
          if (j != i)
          {
-            CHECK_ALARM (true, server->enabled (j), j);
-            CHECK_ALARM (false, server->disabled (j), j);
+            CHECK_ALARM(true, server->enabled(j), j);
+            CHECK_ALARM(false, server->disabled(j), j);
          }
       }
 
-      server->enable (i);
+      server->enable(i);
    }
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Should change the alarm state correctly.
-TEST (AlertServer, State)
+TEST(AlertServer, State)
 {
-   CHECK_FALSE (server->state (42, true));
+   CHECK_FALSE(server->state(42, true));
 
-   CHECK_FALSE (server->state (42));
+   CHECK_FALSE(server->state(42));
 
-   CHECK_EQUAL (0, server->state ());
+   CHECK_EQUAL(0, server->state());
 
-   mock ("Interface").expectNCalls (2 * 32, "notify");
+   mock("Interface").expectNCalls(2 * 32, "notify");
 
    // Check individual assignment.
    for (int i = 0; i < 32; i++)
    {
-      CHECK_ALARM (true, server->state (i, true), i);
-      CHECK_ALARM (true, server->state (i), i);
+      CHECK_ALARM(true, server->state(i, true), i);
+      CHECK_ALARM(true, server->state(i), i);
 
       for (int j = 0; j < 32; j++)
       {
          if (i != j)
          {
-            CHECK_ALARM (false, server->state (j), j);
+            CHECK_ALARM(false, server->state(j), j);
          }
       }
 
-      CHECK_TRUE (server->state (i, false));
-      CHECK_FALSE (server->state (i));
+      CHECK_TRUE(server->state(i, false));
+      CHECK_FALSE(server->state(i));
    }
 
-   mock ("Interface").expectNCalls (32, "notify");
+   mock("Interface").expectNCalls(32, "notify");
 
    // Check clear.
    for (int i = 0; i < 32; i++)
    {
-      server->state (i, true);
+      server->state(i, true);
    }
 
-   CHECK_EQUAL (UINT32_MAX, server->state ());
+   CHECK_EQUAL(UINT32_MAX, server->state());
 
-   mock ("Interface").expectOneCall ("notify");
-   server->clear ();
+   mock("Interface").expectOneCall("notify");
+   server->clear();
 
-   CHECK_EQUAL (0, server->state ());
+   CHECK_EQUAL(0, server->state());
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Should create the correct Alert::Message.
-TEST (AlertServer, Status)
+TEST(AlertServer, Status)
 {
-   server->disableAll ();
-   server->enable (3);
-   server->clear ();
+   server->disableAll();
+   server->enable(3);
+   server->clear();
 
-   server->state (3, true);
+   server->state(3, true);
 
-   Alert::Message *msg = server->create_status (5);
+   Alert::Message *msg = server->create_status(5);
 
-   CHECK_FALSE (msg == nullptr);
+   CHECK_FALSE(msg == nullptr);
 
-   CHECK_EQUAL (8, msg->state);
-   CHECK_EQUAL (5, msg->type);
+   CHECK_EQUAL(8, msg->state);
+   CHECK_EQUAL(5, msg->type);
 
    delete msg;
 }
 
 //! @test Should send the a Alert::Message.
-TEST (AlertServer, Status2)
+TEST(AlertServer, Status2)
 {
-   server->disableAll ();
-   server->enable (3);
-   server->clear ();
-   server->state (3, true);
+   server->disableAll();
+   server->enable(3);
+   server->clear();
+   server->state(3, true);
 
    Protocol::Address addr;
 
-   mock ("Interface").expectOneCall ("send");
+   mock("Interface").expectOneCall("send");
 
-   server->status (addr, 5);
+   server->status(addr, 5);
 
-   mock ("Interface").checkExpectations ();
+   mock("Interface").checkExpectations();
 
-   LONGS_EQUAL (HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
-   LONGS_EQUAL (server->uid (), server->sendMsg.itf.id);
-   LONGS_EQUAL (Alert::STATUS_CMD, server->sendMsg.itf.member);
-   LONGS_EQUAL (Protocol::Message::COMMAND_REQ, server->sendMsg.type);
+   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
+   LONGS_EQUAL(server->uid(), server->sendMsg.itf.id);
+   LONGS_EQUAL(Alert::STATUS_CMD, server->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server->sendMsg.type);
 
    Alert::Message alert_msg;
 
-   alert_msg.unpack (server->sendMsg.payload);
+   alert_msg.unpack(server->sendMsg.payload);
 
-   LONGS_EQUAL (5, alert_msg.type);
-   LONGS_EQUAL (0x00000008, alert_msg.state);
+   LONGS_EQUAL(5, alert_msg.type);
+   LONGS_EQUAL(0x00000008, alert_msg.state);
 }
 
 //! @test Should return attribute.
-TEST (AlertServer, Attribute)
+TEST(AlertServer, Attribute)
 {
-   HF::Attributes::IAttribute *attr = server->attribute (Alert::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr = server->attribute(Alert::__LAST_ATTR__ + 1);
 
-   CHECK_TRUE (attr == nullptr);
+   CHECK_TRUE(attr == nullptr);
 
-   attr = server->attribute (Alert::STATE_ATTR);
+   attr = server->attribute(Alert::STATE_ATTR);
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
-   LONGS_EQUAL (Alert::STATE_ATTR, attr->uid ());
-   CHECK_FALSE (attr->isWritable ());
+   LONGS_EQUAL(Alert::STATE_ATTR, attr->uid());
+   CHECK_FALSE(attr->isWritable());
 
-   LONGS_EQUAL (server->uid (), attr->interface ());
+   LONGS_EQUAL(server->uid(), attr->interface());
 
    delete attr;
 
-   attr = server->attribute (Alert::ENABLE_ATTR);
+   attr = server->attribute(Alert::ENABLE_ATTR);
 
-   CHECK_TRUE (attr != nullptr);
+   CHECK_TRUE(attr != nullptr);
 
-   LONGS_EQUAL (Alert::ENABLE_ATTR, attr->uid ());
-   CHECK_TRUE (attr->isWritable ());
+   LONGS_EQUAL(Alert::ENABLE_ATTR, attr->uid());
+   CHECK_TRUE(attr->isWritable());
 
-   LONGS_EQUAL (server->uid (), attr->interface ());
+   LONGS_EQUAL(server->uid(), attr->interface());
 
    delete attr;
 }
@@ -347,36 +347,36 @@ TEST (AlertServer, Attribute)
 // =============================================================================
 
 //! Test Group for AlertClient interface class.
-TEST_GROUP (AlertClient)
+TEST_GROUP(AlertClient)
 {
-   struct TestAlertClient:public Testing::InterfaceHelper <Alert::Client>
+   struct TestAlertClient: public Testing::InterfaceHelper<Alert::Client>
    {
       uint16_t profile_uid;
       uint32_t state;
 
-      TestAlertClient():profile_uid (0), state (0) {}
+      TestAlertClient(): profile_uid(0), state(0) {}
 
-      void status (HF::Protocol::Address &source, Alert::Message &message)
+      void status(HF::Protocol::Address &source, Alert::Message &message)
       {
-         mock ("AlertClient").actualCall ("status");
+         mock("AlertClient").actualCall("status");
 
-         Testing::InterfaceHelper <Alert::Client>::status (source, message);
+         Testing::InterfaceHelper<Alert::Client>::status(source, message);
 
          profile_uid = message.type;
          state       = message.state;
       }
    };
 
-   TestAlertClient  *client;
+   TestAlertClient *client;
 
    Protocol::Packet packet;
    ByteArray expected;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      mock ("AlertClient").ignoreOtherCalls ();
+      mock("AlertClient").ignoreOtherCalls();
 
-      client   = new TestAlertClient ();
+      client   = new TestAlertClient();
 
       expected = ByteArray {0x00, 0x00, 0x00,
                             0x5A, 0xA5,              // Unit Type.
@@ -384,60 +384,60 @@ TEST_GROUP (AlertClient)
                             0x00, 0x00, 0x00};
 
       packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
-      packet.message.itf.id     = client->uid ();
+      packet.message.itf.id     = client->uid();
       packet.message.itf.member = Alert::STATUS_CMD;
 
-      packet.message.length     = expected.size ();
+      packet.message.length     = expected.size();
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
       delete client;
-      mock ().clear ();
+      mock().clear();
    }
 };
 
 //! @test Should handle valid message.
-TEST (AlertClient, Handle_Valid_Message)
+TEST(AlertClient, Handle_Valid_Message)
 {
-   mock ("AlertClient").expectOneCall ("status");
+   mock("AlertClient").expectOneCall("status");
 
-   Result result = client->handle (packet, expected, 3);
-   CHECK_EQUAL (Result::OK, result);
+   Result result = client->handle(packet, expected, 3);
+   CHECK_EQUAL(Result::OK, result);
 
-   LONGS_EQUAL (0x5AA5, client->profile_uid);
-   LONGS_EQUAL (0xFFA55ABB, client->state);
+   LONGS_EQUAL(0x5AA5, client->profile_uid);
+   LONGS_EQUAL(0xFFA55ABB, client->state);
 
-   mock ("AlertClient").checkExpectations ();
+   mock("AlertClient").checkExpectations();
 }
 
 //! @test Should not handle message from invalid role.
-TEST (AlertClient, Handle_Invalid_Role)
+TEST(AlertClient, Handle_Invalid_Role)
 {
    packet.message.itf.role = HF::Interface::SERVER_ROLE;
 
-   CHECK_EQUAL (Result::FAIL_SUPPORT, client->handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_SUPPORT, client->handle(packet, expected, 3));
 }
 
 //! @test Should not handle message from invalid interface UID.
-TEST (AlertClient, Handle_Invalid_UID)
+TEST(AlertClient, Handle_Invalid_UID)
 {
-   packet.message.itf.id = client->uid () + 1;
+   packet.message.itf.id = client->uid() + 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_ARG, client->handle(packet, expected, 3));
 }
 
 //! @test Should not handle message with invalid payload size.
-TEST (AlertClient, Handle_Invalid_Payload_Size)
+TEST(AlertClient, Handle_Invalid_Payload_Size)
 {
    Alert::Message alert_msg;
-   packet.message.length = alert_msg.size () - 1;
+   packet.message.length = alert_msg.size() - 1;
 
-   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 3));
+   CHECK_EQUAL(Result::FAIL_ARG, client->handle(packet, expected, 3));
 }
 
 //! @test Should not handle message with not enough payload.
-TEST (AlertClient, Handle_Invalid_Payload)
+TEST(AlertClient, Handle_Invalid_Payload)
 {
-   CHECK_EQUAL (Result::FAIL_ARG, client->handle (packet, expected, 10));
+   CHECK_EQUAL(Result::FAIL_ARG, client->handle(packet, expected, 10));
 }

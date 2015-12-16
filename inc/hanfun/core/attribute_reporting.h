@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Attribute Reporting Service
  * in HAN-FUN.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -46,11 +46,14 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (HF::Core::AttributeReporting::IServer *server,
-                                                    uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Core::AttributeReporting::IServer *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the classes that implement the Attribute Reporting service.
+       *
+       * @todo Add support for Get Periodic Report Entries command.
+       * @todo Add support for Get Event Report Entries command.
        */
       namespace AttributeReporting
       {
@@ -113,20 +116,20 @@ namespace HF
              * @param [in] _id   report id.
              */
             Reference(uint8_t _type = 0, uint8_t _id = 0):
-               type (_type), id (_id)
+               type(_type), id(_id)
             {}
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t);
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -145,13 +148,13 @@ namespace HF
                                                  + sizeof(uint8_t);            // Attribute Pack ID.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
             protected:
 
@@ -171,16 +174,16 @@ namespace HF
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = Reference::min_size             // Report ID.
-                                                 + Protocol::Address ::min_size; // Destination Address.
+                                                 + Protocol::Address::min_size;  // Destination Address.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
             protected:
 
@@ -191,7 +194,7 @@ namespace HF
              *
              * @param [in] type Report reference type of this rule.
              */
-            Rule(Type type):report (type) {}
+            Rule(Type type): report(type) {}
          };
 
          /*! @} */
@@ -214,23 +217,23 @@ namespace HF
             /*!
              * This class represents an entry in a periodic rule.
              */
-            struct Entry:public AttributeReporting::Entry
+            struct Entry: public AttributeReporting::Entry
             {
                HF::Attributes::UIDS uids;
 
-               uint16_t size () const;
+               uint16_t size() const;
 
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
             /*!
              * This class represents a periodic rule for attribute reporting.
              */
-            struct Rule:public AttributeReporting::Rule
+            struct Rule: public AttributeReporting::Rule
             {
-               typedef Common::SimpleList <Entry> Container;
+               typedef Common::SimpleList<Entry> Container;
 
                typedef Container::iterator iterator;
 
@@ -247,8 +250,9 @@ namespace HF
                 *
                 * @param [in] _interval   periodic rule interval value.
                 */
-               Rule(uint32_t _interval = 0):AttributeReporting::Rule(PERIODIC), interval (_interval),
-                  last_time (0)
+               Rule(uint32_t _interval = 0): AttributeReporting::Rule(PERIODIC),
+                  interval(_interval),
+                  last_time(0)
                {}
 
                //! Minimum pack/unpack required data size.
@@ -256,28 +260,28 @@ namespace HF
                                                     + sizeof(uint32_t)                   // Interval Value.
                                                     + sizeof(uint8_t);                   // Nr. Entries.
 
-               uint16_t size () const;
+               uint16_t size() const;
 
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
                /*!
                 * Add the given @c entry to rule.
                 *
                 * @param [in] entry    reference to the entry to add to this rule.
                 */
-               void add (const Entry &entry)
+               void add(const Entry &entry)
                {
-                  entries.push_front (entry);
+                  entries.push_front(entry);
                }
 
                /*!
                 * Remove all entries in this rule.
                 */
-               void clear ()
+               void clear()
                {
-                  entries.clear ();
+                  entries.clear();
                }
 
                /*!
@@ -285,9 +289,9 @@ namespace HF
                 *
                 * @return  number of entries present in this rule.
                 */
-               uint16_t entries_count ()
+               uint16_t entries_count()
                {
-                  return std::distance (entries.begin (), entries.end ());
+                  return std::distance(entries.begin(), entries.end());
                }
 
 
@@ -296,9 +300,9 @@ namespace HF
                 *
                 * @return  iterator to the start of the entries present in this rule.
                 */
-               iterator begin ()
+               iterator begin()
                {
-                  return entries.begin ();
+                  return entries.begin();
                }
 
                /*!
@@ -306,9 +310,9 @@ namespace HF
                 *
                 * @return  iterator to the end of the entries present in this rule.
                 */
-               iterator end ()
+               iterator end()
                {
-                  return entries.end ();
+                  return entries.end();
                }
 
                /*!
@@ -316,9 +320,9 @@ namespace HF
                 *
                 * @return  iterator to the start of the entries present in this rule.
                 */
-               const_iterator cbegin () const
+               const_iterator cbegin() const
                {
-                  return entries.cbegin ();
+                  return entries.cbegin();
                }
 
                /*!
@@ -326,9 +330,9 @@ namespace HF
                 *
                 * @return  iterator to the end of the entries present in this rule.
                 */
-               const_iterator cend () const
+               const_iterator cend() const
                {
-                  return entries.cend ();
+                  return entries.cend();
                }
 
                protected:
@@ -387,7 +391,7 @@ namespace HF
                 * @param [in] _attr_uid   field attribute uid.
                 */
                Field(Type _type = COV, uint8_t _attr_uid = 0):
-                  type (_type), attr_uid (_attr_uid)
+                  type(_type), attr_uid(_attr_uid)
                {}
 
                //! Minimum pack/unpack required data size.
@@ -400,14 +404,14 @@ namespace HF
                 * @param [in] with_uid    if @c true include @c attr_uid size
                 *                         in the size calculation.
                 */
-               uint16_t size (bool with_uid) const;
+               uint16_t size(bool with_uid) const;
 
                /*!
                 * @copydoc HF::Common::Serializable::pack
                 *
                 * @param [in] with_uid    include @c attr_uid in the serialization.
                 */
-               uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset, bool with_uid) const;
 
                /*!
                 * @copydoc HF::Common::Serializable::unpack
@@ -417,64 +421,64 @@ namespace HF
                 *
                 * @param [in] with_uid    include uid() size in the calculation.
                 */
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset, bool with_uid);
             };
 
             /*!
              * Report event entry.
              */
-            struct Entry:public AttributeReporting::Entry
+            struct Entry: public AttributeReporting::Entry
             {
                //! Vector containing the fields for this entry.
-               std::vector <Field> fields;
+               std::vector<Field> fields;
 
-               uint16_t size () const;
+               uint16_t size() const;
 
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
             /*!
              * Report event rule.
              */
-            struct Rule:public AttributeReporting::Rule
+            struct Rule: public AttributeReporting::Rule
             {
-               typedef Common::SimpleList <Entry> Container;
+               typedef Common::SimpleList<Entry> Container;
 
                typedef Container::iterator iterator;
 
                typedef Container::const_iterator const_iterator;
 
-               Rule():AttributeReporting::Rule(EVENT)
+               Rule(): AttributeReporting::Rule(EVENT)
                {}
 
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = AttributeReporting::Rule::min_size    // Parent Min. Size.
                                                     + sizeof(uint8_t);                    // Nr. Entries.
 
-               uint16_t size () const;
+               uint16_t size() const;
 
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
                /*!
                 * Add the given @c entry to rule.
                 *
                 * @param [in] entry    reference to the entry to add to this rule.
                 */
-               void add (const Entry &entry)
+               void add(const Entry &entry)
                {
-                  entries.push_front (entry);
+                  entries.push_front(entry);
                }
 
                /*!
                 * Remove all entries in this rule.
                 */
-               void clear ()
+               void clear()
                {
-                  entries.clear ();
+                  entries.clear();
                }
 
                /*!
@@ -482,9 +486,9 @@ namespace HF
                 *
                 * @return  number of entries present in this rule.
                 */
-               uint16_t entries_count ()
+               uint16_t entries_count()
                {
-                  return std::distance (entries.begin (), entries.end ());
+                  return std::distance(entries.begin(), entries.end());
                }
 
                /*!
@@ -492,9 +496,9 @@ namespace HF
                 *
                 * @return  iterator to the start of the entries present in this rule.
                 */
-               iterator begin ()
+               iterator begin()
                {
-                  return entries.begin ();
+                  return entries.begin();
                }
 
                /*!
@@ -502,9 +506,9 @@ namespace HF
                 *
                 * @return  iterator to the end of the entries present in this rule.
                 */
-               iterator end ()
+               iterator end()
                {
-                  return entries.end ();
+                  return entries.end();
                }
 
                /*!
@@ -512,9 +516,9 @@ namespace HF
                 *
                 * @return  iterator to the start of the entries present in this rule.
                 */
-               const_iterator cbegin () const
+               const_iterator cbegin() const
                {
-                  return entries.cbegin ();
+                  return entries.cbegin();
                }
 
                /*!
@@ -522,9 +526,9 @@ namespace HF
                 *
                 * @return  iterator to the end of the entries present in this rule.
                 */
-               const_iterator cend () const
+               const_iterator cend() const
                {
-                  return entries.cend ();
+                  return entries.cend();
                }
 
                protected:
@@ -555,12 +559,12 @@ namespace HF
             // Notification API
             // =============================================================================
 
-            typedef std::shared_ptr <HF::Attributes::IAttribute> Attribute;
+            typedef std::shared_ptr<HF::Attributes::IAttribute> Attribute;
 
             /*!
              * Parent call for all reports.
              */
-            struct Abstract:public AttributeReporting::Reference
+            struct Abstract: public AttributeReporting::Reference
             {
                /*!
                 * Constructor.
@@ -569,7 +573,7 @@ namespace HF
                 * @param [in] id   report id.
                 */
                Abstract(uint8_t type = 0, uint8_t id = 0):
-                  AttributeReporting::Reference (type, id)
+                  AttributeReporting::Reference(type, id)
                {}
             };
 
@@ -585,7 +589,7 @@ namespace HF
                uint8_t           unit; //!< Unit id that originated this notification.
                Common::Interface itf;  //!< Interface UID this notification relates to.
 
-               Entry():unit (0), itf (0, 0) {}
+               Entry(): unit(0), itf(0, 0) {}
 
                /*!
                 * Constructor.
@@ -594,16 +598,16 @@ namespace HF
                 * @param [in] _itf     interface %UID for this notification.
                 */
                Entry(uint8_t _unit, Common::Interface _itf):
-                  unit (_unit), itf (_itf)
+                  unit(_unit), itf(_itf)
                {}
 
                virtual ~Entry() {}
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                /*!
                 * @copydoc HF::Common::Serializable::unpack
@@ -611,8 +615,8 @@ namespace HF
                 * @param [in] get_factory    pointer to a function that returns the attribute factory
                 *                            for the interface given by @c itf.
                 */
-               uint16_t unpack (HF::Attributes::FactoryGetter get_factory,
-                                const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(HF::Attributes::FactoryGetter get_factory,
+                               const Common::ByteArray &array, uint16_t offset = 0);
 
                protected:
 
@@ -624,12 +628,12 @@ namespace HF
                 * @param [in] factory  function pointer to used to create attributes for the
                 *                      interface given in @c itf.
                 */
-               virtual uint16_t unpack (HF::Attributes::Factory factory,
-                                        const Common::ByteArray &array, uint16_t offset = 0)
+               virtual uint16_t unpack(HF::Attributes::Factory factory,
+                                       const Common::ByteArray &array, uint16_t offset = 0)
                {
-                  UNUSED (factory);
-                  UNUSED (array);
-                  UNUSED (offset);
+                  UNUSED(factory);
+                  UNUSED(array);
+                  UNUSED(offset);
 
                   return 0;
                }
@@ -639,7 +643,7 @@ namespace HF
                 *
                 * @return  number of entries is this rule entry.
                 */
-               virtual uint8_t count () const
+               virtual uint8_t count() const
                {
                   return 0;
                }
@@ -661,13 +665,13 @@ namespace HF
                static constexpr uint16_t min_size = Protocol::Address::min_size; // Destination.
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc HF::Common::Serializable::unpack
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
             /*!
@@ -682,13 +686,13 @@ namespace HF
                static constexpr uint16_t min_size = Reference::min_size; // Report ID.
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc HF::Common::Serializable::unpack
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
             /*!
@@ -707,13 +711,13 @@ namespace HF
                                                     + sizeof(uint8_t);  // Nr. Entries.
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc HF::Common::Serializable::unpack
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
                protected:
 
@@ -724,10 +728,10 @@ namespace HF
                 *
                 * Unpack an underling entry for the add entry command.
                 */
-               virtual uint16_t unpack_entry (const Common::ByteArray &array, uint16_t offset = 0)
+               virtual uint16_t unpack_entry(const Common::ByteArray &array, uint16_t offset = 0)
                {
-                  UNUSED (array);
-                  UNUSED (offset);
+                  UNUSED(array);
+                  UNUSED(offset);
 
                   return 0;
                }
@@ -737,7 +741,7 @@ namespace HF
                 *
                 * @return number of entries in this message.
                 */
-               virtual uint8_t count () const
+               virtual uint8_t count() const
                {
                   return 0;
                }
@@ -747,7 +751,7 @@ namespace HF
                 *
                 * @return minimum number of bytes required for unpacking an entry.
                 */
-               virtual uint16_t entry_size () const
+               virtual uint16_t entry_size() const
                {
                   return 0;
                }
@@ -760,14 +764,14 @@ namespace HF
             /*!
              * Periodic report notification.
              */
-            struct Periodic:public Abstract
+            struct Periodic: public Abstract
             {
                /*!
                 * Periodic notification entry.
                 */
-               struct Entry:public Report::Entry
+               struct Entry: public Report::Entry
                {
-                  std::vector <Report::Attribute> attributes;
+                  std::vector<Report::Attribute> attributes;
 
                   Entry() {}
 
@@ -777,58 +781,58 @@ namespace HF
                    * @param [in] unit    unit id for this notification.
                    * @param [in] itf     interface %UID for this notification.
                    */
-                  Entry(uint8_t unit, Common::Interface itf):Report::Entry(unit, itf)
+                  Entry(uint8_t unit, Common::Interface itf): Report::Entry(unit, itf)
                   {}
 
-                  uint16_t size () const;
+                  uint16_t size() const;
 
-                  uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+                  uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                   /*!
                    * Add attribute to this periodic report entry.
                    *
                    * @param [in] attr  reference to a pointer of the attribute to add.
                    */
-                  void add (HF::Attributes::IAttribute * &attr);
+                  void add(HF::Attributes::IAttribute * &attr);
 
                   using Report::Entry::unpack;
 
                   protected:
 
-                  uint16_t unpack (HF::Attributes::Factory factory,
-                                   const Common::ByteArray &array, uint16_t offset = 0);
+                  uint16_t unpack(HF::Attributes::Factory factory,
+                                  const Common::ByteArray &array, uint16_t offset = 0);
 
-                  uint8_t count () const
+                  uint8_t count() const
                   {
-                     return attributes.size ();
+                     return attributes.size();
                   }
                };
 
                //! Entries associated with this notification.
-               Common::SimpleList <Entry> entries;
+               Common::SimpleList<Entry> entries;
 
                /*!
                 * Constructor.
                 *
                 * @param [in] id    report reference ID.
                 */
-               Periodic(uint8_t id = 0):Abstract (PERIODIC, id)
+               Periodic(uint8_t id = 0): Abstract(PERIODIC, id)
                {}
 
-               uint16_t size () const;
+               uint16_t size() const;
 
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc Report::Entry::unpack
-               uint16_t unpack (HF::Attributes::FactoryGetter get_factory,
-                                const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(HF::Attributes::FactoryGetter get_factory,
+                               const Common::ByteArray &array, uint16_t offset = 0);
 
                /*!
                 * Add entry into this periodic report.
                 *
                 * @param [in] entry    entry to add into this periodic report.
                 */
-               void add (Entry &entry);
+               void add(Entry &entry);
 
                // =============================================================================
                // Message API
@@ -837,24 +841,24 @@ namespace HF
                /*!
                 * Create a Periodic rule message.
                 */
-               struct CreateMessage:public Report::CreateMessage
+               struct CreateMessage: public Report::CreateMessage
                {
                   //! Time interval to send the periodic report.
                   uint32_t interval;
 
-                  uint16_t size () const;
+                  uint16_t size() const;
 
-                  uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+                  uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-                  uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+                  uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
                };
 
                /*!
                 * Add entries into a periodic rule message.
                 */
-               struct AddEntryMessage:public Report::AddEntryMessage
+               struct AddEntryMessage: public Report::AddEntryMessage
                {
-                  typedef Common::SimpleList <AttributeReporting::Periodic::Entry> Container;
+                  typedef Common::SimpleList<AttributeReporting::Periodic::Entry> Container;
 
                   typedef Container::iterator iterator;
 
@@ -865,18 +869,18 @@ namespace HF
                      report.type = PERIODIC;
                   }
 
-                  uint16_t size () const;
+                  uint16_t size() const;
 
-                  uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+                  uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                   /*!
                    * Add a periodic entry into this message.
                    *
                    * @param [in] entry    entry to add to this message.
                    */
-                  void add (const AttributeReporting::Periodic::Entry &entry)
+                  void add(const AttributeReporting::Periodic::Entry &entry)
                   {
-                     entries.push_front (entry);
+                     entries.push_front(entry);
                   }
 
                   /*!
@@ -884,9 +888,9 @@ namespace HF
                    *
                    * @return  iterator to the start of the entries present in this rule.
                    */
-                  iterator begin ()
+                  iterator begin()
                   {
-                     return entries.begin ();
+                     return entries.begin();
                   }
 
                   /*!
@@ -894,9 +898,9 @@ namespace HF
                    *
                    * @return  iterator to the end of the entries present in this message.
                    */
-                  iterator end ()
+                  iterator end()
                   {
-                     return entries.end ();
+                     return entries.end();
                   }
 
                   /*!
@@ -904,9 +908,9 @@ namespace HF
                    *
                    * @return  constant iterator to the start of the entries present in this message.
                    */
-                  const_iterator cbegin () const
+                  const_iterator cbegin() const
                   {
-                     return entries.cbegin ();
+                     return entries.cbegin();
                   }
 
                   /*!
@@ -914,9 +918,9 @@ namespace HF
                    *
                    * @return  constant iterator to the end of the entries present in this message.
                    */
-                  const_iterator cend () const
+                  const_iterator cend() const
                   {
-                     return entries.cend ();
+                     return entries.cend();
                   }
 
                   protected:
@@ -924,14 +928,14 @@ namespace HF
                   //! Entries container.
                   Container entries;
 
-                  uint16_t unpack_entry (const Common::ByteArray &array, uint16_t offset = 0);
+                  uint16_t unpack_entry(const Common::ByteArray &array, uint16_t offset = 0);
 
-                  uint8_t count () const
+                  uint8_t count() const
                   {
-                     return std::distance (entries.begin (), entries.end ());
+                     return std::distance(entries.begin(), entries.end());
                   }
 
-                  uint16_t entry_size () const
+                  uint16_t entry_size() const
                   {
                      return AttributeReporting::Periodic::Entry::min_size;
                   }
@@ -945,7 +949,7 @@ namespace HF
             /*!
              * Event type notification.
              */
-            struct Event:public Abstract
+            struct Event: public Abstract
             {
                /*!
                 * Field for the entries in event notification.
@@ -962,34 +966,34 @@ namespace HF
                   Attribute attribute;
 
                   //! @copydoc HF::Common::Serializable::size
-                  uint16_t size () const;
+                  uint16_t size() const;
 
                   //! @copydoc HF::Common::Serializable::pack
-                  uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+                  uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                   //! @copydoc Report::Entry::unpack(HF::Attributes::Factory, const Common::ByteArray &, uint16_t)
-                  uint16_t unpack (HF::Attributes::Factory factory, const Common::ByteArray &array,
-                                   uint16_t offset = 0);
+                  uint16_t unpack(HF::Attributes::Factory factory, const Common::ByteArray &array,
+                                  uint16_t offset = 0);
 
                   /*!
                    * Set the field's attribute to the given attribute in @c attr.
                    *
                    * @param [in] attr  pointer to the attribute to set this field to.
                    */
-                  void set_attribute (HF::Attributes::IAttribute *attr)
+                  void set_attribute(HF::Attributes::IAttribute *attr)
                   {
-                     Attribute temp (attr);
-                     attribute = std::move (temp);
+                     Attribute temp(attr);
+                     attribute = std::move(temp);
                   }
                };
 
                /*!
                 * Event notification entry.
                 */
-               struct Entry:public Report::Entry
+               struct Entry: public Report::Entry
                {
                   //! Vector containing the fields for the event entry.
-                  std::vector <Field> fields;
+                  std::vector<Field> fields;
 
                   Entry() {}
 
@@ -999,63 +1003,63 @@ namespace HF
                    * @param [in] unit    unit id for this notification.
                    * @param [in] itf     interface %UID for this notification.
                    */
-                  Entry(uint8_t unit, Common::Interface itf):Report::Entry(unit, itf)
+                  Entry(uint8_t unit, Common::Interface itf): Report::Entry(unit, itf)
                   {}
 
-                  uint16_t size () const;
+                  uint16_t size() const;
 
-                  uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+                  uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                   /*!
                    * Add the given field into this entry.
                    *
                    * @param [in] field    field to add to the entry.
                    */
-                  void add (Field &field)
+                  void add(Field &field)
                   {
-                     fields.push_back (std::move (field));
+                     fields.push_back(std::move(field));
                   }
 
                   using Report::Entry::unpack;
 
                   protected:
 
-                  uint16_t unpack (HF::Attributes::Factory factory,
-                                   const Common::ByteArray &array, uint16_t offset = 0);
+                  uint16_t unpack(HF::Attributes::Factory factory,
+                                  const Common::ByteArray &array, uint16_t offset = 0);
 
-                  uint8_t count () const
+                  uint8_t count() const
                   {
-                     return fields.size ();
+                     return fields.size();
                   }
                };
 
                //! Entries for the event notification.
-               Common::SimpleList <Entry> entries;
+               Common::SimpleList<Entry> entries;
 
                /*!
                 * Constructor.
                 *
                 * @param [in] id    report reference ID.
                 */
-               Event(uint8_t id = 0):Abstract (EVENT, id)
+               Event(uint8_t id = 0): Abstract(EVENT, id)
                {}
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc Report::Entry::unpack
-               uint16_t unpack (HF::Attributes::FactoryGetter get_factory,
-                                const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(HF::Attributes::FactoryGetter get_factory,
+                               const Common::ByteArray &array, uint16_t offset = 0);
 
                /*!
                 * Add event entry into this event report.
                 */
-               void add (Entry &entry)
+               void add(Entry &entry)
                {
-                  entries.push_front (std::move (entry));
+                  entries.push_front(std::move(entry));
                }
 
                // =============================================================================
@@ -1065,15 +1069,15 @@ namespace HF
                /*!
                 * Create a Event rule message.
                 */
-               struct CreateMessage:public Report::CreateMessage
+               struct CreateMessage: public Report::CreateMessage
                {};
 
                /*!
                 * Add entries into a event rule message.
                 */
-               struct AddEntryMessage:public Report::AddEntryMessage
+               struct AddEntryMessage: public Report::AddEntryMessage
                {
-                  typedef Common::SimpleList <AttributeReporting::Event::Entry> Container;
+                  typedef Common::SimpleList<AttributeReporting::Event::Entry> Container;
 
                   typedef Container::iterator iterator;
 
@@ -1084,18 +1088,18 @@ namespace HF
                      report.type = EVENT;
                   }
 
-                  uint16_t size () const;
+                  uint16_t size() const;
 
-                  uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+                  uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                   /*!
                    * Add a event entry into this message.
                    *
                    * @param [in] entry    entry to add to this message.
                    */
-                  void add (const AttributeReporting::Event::Entry &entry)
+                  void add(const AttributeReporting::Event::Entry &entry)
                   {
-                     entries.push_front (entry);
+                     entries.push_front(entry);
                   }
 
                   /*!
@@ -1103,9 +1107,9 @@ namespace HF
                    *
                    * @return  iterator to the start of the entries present in this rule.
                    */
-                  iterator begin ()
+                  iterator begin()
                   {
-                     return entries.begin ();
+                     return entries.begin();
                   }
 
                   /*!
@@ -1113,9 +1117,9 @@ namespace HF
                    *
                    * @return  iterator to the end of the entries present in this message.
                    */
-                  iterator end ()
+                  iterator end()
                   {
-                     return entries.end ();
+                     return entries.end();
                   }
 
                   /*!
@@ -1123,9 +1127,9 @@ namespace HF
                    *
                    * @return  constant iterator to the start of the entries present in this message.
                    */
-                  const_iterator cbegin () const
+                  const_iterator cbegin() const
                   {
-                     return entries.cbegin ();
+                     return entries.cbegin();
                   }
 
                   /*!
@@ -1133,9 +1137,9 @@ namespace HF
                    *
                    * @return  constant iterator to the end of the entries present in this message.
                    */
-                  const_iterator cend () const
+                  const_iterator cend() const
                   {
-                     return entries.cend ();
+                     return entries.cend();
                   }
 
                   protected:
@@ -1143,14 +1147,14 @@ namespace HF
                   //! Container that holds the entries present in the message.
                   Container entries;
 
-                  uint16_t unpack_entry (const Common::ByteArray &array, uint16_t offset = 0);
+                  uint16_t unpack_entry(const Common::ByteArray &array, uint16_t offset = 0);
 
-                  uint8_t count () const
+                  uint8_t count() const
                   {
-                     return std::distance (entries.begin (), entries.end ());
+                     return std::distance(entries.begin(), entries.end());
                   }
 
-                  uint16_t entry_size () const
+                  uint16_t entry_size() const
                   {
                      return AttributeReporting::Event::Entry::min_size;
                   }
@@ -1166,7 +1170,7 @@ namespace HF
                 *
                 * @return  an report event entry to be sent or @c nullptr if no fields match.
                 */
-               static Report::Event::Entry *process (
+               static Report::Event::Entry *process(
                   const AttributeReporting::Event::Entry &entry,
                   const HF::Attributes::IAttribute &old_value,
                   const HF::Attributes::IAttribute &new_value);
@@ -1184,15 +1188,15 @@ namespace HF
          // Message API
          // =============================================================================
 
-         struct Response:public HF::Protocol::Response
+         struct Response: public HF::Protocol::Response
          {
             Reference report;
 
-            uint16_t size () const;
+            uint16_t size() const;
 
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          // =============================================================================
@@ -1208,8 +1212,8 @@ namespace HF
          //! Value indicating all reports.
          static constexpr uint8_t ALL_ADDR = 0x7F;
 
-         typedef std::vector <Periodic::Entry>::iterator periodic_iterator;
-         typedef std::vector <Event::Entry>::iterator event_iterator;
+         typedef std::vector<Periodic::Entry>::iterator periodic_iterator;
+         typedef std::vector<Event::Entry>::iterator event_iterator;
 
          /*!
           * Create a new attribute reporting event rule for the device with the
@@ -1220,7 +1224,7 @@ namespace HF
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
           */
-         Protocol::Message *create (Protocol::Address &destination);
+         Protocol::Message *create(Protocol::Address &destination);
 
          /*!
           * Create a new attribute reporting periodic rule for the device with the
@@ -1232,7 +1236,7 @@ namespace HF
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
           */
-         Protocol::Message *create (Protocol::Address &destination, uint32_t interval);
+         Protocol::Message *create(Protocol::Address &destination, uint32_t interval);
 
          /*!
           * Remove the rule with the given @c type and the given @c report_id.
@@ -1243,7 +1247,7 @@ namespace HF
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
           */
-         Protocol::Message *destroy (Type type, uint8_t report_id);
+         Protocol::Message *destroy(Type type, uint8_t report_id);
 
          /*!
           * Remove the rule for the given @c report reference.
@@ -1253,7 +1257,7 @@ namespace HF
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
           */
-         Protocol::Message *destroy (Reference report);
+         Protocol::Message *destroy(Reference report);
 
          /*!
           * Add the periodic entries from @c start to @c end into the rule with
@@ -1266,7 +1270,7 @@ namespace HF
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
           */
-         Protocol::Message *add (Reference report, periodic_iterator begin, periodic_iterator end);
+         Protocol::Message *add(Reference report, periodic_iterator begin, periodic_iterator end);
 
          /*!
           * Add the event entries from @c start to @c end into the rule with
@@ -1279,7 +1283,7 @@ namespace HF
           * @return  pointer to a message indicating the result of the operation to be
           *          sent to the requesting device.
           */
-         Protocol::Message *add (Reference report, event_iterator begin, event_iterator end);
+         Protocol::Message *add(Reference report, event_iterator begin, event_iterator end);
 
          /*!
           * @copybrief HF::Core::create_attribute (HF::Core::AttributeReporting::Server *,uint8_t)
@@ -1291,7 +1295,7 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * @}
@@ -1302,13 +1306,13 @@ namespace HF
          /*!
           * Attribute Reporting - Client Role.
           */
-         struct Client:public HF::Interfaces::Base <HF::Interface::ATTRIBUTE_REPORTING>
+         struct Client: public HF::Interfaces::Interface<HF::Interface::ATTRIBUTE_REPORTING>
          {
             // =============================================================================
             // Interface API
             // =============================================================================
 
-            Interface::Role role () const
+            Interface::Role role() const
             {
                return HF::Interface::CLIENT_ROLE;
             }
@@ -1332,13 +1336,13 @@ namespace HF
              * @param [in] offset   offset from which to start reading the data of the
              *                      the report in the @c payload.
              */
-            virtual void report (Type type, const Protocol::Address &address,
-                                 const Common::ByteArray &payload, uint16_t offset)
+            virtual void report(Type type, const Protocol::Address &address,
+                                const Common::ByteArray &payload, uint16_t offset)
             {
-               UNUSED (type);
-               UNUSED (address);
-               UNUSED (payload);
-               UNUSED (offset);
+               UNUSED(type);
+               UNUSED(address);
+               UNUSED(payload);
+               UNUSED(offset);
             }
 
             /*!
@@ -1348,10 +1352,10 @@ namespace HF
              * @param [in] address     device address that originated the event.
              * @param [in] response    result of the operation.
              */
-            virtual void created (const Protocol::Address &address, const Response &response)
+            virtual void created(const Protocol::Address &address, const Response &response)
             {
-               UNUSED (address);
-               UNUSED (response);
+               UNUSED(address);
+               UNUSED(response);
             }
 
             /*!
@@ -1361,10 +1365,10 @@ namespace HF
              * @param [in] address     device address that originated the event.
              * @param [in] response    result of the operation.
              */
-            virtual void added (const Protocol::Address &address, const Response &response)
+            virtual void added(const Protocol::Address &address, const Response &response)
             {
-               UNUSED (address);
-               UNUSED (response);
+               UNUSED(address);
+               UNUSED(response);
             }
 
             /*!
@@ -1373,10 +1377,10 @@ namespace HF
              * @param [in] address     device address that originated the event.
              * @param [in] response    result of the operation.
              */
-            virtual void deleted (const Protocol::Address &address, const Response &response)
+            virtual void deleted(const Protocol::Address &address, const Response &response)
             {
-               UNUSED (address);
-               UNUSED (response);
+               UNUSED(address);
+               UNUSED(response);
             }
 
             //! @}
@@ -1384,19 +1388,19 @@ namespace HF
 
             protected:
 
-            uint16_t payload_size (Protocol::Message &message) const;
+            uint16_t payload_size(Protocol::Message &message) const;
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
 
          };
 
          /*!
           * Helper class for using the Attribute Reporting service.
           */
-         struct AbstractClient:public Client
+         struct AbstractClient: public Client
          {
             // =============================================================================
             // API
@@ -1414,7 +1418,7 @@ namespace HF
              *
              * @param [in] destination   device address the rule should be sent to.
              */
-            void create (Protocol::Address &destination);
+            void create(Protocol::Address &destination);
 
             /*!
              * Create a new attribute reporting periodic rule on the device with the
@@ -1424,7 +1428,7 @@ namespace HF
              * @param [in] destination   device address the rule should be sent to.
              * @param [in] interval      time interval in seconds for the periodic rule.
              */
-            void create (Protocol::Address &destination, uint32_t interval);
+            void create(Protocol::Address &destination, uint32_t interval);
 
             /*!
              * Remove the rule with the given @c type and the given @c report_id,
@@ -1434,7 +1438,7 @@ namespace HF
              * @param [in] type           report type (HF::Core::AttributeReporting::Type)
              * @param [in] report_id      report ID.
              */
-            void destroy (Protocol::Address &destination, Type type, uint8_t report_id);
+            void destroy(Protocol::Address &destination, Type type, uint8_t report_id);
 
             /*!
              * Remove the rule for the given @c report reference, on the device with the
@@ -1443,7 +1447,7 @@ namespace HF
              * @param [in] destination    device address the rule should be sent to.
              * @param [in] report         report reference to remove the rule for.
              */
-            void destroy (Protocol::Address &destination, Reference report);
+            void destroy(Protocol::Address &destination, Reference report);
 
             /*!
              * Add the periodic entries from @c start to @c end into the rule with
@@ -1454,8 +1458,8 @@ namespace HF
              * @param [in] begin          iterator to the start of the periodic entries to add.
              * @param [in] end            iterator to the end of the periodic entries to add.
              */
-            void add (Protocol::Address &destination, Reference report,
-                      periodic_iterator begin, periodic_iterator end);
+            void add(Protocol::Address &destination, Reference report,
+                     periodic_iterator begin, periodic_iterator end);
 
             /*!
              * Add the event entries from @c start to @c end into the rule with
@@ -1467,8 +1471,8 @@ namespace HF
              * @param [in] begin          iterator to the start of the event entries to add.
              * @param [in] end            iterator to the end of the event entries to add.
              */
-            void add (Protocol::Address &destination, Reference report,
-                      event_iterator begin, event_iterator end);
+            void add(Protocol::Address &destination, Reference report,
+                     event_iterator begin, event_iterator end);
 
             //! @}
             // ======================================================================
@@ -1480,7 +1484,7 @@ namespace HF
              *
              * @return  reference to unit that contains this interface.
              */
-            virtual HF::Units::IUnit &unit () const = 0;
+            virtual HF::Units::IUnit &unit() const = 0;
          };
 
          /*!
@@ -1491,7 +1495,7 @@ namespace HF
           *
           * All requests will get a HF::Common::Result::FAIL_RESOURCES response.
           */
-         struct IServer:public AbstractService
+         struct IServer: public AbstractService
          {
             /*!
              * Constructor.
@@ -1499,7 +1503,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             IServer(Unit0 &unit):
-               AbstractService (unit)
+               AbstractService(unit)
             {}
 
             virtual ~IServer() {}
@@ -1508,12 +1512,12 @@ namespace HF
             // API
             // =============================================================================
 
-            uint16_t uid () const
+            uint16_t uid() const
             {
                return HF::Interface::ATTRIBUTE_REPORTING;
             }
 
-            Interface::Role role () const
+            Interface::Role role() const
             {
                return HF::Interface::SERVER_ROLE;
             }
@@ -1529,12 +1533,12 @@ namespace HF
              * @param [in] old_value   old value for the attribute.
              * @param [in] new_value   new value for the attribute.
              */
-            virtual void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
-                                 const HF::Attributes::IAttribute &new_value)
+            virtual void notify(uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                                const HF::Attributes::IAttribute &new_value)
             {
-               UNUSED (unit);
-               UNUSED (old_value);
-               UNUSED (new_value);
+               UNUSED(unit);
+               UNUSED(old_value);
+               UNUSED(new_value);
             }
 
             /*!
@@ -1544,9 +1548,9 @@ namespace HF
              *
              * @return  number of rules for the given @c type.
              */
-            virtual uint16_t count (Type type) const
+            virtual uint16_t count(Type type) const
             {
-               UNUSED (type);
+               UNUSED(type);
                return 0;
             }
 
@@ -1554,15 +1558,15 @@ namespace HF
             // Interface Attribute API.
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            HF::Attributes::IAttribute *attribute(uint8_t uid)
             {
-               return Core::create_attribute (this, uid);
+               return Core::create_attribute(this, uid);
             }
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id =
-                                                HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const
             {
-               UNUSED (pack_id);
+               UNUSED(pack_id);
                return HF::Attributes::UIDS {REPORT_COUNT_ATTR, PERIODIC_REPORT_COUNT_ATTR,
                                             EVENT_REPORT_COUNT_ATTR};
             }
@@ -1571,8 +1575,8 @@ namespace HF
 
             using AbstractService::notify;
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
 
             /*!
              * Send the response to a command with the given @c result.
@@ -1581,7 +1585,7 @@ namespace HF
              * @param [in] report   report identification.
              * @param [in] result   operation result.
              */
-            void response (Protocol::Packet &packet, Reference &report, Common::Result result);
+            void response(Protocol::Packet &packet, Reference &report, Common::Result result);
 
             /*!
              * Check if the given command is authorized for the device with
@@ -1593,27 +1597,27 @@ namespace HF
              * @retval  true  the command if authorized.
              * @retval  false otherwise.
              */
-            virtual bool authorized (uint8_t member, Protocol::Address &source)
+            virtual bool authorized(uint8_t member, Protocol::Address &source)
             {
-               UNUSED (member);
-               UNUSED (source);
+               UNUSED(member);
+               UNUSED(source);
 
                return true;
             }
 
-            bool check_uid (uint16_t uid) const
+            bool check_uid(uint16_t uid) const
             {
-               return IServer::uid () == uid;
+               return IServer::uid() == uid;
             }
          };
 
          /*!
           * %Attribute Reporting - %Server %Role.
           */
-         struct Server:public IServer
+         struct Server: public IServer
          {
-            Common::SimpleList <Periodic::Rule> periodic_rules;    //!< Periodic rules.
-            Common::SimpleList <Event::Rule>    event_rules;       //!< Event rules.
+            Common::SimpleList<Periodic::Rule> periodic_rules;     //!< Periodic rules.
+            Common::SimpleList<Event::Rule>    event_rules;        //!< Event rules.
 
             /*!
              * Constructor.
@@ -1621,7 +1625,7 @@ namespace HF
              * @param [in] unit  reference to the unit containing this service.
              */
             Server(Unit0 &unit):
-               IServer (unit), last_time (0)
+               IServer(unit), last_time(0)
             {}
 
             virtual ~Server() {}
@@ -1638,7 +1642,7 @@ namespace HF
              * @retval HF::Common::Result::FAIL_RESOURCES   if the rule could not be created.
              * @retval HF::Common::Result::OK               if the rule was created.
              */
-            virtual Common::Result handle (const Report::Periodic::CreateMessage &message);
+            virtual Common::Result handle(const Report::Periodic::CreateMessage &message);
 
             /*!
              * Handle an add periodic entries message.
@@ -1648,7 +1652,7 @@ namespace HF
              * @retval Common::Result::FAIL_ARG    if the rule cannot be found.
              * @retval Common::Result::OK          if the entries where added.
              */
-            virtual Common::Result handle (const Report::Periodic::AddEntryMessage &message);
+            virtual Common::Result handle(const Report::Periodic::AddEntryMessage &message);
 
             /*!
              * Handle a create event rule command.
@@ -1658,7 +1662,7 @@ namespace HF
              * @retval HF::Common::Result::FAIL_RESOURCES   if the rule could not be created.
              * @retval HF::Common::Result::OK               if the rule was created.
              */
-            virtual Common::Result handle (const Report::Event::CreateMessage &message);
+            virtual Common::Result handle(const Report::Event::CreateMessage &message);
 
             /*!
              * Handle an add event entries message.
@@ -1668,7 +1672,7 @@ namespace HF
              * @retval Common::Result::FAIL_ARG    if the rule cannot be found.
              * @retval Common::Result::OK          if the entries where added.
              */
-            virtual Common::Result handle (const Report::Event::AddEntryMessage &message);
+            virtual Common::Result handle(const Report::Event::AddEntryMessage &message);
 
             /*!
              * Handle a delete rule request.
@@ -1678,16 +1682,16 @@ namespace HF
              * @retval Common::Result::FAIL_ARG    if the rule cannot be found.
              * @retval Common::Result::OK          if the rule was deleted.
              */
-            virtual Common::Result handle (const Report::DeleteMessage &message);
+            virtual Common::Result handle(const Report::DeleteMessage &message);
 
             using HF::Interfaces::AbstractInterface::handle;
 
-            void periodic (uint32_t time);
+            void periodic(uint32_t time);
 
-            void notify (uint8_t unit, const HF::Attributes::IAttribute &old_value,
-                         const HF::Attributes::IAttribute &new_value);
+            void notify(uint8_t unit, const HF::Attributes::IAttribute &old_value,
+                        const HF::Attributes::IAttribute &new_value);
 
-            uint16_t count (Type type) const;
+            uint16_t count(Type type) const;
 
             protected:
 
@@ -1696,10 +1700,10 @@ namespace HF
 
             using AbstractService::notify;
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
          };
 
          /*! @} */
@@ -1727,7 +1731,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command);
+std::ostream &operator<<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command);
 
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
@@ -1737,7 +1741,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporting::Attributes attribute);
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::AttributeReporting::Attributes attribute);
 
 /*! @} */
 

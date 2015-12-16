@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Bind Management : Client Role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,26 +35,26 @@ using namespace HF::Core::BindManagement;
  *
  */
 // =============================================================================
-void Client::add (const Protocol::Address &source, const Protocol::Address &destination,
-                  const Common::Interface &itf)
+void Client::add(const Protocol::Address &source, const Protocol::Address &destination,
+                 const Common::Interface &itf)
 {
-   Protocol::Address addr (0, 0);
+   Protocol::Address addr(0, 0);
 
-   BindManagement::Entry *payload = new BindManagement::Entry ();
+   BindManagement::Entry *payload = new BindManagement::Entry();
 
    payload->source      = source;
    payload->destination = destination;
    payload->itf         = itf;
 
-   Protocol::Message message (payload->size ());
+   Protocol::Message message(payload->size());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = BindManagement::Client::uid ();
+   message.itf.id     = BindManagement::Client::uid();
    message.itf.member = ADD_BIND_CMD;
 
-   payload->pack (message.payload);
+   payload->pack(message.payload);
 
-   send (addr, message);
+   send(addr, message);
 
    delete payload;
 }
@@ -66,26 +66,26 @@ void Client::add (const Protocol::Address &source, const Protocol::Address &dest
  *
  */
 // =============================================================================
-void Client::remove (const Protocol::Address &source, const Protocol::Address &destination,
-                     const Common::Interface &itf)
+void Client::remove(const Protocol::Address &source, const Protocol::Address &destination,
+                    const Common::Interface &itf)
 {
-   Protocol::Address addr (0, 0);
+   Protocol::Address addr(0, 0);
 
-   BindManagement::Entry *payload = new BindManagement::Entry ();
+   BindManagement::Entry *payload = new BindManagement::Entry();
 
    payload->source      = source;
    payload->destination = destination;
    payload->itf         = itf;
 
-   Protocol::Message message (payload->size ());
+   Protocol::Message message(payload->size());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = BindManagement::Client::uid ();
+   message.itf.id     = BindManagement::Client::uid();
    message.itf.member = REMOVE_BIND_CMD;
 
-   payload->pack (message.payload);
+   payload->pack(message.payload);
 
-   send (addr, message);
+   send(addr, message);
 
    delete payload;
 }
@@ -97,7 +97,7 @@ void Client::remove (const Protocol::Address &source, const Protocol::Address &d
  *
  */
 // =============================================================================
-uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -106,13 +106,13 @@ uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
          return Protocol::Response::min_size;
 
       case START_SESSION_CMD:
-         return SessionMgr::payload_size (SessionManagement::START);
+         return SessionMgr::payload_size(SessionManagement::START);
 
       case GET_ENTRIES_CMD:
-         return SessionMgr::payload_size (SessionManagement::GET);
+         return SessionMgr::payload_size(SessionManagement::GET);
 
       case END_SESSION_CMD:
-         return SessionMgr::payload_size (SessionManagement::END);
+         return SessionMgr::payload_size(SessionManagement::END);
 
       default:
          return 0;
@@ -126,12 +126,12 @@ uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
  *
  */
 // =============================================================================
-Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
-                                                       Common::ByteArray &payload, uint16_t offset)
+Common::Result BindManagement::Client::handle_command(Protocol::Packet &packet,
+                                                      Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result   = Common::Result::FAIL_UNKNOWN;
 
-   BindManagement::CMD cmd = static_cast <BindManagement::CMD>(packet.message.itf.member);
+   BindManagement::CMD cmd = static_cast<BindManagement::CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
@@ -139,20 +139,20 @@ Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
       case REMOVE_BIND_CMD:
       {
          Protocol::Response response;
-         response.unpack (payload, offset);
+         response.unpack(payload, offset);
 
-         this->response (cmd, response);
+         this->response(cmd, response);
          result = Common::Result::OK;
          break;
       }
       case START_SESSION_CMD:
-         return SessionMgr::handle_command (SessionManagement::START, packet, payload, offset);
+         return SessionMgr::handle_command(SessionManagement::START, packet, payload, offset);
 
       case GET_ENTRIES_CMD:
-         return SessionMgr::handle_command (SessionManagement::GET, packet, payload, offset);
+         return SessionMgr::handle_command(SessionManagement::GET, packet, payload, offset);
 
       case END_SESSION_CMD:
-         return SessionMgr::handle_command (SessionManagement::END, packet, payload, offset);
+         return SessionMgr::handle_command(SessionManagement::END, packet, payload, offset);
 
       default:
          break;
@@ -168,9 +168,9 @@ Common::Result BindManagement::Client::handle_command (Protocol::Packet &packet,
  *
  */
 // =============================================================================
-void BindManagement::Client::response (const BindManagement::CMD cmd,
-                                       const Protocol::Response &response)
+void BindManagement::Client::response(const BindManagement::CMD cmd,
+                                      const Protocol::Response &response)
 {
-   UNUSED (cmd);
-   UNUSED (response);
+   UNUSED(cmd);
+   UNUSED(response);
 }

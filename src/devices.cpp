@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,9 +35,9 @@ using namespace HF::Devices;
  *
  */
 // =============================================================================
-Units::IUnit *AbstractDevice::unit (uint8_t id) const
+Units::IUnit *AbstractDevice::unit(uint8_t id) const
 {
-   if (_units.empty ())
+   if (_units.empty())
    {
       return nullptr;
    }
@@ -49,7 +49,7 @@ Units::IUnit *AbstractDevice::unit (uint8_t id) const
    });
    /* *INDENT-ON* */
 
-   if (it == _units.end ())
+   if (it == _units.end())
    {
       return nullptr;
    }
@@ -66,37 +66,37 @@ Units::IUnit *AbstractDevice::unit (uint8_t id) const
  *
  */
 // =============================================================================
-void AbstractDevice::send (Protocol::Packet &packet)
+void AbstractDevice::send(Protocol::Packet &packet)
 {
-   if (is_local (packet) && is_registered ())
+   if (is_local(packet) && is_registered())
    {
-      receive (packet, packet.message.payload, 0);
+      receive(packet, packet.message.payload, 0);
       return;
    }
 
    Transport::Link *tsp_link = packet.link;
 
    // Update message reference if it is a request.
-   if (packet.source.device == address () && Protocol::request (packet.message.type, false))
+   if (packet.source.device == address() && Protocol::request(packet.message.type, false))
    {
       packet.message.reference = this->next_reference++;
    }
 
    if (tsp_link == nullptr)
    {
-      packet.link = tsp_link = link (packet.destination.device);
+      packet.link = tsp_link = link(packet.destination.device);
    }
 
    if (tsp_link != nullptr)
    {
-      Common::ByteArray array (packet.size ());
+      Common::ByteArray array(packet.size());
 
-      packet.pack (array);
+      packet.pack(array);
 
-      tsp_link->send (array);
+      tsp_link->send(array);
    }
 
-   response_filter (packet);
+   response_filter(packet);
 }
 
 // =============================================================================
@@ -106,37 +106,37 @@ void AbstractDevice::send (Protocol::Packet &packet)
  *
  */
 // =============================================================================
-void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+void AbstractDevice::receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
-   assert (nullptr != packet.link);
+   assert(nullptr != packet.link);
 
-   if (is_local (packet))
+   if (is_local(packet))
    {
-      IUnit *unit = this->unit (packet.destination.unit);
+      IUnit *unit = this->unit(packet.destination.unit);
 
       if (unit != nullptr)
       {
-         result = unit->handle (packet, payload, offset);
+         result = unit->handle(packet, payload, offset);
       }
    }
 
    // Send missing response.
-   if (response_filter (packet))
+   if (response_filter(packet))
    {
-      Protocol::Message  *message = new Protocol::Message (packet.message, 0);
-      Protocol::Response resp (result);
-      message->payload = Common::ByteArray (resp.size ());
+      Protocol::Message *message = new Protocol::Message(packet.message, 0);
+      Protocol::Response resp(result);
+      message->payload = Common::ByteArray(resp.size());
 
-      resp.pack (message->payload);
+      resp.pack(message->payload);
 
-      Protocol::Packet *resp_packet = new Protocol::Packet (*message);
+      Protocol::Packet *resp_packet = new Protocol::Packet(*message);
       resp_packet->link = packet.link;
 
       delete message;
 
-      send (*resp_packet);
+      send(*resp_packet);
 
       delete resp_packet;
    }
@@ -149,7 +149,7 @@ void AbstractDevice::receive (Protocol::Packet &packet, Common::ByteArray &paylo
  *
  */
 // =============================================================================
-void AbstractDevice::periodic (uint32_t time)
+void AbstractDevice::periodic(uint32_t time)
 {
    /* *INDENT-OFF* */
    std::for_each(units().begin(), units().end(), [time](Units::IUnit *unit)
@@ -178,16 +178,16 @@ void AbstractDevice::periodic (uint32_t time)
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::connected (HF::Transport::Link *link)
+void Concentrator::AbstractBase::connected(HF::Transport::Link *link)
 {
-   _links.push_front (link);
+   _links.push_front(link);
 
    // Check if a registration exists for this link.
-   auto entry = unit0 ()->device_management ()->entry (link->uid ());
+   auto entry = unit0()->device_management()->entry(link->uid());
 
    if (entry != nullptr)
    {
-      link->address (entry->address);
+      link->address(entry->address);
    }
 }
 
@@ -198,9 +198,9 @@ void Concentrator::AbstractBase::connected (HF::Transport::Link *link)
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::disconnected (HF::Transport::Link *link)
+void Concentrator::AbstractBase::disconnected(HF::Transport::Link *link)
 {
-   _links.remove (link);
+   _links.remove(link);
 }
 
 // =============================================================================
@@ -210,27 +210,27 @@ void Concentrator::AbstractBase::disconnected (HF::Transport::Link *link)
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::ByteArray &payload,
-                                          uint16_t offset)
+void Concentrator::AbstractBase::receive(Protocol::Packet &packet, Common::ByteArray &payload,
+                                         uint16_t offset)
 {
    if (packet.destination.device == Protocol::BROADCAST_ADDR)
    {
-      route_packet (packet, payload, offset);
+      route_packet(packet, payload, offset);
    }
-   else if (is_local (packet))  // The message is for us.
+   else if (is_local(packet))   // The message is for us.
    {
-      AbstractDevice::receive (packet, payload, offset);
+      AbstractDevice::receive(packet, payload, offset);
    }
    else  // Route message to the proper device.
    {
       Protocol::Packet other = packet;
       other.link            = nullptr;
 
-      other.message.payload = Common::ByteArray (payload.size () - offset);
+      other.message.payload = Common::ByteArray(payload.size() - offset);
 
-      std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+      std::copy(payload.begin() + offset, payload.end(), other.message.payload.begin());
 
-      send (other);
+      send(other);
    }
 }
 
@@ -241,9 +241,9 @@ void Concentrator::AbstractBase::receive (Protocol::Packet &packet, Common::Byte
  *
  */
 // =============================================================================
-HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
+HF::Transport::Link *Concentrator::AbstractBase::link(uint16_t addr) const
 {
-   if (_links.empty ())
+   if (_links.empty())
    {
       return nullptr;
    }
@@ -256,7 +256,7 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
                           });
    /* *INDENT-ON* */
 
-   if (it == _links.end ())
+   if (it == _links.end())
    {
       return nullptr;
    }
@@ -271,10 +271,10 @@ HF::Transport::Link *Concentrator::AbstractBase::link (uint16_t addr) const
  *
  */
 // =============================================================================
-void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                               uint16_t offset)
+void Concentrator::AbstractBase::route_packet(Protocol::Packet &packet, Common::ByteArray &payload,
+                                              uint16_t offset)
 {
-   typedef std::pair<Protocol::Address,Common::Interface> RoutePair;
+   typedef std::pair<Protocol::Address, Common::Interface> RoutePair;
    /* *INDENT-OFF* */
    static std::array<RoutePair, 8> route_pairs {{  // | Idx | Device    | Unit      | Interface |
                                                    // | --- | --------- | --------- | --------- |
@@ -296,30 +296,30 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
       return;
    }
 
-   route_pairs[0].first = packet.source;
-   route_pairs[0].second = packet.message.itf;
+   route_pairs[0].first        = packet.source;
+   route_pairs[0].second       = packet.message.itf;
 
-   route_pairs[1].first = packet.source;
+   route_pairs[1].first        = packet.source;
 
    route_pairs[2].first.device = packet.source.device;
-   route_pairs[2].second = packet.message.itf;
+   route_pairs[2].second       = packet.message.itf;
 
    route_pairs[3].first.device = packet.source.device;
 
-   route_pairs[4].second = packet.message.itf;
+   route_pairs[4].second       = packet.message.itf;
 
-   route_pairs[6].first.unit = packet.source.unit;
-   route_pairs[6].second = packet.message.itf;
+   route_pairs[6].first.unit   = packet.source.unit;
+   route_pairs[6].second       = packet.message.itf;
 
-   route_pairs[7].first.unit = packet.source.unit;
+   route_pairs[7].first.unit   = packet.source.unit;
 
    // Find bind entries for device.
-   auto &entries = unit0 ()->bind_management ()->entries ();
+   auto &entries = unit0()->bind_management()->entries();
 
-   if (std::none_of (route_pairs.begin(), route_pairs.end(),
-                     [&entries](const RoutePair &pair)
+   if (std::none_of(route_pairs.begin(), route_pairs.end(),
+                    [&entries](const RoutePair &pair)
    {
-      return entries.any_of (pair.first, pair.second);
+      return entries.any_of(pair.first, pair.second);
    }))
    {
       return;
@@ -328,21 +328,21 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
    // Send packets to binded destination devices.
    Protocol::Packet other = packet;
 
-   other.message.payload = Common::ByteArray (payload.size () - offset);
+   other.message.payload = Common::ByteArray(payload.size() - offset);
 
-   std::copy (payload.begin () + offset, payload.end (), other.message.payload.begin ());
+   std::copy(payload.begin() + offset, payload.end(), other.message.payload.begin());
 
    auto process_entry = [this, &other, &packet](const Core::BindManagement::Entry &entry)
                         {
                            other.destination = entry.destination;
-                           other.link        = this->is_local (other) ? packet.link : nullptr;
-                           this->send (other);
+                           other.link        = this->is_local(other) ? packet.link : nullptr;
+                           this->send(other);
                         };
 
    std::for_each(route_pairs.begin(), route_pairs.end(),
                  [&entries, &process_entry](const RoutePair &pair)
    {
-      entries.for_each (pair.first, pair.second, process_entry);
+      entries.for_each(pair.first, pair.second, process_entry);
    });
 }
 
@@ -350,10 +350,10 @@ void Concentrator::AbstractBase::route_packet (Protocol::Packet &packet, Common:
 // HF::Devices::Concentrator::Transport
 // =============================================================================
 
-void Concentrator::Transport::destroy ()
+void Concentrator::Transport::destroy()
 {
-   remove ((HF::Transport::Endpoint *) nullptr);
-   remove ((HF::Transport::Link *) nullptr);
+   remove((HF::Transport::Endpoint *) nullptr);
+   remove((HF::Transport::Link *) nullptr);
 }
 
 // =============================================================================
@@ -363,7 +363,7 @@ void Concentrator::Transport::destroy ()
  *
  */
 // =============================================================================
-void Concentrator::Transport::remove (HF::Transport::Link *link)
+void Concentrator::Transport::remove(HF::Transport::Link *link)
 {
    if (link != nullptr)
    {
@@ -374,7 +374,7 @@ void Concentrator::Transport::remove (HF::Transport::Link *link)
       });
       /* *INDENT-ON* */
 
-      links.remove (link);
+      links.remove(link);
 
       delete link;
    }
@@ -392,7 +392,7 @@ void Concentrator::Transport::remove (HF::Transport::Link *link)
       });
       /* *INDENT-ON* */
 
-      links.clear ();
+      links.clear();
    }
 }
 
@@ -403,7 +403,7 @@ void Concentrator::Transport::remove (HF::Transport::Link *link)
  *
  */
 // =============================================================================
-HF::Transport::Link *Concentrator::Transport::find (uint16_t address)
+HF::Transport::Link *Concentrator::Transport::find(uint16_t address)
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(links.begin(), links.end(),
@@ -414,7 +414,7 @@ HF::Transport::Link *Concentrator::Transport::find (uint16_t address)
    /* *INDENT-ON* */
 
    // Link was found.
-   if (it != links.end ())
+   if (it != links.end())
    {
       return *it;
    }

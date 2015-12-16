@@ -4,7 +4,7 @@
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -46,6 +46,10 @@
 #include "hanfun/interfaces/on_off.h"
 #include "hanfun/interfaces/level_control.h"
 #include "hanfun/interfaces/simple_power_meter.h"
+#include "hanfun/interfaces/simple_thermostat.h"
+#include "hanfun/interfaces/simple_button.h"
+#include "hanfun/interfaces/simple_visual_effects.h"
+#include "hanfun/interfaces/simple_air_pressure.h"
 
 // =============================================================================
 // Core Services & Interfaces.
@@ -54,6 +58,10 @@
 #include "hanfun/core.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/device_information.h"
+#include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/bind_management.h"
+#include "hanfun/core/rssi.h"
+#include "hanfun/core/suota.h"
 
 // =============================================================================
 // Profiles

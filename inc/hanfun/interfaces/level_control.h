@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Level Control interface.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -43,8 +43,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (HF::Interfaces::LevelControl::Server *server,
-                                                    uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Interfaces::LevelControl::Server *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Level Control interface
@@ -79,33 +79,33 @@ namespace HF
             //! Level value to set at the server side.
             uint8_t level;
 
-            Message(uint8_t level = 0):level (level) {}
+            Message(uint8_t level = 0): level(level) {}
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t);
 
             //! \see HF::Serializable::size.
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! \see HF::Serializable::pack.
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               SERIALIZABLE_CHECK (array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-               array.write (offset, level);
+               array.write(offset, level);
 
                return min_size;
             }
 
             //! \see HF::Serializable::unpack.
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               SERIALIZABLE_CHECK (array, offset, min_size);
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-               array.read (offset, level);
+               array.read(offset, level);
 
                return min_size;
             }
@@ -114,13 +114,13 @@ namespace HF
          /*!
           * Helper class to handle the %Level attribute for the Level Control interface.
           */
-         struct Level:public HF::Attributes::Attribute <uint8_t>
+         struct Level: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID        = LEVEL_ATTR;
             static constexpr bool    WRITABBLE = true;
 
             Level(uint8_t level = 0, HF::Interface *owner = nullptr):
-               Attribute <uint8_t>(Interface::LEVEL_CONTROL, ID, owner, level, WRITABBLE)
+               Attribute<uint8_t>(HF::Interface::LEVEL_CONTROL, ID, owner, level, WRITABBLE)
             {}
          };
 
@@ -134,25 +134,25 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * Level Control Interface : Parent.
           *
           * This is the parent class for the Level Control interface implementation.
           */
-         struct Base:public Interfaces::Base <Interface::LEVEL_CONTROL>
+         struct Base: public Interface<HF::Interface::LEVEL_CONTROL>
          {
             protected:
 
             Base() {}
 
-            using Interfaces::Base <Interface::LEVEL_CONTROL>::payload_size;
+            using Interface<HF::Interface::LEVEL_CONTROL>::payload_size;
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const
+            uint16_t payload_size(Protocol::Message::Interface &itf) const
             {
-               UNUSED (itf);
-               return payload_size_helper <Level>();
+               UNUSED(itf);
+               return payload_size_helper<Level>();
             }
 
             /*!
@@ -160,7 +160,7 @@ namespace HF
              *
              * @param [in] value    reference to the value to check and fix.
              */
-            void check_and_fix (float &value)
+            void check_and_fix(float &value)
             {
                if (value < 0)
                {
@@ -186,7 +186,7 @@ namespace HF
           * Use the overloaded level functions with float attributes to send the values
           * in the [0,100] range and have them converted into the proper range.
           */
-         class Server:public InterfaceRole <LevelControl::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<LevelControl::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -196,7 +196,7 @@ namespace HF
             public:
 
             //! Constructor
-            Server():_level (0) {}
+            Server(): _level(0) {}
 
             // ======================================================================
             // API
@@ -207,14 +207,14 @@ namespace HF
              *
              * @return  the current level.
              */
-            uint8_t level ();
+            uint8_t level();
 
             /*!
              * Setter for the server level.
              *
              * @param [in] new_level  the new level value to use.
              */
-            void level (uint8_t new_level);
+            void level(uint8_t new_level);
 
             /*!
              * Setter for the server level (unsigned float).
@@ -224,7 +224,7 @@ namespace HF
              *
              * @param [in] new_level  the new level value to use.
              */
-            void level (float new_level);
+            void level(float new_level);
 
             // =============================================================================
             // Events
@@ -243,7 +243,9 @@ namespace HF
              * @param [in] old_level    the old level value to used.
              * @param [in] new_level    the new level value to use.
              */
-            virtual void level_change (Protocol::Address &source, uint8_t old_level, uint8_t new_level);
+            virtual void level_change(Protocol::Address &source,
+                                      uint8_t old_level,
+                                      uint8_t new_level);
 
             //! @}
             // =============================================================================
@@ -252,28 +254,30 @@ namespace HF
             // Attributes API
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            HF::Attributes::IAttribute *attribute(uint8_t uid)
             {
-               return Interfaces::create_attribute (this, uid);
+               return Interfaces::create_attribute(this, uid);
             }
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const
             {
-               UNUSED (pack_id);
+               UNUSED(pack_id);
                /* *INDENT-OFF* */
                return HF::Attributes::UIDS ({ LevelControl::LEVEL_ATTR });
                /* *INDENT-ON* */
             }
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute (LevelControl::Server *, uint8_t);
+            friend HF::Attributes::IAttribute *Interfaces::create_attribute(LevelControl::Server *,
+                                                                            uint8_t);
 
             protected:
 
-            Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                             uint16_t offset);
+            Common::Result handle_attribute(Protocol::Packet &packet, Common::ByteArray &payload,
+                                            uint16_t offset);
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
          };
 
          /*!
@@ -281,7 +285,7 @@ namespace HF
           *
           * This class provides the client side of the %Level Control interface.
           */
-         class Client:public InterfaceRole <LevelControl::Base, Interface::CLIENT_ROLE>
+         class Client: public InterfaceRole<LevelControl::Base, HF::Interface::CLIENT_ROLE>
          {
             public:
 
@@ -298,7 +302,7 @@ namespace HF
              * @param [in] addr        network address to send the message to.
              * @param [in] new_level   level value to send in the message.
              */
-            void level (Protocol::Address &addr, uint8_t new_level);
+            void level(Protocol::Address &addr, uint8_t new_level);
 
             /*!
              * Send a @c SET_LEVEL_CMD to broadcast network address to set the level
@@ -306,10 +310,10 @@ namespace HF
              *
              * @param [in] new_level    level value to send in the message.
              */
-            void level (uint8_t new_level)
+            void level(uint8_t new_level)
             {
                Protocol::Address addr;
-               level (addr, new_level);
+               level(addr, new_level);
             }
 
             /*!
@@ -318,15 +322,15 @@ namespace HF
              * @remark This method converts the given @c new_level percentage value in the
              * range of [0,100] to the range used by the interface [0-255].
              */
-            void level (Protocol::Address &addr, float new_level);
+            void level(Protocol::Address &addr, float new_level);
 
             /*!
              * @copydoc Client::level(uint8_t)
              */
-            void level (float new_level)
+            void level(float new_level)
             {
                Protocol::Address addr;
-               level (addr, new_level);
+               level(addr, new_level);
             }
 
             //! @}
@@ -358,7 +362,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command);
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command);
 
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
@@ -368,7 +372,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::Attributes attribute);
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::LevelControl::Attributes attribute);
 
 /*! @} */
 

@@ -1,0 +1,74 @@
+<%- unless @commands.empty? && @attributes.empty?-%>
+
+// =============================================================================
+// HF::<%= @namespace.name %>::<%= @interface.to_class %>
+// =============================================================================
+
+#include "hanfun/<%= @namespace.path %>/<%= @interface.path %>.h"
+<%- unless @commands.empty? -%>
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>::<%= @interface.to_class %>::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
+
+   switch (command)
+   {
+      <%- @commands.each do |cmd| -%>
+      case <%= cmd.to_uid %>:
+         result = "<%= cmd.name.split('_').map { |p| p.capitalize }.join(' ') %>";
+         break;
+      <%- end -%>
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+<%- end -%>
+<%- unless @attributes.empty? -%>
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>::<%= @interface.to_class %>::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::<%= @namespace.name %>::<%= @interface.to_class %>;
+
+   switch (attribute)
+   {
+      <%- @attributes.each do |arg| -%>
+      case <%= arg.to_uid %>:
+         result = "<%= arg.to_doc %>";
+         break;
+      <%- end -%>
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+<%- end -%>
+<%- end -%>

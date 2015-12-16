@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -50,34 +50,34 @@ namespace HF
       /*!
        * This class provides the basic implementation for the Device's interface.
        */
-      struct AbstractDevice:public IDevice
+      struct AbstractDevice: public IDevice
       {
          // =============================================================================
          // IDevice API
          // =============================================================================
 
-         const IUnits &units () const
+         const IUnits &units() const
          {
             return _units;
          }
 
-         void add (Units::IUnit *unit)
+         void add(Units::IUnit *unit)
          {
-            _units.push_front (unit);
+            _units.push_front(unit);
          }
 
-         void remove (Units::IUnit *unit)
+         void remove(Units::IUnit *unit)
          {
-            _units.remove (unit);
+            _units.remove(unit);
          }
 
-         Units::IUnit *unit (uint8_t id) const;
+         Units::IUnit *unit(uint8_t id) const;
 
-         void send (Protocol::Packet &packet);
+         void send(Protocol::Packet &packet);
 
-         void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset);
+         void receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset);
 
-         void periodic (uint32_t time);
+         void periodic(uint32_t time);
 
          protected:
 
@@ -91,7 +91,7 @@ namespace HF
          Protocol::Filters::ResponseRequired response_filter;
 
          AbstractDevice():
-            next_reference (0)
+            next_reference(0)
          {}
 
          // =============================================================================
@@ -105,7 +105,7 @@ namespace HF
           * @return             a pointer to the link that can be used to send the packet,
           *                     @c nullptr otherwise;
           */
-         virtual Transport::Link *link (uint16_t addr) const = 0;
+         virtual Transport::Link *link(uint16_t addr) const = 0;
 
          /*!
           * Check if the given packet is for this device.
@@ -114,9 +114,9 @@ namespace HF
           *
           * @return
           */
-         virtual bool is_local (Protocol::Packet &packet)
+         virtual bool is_local(Protocol::Packet &packet)
          {
-            return packet.destination.device == address ();
+            return packet.destination.device == address();
          }
 
          /*!
@@ -124,9 +124,9 @@ namespace HF
           *
           * @return  if the device address is different from HF::Protocol::BROADCAST_ADDR.
           */
-         bool is_registered ()
+         bool is_registered()
          {
-            return this->address () != Protocol::BROADCAST_ADDR;
+            return this->address() != Protocol::BROADCAST_ADDR;
          }
       };
 
@@ -149,7 +149,7 @@ namespace HF
          /*!
           * Interface of Unit 0 for Node devices.
           */
-         struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
+         struct IUnit0: public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
             /*!
              * Constructor
@@ -157,7 +157,7 @@ namespace HF
              * @param device  reference to the device this unit 0 belongs to.
              */
             IUnit0(HF::IDevice &device):
-               HF::Core::Unit0 (device)
+               HF::Core::Unit0(device)
             {}
 
             /*!
@@ -165,27 +165,27 @@ namespace HF
              *
              * @return pointer to the node's Device Management service.
              */
-            virtual HF::Core::DeviceManagement::Client *device_management () = 0;
+            virtual HF::Core::DeviceManagement::Client *device_management() = 0;
 
             /*!
              * Get the pointer to the node's Device Management service.
              *
              * @return pointer to the node's Device Management service.
              */
-            virtual HF::Core::DeviceManagement::Client *device_management () const = 0;
+            virtual HF::Core::DeviceManagement::Client *device_management() const = 0;
          };
 
          /*!
           * Template to create Unit 0 for HAN-FUN node devices.
           */
          template<typename... ITF>
-         struct Unit0:public HF::Unit0 <IUnit0, ITF...>
+         struct Unit0: public HF::Unit0<IUnit0, ITF...>
          {
-            static_assert (std::is_base_of <HF::Core::DeviceManagement::Client,
-                                            typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
+            static_assert(std::is_base_of<HF::Core::DeviceManagement::Client,
+                                          typename HF::Unit0<IUnit0, ITF...>::DeviceMgt>::value,
+                          "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
-            typedef typename HF::Unit0 <IUnit0, ITF...> _Parent;
+            typedef typename HF::Unit0<IUnit0, ITF...> _Parent;
 
             typedef typename _Parent::DeviceInfo DeviceInfo;
             typedef typename _Parent::DeviceMgt DeviceMgt;
@@ -197,7 +197,7 @@ namespace HF
              * @param device  reference to the device this unit 0 belongs to.
              */
             Unit0(IDevice &device):
-               HF::Unit0 <IUnit0, ITF...>(device)
+               HF::Unit0<IUnit0, ITF...>(device)
             {}
 
             /*!
@@ -205,9 +205,9 @@ namespace HF
              *
              * @return pointer to the node's Device Information service.
              */
-            DeviceInfo *device_info () const
+            DeviceInfo *device_info() const
             {
-               return _Parent::device_info ();
+               return _Parent::device_info();
             }
 
             /*!
@@ -215,9 +215,9 @@ namespace HF
              *
              * @return pointer to the node's Device Information service.
              */
-            DeviceInfo *device_info ()
+            DeviceInfo *device_info()
             {
-               return _Parent::device_info ();
+               return _Parent::device_info();
             }
 
             /*!
@@ -225,9 +225,9 @@ namespace HF
              *
              * @return pointer to the node's Attribute Reporting service.
              */
-            AttrReporting *attribute_reporting () const
+            AttrReporting *attribute_reporting() const
             {
-               return _Parent::attribute_reporting ();
+               return _Parent::attribute_reporting();
             }
 
             /*!
@@ -235,9 +235,9 @@ namespace HF
              *
              * @return pointer to the node's Attribute Reporting service.
              */
-            AttrReporting *attribute_reporting ()
+            AttrReporting *attribute_reporting()
             {
-               return _Parent::attribute_reporting ();
+               return _Parent::attribute_reporting();
             }
 
             /*!
@@ -245,9 +245,9 @@ namespace HF
              *
              * @return pointer to the node's Device Management service.
              */
-            DeviceMgt *device_management ()
+            DeviceMgt *device_management()
             {
-               return &std::get <_Parent::DEV_MGT>(_Parent::interfaces);
+               return _Parent::device_management();
             }
 
             /*!
@@ -255,22 +255,22 @@ namespace HF
              *
              * @return pointer to the node's Device Management service.
              */
-            DeviceMgt *device_management () const
+            DeviceMgt *device_management() const
             {
-               return const_cast <DeviceMgt *>(&std::get <_Parent::DEV_MGT>(_Parent::interfaces));
+               return _Parent::device_management();
             }
          };
 
          /*!
           * Unit0 using default classes to provide the core services for node devices.
           */
-         struct DefaultUnit0:public Unit0 <HF::Core::DeviceInformation::Server,
+         struct DefaultUnit0: public Unit0<HF::Core::DeviceInformation::Server,
                                            HF::Core::DeviceManagement::Client,
                                            HF::Core::AttributeReporting::Server>
          {
             DefaultUnit0(IDevice &device):
-               Unit0 <Core::DeviceInformation::Server, Core::DeviceManagement::Client,
-                      Core::AttributeReporting::Server>(device)
+               Unit0<Core::DeviceInformation::Server, Core::DeviceManagement::Client,
+                     Core::AttributeReporting::Server>(device)
             {}
          };
 
@@ -278,7 +278,7 @@ namespace HF
           * Template for declaring HAN-FUN node devices.
           */
          template<typename CoreServices = DefaultUnit0>
-         class Abstract:public AbstractDevice
+         class Abstract: public AbstractDevice
          {
             public:
 
@@ -286,12 +286,12 @@ namespace HF
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected (HF::Transport::Link *link)
+            void connected(HF::Transport::Link *link)
             {
                _link = link;
             }
 
-            void disconnected (HF::Transport::Link *link)
+            void disconnected(HF::Transport::Link *link)
             {
                if (_link == link)
                {
@@ -299,23 +299,23 @@ namespace HF
                }
             }
 
-            void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+            void receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
             {
-               AbstractDevice::receive (packet, payload, offset);
+               AbstractDevice::receive(packet, payload, offset);
             }
 
             // =============================================================================
             // IDevice API.
             // =============================================================================
 
-            uint16_t address () const
+            uint16_t address() const
             {
-               return unit0 ()->device_management ()->address ();
+               return unit0()->device_management()->address();
             }
 
-            CoreServices *unit0 () const
+            CoreServices *unit0() const
             {
-               return const_cast <CoreServices *>(&_unit0);
+               return const_cast<CoreServices *>(&_unit0);
             }
 
             protected:
@@ -326,14 +326,14 @@ namespace HF
             //! Unit 0 implementation this device will use.
             CoreServices _unit0;
 
-            Abstract():_link (nullptr), _unit0 (*this)
+            Abstract(): _link(nullptr), _unit0(*this)
             {}
 
             // =============================================================================
 
-            HF::Transport::Link *link (uint16_t addr) const
+            HF::Transport::Link *link(uint16_t addr) const
             {
-               UNUSED (addr);
+               UNUSED(addr);
                return _link;
             }
 
@@ -345,20 +345,20 @@ namespace HF
              * @retval  true  if the packet if for the node;
              * @retval  false otherwise.
              */
-            bool is_local (Protocol::Packet &packet)
+            bool is_local(Protocol::Packet &packet)
             {
-               return AbstractDevice::is_local (packet) ||
+               return AbstractDevice::is_local(packet) ||
                       // If we are unregistered only allow packets to unit 0.
-                      (address () == Protocol::BROADCAST_ADDR && packet.destination.unit == 0);
+                      (address() == Protocol::BROADCAST_ADDR && packet.destination.unit == 0);
             }
          };
 
-         typedef Abstract <> Node;
+         typedef Abstract<> Node;
 
          /*!
           * Parent class for transport layer implementations on a HAN-FUN Node.
           */
-         class Transport:public HF::Transport::AbstractLayer
+         class Transport: public HF::Transport::AbstractLayer
          {
             protected:
 
@@ -368,21 +368,21 @@ namespace HF
             public:
 
             Transport():
-               link (nullptr)
+               link(nullptr)
             {}
 
-            void destroy ()
+            void destroy()
             {
-               remove ((HF::Transport::Link *) nullptr);
+               remove((HF::Transport::Link *) nullptr);
             }
 
-            void add (HF::Transport::Endpoint *ep)
+            void add(HF::Transport::Endpoint *ep)
             {
-               HF::Transport::AbstractLayer::add (ep);
+               HF::Transport::AbstractLayer::add(ep);
 
                if (link != nullptr)
                {
-                  ep->connected (link);
+                  ep->connected(link);
                }
             }
 
@@ -392,12 +392,12 @@ namespace HF
              *
              * @param [in] _link  pointer to the link to add.
              */
-            void add (HF::Transport::Link *_link)
+            void add(HF::Transport::Link *_link)
             {
-               assert (_link != nullptr);
+               assert(_link != nullptr);
 
                this->link = _link;
-               HF::Transport::AbstractLayer::connected (_link);
+               HF::Transport::AbstractLayer::connected(_link);
             }
 
             /*!
@@ -408,11 +408,11 @@ namespace HF
              *
              * @param [in] _link  pointer to the link to remove.
              */
-            void remove (HF::Transport::Link *_link = nullptr)
+            void remove(HF::Transport::Link *_link = nullptr)
             {
                if ((_link == nullptr && this->link != nullptr) || (_link == this->link))
                {
-                  HF::Transport::AbstractLayer::disconnected (this->link);
+                  HF::Transport::AbstractLayer::disconnected(this->link);
                   delete this->link;
                   this->link = nullptr;
                }
@@ -431,9 +431,9 @@ namespace HF
              * @return  a pointer to the link for the given address or
              *          @c nullptr if no link exists for the given address.
              */
-            HF::Transport::Link *find (uint16_t address)
+            HF::Transport::Link *find(uint16_t address)
             {
-               UNUSED (address);
+               UNUSED(address);
                return link;
             }
          };
@@ -459,7 +459,7 @@ namespace HF
          /*!
           * Unit 0 interface API for HAN-FUN Concentrators.
           */
-         struct IUnit0:public HF::Core::Unit0, public HF::IDevice::IUnit0
+         struct IUnit0: public HF::Core::Unit0, public HF::IDevice::IUnit0
          {
             /*!
              * Constructor
@@ -467,7 +467,7 @@ namespace HF
              * @param device  reference to the device this unit 0 belongs to.
              */
             IUnit0(HF::IDevice &device):
-               HF::Core::Unit0 (device)
+               HF::Core::Unit0(device)
             {}
 
             /*!
@@ -475,50 +475,55 @@ namespace HF
              *
              * @return  pointer to unit 0 device management service.
              */
-            virtual HF::Core::DeviceManagement::IServer *device_management () = 0;
+            virtual HF::Core::DeviceManagement::IServer *device_management() = 0;
 
             /*!
              * Return a pointer to unit 0 device management service.
              *
              * @return  pointer to unit 0 device management service.
              */
-            virtual HF::Core::DeviceManagement::IServer *device_management () const = 0;
+            virtual HF::Core::DeviceManagement::IServer *device_management() const = 0;
 
             /*!
              * Return a pointer to unit 0 bind management service.
              *
              * @return  pointer to unit 0 bind management service.
              */
-            virtual HF::Core::BindManagement::IServer *bind_management () = 0;
+            virtual HF::Core::BindManagement::IServer *bind_management() = 0;
 
             /*!
              * Return a pointer to unit 0 bind management service.
              *
              * @return  pointer to unit 0 bind management service.
              */
-            virtual HF::Core::BindManagement::IServer *bind_management () const = 0;
+            virtual HF::Core::BindManagement::IServer *bind_management() const = 0;
          };
 
          /*!
           * Template to create Unit0 for HAN-FUN concentrator devices.
           */
          template<typename... ITF>
-         struct Unit0:public HF::Unit0 <IUnit0, ITF...>
+         struct Unit0: public HF::Unit0<IUnit0, ITF...>
          {
-            static_assert (std::is_base_of <HF::Core::DeviceManagement::IServer,
-                                            typename HF::Unit0 <IUnit0, ITF...>::DeviceMgt>::value,
-                           "DeviceMgt must be of type HF::Core::DeviceManagement::IServer");
+            static_assert(std::is_base_of<HF::Core::DeviceManagement::IServer,
+                                          typename HF::Unit0<IUnit0, ITF...>::DeviceMgt>::value,
+                          "DeviceMgt must be of type HF::Core::DeviceManagement::IServer");
 
-            typedef typename HF::Unit0 <IUnit0, ITF...> _Parent;
+            typedef typename HF::Unit0<IUnit0, ITF...> _Parent;
 
             typedef typename _Parent::DeviceInfo DeviceInfo;
             typedef typename _Parent::DeviceMgt DeviceMgt;
             typedef typename _Parent::AttrReporting AttrReporting;
 
-            typedef typename std::tuple_element <3, decltype (_Parent::interfaces)>::type BindMgt;
+            using interfaces_t = std::tuple<ITF...>;
 
-            static_assert (std::is_base_of <HF::Core::BindManagement::IServer, BindMgt>::value,
-                           "BindMgt must be of type HF::Core::BindManagement::IServer");
+            //! Bind Management service index.
+            static constexpr uint8_t BIND_MGT = _Parent::ATTR_RPT + 1;
+
+            typedef typename std::tuple_element<BIND_MGT, interfaces_t>::type BindMgt;
+
+            static_assert(std::is_base_of<HF::Core::BindManagement::IServer, BindMgt>::value,
+                          "BindMgt must be of type HF::Core::BindManagement::IServer");
 
             /*!
              * Constructor
@@ -526,44 +531,44 @@ namespace HF
              * @param device  reference to the device this unit 0 belongs to.
              */
             Unit0(HF::IDevice &device):
-               HF::Unit0 <IUnit0, ITF...>(device)
+               HF::Unit0<IUnit0, ITF...>(device)
             {}
 
-            BindMgt *bind_management () const
+            BindMgt *bind_management() const
             {
-               return const_cast <BindMgt *>(&std::get <3>(_Parent::interfaces));
+               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
             }
 
-            BindMgt *bind_management ()
+            BindMgt *bind_management()
             {
-               return &std::get <3>(_Parent::interfaces);
+               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
             }
 
-            DeviceInfo *device_info () const
+            DeviceInfo *device_info() const
             {
-               return _Parent::device_info ();
+               return _Parent::device_info();
             }
 
-            DeviceInfo *device_info ()
+            DeviceInfo *device_info()
             {
-               return _Parent::device_info ();
+               return _Parent::device_info();
             }
 
-            AttrReporting *attribute_reporting () const
+            AttrReporting *attribute_reporting() const
             {
-               return _Parent::attribute_reporting ();
+               return _Parent::attribute_reporting();
             }
 
-            AttrReporting *attribute_reporting ()
+            AttrReporting *attribute_reporting()
             {
-               return _Parent::attribute_reporting ();
+               return _Parent::attribute_reporting();
             }
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0:public Unit0 <Core::DeviceInformation::Server,
+         struct DefaultUnit0: public Unit0<Core::DeviceInformation::Server,
                                            Core::DeviceManagement::DefaultServer,
                                            Core::AttributeReporting::Server,
                                            Core::BindManagement::DefaultServer>
@@ -574,7 +579,7 @@ namespace HF
              * @param device  reference to the device this unit 0 belongs to.
              */
             DefaultUnit0(IDevice &device):
-               Unit0 (device)
+               Unit0(device)
             {}
          };
 
@@ -582,7 +587,7 @@ namespace HF
           * This is the parent class for the HAN-FUN Concentrator devices
           * implementation.
           */
-         class AbstractBase:public AbstractDevice
+         class AbstractBase: public AbstractDevice
          {
             public:
 
@@ -590,7 +595,7 @@ namespace HF
             // IDevice API.
             // =============================================================================
 
-            uint16_t address () const
+            uint16_t address() const
             {
                return 0;
             }
@@ -599,22 +604,22 @@ namespace HF
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected (HF::Transport::Link *link);
+            void connected(HF::Transport::Link *link);
 
-            void disconnected (HF::Transport::Link *link);
+            void disconnected(HF::Transport::Link *link);
 
-            void receive (Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset);
+            void receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset);
 
             virtual ~AbstractBase() {}
 
             protected:
 
             //! List of links present in this concentrator.
-            Common::SimpleList <Transport::Link *> _links;
+            Common::SimpleList<Transport::Link *> _links;
 
             // =============================================================================
 
-            HF::Transport::Link *link (uint16_t addr) const;
+            HF::Transport::Link *link(uint16_t addr) const;
 
             /*!
              * Route the given packet to the corresponding device.
@@ -623,63 +628,63 @@ namespace HF
              * @param [in] payload reference to the ByteArray containing the packet payload.
              * @param [in] offset  offset from where the packet data starts.
              */
-            virtual void route_packet (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset);
+            virtual void route_packet(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset);
 
             /*!
              * Get the unit 0 used by this concentrator device.
              *
              * @return pointer to the unit 0 used by this concentrator device.
              */
-            virtual Concentrator::IUnit0 *unit0 () const = 0;
+            virtual Concentrator::IUnit0 *unit0() const = 0;
          };
 
          /*!
           * Template for HAN-FUN concentrator devices.
           */
          template<typename CoreServices = DefaultUnit0>
-         class Abstract:public AbstractBase
+         class Abstract: public AbstractBase
          {
             public:
 
-            CoreServices *unit0 () const
+            CoreServices *unit0() const
             {
-               return const_cast <CoreServices *>(&_unit0);
+               return const_cast<CoreServices *>(&_unit0);
             }
 
             protected:
 
             CoreServices _unit0;
 
-            Abstract():AbstractBase (), _unit0 (*this)
+            Abstract(): AbstractBase(), _unit0(*this)
             {}
          };
 
-         typedef Abstract <> Concentrator;
+         typedef Abstract<> Concentrator;
 
          /*!
           * Parent class for transport layer implementations on a HAN-FUN
           * %Concentrator device.
           */
-         class Transport:public HF::Transport::AbstractLayer
+         class Transport: public HF::Transport::AbstractLayer
          {
             protected:
 
             //! List of links present in the transport layer.
-            Common::SimpleList <HF::Transport::Link *> links;
+            Common::SimpleList<HF::Transport::Link *> links;
 
             public:
 
             virtual ~Transport()
             {
-               destroy ();
+               destroy();
             }
 
-            void destroy ();
+            void destroy();
 
-            void add (HF::Transport::Endpoint *ep)
+            void add(HF::Transport::Endpoint *ep)
             {
-               HF::Transport::AbstractLayer::add (ep);
+               HF::Transport::AbstractLayer::add(ep);
                /* *INDENT-OFF* */
                std::for_each(links.begin(), links.end(), [ep](HF::Transport::Link *link)
                {
@@ -694,12 +699,12 @@ namespace HF
              *
              * @param [in] link  pointer to the link to add.
              */
-            void add (HF::Transport::Link *link)
+            void add(HF::Transport::Link *link)
             {
-               assert (link != nullptr);
+               assert(link != nullptr);
 
-               links.push_front (link);
-               HF::Transport::AbstractLayer::connected (link);
+               links.push_front(link);
+               HF::Transport::AbstractLayer::connected(link);
             }
 
             /*!
@@ -710,7 +715,7 @@ namespace HF
              *
              * @param [in] link  pointer to the link to remove.
              */
-            void remove (HF::Transport::Link *link = nullptr);
+            void remove(HF::Transport::Link *link = nullptr);
 
             using HF::Transport::AbstractLayer::remove;
 
@@ -723,7 +728,7 @@ namespace HF
              * @return  a pointer to the link for the given address or
              *          @c nullptr if no link exists for the given address.
              */
-            HF::Transport::Link *find (uint16_t address);
+            HF::Transport::Link *find(uint16_t address);
          };
 
          /*! @} */

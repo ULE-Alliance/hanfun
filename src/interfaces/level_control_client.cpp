@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Level Control interface : Client role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,20 +35,20 @@ using namespace HF::Interfaces::LevelControl;
  *
  */
 // =============================================================================
-void Client::level (Protocol::Address &addr, uint8_t new_level)
+void Client::level(Protocol::Address &addr, uint8_t new_level)
 {
-   Message level_msg (new_level);
+   Message level_msg(new_level);
 
-   Protocol::Message message (level_msg.size ());
+   Protocol::Message message(level_msg.size());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = LevelControl::Client::uid ();
+   message.itf.id     = LevelControl::Client::uid();
    message.itf.member = SET_LEVEL_CMD;
 
 
-   level_msg.pack (message.payload);
+   level_msg.pack(message.payload);
 
-   send (addr, message);
+   send(addr, message);
 }
 
 // =============================================================================
@@ -58,9 +58,9 @@ void Client::level (Protocol::Address &addr, uint8_t new_level)
  *
  */
 // =============================================================================
-void Client::level (Protocol::Address &addr, float new_level)
+void Client::level(Protocol::Address &addr, float new_level)
 {
-   check_and_fix (new_level);
-   uint8_t value = HF::Common::from_percent <uint8_t>(new_level);
-   level (addr, value);
+   check_and_fix(new_level);
+   uint8_t value = HF::Common::from_percent<uint8_t>(new_level);
+   level(addr, value);
 }

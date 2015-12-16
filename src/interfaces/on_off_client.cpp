@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the On-Off interface : Client role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,15 +35,15 @@ using namespace HF::Interfaces::OnOff;
  *
  */
 // =============================================================================
-void Client::on (Protocol::Address &addr)
+void Client::on(Protocol::Address &addr)
 {
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
+   message.itf.id     = Client::uid();
    message.itf.member = ON_CMD;
 
-   send (addr, message);
+   send(addr, message);
 }
 
 // =============================================================================
@@ -53,15 +53,15 @@ void Client::on (Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::off (Protocol::Address &addr)
+void Client::off(Protocol::Address &addr)
 {
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
+   message.itf.id     = Client::uid();
    message.itf.member = OFF_CMD;
 
-   send (addr, message);
+   send(addr, message);
 }
 
 // =============================================================================
@@ -71,13 +71,13 @@ void Client::off (Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::toggle (Protocol::Address &addr)
+void Client::toggle(Protocol::Address &addr)
 {
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
+   message.itf.id     = Client::uid();
    message.itf.member = TOGGLE_CMD;
 
-   send (addr, message);
+   send(addr, message);
 }

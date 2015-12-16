@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the attribute handling API in HAN-FUN.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -41,14 +41,14 @@ namespace HF
       /*!
        * %Interface/%Service %Attribute API.
        */
-      struct IAttribute:public Common::Serializable, public Common::Cloneable <IAttribute>
+      struct IAttribute: public Common::Serializable, public Common::Cloneable<IAttribute>
       {
          /*!
           * Attribute's UID.
           *
           * @return  the attribute's UID value.
           */
-         virtual uint8_t uid () const = 0;
+         virtual uint8_t uid() const = 0;
 
          /*!
           * Indicate if the attribute is writable.
@@ -56,14 +56,14 @@ namespace HF
           * @retval  true if the attribute is writable,
           * @retval  false otherwise.
           */
-         virtual bool isWritable () const = 0;
+         virtual bool isWritable() const = 0;
 
          /*!
           * Return the UID of the interface the attribute belongs to.
           *
           * @return  UID of the interface the attribute belongs to.
           */
-         virtual uint16_t interface () const = 0;
+         virtual uint16_t interface() const = 0;
 
          /*!
           * Pointer to the interface that owns this attribute.
@@ -73,27 +73,27 @@ namespace HF
           * @return  pointer to the interface that owns this attribute,
           *          or nullptr if owner is a remote object.
           */
-         virtual HF::Interface const *owner () const = 0;
+         virtual HF::Interface const *owner() const = 0;
 
          /*!
           * @copydoc HF::Common::Serializable::size
           *
           * @param [in] with_uid    include uid() size in the calculation.
           */
-         virtual uint16_t size (bool with_uid) const = 0;
+         virtual uint16_t size(bool with_uid) const = 0;
 
          //! @copydoc HF::Common::Serializable::size
-         virtual uint16_t size () const = 0;
+         virtual uint16_t size() const = 0;
 
          /*!
           * @copydoc HF::Common::Serializable::pack
           *
           * @param [in] with_uid    include uid() in the serialization.
           */
-         virtual uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const = 0;
+         virtual uint16_t pack(Common::ByteArray &array, uint16_t offset, bool with_uid) const = 0;
 
          //! @copydoc HF::Common::Serializable::pack
-         virtual uint16_t pack (Common::ByteArray &array, uint16_t offset) const = 0;
+         virtual uint16_t pack(Common::ByteArray &array, uint16_t offset) const = 0;
 
          /*!
           * @copydoc HF::Common::Serializable::unpack
@@ -103,16 +103,17 @@ namespace HF
           *
           * @param [in] with_uid    attribute %UID is included in the serialization.
           */
-         virtual uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid) = 0;
+         virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset,
+                                 bool with_uid) = 0;
 
          //! @copydoc HF::Common::Serializable::unpack
-         virtual uint16_t unpack (const Common::ByteArray &array, uint16_t offset) = 0;
+         virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset) = 0;
 
-         virtual bool operator ==(const IAttribute &other) const                   = 0;
+         virtual bool operator==(const IAttribute &other) const                   = 0;
 
-         virtual bool operator <(const IAttribute &other) const                    = 0;
+         virtual bool operator<(const IAttribute &other) const                    = 0;
 
-         virtual bool operator >(const IAttribute &other) const                    = 0;
+         virtual bool operator>(const IAttribute &other) const                    = 0;
 
          /*!
           * This method is used to get the percentage of change that the
@@ -122,7 +123,7 @@ namespace HF
           *
           * @return  float indicating the percentage of change.
           */
-         virtual float changed (const IAttribute &other) const = 0;
+         virtual float changed(const IAttribute &other) const = 0;
 
          /*!
           * Compare this attribute with the given attribute in @c other.
@@ -136,7 +137,7 @@ namespace HF
           * @retval  0  if attribute equal to @c other;
           * @retval  >0 if attribute greater than @c other.
           */
-         virtual int compare (const IAttribute &other) const = 0;
+         virtual int compare(const IAttribute &other) const = 0;
       };
 
       //! Attribute factory function type.
@@ -160,14 +161,14 @@ namespace HF
        * @return  the factory associated with the interface, or
        *          @c nullptr if the interface is unknown.
        */
-      Factory get_factory (Common::Interface itf);
+      Factory get_factory(Common::Interface itf);
 
       /*!
        * List of attributes UIDs.
        */
-      struct UIDS:public std::vector <uint8_t>
+      struct UIDS: public std::vector<uint8_t>
       {
-         UIDS():std::vector <uint8_t>()
+         UIDS(): std::vector<uint8_t>()
          {}
 
          /*!
@@ -175,7 +176,7 @@ namespace HF
           *
           * @param [in] uids attributes UIDs list.
           */
-         UIDS(std::initializer_list <uint8_t> uids):vector <uint8_t>(uids)
+         UIDS(std::initializer_list<uint8_t> uids): vector<uint8_t>(uids)
          {}
 
          /*!
@@ -187,29 +188,29 @@ namespace HF
           *
           * @return  number of elements.
           */
-         vector <uint8_t>::size_type length () const
+         vector<uint8_t>::size_type length() const
          {
-            return vector <uint8_t>::size ();
+            return vector<uint8_t>::size();
          }
 
          //! Minimum pack/unpack required data size.
          static constexpr uint8_t min_size = sizeof(uint8_t);
 
          //! @copydoc HF::Common::Serializable::size
-         uint16_t size () const
+         uint16_t size() const
          {
-            return min_size + sizeof(uint8_t) * vector <uint8_t>::size ();
+            return min_size + sizeof(uint8_t) * vector<uint8_t>::size();
          }
 
          //! @copydoc HF::Common::Serializable::pack
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
-            uint8_t  count = length ();
-            offset += array.write (offset, count);
+            uint8_t count  = length();
+            offset += array.write(offset, count);
 
             /* *INDENT-OFF* */
             std::for_each (vector<uint8_t>::begin(), vector<uint8_t>::end(),
@@ -223,10 +224,10 @@ namespace HF
          }
 
          //! @copydoc HF::Common::Serializable::unpack
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint8_t count = 0;
-            return unpack (array, offset, count);
+            return unpack(array, offset, count);
          }
 
          /*!
@@ -235,23 +236,23 @@ namespace HF
           * @param [out] count   reference to a variable that will hold
           *                      the count value read from the array.
           */
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset, uint8_t &count)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset, uint8_t &count)
          {
-            SERIALIZABLE_CHECK (array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
-            offset += array.read (offset, count);
+            offset += array.read(offset, count);
 
-            SERIALIZABLE_CHECK (array, offset, count);
+            HF_SERIALIZABLE_CHECK(array, offset, count);
 
-            vector <uint8_t>::reserve (count);
+            vector<uint8_t>::reserve(count);
 
             for (uint8_t i = 0; i < count; i++)
             {
                uint8_t uid;
-               offset += array.read (offset, uid);
-               vector <uint8_t>::push_back (uid);
+               offset += array.read(offset, uid);
+               vector<uint8_t>::push_back(uid);
             }
 
             return offset - start;
@@ -261,75 +262,75 @@ namespace HF
       /*!
        * Parent class for Attribute API implementation.
        */
-      class AbstractAttribute:public IAttribute
+      class AbstractAttribute: public IAttribute
       {
          protected:
 
          const uint16_t _itf_uid;      //!< Interface this attribute belongs to.
-         const uint8_t  _uid;          //!< Attribute unique identifier.
+         const uint8_t _uid;           //!< Attribute unique identifier.
          const bool _writable;         //!< Attribute access mode.
 
          AbstractAttribute(const uint16_t itf_uid, const uint8_t uid, const bool writable = false):
-            _itf_uid (itf_uid), _uid (uid), _writable (writable)
+            _itf_uid(itf_uid), _uid(uid), _writable(writable)
          {}
 
          public:
 
-         uint8_t uid () const
+         uint8_t uid() const
          {
             return _uid;
          }
 
-         bool isWritable () const
+         bool isWritable() const
          {
             return _writable;
          }
 
-         uint16_t interface () const
+         uint16_t interface() const
          {
             return _itf_uid;
          }
 
-         bool operator ==(const IAttribute &other) const
+         bool operator==(const IAttribute &other) const
          {
-            return this->compare (other) == 0;
+            return this->compare(other) == 0;
          }
 
-         bool operator ==(IAttribute &other) const
+         bool operator==(IAttribute &other) const
          {
-            return this->compare (other) == 0;
+            return this->compare(other) == 0;
          }
 
-         bool operator <(const IAttribute &other) const
+         bool operator<(const IAttribute &other) const
          {
-            return this->compare (other) < 0;
+            return this->compare(other) < 0;
          }
 
-         bool operator <(IAttribute &other) const
+         bool operator<(IAttribute &other) const
          {
-            return this->compare (other) < 0;
+            return this->compare(other) < 0;
          }
 
-         bool operator >(const IAttribute &other) const
+         bool operator>(const IAttribute &other) const
          {
-            return this->compare (other) > 0;
+            return this->compare(other) > 0;
          }
 
-         bool operator >(IAttribute &other) const
+         bool operator>(IAttribute &other) const
          {
-            return this->compare (other) > 0;
+            return this->compare(other) > 0;
          }
 
-         int compare (const IAttribute &other) const
+         int compare(const IAttribute &other) const
          {
-            int res = this->interface () - other.interface ();
+            int res = this->interface() - other.interface();
 
             if (res != 0)
             {
                return res;
             }
 
-            return this->uid () - other.uid ();
+            return this->uid() - other.uid();
          }
       };
 
@@ -339,7 +340,7 @@ namespace HF
        * @tparam T underling data type for the attribute.
        */
       template<typename T, typename _Owner = void, typename = void>
-      struct Attribute:public AbstractAttribute
+      struct Attribute: public AbstractAttribute
       {
          /*!
           * Attribute template constructor.
@@ -350,9 +351,9 @@ namespace HF
           * @param [in] __owner     pointer to attribute's interface owner object.
           * @param [in] writable    attribute's writable information.
           */
-         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *__owner, T data,
-                   bool writable = false):
-            AbstractAttribute (interface, uid, writable), helper (data), _owner (__owner)
+         Attribute(const uint16_t interface, const uint8_t uid, const HF::Interface *__owner,
+                   T data, bool writable = false):
+            AbstractAttribute(interface, uid, writable), helper(data), _owner(__owner)
          {}
 
          /*!
@@ -363,7 +364,7 @@ namespace HF
           * @param [in] writable    attribute's writable information.
           */
          Attribute(const uint16_t interface, const uint8_t uid, bool writable = false):
-            AbstractAttribute (interface, uid, writable), _owner (nullptr)
+            AbstractAttribute(interface, uid, writable), _owner(nullptr)
          {}
 
          /*!
@@ -375,125 +376,125 @@ namespace HF
           * @param [in] writable    attribute's writable information.
           */
          Attribute(const uint16_t interface, const uint8_t uid, T data, bool writable = false):
-            AbstractAttribute (interface, uid, writable), helper (data), _owner (nullptr)
+            AbstractAttribute(interface, uid, writable), helper(data), _owner(nullptr)
          {}
 
-         typedef typename std::remove_reference <T>::type value_type;
+         typedef typename std::remove_reference<T>::type value_type;
 
          // =============================================================================
          // API
          // =============================================================================
 
-         void set (value_type __value)
+         void set(value_type __value)
          {
-            value (__value);
+            value(__value);
          }
 
-         value_type get () const
+         value_type get() const
          {
-            return value ();
+            return value();
          }
 
-         value_type value () const
+         value_type value() const
          {
             return helper.data;
          }
 
-         void value (value_type __value)
+         void value(value_type __value)
          {
             helper.data = __value;
          }
 
-         HF::Interface const *owner () const
+         HF::Interface const *owner() const
          {
             return _owner;
          }
 
-         uint16_t size (bool with_uid) const
+         uint16_t size(bool with_uid) const
          {
-            return size () + (with_uid ? sizeof(uint8_t) : 0);
+            return size() + (with_uid ? sizeof(uint8_t) : 0);
          }
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return helper.size ();
+            return helper.size();
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset, bool with_uid) const
          {
-            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+            HF_SERIALIZABLE_CHECK(array, offset, size(with_uid));
 
             uint16_t start = offset;
 
             if (with_uid)
             {
-               offset += array.write (offset, uid ());
+               offset += array.write(offset, uid());
             }
 
-            offset += helper.pack (array, offset);
+            offset += helper.pack(array, offset);
 
             return offset - start;
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            return helper.pack (array, offset);
+            return helper.pack(array, offset);
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset, bool with_uid)
          {
-            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+            HF_SERIALIZABLE_CHECK(array, offset, size(with_uid));
 
             uint16_t start = offset;
 
             if (with_uid)
             {
                uint8_t temp;
-               offset += array.read (offset, temp);
+               offset += array.read(offset, temp);
 
-               if (temp != uid ())
+               if (temp != uid())
                {
                   return 0;
                }
             }
 
-            offset += helper.unpack (array, offset);
+            offset += helper.unpack(array, offset);
 
             return offset - start;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            return helper.unpack (array, offset);
+            return helper.unpack(array, offset);
          }
 
-         IAttribute *clone () const
+         IAttribute *clone() const
          {
-            return new HF::Attributes::Attribute <T>(this->_itf_uid, this->_uid, this->_owner,
-                                                     this->helper.data, this->_writable);
+            return new HF::Attributes::Attribute<T>(this->_itf_uid, this->_uid, this->_owner,
+                                                    this->helper.data, this->_writable);
          }
 
-         int compare (const IAttribute &other) const
+         int compare(const IAttribute &other) const
          {
-            int res = AbstractAttribute::compare (other);
+            int res = AbstractAttribute::compare(other);
 
             if (res == 0)
             {
-               Attribute <T> *temp = (Attribute <T> *) & other;
-               res = helper.compare (temp->helper);
+               Attribute<T> *temp = (Attribute<T> *) & other;
+               res = helper.compare(temp->helper);
             }
 
             return res;
          }
 
-         float changed (const IAttribute &other) const
+         float changed(const IAttribute &other) const
          {
-            int res = AbstractAttribute::compare (other);
+            int res = AbstractAttribute::compare(other);
 
             if (res == 0)
             {
-               Attribute <T> *temp = (Attribute <T> *) & other;
-               return helper.changed (temp->helper);
+               Attribute<T> *temp = (Attribute<T> *) & other;
+               return helper.changed(temp->helper);
             }
 
             return 0.0;
@@ -501,9 +502,9 @@ namespace HF
 
          protected:
 
-         Common::SerializableHelper <T> helper;
+         Common::SerializableHelper<T> helper;
 
-         const HF::Interface            *_owner;
+         const HF::Interface           *_owner;
 
          private:
 
@@ -517,13 +518,13 @@ namespace HF
        * @tparam T underling data type for the attribute.
        */
       template<typename T, typename _Owner>
-      struct Attribute <T, _Owner, typename std::enable_if <std::is_base_of <HF::Interface, _Owner>::value>::type> :
+      struct Attribute<T, _Owner, EnableIf<Parent<HF::Interface, _Owner>>>:
          public AbstractAttribute
       {
-         typedef typename std::remove_reference <T>::type value_type;
+         typedef typename std::remove_reference<T>::type value_type;
 
-         typedef typename std::function <value_type (_Owner &)> getter_t;
-         typedef typename std::function <void (_Owner &, T)> setter_t;
+         typedef typename std::function<value_type(_Owner &)> getter_t;
+         typedef typename std::function<void (_Owner &, T)> setter_t;
 
          /*!
           * Attribute template constructor.
@@ -534,8 +535,10 @@ namespace HF
           * @param [in] _setter   owner's member function to set the value of the attribute.
           * @param [in] writable  attribute's writable information.
           */
-         Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, setter_t _setter, bool writable = false):
-            AbstractAttribute (__owner.uid (), uid, writable), _owner (__owner), getter (_getter), setter (_setter)
+         Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, setter_t _setter,
+                   bool writable = false):
+            AbstractAttribute(__owner.uid(), uid, writable), _owner(__owner), getter(_getter),
+            setter(_setter)
          {}
 
          /*!
@@ -547,140 +550,140 @@ namespace HF
           * @param [in] writable  attribute's writable information.
           */
          Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, bool writable = false):
-            AbstractAttribute (__owner.uid (), uid, writable), _owner (__owner), getter (_getter)
+            AbstractAttribute(__owner.uid(), uid, writable), _owner(__owner), getter(_getter)
          {}
 
          // =============================================================================
          // API
          // =============================================================================
 
-         void set (value_type __value)
+         void set(value_type __value)
          {
-            value (__value);
+            value(__value);
          }
 
-         value_type get () const
+         value_type get() const
          {
-            return value ();
+            return value();
          }
 
-         value_type value () const
+         value_type value() const
          {
-            return getter (_owner);
+            return getter(_owner);
          }
 
-         void value (value_type __value)
+         void value(value_type __value)
          {
             if (setter)
             {
-               setter (_owner, __value);
+               setter(_owner, __value);
             }
          }
 
-         HF::Interface const *owner () const
+         HF::Interface const *owner() const
          {
             return &_owner;
          }
 
-         uint16_t size (bool with_uid) const
+         uint16_t size(bool with_uid) const
          {
-            return size () + (with_uid ? sizeof(uint8_t) : 0);
+            return size() + (with_uid ? sizeof(uint8_t) : 0);
          }
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return helper.size ();
+            return helper.size();
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset, bool with_uid) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset, bool with_uid) const
          {
-            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+            HF_SERIALIZABLE_CHECK(array, offset, size(with_uid));
 
             uint16_t start = offset;
 
             if (with_uid)
             {
-               offset += array.write (offset, uid ());
+               offset += array.write(offset, uid());
             }
 
-            const_cast <decltype(helper) &>(helper).data = getter (_owner);
+            const_cast<decltype(helper) &>(helper).data = getter(_owner);
 
-            offset                                      += helper.pack (array, offset);
+            offset                                     += helper.pack(array, offset);
 
             return offset - start;
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            const_cast <decltype(helper) &>(helper).data = getter (_owner);
+            const_cast<decltype(helper) &>(helper).data = getter(_owner);
 
-            return helper.pack (array, offset);
+            return helper.pack(array, offset);
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset, bool with_uid)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset, bool with_uid)
          {
-            SERIALIZABLE_CHECK (array, offset, size (with_uid));
+            HF_SERIALIZABLE_CHECK(array, offset, size(with_uid));
 
             uint16_t start = offset;
 
             if (with_uid)
             {
                uint8_t temp;
-               offset += array.read (offset, temp);
+               offset += array.read(offset, temp);
 
-               if (temp != uid ())
+               if (temp != uid())
                {
                   goto _end;
                }
             }
 
-            offset += helper.unpack (array, offset);
+            offset += helper.unpack(array, offset);
 
-            setter (_owner, helper.data);
+            setter(_owner, helper.data);
 
             _end:
             return offset - start;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            uint16_t result = helper.unpack (array, offset);
-            setter (_owner, helper.data);
+            uint16_t result = helper.unpack(array, offset);
+            setter(_owner, helper.data);
             return result;
          }
 
-         IAttribute *clone () const
+         IAttribute *clone() const
          {
-            return new HF::Attributes::Attribute <T, _Owner>(this->_owner, this->uid (),
-                                                             this->getter, this->setter,
-                                                             this->isWritable ());
+            return new HF::Attributes::Attribute<T, _Owner>(this->_owner, this->uid(),
+                                                            this->getter, this->setter,
+                                                            this->isWritable());
          }
 
-         int compare (const IAttribute &other) const
+         int compare(const IAttribute &other) const
          {
-            int res = AbstractAttribute::compare (other);
+            int res = AbstractAttribute::compare(other);
 
             if (res == 0)
             {
-               const_cast <decltype(helper) &>(helper).data = getter (_owner);
+               const_cast<decltype(helper) &>(helper).data = getter(_owner);
 
-               Attribute <T, _Owner> *temp = (Attribute <T, _Owner> *) & other;
-               res = helper.compare (temp->helper);
+               Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
+               res = helper.compare(temp->helper);
             }
 
             return res;
          }
 
-         float changed (const IAttribute &other) const
+         float changed(const IAttribute &other) const
          {
-            int res = AbstractAttribute::compare (other);
+            int res = AbstractAttribute::compare(other);
 
             if (res == 0)
             {
-               const_cast <decltype(helper) &>(helper).data = getter (_owner);
+               const_cast<decltype(helper) &>(helper).data = getter(_owner);
 
-               Attribute <T, _Owner> *temp = (Attribute <T, _Owner> *) & other;
-               return helper.changed (temp->helper);
+               Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
+               return helper.changed(temp->helper);
             }
 
             return 0.0;
@@ -688,11 +691,11 @@ namespace HF
 
          protected:
 
-         _Owner                                  &_owner;
-         getter_t                                getter;
-         setter_t                                setter;
+         _Owner                                 &_owner;
+         getter_t                               getter;
+         setter_t                               setter;
 
-         Common::SerializableHelper <value_type> helper;
+         Common::SerializableHelper<value_type> helper;
 
          private:
 
@@ -708,13 +711,13 @@ namespace HF
        * The difference between the @c list indexes and the @c Attribute
        * indexes is that the former start at 0 and the latter at 1.
        */
-      struct List:public std::list <IAttribute *>
+      struct List: public std::list<IAttribute *>
       {
-         IAttribute *operator [](uint8_t uid) const
+         IAttribute *operator[](uint8_t uid) const
          {
-            for (const_iterator it = begin (); it != end (); ++it)
+            for (const_iterator it = begin(); it != end(); ++it)
             {
-               if ((*it)->uid () == uid)
+               if ((*it)->uid() == uid)
                {
                   return *it;
                }
@@ -728,7 +731,7 @@ namespace HF
        * This class represents the response sent when a
        * Protocol::Message::GET_ATTR_REQ request.
        */
-      struct Response:public Protocol::Response
+      struct Response: public Protocol::Response
       {
          IAttribute *attribute;
 
@@ -739,7 +742,7 @@ namespace HF
           *                          in the response.
           */
          Response(IAttribute *_attribute = nullptr):
-            attribute (_attribute)
+            attribute(_attribute)
          {}
 
          virtual ~Response()
@@ -747,32 +750,32 @@ namespace HF
             delete attribute;
          }
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return Protocol::Response::size () + (attribute != nullptr ? attribute->size () : 0);
+            return Protocol::Response::size() + (attribute != nullptr ? attribute->size() : 0);
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
-            offset += Protocol::Response::pack (array, offset);
+            offset += Protocol::Response::pack(array, offset);
 
-            offset += (attribute != nullptr ? attribute->pack (array, offset) : 0);
+            offset += (attribute != nullptr ? attribute->pack(array, offset) : 0);
 
             return offset - start;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
-            offset += Protocol::Response::unpack (array, offset);
-            offset += (attribute != nullptr ? attribute->unpack (array, offset) : 0);
+            offset += Protocol::Response::unpack(array, offset);
+            offset += (attribute != nullptr ? attribute->unpack(array, offset) : 0);
 
             return offset - start;
          }
@@ -814,18 +817,18 @@ namespace HF
        *
        * @return  list containing the attributes.
        */
-      List get (const HF::Interface &itf, uint8_t pack_id, const UIDS &uids);
+      List get(const HF::Interface &itf, uint8_t pack_id, const UIDS &uids);
 
       template<typename T>
-      Attribute <T> *adapt (IAttribute *attr)
+      Attribute<T> *adapt(IAttribute *attr)
       {
-         return static_cast <Attribute <T> *>(attr);
+         return static_cast<Attribute<T> *>(attr);
       }
 
       template<typename T>
-      const Attribute <T> *adapt (const IAttribute *attr)
+      const Attribute<T> *adapt(const IAttribute *attr)
       {
-         return static_cast <const Attribute <T> *>(attr);
+         return static_cast<const Attribute<T> *>(attr);
       }
 
       /*! @} */
@@ -860,28 +863,28 @@ namespace HF
              */
             uint8_t count;
 
-            Request():count (0) {}
+            Request(): count(0) {}
 
             Request(HF::Attributes::UIDS &attributes):
-               attributes (attributes), count (0)
+               attributes(attributes), count(0)
             {}
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
-               return attributes.size ();
+               return attributes.size();
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
             {
-               return attributes.pack (array, offset);
+               return attributes.pack(array, offset);
             }
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
             {
-               return attributes.unpack (array, offset, count);
+               return attributes.unpack(array, offset, count);
             }
          };
 
@@ -890,7 +893,7 @@ namespace HF
           *
           * The payload contains the attribute values that were requested.
           */
-         struct Response:public Protocol::Response
+         struct Response: public Protocol::Response
          {
             //! Pointer to the function to request the attribute instances to unpack the response.
             HF::Attributes::Factory attribute_factory;
@@ -909,7 +912,7 @@ namespace HF
             /*!
              * Constructor.
              */
-            Response():attribute_factory (nullptr)
+            Response(): attribute_factory(nullptr)
             {}
 
             /*!
@@ -918,7 +921,7 @@ namespace HF
              * @param [in] attributes  list of attributes to send.
              */
             Response(HF::Attributes::List &attributes):
-               attribute_factory (nullptr), attributes (attributes)
+               attribute_factory(nullptr), attributes(attributes)
             {}
 
             /*!
@@ -928,7 +931,7 @@ namespace HF
              *                      incoming attributes.
              */
             Response(HF::Attributes::Factory factory):
-               attribute_factory (factory)
+               attribute_factory(factory)
             {}
 
             virtual ~Response()
@@ -947,17 +950,17 @@ namespace HF
                                                  + sizeof(uint8_t);           // Number of attributes.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             /*!
              * @copydoc HF::Common::Serializable::unpack
              *
              * @pre The attribute @c attribute_factory __MUST NOT__ be equal to @c nullptr.
              */
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
       } // namespace GetAttributePack
@@ -990,10 +993,10 @@ namespace HF
             static constexpr uint16_t min_size = sizeof(uint8_t);    // Number of attributes.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             /*!
              * @copydoc HF::Common::Serializable::unpack
@@ -1002,7 +1005,7 @@ namespace HF
              * are in the @c array and palces that value into @c count.
              * Further processing __MUST__ be done to read the attribute values.
              */
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -1027,46 +1030,46 @@ namespace HF
                 * @param [in] code  operation result code.
                 */
                Result(uint8_t uid, Common::Result code):
-                  uid (uid), code (code)
+                  uid(uid), code(code)
                {}
 
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = sizeof(uint8_t) + sizeof(uint8_t);
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const
+               uint16_t size() const
                {
                   return min_size;
                }
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
                {
-                  SERIALIZABLE_CHECK (array, offset, min_size);
+                  HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-                  offset += array.write (offset, (uint8_t) uid);
+                  offset += array.write(offset, (uint8_t) uid);
 
-                  array.write (offset, (uint8_t) code);
+                  array.write(offset, (uint8_t) code);
 
                   return min_size;
                }
 
                //! @copydoc HF::Common::Serializable::unpack
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
                {
-                  SERIALIZABLE_CHECK (array, offset, min_size);
+                  HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-                  offset += array.read (offset, uid);
+                  offset += array.read(offset, uid);
 
                   uint8_t temp;
-                  array.read (offset, temp);
-                  code = static_cast <Common::Result>(temp);
+                  array.read(offset, temp);
+                  code = static_cast<Common::Result>(temp);
 
                   return min_size;
                }
             };
 
-            typedef std::vector <Result> results_t;
+            typedef std::vector<Result> results_t;
 
             results_t results;   //!< Response results.
 
@@ -1082,20 +1085,20 @@ namespace HF
             static constexpr uint16_t min_size = sizeof(uint8_t); // Number of attribute results.
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                uint16_t result = min_size;
 
-               result += results.size () * Result::min_size;
+               result += results.size() * Result::min_size;
 
                return result;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
       } // namespace SetAttributePack

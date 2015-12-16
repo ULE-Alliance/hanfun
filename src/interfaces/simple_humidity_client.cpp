@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Simple Humidity interface : Client role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -40,16 +40,16 @@ using namespace HF::Attributes;
  *
  */
 // =============================================================================
-void Client::read_all (Protocol::Address &addr)
+void Client::read_all(Protocol::Address &addr)
 {
    Message message;
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = SimpleHumidity::Client::uid ();
+   message.itf.id     = SimpleHumidity::Client::uid();
    message.itf.member = Pack::ALL;
    message.type       = Protocol::Message::GET_ATTR_PACK_REQ;
 
-   send (addr, message);
+   send(addr, message);
 }
 
 // =============================================================================
@@ -59,10 +59,10 @@ void Client::read_all (Protocol::Address &addr)
  *
  */
 // =============================================================================
-Common::Result Client::handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                         uint16_t offset)
+Common::Result Client::handle_attribute(Protocol::Packet &packet, Common::ByteArray &payload,
+                                        uint16_t offset)
 {
-   Common::Result res = AbstractInterface::handle_attribute (packet, payload, offset);
+   Common::Result res = AbstractInterface::handle_attribute(packet, payload, offset);
 
    if (res != Common::Result::OK)
    {
@@ -71,8 +71,8 @@ Common::Result Client::handle_attribute (Protocol::Packet &packet, Common::ByteA
 
    if (packet.message.type == Message::GET_ATTR_PACK_RES)
    {
-      GetAttributePack::Response resp (create_attribute);
-      resp.unpack (payload, offset);
+      GetAttributePack::Response resp(create_attribute);
+      resp.unpack(payload, offset);
 
       auto &attributes = resp.attributes;
 
@@ -82,20 +82,20 @@ Common::Result Client::handle_attribute (Protocol::Packet &packet, Common::ByteA
 
          if (nullptr != attr)
          {
-            read_resp (packet.source, *(static_cast <Attribute <uint16_t> *>(attr)));
+            read_resp(packet.source, *(static_cast<Attribute<uint16_t> *>(attr)));
          }
       }
    }
    else if (packet.message.type == Message::GET_ATTR_RES)
    {
-      auto attr = create_attribute (packet.message.itf.member);
+      auto attr = create_attribute(packet.message.itf.member);
 
       if (nullptr != attr)
       {
-         HF::Attributes::Response resp (attr);
-         resp.unpack (payload, offset);
+         HF::Attributes::Response resp(attr);
+         resp.unpack(payload, offset);
 
-         read_resp (packet.source, *(static_cast <Attribute <uint16_t> *>(attr)));
+         read_resp(packet.source, *(static_cast<Attribute<uint16_t> *>(attr)));
       }
    }
 

@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -71,15 +71,49 @@
  * @param [in] __offset    offset index to check available data from.
  * @param [in] __size      number of bytes required.
  */
-#define SERIALIZABLE_CHECK(__array, __offset, __size) \
-   {                                                  \
-      assert (__array.available (__offset, __size));  \
-                                                      \
-      if (!__array.available (__offset, __size))      \
-      {                                               \
-         return 0;                                    \
-      }                                               \
+#define HF_SERIALIZABLE_CHECK(__array, __offset, __size)           \
+   {                                                               \
+      HF_ASSERT(__array.available(__offset, __size), {return 0;}); \
    }
+
+/*!
+ * @ingroup common
+ *
+ * Helper macro to implement attribute setters.
+ *
+ * @param [in] _Type    helper class that wraps the attribute.
+ * @param [in] _name    name of the attribute to generate the setter for.
+ * @param [in] _value   name of the variable containing the new value.
+ */
+#define HF_SETTER_HELPER(_Type, _name, _value) \
+   {                                           \
+      _Type::value_type old = this->_name;     \
+                                               \
+      this->_name = _value;                    \
+                                               \
+      _Type old_attr(old, this);               \
+      _Type new_attr(this->_name, this);       \
+                                               \
+      notify(old_attr, new_attr);              \
+   }
+
+#ifndef HF_ASSERT // Allow macro to be replaced for testing.
+/*!
+ * @ingroup common
+ *
+ * Helper macro to check for correct assumptions.
+ *
+ * @warning This macro MAY evaluate the @c _expr twice.
+ *
+ * @param [in] _expr    helper class that wraps the attribute.
+ * @param [in] _block   code block to run if the condition fails.
+ */
+   #define HF_ASSERT(_expr, _block) \
+   {                                \
+      assert(_expr);                \
+      if (!(_expr)) {_block}        \
+   }
+#endif
 
 // =============================================================================
 // API
@@ -100,6 +134,13 @@ namespace HF
    constexpr uint8_t INTERFACES_VERSION = 1; //!< %Interfaces major version supported.
 
    /*! @} */
+
+   template<typename T> using Invoke             = typename T::type;
+   template<typename C> using EnableIf           = Invoke<std::enable_if<C::value>>;
+   template<typename P, typename C> using Parent = std::is_base_of<P, C>;
+
+   template<typename T>
+   using IsIntegral = std::is_integral<Invoke<std::remove_reference<T>>>;
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -147,7 +188,7 @@ namespace HF
        * The method in this class are used to serialize the messages to be sent over the
        * network, converting between the host's endianness and the big-endian network format.
        */
-      struct ByteArray:public std::vector <uint8_t>
+      struct ByteArray: public std::vector<uint8_t>
       {
          /*!
           * Create a byte array with the given initial size.
@@ -169,7 +210,7 @@ namespace HF
           *
           * @param [in] raw  values to add to the byte array.
           */
-         ByteArray(std::initializer_list <uint8_t> raw):vector (raw)
+         ByteArray(std::initializer_list<uint8_t> raw): vector(raw)
          {}
 
          //! Destructor
@@ -183,7 +224,7 @@ namespace HF
           *
           * @return  number of bytes written (1).
           */
-         uint16_t write (uint16_t offset, uint8_t data);
+         uint16_t write(uint16_t offset, uint8_t data);
 
          /*!
           * Write a word in the big endian format into the
@@ -194,7 +235,7 @@ namespace HF
           *
           * @return  number of bytes written (2).
           */
-         uint16_t write (uint16_t offset, uint16_t data);
+         uint16_t write(uint16_t offset, uint16_t data);
 
          /*!
           * Write a double-word in big endian format into the
@@ -205,20 +246,20 @@ namespace HF
           *
           * @return  number of bytes written (4).
           */
-         uint16_t write (uint16_t offset, uint32_t data);
+         uint16_t write(uint16_t offset, uint32_t data);
 
          //! @copydoc ByteArray::write (uint16_t, uint8_t)
-         uint16_t write (uint16_t offset, bool data)
+         uint16_t write(uint16_t offset, bool data)
          {
-            return write (offset, static_cast <uint8_t>(data));
+            return write(offset, static_cast<uint8_t>(data));
          }
 
          //! @copydoc ByteArray::write (uint16_t, uint8_t)
          template<typename T>
-         uint16_t write (uint16_t offset, T data)
+         uint16_t write(uint16_t offset, T data)
          {
-            typedef typename std::make_unsigned <T>::type Type;
-            return write (offset, static_cast <Type>(data));
+            typedef typename std::make_unsigned<T>::type Type;
+            return write(offset, static_cast<Type>(data));
          }
 
          /*!
@@ -229,7 +270,7 @@ namespace HF
           *
           * @return  number of bytes read (1).
           */
-         uint16_t read (uint16_t offset, uint8_t &data) const;
+         uint16_t read(uint16_t offset, uint8_t &data) const;
 
          /*!
           * Read the word in big-endian format at @c offset into @c data.
@@ -239,7 +280,7 @@ namespace HF
           *
           * @return  number of bytes read (2).
           */
-         uint16_t read (uint16_t offset, uint16_t &data) const;
+         uint16_t read(uint16_t offset, uint16_t &data) const;
 
          /*!
           * Read the double-word in big-endian format at @c offset into @c data.
@@ -249,13 +290,13 @@ namespace HF
           *
           * @return  number of bytes read (4).
           */
-         uint16_t read (uint16_t offset, uint32_t &data) const;
+         uint16_t read(uint16_t offset, uint32_t &data) const;
 
          //! @copydoc  ByteArray::read (uint16_t, uint8_t)
-         uint16_t read (uint16_t offset, bool &data) const
+         uint16_t read(uint16_t offset, bool &data) const
          {
-            uint8_t  temp;
-            uint16_t result = read (offset, temp);
+            uint8_t temp;
+            uint16_t result = read(offset, temp);
 
             data = (temp & 0x01) != 0;
 
@@ -264,13 +305,13 @@ namespace HF
 
          //! @copydoc  ByteArray::read (uint16_t, uint8_t)
          template<typename T>
-         uint16_t read (uint16_t offset, T &data) const
+         uint16_t read(uint16_t offset, T &data) const
          {
-            typedef typename std::make_unsigned <T>::type Type;
+            typedef typename std::make_unsigned<T>::type Type;
             Type temp;
-            uint16_t result = read (offset, temp);
+            uint16_t result = read(offset, temp);
 
-            data = static_cast <T>(temp);
+            data = static_cast<T>(temp);
 
             return result;
          }
@@ -285,9 +326,9 @@ namespace HF
           * @retval  true if enough data is available,
           * @retval  false otherwise.
           */
-         bool available (uint16_t offset, uint16_t expected) const
+         bool available(uint16_t offset, uint16_t expected) const
          {
-            return expected <= available (offset);
+            return expected <= available(offset);
          }
 
          /*!
@@ -297,18 +338,18 @@ namespace HF
           *
           * @return  number of data bytes available from the given @c offset.
           */
-         uint16_t available (uint16_t offset) const
+         uint16_t available(uint16_t offset) const
          {
-            return (size () >= offset ? size () - offset : 0);
+            return (size() >= offset ? size() - offset : 0);
          }
 
-         bool operator ==(const ByteArray &other)
+         bool operator==(const ByteArray &other)
          {
-            return (this->size () == other.size () &&
-                    std::equal (this->begin (), this->end (), other.begin ()));
+            return (this->size() == other.size() &&
+                    std::equal(this->begin(), this->end(), other.begin()));
          }
 
-         bool operator !=(const ByteArray &other)
+         bool operator!=(const ByteArray &other)
          {
             return !(*this == other);
          }
@@ -320,9 +361,9 @@ namespace HF
           *
           * @param [in] _size number of bytes to extent the array by.
           */
-         void extend (uint16_t _size)
+         void extend(uint16_t _size)
          {
-            vector <uint8_t>::reserve (size () + _size);
+            vector<uint8_t>::reserve(size() + _size);
          }
 
          /*!
@@ -332,19 +373,20 @@ namespace HF
           * @param [in] _offset  offset index to check from.
           * @param [in] _size    number of bytes to ensure that exist.
           */
-         void ensure (uint16_t _offset, uint16_t _size)
+         void ensure(uint16_t _offset, uint16_t _size)
          {
-            if (!available (_offset, _size))
+            if (!available(_offset, _size))
             {
-               _size = _size - available (_offset) + std::max <int16_t>((int16_t) (_offset - size ()), 0);
-               vector <uint8_t>::reserve (size () + _size);
-               std::fill_n (back_inserter (*this), _size, 0);
+               _size = _size - available(_offset) + std::max<int16_t>(
+                  (int16_t) (_offset - size()), 0);
+               vector<uint8_t>::reserve(size() + _size);
+               std::fill_n(back_inserter(*this), _size, 0);
             }
          }
       };
 
       template<typename T>
-      struct SimpleList:public std::forward_list<T>
+      struct SimpleList: public std::forward_list<T>
       {};
 
       // =============================================================================
@@ -364,7 +406,7 @@ namespace HF
           *
           * @return  number of bytes the message requires to be serialized.
           */
-         virtual uint16_t size () const = 0;
+         virtual uint16_t size() const = 0;
 
          /*!
           * Write the object on to a ByteArray so it can be sent over the network.
@@ -382,7 +424,7 @@ namespace HF
           *
           * @return  the number of bytes written.
           */
-         virtual uint16_t pack (ByteArray &array, uint16_t offset = 0) const = 0;
+         virtual uint16_t pack(ByteArray &array, uint16_t offset = 0) const = 0;
 
          /*!
           * Read a message from a ByteArray.
@@ -392,7 +434,7 @@ namespace HF
           *
           * @return  the number of bytes read.
           */
-         virtual uint16_t unpack (const ByteArray &array, uint16_t offset = 0) = 0;
+         virtual uint16_t unpack(const ByteArray &array, uint16_t offset = 0) = 0;
       };
 
       /*!
@@ -403,46 +445,46 @@ namespace HF
        * @warning T should be POD (Plain Old Data)
        */
       template<typename T, typename = void>
-      struct SerializableHelper:public Serializable
+      struct SerializableHelper: public Serializable
       {
          //! Data type instance wrapped.
          T data;
 
          SerializableHelper()
          {
-            memset (&data, 0, sizeof(T));
+            memset(&data, 0, sizeof(T));
          }
 
-         SerializableHelper(T data):data (data)
+         SerializableHelper(T data): data(data)
          {}
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return data.size ();
+            return data.size();
          }
 
-         uint16_t pack (ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
-            return data.pack (array, offset);
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+            return data.pack(array, offset);
          }
 
-         uint16_t unpack (const ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
-            return data.unpack (array, offset);
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+            return data.unpack(array, offset);
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper <T> &other) const
+         int compare(const SerializableHelper<T> &other) const
          {
-            return data.compare (other.data);
+            return data.compare(other.data);
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper <T> &other) const
+         float changed(const SerializableHelper<T> &other) const
          {
-            return data.changed (other.data);
+            return data.changed(other.data);
          }
       };
 
@@ -452,7 +494,7 @@ namespace HF
        * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
-      struct SerializableHelper <T, typename std::enable_if <std::is_pointer <T>::value>::type> :
+      struct SerializableHelper<T, EnableIf<std::is_pointer<T>>>:
          public Serializable
       {
          //! Pointer to the wrapped instance.
@@ -463,36 +505,36 @@ namespace HF
             data = nullptr;
          }
 
-         SerializableHelper(T data):data (data)
+         SerializableHelper(T data): data(data)
          {}
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return data->size ();
+            return data->size();
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
-            return data->pack (array, offset);
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+            return data->pack(array, offset);
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
-            return data->unpack (array, offset);
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+            return data->unpack(array, offset);
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper <T> &other) const
+         int compare(const SerializableHelper<T> &other) const
          {
-            return data->compare (other.data);
+            return data->compare(other.data);
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper <T> &other) const
+         float changed(const SerializableHelper<T> &other) const
          {
-            return data->changed (other.data);
+            return data->changed(other.data);
          }
       };
 
@@ -502,7 +544,7 @@ namespace HF
        * @tparam T   integral data type to warp.
        */
       template<typename T>
-      struct SerializableHelper <T, typename std::enable_if <std::is_integral <typename std::remove_reference <T>::type>::value>::type> :
+      struct SerializableHelper<T, EnableIf<IsIntegral<T>>>:
          public Common::Serializable
       {
          //! Data type instance wrapped.
@@ -513,42 +555,42 @@ namespace HF
             data = 0;
          }
 
-         SerializableHelper(T data):data (data) {}
+         SerializableHelper(T data): data(data) {}
 
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(T);
 
-         uint16_t size () const
+         uint16_t size() const
          {
             return min_size;
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-            array.write (offset, data);
+            array.write(offset, data);
 
             return min_size;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-            array.read (offset, data);
+            array.read(offset, data);
 
             return min_size;
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper <T> &other) const
+         int compare(const SerializableHelper<T> &other) const
          {
             return data - other.data;
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper <T> &other) const
+         float changed(const SerializableHelper<T> &other) const
          {
             return (((float) (data - other.data)) / other.data);
          }
@@ -558,7 +600,7 @@ namespace HF
        * Wrapper for Common::ByteArray implementing the  Serializable API.
        */
       template<>
-      struct SerializableHelper <Common::ByteArray> :
+      struct SerializableHelper<Common::ByteArray>:
          public Common::Serializable
       {
          Common::ByteArray data;
@@ -566,49 +608,49 @@ namespace HF
          SerializableHelper()
          {}
 
-         SerializableHelper(Common::ByteArray _data):data (_data) {}
+         SerializableHelper(Common::ByteArray _data): data(_data) {}
 
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(uint8_t);
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return min_size + data.size ();
+            return min_size + data.size();
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
-            offset += array.write (offset, (uint8_t) data.size ());
+            offset += array.write(offset, (uint8_t) data.size());
 
-            auto it = array.begin ();
-            std::advance (it, offset);
+            auto it = array.begin();
+            std::advance(it, offset);
 
-            std::copy (data.begin (), data.end (), it);
+            std::copy(data.begin(), data.end(), it);
 
-            offset += data.size ();
+            offset += data.size();
 
             return offset - start;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
-            uint8_t  _size = 0;
-            offset += array.read (offset, _size);
+            uint8_t _size  = 0;
+            offset += array.read(offset, _size);
 
-            SERIALIZABLE_CHECK (array, offset, _size);
+            HF_SERIALIZABLE_CHECK(array, offset, _size);
 
-            auto it = array.begin ();
-            std::advance (it, offset);
+            auto it = array.begin();
+            std::advance(it, offset);
 
-            std::copy_n (it, _size, data.begin ());
+            std::copy_n(it, _size, data.begin());
 
             offset += _size;
 
@@ -616,22 +658,22 @@ namespace HF
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper <Common::ByteArray> &other) const
+         int compare(const SerializableHelper<Common::ByteArray> &other) const
          {
-            int res = data.size () - other.size ();
+            int res = data.size() - other.size();
 
             if (res == 0)
             {
-               return memcmp (data.data (), other.data.data (), data.size ());
+               return memcmp(data.data(), other.data.data(), data.size());
             }
 
             return res;
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper <Common::ByteArray> &other) const
+         float changed(const SerializableHelper<Common::ByteArray> &other) const
          {
-            UNUSED (other);
+            UNUSED(other);
             return 0.0;
          }
       };
@@ -640,7 +682,7 @@ namespace HF
        * Wrapper for std::string implementing the Serializable API.
        */
       template<>
-      struct SerializableHelper <std::string> :
+      struct SerializableHelper<std::string>:
          public Common::Serializable
       {
          std::string data;
@@ -648,72 +690,84 @@ namespace HF
          SerializableHelper()
          {}
 
-         SerializableHelper(std::string _data):data (_data) {}
+         SerializableHelper(std::string _data): data(_data) {}
 
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(uint8_t);
 
-         static uint16_t size (const std::string &data)
+         static uint16_t size(const std::string &data)
          {
-            return min_size + data.size ();
+            return min_size + data.size();
          }
 
-         uint16_t size () const
+         static uint16_t pack(const std::string &data, Common::ByteArray &array,
+                              uint16_t offset = 0)
          {
-            return size (data);
-         }
-
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
-         {
-            SERIALIZABLE_CHECK (array, offset, size ());
+            HF_SERIALIZABLE_CHECK(array, offset, size(data));
 
             uint16_t start = offset;
 
-            offset += array.write (offset, (uint8_t) data.size ());
+            offset += array.write(offset, (uint8_t) data.size());
 
-            auto it = array.begin ();
-            std::advance (it, offset);
+            auto it = array.begin();
+            std::advance(it, offset);
 
-            std::copy (data.begin (), data.end (), it);
+            std::copy(data.begin(), data.end(), it);
 
-            offset += data.size ();
+            offset += data.size();
 
             return offset - start;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         static uint16_t unpack(std::string &data, const Common::ByteArray &array,
+                                uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, min_size);
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
             uint16_t start = offset;
 
-            uint8_t  _size = 0;
-            offset += array.read (offset, _size);
+            uint8_t _size  = 0;
+            offset += array.read(offset, _size);
 
-            SERIALIZABLE_CHECK (array, offset, _size);
+            HF_SERIALIZABLE_CHECK(array, offset, _size);
 
-            auto it = array.begin ();
-            std::advance (it, offset);
+            auto it = array.begin();
+            std::advance(it, offset);
 
-            data.resize (_size);
+            data.resize(_size);
 
-            std::copy_n (it, _size, data.begin ());
+            std::copy_n(it, _size, data.begin());
 
             offset += _size;
 
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper <std::string> &other) const
+         uint16_t size() const
          {
-            return strcmp (data.data (), other.data.data ());
+            return size(data);
+         }
+
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            return pack(data, array, offset);
+         }
+
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+         {
+            return unpack(data, array, offset);
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::compare
+         int compare(const SerializableHelper<std::string> &other) const
+         {
+            return strcmp(data.data(), other.data.data());
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper <std::string> &other) const
+         float changed(const SerializableHelper<std::string> &other) const
          {
-            UNUSED (other);
+            UNUSED(other);
             return 0.0;
          }
       };
@@ -725,63 +779,63 @@ namespace HF
        * size of the @c data vector.
        */
       template<>
-      struct SerializableHelper < std::vector < uint8_t >>:
+      struct SerializableHelper<std::vector<uint8_t>>:
          public Common::Serializable
       {
-         std::vector <uint8_t> data;
+         std::vector<uint8_t> data;
 
          SerializableHelper()
          {}
 
-         SerializableHelper(std::vector <uint8_t> _data):data (_data) {}
+         SerializableHelper(std::vector<uint8_t> _data): data(_data) {}
 
-         uint16_t size () const
+         uint16_t size() const
          {
-            return data.size ();
+            return data.size();
          }
 
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
-            auto it        = array.begin ();
-            std::advance (it, offset);
+            auto it        = array.begin();
+            std::advance(it, offset);
 
-            std::copy (data.begin (), data.end (), it);
+            std::copy(data.begin(), data.end(), it);
 
-            offset += data.size ();
+            offset += data.size();
 
             return offset - start;
          }
 
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
-            SERIALIZABLE_CHECK (array, offset, size ());
+            HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
-            auto it        = array.begin ();
-            std::advance (it, offset);
+            auto it        = array.begin();
+            std::advance(it, offset);
 
-            std::copy_n (it, data.size (), data.begin ());
+            std::copy_n(it, data.size(), data.begin());
 
-            offset += data.size ();
+            offset += data.size();
 
             return offset - start;
          }
 
          //! @copydoc HF::Attributes::IAttribute::compare
-         int compare (const SerializableHelper < std::vector < uint8_t >> &other) const
+         int compare(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
-            return memcmp (data.data (), other.data.data (), data.size ());
+            return memcmp(data.data(), other.data.data(), data.size());
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed (const SerializableHelper < std::vector < uint8_t >> &other) const
+         float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
-            UNUSED (other);
+            UNUSED(other);
             return 0.0;
          }
       };
@@ -798,7 +852,7 @@ namespace HF
           *
           * @return  a new object that is a clone of this object.
           */
-         virtual T *clone () const = 0;
+         virtual T *clone() const = 0;
       };
 
       /*!
@@ -832,37 +886,37 @@ namespace HF
           * @param [in] role  interface role.
           */
          Interface(uint16_t id = 0, uint8_t role = 0):
-            role (role), id (id)
+            role(role), id(id)
          {}
 
          //! Minimum pack/unpack required data size.
          static constexpr uint16_t min_size = sizeof(uint16_t);   // Interface UID.
 
          //! @copydoc HF::Common::Serializable::size
-         uint16_t size () const;
+         uint16_t size() const;
 
          //! @copydoc HF::Common::Serializable::pack
-         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
          //! @copydoc HF::Common::Serializable::unpack
-         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
       };
 
       // =============================================================================
       // Operators
       // =============================================================================
 
-      inline bool operator ==(const Interface &lhs, const Interface &rhs)
+      inline bool operator==(const Interface &lhs, const Interface &rhs)
       {
          return (lhs.role == rhs.role) && (lhs.id == rhs.id);
       }
 
-      inline bool operator !=(const Interface &lhs, const Interface &rhs)
+      inline bool operator!=(const Interface &lhs, const Interface &rhs)
       {
          return !(lhs == rhs);
       }
 
-      inline bool operator <(Interface const &lhs, Interface const &rhs)
+      inline bool operator<(Interface const &lhs, Interface const &rhs)
       {
          return (lhs.role < rhs.role) || (lhs.role == rhs.role && lhs.id < rhs.id);
       }
@@ -891,7 +945,7 @@ namespace HF
           *                         be deleted when this object is deleted.
           */
          Pointer(T *_pointer = nullptr, bool _owner = false):
-            pointer (_pointer), owner (_owner)
+            pointer(_pointer), owner(_owner)
          {}
 
          /*!
@@ -900,7 +954,7 @@ namespace HF
           * @param [in] _pointer    pointer to wrap.
           */
          Pointer(T &_pointer):
-            pointer (&_pointer), owner (false)
+            pointer(&_pointer), owner(false)
          {}
 
          /*!
@@ -908,10 +962,10 @@ namespace HF
           *
           * @param [in] other original object.
           */
-         Pointer(Pointer <T> &&other):pointer (nullptr), owner (false)
+         Pointer(Pointer<T> &&other): pointer(nullptr), owner(false)
          {
-            std::swap (this->pointer, other.pointer);
-            std::swap (this->owner, other.owner);
+            std::swap(this->pointer, other.pointer);
+            std::swap(this->owner, other.owner);
          }
 
          /*!
@@ -919,7 +973,7 @@ namespace HF
           *
           * @param [in] other original object.
           */
-         Pointer(Pointer <T> &other):pointer (other.pointer), owner (other.owner)
+         Pointer(Pointer<T> &other): pointer(other.pointer), owner(other.owner)
          {
             other.owner = false;
          }
@@ -932,42 +986,42 @@ namespace HF
             }
          }
 
-         T &operator *() const
+         T &operator*() const
          {
             return *pointer;
          }
 
-         T *operator ->() const
+         T *operator->() const
          {
             return pointer;
          }
 
-         bool operator ==(const Pointer <T> &other) const
+         bool operator==(const Pointer<T> &other) const
          {
             return pointer == other.pointer;
          }
 
-         bool operator !=(const Pointer <T> &other) const
+         bool operator!=(const Pointer<T> &other) const
          {
             return !(*this == other);
          }
 
-         bool operator ==(const T *other) const
+         bool operator==(const T *other) const
          {
             return pointer == other;
          }
 
-         bool operator !=(const T *other) const
+         bool operator!=(const T *other) const
          {
             return pointer != other;
          }
 
-         bool operator ==(const T &other) const
+         bool operator==(const T &other) const
          {
             return pointer == &other;
          }
 
-         bool operator !=(const T &other) const
+         bool operator!=(const T &other) const
          {
             return pointer != &other;
          }
@@ -979,7 +1033,7 @@ namespace HF
           *
           * @return  reference to this object.
           */
-         Pointer <T> &operator =(Pointer <T> &&other)
+         Pointer<T> &operator=(Pointer<T> &&other)
          {
             if (this->owner)
             {
@@ -1010,7 +1064,7 @@ namespace HF
           *
           * @return  the number of entries in the container.
           */
-         virtual uint16_t size () const = 0;
+         virtual uint16_t size() const = 0;
 
          /*!
           * Store the given bind @c entry to persistent storage.
@@ -1020,7 +1074,7 @@ namespace HF
           * @retval  Common::Result::OK if the bind entry was saved,
           * @retval  Common::Result::FAIL_UNKNOWN otherwise.
           */
-         virtual Result save (const T &entry) = 0;
+         virtual Result save(const T &entry) = 0;
 
          /*!
           * Destroy the given @c entry in the persistent storage.
@@ -1030,7 +1084,7 @@ namespace HF
           * @retval  Common::Result::OK, if the entry was destroyed.
           * @retval  Common::Result::FAIL_ARG otherwise.
           */
-         virtual Result destroy (const T &entry) = 0;
+         virtual Result destroy(const T &entry) = 0;
       };
 
       /*!
@@ -1043,9 +1097,10 @@ namespace HF
        *          [0,std::numeric_limits<T>::max()] range.
        */
       template<typename T, typename P = float>
-      T from_percent (P value)
+      T from_percent(P value)
       {
-         return static_cast <T>(round ((static_cast <float>(value) * std::numeric_limits <T>::max ()) / 100.0));
+         return static_cast<T>(round((static_cast<float>(value) *
+                                      std::numeric_limits<T>::max()) / 100.0));
       }
 
       /*!
@@ -1058,9 +1113,10 @@ namespace HF
        * @return  the percentage value.
        */
       template<typename T, typename P = float>
-      P to_percent (T value)
+      P to_percent(T value)
       {
-         return static_cast <P>(round ((static_cast <float>(value) * 100.0) / std::numeric_limits <T>::max ()));
+         return static_cast<P>(round((static_cast<float>(value) * 100.0) /
+                                     std::numeric_limits<T>::max()));
       }
 
       /*! @} */
@@ -1085,7 +1141,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const uint8_t byte);
+std::ostream &operator<<(std::ostream &stream, const uint8_t byte);
 
 /*!
  * Convert the given @c packet into a string and write it to the given @c stream if
@@ -1096,7 +1152,7 @@ std::ostream &operator <<(std::ostream &stream, const uint8_t byte);
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array);
+std::ostream &operator<<(std::ostream &stream, const HF::Common::ByteArray &array);
 
 /*!
  * Convert the given @c interface into a string and write it to the given @c stream.
@@ -1106,7 +1162,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &arr
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface interface);
+std::ostream &operator<<(std::ostream &stream, const HF::Common::Interface interface);
 
 /*! @} */
 

@@ -4,7 +4,7 @@
  *
  * This file contains the declarations of the transport layer over libuv.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -38,7 +38,7 @@ namespace HF
       /*!
        * Transport Layer implementation over TCP/IP using libuv.
        */
-      class Transport:public HF::Devices::Concentrator::Transport
+      class Transport: public HF::Devices::Concentrator::Transport
       {
          protected:
 
@@ -48,15 +48,15 @@ namespace HF
 
          virtual ~Transport() {}
 
-         void initialize ();
+         void initialize();
 
-         void destroy ();
+         void destroy();
       };
 
       /*!
        * Transport Layer link implementation over TCP/IP using libuv.
        */
-      class Link:public HF::Transport::AbstractLink
+      class Link: public HF::Transport::AbstractLink
       {
          protected:
 
@@ -73,7 +73,7 @@ namespace HF
           * @param stream  pointer to the libuv stream.
           */
          Link(Transport *_tsp, uv_stream_s *stream):
-            HF::Transport::AbstractLink (), tsp (_tsp), stream (stream)
+            HF::Transport::AbstractLink(), tsp(_tsp), stream(stream)
          {
             stream->data = this;
          }
@@ -81,9 +81,9 @@ namespace HF
          virtual ~Link()
          {}
 
-         void send (HF::Common::ByteArray &array);
+         void send(HF::Common::ByteArray &array);
 
-         Transport *transport () const
+         Transport *transport() const
          {
             return tsp;
          }

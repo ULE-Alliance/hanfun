@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Alert interface.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,7 +35,7 @@ using namespace HF::Interfaces;
  */
 // =============================================================================
 Alert::Message::Message(uint16_t type, uint32_t state):
-   type (type), state (state)
+   type(type), state(state)
 {}
 
 // =============================================================================
@@ -45,7 +45,7 @@ Alert::Message::Message(uint16_t type, uint32_t state):
  *
  */
 // =============================================================================
-uint16_t Alert::Message::size () const
+uint16_t Alert::Message::size() const
 {
    return min_size;
 }
@@ -57,13 +57,13 @@ uint16_t Alert::Message::size () const
  *
  */
 // =============================================================================
-uint16_t Alert::Message::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Alert::Message::pack(Common::ByteArray &array, uint16_t offset) const
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += array.write (offset, this->type);
+   offset += array.write(offset, this->type);
 
-   array.write (offset, this->state);
+   array.write(offset, this->state);
 
    return min_size;
 }
@@ -75,13 +75,13 @@ uint16_t Alert::Message::pack (Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t Alert::Message::unpack (const Common::ByteArray &array, uint16_t offset)
+uint16_t Alert::Message::unpack(const Common::ByteArray &array, uint16_t offset)
 {
-   SERIALIZABLE_CHECK (array, offset, min_size);
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += array.read (offset, this->type);
+   offset += array.read(offset, this->type);
 
-   array.read (offset, this->state);
+   array.read(offset, this->state);
 
    return min_size;
 }
@@ -97,7 +97,7 @@ uint16_t Alert::Message::unpack (const Common::ByteArray &array, uint16_t offset
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *HF::Interfaces::Alert::create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *HF::Interfaces::Alert::create_attribute(uint8_t uid)
 {
-   return Interfaces::create_attribute (((Alert::Server *) nullptr), uid);
+   return Interfaces::create_attribute(((Alert::Server *) nullptr), uid);
 }

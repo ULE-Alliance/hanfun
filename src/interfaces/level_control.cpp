@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Level Control interface.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -32,7 +32,7 @@ using namespace HF::Interfaces::LevelControl;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *LevelControl::create_attribute (uint8_t uid)
+HF::Attributes::IAttribute *LevelControl::create_attribute(uint8_t uid)
 {
-   return Interfaces::create_attribute ((LevelControl::Server *) nullptr, uid);
+   return Interfaces::create_attribute((LevelControl::Server *) nullptr, uid);
 }

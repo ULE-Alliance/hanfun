@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality for the
  * Attribute Reporting service interface. Client role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -32,7 +32,7 @@ using namespace HF::Core::AttributeReporting;
  *
  */
 // =============================================================================
-uint16_t Client::payload_size (Protocol::Message &message) const
+uint16_t Client::payload_size(Protocol::Message &message) const
 {
    if (message.type == Protocol::Message::COMMAND_REQ ||
        message.type == Protocol::Message::COMMAND_RESP_REQ)
@@ -40,10 +40,10 @@ uint16_t Client::payload_size (Protocol::Message &message) const
       switch (message.itf.member)
       {
          case PERIODIC_REPORT_CMD:
-            return payload_size_helper <Report::Periodic>();
+            return payload_size_helper<Report::Periodic>();
 
          case EVENT_REPORT_CMD:
-            return payload_size_helper <Report::Event>();
+            return payload_size_helper<Report::Event>();
 
          default:
             return 0;
@@ -51,7 +51,7 @@ uint16_t Client::payload_size (Protocol::Message &message) const
    }
    else
    {
-      return AbstractInterface::payload_size (message);
+      return AbstractInterface::payload_size(message);
    }
 }
 
@@ -62,7 +62,7 @@ uint16_t Client::payload_size (Protocol::Message &message) const
  *
  */
 // =============================================================================
-uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -71,7 +71,7 @@ uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
       case CREATE_EVENT_CMD:
       case ADD_EVENT_ENTRY_CMD:
       case DELETE_REPORT_CMD:
-         return payload_size_helper <Response>();
+         return payload_size_helper<Response>();
 
       default:
          return 0;
@@ -85,36 +85,36 @@ uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
  *
  */
 // =============================================================================
-Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
-   CMD cmd = static_cast <CMD>(packet.message.itf.member);
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    if (packet.message.type == Protocol::Message::COMMAND_RES)
    {
-      Response *response = new Response ();
+      Response *response = new Response();
 
-      response->unpack (payload, offset);
+      response->unpack(payload, offset);
 
       switch (cmd)
       {
          case CREATE_PERIODIC_CMD:
          case CREATE_EVENT_CMD:
          {
-            this->created (packet.source, *response);
+            this->created(packet.source, *response);
             break;
          }
 
          case ADD_PERIODIC_ENTRY_CMD:
          case ADD_EVENT_ENTRY_CMD:
          {
-            this->added (packet.source, *response);
+            this->added(packet.source, *response);
             break;
          }
 
          case DELETE_REPORT_CMD:
          {
-            this->deleted (packet.source, *response);
+            this->deleted(packet.source, *response);
             break;
          }
 
@@ -133,13 +133,13 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
       {
          case PERIODIC_REPORT_CMD:
          {
-            report (PERIODIC, packet.source, payload, offset);
+            report(PERIODIC, packet.source, payload, offset);
             break;
          }
 
          case EVENT_REPORT_CMD:
          {
-            report (EVENT, packet.source, payload, offset);
+            report(EVENT, packet.source, payload, offset);
             break;
          }
          default:
@@ -163,17 +163,17 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void AbstractClient::create (Protocol::Address &destination)
+void AbstractClient::create(Protocol::Address &destination)
 {
    HF::Protocol::Address rule_destination;
-   rule_destination.device = unit ().device ().address ();
-   rule_destination.unit   = unit ().id ();
+   rule_destination.device = unit().device().address();
+   rule_destination.unit   = unit().id();
 
-   auto msg = HF::Core::AttributeReporting::create (rule_destination);
+   auto msg = HF::Core::AttributeReporting::create(rule_destination);
 
    destination.unit = 0;
 
-   send (destination, *msg);
+   send(destination, *msg);
 
    delete msg;
 }
@@ -185,17 +185,17 @@ void AbstractClient::create (Protocol::Address &destination)
  *
  */
 // =============================================================================
-void AbstractClient::create (Protocol::Address &destination, uint32_t interval)
+void AbstractClient::create(Protocol::Address &destination, uint32_t interval)
 {
    HF::Protocol::Address rule_destination;
-   rule_destination.device = unit ().device ().address ();
-   rule_destination.unit   = unit ().id ();
+   rule_destination.device = unit().device().address();
+   rule_destination.unit   = unit().id();
 
-   auto msg = AttributeReporting::create (rule_destination, interval);
+   auto msg = AttributeReporting::create(rule_destination, interval);
 
    destination.unit = 0;
 
-   send (destination, *msg);
+   send(destination, *msg);
 
    delete msg;
 }
@@ -207,11 +207,11 @@ void AbstractClient::create (Protocol::Address &destination, uint32_t interval)
  *
  */
 // =============================================================================
-void AbstractClient::destroy (Protocol::Address &destination, Type type, uint8_t report_id)
+void AbstractClient::destroy(Protocol::Address &destination, Type type, uint8_t report_id)
 {
-   auto msg = AttributeReporting::destroy (type, report_id);
+   auto msg = AttributeReporting::destroy(type, report_id);
 
-   send (destination, *msg);
+   send(destination, *msg);
 
    delete msg;
 }
@@ -223,11 +223,11 @@ void AbstractClient::destroy (Protocol::Address &destination, Type type, uint8_t
  *
  */
 // =============================================================================
-void AbstractClient::destroy (Protocol::Address &destination, Reference report)
+void AbstractClient::destroy(Protocol::Address &destination, Reference report)
 {
-   auto msg = AttributeReporting::destroy (report);
+   auto msg = AttributeReporting::destroy(report);
 
-   send (destination, *msg);
+   send(destination, *msg);
 
    delete msg;
 }
@@ -239,12 +239,12 @@ void AbstractClient::destroy (Protocol::Address &destination, Reference report)
  *
  */
 // =============================================================================
-void AbstractClient::add (Protocol::Address &destination, Reference report,
-                          periodic_iterator begin, periodic_iterator end)
+void AbstractClient::add(Protocol::Address &destination, Reference report,
+                         periodic_iterator begin, periodic_iterator end)
 {
-   auto msg = AttributeReporting::add (report, begin, end);
+   auto msg = AttributeReporting::add(report, begin, end);
 
-   send (destination, *msg);
+   send(destination, *msg);
 
    delete msg;
 }
@@ -256,12 +256,12 @@ void AbstractClient::add (Protocol::Address &destination, Reference report,
  *
  */
 // =============================================================================
-void AbstractClient::add (Protocol::Address &destination, Reference report,
-                          event_iterator begin, event_iterator end)
+void AbstractClient::add(Protocol::Address &destination, Reference report,
+                         event_iterator begin, event_iterator end)
 {
-   auto msg = AttributeReporting::add (report, begin, end);
+   auto msg = AttributeReporting::add(report, begin, end);
 
-   send (destination, *msg);
+   send(destination, *msg);
 
    delete msg;
 }

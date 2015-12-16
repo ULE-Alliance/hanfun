@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the debug helper functions.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -16,7 +16,6 @@
 
 #include <iomanip>
 
-#include "hanfun.h"
 #include "hanfun/debug.h"
 
 using namespace HF::Debug;
@@ -47,16 +46,16 @@ static int8_t log_width = -1;
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
+std::ostream &operator<<(std::ostream &stream, const uint8_t byte)
 {
    if (stream == std::cout || stream == std::cerr)
    {
-      std::ios_base::fmtflags ff = stream.flags ();
-      char f                     = stream.fill ('0');
+      std::ios_base::fmtflags ff = stream.flags();
+      char f                     = stream.fill('0');
 
-      stream << Hex <uint8_t>(byte);
+      stream << Hex<uint8_t>(byte);
 
-      stream << std::setfill (f) << std::setiosflags (ff);
+      stream << std::setfill(f) << std::setiosflags(ff);
    }
    else
    {
@@ -70,6 +69,10 @@ std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
 // Common
 // =============================================================================
 
+#include "hanfun/common.h"
+#include "hanfun/uids.h"
+#include "hanfun/interface.h"
+
 // =============================================================================
 // operator <<
 // =============================================================================
@@ -77,15 +80,15 @@ std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array)
+std::ostream &operator<<(std::ostream &stream, const HF::Common::ByteArray &array)
 {
    if (stream == std::cout || stream == std::cerr)
    {
-      std::ios_base::fmtflags ff = stream.flags ();
-      char f                     = stream.fill ('0');
+      std::ios_base::fmtflags ff = stream.flags();
+      char f                     = stream.fill('0');
 
       stream << std::left;
-      stream << "(" << Hex <uint16_t>(array.size ()) << ") ";
+      stream << "(" << Hex<uint16_t>(array.size()) << ") ";
 
       /* *INDENT-OFF* */
       std::for_each (array.begin (), array.end (), [&stream](uint8_t byte)
@@ -94,7 +97,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &arr
       });
       /* *INDENT-ON* */
 
-      stream << std::setfill (f) << std::setiosflags (ff);
+      stream << std::setfill(f) << std::setiosflags(ff);
    }
    else
    {
@@ -116,15 +119,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &arr
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface interface)
+std::ostream &operator<<(std::ostream &stream, const HF::Common::Interface interface)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
-   stream << "R:" << static_cast <HF::Interface::Role>(interface.role)
-          << " UID:" << static_cast <HF::Interface::UID>(interface.id);
+   stream << "R:" << static_cast<HF::Interface::Role>(interface.role)
+          << " UID:" << static_cast<HF::Interface::UID>(interface.id);
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -136,12 +139,12 @@ std::ostream &operator <<(std::ostream &stream, const HF::Common::Interface inte
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
+std::ostream &operator<<(std::ostream &stream, const HF::UID::UID &uid)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill ('0');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill('0');
 
-   switch (uid.raw ()->type ())
+   switch (uid.raw()->type())
    {
       case HF::UID::NONE_UID:
       {
@@ -150,35 +153,35 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
       }
       case HF::UID::DECT_UID:
       {
-         HF::UID::DECT *dect = (HF::UID::DECT *) uid.raw ();
+         HF::UID::DECT *dect = (HF::UID::DECT *) uid.raw();
          stream << "dect: ";
 
-         for (uint8_t i = 0; i < HF::UID::DECT::length (); i++)
+         for (uint8_t i = 0; i < HF::UID::DECT::length(); i++)
          {
-            stream << Hex <uint8_t>((*dect)[i]);
+            stream << Hex<uint8_t>((*dect)[i]);
          }
 
          break;
       }
       case HF::UID::MAC_UID:
       {
-         HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw ();
+         HF::UID::MAC *mac = (HF::UID::MAC *) uid.raw();
          stream << "mac: ";
 
-         for (uint8_t i = 0; i < HF::UID::MAC::length () - 1; i++)
+         for (uint8_t i = 0; i < HF::UID::MAC::length() - 1; i++)
          {
-            stream << Hex <uint8_t>((*mac)[i]) << ":";
+            stream << Hex<uint8_t>((*mac)[i]) << ":";
          }
 
-         stream << Hex <uint8_t>((*mac)[HF::UID::MAC::length () - 1]);
+         stream << Hex<uint8_t>((*mac)[HF::UID::MAC::length() - 1]);
 
          break;
       }
 
       case HF::UID::URI_UID:
       {
-         HF::UID::URI *uri = (HF::UID::URI *) uid.raw ();
-         stream << "uri: " << uri->str ();
+         HF::UID::URI *uri = (HF::UID::URI *) uid.raw();
+         stream << "uri: " << uri->str();
          break;
       }
 
@@ -186,317 +189,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::UID::UID &uid)
          break;
    }
 
-   stream << std::setfill (f) << std::setiosflags (ff);
-
-   return stream;
-}
-
-// =============================================================================
-// Protocol
-// =============================================================================
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Address &address)
-{
-   stream << "M:" << address.mod << " "
-          << "D:" << Hex <uint16_t>(address.device) << " "
-          << "U:" << Hex <uint8_t>(address.unit);
-
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message::Type type)
-{
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
-
-   using namespace HF::Protocol;
-
-   std::string result = "Unknown";
-
-   switch (type)
-   {
-      case Message::Type::COMMAND_REQ:
-      {
-         result = "COMMAND_REQ";
-         break;
-      }
-      case Message::Type::COMMAND_RESP_REQ:
-      {
-         result = "COMMAND_RESP_REQ";
-         break;
-      }
-      case Message::Type::COMMAND_RES:
-      {
-         result = "COMMAND_RES";
-         break;
-      }
-      case Message::Type::GET_ATTR_REQ:
-      {
-         result = "GET_ATTR_REQ";
-         break;
-      }
-      case Message::Type::GET_ATTR_RES:
-      {
-         result = "GET_ATTR_RES";
-         break;
-      }
-      case Message::Type::SET_ATTR_REQ:
-      {
-         result = "SET_ATTR_REQ";
-         break;
-      }
-      case Message::Type::SET_ATTR_RESP_REQ:
-      {
-         result = "SET_ATTR_RESP_REQ";
-         break;
-      }
-      case Message::Type::SET_ATTR_RES:
-      {
-         result = "SET_ATTR_RES";
-         break;
-      }
-      case Message::Type::GET_ATTR_PACK_REQ:
-      {
-         result = "GET_ATTR_PACK_REQ";
-         break;
-      }
-      case Message::Type::GET_ATTR_PACK_RES:
-      {
-         result = "GET_ATTR_PACK_RES";
-         break;
-      }
-      case Message::Type::SET_ATTR_PACK_REQ:
-      {
-         result = "SET_ATTR_PACK_REQ";
-         break;
-      }
-      case Message::Type::SET_ATTR_PACK_RESP_REQ:
-      {
-         result = "SET_ATTR_PACK_RESP_REQ";
-         break;
-      }
-      case Message::Type::SET_ATTR_PACK_RES:
-      {
-         result = "SET_ATTR_PACK_RES";
-         break;
-      }
-      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
-      {
-         result = "ATOMIC_SET_ATTR_PACK_REQ";
-         break;
-      }
-      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
-      {
-         result = "ATOMIC_SET_ATTR_PACK_RESP_REQ";
-         break;
-      }
-      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
-      {
-         result = "ATOMIC_SET_ATTR_PACK_RES";
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << Hex <uint8_t>((uint8_t) type) << " (" << result << ")";
-
-   stream << std::setfill (f) << std::setiosflags (ff);
-
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Message &message)
-{
-   int8_t old_width = log_width;
-
-   if (log_width < 0)
-   {
-      log_width = 12;
-   }
-
-   using namespace HF::Protocol;
-   using namespace HF::Interfaces;
-   using namespace HF::Core;
-
-   stream << ALIGN ();
-   stream << "Reference | " << Hex <uint8_t>(message.reference) << NL_ALIGN ()
-          << "Type | " << static_cast <HF::Protocol::Message::Type>(message.type) << NL_ALIGN ()
-          << "Interface | " << message.itf << " M:" << Hex <uint8_t>(message.itf.member) << " (";
-
-   switch (message.type)
-   {
-      case Message::Type::COMMAND_RESP_REQ:
-      case Message::Type::COMMAND_REQ:
-      case Message::Type::COMMAND_RES:
-      {
-         switch (message.itf.id)
-         {
-            case HF::Interface::ATTRIBUTE_REPORTING:
-               stream << static_cast <AttributeReporting::CMD>(message.itf.member);
-               break;
-            case HF::Interface::BIND_MANAGEMENT:
-               stream << static_cast <BindManagement::CMD>(message.itf.member);
-               break;
-            case HF::Interface::DEVICE_MANAGEMENT:
-               stream << static_cast <DeviceManagement::CMD>(message.itf.member);
-               break;
-            case HF::Interface::ALERT:
-               stream << static_cast <Alert::CMD>(message.itf.member);
-               break;
-            case HF::Interface::LEVEL_CONTROL:
-               stream << static_cast <LevelControl::CMD>(message.itf.member);
-               break;
-            case HF::Interface::ON_OFF:
-               stream << static_cast <OnOff::CMD>(message.itf.member);
-               break;
-            case HF::Interface::SIMPLE_POWER_METER:
-               stream << static_cast <SimplePowerMeter::CMD>(message.itf.member);
-               break;
-            default:
-               stream << "Unknown";
-               break;
-         }
-
-         stream << " [C]";
-
-         break;
-      }
-      case Message::Type::GET_ATTR_REQ:
-      case Message::Type::GET_ATTR_RES:
-      case Message::Type::SET_ATTR_REQ:
-      case Message::Type::SET_ATTR_RESP_REQ:
-      case Message::Type::SET_ATTR_RES:
-      {
-         switch (message.itf.id)
-         {
-            case HF::Interface::ATTRIBUTE_REPORTING:
-               stream << static_cast <AttributeReporting::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::BIND_MANAGEMENT:
-               stream << static_cast <BindManagement::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::DEVICE_INFORMATION:
-               stream << static_cast <DeviceInformation::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::DEVICE_MANAGEMENT:
-               stream << static_cast <DeviceManagement::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::ALERT:
-               stream << static_cast <Alert::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::LEVEL_CONTROL:
-               stream << static_cast <LevelControl::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::ON_OFF:
-               stream << static_cast <OnOff::Attributes>(message.itf.member);
-               break;
-            case HF::Interface::SIMPLE_POWER_METER:
-               stream << static_cast <SimplePowerMeter::Attributes>(message.itf.member);
-               break;
-            default:
-               break;
-         }
-
-         stream << " [A]";
-
-         break;
-      }
-      case Message::Type::GET_ATTR_PACK_REQ:
-      case Message::Type::GET_ATTR_PACK_RES:
-      case Message::Type::SET_ATTR_PACK_REQ:
-      case Message::Type::SET_ATTR_PACK_RESP_REQ:
-      case Message::Type::SET_ATTR_PACK_RES:
-      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
-      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
-      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
-      {
-         using namespace HF::Attributes;
-
-         switch (message.itf.member)
-         {
-            case Pack::MANDATORY:
-               stream << "Mandatory";
-               break;
-            case Pack::ALL:
-               stream << "All";
-               break;
-            case Pack::DYNAMIC:
-               stream << "Dynamic";
-               break;
-            default:
-               stream << "Other";
-               break;
-         }
-
-         stream << " [P]";
-
-         break;
-      }
-      default:
-         break;
-   }
-
-   stream << ")" << NL_ALIGN () << "Payload | " << message.payload;
-
-   log_width = old_width;
-
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &packet)
-{
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (0);
-
-   int8_t old_width           = log_width;
-
-   if (log_width < 0)
-   {
-      log_width = 15;
-   }
-
-   stream << std::right << std::setfill (' ') << std::setw (log_width);
-   stream << "Packet | " << NL_ALIGN ();
-
-   stream << "Source | " << packet.source << NL_ALIGN ();
-
-   stream << "Destination | " << packet.destination << NL_ALIGN ();
-
-   stream << "Message | " << NL_ALIGN ();
-   stream << packet.message;
-
-   stream << std::setfill (f) << std::setiosflags (ff);
-
-   log_width = old_width;
+   stream << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -505,6 +198,8 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &pack
 // Interfaces
 // =============================================================================
 
+#include "hanfun/interface.h"
+
 // =============================================================================
 // operator <<
 // =============================================================================
@@ -512,10 +207,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Protocol::Packet &pack
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, HF::Interface::Role role)
+std::ostream &operator<<(std::ostream &stream, HF::Interface::Role role)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -533,9 +228,9 @@ std::ostream &operator <<(std::ostream &stream, HF::Interface::Role role)
       }
    }
 
-   stream << Hex <uint8_t>((uint8_t) role) << " (" << result << ")";
+   stream << Hex<uint8_t>((uint8_t) role) << " (" << result << ")";
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -546,10 +241,10 @@ std::ostream &operator <<(std::ostream &stream, HF::Interface::Role role)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
+std::ostream &operator<<(std::ostream &stream, const HF::Interface::UID uid)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -641,11 +336,17 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
       }
    }
 
-   stream << Hex <uint16_t>((uint16_t) uid) << " (" << result << ")";
+   stream << Hex<uint16_t>((uint16_t) uid) << " (" << result << ")";
 
-   stream << std::setfill (f) << std::setiosflags (ff);
+   stream << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
+
+// =============================================================================
+// HF::Interfaces::Alert
+// =============================================================================
+
+#include "hanfun/interfaces/alert.h"
 
 // =============================================================================
 // operator <<
@@ -654,10 +355,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interface::UID uid)
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -672,7 +373,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
@@ -684,10 +385,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::CMD
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::Alert::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -705,10 +406,16 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Att
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
 
    return stream;
 }
+
+// =============================================================================
+// HF::Interfaces::LevelControl
+// =============================================================================
+
+#include "hanfun/interfaces/level_control.h"
 
 // =============================================================================
 // operator <<
@@ -717,10 +424,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::Alert::Att
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::LevelControl::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -735,7 +442,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -746,10 +453,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelControl::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::LevelControl::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -764,9 +472,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
+
+// =============================================================================
+// HF::Interfaces::OnOff
+// =============================================================================
+
+#include "hanfun/interfaces/on_off.h"
 
 // =============================================================================
 // operator <<
@@ -775,10 +489,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::LevelContr
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -799,7 +513,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -810,10 +524,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -828,9 +542,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Att
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
+
+// =============================================================================
+// HF::Interfaces::SimplePowerMeter
+// =============================================================================
+
+#include "hanfun/interfaces/simple_power_meter.h"
 
 // =============================================================================
 // operator <<
@@ -839,10 +559,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Att
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -857,7 +577,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -868,10 +588,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowerMeter::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimplePowerMeter::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -938,7 +659,45 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimpleThermostat
+// =============================================================================
+
+#include "hanfun/interfaces/simple_thermostat.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleThermostat::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   switch (command)
+   {
+      case BOOST_START_CMD:
+         result = "Boost Start";
+         break;
+      case BOOST_STOP_CMD:
+         result = "Boost Stop";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -949,14 +708,256 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::SimplePowe
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleThermostat::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
-   stream << Hex <uint8_t>((uint8_t) command) << " (" << result << " [C])";
+   using namespace HF::Interfaces::SimpleThermostat;
+
+   switch (attribute)
+   {
+      case SUPPORTED_MODES_ATTR:
+         result = "Supported Modes";
+         break;
+      case HEAT_COOL_MODE_ATTR:
+         result = "Heat/Cool Mode";
+         break;
+      case FAN_MODE_ATTR:
+         result = "Fan Mode";
+         break;
+      case HEAT_MODE_TEMP_ATTR:
+         result = "Heat Mode Temperature";
+         break;
+      case COOL_MODE_TEMP_ATTR:
+         result = "Cool Mode Temperature";
+         break;
+      case AUTO_MODE_HEAT_TEMP_ATTR:
+         result = "Heat/Cool Mode - Heat Temperature";
+         break;
+      case AUTO_MODE_COOL_TEMP_ATTR:
+         result = "Heat/Cool Mode - Cool Temperature";
+         break;
+      case HEAT_MODE_TEMP_OFFSET_ATTR:
+         result = "Heat Mode Temperature Offset";
+         break;
+      case COOL_MODE_TEMP_OFFSET_ATTR:
+         result = "Cool Mode Temperature Offset";
+         break;
+      case BOOST_DURATION_ATTR:
+         result = "Boost Duration";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimpleButton
+// =============================================================================
+
+#include "hanfun/interfaces/simple_button.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleButton::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleButton;
+
+   switch (command)
+   {
+      case SHORT_PRESS_CMD:
+         result = "Short Press";
+         break;
+      case LONG_PRESS_CMD:
+         result = "Long Press";
+         break;
+      case EXTRA_LONG_PRESS_CMD:
+         result = "Extra Long Press";
+         break;
+      case DOUBLE_CLICK_PRESS_CMD:
+         result = "Double Click Press";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleButton::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleButton;
+
+   switch (attribute)
+   {
+      case SHORT_PRESS_MAX_DURATION_ATTR:
+         result = "Short Press Max Duration";
+         break;
+      case EXTRA_LONG_PRESS_MIN_DURATION_ATTR:
+         result = "Extra Long Press Min Duration";
+         break;
+      case DOUBLE_CLICK_GAP_DURATION_ATTR:
+         result = "Double Click Gap Duration";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimpleVisualEffects
+// =============================================================================
+
+#include "hanfun/interfaces/simple_visual_effects.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleVisualEffects::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleVisualEffects;
+
+   switch (command)
+   {
+      case ON_CMD:
+         result = "On";
+         break;
+      case OFF_CMD:
+         result = "Off";
+         break;
+      case BLINK_CMD:
+         result = "Blink";
+         break;
+      case FADE_CMD:
+         result = "Fade";
+         break;
+      case BREATHE_CMD:
+         result = "Breathe";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Interfaces::SimpleAirPressure
+// =============================================================================
+
+#include "hanfun/interfaces/simple_air_pressure.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleAirPressure::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleAirPressure;
+
+   switch (attribute)
+   {
+      case VALUE_ATTR:
+         result = "Value";
+         break;
+      case MAXIMUM_ATTR:
+         result = "Maximum";
+         break;
+      case MINIMUM_ATTR:
+         result = "Minimum";
+         break;
+      case TOLERANCE_ATTR:
+         result = "Tolerance";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// Core Services & Interfaces
+// =============================================================================
+
+#include "hanfun/core.h"
+
+// =============================================================================
+// HF::Core::AttributeReporting
+// =============================================================================
+
+#include "hanfun/core/attribute_reporting.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::AttributeReporting::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   stream << Hex<uint8_t>((uint8_t) command) << " (" << result << " [C])";
 
    using namespace HF::Core::AttributeReporting;
 
@@ -1003,7 +1004,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1014,10 +1015,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporting::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::AttributeReporting::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1044,9 +1046,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
+
+// =============================================================================
+// HF::Core::BindManagement
+// =============================================================================
+
+#include "hanfun/core/bind_management.h"
 
 // =============================================================================
 // operator <<
@@ -1055,10 +1063,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::AttributeReporti
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1095,7 +1103,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1106,10 +1114,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BindManagement::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1126,9 +1134,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
+
+// =============================================================================
+// HF::Core::DeviceInformation
+// =============================================================================
+
+#include "hanfun/core/device_information.h"
 
 // =============================================================================
 // operator <<
@@ -1137,10 +1151,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::BindManagement::
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformation::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceInformation::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1232,9 +1247,15 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformatio
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
+
+// =============================================================================
+// HF::Core::DeviceManagement
+// =============================================================================
+
+#include "hanfun/core/device_management.h"
 
 // =============================================================================
 // operator <<
@@ -1243,10 +1264,10 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceInformatio
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command)
+std::ostream &operator<<(std::ostream &stream, const HF::Core::DeviceManagement::CMD command)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1283,7 +1304,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
    return stream;
 }
 
@@ -1294,10 +1315,11 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
  *
  */
 // =============================================================================
-std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::DeviceManagement::Attributes attribute)
 {
-   std::ios_base::fmtflags ff = stream.flags ();
-   char f                     = stream.fill (' ');
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
 
    std::string result         = "Unknown";
 
@@ -1314,6 +1336,417 @@ std::ostream &operator <<(std::ostream &stream, const HF::Core::DeviceManagement
          break;
    }
 
-   stream << result << std::setfill (f) << std::setiosflags (ff);
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Core::RSSI
+// =============================================================================
+
+#include "hanfun/core/rssi.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::RSSI::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::RSSI;
+
+   switch (attribute)
+   {
+      case RSSI_ATTR:
+         result = "RSSI";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// HF::Core::SUOTA
+// =============================================================================
+
+#include "hanfun/core/suota.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::SUOTA::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::SUOTA;
+
+   switch (command)
+   {
+      case NEW_VERSION_AVAILABLE_CMD /* CHECK_VERSION_CMD */:
+         result = "New Version Available/Check Version";
+         break;
+      case UPGRADE_COMPLETE_CMD:
+         result = "Upgrade Complete";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// Protocol
+// =============================================================================
+
+#include "hanfun/protocol.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Address &address)
+{
+   stream << "M:" << address.mod << " "
+          << "D:" << Hex<uint16_t>(address.device) << " "
+          << "U:" << Hex<uint8_t>(address.unit);
+
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message::Type type)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   using namespace HF::Protocol;
+
+   std::string result = "Unknown";
+
+   switch (type)
+   {
+      case Message::Type::COMMAND_REQ:
+      {
+         result = "COMMAND_REQ";
+         break;
+      }
+      case Message::Type::COMMAND_RESP_REQ:
+      {
+         result = "COMMAND_RESP_REQ";
+         break;
+      }
+      case Message::Type::COMMAND_RES:
+      {
+         result = "COMMAND_RES";
+         break;
+      }
+      case Message::Type::GET_ATTR_REQ:
+      {
+         result = "GET_ATTR_REQ";
+         break;
+      }
+      case Message::Type::GET_ATTR_RES:
+      {
+         result = "GET_ATTR_RES";
+         break;
+      }
+      case Message::Type::SET_ATTR_REQ:
+      {
+         result = "SET_ATTR_REQ";
+         break;
+      }
+      case Message::Type::SET_ATTR_RESP_REQ:
+      {
+         result = "SET_ATTR_RESP_REQ";
+         break;
+      }
+      case Message::Type::SET_ATTR_RES:
+      {
+         result = "SET_ATTR_RES";
+         break;
+      }
+      case Message::Type::GET_ATTR_PACK_REQ:
+      {
+         result = "GET_ATTR_PACK_REQ";
+         break;
+      }
+      case Message::Type::GET_ATTR_PACK_RES:
+      {
+         result = "GET_ATTR_PACK_RES";
+         break;
+      }
+      case Message::Type::SET_ATTR_PACK_REQ:
+      {
+         result = "SET_ATTR_PACK_REQ";
+         break;
+      }
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      {
+         result = "SET_ATTR_PACK_RESP_REQ";
+         break;
+      }
+      case Message::Type::SET_ATTR_PACK_RES:
+      {
+         result = "SET_ATTR_PACK_RES";
+         break;
+      }
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      {
+         result = "ATOMIC_SET_ATTR_PACK_REQ";
+         break;
+      }
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      {
+         result = "ATOMIC_SET_ATTR_PACK_RESP_REQ";
+         break;
+      }
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      {
+         result = "ATOMIC_SET_ATTR_PACK_RES";
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << Hex<uint8_t>((uint8_t) type) << " (" << result << ")";
+
+   stream << std::setfill(f) << std::setiosflags(ff);
+
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &message)
+{
+   int8_t old_width = log_width;
+
+   if (log_width < 0)
+   {
+      log_width = 12;
+   }
+
+   using namespace HF::Protocol;
+   using namespace HF::Interfaces;
+   using namespace HF::Core;
+
+   stream << ALIGN();
+   stream << "Reference | " << Hex<uint8_t>(message.reference) << NL_ALIGN()
+          << "Type | " << static_cast<HF::Protocol::Message::Type>(message.type) << NL_ALIGN()
+          << "Interface | " << message.itf << " M:" << Hex<uint8_t>(message.itf.member) << " (";
+
+   switch (message.type)
+   {
+      case Message::Type::COMMAND_RESP_REQ:
+      case Message::Type::COMMAND_REQ:
+      case Message::Type::COMMAND_RES:
+      {
+         switch (message.itf.id)
+         {
+            /* Core Service & Interface [C] */
+            case HF::Interface::ATTRIBUTE_REPORTING:
+               stream << static_cast<AttributeReporting::CMD>(message.itf.member);
+               break;
+            case HF::Interface::BIND_MANAGEMENT:
+               stream << static_cast<BindManagement::CMD>(message.itf.member);
+               break;
+            case HF::Interface::DEVICE_MANAGEMENT:
+               stream << static_cast<DeviceManagement::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SUOTA:
+               stream << static_cast<SUOTA::CMD>(message.itf.member);
+               break;
+            /* Interfaces [C] */
+            case HF::Interface::ALERT:
+               stream << static_cast<Alert::CMD>(message.itf.member);
+               break;
+            case HF::Interface::LEVEL_CONTROL:
+               stream << static_cast<LevelControl::CMD>(message.itf.member);
+               break;
+            case HF::Interface::ON_OFF:
+               stream << static_cast<OnOff::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_POWER_METER:
+               stream << static_cast<SimplePowerMeter::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_BUTTON:
+               stream << static_cast<SimpleButton::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_VISUAL_EFFECTS:
+               stream << static_cast<SimpleVisualEffects::CMD>(message.itf.member);
+               break;
+
+            /* Unknown [C] */
+            default:
+               stream << "Unknown";
+               break;
+         }
+
+         stream << " [C]";
+
+         break;
+      }
+      case Message::Type::GET_ATTR_REQ:
+      case Message::Type::GET_ATTR_RES:
+      case Message::Type::SET_ATTR_REQ:
+      case Message::Type::SET_ATTR_RESP_REQ:
+      case Message::Type::SET_ATTR_RES:
+      {
+         switch (message.itf.id)
+         {
+            /* Core Service & Interface [A] */
+            case HF::Interface::ATTRIBUTE_REPORTING:
+               stream << static_cast<AttributeReporting::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::BIND_MANAGEMENT:
+               stream << static_cast<BindManagement::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::DEVICE_INFORMATION:
+               stream << static_cast<DeviceInformation::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::DEVICE_MANAGEMENT:
+               stream << static_cast<DeviceManagement::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::RSSI:
+               stream << static_cast<RSSI::Attributes>(message.itf.member);
+               break;
+            /* Interfaces [A] */
+            case HF::Interface::ALERT:
+               stream << static_cast<Alert::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::LEVEL_CONTROL:
+               stream << static_cast<LevelControl::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::ON_OFF:
+               stream << static_cast<OnOff::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_POWER_METER:
+               stream << static_cast<SimplePowerMeter::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_BUTTON:
+               stream << static_cast<SimpleButton::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_AIR_PRESSURE:
+               stream << static_cast<SimpleAirPressure::Attributes>(message.itf.member);
+               break;
+
+            /* Unknown [A] */
+            default:
+               break;
+         }
+
+         stream << " [A]";
+
+         break;
+      }
+      case Message::Type::GET_ATTR_PACK_REQ:
+      case Message::Type::GET_ATTR_PACK_RES:
+      case Message::Type::SET_ATTR_PACK_REQ:
+      case Message::Type::SET_ATTR_PACK_RESP_REQ:
+      case Message::Type::SET_ATTR_PACK_RES:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RESP_REQ:
+      case Message::Type::ATOMIC_SET_ATTR_PACK_RES:
+      {
+         using namespace HF::Attributes;
+
+         switch (message.itf.member)
+         {
+            case Pack::MANDATORY:
+               stream << "Mandatory";
+               break;
+            case Pack::ALL:
+               stream << "All";
+               break;
+            case Pack::DYNAMIC:
+               stream << "Dynamic";
+               break;
+            default:
+               stream << "Other";
+               break;
+         }
+
+         stream << " [P]";
+
+         break;
+      }
+      default:
+         break;
+   }
+
+   stream << ")" << NL_ALIGN() << "Payload | " << message.payload;
+
+   log_width = old_width;
+
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Packet &packet)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(0);
+
+   int8_t old_width           = log_width;
+
+   if (log_width < 0)
+   {
+      log_width = 15;
+   }
+
+   stream << std::right << std::setfill(' ') << std::setw(log_width);
+   stream << "Packet | " << NL_ALIGN();
+
+   stream << "Source | " << packet.source << NL_ALIGN();
+
+   stream << "Destination | " << packet.destination << NL_ALIGN();
+
+   stream << "Message | " << NL_ALIGN();
+   stream << packet.message;
+
+   stream << std::setfill(f) << std::setiosflags(ff);
+
+   log_width = old_width;
+
    return stream;
 }

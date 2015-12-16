@@ -1,10 +1,10 @@
 // =============================================================================
 /*!
- * @file       src/interfaces/on_off_client.cpp
+ * @file       src/interfaces/on_off_server.cpp
  *
  * This file contains the implementation of the On-Off interface : Server role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,24 +35,24 @@ using namespace HF::Interfaces::OnOff;
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
-   UNUSED (payload);
-   UNUSED (offset);
+   UNUSED(payload);
+   UNUSED(offset);
 
-   CMD cmd = static_cast <CMD>(packet.message.itf.member);
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
       case ON_CMD:
-         on (packet.source);
+         on(packet.source);
          break;
       case OFF_CMD:
-         off (packet.source);
+         off(packet.source);
          break;
       case TOGGLE_CMD:
-         toggle (packet.source);
+         toggle(packet.source);
          break;
       default:
          return Common::Result::FAIL_SUPPORT;
@@ -68,10 +68,10 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void Server::on (HF::Protocol::Address &source)
+void Server::on(HF::Protocol::Address &source)
 {
-   UNUSED (source);
-   state (true);
+   UNUSED(source);
+   state(true);
 }
 
 // =============================================================================
@@ -81,10 +81,10 @@ void Server::on (HF::Protocol::Address &source)
  *
  */
 // =============================================================================
-void Server::off (HF::Protocol::Address &source)
+void Server::off(HF::Protocol::Address &source)
 {
-   UNUSED (source);
-   state (false);
+   UNUSED(source);
+   state(false);
 }
 
 // =============================================================================
@@ -94,10 +94,10 @@ void Server::off (HF::Protocol::Address &source)
  *
  */
 // =============================================================================
-void Server::toggle (HF::Protocol::Address &source)
+void Server::toggle(HF::Protocol::Address &source)
 {
-   UNUSED (source);
-   state (!state ());
+   UNUSED(source);
+   state(!state());
 }
 
 // =============================================================================
@@ -107,16 +107,16 @@ void Server::toggle (HF::Protocol::Address &source)
  *
  */
 // =============================================================================
-void Server::state (bool state)
+void Server::state(bool state)
 {
    bool old = this->_state;
 
    this->_state = state;
 
-   State old_attr (old, this);
-   State new_attr (this->_state, this);
+   State old_attr(old, this);
+   State new_attr(this->_state, this);
 
-   notify (old_attr, new_attr);
+   notify(old_attr, new_attr);
 }
 
 // =============================================================================
@@ -126,7 +126,7 @@ void Server::state (bool state)
  *
  */
 // =============================================================================
-bool Server::state ()
+bool Server::state()
 {
    return _state;
 }

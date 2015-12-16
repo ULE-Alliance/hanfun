@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -38,13 +38,13 @@ using namespace HF::Core::DeviceManagement;
  *
  */
 // =============================================================================
-void Client::register_device ()
+void Client::register_device()
 {
-   Protocol::Address addr (0, 0);
+   Protocol::Address addr(0, 0);
 
-   RegisterMessage   *payload = new RegisterMessage (DeviceInformation::EMC);
+   RegisterMessage *payload = new RegisterMessage(DeviceInformation::EMC);
 
-   HF::IDevice &device        = unit ().device ();
+   HF::IDevice &device      = unit().device();
 
    /* *INDENT-OFF* */
    for_each (device.units ().begin (), device.units ().end (),
@@ -61,15 +61,15 @@ void Client::register_device ()
    });
    /* *INDENT-ON* */
 
-   Protocol::Message message (payload->size ());
+   Protocol::Message message(payload->size());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
+   message.itf.id     = Client::uid();
    message.itf.member = REGISTER_CMD;
 
-   payload->pack (message.payload);
+   payload->pack(message.payload);
 
-   send (addr, message);
+   send(addr, message);
 
    delete payload;
 }
@@ -81,20 +81,20 @@ void Client::register_device ()
  *
  */
 // =============================================================================
-void Client::deregister (uint16_t address)
+void Client::deregister(uint16_t address)
 {
-   DeregisterMessage payload (address);
+   DeregisterMessage payload(address);
 
-   Protocol::Address addr (0, 0);
-   Protocol::Message message (payload.size ());
+   Protocol::Address addr(0, 0);
+   Protocol::Message message(payload.size());
 
    message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Client::uid ();
+   message.itf.id     = Client::uid();
    message.itf.member = DEREGISTER_CMD;
 
-   payload.pack (message.payload);
+   payload.pack(message.payload);
 
-   send (addr, message);
+   send(addr, message);
 }
 
 // =============================================================================
@@ -104,24 +104,24 @@ void Client::deregister (uint16_t address)
  *
  */
 // =============================================================================
-uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
+uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
       case REGISTER_CMD:
-         return payload_size_helper <RegisterResponse>();
+         return payload_size_helper<RegisterResponse>();
 
       case DEREGISTER_CMD:
-         return payload_size_helper <Protocol::Response>();
+         return payload_size_helper<Protocol::Response>();
 
       case START_SESSION_CMD:
-         return SessionMgr::payload_size (SessionManagement::START);
+         return SessionMgr::payload_size(SessionManagement::START);
 
       case GET_ENTRIES_CMD:
-         return SessionMgr::payload_size (SessionManagement::GET);
+         return SessionMgr::payload_size(SessionManagement::GET);
 
       case END_SESSION_CMD:
-         return SessionMgr::payload_size (SessionManagement::END);
+         return SessionMgr::payload_size(SessionManagement::END);
 
       default:
          return 0;
@@ -135,38 +135,38 @@ uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
  *
  */
 // =============================================================================
-Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
    switch (packet.message.itf.member)
    {
       case REGISTER_CMD:
       {
          RegisterResponse registration;
-         registration.unpack (payload, offset);
-         registered (registration);
+         registration.unpack(payload, offset);
+         registered(registration);
 
          break;
       }
       case DEREGISTER_CMD:
       {
          Protocol::Response response;
-         response.unpack (payload, offset);
-         deregistered (response);
+         response.unpack(payload, offset);
+         deregistered(response);
 
          break;
       }
       case START_SESSION_CMD:
       {
-         return SessionMgr::handle_command (SessionManagement::START, packet, payload, offset);
+         return SessionMgr::handle_command(SessionManagement::START, packet, payload, offset);
       }
       case GET_ENTRIES_CMD:
       {
-         return SessionMgr::handle_command (SessionManagement::GET, packet, payload, offset);
+         return SessionMgr::handle_command(SessionManagement::GET, packet, payload, offset);
       }
       case END_SESSION_CMD:
       {
-         return SessionMgr::handle_command (SessionManagement::END, packet, payload, offset);
+         return SessionMgr::handle_command(SessionManagement::END, packet, payload, offset);
       }
       default:
          return Common::Result::FAIL_UNKNOWN;
@@ -182,7 +182,7 @@ Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void Client::registered (RegisterResponse &response)
+void Client::registered(RegisterResponse &response)
 {
    if (response.code == Common::Result::OK)
    {
@@ -197,7 +197,7 @@ void Client::registered (RegisterResponse &response)
  *
  */
 // =============================================================================
-void Client::deregistered (Protocol::Response &response)
+void Client::deregistered(Protocol::Response &response)
 {
    if (response.code == Common::Result::OK)
    {

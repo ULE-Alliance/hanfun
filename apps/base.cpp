@@ -5,7 +5,7 @@
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -45,10 +45,10 @@
  *
  */
 // =============================================================================
-HF::Common::Result DeviceManagement::Entries::save (const Device &device)
+HF::Common::Result DeviceManagement::Entries::save(const Device &device)
 {
-   auto res = HF::Core::DeviceManagement::Entries::save (device);
-   HF::Application::Save ();
+   auto res = HF::Core::DeviceManagement::Entries::save(device);
+   HF::Application::Save();
    return res;
 }
 
@@ -59,9 +59,9 @@ HF::Common::Result DeviceManagement::Entries::save (const Device &device)
  *
  */
 // =============================================================================
-void DeviceManagement::Entries::insert (const Device &device)
+void DeviceManagement::Entries::insert(const Device &device)
 {
-   HF::Core::DeviceManagement::Entries::save (device);
+   HF::Core::DeviceManagement::Entries::save(device);
 }
 
 // =============================================================================
@@ -71,10 +71,10 @@ void DeviceManagement::Entries::insert (const Device &device)
  *
  */
 // =============================================================================
-HF::Common::Result DeviceManagement::Entries::destroy (const Device &device)
+HF::Common::Result DeviceManagement::Entries::destroy(const Device &device)
 {
-   auto res = HF::Core::DeviceManagement::Entries::destroy (device);
-   HF::Application::Save ();
+   auto res = HF::Core::DeviceManagement::Entries::destroy(device);
+   HF::Application::Save();
    return res;
 }
 
@@ -85,7 +85,7 @@ HF::Common::Result DeviceManagement::Entries::destroy (const Device &device)
  *
  */
 // =============================================================================
-bool DeviceManagement::Server::available (uint16_t address)
+bool DeviceManagement::Server::available(uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)
    {
@@ -100,7 +100,7 @@ bool DeviceManagement::Server::available (uint16_t address)
                           });
    /* *INDENT-ON* */
 
-   return it == entries ().end ();
+   return it == entries().end();
 }
 
 // =============================================================================
@@ -110,7 +110,7 @@ bool DeviceManagement::Server::available (uint16_t address)
  *
  */
 // =============================================================================
-uint16_t DeviceManagement::Server::next_address ()
+uint16_t DeviceManagement::Server::next_address()
 {
    uint16_t result = _next_address;
 
@@ -118,7 +118,7 @@ uint16_t DeviceManagement::Server::next_address ()
 
    if (result == HF::Protocol::BROADCAST_ADDR)
    {
-      result = HF::Core::DeviceManagement::Server <Entries>::next_address ();
+      result = HF::Core::DeviceManagement::Server<Entries>::next_address();
    }
 
    return result;
@@ -131,18 +131,18 @@ uint16_t DeviceManagement::Server::next_address ()
  *
  */
 // =============================================================================
-bool DeviceManagement::Server::deregister (uint16_t address)
+bool DeviceManagement::Server::deregister(uint16_t address)
 {
    if (address == 0 || address == HF::Protocol::BROADCAST_ADDR)
    {
       return false;
    }
 
-   auto _entry = entry (address);
+   auto _entry = entry(address);
 
    if (_entry != nullptr)
    {
-      HF::Core::DeviceManagement::Server <Entries>::deregister (_entry);
+      HF::Core::DeviceManagement::Server<Entries>::deregister(_entry);
       return true;
    }
 
@@ -156,9 +156,9 @@ bool DeviceManagement::Server::deregister (uint16_t address)
  *
  */
 // =============================================================================
-void DeviceManagement::Server::save (Json::Value &root)
+void DeviceManagement::Server::save(Json::Value &root)
 {
-   LOG (INFO) << "Saving registration entries ..." << NL;
+   LOG(INFO) << "Saving registration entries ..." << NL;
 
    unsigned i = 0;
 
@@ -179,16 +179,16 @@ void DeviceManagement::Server::save (Json::Value &root)
  *
  */
 // =============================================================================
-void DeviceManagement::Server::restore (Json::Value root)
+void DeviceManagement::Server::restore(Json::Value root)
 {
-   LOG (INFO) << "Restoring registration entries ..." << NL;
+   LOG(INFO) << "Restoring registration entries ..." << NL;
 
    HF::Core::DeviceManagement::Device device;
 
-   for (unsigned i = 0; i < root.size (); i++)
+   for (unsigned i = 0; i < root.size(); i++)
    {
-      from_json (root[i], device);
-      HF::Core::DeviceManagement::Server <Entries>::entries ().insert (device);
+      from_json(root[i], device);
+      HF::Core::DeviceManagement::Server<Entries>::entries().insert(device);
    }
 }
 
@@ -203,10 +203,10 @@ void DeviceManagement::Server::restore (Json::Value root)
  *
  */
 // =============================================================================
-HF::Common::Result BindManagement::Entries::save (const Entry &entry)
+HF::Common::Result BindManagement::Entries::save(const Entry &entry)
 {
-   auto res = HF::Core::BindManagement::Entries::save (entry);
-   HF::Application::Save ();
+   auto res = HF::Core::BindManagement::Entries::save(entry);
+   HF::Application::Save();
    return res;
 }
 
@@ -217,9 +217,9 @@ HF::Common::Result BindManagement::Entries::save (const Entry &entry)
  *
  */
 // =============================================================================
-void BindManagement::Entries::insert (Entry &entry)
+void BindManagement::Entries::insert(Entry &entry)
 {
-   HF::Core::BindManagement::Entries::save (entry);
+   HF::Core::BindManagement::Entries::save(entry);
 }
 
 // =============================================================================
@@ -229,10 +229,10 @@ void BindManagement::Entries::insert (Entry &entry)
  *
  */
 // =============================================================================
-HF::Common::Result BindManagement::Entries::destroy (const Entry &entry)
+HF::Common::Result BindManagement::Entries::destroy(const Entry &entry)
 {
-   auto res = HF::Core::BindManagement::Entries::destroy (entry);
-   HF::Application::Save ();
+   auto res = HF::Core::BindManagement::Entries::destroy(entry);
+   HF::Application::Save();
    return res;
 }
 
@@ -243,9 +243,9 @@ HF::Common::Result BindManagement::Entries::destroy (const Entry &entry)
  *
  */
 // =============================================================================
-void BindManagement::Server::save (Json::Value &root)
+void BindManagement::Server::save(Json::Value &root)
 {
-   LOG (INFO) << "Saving binding entries ..." << NL;
+   LOG(INFO) << "Saving binding entries ..." << NL;
 
    unsigned i = 0;
 
@@ -266,17 +266,17 @@ void BindManagement::Server::save (Json::Value &root)
  *
  */
 // =============================================================================
-void BindManagement::Server::restore (Json::Value root)
+void BindManagement::Server::restore(Json::Value root)
 {
-   LOG (INFO) << "Restoring binding entries ..." << NL;
+   LOG(INFO) << "Restoring binding entries ..." << NL;
 
-   for (unsigned i = 0; i < root.size (); i++)
+   for (unsigned i = 0; i < root.size(); i++)
    {
       HF::Core::BindManagement::Entry entry;
-      from_json (root[i], entry);
-      entries ().insert (entry);
-      LOG (TRACE) << "Bind Add : " << entry.source.device
-                  << " -> " << entry.destination.device << NL;
+      from_json(root[i], entry);
+      entries().insert(entry);
+      LOG(TRACE) << "Bind Add : " << entry.source.device
+                 << " -> " << entry.destination.device << NL;
    }
 }
 
@@ -291,14 +291,14 @@ void BindManagement::Server::restore (Json::Value root)
  *
  */
 // =============================================================================
-void Events::Alert::status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
+void Events::Alert::status(HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
 {
    using namespace HF::Debug;
 
-   LOG (INFO) << ">>>>>>>>>>>>> ALERT <<<<<<<<<<<<<" << std::endl
-              << "\tSource | " << source << std::endl
-              << "\tType   | 0x" << Hex <uint16_t>(message.type) << std::endl
-              << "\tState  | 0x" << Hex <uint32_t>(message.state) << NL;
+   LOG(INFO) << ">>>>>>>>>>>>> ALERT <<<<<<<<<<<<<" << std::endl
+             << "\tSource | " << source << std::endl
+             << "\tType   | 0x" << Hex<uint16_t>(message.type) << std::endl
+             << "\tState  | 0x" << Hex<uint32_t>(message.state) << NL;
 }
 
 // =============================================================================
@@ -308,15 +308,15 @@ void Events::Alert::status (HF::Protocol::Address &source, HF::Interfaces::Alert
  *
  */
 // =============================================================================
-void Events::LevelControl::level_change (HF::Protocol::Address &source, uint8_t old_level,
-                                         uint8_t new_level)
+void Events::LevelControl::level_change(HF::Protocol::Address &source, uint8_t old_level,
+                                        uint8_t new_level)
 {
    using namespace HF::Debug;
 
-   LOG (INFO) << ">>>>>>>>>>>>> LEVEL CONTROL <<<<<<<<<<<<<" << std::endl
-              << "\tSource | " << source << std::endl
-              << "\t   Old | " << Hex <uint8_t>(old_level) << std::endl
-              << "\t   New | " << Hex <uint8_t>(new_level) << NL;
+   LOG(INFO) << ">>>>>>>>>>>>> LEVEL CONTROL <<<<<<<<<<<<<" << std::endl
+             << "\tSource | " << source << std::endl
+             << "\t   Old | " << Hex<uint8_t>(old_level) << std::endl
+             << "\t   New | " << Hex<uint8_t>(new_level) << NL;
 }
 
 // =============================================================================
@@ -326,13 +326,13 @@ void Events::LevelControl::level_change (HF::Protocol::Address &source, uint8_t 
  *
  */
 // =============================================================================
-void Events::OnOff::on (HF::Protocol::Address &source)
+void Events::OnOff::on(HF::Protocol::Address &source)
 {
    using namespace HF::Debug;
 
-   LOG (INFO) << ">>>>>>>>>>>>> ON-OFF <<<<<<<<<<<<<" << std::endl
-              << "\tSource  | " << source << std::endl
-              << "\tCommand | ON" << NL;
+   LOG(INFO) << ">>>>>>>>>>>>> ON-OFF <<<<<<<<<<<<<" << std::endl
+             << "\tSource  | " << source << std::endl
+             << "\tCommand | ON" << NL;
 }
 
 // =============================================================================
@@ -342,13 +342,13 @@ void Events::OnOff::on (HF::Protocol::Address &source)
  *
  */
 // =============================================================================
-void Events::OnOff::off (HF::Protocol::Address &source)
+void Events::OnOff::off(HF::Protocol::Address &source)
 {
    using namespace HF::Debug;
 
-   LOG (INFO) << ">>>>>>>>>>>>> ON-OFF <<<<<<<<<<<<<" << std::endl
-              << "\tSource  | " << source << std::endl
-              << "\tCommand | OFF" << NL;
+   LOG(INFO) << ">>>>>>>>>>>>> ON-OFF <<<<<<<<<<<<<" << std::endl
+             << "\tSource  | " << source << std::endl
+             << "\tCommand | OFF" << NL;
 }
 
 // =============================================================================
@@ -358,13 +358,13 @@ void Events::OnOff::off (HF::Protocol::Address &source)
  *
  */
 // =============================================================================
-void Events::OnOff::toggle (HF::Protocol::Address &source)
+void Events::OnOff::toggle(HF::Protocol::Address &source)
 {
    using namespace HF::Debug;
 
-   LOG (INFO) << ">>>>>>>>>>>>> ON-OFF <<<<<<<<<<<<<" << std::endl
-              << "\tSource  | " << source << std::endl
-              << "\tCommand | TOGGLE" << NL;
+   LOG(INFO) << ">>>>>>>>>>>>> ON-OFF <<<<<<<<<<<<<" << std::endl
+             << "\tSource  | " << source << std::endl
+             << "\tCommand | TOGGLE" << NL;
 }
 
 // =============================================================================
@@ -374,26 +374,26 @@ void Events::OnOff::toggle (HF::Protocol::Address &source)
  *
  */
 // =============================================================================
-void Events::SimplePowerMeter::report (HF::Protocol::Address &source,
-                                       HF::Interfaces::SimplePowerMeter::Report &report)
+void Events::SimplePowerMeter::report(HF::Protocol::Address &source,
+                                      HF::Interfaces::SimplePowerMeter::Report &report)
 {
    using namespace HF::Debug;
 
-   UNUSED (report);
-   LOG (INFO) << ">>>>>>>>>>>>> Simple Power Meter <<<<<<<<<<<<<" << std::endl
-              << "\tSource  | " << source << std::endl
-              << "\tReport  | " << NL;
+   UNUSED(report);
+   LOG(INFO) << ">>>>>>>>>>>>> Simple Power Meter <<<<<<<<<<<<<" << std::endl
+             << "\tSource  | " << source << std::endl
+             << "\tReport  | " << NL;
 }
 
 // =============================================================================
 // Commands
 // =============================================================================
 
-static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t offset)
+static void handle_device_infomation(HF::Common::ByteArray &payload, uint16_t offset)
 {
-   HF::Protocol::GetAttributePack::Response response (HF::Core::DeviceInformation::create_attribute);
+   HF::Protocol::GetAttributePack::Response response(HF::Core::DeviceInformation::create_attribute);
 
-   response.unpack (payload, offset);
+   response.unpack(payload, offset);
 
    using namespace HF::Core::DeviceInformation;
    using namespace HF::Attributes;
@@ -401,8 +401,8 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
 
    uint8_t log_width = 20;
 
-   LOG (INFO) << "====== Device Information : Attributes ======" << std::endl
-              << std::right << std::setw (log_width) << std::setfill (' ');
+   LOG(INFO) << "====== Device Information : Attributes ======" << std::endl
+             << std::right << std::setw(log_width) << std::setfill(' ');
 
    /* *INDENT-OFF* */
    std::for_each (response.attributes.begin (), response.attributes.end (),
@@ -550,7 +550,7 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
    });
    /* *INDENT-ON* */
 
-   LOG (INFO) << "====== Device Information : Attributes ======" << NL;
+   LOG(INFO) << "====== Device Information : Attributes ======" << NL;
 }
 
 // =============================================================================
@@ -560,17 +560,17 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
  *
  */
 // =============================================================================
-HF::Common::Result Commands::Unit::handle (HF::Protocol::Packet &packet,
-                                           HF::Common::ByteArray &payload, uint16_t offset)
+HF::Common::Result Commands::Unit::handle(HF::Protocol::Packet &packet,
+                                          HF::Common::ByteArray &payload, uint16_t offset)
 {
-   UNUSED (packet);
-   UNUSED (payload);
-   UNUSED (offset);
+   UNUSED(packet);
+   UNUSED(payload);
+   UNUSED(offset);
 
    if (packet.message.type == HF::Protocol::Message::GET_ATTR_PACK_RES &&
        packet.message.itf.id == HF::Interface::DEVICE_INFORMATION)
    {
-      handle_device_infomation (payload, offset);
+      handle_device_infomation(payload, offset);
       return HF::Common::Result::OK;
    }
 
@@ -588,15 +588,15 @@ HF::Common::Result Commands::Unit::handle (HF::Protocol::Packet &packet,
  *
  */
 // =============================================================================
-void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
+void Base::receive(HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset)
 {
-   LOG (DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
+   LOG(DEBUG) << ">>>>>>>>>>>>> Message Received <<<<<<<<<<<<<" << NL;
 
-   LOG (TRACE) << "Payload : " << payload << NL;
+   LOG(TRACE) << "Payload : " << payload << NL;
 
-   LOG (DEBUG) << std::endl << packet << NL;
+   LOG(DEBUG) << std::endl << packet << NL;
 
-   HF::Devices::Concentrator::Abstract <Unit0>::receive (packet, payload, offset);
+   HF::Devices::Concentrator::Abstract<Unit0>::receive(packet, payload, offset);
 }
 
 // =============================================================================
@@ -606,13 +606,13 @@ void Base::receive (HF::Protocol::Packet &packet, HF::Common::ByteArray &payload
  *
  */
 // =============================================================================
-bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
+bool Base::has_bind(uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   HF::Protocol::Address source (dev_addr_1, 1);
-   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
-   HF::Protocol::Address destination (dev_addr_2, 1);
+   HF::Protocol::Address source(dev_addr_1, 1);
+   HF::Common::Interface itf(HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination(dev_addr_2, 1);
 
-   return _unit0.bind_management ()->entries ().find (source, itf, destination) != nullptr;
+   return _unit0.bind_management()->entries().find(source, itf, destination) != nullptr;
 }
 
 // =============================================================================
@@ -622,30 +622,30 @@ bool Base::has_bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
  *
  */
 // =============================================================================
-uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
+uint8_t Base::bind(uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   if (this->has_bind (dev_addr_1, dev_addr_2))
+   if (this->has_bind(dev_addr_1, dev_addr_2))
    {
       return 1;
    }
 
-   HF::Protocol::Address source (dev_addr_1, 1);
-   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
-   HF::Protocol::Address destination (dev_addr_2, 1);
+   HF::Protocol::Address source(dev_addr_1, 1);
+   HF::Common::Interface itf(HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination(dev_addr_2, 1);
 
-   auto res = _unit0.bind_management ()->add (source, destination, itf);
+   auto res = _unit0.bind_management()->add(source, destination, itf);
 
    if (res == HF::Common::OK)
    {
       return 0;
    }
 
-   if (_unit0.device_management ()->entry (dev_addr_1) == nullptr)
+   if (_unit0.device_management()->entry(dev_addr_1) == nullptr)
    {
       return 2;
    }
 
-   if (_unit0.device_management ()->entry (dev_addr_2) == nullptr)
+   if (_unit0.device_management()->entry(dev_addr_2) == nullptr)
    {
       return 3;
    }
@@ -660,32 +660,32 @@ uint8_t Base::bind (uint16_t dev_addr_1, uint16_t dev_addr_2)
  *
  */
 // =============================================================================
-bool Base::unbind (uint16_t dev_addr_1, uint16_t dev_addr_2)
+bool Base::unbind(uint16_t dev_addr_1, uint16_t dev_addr_2)
 {
-   HF::Protocol::Address source (dev_addr_1, 1);
-   HF::Common::Interface itf (HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
-   HF::Protocol::Address destination (dev_addr_2, 1);
+   HF::Protocol::Address source(dev_addr_1, 1);
+   HF::Common::Interface itf(HF::Interface::ON_OFF, HF::Interface::SERVER_ROLE);
+   HF::Protocol::Address destination(dev_addr_2, 1);
 
-   return _unit0.bind_management ()->remove (source, destination, itf) == HF::Common::Result::OK;
+   return _unit0.bind_management()->remove(source, destination, itf) == HF::Common::Result::OK;
 }
 
 // =============================================================================
 // Helper Functions
 // =============================================================================
 
-static std::string json_uid (uint16_t uid)
+static std::string json_uid(uint16_t uid)
 {
    std::ostringstream convert;
 
-   convert << "0x" << std::setfill ('0') << std::setw (sizeof(uint16_t) * 2)
+   convert << "0x" << std::setfill('0') << std::setw(sizeof(uint16_t) * 2)
            << std::hex << uid;
 
-   return convert.str ();
+   return convert.str();
 }
 
-static uint16_t json_uid (std::string uid)
+static uint16_t json_uid(std::string uid)
 {
-   return STRTOL_HEX (uid.substr (2));
+   return STRTOL_HEX(uid.substr(2));
 }
 
 // =============================================================================
@@ -695,7 +695,7 @@ static uint16_t json_uid (std::string uid)
  *
  */
 // =============================================================================
-void to_json (const HF::Common::Interface &interface, Json::Value &node)
+void to_json(const HF::Common::Interface &interface, Json::Value &node)
 {
    if (interface.role == HF::Interface::SERVER_ROLE)
    {
@@ -706,7 +706,7 @@ void to_json (const HF::Common::Interface &interface, Json::Value &node)
       node["role"] = "client";
    }
 
-   node["id"] = json_uid (interface.id);
+   node["id"] = json_uid(interface.id);
 }
 
 // =============================================================================
@@ -716,9 +716,9 @@ void to_json (const HF::Common::Interface &interface, Json::Value &node)
  *
  */
 // =============================================================================
-void to_json (const HF::UID::UID &uid, Json::Value &node)
+void to_json(const HF::UID::UID &uid, Json::Value &node)
 {
-   switch (uid.type ())
+   switch (uid.type())
    {
       case HF::UID::NONE_UID:
       {
@@ -730,9 +730,9 @@ void to_json (const HF::UID::UID &uid, Json::Value &node)
       {
          node["type"] = "dect";
 
-         const HF::UID::DECT *dect = static_cast <const HF::UID::DECT *>(uid.raw ());
+         const HF::UID::DECT *dect = static_cast<const HF::UID::DECT *>(uid.raw());
 
-         for (uint8_t i = 0; i < HF::UID::DECT::length (); i++)
+         for (uint8_t i = 0; i < HF::UID::DECT::length(); i++)
          {
             node["value"][i] = (int) (*dect)[i];
          }
@@ -744,7 +744,7 @@ void to_json (const HF::UID::UID &uid, Json::Value &node)
       {
          node["type"] = "mac";
 
-         const HF::UID::MAC *mac = static_cast <const HF::UID::MAC *>(uid.raw ());
+         const HF::UID::MAC *mac = static_cast<const HF::UID::MAC *>(uid.raw());
 
          for (int i = 0; i < 6; i++)
          {
@@ -757,7 +757,7 @@ void to_json (const HF::UID::UID &uid, Json::Value &node)
       case HF::UID::URI_UID:
       {
          node["type"]  = "uri";
-         node["value"] = static_cast <const HF::UID::URI *>(uid.raw ())->str ();
+         node["value"] = static_cast<const HF::UID::URI *>(uid.raw())->str();
          break;
       }
    }
@@ -770,15 +770,15 @@ void to_json (const HF::UID::UID &uid, Json::Value &node)
  *
  */
 // =============================================================================
-void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
+void to_json(const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
 {
    node["id"]      = unit.id;
 
-   node["profile"] = json_uid (unit.profile);
+   node["profile"] = json_uid(unit.profile);
 
-   for (unsigned i = 0; i < unit.interfaces.size (); i++)
+   for (unsigned i = 0; i < unit.interfaces.size(); i++)
    {
-      to_json (unit.interfaces[i], node["opts"][i]);
+      to_json(unit.interfaces[i], node["opts"][i]);
    }
 }
 
@@ -789,18 +789,18 @@ void to_json (const HF::Core::DeviceManagement::Unit &unit, Json::Value &node)
  *
  */
 // =============================================================================
-void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &node)
+void to_json(const HF::Core::DeviceManagement::Device &device, Json::Value &node)
 {
    node["address"] = device.address;
 
-   for (unsigned i = 0; i < device.units.size (); i++)
+   for (unsigned i = 0; i < device.units.size(); i++)
    {
-      to_json (device.units[i], node["units"][i]);
+      to_json(device.units[i], node["units"][i]);
    }
 
-   node["emc"] = json_uid (device.emc);
+   node["emc"] = json_uid(device.emc);
 
-   to_json (device.uid, node["uid"]);
+   to_json(device.uid, node["uid"]);
 }
 
 // =============================================================================
@@ -810,7 +810,7 @@ void to_json (const HF::Core::DeviceManagement::Device &device, Json::Value &nod
  *
  */
 // =============================================================================
-void to_json (const HF::Protocol::Address &address, Json::Value &node)
+void to_json(const HF::Protocol::Address &address, Json::Value &node)
 {
    node["mod"]    = (int) address.mod;
    node["device"] = (int) address.device;
@@ -824,11 +824,11 @@ void to_json (const HF::Protocol::Address &address, Json::Value &node)
  *
  */
 // =============================================================================
-void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node)
+void to_json(const HF::Core::BindManagement::Entry &entry, Json::Value &node)
 {
-   to_json (entry.source, node["src"]);
-   to_json (entry.destination, node["dst"]);
-   to_json (entry.itf, node["itf"]);
+   to_json(entry.source, node["src"]);
+   to_json(entry.destination, node["dst"]);
+   to_json(entry.itf, node["itf"]);
 }
 
 // =============================================================================
@@ -838,9 +838,9 @@ void to_json (const HF::Core::BindManagement::Entry &entry, Json::Value &node)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Common::Interface &interface)
+void from_json(Json::Value &node, HF::Common::Interface &interface)
 {
-   std::string role = node.get ("role", "client").asString ();
+   std::string role = node.get("role", "client").asString();
 
    if (role[0] == 's' || role[0] == 'S')
    {
@@ -851,7 +851,7 @@ void from_json (Json::Value &node, HF::Common::Interface &interface)
       interface.role = HF::Interface::CLIENT_ROLE;
    }
 
-   interface.id = json_uid (node.get ("id", "0x7FFF").asString ());
+   interface.id = json_uid(node.get("id", "0x7FFF").asString());
 }
 
 // =============================================================================
@@ -861,9 +861,9 @@ void from_json (Json::Value &node, HF::Common::Interface &interface)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::UID::UID &uid)
+void from_json(Json::Value &node, HF::UID::UID &uid)
 {
-   std::string uid_type = node.get ("type", "none").asString ();
+   std::string uid_type = node.get("type", "none").asString();
 
    if (uid_type == "none")
    {
@@ -874,9 +874,9 @@ void from_json (Json::Value &node, HF::UID::UID &uid)
    {
       HF::UID::DECT *dect = new HF::UID::DECT;
 
-      for (unsigned i = 0; i < node["value"].size (); ++i)
+      for (unsigned i = 0; i < node["value"].size(); ++i)
       {
-         (*dect)[i] = (uint8_t) node["value"][i].asUInt ();
+         (*dect)[i] = (uint8_t) node["value"][i].asUInt();
       }
 
       uid = dect;
@@ -885,9 +885,9 @@ void from_json (Json::Value &node, HF::UID::UID &uid)
    {
       HF::UID::MAC *mac = new HF::UID::MAC;
 
-      for (unsigned i = 0; i < node["value"].size (); ++i)
+      for (unsigned i = 0; i < node["value"].size(); ++i)
       {
-         (*mac)[i] = (uint8_t) node["value"][i].asUInt ();
+         (*mac)[i] = (uint8_t) node["value"][i].asUInt();
       }
 
       uid = mac;
@@ -895,7 +895,7 @@ void from_json (Json::Value &node, HF::UID::UID &uid)
    else if (uid_type == "uri")
    {
       HF::UID::URI *uri = new HF::UID::URI;
-      uri->value = node["value"].asString ();
+      uri->value = node["value"].asString();
       uid        = uri;
    }
 }
@@ -907,16 +907,16 @@ void from_json (Json::Value &node, HF::UID::UID &uid)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
+void from_json(Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
 {
-   unit.id      = (uint8_t) node.get ("id", HF::Protocol::BROADCAST_UNIT).asUInt ();
+   unit.id      = (uint8_t) node.get("id", HF::Protocol::BROADCAST_UNIT).asUInt();
 
-   unit.profile = json_uid (node.get ("profile", "0x7FFF").asString ());
+   unit.profile = json_uid(node.get("profile", "0x7FFF").asString());
 
-   for (unsigned i = 0; i < node["opts"].size (); i++)
+   for (unsigned i = 0; i < node["opts"].size(); i++)
    {
-      unit.interfaces.push_back (0);
-      from_json (node["opts"][i], unit.interfaces[i]);
+      unit.interfaces.push_back(0);
+      from_json(node["opts"][i], unit.interfaces[i]);
    }
 }
 
@@ -927,19 +927,19 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Unit &unit)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &dev)
+void from_json(Json::Value &node, HF::Core::DeviceManagement::Device &dev)
 {
-   dev.address = (uint16_t) node.get ("address", HF::Protocol::BROADCAST_ADDR).asUInt ();
+   dev.address = (uint16_t) node.get("address", HF::Protocol::BROADCAST_ADDR).asUInt();
 
-   for (unsigned i = 0; i < node["units"].size (); i++)
+   for (unsigned i = 0; i < node["units"].size(); i++)
    {
-      dev.units.push_back (0);
-      from_json (node["units"][i], dev.units[i]);
+      dev.units.push_back(0);
+      from_json(node["units"][i], dev.units[i]);
    }
 
-   dev.emc = json_uid (node.get ("emc", "0x0000").asString ());
+   dev.emc = json_uid(node.get("emc", "0x0000").asString());
 
-   from_json (node["uid"], dev.uid);
+   from_json(node["uid"], dev.uid);
 }
 
 // =============================================================================
@@ -949,11 +949,11 @@ void from_json (Json::Value &node, HF::Core::DeviceManagement::Device &dev)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Protocol::Address &addr)
+void from_json(Json::Value &node, HF::Protocol::Address &addr)
 {
-   addr.mod    = (uint16_t) node.get ("mod", 0).asUInt ();
-   addr.device = (uint16_t) node.get ("device", 0).asUInt ();
-   addr.unit   = (uint8_t) node.get ("unit", 0).asUInt ();
+   addr.mod    = (uint16_t) node.get("mod", 0).asUInt();
+   addr.device = (uint16_t) node.get("device", 0).asUInt();
+   addr.unit   = (uint8_t) node.get("unit", 0).asUInt();
 }
 
 // =============================================================================
@@ -963,11 +963,11 @@ void from_json (Json::Value &node, HF::Protocol::Address &addr)
  *
  */
 // =============================================================================
-void from_json (Json::Value &node, HF::Core::BindManagement::Entry &entry)
+void from_json(Json::Value &node, HF::Core::BindManagement::Entry &entry)
 {
-   from_json (node["src"], entry.source);
-   from_json (node["dst"], entry.destination);
-   from_json (node["itf"], entry.itf);
+   from_json(node["src"], entry.source);
+   from_json(node["dst"], entry.destination);
+   from_json(node["itf"], entry.itf);
 }
 
 /*! @} */

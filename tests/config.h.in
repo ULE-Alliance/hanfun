@@ -2,13 +2,35 @@
 #define HF_CONFIG_H
 
 // =============================================================================
-// DeviceInformation Configuration
+// Core Services and Interfaces
 // =============================================================================
 
-#define HF_DEVICE_MANUFACTURER_CODE             0x1234
+// =============================================================================
+// Device Information Configuration
+// =============================================================================
+
+#define HF_DEVICE_MANUFACTURER_CODE                 0x1234
+#define HF_APPLICATION_VERSION                      "v1.0.0"
+#define HF_HARDWARE_VERSION                         "revA"
+#define HF_MANUFACTURER_NAME                        "Foobar"
+
+#define HF_CORE_DEV_INFO_APP_VERSION_ATTR           1
+#define HF_CORE_DEV_INFO_HW_VERSION_ATTR            1
+#define HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR     1
 
 // =============================================================================
-// SimplePowerMeter Configuration
+// SUOTA Configuration
+// =============================================================================
+
+#define HF_CORE_SUOTA_SUPPORT                       1
+#define HF_CORE_SUOTA_CHECK_VERSION_CMD             1
+
+// =============================================================================
+// Interfaces
+// =============================================================================
+
+// =============================================================================
+// Simple Power Meter Configuration
 // =============================================================================
 
 // In testing mode support all attributes.
@@ -29,6 +51,45 @@
 
 #define HF_ITF_SPM_REPORT_CMD                   1
 #define HF_ITF_SPM_RESET_CMD                    1
+
+// =============================================================================
+// Simple Thermostat Configuration
+// =============================================================================
+
+#define HF_ITF_STS_HEAT_MODE                    1
+#define HF_ITF_STS_COOL_MODE                    1
+#define HF_ITF_STS_AUTO_MODE                    1
+#define HF_ITF_STS_FAN_MODE                     1
+
+#define HF_ITF_STS_HEAT_OFFSET_ATTR             1
+#define HF_ITF_STS_COOL_OFFSET_ATTR             1
+
+#define HF_ITF_STS_BOOST_CMD                    1
+
+// =============================================================================
+// Simple Button Configuration
+// =============================================================================
+
+#define HF_ITF_SIMPLE_BUTTON_SHORT_PRESS_CMD                     1
+#define HF_ITF_SIMPLE_BUTTON_LONG_PRESS_CMD                      1
+#define HF_ITF_SIMPLE_BUTTON_EXTRA_LONG_PRESS_CMD                1
+#define HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD              1
+
+#define HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_GAP_DURATION_ATTR      1
+
+// =============================================================================
+// Simple Visual Effects Configuration
+// =============================================================================
+
+#define HF_ITF_SIMPLE_VISUAL_EFFECTS_ON_CMD       1
+#define HF_ITF_SIMPLE_VISUAL_EFFECTS_OFF_CMD      1
+#define HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD    1
+#define HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD     1
+#define HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD  1
+
+// =============================================================================
+// Other Configuration
+// =============================================================================
 
 #cmakedefine Backtrace_FOUND  1
 #ifdef Backtrace_FOUND

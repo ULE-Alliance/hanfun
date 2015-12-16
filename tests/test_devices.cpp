@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the Device API.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -23,40 +23,40 @@
 using namespace HF;
 using namespace HF::Testing;
 
-TEST_GROUP (Devices)
+TEST_GROUP(Devices)
 {
-   struct Device:public HF::Devices::AbstractDevice
+   struct Device: public HF::Devices::AbstractDevice
    {
       uint16_t            _address;
 
       HF::Transport::Link *_link;
 
-      uint16_t address () const
+      uint16_t address() const
       {
          return _address;
       }
 
-      void connected (HF::Transport::Link *_link)
+      void connected(HF::Transport::Link *_link)
       {
          this->_link = _link;
-         mock ("Device").actualCall ("connected");
+         mock("Device").actualCall("connected");
       }
 
-      void disconnected (HF::Transport::Link *_link)
+      void disconnected(HF::Transport::Link *_link)
       {
-         UNUSED (_link);
+         UNUSED(_link);
 
          this->_link = nullptr;
-         mock ("Device").actualCall ("disconnected");
+         mock("Device").actualCall("disconnected");
       }
 
-      Transport::Link *link (uint16_t addr) const
+      Transport::Link *link(uint16_t addr) const
       {
-         mock ("Device").actualCall ("link").withIntParameter ("address", addr);
+         mock("Device").actualCall("link").withIntParameter("address", addr);
          return _link;
       }
 
-      IDevice::IUnit0 *unit0 () const
+      IDevice::IUnit0 *unit0() const
       {
          return nullptr;
       }
@@ -65,35 +65,35 @@ TEST_GROUP (Devices)
    Device device;
 
    Testing::Link link;
-   Protocol::Packet  packet;
+   Protocol::Packet packet;
    Common::ByteArray payload;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
       device._address = 0x5A5A;
-      link.address (0x7AA5);
+      link.address(0x7AA5);
 
-      mock ().ignoreOtherCalls ();
+      mock().ignoreOtherCalls();
 
-      device.connected (&link);
+      device.connected(&link);
       packet.destination.device = 0x7AA5;
       packet.destination.unit   = 0x78;
 
-      packet.source.device      = device.address ();
+      packet.source.device      = device.address();
       packet.source.unit        = 0x23;
 
       packet.link               = &link;
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
-      mock ().clear ();
+      mock().clear();
    }
 };
 
-TEST (Devices, NoResponseRequired)
+TEST(Devices, NoResponseRequired)
 {
-   std::vector <Protocol::Message::Type> types {
+   std::vector<Protocol::Message::Type> types {
       Protocol::Message::COMMAND_REQ,
       Protocol::Message::GET_ATTR_REQ,
       Protocol::Message::SET_ATTR_REQ,
@@ -102,7 +102,7 @@ TEST (Devices, NoResponseRequired)
       Protocol::Message::ATOMIC_SET_ATTR_PACK_REQ,
    };
 
-   mock ("Link").expectNCalls (0, "send");
+   mock("Link").expectNCalls(0, "send");
 
    /* *INDENT-OFF* */
    std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
@@ -112,19 +112,19 @@ TEST (Devices, NoResponseRequired)
    });
    /* *INDENT-ON* */
 
-   mock ("Link").checkExpectations ();
+   mock("Link").checkExpectations();
 }
 
-TEST (Devices, ResponseRequired)
+TEST(Devices, ResponseRequired)
 {
-   std::vector <Protocol::Message::Type> types {
+   std::vector<Protocol::Message::Type> types {
       Protocol::Message::COMMAND_RESP_REQ,
       Protocol::Message::SET_ATTR_RESP_REQ,
       Protocol::Message::SET_ATTR_PACK_RESP_REQ,
       Protocol::Message::ATOMIC_SET_ATTR_PACK_RESP_REQ,
    };
 
-   mock ("Link").expectNCalls (types.size (), "send");
+   mock("Link").expectNCalls(types.size(), "send");
 
    /* *INDENT-OFF* */
    std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
@@ -141,7 +141,7 @@ TEST (Devices, ResponseRequired)
    });
    /* *INDENT-ON* */
 
-   mock ("Link").checkExpectations ();
+   mock("Link").checkExpectations();
 }
 
 // =============================================================================
@@ -150,79 +150,80 @@ TEST (Devices, ResponseRequired)
 
 namespace
 {
-   struct SimpleDetector:public HF::Units::Unit <HF::Profiles::SimpleDetector>
+   struct SimpleDetector: public HF::Units::Unit<HF::Profiles::SimpleDetector>
    {
       SimpleDetector(uint8_t index, IDevice &device):
-         HF::Units::Unit <HF::Profiles::SimpleDetector>(index, device)
+         HF::Units::Unit<HF::Profiles::SimpleDetector>(index, device)
       {}
    };
 
-   struct Alertable:public HF::Units::Unit <HF::Profiles::Alertable>
+   struct Alertable: public HF::Units::Unit<HF::Profiles::Alertable>
    {
       Alertable(uint8_t index, IDevice &device):
-         HF::Units::Unit <HF::Profiles::Alertable>(index, device)
+         HF::Units::Unit<HF::Profiles::Alertable>(index, device)
       {}
 
-      void status (HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
+      void status(HF::Protocol::Address &source, HF::Interfaces::Alert::Message &message)
       {
-         UNUSED (source);
-         UNUSED (message);
-         mock ("Alertable").actualCall ("status").onObject (this);
-         HF::Units::Unit <HF::Profiles::Alertable>::status (source, message);
+         UNUSED(source);
+         UNUSED(message);
+         mock("Alertable").actualCall("status").onObject(this);
+         HF::Units::Unit<HF::Profiles::Alertable>::status(source, message);
       }
    };
 
-   struct SimpleLight:public HF::Units::Unit <HF::Profiles::SimpleLight>
+   struct SimpleLight: public HF::Units::Unit<HF::Profiles::SimpleLight>
    {
       SimpleLight(uint8_t index, IDevice &device):
-         HF::Units::Unit <HF::Profiles::SimpleLight>(index, device)
+         HF::Units::Unit<HF::Profiles::SimpleLight>(index, device)
       {}
 
-      void on (HF::Protocol::Address &source)
+      void on(HF::Protocol::Address &source)
       {
-         UNUSED (source);
-         mock ("SimpleLight").actualCall ("on").onObject (this);
+         UNUSED(source);
+         mock("SimpleLight").actualCall("on").onObject(this);
       }
 
-      void off (HF::Protocol::Address &source)
+      void off(HF::Protocol::Address &source)
       {
-         UNUSED (source);
-         mock ("SimpleLight").actualCall ("off").onObject (this);
+         UNUSED(source);
+         mock("SimpleLight").actualCall("off").onObject(this);
       }
 
-      void toggle (HF::Protocol::Address &source)
+      void toggle(HF::Protocol::Address &source)
       {
-         UNUSED (source);
-         mock ("SimpleLight").actualCall ("toggle").onObject (this);
+         UNUSED(source);
+         mock("SimpleLight").actualCall("toggle").onObject(this);
       }
 
-      Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
-                             uint16_t offset)
+      Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                            uint16_t offset)
       {
-         mock ("SimpleLight").actualCall ("handle").onObject (this);
-         return HF::Units::Unit <HF::Profiles::SimpleLight>::handle(packet, payload, offset);
+         mock("SimpleLight").actualCall("handle").onObject(this);
+         return HF::Units::Unit<HF::Profiles::SimpleLight>::handle(packet, payload, offset);
       }
 
-      Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                             uint16_t offset)
+      Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                    uint16_t offset)
       {
-         mock ("SimpleLight").actualCall ("handle_command").onObject (this);
-         return HF::Units::Unit <HF::Profiles::SimpleLight>::handle_command(packet, payload, offset);
+         mock("SimpleLight").actualCall("handle_command").onObject(this);
+         return HF::Units::Unit<HF::Profiles::SimpleLight>::handle_command(packet, payload,
+                                                                           offset);
       }
    };
 
-   struct AbstractDeviceHelper:public HF::Devices::Node::Abstract <HF::Devices::Node::DefaultUnit0>
+   struct AbstractDeviceHelper: public HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>
    {
       virtual ~AbstractDeviceHelper()
       {}
    };
 
-   struct DeviceHelper:public AbstractDeviceHelper
+   struct DeviceHelper: public AbstractDeviceHelper
    {
       SimpleDetector unit;
       SimpleDetector unit2;
 
-      DeviceHelper():unit (1, *this), unit2(2, *this)
+      DeviceHelper(): unit(1, *this), unit2(2, *this)
       {}
 
       virtual ~DeviceHelper()
@@ -230,27 +231,28 @@ namespace
 
    };
 
-   struct DeviceHelper2:public AbstractDeviceHelper
+   struct DeviceHelper2: public AbstractDeviceHelper
    {
       Alertable unit;
 
-      DeviceHelper2():unit (1, *this)
+      DeviceHelper2(): unit(1, *this)
       {}
 
       virtual ~DeviceHelper2()
       {}
    };
 
-   struct BaseHelper:public HF::Devices::Concentrator::Abstract <HF::Devices::Concentrator::DefaultUnit0>
+   struct BaseHelper: public HF::Devices::Concentrator::Abstract<HF::Devices::Concentrator::
+                                                                    DefaultUnit0>
    {
-      Alertable unit;
+      Alertable   unit;
       SimpleLight unit2;
 
-      BaseHelper():unit (1, *this), unit2(2,*this)
+      BaseHelper(): unit(1, *this), unit2(2, *this)
       {}
    };
 
-   struct Link:public HF::Transport::AbstractLink
+   struct Link: public HF::Transport::AbstractLink
    {
       HF::Transport::AbstractLayer &recv_tsp;
 
@@ -260,9 +262,9 @@ namespace
       Link                         *other;
 
       Link(HF::Transport::AbstractLayer &_recv_tsp,
-           HF::UID::UID_T *uid = new HF::UID::NONE (),
+           HF::UID::UID_T *uid = new HF::UID::NONE(),
            HF::Transport::Layer *tsp = nullptr):
-         recv_tsp (_recv_tsp), _uid (uid), tsp (tsp), other (nullptr)
+         recv_tsp(_recv_tsp), _uid(uid), tsp(tsp), other(nullptr)
       {}
 
       virtual ~Link()
@@ -270,17 +272,17 @@ namespace
          delete _uid;
       }
 
-      void send (Common::ByteArray &array)
+      void send(Common::ByteArray &array)
       {
-         recv_tsp.receive (other, array);
+         recv_tsp.receive(other, array);
       }
 
-      const HF::UID::UID uid () const
+      const HF::UID::UID uid() const
       {
          return HF::UID::UID(_uid);
       }
 
-      HF::Transport::Layer const *transport () const
+      HF::Transport::Layer const *transport() const
       {
          return tsp;
       }
@@ -288,82 +290,83 @@ namespace
 
    struct TransportHelper
    {
-      HF::Devices::Concentrator::Transport         base_tsp;
+      HF::Devices::Concentrator::Transport        base_tsp;
 
-      std::vector <HF::Devices::Node::Transport *> devices_tsp;
+      std::vector<HF::Devices::Node::Transport *> devices_tsp;
 
       TransportHelper(BaseHelper &_base)
       {
-         base_tsp.add (&_base);
+         base_tsp.add(&_base);
       }
 
       ~TransportHelper()
       {
          for (auto tsp : devices_tsp)
          {
-            tsp->destroy ();
+            tsp->destroy();
             delete tsp;
          }
+
          base_tsp.destroy();
       }
 
-      void add (AbstractDeviceHelper &device, std::string id)
+      void add(AbstractDeviceHelper &device, std::string id)
       {
-         HF::Devices::Node::Transport *dev_tsp = new HF::Devices::Node::Transport ();
-         dev_tsp->add (&device);
+         HF::Devices::Node::Transport *dev_tsp = new HF::Devices::Node::Transport();
+         dev_tsp->add(&device);
 
-         Link *dev_link  = new Link (base_tsp, new HF::UID::URI ("base"));
-         Link *base_link = new Link (*dev_tsp, new HF::UID::URI (id));
+         Link *dev_link  = new Link(base_tsp, new HF::UID::URI("base"));
+         Link *base_link = new Link(*dev_tsp, new HF::UID::URI(id));
 
          dev_link->other  = base_link;
          base_link->other = dev_link;
 
-         dev_link->address(0);   // Ensure device link has valid base address.
+         dev_link->address(0);    // Ensure device link has valid base address.
 
-         dev_tsp->add (dev_link);
-         base_tsp.add (base_link);
+         dev_tsp->add(dev_link);
+         base_tsp.add(base_link);
 
-         devices_tsp.push_back (dev_tsp);
+         devices_tsp.push_back(dev_tsp);
       }
    };
 
 }  // namespace
 
-TEST_GROUP (Concentrator)
+TEST_GROUP(Concentrator)
 {
    DeviceHelper *device1;
    DeviceHelper *device2;
    DeviceHelper2 *device3;
 
-   BaseHelper    *base;
+   BaseHelper *base;
 
    TransportHelper *transport;
 
-   TEST_SETUP ()
+   TEST_SETUP()
    {
-      mock ().ignoreOtherCalls ();
+      mock().ignoreOtherCalls();
 
-      base      = new BaseHelper ();
+      base      = new BaseHelper();
 
-      device1   = new DeviceHelper ();
-      device2   = new DeviceHelper ();
-      device3   = new DeviceHelper2 ();
+      device1   = new DeviceHelper();
+      device2   = new DeviceHelper();
+      device3   = new DeviceHelper2();
 
-      transport = new TransportHelper (*base);
-      transport->add (*device1, "1");
-      device1->unit0 ()->device_management ()->register_device ();
+      transport = new TransportHelper(*base);
+      transport->add(*device1, "1");
+      device1->unit0()->device_management()->register_device();
       // LONGS_EQUAL (1, device1->address());
 
-      transport->add (*device2, "2");
-      device2->unit0 ()->device_management ()->register_device ();
+      transport->add(*device2, "2");
+      device2->unit0()->device_management()->register_device();
       // LONGS_EQUAL (2, device2->address());
 
-      transport->add (*device3, "3");
-      device3->unit0 ()->device_management ()->register_device ();
+      transport->add(*device3, "3");
+      device3->unit0()->device_management()->register_device();
       // LONGS_EQUAL (3, device3->address());
    }
 
-   TEST_TEARDOWN ()
+   TEST_TEARDOWN()
    {
       delete transport;
 
@@ -373,126 +376,126 @@ TEST_GROUP (Concentrator)
 
       delete base;
 
-      mock ().clear ();
+      mock().clear();
    }
 };
 
-TEST (Concentrator, PacketToDevice)
+TEST(Concentrator, PacketToDevice)
 {
-   mock ("Alertable").expectOneCall ("status").onObject (&(device3->unit));
+   mock("Alertable").expectOneCall("status").onObject(&(device3->unit));
 
-   Protocol::Address dest (3, 1);
-   device1->unit.alert (dest, true);
+   Protocol::Address dest(3, 1);
+   device1->unit.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }
 
-TEST (Concentrator, PacketToBase)
+TEST(Concentrator, PacketToBase)
 {
-   mock ("Alertable").expectOneCall ("status").onObject (&(base->unit));
+   mock("Alertable").expectOneCall("status").onObject(&(base->unit));
 
-   Protocol::Address dest (0, 1);
-   device1->unit.alert (dest, true);
+   Protocol::Address dest(0, 1);
+   device1->unit.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }
 
-TEST (Concentrator, BroadcastToDevice)
+TEST(Concentrator, BroadcastToDevice)
 {
-   Protocol::Address src (1, 1);
-   Protocol::Address dst (3, 1);
+   Protocol::Address src(1, 1);
+   Protocol::Address dst(3, 1);
 
-   Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
+   Common::Interface itf(Interface::ALERT, Interface::CLIENT_ROLE);
 
-   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
-   LONGS_EQUAL (Common::Result::OK, res);
+   auto res = base->unit0()->bind_management()->add(src, dst, itf);
+   LONGS_EQUAL(Common::Result::OK, res);
 
-   src = Protocol::Address (2, 1);
-   res = base->unit0 ()->bind_management ()->add (src, dst, itf);
-   LONGS_EQUAL (Common::Result::OK, res);
+   src = Protocol::Address(2, 1);
+   res = base->unit0()->bind_management()->add(src, dst, itf);
+   LONGS_EQUAL(Common::Result::OK, res);
 
-   mock ("Alertable").expectNCalls (2, "status").onObject (&(device3->unit));
+   mock("Alertable").expectNCalls(2, "status").onObject(&(device3->unit));
 
    Protocol::Address dest;
-   device1->unit.alert (dest, true);
-   device2->unit.alert (dest, true);
+   device1->unit.alert(dest, true);
+   device2->unit.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }
 
-TEST (Concentrator, BroadcastToAnyDeviceSingleUnitSingleItf)
+TEST(Concentrator, BroadcastToAnyDeviceSingleUnitSingleItf)
 {
-   Protocol::Address src (HF::Protocol::BROADCAST_ADDR, 1);
-   Protocol::Address dst (3, 1);
-   Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
+   Protocol::Address src(HF::Protocol::BROADCAST_ADDR, 1);
+   Protocol::Address dst(3, 1);
+   Common::Interface itf(Interface::ALERT, Interface::CLIENT_ROLE);
 
-   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
-   LONGS_EQUAL (Common::Result::OK, res);
+   auto res = base->unit0()->bind_management()->add(src, dst, itf);
+   LONGS_EQUAL(Common::Result::OK, res);
 
-   mock ("Alertable").expectNCalls (2, "status").onObject (&(device3->unit));
+   mock("Alertable").expectNCalls(2, "status").onObject(&(device3->unit));
 
    Protocol::Address dest;
-   device1->unit.alert (dest, true);
-   device2->unit.alert (dest, true);
+   device1->unit.alert(dest, true);
+   device2->unit.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }
 
-TEST (Concentrator, PacketToAnyItf)
+TEST(Concentrator, PacketToAnyItf)
 {
    Protocol::Address src;
-   Protocol::Address dst (0, 2);
-   Common::Interface itf (Interface::ANY_UID);
+   Protocol::Address dst(0, 2);
+   Common::Interface itf(Interface::ANY_UID);
 
-   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
+   auto res = base->unit0()->bind_management()->add(src, dst, itf);
 
-   LONGS_EQUAL (Common::Result::OK, res);
+   LONGS_EQUAL(Common::Result::OK, res);
 
-   mock ("SimpleLight").expectNCalls (2, "handle").onObject (&(base->unit2));
-   mock ("SimpleLight").expectNCalls (0, "handle_command").onObject (&(base->unit2));
+   mock("SimpleLight").expectNCalls(2, "handle").onObject(&(base->unit2));
+   mock("SimpleLight").expectNCalls(0, "handle_command").onObject(&(base->unit2));
 
    Protocol::Address dest;
-   device1->unit.alert (dest, true);
-   device2->unit.alert (dest, true);
+   device1->unit.alert(dest, true);
+   device2->unit.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }
 
-TEST (Concentrator, PacketFromAnyUnitSingleItf)
+TEST(Concentrator, PacketFromAnyUnitSingleItf)
 {
-   Protocol::Address src (1);
-   Protocol::Address dst (3, 1);
-   Common::Interface itf (Interface::ALERT, Interface::CLIENT_ROLE);
+   Protocol::Address src(1);
+   Protocol::Address dst(3, 1);
+   Common::Interface itf(Interface::ALERT, Interface::CLIENT_ROLE);
 
-   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
+   auto res = base->unit0()->bind_management()->add(src, dst, itf);
 
-   LONGS_EQUAL (Common::Result::OK, res);
+   LONGS_EQUAL(Common::Result::OK, res);
 
-   mock ("Alertable").expectNCalls (2, "status").onObject (&(device3->unit));
+   mock("Alertable").expectNCalls(2, "status").onObject(&(device3->unit));
 
    Protocol::Address dest;
-   device1->unit.alert (dest, true);
-   device1->unit2.alert (dest, true);
+   device1->unit.alert(dest, true);
+   device1->unit2.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }
 
-TEST (Concentrator, PacketFromAnyUnitAnyItf)
+TEST(Concentrator, PacketFromAnyUnitAnyItf)
 {
-   Protocol::Address src (1);
-   Protocol::Address dst (0, 2);
-   Common::Interface itf (Interface::ANY_UID);
+   Protocol::Address src(1);
+   Protocol::Address dst(0, 2);
+   Common::Interface itf(Interface::ANY_UID);
 
-   auto res = base->unit0 ()->bind_management ()->add (src, dst, itf);
+   auto res = base->unit0()->bind_management()->add(src, dst, itf);
 
-   LONGS_EQUAL (Common::Result::OK, res);
+   LONGS_EQUAL(Common::Result::OK, res);
 
-   mock ("SimpleLight").expectNCalls (2, "handle").onObject (&(base->unit2));
-   mock ("SimpleLight").expectNCalls (0, "handle_command").onObject (&(base->unit2));
+   mock("SimpleLight").expectNCalls(2, "handle").onObject(&(base->unit2));
+   mock("SimpleLight").expectNCalls(0, "handle_command").onObject(&(base->unit2));
 
    Protocol::Address dest;
-   device1->unit.alert (dest, true);
-   device1->unit2.alert (dest, true);
+   device1->unit.alert(dest, true);
+   device1->unit2.alert(dest, true);
 
-   mock ().checkExpectations ();
+   mock().checkExpectations();
 }

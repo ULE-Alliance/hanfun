@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Temperature interface.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -43,7 +43,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (SimpleTemperature::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(SimpleTemperature::Server *server, uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Temperature interface
@@ -73,13 +73,13 @@ namespace HF
           * Helper class to handle the Measured Temperature attribute for the
           * Simple Temperature interface.
           */
-         struct Temperature:public HF::Attributes::Attribute <int16_t>
+         struct Temperature: public HF::Attributes::Attribute<int16_t>
          {
             static constexpr uint8_t ID        = VALUE_ATTR;
             static constexpr bool    WRITABBLE = false;
 
             Temperature(int16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute <int16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<int16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -87,13 +87,13 @@ namespace HF
           * Helper class to handle the Minimum Measured Temperature attribute for the
           * Simple Temperature interface.
           */
-         struct MininumTemperature:public HF::Attributes::Attribute <int16_t>
+         struct MininumTemperature: public HF::Attributes::Attribute<int16_t>
          {
             static constexpr uint8_t ID        = MINIMUM_ATTR;
             static constexpr bool    WRITABBLE = false;
 
             MininumTemperature(int16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute <int16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<int16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -101,26 +101,26 @@ namespace HF
           * Helper class to handle the Maximum Measured Temperature attribute for the
           * Simple Temperature interface.
           */
-         struct MaximumTemperature:public HF::Attributes::Attribute <int16_t>
+         struct MaximumTemperature: public HF::Attributes::Attribute<int16_t>
          {
             static constexpr uint8_t ID        = MAXIMUM_ATTR;
             static constexpr bool    WRITABBLE = false;
 
             MaximumTemperature(int16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute <int16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<int16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
          /*!
           * Helper class to handle the Tolerance attribute for the Simple Temperature interface.
           */
-         struct Tolerance:public HF::Attributes::Attribute <uint16_t>
+         struct Tolerance: public HF::Attributes::Attribute<uint16_t>
          {
             static constexpr uint8_t ID        = TOLERANCE_ATTR;
             static constexpr bool    WRITABBLE = false;
 
             Tolerance(uint16_t value = 0, HF::Interface *owner = nullptr):
-               Attribute <uint16_t>(Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
+               Attribute<uint16_t>(HF::Interface::SIMPLE_TEMPERATURE, ID, owner, value, WRITABBLE)
             {}
          };
 
@@ -134,9 +134,10 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         inline HF::Attributes::IAttribute *create_attribute (uint8_t uid)
+         inline HF::Attributes::IAttribute *create_attribute(uint8_t uid)
          {
-            return Interfaces::create_attribute (static_cast <SimpleTemperature::Server *>(nullptr), uid);
+            return Interfaces::create_attribute(static_cast<SimpleTemperature::Server *>(nullptr),
+                                                uid);
          }
 
          /*!
@@ -144,12 +145,11 @@ namespace HF
           *
           * This is the parent class for the Simple Temperature interface implementation.
           */
-         struct Base:public Interfaces::Base <Interface::SIMPLE_TEMPERATURE>
+         struct Base: public Interface<HF::Interface::SIMPLE_TEMPERATURE>
          {
             protected:
 
-            Base()
-            {}
+            Base() {}
          };
 
          /*!
@@ -157,15 +157,15 @@ namespace HF
           *
           * This class provides the API for server side of the Simple Temperature interface.
           */
-         class Server:public InterfaceRole <SimpleTemperature::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<SimpleTemperature::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
             //! Current measured temperature.
             int16_t _value;
 
-            const int16_t  _minimum;   //!< Minimum measurable temperature.
-            const int16_t  _maximum;   //!< Maximum measurable temperature.
+            const int16_t _minimum;    //!< Minimum measurable temperature.
+            const int16_t _maximum;    //!< Maximum measurable temperature.
             const uint16_t _tolerance; //!< Tolerance.
 
             public:
@@ -177,11 +177,11 @@ namespace HF
              * @param [in] maximum     Maximum measurable temperature.
              * @param [in] tolerance   Tolerance.
              */
-            Server(int16_t minimum = std::numeric_limits <int16_t>::min (),
-                   int16_t maximum = std::numeric_limits <int16_t>::max (),
+            Server(int16_t minimum = std::numeric_limits<int16_t>::min(),
+                   int16_t maximum = std::numeric_limits<int16_t>::max(),
                    int16_t tolerance = 0):
-               _value (0), _minimum (minimum), _maximum (maximum),
-               _tolerance (tolerance)
+               _value(0), _minimum(minimum), _maximum(maximum),
+               _tolerance(tolerance)
             {}
 
             virtual ~Server() {}
@@ -195,48 +195,49 @@ namespace HF
              *
              * @return  the current measured temperature.
              */
-            int16_t temperature ();
+            int16_t temperature();
 
             /*!
              * Setter for the current measured temperature.
              *
              * @param [in] __value  the new temperature value to use.
              */
-            void temperature (int16_t __value);
+            void temperature(int16_t __value);
 
             /*!
              * Getter for the minimum measurable temperature.
              *
              * @return  the minimum measurable temperature.
              */
-            int16_t minimum_temperature ();
+            int16_t minimum_temperature();
 
             /*!
              * Getter for the maximum measurable temperature.
              *
              * @return  the maximum measurable temperature.
              */
-            int16_t maximum_temperature ();
+            int16_t maximum_temperature();
 
             /*!
              * Getter for the tolerance attribute.
              *
              * @return  the tolerance value.
              */
-            uint16_t tolerance ();
+            uint16_t tolerance();
 
             // =============================================================================
             // Attributes API
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            HF::Attributes::IAttribute *attribute(uint8_t uid)
             {
-               return Interfaces::create_attribute (this, uid);
+               return Interfaces::create_attribute(this, uid);
             }
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const;
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute (
+            friend HF::Attributes::IAttribute *Interfaces::create_attribute(
                SimpleTemperature::Server *, uint8_t);
          };
 
@@ -245,7 +246,7 @@ namespace HF
           *
           * This class provides the client side of the %Level Control interface.
           */
-         class Client:public InterfaceRole <SimpleTemperature::Base, Interface::CLIENT_ROLE>
+         class Client: public InterfaceRole<SimpleTemperature::Base, HF::Interface::CLIENT_ROLE>
          {
             public:
 
@@ -261,7 +262,7 @@ namespace HF
              *
              * @param [in] addr        network address to send the message to.
              */
-            void read_all (Protocol::Address &addr);
+            void read_all(Protocol::Address &addr);
 
             /*!
              * Send a @c GET_ATTR_REQ to the given address to get the current temperature.
@@ -270,16 +271,16 @@ namespace HF
              * @param  [in] addr        network address to send the message to.
              */
             template<Attributes _Attribute>
-            void read (Protocol::Address &addr)
+            void read(Protocol::Address &addr)
             {
                Protocol::Message message;
 
                message.itf.role   = SERVER_ROLE;
-               message.itf.id     = SimpleTemperature::Client::uid ();
+               message.itf.id     = SimpleTemperature::Client::uid();
                message.itf.member = _Attribute;
                message.type       = Protocol::Message::GET_ATTR_REQ;
 
-               send (addr, message);
+               send(addr, message);
             }
 
             //! @}
@@ -291,18 +292,18 @@ namespace HF
             //! @name Events
             //! @{
 
-            virtual void read_resp (const Protocol::Address &addr,
-                                    const HF::Attributes::Attribute <int16_t> &attr)
+            virtual void read_resp(const Protocol::Address &addr,
+                                   const HF::Attributes::Attribute<int16_t> &attr)
             {
-               UNUSED (addr);
-               UNUSED (attr);
+               UNUSED(addr);
+               UNUSED(attr);
             }
 
-            virtual void read_resp (const Protocol::Address &addr,
-                                    const HF::Attributes::Attribute <uint16_t> &attr)
+            virtual void read_resp(const Protocol::Address &addr,
+                                   const HF::Attributes::Attribute<uint16_t> &attr)
             {
-               UNUSED (addr);
-               UNUSED (attr);
+               UNUSED(addr);
+               UNUSED(attr);
             }
 
             //! @}
@@ -310,8 +311,8 @@ namespace HF
 
             protected:
 
-            Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                             uint16_t offset);
+            Common::Result handle_attribute(Protocol::Packet &packet, Common::ByteArray &payload,
+                                            uint16_t offset);
 
          };
 

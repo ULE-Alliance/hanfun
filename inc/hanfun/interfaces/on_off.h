@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the OnOff interface.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -44,7 +44,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute (OnOff::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(OnOff::Server *server, uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the On-Off interface.
@@ -77,13 +77,13 @@ namespace HF
          /*!
           * Helper class to handle the %State attribute for the On-Off interface.
           */
-         struct State:public HF::Attributes::Attribute <bool>
+         struct State: public HF::Attributes::Attribute<bool>
          {
             static constexpr uint8_t ID        = STATE_ATTR;  //!< Attribute UID.
             static constexpr bool    WRITABBLE = false;       //!< Attribute Read/Write
 
             State(bool state = false, HF::Interface *owner = nullptr):
-               Attribute <bool>(Interface::ON_OFF, ID, owner, state, WRITABBLE)
+               Attribute<bool>(HF::Interface::ON_OFF, ID, owner, state, WRITABBLE)
             {}
          };
 
@@ -97,22 +97,26 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * On-Off Interface : Parent.
           *
           * This is the parent class for the On-Off interface implementation.
           */
-         struct Base:public Interfaces::Base <Interface::ON_OFF>
-         {};
+         struct Base: public Interface<HF::Interface::ON_OFF>
+         {
+            protected:
+
+            Base() {}
+         };
 
          /*!
           * On-Off %Interface : %Server side implementation.
           *
           * This class provides the server side of the On-Off interface.
           */
-         class Server:public InterfaceRole <OnOff::Base, Interface::SERVER_ROLE>
+         class Server: public InterfaceRole<OnOff::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -127,7 +131,7 @@ namespace HF
             public:
 
             //! Constructor
-            Server():_state (false) {}
+            Server(): _state(false) {}
 
             //! Destructor
             virtual ~Server() {}
@@ -143,21 +147,21 @@ namespace HF
              *
              * @param [in] source   device address that sent the command.
              */
-            virtual void on (Protocol::Address &source);
+            virtual void on(Protocol::Address &source);
 
             /*!
              * Callback that is called when a @c OFF_CMD message is received.
              *
              * @param [in] source   device address that sent the command.
              */
-            virtual void off (Protocol::Address &source);
+            virtual void off(Protocol::Address &source);
 
             /*!
              * Callback that is called when a @c TOGGLE_CMD message is received.
              *
              * @param [in] source   device address that sent the command.
              */
-            virtual void toggle (Protocol::Address &source);
+            virtual void toggle(Protocol::Address &source);
 
             //! @}
 
@@ -170,7 +174,7 @@ namespace HF
              *
              * @param state   @c true the interface is on, @c false the interface is off.
              */
-            void state (bool state);
+            void state(bool state);
 
             /*!
              * Getter : get the current state of the interface :
@@ -180,31 +184,33 @@ namespace HF
              * @retval  <tt>true</tt> if the interface is ON.
              * @retval  <tt>false</tt> if the interface is OFF.
              */
-            bool state ();
+            bool state();
 
             // =============================================================================
             // Attribute API.
             // =============================================================================
 
-            HF::Attributes::IAttribute *attribute (uint8_t uid)
+            HF::Attributes::IAttribute *attribute(uint8_t uid)
             {
-               return Interfaces::create_attribute (this, uid);
+               return Interfaces::create_attribute(this, uid);
             }
 
-            HF::Attributes::UIDS attributes (uint8_t pack_id = HF::Attributes::Pack::MANDATORY) const
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const
             {
-               UNUSED (pack_id);
+               UNUSED(pack_id);
                /* *INDENT-OFF* */
                return HF::Attributes::UIDS ({ OnOff::STATE_ATTR });
                /* *INDENT-ON* */
             }
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute (OnOff::Server *, uint8_t);
+            friend HF::Attributes::IAttribute *Interfaces::create_attribute(OnOff::Server *,
+                                                                            uint8_t);
 
             protected:
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
          };
 
          /*!
@@ -212,7 +218,7 @@ namespace HF
           *
           * This class provides the client side of the On-Off interface.
           */
-         struct Client:public InterfaceRole <OnOff::Base, Interface::CLIENT_ROLE>
+         struct Client: public InterfaceRole<OnOff::Base, HF::Interface::CLIENT_ROLE>
          {
             // ======================================================================
             // Commands
@@ -225,15 +231,15 @@ namespace HF
              *
              * @param addr    the address of the device to send the message to.
              */
-            void on (Protocol::Address &addr);
+            void on(Protocol::Address &addr);
 
             /*!
              * Send a @c OnOff::ON_CMD message to the broadcast address.
              */
-            void on ()
+            void on()
             {
                Protocol::Address addr;
-               on (addr);
+               on(addr);
             }
 
             /*!
@@ -241,15 +247,15 @@ namespace HF
              *
              * @param addr    the address of the device to send the message to.
              */
-            void off (Protocol::Address &addr);
+            void off(Protocol::Address &addr);
 
             /*!
              * Send a @c OnOff::OFF_CMD message to the broadcast address.
              */
-            void off ()
+            void off()
             {
                Protocol::Address addr;
-               off (addr);
+               off(addr);
             }
 
             /*!
@@ -257,15 +263,15 @@ namespace HF
              *
              * @param addr    the address of the device to send the message to.
              */
-            void toggle (Protocol::Address &addr);
+            void toggle(Protocol::Address &addr);
 
             /*!
              * Send a @c OnOff::TOGGLE_CMD message to the broadcast address.
              */
-            void toggle ()
+            void toggle()
             {
                Protocol::Address addr;
-               toggle (addr);
+               toggle(addr);
             }
 
             //! @}
@@ -297,7 +303,7 @@ namespace HF
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command);
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::CMD command);
 
 /*!
  * Convert the given @c attribute into a string and write it to the given @c stream.
@@ -307,7 +313,7 @@ std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::CMD
  *
  * @return   <tt>stream</tt>
  */
-std::ostream &operator <<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute);
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::OnOff::Attributes attribute);
 
 /*! @} */
 

@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# =============================================================================
+#
+# @file       tools/hanfun/exe/hanfun
+#
+# This file implements a helper generator tool for implementing HAN-FUN interfaces,
+# profiles and services.
+#
+# @version    x.x.x
+#
+# @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
+#
+# For licensing information, please see the file 'LICENSE' in the root folder.
+#
+# Initial development by Bithium S.A. [http://www.bithium.com]
+#
+# =============================================================================
+
+require 'hanfun'
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+Hanfun::Generator.start(ARGV)

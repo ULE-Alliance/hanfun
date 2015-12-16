@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Simple Humidity interface : Server role.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,7 +35,7 @@ using namespace HF::Interfaces::SimpleHumidity;
  *
  */
 // =============================================================================
-uint16_t Server::humidity ()
+uint16_t Server::humidity()
 {
    return _value;
 }
@@ -47,16 +47,16 @@ uint16_t Server::humidity ()
  *
  */
 // =============================================================================
-void Server::humidity (uint16_t __value)
+void Server::humidity(uint16_t __value)
 {
    uint8_t old = this->_value;
 
    this->_value = __value;
 
-   Humidity old_attr (old, this);
-   Humidity new_attr (this->_value, this);
+   Humidity old_attr(old, this);
+   Humidity new_attr(this->_value, this);
 
-   notify (old_attr, new_attr);
+   notify(old_attr, new_attr);
 }
 
 // =============================================================================
@@ -66,7 +66,7 @@ void Server::humidity (uint16_t __value)
  *
  */
 // =============================================================================
-uint16_t Server::tolerance ()
+uint16_t Server::tolerance()
 {
    return _tolerance;
 }
@@ -78,9 +78,9 @@ uint16_t Server::tolerance ()
  *
  */
 // =============================================================================
-HF::Attributes::UIDS Server::attributes (uint8_t pack_id) const
+HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 {
-   UNUSED (pack_id);
+   UNUSED(pack_id);
    /* *INDENT-OFF* */
    return HF::Attributes::UIDS({
       SimpleHumidity::VALUE_ATTR,

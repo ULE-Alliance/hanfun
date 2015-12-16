@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality related with HAN-FUN
  * Profiles.
  *
- * @version    1.3.0
+ * @version    1.4.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -132,6 +132,27 @@ static const HF::Common::Interface profiles_interfaces[] =
 
    // 32 - HF::Profiles::SIMPLE_HUMIDITY_SENSOR,
    {HF::Interface::SIMPLE_HUMIDITY,    HF::Interface::SERVER_ROLE},
+
+   // 33 - HF::Profiles::CONTROLABLE_THERMOSTAT
+   {HF::Interface::ON_OFF,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_THERMOSTAT,   HF::Interface::SERVER_ROLE},
+
+   // 35 - HF::Profiles::USER_INTERFACE_LOCK
+   {HF::Interface::ON_OFF,              HF::Interface::SERVER_ROLE},
+
+   // 36 - HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR
+   {HF::Interface::SIMPLE_AIR_PRESSURE, HF::Interface::SERVER_ROLE},
+
+   // 37 - HF::Profiles::SIMPLE_BUTTON
+   {HF::Interface::SIMPLE_BUTTON,       HF::Interface::SERVER_ROLE},
+
+   // 38 - HF::Profiles::SIMPLE_LED
+   {HF::Interface::SIMPLE_VISUAL_EFFECTS, HF::Interface::SERVER_ROLE},
+   
+   // 39 - HF::Profiles::ENVIRONMENT_MONITOR
+   {HF::Interface::SIMPLE_TEMPERATURE,    HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_HUMIDITY,       HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_AIR_PRESSURE,   HF::Interface::SERVER_ROLE},
 };
 
 /*!
@@ -168,6 +189,12 @@ static const Profile profiles[] =
    {HF::Profiles::SIMPLE_PENDANT,                       0x001E, 1},      // 30
    {HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,            0x001F, 1},      // 31
    {HF::Profiles::SIMPLE_HUMIDITY_SENSOR,               0x0020, 1},      // 32
+   {HF::Profiles::CONTROLABLE_THERMOSTAT,               0x0021, 2},      // 33
+   {HF::Profiles::USER_INTERFACE_LOCK,                  0x0023, 1},      // 35
+   {HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR,           0x0024, 1},      // 36
+   {HF::Profiles::SIMPLE_BUTTON,                        0x0025, 1},      // 37
+   {HF::Profiles::SIMPLE_LED,                           0x0026, 1},      // 38
+   {HF::Profiles::ENVIRONMENT_MONITOR,                  0x0027, 3},      // 39
    {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
    {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };
@@ -183,7 +210,7 @@ static const Profile profiles[] =
  *
  */
 // =============================================================================
-HF::Common::Interface const *HF::Profiles::interfaces (uint16_t profile, uint16_t &count)
+HF::Common::Interface const *HF::Profiles::interfaces(uint16_t profile, uint16_t &count)
 {
    for (uint32_t index = 0; index < (sizeof(profiles) / sizeof(*profiles)); ++index)
    {

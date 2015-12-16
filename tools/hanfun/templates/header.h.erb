@@ -1,0 +1,415 @@
+// =============================================================================
+/*!
+ * @file       inc/hanfun/<%= @namespace.path %>/<%= @interface.path %>.h
+ *
+ * This file contains the definitions for the <%= @interface.to_doc %> <%= @type %>.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; <%= Date.today.year %> ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#ifndef HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H
+#define HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H
+
+#include "hanfun/protocol.h"
+#include "hanfun/<%= @namespace.include %>.h"
+
+namespace HF
+{
+   namespace <%= @namespace.name %>
+   {
+      // Forward declaration.
+      namespace <%= @interface.to_class %>
+      {
+         class Server;
+      }
+
+      /*!
+       * @ingroup <%= @interface.path %>_itf
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       *          exist.
+       */
+      HF::Attributes::IAttribute *create_attribute(<%= @interface.to_class %>::Server *server, uint8_t uid);
+
+      /*!
+       * This namespace contains the implementation of the <%= @interface.to_doc %> <%= @type %>.
+       */
+      namespace <%= @interface.to_class %>
+      {
+         /*!
+          * @addtogroup <%= @interface.path %>_itf  <%= @interface.to_doc %> <%= @type %>
+          * @ingroup interfaces
+          *
+          * This module contains the classes that define and implement the <%= @interface.to_doc %> <%= @type %> API.
+          * @{
+          */
+         <%- unless @commands.empty? -%>
+         //! Command IDs.
+         typedef enum _CMD
+         {
+         <%- @commands.each do |cmd| -%>
+           <%= cmd.to_uid %> = <%= cmd.uid %>,   //!< <%= cmd.to_doc %> command UID.
+         <%- end -%>
+            __LAST_CMD__ = <%= @commands.last.to_uid %>
+         } CMD;
+         <%- end -%>
+
+         <%- unless @attributes.empty? -%>
+         //! Attributes
+         typedef enum _Attributes
+         {
+         <%- @attributes.each do |attr| -%>
+            <%= attr.to_uid %> = <%= attr.uid %>,   //!< <%= attr.to_doc %> attribute UID.
+         <%- end -%>
+            __LAST_ATTR__ = <%= @attributes.last.to_uid %>
+         } Attributes;
+
+         <%- end -%>
+         <%- unless @attributes.empty? -%>
+         // =============================================================================
+         // Attribute Helper classes
+         // =============================================================================
+
+         <%- @attributes.each do |attr| -%>
+         /*!
+          * Helper class to handle the <%= attr.to_doc %> attribute for the <%= @interface.to_doc %> <%= @type %>.
+          */
+         struct <%= attr.to_class %>: public HF::Attributes::Attribute<<%= attr.type %>>
+         {
+            static constexpr uint8_t ID       = <%= attr.to_uid %>;  //!< Attribute UID.
+            static constexpr bool    WRITABLE = <%= attr.writable ? "true" : "false" %>;   //!< Attribute Read/Write
+
+            <%= attr.to_class %>(<%= attr.type %> value = 0, HF::Interface *owner = nullptr):
+               Attribute<<%= attr.type %>>(HF::Interface::<%= @interface.to_uid %>, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         <%- end -%>
+         <%- end -%>
+         /*!
+          * @copybrief HF::<%= @namespace.name %>::create_attribute (HF::Interfaces::<%= @interface.to_class %>::Server *,uint8_t)
+          *
+          * @see HF::<%= @namespace.name %>::create_attribute (HF::<%= @namespace.name %>::<%= @interface.to_class %>::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
+
+         /*!
+          * <%= @interface.to_doc %> %<%= parent %> : Parent.
+          *
+          * This is the parent class for the <%= @interface.to_doc %> <%= @type %> implementation.
+          */
+         struct Base: public <%= parent %><HF::Interface::<%= @interface.to_uid %>>
+         {
+            protected:
+
+            //! Constructor
+            Base(<%= @arguments -%>):<%= parent %><HF::Interface::<%= @interface.to_uid %>>(<%= arguments -%>) {}
+         };
+
+         /*!
+          * <%= @interface.to_doc %> %<%= parent %> : %Server side implementation.
+          *
+          * This class provides the server side of the <%= @interface.to_doc %> interface.
+          */
+         class Server: public <%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::SERVER_ROLE>
+         {
+         <%- unless @attributes.empty? -%>
+            protected:
+
+            <%- @attributes.each do |attr| -%>
+              <%- unless attr.mandatory -%>
+
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
+              <%- end -%>
+            <%= attr.type %> _<%= attr.name %>;   //!< <%= attr.to_doc %>
+              <%- unless attr.mandatory -%>
+#endif
+              <%- end -%>
+            <%- end -%>
+          <%- end -%>
+
+            public:
+
+            //! Constructor
+            Server(<%= @arguments -%>):<%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::SERVER_ROLE>(<%= arguments -%>) {}
+
+            //! Destructor
+            virtual ~Server() {}
+            <%-
+              server_events   = @commands.select { |c| c.event }
+              server_commands = @commands.select { |c| !c.event }
+            -%>
+            <%-  unless server_events.empty? -%>
+
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            //! @name Commands
+            //! @{
+
+            <%- server_events.each do |cmd| -%>
+              <%- unless cmd.server.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void <%= cmd.name %>(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, 
+             * to the <%= service? ? "D:0/U:0" : "broadcast" %> network address.
+             */
+            void <%= cmd.name %>()
+            {
+              <%- unless service? -%>
+                Protocol::Address addr;
+              <%- else -%>
+                Protocol::Address addr(0,0);
+              <%- end -%>
+              <%= cmd.name %>(addr);
+            }
+              <%- unless cmd.server.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
+            //! @}
+            // ======================================================================
+            <%- end -%>
+            <%- unless server_commands.empty? -%>
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            <%- server_commands.each do |cmd| -%>
+              <%- unless cmd.server.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Callback that is called when a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void <%= cmd.name %>(const Protocol::Address &addr);
+              <%- unless cmd.server.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
+            //! @}
+            // ======================================================================
+            <%- end -%>
+            <%- unless @attributes.empty? -%>
+
+            // =============================================================================
+            // Get/Set API.
+            // =============================================================================
+
+            <%- @attributes.each do |attr| -%>
+              <%- unless attr.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= "#{@interface.short}_#{attr.to_uid}" %>
+              <%- end -%>
+            /*!
+             * Get the <%= attr.to_doc %> for the <%= @interface.to_doc %> server.
+             *
+             * @return  the current <%= attr.to_doc %>.
+             */
+            <%= attr.type %> <%= attr.name %>() const;
+
+            /*!
+             * Set the <%= attr.to_doc %> for the <%= @interface.to_doc %> server.
+             *
+             * @param [in] __value the  <%= attr.to_doc %> value to set the server to.
+             */
+            <%= attr.writable ? "virtual" : "" %> void <%= attr.name %>(<%= attr.type %> __value);
+              <%- unless attr.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
+            <%- end -%>
+            <%- unless @attributes.empty? -%>
+            // =============================================================================
+            // Attribute API.
+            // =============================================================================
+
+            HF::Attributes::IAttribute *attribute(uint8_t uid);
+
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
+
+            <%- end -%>
+            <%- if @commands.any? { |c| !c.event } -%>
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+            <%- end -%>
+         };
+
+         /*!
+          * <%= @interface.to_doc %> %<%= parent %> : %Client side implementation.
+          *
+          * This class provides the client side of the <%= @interface.to_doc %> interface.
+          */
+         struct Client: public <%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::CLIENT_ROLE>
+         {
+            Client(<%= @arguments -%>):<%= parent %>Role<<%= @interface.to_class %>::Base, HF::Interface::CLIENT_ROLE>(<%= arguments -%>) {}
+
+            virtual ~Client() {}
+            <%-
+              client_events  = @commands.select { |c| c.event }
+              client_commands = @commands.select { |c| !c.event }
+            -%>
+            <%-  unless client_commands.empty? -%>
+
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            //! @name Commands
+            //! @{
+
+            <%- client_commands.each do |cmd| -%>
+              <%- unless cmd.client.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void <%= cmd.name %>(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
+             * to the <%= service? ? "D:0/U:0" : "broadcast" %> network address.
+             */
+            void <%= cmd.name %>()
+            {
+              <%- unless service? -%>
+                Protocol::Address addr;
+              <%- else -%>
+                Protocol::Address addr(0,0);
+              <%- end -%>
+              <%= cmd.name %>(addr);
+            }
+              <%- unless cmd.client.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
+            //! @}
+            // ======================================================================
+            <%- end -%>
+            <%- unless client_events.empty? -%>
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+            //!
+
+            <%- client_events.each do |cmd| -%>
+              <%- unless cmd.client.mandatory -%>
+#ifdef HF_<%= @namespace.short %>_<%= @interface.short %>_<%= cmd.to_uid %>
+              <%- end -%>
+            /*!
+             * Callback that is called when a @c <%= @interface.to_class %>::<%= cmd.to_uid %>,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void <%= cmd.name %>(const Protocol::Address &addr);
+              <%- unless cmd.client.mandatory -%>
+#endif
+              <%- end -%>
+
+            <%- end -%>
+            //! @}
+            // =============================================================================
+
+            <%- end -%>
+            <%- if @commands.any? { |c| c.event } -%>
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+            <%- end -%>
+         };
+
+         /*! @} */
+
+      }  // namespace <%= @interface.to_class %>
+
+   }  // namespace <%= @namespace.name %>
+
+}   // namespace HF
+
+<%- unless @attributes.empty? && @commands.empty? -%>
+/*!
+ * @addtogroup <%= @interface.path %>_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+<%- unless @commands.empty? -%>
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator<<(std::ostream &stream, const HF::<%= @namespace.name %>::<%= @interface.to_class %>::CMD command);
+<%- end -%>
+
+<%- unless @attributes.empty? -%>
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::<%= @namespace.name %>::<%= @interface.to_class %>::Attributes attribute);
+<%- end -%>
+/*! @} */
+<%- end -%>
+
+#endif /* HF_<%= @namespace.short %>_<%= @interface.to_uid %>_H */
