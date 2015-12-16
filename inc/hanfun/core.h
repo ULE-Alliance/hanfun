@@ -106,9 +106,11 @@ namespace HF
 
          static void remove_mandatory(std::vector<Common::Interface> &itfs)
          {
-            static std::array<uint16_t, 3> const mandatory ({{HF::Interface::DEVICE_INFORMATION,
-                                                              HF::Interface::DEVICE_MANAGEMENT,
-                                                              HF::Interface::ATTRIBUTE_REPORTING}});
+            static std::array<uint16_t, 3> const mandatory({
+               {HF::Interface::DEVICE_INFORMATION,
+                HF::Interface::DEVICE_MANAGEMENT,
+                HF::Interface::ATTRIBUTE_REPORTING}
+            });
 
             itfs.erase(std::remove_if(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
             {
