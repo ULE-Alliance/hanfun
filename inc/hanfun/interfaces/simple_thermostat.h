@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Thermostat interface.
  *
- * @version    1.4.0
+ * @version    1.4.1
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
