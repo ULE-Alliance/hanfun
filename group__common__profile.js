@@ -1,8 +1,8 @@
 var group__common__profile =
 [
     [ "IProfile", "structHF_1_1Profiles_1_1IProfile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1IProfile.html#a99054eab835ceeb55b39297222338168", null ],
-      [ "uid", "structHF_1_1Profiles_1_1IProfile.html#a96dce7da250d858c9b329c2476f7a01a", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1IProfile.html#ad0bf4997cc500bc4fdf64f91c4b13721", null ],
+      [ "uid", "structHF_1_1Profiles_1_1IProfile.html#aa114bf5ebfc35c22e98c8b4d1c8dd555", null ]
     ] ],
     [ "AbstractProfile", "structHF_1_1Profiles_1_1AbstractProfile.html", [
       [ "attributes", "structHF_1_1Profiles_1_1AbstractProfile.html#a32cb08254edaa9e99b754a81e1acc170", null ],
@@ -15,7 +15,7 @@ var group__common__profile =
     [ "ProfileN", "classHF_1_1Profiles_1_1ProfileN.html", [
       [ "attributes", "classHF_1_1Profiles_1_1ProfileN.html#ab1c160a7c7e53378e00b9a61ea3df02b", null ],
       [ "handle", "classHF_1_1Profiles_1_1ProfileN.html#ab016d0ef39c7616883bf90914700d6e8", null ],
-      [ "notify", "classHF_1_1Profiles_1_1ProfileN.html#a4f84307b9f6b6dac163a326feea8b540", null ],
+      [ "notify", "classHF_1_1Profiles_1_1ProfileN.html#a4bd735e85a784cfd219aa8584153b1aa", null ],
       [ "send", "classHF_1_1Profiles_1_1ProfileN.html#af87c93600dfddaadae6e26a4103799a8", null ]
     ] ],
     [ "Profile2", "structHF_1_1Profiles_1_1Profile2.html", [

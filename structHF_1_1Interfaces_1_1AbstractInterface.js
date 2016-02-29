@@ -4,7 +4,7 @@ var structHF_1_1Interfaces_1_1AbstractInterface =
     [ "attributes", "structHF_1_1Interfaces_1_1AbstractInterface.html#aebae0340b748ecbb62ec5e11ade78534", null ],
     [ "check", "structHF_1_1Interfaces_1_1AbstractInterface.html#afce9c5ade03ed519cd10eed9cd56bdbf", null ],
     [ "check_payload_size", "structHF_1_1Interfaces_1_1AbstractInterface.html#a6a424b01b75f634b3afa217b85a53856", null ],
-    [ "check_uid", "structHF_1_1Interfaces_1_1AbstractInterface.html#ae02cb29beae876fedba6a54502de947f", null ],
+    [ "check_uid", "structHF_1_1Interfaces_1_1AbstractInterface.html#a0b0682cb079593595141a02632c13d2f", null ],
     [ "handle", "structHF_1_1Interfaces_1_1AbstractInterface.html#a84413ff61efda7e676edc40577e9f08f", null ],
     [ "handle_attribute", "structHF_1_1Interfaces_1_1AbstractInterface.html#af5a9ec14b54996a48b66f6fe8a92f0d5", null ],
     [ "handle_command", "structHF_1_1Interfaces_1_1AbstractInterface.html#a9b60e0a9200e8ca18c79aa0db0ffc164", null ],

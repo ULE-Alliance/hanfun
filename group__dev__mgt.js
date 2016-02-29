@@ -42,9 +42,9 @@ var group__dev__mgt =
       [ "address", "structHF_1_1Core_1_1DeviceManagement_1_1DeregisterMessage.html#a1343af6a55f09412f5029658166f5db6", null ]
     ] ],
     [ "IEntries", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html", [
-      [ "find", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#ae3eb2cc71a65432e7a3fe15ed84a93f5", null ],
-      [ "find", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#acd0b14953253f14dd49eb6fc5ba9f380", null ],
-      [ "next_address", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#aa1a8dccb2f4de22ef7a1a9e39161a6eb", null ]
+      [ "find", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#ad048cade9dc4e492857cfb0e0a14674c", null ],
+      [ "find", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#ab5ca5a317f5f864984bb3210af17c79c", null ],
+      [ "next_address", "structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html#afb4d446a129a1a35ac2e567bba52777f", null ]
     ] ],
     [ "Base", "classHF_1_1Core_1_1DeviceManagement_1_1Base.html", [
       [ "Base", "classHF_1_1Core_1_1DeviceManagement_1_1Base.html#a7f81ba3d2004238a72c6c05563c818b7", null ]
@@ -67,7 +67,7 @@ var group__dev__mgt =
     [ "IServer", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html", [
       [ "IServer", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#a23c7b48e335cee1f3c9f074be2000161", null ],
       [ "deregistered", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#aa80a3fe392865bf218ea5450151a9170", null ],
-      [ "entries", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#a32ae8f7c0da6b2af41b32791e6f806c6", null ],
+      [ "entries", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#ab10b8b339531c6f21444ce7beab90dfd", null ],
       [ "entry", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#ae474d177b0a1f670af390e4aee9864e8", null ],
       [ "entry", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#a371c2cccb30c4194982b8755c7c40697", null ],
       [ "next_address", "structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#ad9f016c9cc071363f141dc1c1ff7b7ca", null ],

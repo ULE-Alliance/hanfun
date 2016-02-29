@@ -1,4 +1,4 @@
-<map id="inc/hanfun/profiles.h" name="inc/hanfun/profiles.h">
+<map id="profiles.h" name="profiles.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="1303,395,1384,421"/>
 <area shape="rect" id="node24" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="962,171,1088,197"/>
 <area shape="rect" id="node27" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="45,88,208,115"/>

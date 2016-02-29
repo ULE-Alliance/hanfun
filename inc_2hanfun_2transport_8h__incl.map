@@ -1,4 +1,4 @@
-<map id="inc/hanfun/transport.h" name="inc/hanfun/transport.h">
+<map id="transport.h" name="transport.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="874,155,1000,181"/>
 <area shape="rect" id="node24" href="$uids_8h.html" title="This file contains the declaration of the classes that implement the HAN&#45;FUN UIDs. " alt="" coords="887,80,987,107"/>
 <area shape="rect" id="node25" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1012,80,1135,107"/>

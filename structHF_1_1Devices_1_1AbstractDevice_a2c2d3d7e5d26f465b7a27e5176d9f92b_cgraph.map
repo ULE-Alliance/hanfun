@@ -1,3 +1,3 @@
 <map id="HF::Devices::AbstractDevice::is_local" name="HF::Devices::AbstractDevice::is_local">
-<area shape="rect" id="node2" href="$structHF_1_1IDevice.html#a795d217add26b526a844fba806ddcead" title="Return the device address on the HAN&#45;FUN network, when the device is registered, or HF_BROADCAST_ADDR..." alt="" coords="248,12,395,39"/>
+<area shape="rect" id="node2" href="$structHF_1_1IDevice.html#ae785f2abc55eeb8197d40564b1d49e67" title="Return the device address on the HAN&#45;FUN network, when the device is registered, or HF_BROADCAST_ADDR..." alt="" coords="248,12,395,39"/>
 </map>

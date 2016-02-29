@@ -1,5 +1,6 @@
 var structHF_1_1Protocol_1_1SetAttributePack_1_1Response =
 [
+    [ "Result", "structHF_1_1Protocol_1_1SetAttributePack_1_1Response_1_1Result.html", "structHF_1_1Protocol_1_1SetAttributePack_1_1Response_1_1Result" ],
     [ "pack", "structHF_1_1Protocol_1_1SetAttributePack_1_1Response.html#a7f3fd2b2e90932fc947f2c3ef59960b0", null ],
     [ "size", "structHF_1_1Protocol_1_1SetAttributePack_1_1Response.html#ab1904af59479774a515eec9448df0cf4", null ],
     [ "unpack", "structHF_1_1Protocol_1_1SetAttributePack_1_1Response.html#a5f5130efbc21d9f9040325294342989b", null ],

@@ -2,6 +2,6 @@
 <area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html#aa183da3a9d5966eec85b878eea8de2b4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="195,16,349,43"/>
 <area shape="rect" id="node4" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="398,57,565,98"/>
 <area shape="rect" id="node5" href="$structHF_1_1UID_1_1URI.html#a04c6ec60dd8c325ff6f19e60c22de2bf" title="Number bytes needed to serialize the message. " alt="" coords="204,119,340,145"/>
-<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html#a67764f54eda28434c5ccdb059ea80219" title="Type of the UID. " alt="" coords="405,5,557,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3" title="Type of the UID. " alt="" coords="405,5,557,32"/>
 <area shape="rect" id="node6" href="$structHF_1_1UID_1_1UID__T.html#a1e2dae84e26787023406180ce15e0264" title="Number bytes needed to serialize the message. " alt="" coords="406,123,557,149"/>
 </map>

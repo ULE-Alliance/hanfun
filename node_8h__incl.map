@@ -1,4 +1,4 @@
-<map id="apps/node.h" name="apps/node.h">
+<map id="node.h" name="node.h">
 <area shape="rect" id="node2" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="1579,80,1651,107"/>
 <area shape="rect" id="node5" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="2627,875,2753,901"/>
 <area shape="rect" id="node25" href="$uids_8h.html" title="This file contains the declaration of the classes that implement the HAN&#45;FUN UIDs. " alt="" coords="3338,320,3437,347"/>

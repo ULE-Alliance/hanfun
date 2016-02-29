@@ -2,14 +2,14 @@ var group__protocol =
 [
     [ "Attributes", "group__attributes.html", "group__attributes" ],
     [ "Filters", "group__tsp__filters.html", "group__tsp__filters" ],
-    [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html", [
-      [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a36863f52c27dc7d0772042025fd3d577", null ],
-      [ "pack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#aa00c0886f69755990b53800aa879cf88", null ],
-      [ "size", "structHF_1_1Protocol_1_1Message_1_1Interface.html#ad2e4f3c9b2ebecaa5fe4c3e3bdfb9066", null ],
-      [ "unpack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a73ba00981c86375f76fec482131fd45e", null ],
-      [ "member", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a6467a70f5ba9868ec04da3e9df7706e3", null ]
-    ] ],
     [ "Message", "structHF_1_1Protocol_1_1Message.html", [
+      [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html", [
+        [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a36863f52c27dc7d0772042025fd3d577", null ],
+        [ "pack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#aa00c0886f69755990b53800aa879cf88", null ],
+        [ "size", "structHF_1_1Protocol_1_1Message_1_1Interface.html#ad2e4f3c9b2ebecaa5fe4c3e3bdfb9066", null ],
+        [ "unpack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a73ba00981c86375f76fec482131fd45e", null ],
+        [ "member", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a6467a70f5ba9868ec04da3e9df7706e3", null ]
+      ] ],
       [ "Type", "structHF_1_1Protocol_1_1Message.html#a6336f640a072106c7044489fed8bc10d", [
         [ "COMMAND_REQ", "structHF_1_1Protocol_1_1Message.html#a6336f640a072106c7044489fed8bc10da71bebcbfc0c2b4f8e1eed31677ef883f", null ],
         [ "COMMAND_RESP_REQ", "structHF_1_1Protocol_1_1Message.html#a6336f640a072106c7044489fed8bc10da575886f26415f00f151e6f5681772133", null ],

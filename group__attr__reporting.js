@@ -21,7 +21,7 @@ var group__attr__reporting =
       [ "create", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#a3c18199f8c6107fff26f0336b0f03ee9", null ],
       [ "destroy", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#aaa4b87da3e6bd54bf52a9e0b670443ee", null ],
       [ "destroy", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#a25f166177c953a18cc127508aefc04e7", null ],
-      [ "unit", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#aa9de84e248f579f953ab83ae15ddd9c4", null ]
+      [ "unit", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html#a518e511db661304e601fec2aad86daa0", null ]
     ] ],
     [ "IServer", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html", [
       [ "IServer", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a03d407b15db1c38c4a61af34458c47ce", null ],

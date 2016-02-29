@@ -1,4 +1,4 @@
-<map id="apps/example_07.cpp" name="apps/example_07.cpp">
+<map id="example_07.cpp" name="example_07.cpp">
 <area shape="rect" id="node5" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="1436,155,1508,181"/>
 <area shape="rect" id="node48" href="$debug_8h.html" title="This file contains the prototypes of the debug functionality in HAN&#45;FUN. " alt="" coords="719,80,829,107"/>
 <area shape="rect" id="node50" href="$localloop_8h.html" title="This file contains an implementation of a HAN&#45;FUN transport layer to be used in the example applicati..." alt="" coords="1305,80,1388,107"/>

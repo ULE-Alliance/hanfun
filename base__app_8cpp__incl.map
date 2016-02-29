@@ -1,4 +1,4 @@
-<map id="apps/base_app.cpp" name="apps/base_app.cpp">
+<map id="base_app.cpp" name="base_app.cpp">
 <area shape="rect" id="node10" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="1136,229,1208,256"/>
 <area shape="rect" id="node45" href="$base_8h.html" title="This file contains the definition of the Base class that represents the HAN&#45;FUN Concentrator on the a..." alt="" coords="969,80,1031,107"/>
 <area shape="rect" id="node46" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="1128,155,1209,181"/>

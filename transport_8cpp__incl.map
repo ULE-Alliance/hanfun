@@ -1,4 +1,4 @@
-<map id="apps/transport.cpp" name="apps/transport.cpp">
+<map id="transport.cpp" name="transport.cpp">
 <area shape="rect" id="node8" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="1661,155,1733,181"/>
 <area shape="rect" id="node46" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="1650,80,1744,107"/>
 <area shape="rect" id="node48" href="$apps_2transport_8h.html" title="This file contains the declarations of the transport layer over libuv. " alt="" coords="2338,80,2421,107"/>

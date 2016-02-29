@@ -4,6 +4,7 @@ var namespaceHF =
     [ "Attributes", "namespaceHF_1_1Attributes.html", "namespaceHF_1_1Attributes" ],
     [ "Common", "namespaceHF_1_1Common.html", "namespaceHF_1_1Common" ],
     [ "Core", "namespaceHF_1_1Core.html", "namespaceHF_1_1Core" ],
+    [ "Debug", "namespaceHF_1_1Debug.html", null ],
     [ "Devices", "namespaceHF_1_1Devices.html", "namespaceHF_1_1Devices" ],
     [ "Interfaces", "namespaceHF_1_1Interfaces.html", "namespaceHF_1_1Interfaces" ],
     [ "Profiles", "namespaceHF_1_1Profiles.html", "namespaceHF_1_1Profiles" ],
@@ -11,7 +12,7 @@ var namespaceHF =
     [ "Transport", "namespaceHF_1_1Transport.html", "namespaceHF_1_1Transport" ],
     [ "UID", "namespaceHF_1_1UID.html", "namespaceHF_1_1UID" ],
     [ "Units", "namespaceHF_1_1Units.html", "namespaceHF_1_1Units" ],
+    [ "Unit0", "classHF_1_1Unit0.html", "classHF_1_1Unit0" ],
     [ "IDevice", "structHF_1_1IDevice.html", "structHF_1_1IDevice" ],
-    [ "Interface", "structHF_1_1Interface.html", "structHF_1_1Interface" ],
-    [ "Unit0", "classHF_1_1Unit0.html", "classHF_1_1Unit0" ]
+    [ "Interface", "structHF_1_1Interface.html", "structHF_1_1Interface" ]
 ];

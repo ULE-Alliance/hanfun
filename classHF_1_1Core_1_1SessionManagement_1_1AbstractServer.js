@@ -5,7 +5,7 @@ var classHF_1_1Core_1_1SessionManagement_1_1AbstractServer =
     [ "check_session", "group__sessions.html#gaf9f14cfaedb9717922f04da37b56fcd0", null ],
     [ "end_session", "group__sessions.html#gad7cb600975035699353bb19d6bb10e99", null ],
     [ "entries", "group__sessions.html#ga70aada8ac621d6840b8120d99c078197", null ],
-    [ "entries_size", "group__sessions.html#gae46f94406d110012ceb1c0daa7878ac3", null ],
+    [ "entries_size", "group__sessions.html#gadfa1d4dd16f382df1b835e8311e7aeb8", null ],
     [ "exists", "group__sessions.html#ga8bee657bbffe64a948ea7e052b4c8037", null ],
     [ "find", "group__sessions.html#ga157f8c0dd19b9595e44aa6484208ad21", null ],
     [ "find", "group__sessions.html#ga2314576a7788d1d19cee89aff1141a48", null ],

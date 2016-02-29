@@ -1,4 +1,4 @@
-<map id="inc/hanfun/devices.h" name="inc/hanfun/devices.h">
+<map id="devices.h" name="devices.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="1030,725,1156,752"/>
 <area shape="rect" id="node24" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1681,651,1804,677"/>
 <area shape="rect" id="node25" href="$device_8h.html" title="This file contains the declaration of the API for a HAN&#45;FUN device. " alt="" coords="157,336,272,363"/>

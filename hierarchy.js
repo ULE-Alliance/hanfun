@@ -62,15 +62,15 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< Base, Proxy< ITF, Base >... >", "classHF_1_1Interfaces_1_1Container.html", [
+    [ "HF::Interfaces::Container< Base, Proxy< ITF, Base >...>", "classHF_1_1Interfaces_1_1Container.html", [
       [ "HF::Units::InterfacesWrapper< Base, ITF >", "classHF_1_1Units_1_1InterfacesWrapper.html", null ],
-      [ "HF::Units::InterfacesWrapper< Base, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
+      [ "HF::Units::InterfacesWrapper< Base, ITF...>", "classHF_1_1Units_1_1InterfacesWrapper.html", [
         [ "HF::Unit0< Base, ITF >", "classHF_1_1Unit0.html", null ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< IUnit0, Proxy< ITF, IUnit0 >... >", "classHF_1_1Interfaces_1_1Container.html", [
-      [ "HF::Units::InterfacesWrapper< IUnit0, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
-        [ "HF::Unit0< IUnit0, ITF... >", "classHF_1_1Unit0.html", [
+    [ "HF::Interfaces::Container< IUnit0, Proxy< ITF, IUnit0 >...>", "classHF_1_1Interfaces_1_1Container.html", [
+      [ "HF::Units::InterfacesWrapper< IUnit0, ITF...>", "classHF_1_1Units_1_1InterfacesWrapper.html", [
+        [ "HF::Unit0< IUnit0, ITF...>", "classHF_1_1Unit0.html", [
           [ "HF::Devices::Concentrator::Unit0< ITF >", "structHF_1_1Devices_1_1Concentrator_1_1Unit0.html", null ],
           [ "HF::Devices::Node::Unit0< ITF >", "structHF_1_1Devices_1_1Node_1_1Unit0.html", null ],
           [ "HF::Devices::Concentrator::Unit0< Core::DeviceInformation::Server, Core::DeviceManagement::DefaultServer, Core::AttributeReporting::Server, Core::BindManagement::DefaultServer >", "structHF_1_1Devices_1_1Concentrator_1_1Unit0.html", [
@@ -82,7 +82,7 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< ProfileN< _uid, _Interfaces... >, HF::Interfaces::Proxy< _Interfaces, ProfileN< _uid, _Interfaces... > >... >", "classHF_1_1Interfaces_1_1Container.html", [
+    [ "HF::Interfaces::Container< ProfileN< _uid, _Interfaces...>, HF::Interfaces::Proxy< _Interfaces, ProfileN< _uid, _Interfaces...> >...>", "classHF_1_1Interfaces_1_1Container.html", [
       [ "HF::Profiles::ProfileN< _uid, _Interfaces >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
       [ "HF::Profiles::ProfileN< _uid, Interface1, Interface2 >", "classHF_1_1Profiles_1_1ProfileN.html", [
         [ "HF::Profiles::Profile2< _uid, Interface1, Interface2 >", "structHF_1_1Profiles_1_1Profile2.html", null ]
@@ -117,29 +117,29 @@ var hierarchy =
         [ "HF::Profiles::EnvironmentMonitor", "classHF_1_1Profiles_1_1EnvironmentMonitor.html", null ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< Unit< HF::Profiles::GenericApplicationLogic, ITF... >, Proxy< ITF, Unit< HF::Profiles::GenericApplicationLogic, ITF... > >... >", "classHF_1_1Interfaces_1_1Container.html", [
-      [ "HF::Units::InterfacesWrapper< Unit< HF::Profiles::GenericApplicationLogic, ITF... >, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
+    [ "HF::Interfaces::Container< Unit< HF::Profiles::GenericApplicationLogic, ITF...>, Proxy< ITF, Unit< HF::Profiles::GenericApplicationLogic, ITF...> >...>", "classHF_1_1Interfaces_1_1Container.html", [
+      [ "HF::Units::InterfacesWrapper< Unit< HF::Profiles::GenericApplicationLogic, ITF...>, ITF...>", "classHF_1_1Units_1_1InterfacesWrapper.html", [
         [ "HF::Units::Unit< HF::Profiles::GenericApplicationLogic, Alert, LevelControl, OnOff, SimplePowerMeter >", "classHF_1_1Units_1_1Unit.html", null ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< Unit< HF::Profiles::SimpleLight, ITF... >, Proxy< ITF, Unit< HF::Profiles::SimpleLight, ITF... > >... >", "classHF_1_1Interfaces_1_1Container.html", [
-      [ "HF::Units::InterfacesWrapper< Unit< HF::Profiles::SimpleLight, ITF... >, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
+    [ "HF::Interfaces::Container< Unit< HF::Profiles::SimpleLight, ITF...>, Proxy< ITF, Unit< HF::Profiles::SimpleLight, ITF...> >...>", "classHF_1_1Interfaces_1_1Container.html", [
+      [ "HF::Units::InterfacesWrapper< Unit< HF::Profiles::SimpleLight, ITF...>, ITF...>", "classHF_1_1Units_1_1InterfacesWrapper.html", [
         [ "HF::Units::Unit< HF::Profiles::SimpleLight >", "classHF_1_1Units_1_1Unit.html", [
           [ "SimpleLight", "structSimpleLight.html", null ],
           [ "SimpleLight", "structSimpleLight.html", null ]
         ] ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< Unit< HF::Profiles::SimpleOnOffSwitch, ITF... >, Proxy< ITF, Unit< HF::Profiles::SimpleOnOffSwitch, ITF... > >... >", "classHF_1_1Interfaces_1_1Container.html", [
-      [ "HF::Units::InterfacesWrapper< Unit< HF::Profiles::SimpleOnOffSwitch, ITF... >, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
+    [ "HF::Interfaces::Container< Unit< HF::Profiles::SimpleOnOffSwitch, ITF...>, Proxy< ITF, Unit< HF::Profiles::SimpleOnOffSwitch, ITF...> >...>", "classHF_1_1Interfaces_1_1Container.html", [
+      [ "HF::Units::InterfacesWrapper< Unit< HF::Profiles::SimpleOnOffSwitch, ITF...>, ITF...>", "classHF_1_1Units_1_1InterfacesWrapper.html", [
         [ "HF::Units::Unit< HF::Profiles::SimpleOnOffSwitch >", "classHF_1_1Units_1_1Unit.html", [
           [ "SimpleSwitch", "structSimpleSwitch.html", null ],
           [ "SimpleSwitch", "structSimpleSwitch.html", null ]
         ] ]
       ] ]
     ] ],
-    [ "HF::Interfaces::Container< Unit< Profile, ITF... >, Proxy< ITF, Unit< Profile, ITF... > >... >", "classHF_1_1Interfaces_1_1Container.html", [
-      [ "HF::Units::InterfacesWrapper< Unit< Profile, ITF... >, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
+    [ "HF::Interfaces::Container< Unit< Profile, ITF...>, Proxy< ITF, Unit< Profile, ITF...> >...>", "classHF_1_1Interfaces_1_1Container.html", [
+      [ "HF::Units::InterfacesWrapper< Unit< Profile, ITF...>, ITF...>", "classHF_1_1Units_1_1InterfacesWrapper.html", [
         [ "HF::Units::Unit< Profile, ITF >", "classHF_1_1Units_1_1Unit.html", null ]
       ] ]
     ] ],

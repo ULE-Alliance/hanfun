@@ -1,4 +1,4 @@
-<map id="apps/common.cpp" name="apps/common.cpp">
+<map id="common.cpp" name="common.cpp">
 <area shape="rect" id="node9" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="2221,80,2303,107"/>
 <area shape="rect" id="node49" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="1406,80,1500,107"/>
 <area shape="rect" id="node11" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="1417,155,1489,181"/>

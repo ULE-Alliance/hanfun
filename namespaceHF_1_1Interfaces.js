@@ -11,9 +11,9 @@ var namespaceHF_1_1Interfaces =
     [ "SimpleThermostat", "namespaceHF_1_1Interfaces_1_1SimpleThermostat.html", "namespaceHF_1_1Interfaces_1_1SimpleThermostat" ],
     [ "SimpleVisualEffects", "namespaceHF_1_1Interfaces_1_1SimpleVisualEffects.html", "namespaceHF_1_1Interfaces_1_1SimpleVisualEffects" ],
     [ "AbstractInterface", "structHF_1_1Interfaces_1_1AbstractInterface.html", "structHF_1_1Interfaces_1_1AbstractInterface" ],
-    [ "Base", "structHF_1_1Interfaces_1_1Base.html", null ],
-    [ "Container", "classHF_1_1Interfaces_1_1Container.html", "classHF_1_1Interfaces_1_1Container" ],
     [ "Interface", "structHF_1_1Interfaces_1_1Interface.html", "structHF_1_1Interfaces_1_1Interface" ],
+    [ "Base", "structHF_1_1Interfaces_1_1Base.html", null ],
     [ "InterfaceRole", "structHF_1_1Interfaces_1_1InterfaceRole.html", "structHF_1_1Interfaces_1_1InterfaceRole" ],
-    [ "Proxy", "structHF_1_1Interfaces_1_1Proxy.html", "structHF_1_1Interfaces_1_1Proxy" ]
+    [ "Proxy", "structHF_1_1Interfaces_1_1Proxy.html", "structHF_1_1Interfaces_1_1Proxy" ],
+    [ "Container", "classHF_1_1Interfaces_1_1Container.html", "classHF_1_1Interfaces_1_1Container" ]
 ];

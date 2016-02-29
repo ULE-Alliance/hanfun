@@ -22,8 +22,8 @@ var group__common =
     ] ],
     [ "Serializable", "structHF_1_1Common_1_1Serializable.html", [
       [ "~Serializable", "structHF_1_1Common_1_1Serializable.html#a1ce13da919dc555beceb288787712185", null ],
-      [ "pack", "structHF_1_1Common_1_1Serializable.html#a8f7a1f915e7ac87e14de53c0b09156a0", null ],
-      [ "size", "structHF_1_1Common_1_1Serializable.html#af2bb3f6920a7900aa02c9e3b542757b0", null ],
+      [ "pack", "structHF_1_1Common_1_1Serializable.html#aa1f1cec7924e345387ebec0793c59856", null ],
+      [ "size", "structHF_1_1Common_1_1Serializable.html#a8f42af5e150e53d8b453f19f718e3ef9", null ],
       [ "unpack", "structHF_1_1Common_1_1Serializable.html#a97b583a90b618f96fa72860628e78467", null ]
     ] ],
     [ "SerializableHelper", "structHF_1_1Common_1_1SerializableHelper.html", [
@@ -72,7 +72,7 @@ var group__common =
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a49bb5c9d3608d0159de8e66ce0dcad86", null ]
     ] ],
     [ "Cloneable", "structHF_1_1Common_1_1Cloneable.html", [
-      [ "clone", "structHF_1_1Common_1_1Cloneable.html#a0f7e70957433d973d1174687ec6ef63d", null ]
+      [ "clone", "structHF_1_1Common_1_1Cloneable.html#a38395a34874a3f3e733221f797914ebc", null ]
     ] ],
     [ "Interface", "structHF_1_1Common_1_1Interface.html", [
       [ "Interface", "structHF_1_1Common_1_1Interface.html#a56b682f6c56f0453289ef5fe7cee4b28", null ],
@@ -92,12 +92,12 @@ var group__common =
     [ "IEntries", "structHF_1_1Common_1_1IEntries.html", [
       [ "destroy", "structHF_1_1Common_1_1IEntries.html#adde4cc8b5a662f40848dea2e9c3daf91", null ],
       [ "save", "structHF_1_1Common_1_1IEntries.html#ac555f5ed32b08129e13616f573b7a8a6", null ],
-      [ "size", "structHF_1_1Common_1_1IEntries.html#abf77e813e0d79086ca30c05bee668b34", null ]
+      [ "size", "structHF_1_1Common_1_1IEntries.html#a844bd0d263358a9f96df1f76337d02e2", null ]
     ] ],
     [ "HF_ASSERT", "group__common.html#ga97dd3cfb4da2563598a11fe0e0a45c84", null ],
-    [ "HF_SERIALIZABLE_CHECK", "group__common.html#ga3874f9a583d1fe12abb060335cd7fafa", null ],
+    [ "HF_SERIALIZABLE_CHECK", "group__common.html#ga41ddfaa5aad69cf2891abb39a3f50d18", null ],
     [ "HF_SETTER_HELPER", "group__common.html#ga0ff0b91492aaf1b83cac58aac418fd92", null ],
-    [ "UNUSED", "group__common.html#gaf4e671792630e05ded168d006922d59f", null ],
+    [ "UNUSED", "group__common.html#ga86d500a34c624c2cae56bc25a31b12f3", null ],
     [ "Precision", "group__common.html#gad56ba1494114e66754fc2151c1da2f0c", [
       [ "BASE", "group__common.html#ggad56ba1494114e66754fc2151c1da2f0ca3577a90d53a9787f050148d8afdbf4c7", null ],
       [ "MILI", "group__common.html#ggad56ba1494114e66754fc2151c1da2f0cae93c0c9659e35c82a37d61f7a99520fc", null ],

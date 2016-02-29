@@ -7,7 +7,7 @@ var tutorials =
     ] ],
     [ "Basic registration", "example_01.html", null ],
     [ "Handing registration events", "example_02.html", null ],
-    [ "Alert interface usage", "example_03.html", null ],
+    [ "%Alert interface usage", "example_03.html", null ],
     [ "On-Off interface usage", "example_04.html", null ],
     [ "Level Control interface usage", "example_05.html", null ],
     [ "Device Information (advanced)", "example_06.html", null ],

@@ -1,5 +1,6 @@
 var structHF_1_1Protocol_1_1Message =
 [
+    [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html", "structHF_1_1Protocol_1_1Message_1_1Interface" ],
     [ "Type", "structHF_1_1Protocol_1_1Message.html#a6336f640a072106c7044489fed8bc10d", [
       [ "COMMAND_REQ", "structHF_1_1Protocol_1_1Message.html#a6336f640a072106c7044489fed8bc10da71bebcbfc0c2b4f8e1eed31677ef883f", null ],
       [ "COMMAND_RESP_REQ", "structHF_1_1Protocol_1_1Message.html#a6336f640a072106c7044489fed8bc10da575886f26415f00f151e6f5681772133", null ],

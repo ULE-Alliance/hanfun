@@ -1,4 +1,4 @@
-<map id="inc/hanfun/core/suota.h" name="inc/hanfun/core/suota.h">
+<map id="suota.h" name="suota.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="1231,619,1357,645"/>
 <area shape="rect" id="node24" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1328,544,1451,571"/>
 <area shape="rect" id="node25" href="$core_8h.html" title="This file contains the forward declarations of the core services and interfaces implementing classes..." alt="" coords="1773,80,1875,107"/>

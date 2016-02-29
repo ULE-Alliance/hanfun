@@ -1,4 +1,4 @@
-<map id="inc/hanfun/core.h" name="inc/hanfun/core.h">
+<map id="core.h" name="core.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="959,544,1085,571"/>
 <area shape="rect" id="node24" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="1045,320,1171,347"/>
 <area shape="rect" id="node26" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1216,469,1339,496"/>

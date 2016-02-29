@@ -1,4 +1,4 @@
-<map id="apps/node.cpp" name="apps/node.cpp">
+<map id="node.cpp" name="node.cpp">
 <area shape="rect" id="node6" href="$node_8h.html" title="This file contains the definition of the Node class that represents the HAN&#45;FUN Node on the applicati..." alt="" coords="1312,80,1373,107"/>
 <area shape="rect" id="node47" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="1397,80,1479,107"/>
 <area shape="rect" id="node49" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="1193,80,1287,107"/>

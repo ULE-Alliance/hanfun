@@ -13,14 +13,9 @@ var group__sessions =
     ] ],
     [ "IServer", "structHF_1_1Core_1_1SessionManagement_1_1IServer.html", [
       [ "end_session", "group__sessions.html#ga41aba9e6380e31db1a4e95f0e6e645ed", null ],
-      [ "exists", "group__sessions.html#ga9be907f6edaa788f66416a264ab87a01", null ],
-      [ "is_valid", "group__sessions.html#ga4b847d52e19a8ed2dfee357836a32cfb", null ],
+      [ "exists", "group__sessions.html#ga50e75f1b5643d7cb926060b8e583e5bd", null ],
+      [ "is_valid", "group__sessions.html#ga12125f005ef9dce40e10a486a3398db3", null ],
       [ "start_session", "group__sessions.html#ga3c3a771b8c83518e209ef28cc0a04c9e", null ]
-    ] ],
-    [ "Session", "structHF_1_1Core_1_1SessionManagement_1_1AbstractServer_1_1Session.html", [
-      [ "Session", "group__sessions.html#gac3ffbd2713989875278fb7a852c15554", null ],
-      [ "address", "group__sessions.html#gad0e830acf162d2490254be051316c168", null ],
-      [ "valid", "group__sessions.html#ga88520bdddcd5d3919dc00ddfa05066d1", null ]
     ] ],
     [ "AbstractServer", "classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html", [
       [ "AbstractServer", "group__sessions.html#ga1669f932648317d8462aba8eb5fe78a5", null ],
@@ -28,7 +23,7 @@ var group__sessions =
       [ "check_session", "group__sessions.html#gaf9f14cfaedb9717922f04da37b56fcd0", null ],
       [ "end_session", "group__sessions.html#gad7cb600975035699353bb19d6bb10e99", null ],
       [ "entries", "group__sessions.html#ga70aada8ac621d6840b8120d99c078197", null ],
-      [ "entries_size", "group__sessions.html#gae46f94406d110012ceb1c0daa7878ac3", null ],
+      [ "entries_size", "group__sessions.html#gadfa1d4dd16f382df1b835e8311e7aeb8", null ],
       [ "exists", "group__sessions.html#ga8bee657bbffe64a948ea7e052b4c8037", null ],
       [ "find", "group__sessions.html#ga157f8c0dd19b9595e44aa6484208ad21", null ],
       [ "find", "group__sessions.html#ga2314576a7788d1d19cee89aff1141a48", null ],
@@ -39,6 +34,11 @@ var group__sessions =
       [ "send", "group__sessions.html#ga79eb7cfc0c1c2fd0e978e268dfba4aa9", null ],
       [ "start_session", "group__sessions.html#ga1f7d644564b48b266b80a9267b65acbe", null ],
       [ "sessions", "group__sessions.html#ga4c1581918bf4b776fb54d565cdc5b119", null ]
+    ] ],
+    [ "Session", "structHF_1_1Core_1_1SessionManagement_1_1AbstractServer_1_1Session.html", [
+      [ "Session", "group__sessions.html#gac3ffbd2713989875278fb7a852c15554", null ],
+      [ "address", "group__sessions.html#gad0e830acf162d2490254be051316c168", null ],
+      [ "valid", "group__sessions.html#ga88520bdddcd5d3919dc00ddfa05066d1", null ]
     ] ],
     [ "EntriesWrapper", "classHF_1_1Core_1_1SessionManagement_1_1EntriesWrapper.html", [
       [ "EntriesWrapper", "group__sessions.html#gaf49011e7e07c8ffaf01bcfbd77ff5fca", null ],
@@ -86,9 +86,9 @@ var group__sessions =
     [ "entries", "group__sessions.html#gae48e895d12b292bf58f9babc876de72d", null ],
     [ "entries", "group__sessions.html#gaa6b3b6b6ca6edc4c4aa28721646c7592", null ],
     [ "entries", "group__sessions.html#ga78a7df9505cc3b366e6db431eb18723c", null ],
-    [ "entries_size", "group__sessions.html#gae46f94406d110012ceb1c0daa7878ac3", null ],
+    [ "entries_size", "group__sessions.html#gadfa1d4dd16f382df1b835e8311e7aeb8", null ],
     [ "entries_size", "group__sessions.html#ga4807f7c2fb473194603ec2130f985fba", null ],
-    [ "exists", "group__sessions.html#ga9be907f6edaa788f66416a264ab87a01", null ],
+    [ "exists", "group__sessions.html#ga50e75f1b5643d7cb926060b8e583e5bd", null ],
     [ "exists", "group__sessions.html#ga8bee657bbffe64a948ea7e052b4c8037", null ],
     [ "find", "group__sessions.html#ga157f8c0dd19b9595e44aa6484208ad21", null ],
     [ "find", "group__sessions.html#ga2314576a7788d1d19cee89aff1141a48", null ],
@@ -96,7 +96,7 @@ var group__sessions =
     [ "handle_command", "group__sessions.html#ga2f98e92f5e98941c3e67b293e1888fb8", null ],
     [ "handle_command", "group__sessions.html#gafa3e070081dd71589a6d3ed9cb751fb4", null ],
     [ "invalidate", "group__sessions.html#ga9028a87143aa7a58c7c94c936f601168", null ],
-    [ "is_valid", "group__sessions.html#ga4b847d52e19a8ed2dfee357836a32cfb", null ],
+    [ "is_valid", "group__sessions.html#ga12125f005ef9dce40e10a486a3398db3", null ],
     [ "is_valid", "group__sessions.html#ga198975947b97c1d61da94af611190092", null ],
     [ "pack", "group__sessions.html#ga6a9fcdfd0d9d76b0cc7dad2603627b1b", null ],
     [ "payload_size", "group__sessions.html#gabfc813e4b65b7f0158fda7f74bacd636", null ],

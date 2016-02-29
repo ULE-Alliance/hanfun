@@ -36,18 +36,18 @@ var group__common__itf =
         [ "ANY_UID", "structHF_1_1Interface.html#aa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d", null ]
       ] ],
       [ "attribute", "structHF_1_1Interface.html#a312c2e046d145ce826ba62c9da93f932", null ],
-      [ "attributes", "structHF_1_1Interface.html#aa7872ae60e60f9e80532a59abd1ea20f", null ],
+      [ "attributes", "structHF_1_1Interface.html#ad2e7a8ad3743680308f6d6fabccdcadf", null ],
       [ "handle", "structHF_1_1Interface.html#a35c377201d22fbbc1c606313a41a6034", null ],
       [ "periodic", "structHF_1_1Interface.html#a4a2ef5061e637aacf5401faa398c16de", null ],
-      [ "role", "structHF_1_1Interface.html#a1065573ef89c05740797879cf0ddf9ab", null ],
-      [ "uid", "structHF_1_1Interface.html#a7907645f6f59ea6c5c0c7ba412ffa3f7", null ]
+      [ "role", "structHF_1_1Interface.html#a2b12cbc6cf9d11a91befbf6712908554", null ],
+      [ "uid", "structHF_1_1Interface.html#a44aa0ded03abb4cce4b96b9f0b8f8d01", null ]
     ] ],
     [ "AbstractInterface", "structHF_1_1Interfaces_1_1AbstractInterface.html", [
       [ "attribute", "structHF_1_1Interfaces_1_1AbstractInterface.html#a6ffd3e14d243582a6ddd0427721302e5", null ],
       [ "attributes", "structHF_1_1Interfaces_1_1AbstractInterface.html#aebae0340b748ecbb62ec5e11ade78534", null ],
       [ "check", "structHF_1_1Interfaces_1_1AbstractInterface.html#afce9c5ade03ed519cd10eed9cd56bdbf", null ],
       [ "check_payload_size", "structHF_1_1Interfaces_1_1AbstractInterface.html#a6a424b01b75f634b3afa217b85a53856", null ],
-      [ "check_uid", "structHF_1_1Interfaces_1_1AbstractInterface.html#ae02cb29beae876fedba6a54502de947f", null ],
+      [ "check_uid", "structHF_1_1Interfaces_1_1AbstractInterface.html#a0b0682cb079593595141a02632c13d2f", null ],
       [ "handle", "structHF_1_1Interfaces_1_1AbstractInterface.html#a84413ff61efda7e676edc40577e9f08f", null ],
       [ "handle_attribute", "structHF_1_1Interfaces_1_1AbstractInterface.html#af5a9ec14b54996a48b66f6fe8a92f0d5", null ],
       [ "handle_command", "structHF_1_1Interfaces_1_1AbstractInterface.html#a9b60e0a9200e8ca18c79aa0db0ffc164", null ],
@@ -57,10 +57,6 @@ var group__common__itf =
       [ "payload_size_helper", "structHF_1_1Interfaces_1_1AbstractInterface.html#a02bd6cfcdcc2d2336de9151fd47bb686", null ],
       [ "periodic", "structHF_1_1Interfaces_1_1AbstractInterface.html#ade61c3f70e7d8584a946ef4c09d1d170", null ],
       [ "send", "structHF_1_1Interfaces_1_1AbstractInterface.html#a8347ec57ee4a1a820eb30fecbc51589c", null ]
-    ] ],
-    [ "Interface", "structHF_1_1Interfaces_1_1Interface.html", [
-      [ "check_uid", "structHF_1_1Interfaces_1_1Interface.html#a2305c7b6b4f8a5affdbd40869d701c15", null ],
-      [ "uid", "structHF_1_1Interfaces_1_1Interface.html#a35b83fb87e2a930634513951142f27bc", null ]
     ] ],
     [ "Base", "structHF_1_1Interfaces_1_1Base.html", null ],
     [ "InterfaceRole", "structHF_1_1Interfaces_1_1InterfaceRole.html", [

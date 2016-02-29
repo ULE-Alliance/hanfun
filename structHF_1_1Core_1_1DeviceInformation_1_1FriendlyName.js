@@ -1,5 +1,6 @@
 var structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName =
 [
+    [ "Unit", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit" ],
     [ "changed", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a4961cbb897cb74828e3eafc53f5d08ee", null ],
     [ "compare", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a850cd7d972e3f8655de61cc8c94e48b8", null ],
     [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#abeb55461e01dd769fd00f6db12cc8387", null ],

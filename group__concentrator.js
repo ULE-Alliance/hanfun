@@ -3,9 +3,9 @@ var group__concentrator =
     [ "IUnit0", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html", [
       [ "IUnit0", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#ae481de319ce9eb43fa29e5b713bcc85d", null ],
       [ "bind_management", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#a5427240d2cbceac92e8ee32e761bbb4e", null ],
-      [ "bind_management", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#a582c8d380fc1e04c8b4f1ed95f674baf", null ],
+      [ "bind_management", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#ac72e0fb2ced1a313dcd636deeb28846d", null ],
       [ "device_management", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#ae46ef6ca85de710790f2cdf658d31683", null ],
-      [ "device_management", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#aa9fa2dc1745c545ef16846fc88c56952", null ]
+      [ "device_management", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html#a9df4ff67b2db5782365d8d9ba848e9ab", null ]
     ] ],
     [ "Unit0", "structHF_1_1Devices_1_1Concentrator_1_1Unit0.html", [
       [ "Unit0", "structHF_1_1Devices_1_1Concentrator_1_1Unit0.html#a7247447631ea616212fac4cbef9cb6d5", null ]
@@ -20,7 +20,7 @@ var group__concentrator =
       [ "link", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a58fe92c7049d54ec9cbfe099fe3f3552", null ],
       [ "receive", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#ab0467aac7d70d76acf4173fcbe08bd61", null ],
       [ "route_packet", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a3183029380b77a90d46ce85cfb82691a", null ],
-      [ "unit0", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#abbb92b52e94c388510013e31a23f00b6", null ],
+      [ "unit0", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a4f0417caead3cffb026663c34400b43b", null ],
       [ "_links", "classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a5e043bbf05c5dec91ca6ea963df2a9c7", null ]
     ] ],
     [ "Abstract", "classHF_1_1Devices_1_1Concentrator_1_1Abstract.html", [

@@ -1,4 +1,4 @@
-<map id="apps/main.cpp" name="apps/main.cpp">
+<map id="main.cpp" name="main.cpp">
 <area shape="rect" id="node5" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="1707,80,1788,107"/>
 <area shape="rect" id="node47" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="1814,80,1908,107"/>
 <area shape="rect" id="node50" href="$apps_2transport_8h.html" title="This file contains the declarations of the transport layer over libuv. " alt="" coords="1598,80,1681,107"/>

@@ -1,4 +1,4 @@
-<map id="inc/hanfun/core/rssi.h" name="inc/hanfun/core/rssi.h">
+<map id="rssi.h" name="rssi.h">
 <area shape="rect" id="node2" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1309,544,1432,571"/>
 <area shape="rect" id="node25" href="$core_8h.html" title="This file contains the forward declarations of the core services and interfaces implementing classes..." alt="" coords="1064,80,1165,107"/>
 <area shape="rect" id="node3" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="1078,619,1204,645"/>

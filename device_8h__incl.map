@@ -1,4 +1,4 @@
-<map id="inc/hanfun/device.h" name="inc/hanfun/device.h">
+<map id="device.h" name="device.h">
 <area shape="rect" id="node2" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="874,229,1000,256"/>
 <area shape="rect" id="node24" href="$inc_2hanfun_2transport_8h.html" title="This file contains the definition of the transport layer API for the HAN&#45;FUN common implementation..." alt="" coords="899,80,1025,107"/>
 <area shape="rect" id="node21" href="$gcc_8h.html" title="This file contains workarounds for the implementation on C++11 in older versions of GCC..." alt="" coords="1573,304,1669,331"/>

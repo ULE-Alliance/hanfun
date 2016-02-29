@@ -1,4 +1,4 @@
-<map id="apps/base.h" name="apps/base.h">
-<area shape="rect" id="node2" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="5,80,112,107"/>
-<area shape="rect" id="node3" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="137,80,271,107"/>
+<map id="base.h" name="base.h">
+<area shape="rect" id="node2" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="5,80,79,107"/>
+<area shape="rect" id="node3" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="105,80,207,107"/>
 </map>

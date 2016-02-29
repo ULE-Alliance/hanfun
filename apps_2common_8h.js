@@ -1,7 +1,7 @@
 var apps_2common_8h =
 [
-    [ "COMMAND", "group__examples.html#ga07c276875feef8aa8ab70ae6324b6299", null ],
-    [ "COMMAND_ADD", "group__examples.html#ga4d668e9bc100aa004c43b802085660cb", null ],
-    [ "STRTOL", "group__examples.html#ga9c688c115ef8ec1df9f92a36d3403233", null ],
-    [ "STRTOL_HEX", "group__examples.html#ga31e68f776cc1c711148fc5b7626d14a8", null ]
+    [ "COMMAND", "apps_2common_8h.html#gaeeb77e3d333b8c7a61ac683867800daf", null ],
+    [ "COMMAND_ADD", "apps_2common_8h.html#gac5754026ff6e285a8d05b4d4d90daaed", null ],
+    [ "STRTOL", "apps_2common_8h.html#ga2c0313fe7d7bcdbec60950fbc36dd4da", null ],
+    [ "STRTOL_HEX", "apps_2common_8h.html#gafd531615607dae0dadb368a2924e1b6d", null ]
 ];
