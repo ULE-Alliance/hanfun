@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * @version    1.4.1
+ * @version    1.4.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

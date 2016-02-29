@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN unit implementation.
  *
- * @version    1.4.1
+ * @version    1.4.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
