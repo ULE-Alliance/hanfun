@@ -152,7 +152,7 @@ FULL_PATH_NAMES        = NO
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        =
+STRIP_FROM_PATH        = @CMAKE_SOURCE_DIR@/
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -753,11 +753,11 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../README.md \
-                         @CMAKE_CURRENT_SOURCE_DIR@/../inc       \
-                         @CMAKE_CURRENT_SOURCE_DIR@/../apps      \
-                         @CMAKE_CURRENT_SOURCE_DIR@/../RELEASE_NOTES.md    \
-                         @CMAKE_CURRENT_SOURCE_DIR@/../FAQ.md    \
+INPUT                  = @CMAKE_SOURCE_DIR@/README.md \
+                         @CMAKE_SOURCE_DIR@/inc       \
+                         @CMAKE_SOURCE_DIR@/apps      \
+                         @CMAKE_SOURCE_DIR@/RELEASE_NOTES.md    \
+                         @CMAKE_SOURCE_DIR@/FAQ.md    \
                          @CMAKE_CURRENT_SOURCE_DIR@
 
 # This tag can be used to specify the character encoding of the source files

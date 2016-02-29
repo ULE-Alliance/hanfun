@@ -60,7 +60,7 @@ To build the unit tests present in the source code, issue the following commands
     $ git submodule update
     $ mkdir build
     $ cd build
-    $ CMake -DHAN-FUN_BUILD_TESTS=ON ..
+    $ cmake -DHF_BUILD_TESTS=ON ..
     $ make
 
 The unit tests will be run at the end of the compilation if not cross-compiling.
@@ -85,11 +85,11 @@ To build the example applications, issue the following commands (on the root of 
 
     $ mkdir build
     $ cd build
-    $ cmake -DHF_BUILD_APPS=ON ..
+    $ cmake -DHF_BASE_APP=ON -DHF_NODE_APP=ON ..
     $ make
 
-This will build the example applications for the base (_build/apps/base_) and for
-the node (_build/apps/node_).
+This will build the example applications for the base (_build/apps/hf_base_) and for
+the node (_build/apps/hf_node_).
 
 The *base* application demonstrates the registration of nodes in a HAN-FUN network and the binding
 of nodes that have complementary interfaces.
