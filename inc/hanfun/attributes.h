@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the attribute handling API in HAN-FUN.
  *
- * @version    1.4.0
+ * @version    1.4.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

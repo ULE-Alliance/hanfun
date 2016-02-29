@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Humidity %Interface
  * implementation.
  *
- * @version    1.4.0
+ * @version    1.4.1
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the On-Off interface : Server role.
  *
- * @version    1.4.0
+ * @version    1.4.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
