@@ -953,7 +953,7 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case APP_VERSION_ATTR:
       {
-#ifdef HF_CORE_DEV_INFO_APP_VERSION_ATTR
+#if HF_CORE_DEV_INFO_APP_VERSION_ATTR
 
          if (server != nullptr)
          {
@@ -970,7 +970,7 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case HW_VERSION_ATTR:
       {
-#ifdef HF_CORE_DEV_INFO_HW_VERSION_ATTR
+#if HF_CORE_DEV_INFO_HW_VERSION_ATTR
 
          if (server != nullptr)
          {
@@ -997,7 +997,7 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
       }
       case MANUFACTURE_NAME_ATTR:
       {
-#ifdef HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
+#if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
 
          if (server != nullptr)
          {
