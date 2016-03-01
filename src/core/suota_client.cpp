@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the SUOTA interface : Client role.
  *
- * @version    1.4.1
+ * @version    1.4.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

@@ -3,8 +3,8 @@
 |             |                            |
 | ---------:  | -------------------------- |
 | __Project__ | HAN-FUN CI                 |
-| __Version__ | v1.4.0                     |
-| __Date__    | 16/12/2015                 |
+| __Version__ | v1.4.2                     |
+| __Date__    | 01/03/2016                 |
 
 ## Overview
 
@@ -22,23 +22,6 @@ For more information on requirements, building and using this software package, 
 * C - %Command
 
 ### New
-
-* Core Services & Interfaces (already present in v1.2.0 but not implemented)
-  * RSSI
-  * SOUTA
-
-* Profiles
-  * Simple Air Pressure Sensor
-  * Simple Button
-  * Controllable Thermostat
-  * Simple Led
-  * Environment Monitor
-
-* Interfaces
-  * Simple Thermostat Interface
-  * Simple Button Interface
-  * Simple Visual Control
-  * Air Pressure Interface
 
 ### 1. Protocol [HF-Protocol v1.2.0]
 

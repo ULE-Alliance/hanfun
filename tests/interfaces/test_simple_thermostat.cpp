@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Thermostat Interface
  * implementation.
  *
- * @version    1.4.1
+ * @version    1.4.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 Bithium S.A.
  *
