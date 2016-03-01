@@ -138,6 +138,8 @@ uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
+   assert (packet.link != nullptr);
+
    switch (packet.message.itf.member)
    {
       case REGISTER_CMD:
@@ -145,6 +147,8 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          RegisterResponse registration;
          registration.unpack(payload, offset);
          registered(registration);
+
+         packet.link->address(registration.address);
 
          break;
       }

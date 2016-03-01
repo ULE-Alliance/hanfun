@@ -443,19 +443,17 @@ namespace HF
 
       struct Link: public HF::Transport::AbstractLink
       {
-         HF::UID::UID_T       *_uid;
+         HF::UID::UID         _uid;
          HF::Transport::Layer *tsp;
 
          Common::ByteArray    data;
 
          Link(HF::UID::UID_T *uid = new HF::UID::NONE(), HF::Transport::Layer *tsp = nullptr):
-            _uid(uid), tsp(tsp)
+            _uid(uid, true), tsp(tsp)
          {}
 
          virtual ~Link()
-         {
-            delete _uid;
-         }
+         {}
 
          void send(Common::ByteArray &array)
          {
