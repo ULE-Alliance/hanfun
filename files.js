@@ -11,9 +11,7 @@ var files =
     [ "common.cpp", "common_8cpp.html", null ],
     [ "inc/hanfun/common.h", "inc_2hanfun_2common_8h.html", "inc_2hanfun_2common_8h" ],
     [ "apps/common.h", "apps_2common_8h.html", "apps_2common_8h" ],
-    [ "core.h", "core_8h.html", [
-      [ "Unit0", "classHF_1_1Unit0.html", "classHF_1_1Unit0" ]
-    ] ],
+    [ "core.h", "core_8h.html", null ],
     [ "debug.h", "debug_8h.html", "debug_8h" ],
     [ "device.h", "device_8h.html", [
       [ "IUnits", "structHF_1_1IDevice_1_1IUnits.html", null ],

@@ -35,9 +35,9 @@ var structHF_1_1Interface =
       [ "ANY_UID", "structHF_1_1Interface.html#aa56692f4035b4541ea47538adfda3052a1c2fa8d42126fc6e53dc503035feeb4d", null ]
     ] ],
     [ "attribute", "structHF_1_1Interface.html#a312c2e046d145ce826ba62c9da93f932", null ],
-    [ "attributes", "structHF_1_1Interface.html#ad2e7a8ad3743680308f6d6fabccdcadf", null ],
+    [ "attributes", "structHF_1_1Interface.html#aa7872ae60e60f9e80532a59abd1ea20f", null ],
     [ "handle", "structHF_1_1Interface.html#a35c377201d22fbbc1c606313a41a6034", null ],
     [ "periodic", "structHF_1_1Interface.html#a4a2ef5061e637aacf5401faa398c16de", null ],
-    [ "role", "structHF_1_1Interface.html#a2b12cbc6cf9d11a91befbf6712908554", null ],
-    [ "uid", "structHF_1_1Interface.html#a44aa0ded03abb4cce4b96b9f0b8f8d01", null ]
+    [ "role", "structHF_1_1Interface.html#a1065573ef89c05740797879cf0ddf9ab", null ],
+    [ "uid", "structHF_1_1Interface.html#a7907645f6f59ea6c5c0c7ba412ffa3f7", null ]
 ];

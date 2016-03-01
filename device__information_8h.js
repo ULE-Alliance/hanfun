@@ -23,7 +23,6 @@ var device__information_8h =
       [ "FRIENDLY_NAME_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da3014cc97f7581320e1d865b7a683232f", null ],
       [ "UID_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da348c7ca5d10e7f4bb6edd3ee64416c85", null ],
       [ "SERIAL_NUMBER_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dadb44effc9b4045cdf4fa27adb8d442e8", null ],
-      [ "__LAST_ATTR__", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10da7ac010048d07bd25f8d44afcd107bc41", null ],
       [ "MANUFACTURE_NAME_ATTR", "device__information_8h.html#gga2552fe5efd8a60efd040c5174671b10dad01ce1e73a1ef35d3fc99c64921d1334", null ]
     ] ],
     [ "all", "device__information_8h.html#ga1ce3c4587841a79cb267aca942e859fa", null ],
@@ -32,5 +31,5 @@ var device__information_8h =
     [ "get", "device__information_8h.html#gaea546f006a5c0a7ff17940c8632dcbf6", null ],
     [ "get", "device__information_8h.html#ga312772c0b3a8f95df4cd99551f14397b", null ],
     [ "mandatory", "device__information_8h.html#gac986c018a20b226956af25f1c1cfd8dc", null ],
-    [ "operator<<", "device__information_8h.html#ga12719c01e51e64c4916126fc64815ff2", null ]
+    [ "operator<<", "group__dev__info.html#ga12719c01e51e64c4916126fc64815ff2", null ]
 ];

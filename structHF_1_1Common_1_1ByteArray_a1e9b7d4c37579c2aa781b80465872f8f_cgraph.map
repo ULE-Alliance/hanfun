@@ -1,3 +1,4 @@
 <map id="HF::Common::ByteArray::write" name="HF::Common::ByteArray::write">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="222,5,389,46"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="222,5,389,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="222,70,389,111"/>
 </map>

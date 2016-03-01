@@ -1,3 +1,10 @@
 <map id="HF::Protocol::response" name="HF::Protocol::response">
-<area shape="rect" id="node2" href="$group__sessions.html#gaa6b3b6b6ca6edc4c4aa28721646c7592" title="HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;::entries" alt="" coords="211,5,418,46"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a7642b537e8956a5d37a1cfdb4e3d5661" title="Return a vector containing the attribute UIDs, for the given pack ID. " alt="" coords="220,5,409,46"/>
+<area shape="rect" id="node3" href="$group__bind__mgt.html#ga2111d1e49963dee69a5e2c515e948996" title="End read entries session. " alt="" coords="222,70,407,111"/>
+<area shape="rect" id="node4" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#a1854edcd4d38d067b7282601955c7f10" title="End read entries session. " alt="" coords="215,135,415,177"/>
+<area shape="rect" id="node5" href="$group__sessions.html#gaa6b3b6b6ca6edc4c4aa28721646c7592" title="HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;::entries" alt="" coords="211,201,418,242"/>
+<area shape="rect" id="node6" href="$group__sessions.html#ga78a7df9505cc3b366e6db431eb18723c" title="This event is called when a response to a get entries is received. " alt="" coords="211,266,418,307"/>
+<area shape="rect" id="node7" href="$group__examples.html#ga8f7c62314e86a932696850abe655df3f" title="Restore the bind entries from the JSON database. " alt="" coords="230,331,399,373"/>
+<area shape="rect" id="node8" href="$classHF_1_1Protocol_1_1Filters_1_1ResponseRequired.html#ab2f344d24b4812b3102706512b2d6f36" title="Number of entries in the filter&#39;s database. " alt="" coords="228,397,401,438"/>
+<area shape="rect" id="node9" href="$structHF_1_1Core_1_1SUOTA_1_1Client.html#a69423c9333463c22b89b11e58b2a7271" title="Send a HAN&#45;FUN message containing a SUOTA::UPGRADE_COMPLETE_CMD, to the broadcast network address..." alt="" coords="229,462,401,503"/>
 </map>

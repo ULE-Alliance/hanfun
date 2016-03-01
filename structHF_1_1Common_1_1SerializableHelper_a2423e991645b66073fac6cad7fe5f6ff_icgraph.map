@@ -1,6 +1,3 @@
 <map id="HF::Common::SerializableHelper::pack" name="HF::Common::SerializableHelper::pack">
 <area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#ac24dc5bdd55ceebfb43870a0c822d502" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="229,5,416,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute.html#a2db8fa6f722c3aee8e49234ebd186384" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::pack" alt="" coords="242,70,403,111"/>
-<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a62e4a76005f3b0ffcc260d59a65fd7f1" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="242,135,403,206"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a34eb0528b0fa0c0b1ed64b9d0fa10c39" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="233,230,412,271"/>
 </map>

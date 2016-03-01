@@ -1,3 +1,8 @@
 <map id="to_json" name="to_json">
-<area shape="rect" id="node2" href="$group__examples.html#gab4e6eb4b3390cc89a8ad819c9cd57a44" title="Serialize a HF::Common::Interface to the given Json::Value. " alt="" coords="117,5,181,32"/>
+<area shape="rect" id="node2" href="$group__examples.html#gab4e6eb4b3390cc89a8ad819c9cd57a44" title="Serialize a HF::Common::Interface to the given Json::Value. " alt="" coords="117,85,181,112"/>
+<area shape="rect" id="node3" href="$classHF_1_1UID_1_1ByteArray.html#acfff111614fd66fcd98c9696babef5a6" title="Return the number of bytes in the underlining byte array. " alt="" coords="229,5,392,61"/>
+<area shape="rect" id="node4" href="$classHF_1_1UID_1_1UID.html#a27b030fefbb4eb8627eef0498ac4c53f" title="Get the underling wrapped UID_T pointer. " alt="" coords="244,85,377,112"/>
+<area shape="rect" id="node5" href="$classHF_1_1UID_1_1UID.html#a71e5fec487a1c7162b675d44118daf28" title="Type of the UID. " alt="" coords="242,136,379,163"/>
+<area shape="rect" id="node6" href="$structHF_1_1UID_1_1UID__T.html#a67764f54eda28434c5ccdb059ea80219" title="Type of the UID. " alt="" coords="667,136,819,163"/>
+<area shape="rect" id="node7" href="$structHF_1_1UID_1_1UID__T.html#ade600e62de5c626fa9dda2a4703e309c" title="Compare the current UID with the given UID. " alt="" coords="441,161,618,188"/>
 </map>

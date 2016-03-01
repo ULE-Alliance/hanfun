@@ -1,4 +1,7 @@
 <map id="DeviceManagement::Server::restore" name="DeviceManagement::Server::restore">
 <area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html#a5860293c6af904a1ba600f75dfc79073" title="Get a reference to the current object implementing the persistence API, for the device information..." alt="" coords="237,5,437,46"/>
 <area shape="rect" id="node3" href="$group__examples.html#ga0c8c9ef721357e282b2287a769ae95a0" title="Fill a HF::Common::Interface from the given Json::Value object. " alt="" coords="298,71,377,97"/>
+<area shape="rect" id="node4" href="$group__examples.html#gaa0581a446c239d3fae170963ada22247" title="Save application configuration. " alt="" coords="262,121,413,148"/>
+<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html#a2cb2098ad66f441fe4c9eb6a376007af" title="Get the unit 0 used by this concentrator device. " alt="" coords="485,85,664,126"/>
+<area shape="rect" id="node6" href="$group__examples.html#gab7fc21356c8d13b85f56e659e6a6e0f5" title="Callback indicating that the application configuration has been saved. " alt="" coords="496,151,653,177"/>
 </map>

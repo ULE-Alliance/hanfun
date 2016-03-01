@@ -1,4 +1,5 @@
 <map id="HF::Core::SUOTA::UpgradeStatus::unpack" name="HF::Core::SUOTA::UpgradeStatus::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="245,5,411,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2" title="Read a message from a ByteArray. " alt="" coords="240,70,416,111"/>
+<area shape="rect" id="node2" href="$group__suota__itf.html#ga3d5f1117e43394a5b3a9436c7f62d871" title="Create an attribute object that can hold the attribute with the given uid. (HF::Interfaces::SUOTA::Se..." alt="" coords="241,5,415,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="245,70,411,111"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2" title="Read a message from a ByteArray. " alt="" coords="240,135,416,177"/>
 </map>

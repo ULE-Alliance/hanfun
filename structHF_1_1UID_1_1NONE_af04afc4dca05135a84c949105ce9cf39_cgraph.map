@@ -1,5 +1,5 @@
 <map id="HF::UID::NONE::pack" name="HF::UID::NONE::pack">
-<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html#aa183da3a9d5966eec85b878eea8de2b4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="208,13,363,40"/>
-<area shape="rect" id="node4" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="411,57,578,98"/>
-<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html#aff90c25a589dbe3523b46da0d0ac97f3" title="Type of the UID. " alt="" coords="419,5,571,32"/>
+<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html#aa183da3a9d5966eec85b878eea8de2b4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="208,63,363,89"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="411,5,578,46"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html#a67764f54eda28434c5ccdb059ea80219" title="Type of the UID. " alt="" coords="419,71,571,97"/>
 </map>

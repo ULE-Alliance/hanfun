@@ -1,4 +1,6 @@
 <map id="HF::Transport::AbstractLayer::add" name="HF::Transport::AbstractLayer::add">
 <area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Node_1_1Transport.html#a055dac52a5e852875f2bbb2aaa4b8fd8" title="Register the given Endpoint to receive events. " alt="" coords="293,5,435,46"/>
 <area shape="rect" id="node3" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a2d8326c56bc6329ae2e4e54cd3019aa9" title="Register the given Endpoint to receive events. " alt="" coords="275,70,453,111"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="501,77,581,104"/>
+<area shape="rect" id="node5" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="630,70,805,111"/>
 </map>

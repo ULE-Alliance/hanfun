@@ -1,17 +1,17 @@
 <map id="HF::Core::DeviceManagement::AbstractServer" name="HF::Core::DeviceManagement::AbstractServer">
-<area shape="rect" id="node14" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="409,2387,608,2567"/>
-<area shape="rect" id="node15" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="489,2633,688,2813"/>
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="512,1749,711,2032"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="535,1577,688,1698"/>
-<area shape="rect" id="node4" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="451,1318,549,1498"/>
-<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="5,1160,184,1267"/>
-<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="223,744,401,939"/>
-<area shape="rect" id="node10" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="133,989,315,1096"/>
-<area shape="rect" id="node11" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="411,1160,589,1267"/>
-<area shape="rect" id="node12" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="208,1160,387,1267"/>
-<area shape="rect" id="node7" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="215,440,409,693"/>
-<area shape="rect" id="node8" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="265,209,359,389"/>
-<area shape="rect" id="node9" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="231,6,393,157"/>
-<area shape="rect" id="node13" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="573,1355,727,1461"/>
-<area shape="rect" id="node16" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="497,2865,681,3045"/>
+<area shape="rect" id="node14" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="5,2387,204,2567"/>
+<area shape="rect" id="node15" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="85,2633,284,2813"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="108,1749,307,2032"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="131,1577,284,1698"/>
+<area shape="rect" id="node4" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="47,1318,145,1498"/>
+<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="7,1160,185,1267"/>
+<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="193,744,372,939"/>
+<area shape="rect" id="node10" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="209,1160,388,1267"/>
+<area shape="rect" id="node11" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="281,989,463,1096"/>
+<area shape="rect" id="node12" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="412,1160,591,1267"/>
+<area shape="rect" id="node7" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="185,440,380,693"/>
+<area shape="rect" id="node8" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="236,209,329,389"/>
+<area shape="rect" id="node9" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="201,6,364,157"/>
+<area shape="rect" id="node13" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="169,1355,323,1461"/>
+<area shape="rect" id="node16" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="93,2865,277,3045"/>
 </map>

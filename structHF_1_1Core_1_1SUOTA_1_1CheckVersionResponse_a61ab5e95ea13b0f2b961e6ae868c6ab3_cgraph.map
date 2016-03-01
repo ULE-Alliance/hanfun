@@ -1,7 +1,4 @@
 <map id="HF::Core::SUOTA::CheckVersionResponse::pack" name="HF::Core::SUOTA::CheckVersionResponse::pack">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#a02b24bfb728bb7a82b58e4963f436963" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="294,5,477,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Response.html#a210dabf73ca15b0b4d8127e88f41e387" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="304,70,467,111"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a780e28393e12e3f21d66a7aa765a37c9" title="Number bytes needed to serialize the message. " alt="" coords="275,135,495,177"/>
-<area shape="rect" id="node5" href="$structHF_1_1Protocol_1_1Response.html#a462c58382879995579cbc95cd7310d7e" title="Number bytes needed to serialize the message. " alt="" coords="555,102,717,143"/>
-<area shape="rect" id="node6" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#ae81052dc4c5db1a451df8b1a0a198277" title="Number bytes needed to serialize the message. " alt="" coords="545,167,727,209"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#a02b24bfb728bb7a82b58e4963f436963" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="275,5,458,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Response.html#a210dabf73ca15b0b4d8127e88f41e387" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="285,70,448,111"/>
 </map>

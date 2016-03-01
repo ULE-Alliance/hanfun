@@ -1,7 +1,4 @@
 <map id="HF::Core::SUOTA::CheckVersionResponse::unpack" name="HF::Core::SUOTA::CheckVersionResponse::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a780e28393e12e3f21d66a7aa765a37c9" title="Number bytes needed to serialize the message. " alt="" coords="275,37,495,78"/>
-<area shape="rect" id="node5" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#a967bb797a1642c6e17c1746e19a67a30" title="Read a message from a ByteArray. " alt="" coords="294,102,477,143"/>
-<area shape="rect" id="node6" href="$structHF_1_1Protocol_1_1Response.html#a14ce871fee5ac410371594ef286ddd46" title="Read a message from a ByteArray. " alt="" coords="304,167,467,209"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#ae81052dc4c5db1a451df8b1a0a198277" title="Number bytes needed to serialize the message. " alt="" coords="545,5,727,46"/>
-<area shape="rect" id="node4" href="$structHF_1_1Protocol_1_1Response.html#a462c58382879995579cbc95cd7310d7e" title="Number bytes needed to serialize the message. " alt="" coords="555,70,717,111"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#a967bb797a1642c6e17c1746e19a67a30" title="Read a message from a ByteArray. " alt="" coords="275,5,458,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Response.html#a14ce871fee5ac410371594ef286ddd46" title="Read a message from a ByteArray. " alt="" coords="285,70,448,111"/>
 </map>

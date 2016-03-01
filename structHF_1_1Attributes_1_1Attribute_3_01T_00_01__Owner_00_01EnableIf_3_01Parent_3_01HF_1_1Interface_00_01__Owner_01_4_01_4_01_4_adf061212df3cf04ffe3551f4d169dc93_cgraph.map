@@ -1,6 +1,5 @@
 <map id="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;::unpack" name="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="221,5,387,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute.html#aec71673fd2bad3358c7699b2ffa24da5" title="Number bytes needed to serialize the message. " alt="" coords="223,70,385,111"/>
-<area shape="rect" id="node4" href="$classHF_1_1Attributes_1_1AbstractAttribute.html#af161bc1ec0ca8e49ec418c4a343f3125" title="Attribute&#39;s UID. " alt="" coords="223,135,385,177"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2" title="Read a message from a ByteArray. " alt="" coords="216,201,392,242"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="229,5,395,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1IAttribute.html#ad3d65007dba1a33c9d45cc109bac1e4b" title="Number bytes needed to serialize the message. " alt="" coords="229,70,395,111"/>
+<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1IAttribute.html#a47aab6577901e32b00c846a0af90a4bb" title="Attribute&#39;s UID. " alt="" coords="217,136,407,163"/>
 </map>

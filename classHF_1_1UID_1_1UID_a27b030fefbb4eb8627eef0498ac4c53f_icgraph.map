@@ -1,0 +1,8 @@
+<map id="HF::UID::UID::raw" name="HF::UID::UID::raw">
+<area shape="rect" id="node2" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="187,32,267,59"/>
+<area shape="rect" id="node4" href="$group__examples.html#gab4e6eb4b3390cc89a8ad819c9cd57a44" title="Serialize a HF::Common::Interface to the given Json::Value. " alt="" coords="195,123,259,149"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="319,5,494,46"/>
+<area shape="rect" id="node5" href="$group__examples.html#gaa24a5abda0fcd09821ecab556dd9a2c0" title="Save the device entries into the JSON database. " alt="" coords="315,70,499,111"/>
+<area shape="rect" id="node6" href="$group__examples.html#ga6cbf648c24f17825cc0d5aa7ce5a6bfe" title="Save the bind entries into the JSON database. " alt="" coords="322,135,491,177"/>
+<area shape="rect" id="node7" href="$group__examples.html#ga6b059f30ce7220da606d73f16d9aeec8" title="Serialize a HF::Core::DeviceManagement::Unit to the given Json::Value. " alt="" coords="375,201,439,228"/>
+</map>

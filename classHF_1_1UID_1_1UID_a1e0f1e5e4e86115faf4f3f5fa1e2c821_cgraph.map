@@ -1,0 +1,6 @@
+<map id="HF::UID::UID::changed" name="HF::UID::UID::changed">
+<area shape="rect" id="node2" href="$classHF_1_1UID_1_1UID.html#ab84d1c6e72bb893801cb9825f485bc41" title="Compare the current UID with the given UID. " alt="" coords="216,5,379,32"/>
+<area shape="rect" id="node5" href="$group__uid__t.html#ga0a990e94a88880d4337c1060f636a1c7" title="Convert the given uid into a string and write it to the given stream. " alt="" coords="255,56,340,83"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html#ade600e62de5c626fa9dda2a4703e309c" title="Compare the current UID with the given UID. " alt="" coords="427,5,605,32"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html#a67764f54eda28434c5ccdb059ea80219" title="Type of the UID. " alt="" coords="653,5,805,32"/>
+</map>

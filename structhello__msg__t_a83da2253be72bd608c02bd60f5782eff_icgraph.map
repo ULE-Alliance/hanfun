@@ -1,3 +1,4 @@
 <map id="hello_msg_t::size" name="hello_msg_t::size">
-<area shape="rect" id="node2" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="179,5,307,32"/>
+<area shape="rect" id="node2" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="179,12,259,39"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="307,5,482,46"/>
 </map>

@@ -1,3 +1,6 @@
 <map id="HF::Transport::Layer::add" name="HF::Transport::Layer::add">
-<area shape="rect" id="node2" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="227,5,395,32"/>
+<area shape="rect" id="node2" href="$group__examples.html#gaa911fe543ecf44adc10ca8202fa0f965" title="Send a toggle command from the simple switch. " alt="" coords="880,56,973,83"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="227,56,395,83"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga7d4e44368d960972d8b80cb5f5ae3360" title="Callback indicating that the application configuration has been restored. " alt="" coords="443,81,616,108"/>
+<area shape="rect" id="node5" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="665,132,831,159"/>
 </map>

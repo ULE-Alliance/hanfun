@@ -1,0 +1,6 @@
+<map id="HF::Devices::Concentrator::AbstractBase::address" name="HF::Devices::Concentrator::AbstractBase::address">
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Endpoint.html#a8fd44cf4a9d09f6924aaa67d70eeb972" title="Callback to report that a new transport link was been created to a remote device. ..." alt="" coords="248,5,411,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Endpoint.html#ab6a9921706cbbdea032702cd68b3c49f" title="Callback to the report that the given transport link no longer is valid and MUST not be used to send ..." alt="" coords="248,70,411,111"/>
+<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1AbstractDevice.html#ad436960ac39fbd2288af87b67d0fbca7" title="Return the link that can be used to send a packet to the device with the given address. " alt="" coords="232,135,427,177"/>
+<area shape="rect" id="node5" href="$structHF_1_1Devices_1_1AbstractDevice.html#a8a372038f1f12a0bd9a84b6a5fabb259" title="Callback to deliver a packet received from the transport layer. " alt="" coords="232,201,427,242"/>
+</map>

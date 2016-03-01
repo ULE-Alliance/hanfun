@@ -1,0 +1,6 @@
+<map id="HF::Interfaces::SimpleTemperature::create_attribute" name="HF::Interfaces::SimpleTemperature::create_attribute">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1AddEntryMessage.html#a5694d878d32537110ea00966c5af0eb4" title="Get the minimum number of bytes required for unpacking an entry. " alt="" coords="280,5,507,61"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga8f7c62314e86a932696850abe655df3f" title="Restore the bind entries from the JSON database. " alt="" coords="309,85,478,126"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#aba1f97508db1d83ed4a234fc4a97778f" title="Read a message from a ByteArray. " alt="" coords="300,150,487,191"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a381f38521468ed3e51432981ad52be38" title="Read a message from a ByteArray. " alt="" coords="292,215,495,257"/>
+</map>

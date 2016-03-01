@@ -1,6 +1,12 @@
 <map id="HF::Devices::Concentrator::Abstract::unit0" name="HF::Devices::Concentrator::Abstract::unit0">
-<area shape="rect" id="node2" href="$group__examples.html#ga96e4919d4eaf03cc6e92adfd42e5d95b" title="ListRegs List registrations command. " alt="" coords="269,5,363,32"/>
-<area shape="rect" id="node3" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="233,56,399,83"/>
-<area shape="rect" id="node5" href="$group__examples.html#gaa0581a446c239d3fae170963ada22247" title="Save application configuration. " alt="" coords="241,107,391,133"/>
-<area shape="rect" id="node4" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="448,56,616,83"/>
+<area shape="rect" id="node2" href="$group__examples.html#ga96e4919d4eaf03cc6e92adfd42e5d95b" title="ListRegs List registrations command. " alt="" coords="269,31,363,57"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="233,107,399,133"/>
+<area shape="rect" id="node8" href="$group__examples.html#gaa0581a446c239d3fae170963ada22247" title="Save application configuration. " alt="" coords="457,251,607,277"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga4e3a4966ecb64e048eafb3281f7269df" title="De&#45;register device command. " alt="" coords="485,5,579,32"/>
+<area shape="rect" id="node5" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="448,107,616,133"/>
+<area shape="rect" id="node6" href="$group__examples.html#gaa911fe543ecf44adc10ca8202fa0f965" title="Send a toggle command from the simple switch. " alt="" coords="899,132,992,159"/>
+<area shape="rect" id="node7" href="$group__examples.html#ga7d4e44368d960972d8b80cb5f5ae3360" title="Callback indicating that the application configuration has been restored. " alt="" coords="671,157,844,184"/>
+<area shape="rect" id="node9" href="$group__examples.html#ga6cab9ddd2f897fd36d6c583afc7b8dc3" title="Insert a device management entry into the database. " alt="" coords="664,209,851,250"/>
+<area shape="rect" id="node10" href="$group__examples.html#ga7128458f468451885a811e6289f5b116" title="Restore the device entries from the JSON database. " alt="" coords="665,274,849,315"/>
+<area shape="rect" id="node11" href="$group__examples.html#gab8f2b8891d8d538eaff0c9fcf0925b14" title="Insert a bind management entry into the database. " alt="" coords="671,339,843,381"/>
 </map>

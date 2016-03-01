@@ -1,3 +1,4 @@
 <map id="HF::Core::SUOTA::Client::upgrade_complete" name="HF::Core::SUOTA::Client::upgrade_complete">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1Client.html#a9ead2ca4be61163f64f0467caadc0523" title="Send a HAN&#45;FUN message containing a SUOTA::UPGRADE_COMPLETE_CMD, to the given network address..." alt="" coords="227,5,399,46"/>
+<area shape="rect" id="node2" href="$group__suota__itf.html#ga97a67ae99bc7943e554a29b273b20f81" title="Convert the given command into a string and write it to the given stream. " alt="" coords="263,5,348,32"/>
+<area shape="rect" id="node3" href="$group__protocol.html#gaee9a7a9160cb9b4b920ec76aeb89f176" title="Check if message is a response. " alt="" coords="227,56,384,83"/>
 </map>

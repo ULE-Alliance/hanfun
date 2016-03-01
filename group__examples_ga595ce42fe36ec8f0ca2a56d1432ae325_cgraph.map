@@ -1,0 +1,4 @@
+<map id="DeviceManagement::Server::available" name="DeviceManagement::Server::available">
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a035442996968e80735f69d8bdedc592c" title="Get an iterator to the start of the entries in this container. " alt="" coords="237,5,437,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a346aa9a30afe949dd74d96831fe4d53c" title="Get an iterator to the end of the entries in this container. " alt="" coords="237,70,437,111"/>
+</map>

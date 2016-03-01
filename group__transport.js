@@ -1,10 +1,10 @@
 var group__transport =
 [
     [ "Link", "structHF_1_1Transport_1_1Link.html", [
-      [ "address", "structHF_1_1Transport_1_1Link.html#a4f286f54448e6f0e35cfd7889d5c3e07", null ],
+      [ "address", "structHF_1_1Transport_1_1Link.html#a10e8ed71055776420188c701340a95e0", null ],
       [ "address", "structHF_1_1Transport_1_1Link.html#ab17f99151f3af238e6844dbc8aa43b5a", null ],
       [ "send", "structHF_1_1Transport_1_1Link.html#a67c7a42692956d136112043f719c7784", null ],
-      [ "uid", "structHF_1_1Transport_1_1Link.html#ae9562fad3565a19caa860fbb75a6022d", null ]
+      [ "uid", "structHF_1_1Transport_1_1Link.html#a1c5658697ddea1e52029abd87818a3e9", null ]
     ] ],
     [ "Endpoint", "structHF_1_1Transport_1_1Endpoint.html", [
       [ "connected", "structHF_1_1Transport_1_1Endpoint.html#a8fd44cf4a9d09f6924aaa67d70eeb972", null ],
@@ -16,7 +16,7 @@ var group__transport =
       [ "destroy", "structHF_1_1Transport_1_1Layer.html#a9d78a99fc5f39e6c423d4279912736d8", null ],
       [ "initialize", "structHF_1_1Transport_1_1Layer.html#ae57f695375cc3f973ed8a8aa0ff6a00f", null ],
       [ "remove", "structHF_1_1Transport_1_1Layer.html#ad0e420885cf8446a387141451c779306", null ],
-      [ "uid", "structHF_1_1Transport_1_1Layer.html#a79906e1127b8aab5902c3a7dfff70151", null ]
+      [ "uid", "structHF_1_1Transport_1_1Layer.html#a961253356a6c52675c99bf61077fcc50", null ]
     ] ],
     [ "AbstractLink", "classHF_1_1Transport_1_1AbstractLink.html", [
       [ "address", "classHF_1_1Transport_1_1AbstractLink.html#a390f169a96fae8e4b148ddab012fbfa1", null ],

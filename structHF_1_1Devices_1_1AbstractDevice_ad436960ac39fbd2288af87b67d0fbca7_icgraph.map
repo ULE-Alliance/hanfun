@@ -1,0 +1,9 @@
+<map id="HF::Devices::AbstractDevice::link" name="HF::Devices::AbstractDevice::link">
+<area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a2d8326c56bc6329ae2e4e54cd3019aa9" title="Register the given Endpoint to receive events. " alt="" coords="248,5,427,46"/>
+<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a9929967af00aae3d2b35724bd739cce0" title="Return the device address on the HAN&#45;FUN network, when the device is registered, or HF_BROADCAST_ADDR..." alt="" coords="248,70,427,111"/>
+<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html#ad61f7b12e89c08b4edca316ac9bb5dea" title="HF::Devices::Node::\lAbstract\&lt; HF::Devices\l::Node::DefaultUnit0 \&gt;\l::connected" alt="" coords="259,135,416,206"/>
+<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Node_1_1Transport.html#a989bb4fe3077b88fbe884791da56556b" title="Find the link used to send messages to the HAN&#45;FUN device with the given address. ..." alt="" coords="266,230,409,271"/>
+<area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Node_1_1Transport.html#ad008724f39d1fe29cd159ce173bad491" title="Call the disconnected method for all registered end&#45;points with the given _link and remove it from li..." alt="" coords="266,295,409,337"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="475,12,555,39"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="603,5,778,46"/>
+</map>

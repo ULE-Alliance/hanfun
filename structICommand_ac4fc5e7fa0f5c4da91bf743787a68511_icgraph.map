@@ -1,3 +1,7 @@
 <map id="ICommand::run" name="ICommand::run">
-<area shape="rect" id="node2" href="$namespaceHF_1_1Application.html#a84af61388002a17a0270fe14526ddc24" title="Handle the command. " alt="" coords="166,5,327,32"/>
+<area shape="rect" id="node2" href="$namespaceHF_1_1Application.html#a84af61388002a17a0270fe14526ddc24" title="Handle the command. " alt="" coords="166,56,327,83"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga7d4e44368d960972d8b80cb5f5ae3360" title="Callback indicating that the application configuration has been restored. " alt="" coords="376,56,549,83"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="598,56,765,83"/>
+<area shape="rect" id="node6" href="$group__examples.html#gaa911fe543ecf44adc10ca8202fa0f965" title="Send a toggle command from the simple switch. " alt="" coords="1029,56,1123,83"/>
+<area shape="rect" id="node5" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="813,5,981,32"/>
 </map>

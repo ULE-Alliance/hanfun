@@ -3,8 +3,7 @@ var suota_8h =
     [ "CMD", "suota_8h.html#ga348c8740a450a08104fb914b8e0397ef", [
       [ "NEW_VERSION_AVAILABLE_CMD", "suota_8h.html#gga348c8740a450a08104fb914b8e0397efa7341ee410fab5706010a2d4cf00983b1", null ],
       [ "CHECK_VERSION_CMD", "suota_8h.html#gga348c8740a450a08104fb914b8e0397efa65648475ead757d35e90a934847117da", null ],
-      [ "UPGRADE_COMPLETE_CMD", "suota_8h.html#gga348c8740a450a08104fb914b8e0397efa7fed4489f30dff04485a6ec12c5d5baa", null ],
-      [ "__LAST_CMD__", "suota_8h.html#gga348c8740a450a08104fb914b8e0397efa751ff30e9f4f52da28b852f71e75e789", null ]
+      [ "UPGRADE_COMPLETE_CMD", "suota_8h.html#gga348c8740a450a08104fb914b8e0397efa7fed4489f30dff04485a6ec12c5d5baa", null ]
     ] ],
     [ "NewVersionResponse", "suota_8h.html#ga5572761bc0f0151c5e85c2a6b18f4ff5", [
       [ "UPGRADE_INITIATED", "suota_8h.html#gga5572761bc0f0151c5e85c2a6b18f4ff5a53fcb5457493139b4276337d2c2c14ac", null ],
@@ -15,5 +14,5 @@ var suota_8h =
     ] ],
     [ "create_attribute", "suota_8h.html#ga17a62ed36c855acc1c407b09f379e064", null ],
     [ "create_attribute", "suota_8h.html#ga3d5f1117e43394a5b3a9436c7f62d871", null ],
-    [ "operator<<", "suota_8h.html#ga97a67ae99bc7943e554a29b273b20f81", null ]
+    [ "operator<<", "group__suota__itf.html#ga97a67ae99bc7943e554a29b273b20f81", null ]
 ];

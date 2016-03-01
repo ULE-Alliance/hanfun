@@ -1,3 +1,4 @@
 <map id="HF::Protocol::GetAttributePack::Request::unpack" name="HF::Protocol::GetAttributePack::Request::unpack">
 <area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1" title="Read a message from a ByteArray. " alt="" coords="230,5,375,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1IAttribute.html#a74da08fa9eb892a2ed3390f25515520c" title="Read a message from a ByteArray. " alt="" coords="424,5,589,46"/>
 </map>

@@ -1,3 +1,5 @@
 <map id="HF::UID::UID::unpack" name="HF::UID::UID::unpack">
-<area shape="rect" id="node2" href="$structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848" title="Read a message from a ByteArray. " alt="" coords="209,5,351,32"/>
+<area shape="rect" id="node2" href="$structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848" title="Read a message from a ByteArray. " alt="" coords="209,12,351,39"/>
+<area shape="rect" id="node3" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="400,12,480,39"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="529,5,703,46"/>
 </map>

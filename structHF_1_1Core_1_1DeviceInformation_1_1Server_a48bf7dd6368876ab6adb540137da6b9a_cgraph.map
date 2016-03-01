@@ -1,0 +1,5 @@
+<map id="HF::Core::DeviceInformation::Server::Server" name="HF::Core::DeviceInformation::Server::Server">
+<area shape="rect" id="node2" href="$group__dev__info.html#ga1ce3c4587841a79cb267aca942e859fa" title="Create a message that can be used to retrieve all the attributes on a remote device. " alt="" coords="245,5,456,32"/>
+<area shape="rect" id="node3" href="$group__dev__info.html#gac986c018a20b226956af25f1c1cfd8dc" title="Create a message that can be used to retrieve the mandatory attributes on a remote device..." alt="" coords="255,57,446,98"/>
+<area shape="rect" id="node4" href="$group__dev__info.html#ga12719c01e51e64c4916126fc64815ff2" title="Convert the given attribute into a string and write it to the given stream. " alt="" coords="308,123,393,149"/>
+</map>

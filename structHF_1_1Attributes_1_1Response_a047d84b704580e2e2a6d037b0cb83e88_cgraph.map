@@ -1,0 +1,8 @@
+<map id="HF::Attributes::Response::Response" name="HF::Attributes::Response::Response">
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1IAttribute.html#a035db90f09b3098fb96c316504ba655a" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="224,5,389,46"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Response.html#a210dabf73ca15b0b4d8127e88f41e387" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="225,70,388,111"/>
+<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1IAttribute.html#ad3d65007dba1a33c9d45cc109bac1e4b" title="Number bytes needed to serialize the message. " alt="" coords="224,135,389,177"/>
+<area shape="rect" id="node5" href="$structHF_1_1Protocol_1_1Response.html#a462c58382879995579cbc95cd7310d7e" title="Number bytes needed to serialize the message. " alt="" coords="225,201,388,242"/>
+<area shape="rect" id="node6" href="$structHF_1_1Attributes_1_1IAttribute.html#a74da08fa9eb892a2ed3390f25515520c" title="Read a message from a ByteArray. " alt="" coords="224,266,389,307"/>
+<area shape="rect" id="node7" href="$structHF_1_1Protocol_1_1Response.html#a14ce871fee5ac410371594ef286ddd46" title="Read a message from a ByteArray. " alt="" coords="225,331,388,373"/>
+</map>

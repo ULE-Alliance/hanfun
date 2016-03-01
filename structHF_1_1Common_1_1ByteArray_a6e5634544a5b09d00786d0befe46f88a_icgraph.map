@@ -1,22 +1,27 @@
 <map id="HF::Common::ByteArray::read" name="HF::Common::ByteArray::read">
 <area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#ae945cf20657dd5a300dc851795d8805e" title="Read the byte at offset into data. (uint16_t, uint8_t) " alt="" coords="242,5,409,46"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#a02cc99fcd2c5409e20f63c9288b0f9ba" title="Read a message from a ByteArray. " alt="" coords="230,70,421,111"/>
-<area shape="rect" id="node4" href="$structmsg__t.html#aa06d48e197175e35850c8e7a973aa2cb" title="Read a message from a ByteArray. " alt="" coords="271,136,379,163"/>
-<area shape="rect" id="node5" href="$structHF_1_1UID_1_1UID__T.html#af6f522807892797e4c7e6181c5f368e5" title="Read a message from a ByteArray. " alt="" coords="241,237,410,264"/>
-<area shape="rect" id="node6" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="478,189,647,216"/>
-<area shape="rect" id="node7" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="483,243,643,299"/>
-<area shape="rect" id="node8" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="485,328,640,355"/>
-<area shape="rect" id="node9" href="$group__sessions.html#ga80eb5eb237feeab2d395c1edd961f934" title="Read a message from a ByteArray. " alt="" coords="222,390,429,431"/>
-<area shape="rect" id="node10" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#ac151429071acfe50172387e02657cd47" title="Read a message from a ByteArray. " alt="" coords="230,455,421,497"/>
-<area shape="rect" id="node11" href="$structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848" title="Read a message from a ByteArray. " alt="" coords="254,521,397,548"/>
-<area shape="rect" id="node12" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ad9dc1a3f6c784e3c74b9558914eb70e4" title="Read a message from a ByteArray. " alt="" coords="229,573,421,614"/>
-<area shape="rect" id="node13" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a5b7b87d4e49704cc85b53ae3b9ec650e" title="Read a message from a ByteArray. " alt="" coords="230,638,421,679"/>
-<area shape="rect" id="node14" href="$structHF_1_1Attributes_1_1UIDS.html#a793c7e2cd64220b25375aa1005abeaf8" title="Read a message from a ByteArray. " alt="" coords="253,703,398,745"/>
-<area shape="rect" id="node15" href="$structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#aba1f97508db1d83ed4a234fc4a97778f" title="Read a message from a ByteArray. " alt="" coords="232,769,419,810"/>
-<area shape="rect" id="node16" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a381f38521468ed3e51432981ad52be38" title="Read a message from a ByteArray. " alt="" coords="224,834,427,875"/>
-<area shape="rect" id="node17" href="$structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::unpack" alt="" coords="245,899,406,941"/>
-<area shape="rect" id="node18" href="$structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a7e21f5c3bfc12df18ddfdccb8f91e064" title="Read a message from a ByteArray. " alt="" coords="224,964,427,1020"/>
-<area shape="rect" id="node19" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adf061212df3cf04ffe3551f4d169dc93" title="Read a message from a ByteArray. " alt="" coords="245,1045,406,1115"/>
-<area shape="rect" id="node20" href="$structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ad8041b04ce7ee09ded6d524de1c3a7e9" title="Read a message from a ByteArray. " alt="" coords="230,1140,421,1196"/>
-<area shape="rect" id="node21" href="$structHF_1_1Protocol_1_1SetAttributePack_1_1Response_1_1Result.html#a784b1142bc2ca1496c083e8a411a7c14" title="Read a message from a ByteArray. " alt="" coords="239,1220,412,1276"/>
+<area shape="rect" id="node4" href="$structmsg__t.html#aa06d48e197175e35850c8e7a973aa2cb" title="Read a message from a ByteArray. " alt="" coords="714,136,822,163"/>
+<area shape="rect" id="node7" href="$structHF_1_1UID_1_1UID__T.html#af6f522807892797e4c7e6181c5f368e5" title="Read a message from a ByteArray. " alt="" coords="241,288,410,315"/>
+<area shape="rect" id="node8" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="478,237,647,264"/>
+<area shape="rect" id="node9" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="483,339,643,395"/>
+<area shape="rect" id="node10" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="485,419,640,445"/>
+<area shape="rect" id="node13" href="$group__sessions.html#ga80eb5eb237feeab2d395c1edd961f934" title="Read a message from a ByteArray. " alt="" coords="222,441,429,482"/>
+<area shape="rect" id="node14" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#ac151429071acfe50172387e02657cd47" title="Read a message from a ByteArray. " alt="" coords="230,506,421,547"/>
+<area shape="rect" id="node15" href="$structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848" title="Read a message from a ByteArray. " alt="" coords="697,187,839,213"/>
+<area shape="rect" id="node16" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ad9dc1a3f6c784e3c74b9558914eb70e4" title="Read a message from a ByteArray. " alt="" coords="229,571,421,613"/>
+<area shape="rect" id="node17" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a5b7b87d4e49704cc85b53ae3b9ec650e" title="Read a message from a ByteArray. " alt="" coords="230,637,421,678"/>
+<area shape="rect" id="node18" href="$structHF_1_1Attributes_1_1UIDS.html#a793c7e2cd64220b25375aa1005abeaf8" title="Read a message from a ByteArray. " alt="" coords="253,702,398,743"/>
+<area shape="rect" id="node19" href="$structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#aba1f97508db1d83ed4a234fc4a97778f" title="Read a message from a ByteArray. " alt="" coords="232,767,419,809"/>
+<area shape="rect" id="node20" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a381f38521468ed3e51432981ad52be38" title="Read a message from a ByteArray. " alt="" coords="224,833,427,874"/>
+<area shape="rect" id="node21" href="$structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::unpack" alt="" coords="245,898,406,939"/>
+<area shape="rect" id="node22" href="$structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a7e21f5c3bfc12df18ddfdccb8f91e064" title="Read a message from a ByteArray. " alt="" coords="224,963,427,1019"/>
+<area shape="rect" id="node23" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adf061212df3cf04ffe3551f4d169dc93" title="HF::Attributes::Attribute\l\&lt; T, _Owner, EnableIf\&lt;\l Parent\&lt; HF::Interface,\l _Owner \&gt; \&gt; \&gt;::unpack" alt="" coords="245,1043,406,1114"/>
+<area shape="rect" id="node24" href="$structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ad8041b04ce7ee09ded6d524de1c3a7e9" title="Read a message from a ByteArray. " alt="" coords="230,1139,421,1195"/>
+<area shape="rect" id="node25" href="$structHF_1_1Protocol_1_1SetAttributePack_1_1Response_1_1Result.html#a784b1142bc2ca1496c083e8a411a7c14" title="Read a message from a ByteArray. " alt="" coords="239,1219,412,1275"/>
+<area shape="rect" id="node26" href="$structHF_1_1Common_1_1ByteArray.html#a1e9b7d4c37579c2aa781b80465872f8f" title="Write a byte into the array at the given offset. (uint16_t, uint8_t) " alt="" coords="242,1298,409,1339"/>
+<area shape="rect" id="node5" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="888,187,968,213"/>
+<area shape="rect" id="node6" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="1017,179,1191,221"/>
+<area shape="rect" id="node11" href="$classHF_1_1UID_1_1UID.html#a09297712c00f2682cdeeb12c1fde8fc4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="493,288,633,315"/>
+<area shape="rect" id="node12" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="704,263,832,289"/>
 </map>
