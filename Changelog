@@ -1,4 +1,18 @@
 
+1.4.2 / 2016-03-01
+==================
+
+ * Updated the Release Notes.
+ * Compile and run example applications as part of project testing.
+ * FIX: Update node link on registration.
+ * Change helper method to return parent type.
+ * Updated README documentation.
+
+1.4.1 / 2016-02-29
+==================
+
+ * Fixed usage of attribute support defines for Device Information.
+
 1.4.0 / 2015-12-16
 ==================
 

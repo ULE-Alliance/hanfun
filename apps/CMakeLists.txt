@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Examples CMakeList
 #
-#   @version    1.4.1
+#   @version    1.4.2
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -115,38 +115,37 @@ set (HF_TARGETS ${HF_TARGETS} PARENT_SCOPE)
 # Examples
 # ==============================================================================
 
-## Registration examples
-add_executable(example_01 EXCLUDE_FROM_ALL example_01.cpp)
-target_link_libraries(example_01 hanfun)
+macro(add_example _number)
+    set(_example_name  "example_${_number}")
+    add_executable(${_example_name} EXCLUDE_FROM_ALL ${_example_name}.cpp)
+    target_link_libraries(${_example_name} hanfun)
+    list(APPEND HF_EXAMPLES ${_example_name})
+endmacro()
 
-add_executable(example_02 EXCLUDE_FROM_ALL example_02.cpp)
-target_link_libraries(example_02 hanfun)
+## Registration examples
+add_example(01)
+
+add_example(02)
 
 ## Alert interface example
-add_executable(example_03 EXCLUDE_FROM_ALL example_03.cpp)
-target_link_libraries(example_03 hanfun)
+add_example(03)
 
 ## On-Off interface example
-add_executable(example_04 EXCLUDE_FROM_ALL example_04.cpp)
-target_link_libraries(example_04 hanfun)
+add_example(04)
 
 ## Level Control interface example
-add_executable(example_05 EXCLUDE_FROM_ALL example_05.cpp)
-target_link_libraries(example_05 hanfun)
+add_example(05)
 
 ## Device Information service example
-add_executable(example_06 EXCLUDE_FROM_ALL example_06.cpp)
-target_link_libraries(example_06 hanfun)
+add_example(06)
 
 ## Attribute reporting service example
-add_executable(example_07 EXCLUDE_FROM_ALL example_07.cpp)
-target_link_libraries(example_07 hanfun)
+add_example(07)
 
 ## Bind service example
-add_executable(example_08 EXCLUDE_FROM_ALL example_08.cpp)
-target_link_libraries(example_08 hanfun)
+add_example(08)
 
 ## Build all examples
-add_custom_target(examples DEPENDS example_01 example_02 example_03
-                                   example_04 example_05 example_06
-                                   example_07 example_08)
+add_custom_target(examples DEPENDS ${HF_EXAMPLES})
+
+set(HF_TESTS ${HF_TESTS} ${HF_EXAMPLES} PARENT_SCOPE)

@@ -22,7 +22,7 @@
 
 include(CMakeDependentOption)
 
-option(HF_BUILD_TESTS "Build project's unit tests.")
+option(HF_BUILD_TESTS "Build project's unit tests." NO)
 option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
 
 #

@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Visual Effects interface.
  *
- * @version    1.4.1
+ * @version    1.4.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

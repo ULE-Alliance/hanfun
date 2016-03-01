@@ -5,7 +5,7 @@
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * @version    1.4.1
+ * @version    1.4.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -540,6 +540,7 @@ TEST_GROUP(DeviceManagementClient)
    TestDeviceManagementClient *dev_mgt;
 
    Protocol::Packet packet;
+   Testing::Link link;
 
    TEST_SETUP()
    {
@@ -562,6 +563,10 @@ TEST_GROUP(DeviceManagementClient)
       packet.message.type     = Protocol::Message::COMMAND_RES;
       packet.message.itf.role = HF::Interface::SERVER_ROLE;
       packet.message.itf.id   = HF::Interface::DEVICE_MANAGEMENT;
+
+      link = Testing::Link();
+
+      packet.link = &link;
 
       mock().ignoreOtherCalls();
    }

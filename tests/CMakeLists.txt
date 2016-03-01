@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library Tests CMakeList.
 #
-#   @version 1.4.1
+#   @version 1.4.2
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -114,7 +114,15 @@ target_link_libraries( test_hanfun hanfun ${CppUTest_LIBRARIES} )
 if (Backtrace_FOUND)
   target_link_libraries( test_hanfun ${Backtrace_LIBRARIES} )
 endif()
+set (HF_TESTS test_hanfun ${HF_TESTS})
+
+foreach(_test ${HF_TESTS})
+    add_test (NAME "${_test}" COMMAND ${_test})
+endforeach()
 
 if(NOT CMAKE_CROSSCOMPILING)
-  add_custom_target (check ALL DEPENDS test_hanfun COMMAND test_hanfun)
+  set (ARGS --output-on-failure "\$(CTEST_ARGS)")
+
+  add_custom_target (check ALL COMMAND ${CMAKE_CTEST_COMMAND} ${ARGS}
+                               DEPENDS ${HF_TESTS} VERBATIM)
 endif()
