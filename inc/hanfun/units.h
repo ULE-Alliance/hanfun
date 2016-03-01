@@ -156,7 +156,7 @@ namespace HF
          Proxy(_Proxy &_proxy): HF::Interfaces::Proxy<_Interface, _Proxy>(_proxy)
          {}
 
-         _Proxy &unit() const
+         HF::Units::IUnit &unit() const
          {
             return HF::Interfaces::Proxy<_Interface, _Proxy>::proxy;
          }
@@ -194,7 +194,7 @@ namespace HF
        */
       template<class Profile, typename... ITF>
       class Unit: public HF::Units::AbstractUnit, public virtual Profile,
-         public InterfacesWrapper<Unit<Profile, ITF...>, ITF...>
+         public InterfacesWrapper<HF::Units::Unit<Profile, ITF...>, ITF...>
       {
          uint8_t _id;
 
