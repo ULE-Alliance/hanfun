@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Management : Client Role.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -138,7 +138,7 @@ uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   assert (packet.link != nullptr);
+   assert(packet.link != nullptr);
 
    switch (packet.message.itf.member)
    {

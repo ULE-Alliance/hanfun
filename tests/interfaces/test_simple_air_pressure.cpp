@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Air Pressure interface
  * implementation.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *

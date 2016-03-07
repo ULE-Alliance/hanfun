@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -329,7 +329,8 @@ namespace HF
          {}
 
          //! @copydoc HF::Interface::handle
-         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
          {
             return container_t::handle(packet, payload, offset);
          }

@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * SUOTA interface.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
