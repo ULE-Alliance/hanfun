@@ -329,7 +329,8 @@ namespace HF
          {}
 
          //! @copydoc HF::Interface::handle
-         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+         Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
          {
             return container_t::handle(packet, payload, offset);
          }

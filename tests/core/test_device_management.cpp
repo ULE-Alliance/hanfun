@@ -564,9 +564,9 @@ TEST_GROUP(DeviceManagementClient)
       packet.message.itf.role = HF::Interface::SERVER_ROLE;
       packet.message.itf.id   = HF::Interface::DEVICE_MANAGEMENT;
 
-      link = Testing::Link();
+      link                    = Testing::Link();
 
-      packet.link = &link;
+      packet.link             = &link;
 
       mock().ignoreOtherCalls();
    }
