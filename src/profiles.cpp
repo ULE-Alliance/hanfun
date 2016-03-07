@@ -5,7 +5,7 @@
  * This file contains the implementation of the functionality related with HAN-FUN
  * Profiles.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -45,110 +45,110 @@ struct Profile
 static const HF::Common::Interface profiles_interfaces[] =
 {
    // 00 - HF::Profiles::SIMPLE_ONOFF_SWITCHABLE
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
 
    // 01 - HF::Profiles::SIMPLE_ONOFF_SWITCH
-   {HF::Interface::ON_OFF,             HF::Interface::CLIENT_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::CLIENT_ROLE},
 
    // 02 - HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE
-   {HF::Interface::LEVEL_CONTROL,      HF::Interface::SERVER_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::SERVER_ROLE},
 
    // 03 - HF::Profiles::SIMPLE_LEVEL_CONTROL
-   {HF::Interface::LEVEL_CONTROL,      HF::Interface::CLIENT_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::CLIENT_ROLE},
 
    // 04 - HF::Profiles::SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
-   {HF::Interface::LEVEL_CONTROL,      HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::SERVER_ROLE},
 
    // 06 - HF::Profiles::SIMPLE_LEVEL_CONTROL_SWITCH,
-   {HF::Interface::ON_OFF,             HF::Interface::CLIENT_ROLE},
-   {HF::Interface::LEVEL_CONTROL,      HF::Interface::CLIENT_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::CLIENT_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::CLIENT_ROLE},
 
    // 08 - HF::Profiles::AC_OUTLET,
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
 
    // 09 - HF::Profiles::AC_OUTLET_WITH_POWER_METERING,
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
-   {HF::Interface::SIMPLE_POWER_METER, HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_POWER_METER,    HF::Interface::SERVER_ROLE},
 
    // 11 - HF::Profiles::SIMPLE_LIGHT,
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
 
    // 12 - HF::Profiles::DIMMABLE_LIGHT,
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
-   {HF::Interface::LEVEL_CONTROL,      HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::SERVER_ROLE},
 
    // 14 - HF::Profiles::DIMMER_SWITCH,
-   {HF::Interface::ON_OFF,             HF::Interface::CLIENT_ROLE},
-   {HF::Interface::LEVEL_CONTROL,      HF::Interface::CLIENT_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::CLIENT_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::CLIENT_ROLE},
 
    // 16 - HF::Profiles::SIMPLE_DOOR_LOCK,
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
 
    // 17 - HF::Profiles::DOOR_BELL,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 18 - HF::Profiles::SIMPLE_POWER_METER,
-   {HF::Interface::SIMPLE_POWER_METER, HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_POWER_METER,    HF::Interface::SERVER_ROLE},
 
    // 19 - HF::Profiles::SIMPLE_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 20 - HF::Profiles::DOOR_OPEN_CLOSE_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 21 - HF::Profiles::WINDOW_OPEN_CLOSE_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 22 - HF::Profiles::MOTION_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 23 - HF::Profiles::SMOKE_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 24 - HF::Profiles::GAS_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 25 - HF::Profiles::FLOOD_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 26 - HF::Profiles::GLASS_BREAK_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 27 - HF::Profiles::VIBRATION_DETECTOR,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 28 - HF::Profiles::SIREN,
-   {HF::Interface::ON_OFF,             HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
 
    // 29 - HF::Profiles::ALERTABLE,
-   {HF::Interface::ALERT,              HF::Interface::CLIENT_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::CLIENT_ROLE},
 
    // 30 - HF::Profiles::SIMPLE_PENDANT,
-   {HF::Interface::ALERT,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ALERT,                 HF::Interface::SERVER_ROLE},
 
    // 31 - HF::Profiles::SIMPLE_TEMPERATURE_SENSOR,
-   {HF::Interface::SIMPLE_TEMPERATURE, HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_TEMPERATURE,    HF::Interface::SERVER_ROLE},
 
    // 32 - HF::Profiles::SIMPLE_HUMIDITY_SENSOR,
-   {HF::Interface::SIMPLE_HUMIDITY,    HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_HUMIDITY,       HF::Interface::SERVER_ROLE},
 
    // 33 - HF::Profiles::CONTROLABLE_THERMOSTAT
-   {HF::Interface::ON_OFF,              HF::Interface::SERVER_ROLE},
-   {HF::Interface::SIMPLE_THERMOSTAT,   HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_THERMOSTAT,     HF::Interface::SERVER_ROLE},
 
    // 35 - HF::Profiles::USER_INTERFACE_LOCK
-   {HF::Interface::ON_OFF,              HF::Interface::SERVER_ROLE},
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
 
    // 36 - HF::Profiles::SIMPLE_AIR_PRESSURE_SENSOR
-   {HF::Interface::SIMPLE_AIR_PRESSURE, HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_AIR_PRESSURE,   HF::Interface::SERVER_ROLE},
 
    // 37 - HF::Profiles::SIMPLE_BUTTON
-   {HF::Interface::SIMPLE_BUTTON,       HF::Interface::SERVER_ROLE},
+   {HF::Interface::SIMPLE_BUTTON,         HF::Interface::SERVER_ROLE},
 
    // 38 - HF::Profiles::SIMPLE_LED
    {HF::Interface::SIMPLE_VISUAL_EFFECTS, HF::Interface::SERVER_ROLE},
-   
+
    // 39 - HF::Profiles::ENVIRONMENT_MONITOR
    {HF::Interface::SIMPLE_TEMPERATURE,    HF::Interface::SERVER_ROLE},
    {HF::Interface::SIMPLE_HUMIDITY,       HF::Interface::SERVER_ROLE},

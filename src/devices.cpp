@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -96,7 +96,10 @@ void AbstractDevice::send(Protocol::Packet &packet)
       tsp_link->send(array);
    }
 
-   response_filter(packet);
+   if (is_registered())
+   {
+      response_filter(packet);
+   }
 }
 
 // =============================================================================

@@ -5,7 +5,7 @@
  * This file contains the implementation of the session management functionality
  * for the server side.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

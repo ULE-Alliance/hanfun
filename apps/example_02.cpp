@@ -4,7 +4,7 @@
  *
  * This file contains an example demonstrating registration event handling.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
