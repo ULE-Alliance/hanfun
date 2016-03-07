@@ -96,7 +96,10 @@ void AbstractDevice::send(Protocol::Packet &packet)
       tsp_link->send(array);
    }
 
-   response_filter(packet);
+   if (is_registered())
+   {
+      response_filter(packet);
+   }
 }
 
 // =============================================================================
