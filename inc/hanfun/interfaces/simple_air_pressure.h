@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Air Pressure interface.
  *
- * @version    1.4.2
+ * @version    1.4.3
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
