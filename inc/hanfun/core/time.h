@@ -156,6 +156,22 @@ namespace HF
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
 
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * Increment time by the amount given by @c count seconds.
+             *
+             * @param [in] count number of seconds to increment the time count by.
+             */
+            void tick(uint32_t count = 1)
+            {
+               HF_ASSERT(Value::INVALID - _time > count, {_time = Value::INVALID;
+                                                          return;
+                         });
+               _time += count;
+            }
          };
 
          /*!

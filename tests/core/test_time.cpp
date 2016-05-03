@@ -136,3 +136,31 @@ TEST(TimeServer, Time)
 {
    CHECK_ATTRIBUTE(TimeServer, Value, true, time, 42, 142);
 }
+
+//! @test Tick method.
+TEST(TimeServer, Tick)
+{
+   server->time(42);
+   server->tick();
+
+   LONGS_EQUAL(43, server->time());
+
+   server->time(42);
+   server->tick(100);
+
+   LONGS_EQUAL(142, server->time());
+
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
+
+   server->time(Time::Value::INVALID - 100);
+   server->tick(100);
+
+   LONGS_EQUAL(Time::Value::INVALID, server->time());
+
+   server->time(Time::Value::INVALID - 100);
+   server->tick(101);
+
+   LONGS_EQUAL(Time::Value::INVALID, server->time());
+
+   mock("support").checkExpectations();
+}
