@@ -34,6 +34,7 @@
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/rssi.h"
 #include "hanfun/core/suota.h"
+#include "hanfun/core/time.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -85,6 +86,10 @@ static const Entry factories[] =
       HF::Core::SUOTA::create_attribute,
    },
 #endif
+   {
+      HF::Interface::TIME,
+      HF::Core::Time::create_attribute,
+   },
    /* Functional Interfaces. */
    {
       HF::Interface::ALERT,

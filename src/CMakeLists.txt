@@ -76,6 +76,7 @@ add_core("rssi")
 if(HF_CORE_SUOTA_SUPPORT)
     add_core("suota")
 endif()
+add_core("time")
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)
