@@ -115,6 +115,11 @@
    }
 #endif
 
+// Allow some static functions to be accessed from the test code.
+#ifndef STATIC
+#define STATIC static
+#endif
+
 // =============================================================================
 // API
 // =============================================================================
