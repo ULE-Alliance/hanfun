@@ -135,6 +135,16 @@ void check_attribute(Interface &itf, bool writable, Value first, Value second,
 
 template<typename Attribute, typename Interface, typename Getter, typename Setter,
          typename Value = typename Attribute::value_type>
+void check_attribute(Interface *itf, bool writable, Value first, Value second,
+                     Getter getter, Setter setter, const char *file, int lineno)
+{
+   assert(itf != nullptr);
+   check_attribute<Attribute, Interface, Getter, Setter, Value>(*itf, writable, first, second,
+                                                                getter, setter, file, lineno);
+}
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter,
+         typename Value = typename Attribute::value_type>
 void check_optional_attribute(Interface &itf, bool writable, Value first, Value second,
                               Getter getter, Setter setter, const char *file, int lineno)
 {
@@ -229,6 +239,10 @@ namespace HF
          Protocol::Message sendMsg;
 
          InterfaceHelper()
+         {}
+
+         template<typename Arg>
+         InterfaceHelper(Arg &&arg): Base(arg)
          {}
 
          virtual ~InterfaceHelper()

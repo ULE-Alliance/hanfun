@@ -1414,6 +1414,75 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::SUOTA::CMD comman
 }
 
 // =============================================================================
+// HF::Core::Time
+// =============================================================================
+
+#include "hanfun/core/time.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::Time::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::Time;
+
+   switch (attribute)
+   {
+      case TIME_ATTR:
+         result = "Time";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::Time::Date &date)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill('0');
+
+   using namespace HF::Core::Time;
+
+   Date invalid;
+
+   if (memcmp(&date, &invalid, sizeof(Date)) == 0)
+   {
+      stream << "Invalid Time";
+   }
+   else
+   {
+      stream << std::setw(4) << std::setfill('0') << YEARS_BASE + date.year << "-";
+      stream << std::setw(2) << std::setfill('0') << date.month << "-";
+      stream << std::setw(2) << std::setfill('0') << date.day << " ";
+      stream << std::setw(2) << std::setfill('0') << date.hour << ":";
+      stream << std::setw(2) << std::setfill('0') << date.minute << ":";
+      stream << std::setw(2) << std::setfill('0') << date.second;
+   }
+
+   stream << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1643,6 +1712,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::RSSI:
                stream << static_cast<RSSI::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::TIME:
+               stream << static_cast<Time::Attributes>(message.itf.member);
                break;
             /* Interfaces [A] */
             case HF::Interface::ALERT:

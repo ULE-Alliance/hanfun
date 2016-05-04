@@ -93,6 +93,7 @@ add_core_tests("rssi")
 if(HF_CORE_SUOTA_SUPPORT)
     add_core("suota")
 endif()
+add_core_tests("time")
 
 ## Transport Layer ##
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
