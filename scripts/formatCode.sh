@@ -38,15 +38,30 @@ fi
 
 
 echo -n "Generating file list ... "
-git ls-files --exclude-standard $@ | grep ".*\.\(c\(pp\)\?\|h\)$" > $FILES
+git ls-files $@ | grep ".*\.\(c\(pp\)\?\|h\)$" > $FILES
+for file in $(find . -type f -name .indent-off)
+do
+    dirname=$(dirname $file)
+    dirname=${dirname:2}
+    sed -i -e "s|$dirname.*||g" -e "/^$/d" $FILES
+done
 echo "done !"
 
 NFILES=$(wc -l $FILES | cut -f 1 -d \ )
 
 echo -ne "Running uncrustify ... \r"
 
-uncrustify $UNCRUSTIFY_CONFIG -F $FILES --no-backup 2>&1 | tee -a format.log | \
-	awk -v nfiles=$NFILES -v cnt=1 '/Parsing/{ printf("Running uncrustify ... [%d/%d]\r", cnt++, nfiles ) }'
+rm -f format.log
+
+cnt=0
+for file in $(cat $FILES)
+do
+  cnt=$((cnt + 1))
+  uncrustify $UNCRUSTIFY_CONFIG --no-backup $file &> format.log
+  printf "Running uncrustify ... [%d/%d]\r" $cnt $NFILES
+  #format.log | \
+  #  awk -v nfiles=$NFILES -v cnt=1 '/Parsing/{ printf("Running uncrustify ... [%d/%d]\r", cnt++, nfiles ) }'
+done
 
 grep "Error" format.log
 if [ $? -eq 0 ]; then

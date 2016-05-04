@@ -594,11 +594,13 @@ namespace HF
           * @deprecated This template class has been deprecated please use
           *             HF::Core::SessionManagement::EntriesWrapper
           */
+         /* *INDENT-OFF* */
          template<typename Parent>
          struct __attribute__((deprecated)) Entries: public EntriesWrapper<Parent>
          {
             Entries(AbstractServer & _manager): EntriesWrapper<Parent>(_manager) {}
          };
+         /* *INDENT-ON* */
 
          /*!
           * Helper template to inject session management functionality into
