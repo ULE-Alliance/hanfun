@@ -20,6 +20,8 @@
 
 using namespace HF::Debug;
 
+// LCOV_EXCL_START
+
 // =============================================================================
 // Defines
 // =============================================================================
@@ -1822,3 +1824,5 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Packet &packe
 
    return stream;
 }
+
+// LCOV_EXCL_STOP
