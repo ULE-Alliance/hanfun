@@ -29,3 +29,11 @@ class String
   end
 
 end
+
+class Integer
+
+  def to_hex(lenght = 4)
+    "0x" + to_s(16).rjust(lenght,'0')
+  end
+
+end

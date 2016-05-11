@@ -67,30 +67,40 @@ module Hanfun
   # Interface/Service attribute configuration
   class Attribute < Option
 
+    FIELDS = %w(acl type uid)
+
     attr_reader :uid
     attr_reader :type
     attr_reader :writable
     attr_reader :mandatory
+
     def initialize(name, options)
       super(name)
       @to_uid = @name.upcase + "_ATTR"
-      if options =~ /(\w+):(\d+):(rw?):(m|o)(:(\w+))?/i
+      if options.is_a?(String) && options =~ /(\w+):(\d+):(rw?):(m|o)(:(\w+))?/i
         @type         = $1
         @uid          = $2.to_i
         @writable     = $3
         @mandatory    = $4
         name_override = $6
-
-        @writable  = @writable =~ /w/i ? true : false
-        @mandatory = @mandatory =~ /m/i ? true : false
-
-        @name     = name_override if name_override
-        @to_class = @name.camelize if name_override
-
-        @to_doc   = name if name =~ /\A[A-Z]+\z/
+      elsif options.is_a?(Hash) && ((options.keys.sort & FIELDS) == FIELDS)
+        @type = options["type"]
+        @uid  = options["uid"].to_i
+        @writable     = options["acl"]
+        @mandatory    = options["acl"]
+        name_override = options["override"]
       else
-        raise ArgumentError, "Invalid option string '#{options}'"
+        raise ArgumentError, "Invalid options '#{options}'"
       end
+
+      @writable  = @writable =~ /w/i ? true : false
+      @mandatory = @mandatory =~ /m/i ? true : false
+
+      @name     = name_override if name_override
+      @to_class = @name.camelize if name_override
+
+      @to_doc   = name if name =~ /\A[A-Z]+\z/
+
     end
 
   end
@@ -106,6 +116,8 @@ module Hanfun
       end
     end
 
+    FIELDS = %w(client server uid)
+
     attr_reader :uid
     attr_reader :event
     attr_reader :server
@@ -114,15 +126,19 @@ module Hanfun
     def initialize(name, options)
       super(name)
       @to_uid = @name.upcase + "_CMD"
-      if options =~ /(\d+):(c|e):(m|o):(m|o)/i
+      if options.is_a?(String) && options =~ /(\d+):(c|e):(m|o):(m|o)/i
         @uid       = $1.to_i
         @event     = $2
         @server    = Role.new($3)
         @client    = Role.new($4)
-
         @event     = @event =~ /e/i ? true : false
+      elsif options.is_a?(Hash) && ((options.keys.sort & FIELDS) == FIELDS)
+        @uid       = options["uid"].to_i
+        @event     = options.fetch("event", false)
+        @server    = Role.new(options["server"])
+        @client    = Role.new(options["client"])
       else
-        raise ArgumentError, "Invalid option string '#{options}'"
+        raise ArgumentError, "Invalid options '#{options}'"
       end
 
     end

@@ -63,7 +63,7 @@ namespace HF
          typedef enum _CMD
          {
          <%- @commands.each do |cmd| -%>
-           <%= cmd.to_uid %> = <%= cmd.uid %>,   //!< <%= cmd.to_doc %> command UID.
+           <%= cmd.to_uid %> = <%= cmd.uid.to_hex(2) %>,   //!< <%= cmd.to_doc %> command UID.
          <%- end -%>
             __LAST_CMD__ = <%= @commands.last.to_uid %>
          } CMD;
@@ -74,7 +74,7 @@ namespace HF
          typedef enum _Attributes
          {
          <%- @attributes.each do |attr| -%>
-            <%= attr.to_uid %> = <%= attr.uid %>,   //!< <%= attr.to_doc %> attribute UID.
+            <%= attr.to_uid %> = <%= attr.uid.to_hex(2) %>,   //!< <%= attr.to_doc %> attribute UID.
          <%- end -%>
             __LAST_ATTR__ = <%= @attributes.last.to_uid %>
          } Attributes;
