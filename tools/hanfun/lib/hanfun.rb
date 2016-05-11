@@ -37,12 +37,12 @@ module Hanfun
       config = YAML::load(File.open(filename))
 
       config.each do |interface|
-        args = [interface["name"], interface["uid"].to_hex]
-        interface['attributes'] = interface['attributes'].reduce({}, :merge)
-        interface['commands'] = interface['commands'].reduce({}, :merge)
+        args = [interface['name'], interface['uid'].to_hex]
+        interface['attributes'] = interface['attributes'].reduce({}, :merge) if interface['attributes'].is_a? Array
+        interface['commands'] = interface['commands'].reduce({}, :merge) if interface['attributes'].is_a? Array
 
-        if interface[:core]
-          args << interface[:interface] || false
+        if interface['core']
+          args << interface.fetch('interface', false)
           generator = Generators::Core.new(args, interface)
         else
           generator = Generators::Interface.new(args,interface)
