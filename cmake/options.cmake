@@ -24,6 +24,7 @@ include(CMakeDependentOption)
 
 option(HF_BUILD_TESTS "Build project's unit tests." NO)
 option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
+option(HF_CODE_COVERAGE "Build HAN-FUN with code coverage support" NO)
 
 #
 # Package configuration options.

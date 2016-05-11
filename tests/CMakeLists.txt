@@ -126,4 +126,7 @@ if(NOT CMAKE_CROSSCOMPILING)
 
   add_custom_target (check ALL COMMAND ${CMAKE_CTEST_COMMAND} ${ARGS}
                                DEPENDS ${HF_TESTS} VERBATIM)
+
+  generate_code_coverage_report()
+
 endif()

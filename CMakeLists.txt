@@ -50,6 +50,7 @@ configure_file( ${CMAKE_SOURCE_DIR}/version.h.in
                 ${CMAKE_BINARY_DIR}/hanfun/version.h )
 
 include("cmake/options.cmake")
+include("cmake/code_coverage.cmake")
 
 configure_file( ${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/hanfun/config.h )
 
