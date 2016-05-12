@@ -47,13 +47,13 @@ if(NOT HF_CODE_COVERAGE)
   return ()
 endif()
 
-set(CMAKE_COVERAGE_FLAGS "--coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_COVERAGE_FLAGS "-g --coverage -fprofile-arcs -ftest-coverage")
 mark_as_advanced(CMAKE_COVERAGE_FLAGS)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_COVERAGE_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_COVERAGE_FLAGS}")
 
-macro(generate_code_coverage_report)
+function(generate_code_coverage_report _targets)
   if(NOT HF_CODE_COVERAGE)
     return()
   endif()
@@ -80,18 +80,17 @@ macro(generate_code_coverage_report)
 
   add_custom_target(coverage_prepare
                     COMMAND ${LCOV_PATH} --directory . --zerocounters
-                    COMMAND ${LCOV_PATH} --directory . --capture --initial --output-file hanfun.lcov
+                    COMMAND ${LCOV_PATH} --directory . --capture --initial --output-file hanfun.info
                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                    DEPENDS ${_targets}
                     COMMENT "Resetting code coverage counters to zero.")
-
-  add_dependencies(check coverage_prepare)
 
   execute_process(COMMAND ${GIT_PATH} describe OUTPUT_VARIABLE GIT_DESCRIBE
                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
   add_custom_target(coverage_report
-                    COMMAND ${LCOV_PATH} --directory . --capture --output-file hanfun.info
+                    COMMAND ${LCOV_PATH} --rc lcov_branch_coverage=1 --directory . --capture --output-file hanfun.info
                     COMMAND ${LCOV_PATH} --remove hanfun.info 'tests/cpputest*' '/usr/*' --output-file hanfun.info
                     COMMAND ${GENHTML_PATH} --legend -title "HAN-FUN ${GIT_DESCRIBE}" -o coverage hanfun.info
                     COMMAND ${CMAKE_COMMAND} -E remove hanfun.info
@@ -102,7 +101,7 @@ macro(generate_code_coverage_report)
     # Show info where to find the report
     add_custom_target(coverage
         COMMAND ;
-        DEPENDS coverage_report
+        DEPENDS coverage_prepare check coverage_report
         COMMENT "Open ${CMAKE_BINARY_DIR}/coverage/index.html in your browser to view the coverage report.")
 
-endmacro()
+endfunction()
