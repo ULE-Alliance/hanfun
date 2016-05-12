@@ -269,6 +269,13 @@ namespace HF
       template<class Base>
       struct InterfaceParentHelper: public InterfaceHelper<Base>
       {
+         InterfaceParentHelper() : InterfaceHelper<Base>()
+         {}
+
+         template<typename Arg>
+         InterfaceParentHelper(Arg &&arg): InterfaceHelper<Base>(arg)
+         {}
+
          Interface::Role role() const
          {
             return Interface::SERVER_ROLE;

@@ -243,7 +243,7 @@ module Hanfun
       # Generate test code file and add it to the build.
       def test_file
         # Generate test code.
-        template("test_#{@type}.cpp.erb", test_path("test_#{@interface.path}.cpp")) do |content|
+        template("test_interface.cpp.erb", test_path("test_#{@interface.path}.cpp")) do |content|
           format_code(content)
         end
 

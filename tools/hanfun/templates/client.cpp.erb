@@ -88,11 +88,10 @@ void Client::<%= cmd.name %>(const Protocol::Address &addr)
   // FIXME Generated Stub.
   <%- unless cmd.event -%>
   <%- if service? -%>
-  assert (addr.unit == 0);
-  if(addr.unit != 0)
-  {
-    return;
-  }
+  /* *INDENT-OFF* */
+  HF_ASSERT(addr.unit == 0, { return; });
+  /* *INDENT-ON* */
+
   <%- end -%>
   Protocol::Message message;
 
