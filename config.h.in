@@ -28,6 +28,12 @@
 #define HF_CORE_SUOTA_CHECK_VERSION_CMD          @HF_CORE_SUOTA_CHECK_VERSION_CMD@
 
 // =============================================================================
+// Group Management Configuration
+// =============================================================================
+
+#define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD           @HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD@
+
+// =============================================================================
 // Interfaces
 // =============================================================================
 

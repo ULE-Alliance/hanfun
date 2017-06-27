@@ -59,7 +59,7 @@ namespace HF
          /* Core Services */
          DEVICE_MANAGEMENT       = 0x0001, //!< %Device Management interface %UID.
          BIND_MANAGEMENT         = 0x0002, //!< Bind Management interface %UID.
-         GROUP_MANGEMENT         = 0x0003, //!< Group Management interface %UID. __Not implemented__
+         GROUP_MANAGEMENT        = 0x0003, //!< Group Management interface %UID.
          IDENTIFY                = 0x0004, //!< Identify interface %UID. __Not implemented__
          DEVICE_INFORMATION      = 0x0005, //!< %Device information interface UID.
          ATTRIBUTE_REPORTING     = 0x0006, //!< %Attribute Reporting interface UID.

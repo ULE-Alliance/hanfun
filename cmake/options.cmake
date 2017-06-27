@@ -95,6 +95,12 @@ cmake_dependent_option(HF_CORE_SUOTA_CHECK_VERSION_CMD "Service - SUOTA - Check 
                        OFF "HF_CORE_SUOTA_SUPPORT" OFF)
 
 # =============================================================================
+# Group Management Configuration
+# =============================================================================
+
+option(HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD          "Service - Group Management - Get Info")
+
+# =============================================================================
 # Interfaces Configuration
 # =============================================================================
 
