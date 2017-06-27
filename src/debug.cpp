@@ -50,7 +50,7 @@ static int8_t log_width = -1;
 // =============================================================================
 std::ostream &operator<<(std::ostream &stream, const uint8_t byte)
 {
-   if (stream == std::cout || stream == std::cerr)
+   if (stream.rdbuf() == std::cout.rdbuf() || stream.rdbuf() == std::cerr.rdbuf())
    {
       std::ios_base::fmtflags ff = stream.flags();
       char f                     = stream.fill('0');
@@ -84,7 +84,7 @@ std::ostream &operator<<(std::ostream &stream, const uint8_t byte)
 // =============================================================================
 std::ostream &operator<<(std::ostream &stream, const HF::Common::ByteArray &array)
 {
-   if (stream == std::cout || stream == std::cerr)
+   if (stream.rdbuf() == std::cout.rdbuf() || stream.rdbuf() == std::cerr.rdbuf())
    {
       std::ios_base::fmtflags ff = stream.flags();
       char f                     = stream.fill('0');

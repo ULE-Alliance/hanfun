@@ -102,8 +102,7 @@ namespace
                {
                   auto attr = new HF::Attributes::Attribute<std::string>(
                      HF::Interface::DEVICE_INFORMATION,
-                     HF::Core::DeviceInformation::SERIAL_NUMBER_ATTR,
-                     nullptr);
+                     HF::Core::DeviceInformation::SERIAL_NUMBER_ATTR, "");
 
                   HF::Attributes::Response resp(attr);
                   resp.unpack(payload, offset);
