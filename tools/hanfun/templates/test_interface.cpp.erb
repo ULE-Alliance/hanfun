@@ -76,6 +76,32 @@ TEST(<%= @interface.to_class %>, UID)
 {
    LONGS_EQUAL(HF::Interface::<%= @interface.to_uid %>, <%= object -%>uid());
 }
+<%- unless @attributes.empty? -%>
+
+<%- @attributes.each do |attr| -%>
+//! @test <%= attr.to_doc %> support.
+TEST(<%= @interface.to_class %>, <%= attr.to_class %>)
+{
+  HF::Attributes::IAttribute * attr = <%= @interface.to_class %>::create_attribute(<%= @interface.to_class %>::<%= attr.to_uid %>);
+
+  CHECK_TRUE (attr != nullptr);
+
+  LONGS_EQUAL(<%= attr.to_class %>::ID, attr->uid());
+  CHECK_EQUAL(<%= attr.to_class %>::WRITABLE, attr->isWritable());
+  LONGS_EQUAL(HF::Interface::<%= @interface.to_uid %>, attr->interface());
+
+  delete attr;
+}
+
+<%- end -%>
+//! @test Check nullptr return for invalid attribute
+TEST(<%= @interface.to_class %>, InvalidAttribute)
+{
+  HF::Attributes::IAttribute * attr = <%= @interface.to_class %>::create_attribute(<%= @interface.to_class %>::__LAST_ATTR__+1);
+
+  CHECK_TRUE (attr == nullptr);
+}
+<%- end -%>
 
 // =============================================================================
 // <%= @interface.to_doc %> Client
