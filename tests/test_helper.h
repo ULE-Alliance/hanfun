@@ -18,6 +18,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include <random>
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
