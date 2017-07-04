@@ -802,73 +802,77 @@ namespace HF
          }
       };
 
-      /*!
-       * Wrapper for std::vector implementing the Serializable API.
-       *
-       * @remark This class will unpack the same number of bytes as the
-       * size of the @c data vector.
-       */
-      template<>
-      struct SerializableHelper<std::vector<uint8_t>>:
-         public Common::Serializable
+
+      /*!vector type*/
+      template<typename T>
+      struct SerializableHelper<std::vector<T>> : public Common::Serializable
       {
-         std::vector<uint8_t> data;
+         std::vector<T> &data;
 
-         SerializableHelper()
-         {}
-
-         SerializableHelper(std::vector<uint8_t> _data): data(_data) {}
-
-         uint16_t size() const
+         SerializableHelper (std::vector<T> &data) :
+               data(data)
          {
-            return data.size();
+
          }
 
-         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         uint16_t size () const
          {
+            return sizeof(uint8_t) + sizeof(T) * data.size();
+         }
+
+         uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const
+                        {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
 
-            auto it        = array.begin();
-            std::advance(it, offset);
+            offset += array.write(offset, size());    // size of the vector of type T
 
-            std::copy(data.begin(), data.end(), it);
+            SerializableHelper<T> Helper;    //Instantiate the SerializableHelper for the element type
 
-            offset += data.size();
+            for (auto elem : data)
+            {
+               Helper.data = elem;
+               offset += Helper.pack(array, offset);     //Use the pack function for this type.
+            }
 
             return offset - start;
          }
 
-         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
             uint16_t start = offset;
+            uint16_t n_members;
 
-            auto it        = array.begin();
-            std::advance(it, offset);
+            offset += array.read(offset, n_members);
+            data.reserve(n_members);
 
-            std::copy_n(it, data.size(), data.begin());
+            SerializableHelper<T> helper;
 
-            offset += data.size();
+            for(uint16_t i=0; i< n_members; i++)
+            {
+               offset += helper.unpack(array,offset);
+               data.push_back(helper.data);
+            }
 
             return offset - start;
          }
-
-         //! @copydoc HF::Attributes::IAttribute::compare
-         int compare(const SerializableHelper<std::vector<uint8_t>> &other) const
-         {
+         //!@copydoc HF::Attributes::IAttribute::compare
+         int compare (const SerializableHelper<std::vector<uint8_t>> &other) const
+                      {
             return memcmp(data.data(), other.data.data(), data.size());
          }
 
          //! @copydoc HF::Attributes::IAttribute::changed
-         float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
-         {
+         float changed (const SerializableHelper<std::vector<uint8_t>> &other) const
+                        {
             UNUSED(other);
             return 0.0;
          }
       };
+
 
       /*!
        * This class represents the interface that cloneable objects need
