@@ -20,6 +20,8 @@
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
 
+#include <string>
+
 namespace HF
 {
    namespace Core
@@ -75,6 +77,310 @@ namespace HF
             NUMBER_OF_GROUPS_ATTR = 0x01,   //!< Number Of Groups attribute UID.
             __LAST_ATTR__         = NUMBER_OF_GROUPS_ATTR
          } Attributes;
+
+
+         struct GroupAddress
+         {
+            uint16_t address;    //!< Group Address
+
+            constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN Group Address.
+            constexpr static uint16_t END_ADDR   = 0x7FFF;  //!< Last HAN-FUN Group Address.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] address     The group Address
+             */
+            GroupAddress(uint16_t address)
+            {
+               //static_assert(START_ADDR <= address && address <= END_ADDR, "Group Address outside range");
+               this->address=address;
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t);                         // Group Address
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+         };
+
+
+         // =============================================================================
+         // Group Member Entry Data structure
+         // =============================================================================
+
+         typedef Protocol::Address Member;
+
+         // =============================================================================
+         // Group Entry Data structure
+         // =============================================================================
+
+         struct Group:public GroupAddress
+         {
+            std::string name; 	//!< Group Name
+            std::vector<Member> members; //!< Group Members
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] GroupAddr 	Group Address
+             * @param [in] GroupName	Group Name
+             */
+            Group(uint16_t address, std::string name):
+               GroupAddress(address), name(name)
+            {};
+
+            // =============================================================================
+            // Serializable API
+            // =============================================================================
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = GroupAddress::min_size						         // Group Address
+        	                                      + sizeof(uint8_t)                 	 	// Group Name (Length)
+        	                                      + sizeof(uint16_t); 				        	// Members Count
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+
+            // =============================================================================
+            // Operators
+            // =============================================================================
+
+            //!Equals operator
+            bool operator == (Group &other)
+            {
+               if (this->address == other.address)
+                  return true;
+               else
+                  return false;
+            }
+            //!Not equals operator
+            bool operator != (Group &other)
+            {
+               return !(*this == other);
+            }
+
+         };
+
+
+
+//         struct Member{
+//            uint16_t address; //!< Device Address
+//            uint8_t unit_id; //!< Unit ID
+//
+//            constexpr static uint16_t START_ADDR = 0x0000;  //!< First HAN-FUN Device Address.
+//            constexpr static uint16_t END_ADDR   = 0x7FFE;  //!< Last HAN-FUN Device Address.
+//
+//            /*!
+//             * Constructor.
+//             *
+//             * @param [in] address		Device Address
+//             * @param [in] unit_id		Unit Member ID
+//             */
+//            Member(uint16_t address, uint8_t unit_id):
+//               address(address), unit_id(unit_id)
+//            {};
+//
+//            // =============================================================================
+//            // Serializable API
+//            // =============================================================================
+//
+//            //! Minimum pack/unpack required data size.
+//            static constexpr uint16_t min_size = sizeof(uint16_t)					      	// Member Address
+//        	         	                              + sizeof(uint8_t);					 	// Member Unit ID
+//
+//            //! @copydoc HF::Common::Serializable::size
+//            uint16_t size() const;
+//
+//            //! @copydoc HF::Common::Serializable::pack
+//            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+//
+//            //! @copydoc HF::Common::Serializable::unpack
+//            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+//
+//         };
+
+         struct CreateMessage
+         {
+            std::string name; //!< Group Name.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] name     Group Name
+             */
+            CreateMessage(std::string name):
+               name(name)
+            {};
+
+            virtual ~CreateMessage();
+
+            // =============================================================================
+            // Serializable API
+            // =============================================================================
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);          // Group Name (length)
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+
+         };
+
+         struct CreateResponse : public Protocol::Response, GroupAddress
+         {
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] address     Group address
+             */
+            CreateResponse(uint16_t address):
+               GroupAddress(address)
+            {};
+
+            virtual ~CreateResponse();
+
+            // =============================================================================
+            // Serializable API
+            // =============================================================================
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Protocol::Response::min_size            // Response Code
+                                               + GroupAddress::min_size;          // Group Address
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+
+         };
+
+         typedef GroupAddress DeleteMessage;
+
+         typedef Protocol::Response DeleteResponse;
+
+
+         struct AddMessage : public GroupAddress, Protocol::Address
+         {
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] address     Group address
+             */
+            AddMessage(uint16_t group, uint16_t device, uint8_t unit):
+               GroupAddress(group), Protocol::Address(device, unit)
+            {};
+
+            virtual ~AddMessage();
+
+            // =============================================================================
+            // Serializable API
+            // =============================================================================
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t)           // Group Address
+                                               + sizeof(uint16_t)           // Device address
+                                               + sizeof(uint8_t);          // Unit ID
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+
+         };
+
+         typedef Protocol::Response AddResponse;
+
+         struct RemoveMessage: public GroupAddress, public Protocol::Address
+         {
+            /*!
+             * Constructor.
+             *
+             * @param [in] address     Group address
+             */
+            RemoveMessage(uint16_t group_address, uint16_t device, uint8_t unit):
+               GroupAddress(group_address), Protocol::Address(device, unit)
+            {};
+
+            virtual ~RemoveMessage();
+
+            // =============================================================================
+            // Serializable API
+            // =============================================================================
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = GroupAddress::min_size + Protocol::Address::min_size;
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+
+         };
+
+
+         typedef Protocol::Response RemoveResponse;
+
+
+         typedef GroupAddress Info;
+
+         struct InfoResponse: public Protocol::Response
+         {
+            std::string name;
+            std::vector<Member> members;
+
+
+            InfoResponse(std::string name, std::vector<Member> members):
+               name(name), members(members)
+            {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = Protocol::Response::min_size
+                                                + sizeof(uint8_t)                // Group Name size("")
+                                                + sizeof(uint16_t);              // Number of members (=0)
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+
+         };
 
          // =============================================================================
          // Attribute Helper classes

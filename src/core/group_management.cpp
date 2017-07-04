@@ -69,3 +69,307 @@ HF::Attributes::IAttribute *GroupManagement::create_attribute(uint8_t uid)
          return nullptr;
    }
 }
+
+
+uint16_t GroupAddress::size() const
+{
+   return min_size;
+}
+
+uint16_t GroupAddress::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+   HF_ASSERT(START_ADDR <= address && address <= END_ADDR,return 0;);
+
+   array.write(offset, address);
+
+   return min_size;
+}
+
+uint16_t GroupAddress::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   array.read(offset,address);
+
+   return min_size;
+}
+
+
+
+
+uint16_t Group::size() const
+{
+   uint16_t result = min_size;
+   result += name.length();
+   return result;
+}
+
+uint16_t Group::pack (Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+   HF_ASSERT(GroupAddress::START_ADDR <= address && address <= GroupAddress::END_ADDR, return 0;);
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = GroupAddress::pack(array, offset);
+   HF_ASSERT(size > 0, return 0;);
+   offset += size;
+
+   size = HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
+   HF_ASSERT(size > 0, return 0;);
+   offset += size;
+
+   HF::Common::SerializableHelper<std::vector<Member>> helper(const_cast<std::vector<Member> &>(members));
+   offset += helper.pack(array, offset);
+
+   return offset - start;
+}
+
+uint16_t Group::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   offset  += GroupAddress::unpack(array, offset);
+
+   size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
+
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   HF::Common::SerializableHelper<std::vector<Member>> helper(members);
+   size += helper.unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return offset - start;
+}
+
+
+/*====================================================================================
+ * Messages
+ *====================================================================================*/
+
+/*==== Create Group ====*/
+
+uint16_t CreateMessage::size() const
+{
+   return (name.length() + min_size);
+}
+
+uint16_t CreateMessage::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
+
+   return (offset - start);
+}
+
+uint16_t CreateMessage::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
+
+/*==== Create Group Response ====*/
+
+uint16_t CreateResponse::size() const
+{
+   return (Response::size() + GroupAddress::size());
+}
+
+uint16_t CreateResponse::pack (Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += Response::pack(array, offset);
+
+   if (this->code != Common::Result::OK)
+   {
+      return min_size;
+   }
+
+   offset += GroupAddress::pack(array, offset);
+
+   return offset - start;
+}
+
+uint16_t CreateResponse::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   uint16_t start = offset;
+
+   offset += Response::unpack(array, offset);
+
+   if (this->code != Common::Result::OK)
+   {
+      goto _end;
+   }
+
+   HF_SERIALIZABLE_CHECK(array, offset, sizeof(uint16_t));
+
+   offset += GroupAddress::unpack(array, offset);
+
+   _end:
+   return offset - start;
+}
+
+
+/*==== Add to Group ====*/
+
+uint16_t AddMessage::size() const
+{
+   return (GroupAddress::size()+Protocol::Address::size());
+}
+
+uint16_t AddMessage::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += GroupAddress::pack(array, offset);
+
+   offset += Protocol::Address::pack(array, offset);
+
+   return (offset - start);
+}
+
+uint16_t AddMessage::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = GroupAddress::unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = Protocol::Address::unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
+/*==== Add to Group ====*/
+
+uint16_t RemoveMessage::size() const
+{
+   return (GroupAddress::size()+Protocol::Address::size());
+}
+
+uint16_t RemoveMessage::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += GroupAddress::pack(array, offset);
+
+   offset += Protocol::Address::pack(array, offset);
+
+   return (offset - start);
+}
+
+uint16_t RemoveMessage::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = GroupAddress::unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = Protocol::Address::unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
+
+/*==== Group Info Response ====*/
+
+uint16_t InfoResponse::size() const
+{
+   return ( min_size + sizeof(char)*name.length() + sizeof(Member)*members.size());
+}
+
+uint16_t InfoResponse::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += Response::pack(array, offset);
+
+   if (this->code != Common::Result::OK)
+   {
+      return min_size;
+   }
+
+   offset += HF::Common::SerializableHelper<std::string>::pack(name,array,offset);
+
+   HF::Common::SerializableHelper<std::vector<Member> > helper(const_cast<std::vector<Member> &>(members));
+
+   offset += helper.pack(array, offset);
+
+   return offset - start;
+}
+
+uint16_t InfoResponse::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = Response::unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   HF::Common::SerializableHelper<std::vector<Member>> helper(members);
+
+   if (this->code != Common::Result::OK)
+   {
+      goto _end;
+   }
+
+   HF_SERIALIZABLE_CHECK(array, offset, sizeof(uint16_t));
+
+   size = HF::Common::SerializableHelper<std::string>::unpack(name,array,offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+
+   size = helper.unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   _end:
+   return offset - start;
+}
