@@ -143,7 +143,7 @@ namespace HF
    template<typename T> using Invoke             = typename T::type;
    template<typename C> using EnableIf           = Invoke<std::enable_if<C::value>>;
    template<typename P, typename C> using Parent = std::is_base_of<P, C>;
-   template<typename T> using IsClass            = std::is_class<std::remove_pointer<T>>;
+   template<typename T> using IsClass            = std::is_class<T>;
 
    template<typename T>
    using IsIntegral = std::is_integral<Invoke<std::remove_reference<T>>>;
@@ -171,6 +171,9 @@ namespace HF
    struct And<T> {
       static constexpr bool value = T::value;
    };
+
+   template<typename T> using IsClassPointer     = And<std::is_pointer<T>,
+                                                       std::is_class<std::remove_pointer<T>>>;
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -524,7 +527,7 @@ namespace HF
        * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
-      struct SerializableHelper<T, EnableIf<And<std::is_pointer<T>, IsClass<T>>>>:
+      struct SerializableHelper<T, EnableIf<IsClassPointer<T>>>:
          public Serializable
       {
          //! Pointer to the wrapped instance.
@@ -799,6 +802,180 @@ namespace HF
          {
             UNUSED(other);
             return 0.0;
+         }
+      };
+
+      template<typename T>
+      struct SerializableHelper<T, EnableIf<IsIntegral<typename T::value_type>>>: public Serializable
+      {
+         T &data;
+
+         using value_type = typename T::value_type;
+
+         SerializableHelper(T &data): data(data) {}
+
+         static constexpr uint16_t min_size = sizeof(uint8_t);
+
+         uint16_t size() const
+         {
+            return min_size + data_size() * sizeof(value_type);
+         }
+
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+
+            HF_ASSERT(data.size() > UINT8_MAX, { return 0; });
+
+            uint16_t start = offset;
+
+            offset += array.write(offset, (uint8_t) data_size());
+
+            SerializableHelper<value_type> h;
+            std::for_each(data.cbegin(), data.cend(), [&h, &offset, &array](const value_type e)
+            {
+               h.data = e;
+               offset += h.pack(array, offset);
+            });
+
+            return offset - start;
+         }
+
+         uint16_t unpack(Common::ByteArray &array, uint16_t offset = 0)
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+            uint16_t start = offset;
+
+            uint8_t size = 0;
+
+            offset += array.read(offset, size);
+
+            HF_SERIALIZABLE_CHECK(array, offset, size * sizeof(value_type));
+
+            SerializableHelper<value_type> h;
+            auto it = std::back_inserter<T>(data);
+
+            for(uint8_t i = 0; i < size; ++i)
+            {
+               h.data = 0;
+               offset += h.unpack(array, offset);
+               it = h.data;
+            }
+
+            return offset - start;
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::compare
+         int compare(const SerializableHelper<T> &other) const
+         {
+            return std::equal(data.cbegin(), data.cend(), other.data.cbegin()) ? 0 : -1;
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::changed
+         float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
+         {
+            UNUSED(other);
+            return 0.0;
+         }
+
+         protected:
+
+         uint16_t data_size() const
+         {
+            return std::distance(data.cbegin(), data.cend());
+         }
+      };
+
+      template<typename T>
+      struct SerializableHelper<T, EnableIf<IsClass<typename T::value_type>>>: public Serializable
+      {
+         T &data;
+
+         using value_type = typename T::value_type;
+
+         SerializableHelper(T &data): data(data) {}
+
+         static constexpr uint16_t min_size = sizeof(uint8_t);
+
+         uint16_t size() const
+         {
+            uint16_t result = min_size;
+
+            SerializableHelper<value_type *> h;
+            std::for_each(data.cbegin(), data.cend(), [&h, &result](const value_type e)
+            {
+               h.data  = const_cast<value_type *>(&e);
+               result += h.size();
+            });
+
+            return result;
+         }
+
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+
+            HF_ASSERT(data.size() > UINT8_MAX, { return 0; });
+
+            uint16_t start = offset;
+
+            offset += array.write(offset, (uint8_t) data_size());
+
+            SerializableHelper<value_type *> h;
+            std::for_each(data.cbegin(), data.cend(), [&h, &offset, &array](const value_type &e)
+            {
+               h.data  = const_cast<value_type *>(&e);
+               offset += h.pack(array, offset);
+            });
+
+            return offset - start;
+         }
+
+         uint16_t unpack(Common::ByteArray &array, uint16_t offset = 0)
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+            uint16_t start = offset;
+
+            uint8_t size = 0;
+
+            offset += array.read(offset, size);
+
+            auto it = std::back_inserter<T>(data);
+
+            for(uint8_t i = 0; i < size; ++i)
+            {
+               SerializableHelper<value_type> h;
+
+               HF_SERIALIZABLE_CHECK(array, offset, h.size());
+
+               offset += h.unpack(array, offset);
+
+               it = h.data;
+            }
+
+            return offset - start;
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::compare
+         int compare(const SerializableHelper<T> &other) const
+         {
+            return std::equal(data.cbegin(), data.cend(), other.data.cbegin()) ? 0 : -1;
+         }
+
+         //! @copydoc HF::Attributes::IAttribute::changed
+         float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
+         {
+            UNUSED(other);
+            return 0.0;
+         }
+
+         protected:
+
+         uint16_t data_size() const
+         {
+            return std::distance(data.cbegin(), data.cend());
          }
       };
 
