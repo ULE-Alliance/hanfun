@@ -143,9 +143,34 @@ namespace HF
    template<typename T> using Invoke             = typename T::type;
    template<typename C> using EnableIf           = Invoke<std::enable_if<C::value>>;
    template<typename P, typename C> using Parent = std::is_base_of<P, C>;
+   template<typename T> using IsClass            = std::is_class<std::remove_pointer<T>>;
 
    template<typename T>
    using IsIntegral = std::is_integral<Invoke<std::remove_reference<T>>>;
+
+   template<typename ...Args> struct Or;
+
+   template<typename T, typename ...Args>
+   struct Or<T, Args...> {
+      static constexpr bool value = T::value || Or<Args...>::value;
+   };
+
+   template<typename T>
+   struct Or<T> {
+      static constexpr bool value = T::value;
+   };
+
+   template<typename ...Args> struct And;
+
+   template<typename T, typename ...Args>
+   struct And<T, Args...> {
+      static constexpr bool value = T::value && And<Args...>::value;
+   };
+
+   template<typename T>
+   struct And<T> {
+      static constexpr bool value = T::value;
+   };
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
