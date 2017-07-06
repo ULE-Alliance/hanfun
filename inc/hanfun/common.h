@@ -524,7 +524,7 @@ namespace HF
        * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
-      struct SerializableHelper<T, EnableIf<std::is_pointer<T>>>:
+      struct SerializableHelper<T, EnableIf<And<std::is_pointer<T>, IsClass<T>>>>:
          public Serializable
       {
          //! Pointer to the wrapped instance.
