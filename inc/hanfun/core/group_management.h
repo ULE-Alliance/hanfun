@@ -225,7 +225,7 @@ namespace HF
                name(name)
             {};
 
-            virtual ~CreateMessage();
+            //virtual ~CreateMessage();
 
             // =============================================================================
             // Serializable API
@@ -257,7 +257,7 @@ namespace HF
                GroupAddress(address)
             {};
 
-            virtual ~CreateResponse();
+            //virtual ~CreateResponse();
 
             // =============================================================================
             // Serializable API
@@ -330,7 +330,7 @@ namespace HF
                GroupAddress(group_address), Protocol::Address(device, unit)
             {};
 
-            virtual ~RemoveMessage();
+            //virtual ~AddMessage();
 
             // =============================================================================
             // Serializable API
