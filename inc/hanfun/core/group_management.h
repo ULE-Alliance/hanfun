@@ -91,7 +91,7 @@ namespace HF
              *
              * @param [in] address     The group Address
              */
-            GroupAddress(uint16_t address)
+            GroupAddress(uint16_t address = 0)
             {
                //static_assert(START_ADDR <= address && address <= END_ADDR, "Group Address outside range");
                this->address=address;
@@ -221,7 +221,7 @@ namespace HF
              *
              * @param [in] name     Group Name
              */
-            CreateMessage(std::string name):
+            CreateMessage(std::string name=""):
                name(name)
             {};
 
@@ -253,7 +253,7 @@ namespace HF
              *
              * @param [in] address     Group address
              */
-            CreateResponse(uint16_t address):
+            CreateResponse(uint16_t address = 0):
                GroupAddress(address)
             {};
 
@@ -295,39 +295,12 @@ namespace HF
                GroupAddress(group), Protocol::Address(device, unit)
             {};
 
-            virtual ~AddMessage();
-
-            // =============================================================================
-            // Serializable API
-            // =============================================================================
-
-            //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint16_t)           // Group Address
-                                               + sizeof(uint16_t)           // Device address
-                                               + sizeof(uint8_t);          // Unit ID
-
-            //! @copydoc HF::Common::Serializable::size
-            uint16_t size() const;
-
-            //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
-
-            //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
-
-         };
-
-         typedef Protocol::Response AddResponse;
-
-         struct RemoveMessage: public GroupAddress, public Protocol::Address
-         {
             /*!
-             * Constructor.
+             * Empty Constructor.
              *
-             * @param [in] address     Group address
+             * Mainly used for the unpack function.
              */
-            RemoveMessage(uint16_t group_address, uint16_t device, uint8_t unit):
-               GroupAddress(group_address), Protocol::Address(device, unit)
+            AddMessage()
             {};
 
             //virtual ~AddMessage();
@@ -350,6 +323,9 @@ namespace HF
 
          };
 
+         typedef Protocol::Response AddResponse;
+
+         typedef AddMessage RemoveMessage;
 
          typedef Protocol::Response RemoveResponse;
 
@@ -361,11 +337,23 @@ namespace HF
             std::string name;
             std::vector<Member> members;
 
-
+            /*!
+             * Constructor.
+             *
+             * @param name       Group Name
+             * @param members    Member vector
+             */
             InfoResponse(std::string name, std::vector<Member> members):
                name(name), members(members)
             {}
 
+            /*!
+             * Empty Constructor.
+             *
+             * Mainly to use with the unpack function.
+             */
+            InfoResponse()
+            {}
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = Protocol::Response::min_size
                                                 + sizeof(uint8_t)                // Group Name size("")

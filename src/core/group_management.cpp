@@ -272,43 +272,6 @@ uint16_t AddMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    return (offset - start);
 }
 
-/*==== Add to Group ====*/
-
-uint16_t RemoveMessage::size() const
-{
-   return (GroupAddress::size()+Protocol::Address::size());
-}
-
-uint16_t RemoveMessage::pack(Common::ByteArray &array, uint16_t offset) const
-{
-   HF_SERIALIZABLE_CHECK(array, offset, size());
-
-   uint16_t start = offset;
-
-   offset += GroupAddress::pack(array, offset);
-
-   offset += Protocol::Address::pack(array, offset);
-
-   return (offset - start);
-}
-
-uint16_t RemoveMessage::unpack(const Common::ByteArray &array, uint16_t offset)
-{
-   HF_SERIALIZABLE_CHECK(array, offset, size());
-
-   uint16_t start = offset;
-   uint16_t size;
-
-   size = GroupAddress::unpack(array, offset);
-   HF_ASSERT(size != 0, {return 0;});
-   offset += size;
-
-   size = Protocol::Address::unpack(array, offset);
-   HF_ASSERT(size != 0, {return 0;});
-   offset += size;
-
-   return (offset - start);
-}
 
 
 /*==== Group Info Response ====*/
