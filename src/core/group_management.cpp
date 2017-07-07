@@ -191,6 +191,11 @@ uint16_t CreateMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 
 uint16_t CreateResponse::size() const
 {
+   if(code != Common::Result::OK)
+   {
+      return min_size;
+   }
+
    return (Response::size() + GroupAddress::size());
 }
 
@@ -199,6 +204,7 @@ uint16_t CreateResponse::pack (Common::ByteArray &array, uint16_t offset) const
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
+   uint8_t size;
 
    offset += Response::pack(array, offset);
 
@@ -207,7 +213,9 @@ uint16_t CreateResponse::pack (Common::ByteArray &array, uint16_t offset) const
       return min_size;
    }
 
-   offset += GroupAddress::pack(array, offset);
+   size = GroupAddress::pack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
 
    return offset - start;
 }
@@ -245,6 +253,8 @@ uint16_t AddMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
+   HF_ASSERT(device != 0, {return 0;});
+
    uint16_t start = offset;
 
    offset += GroupAddress::pack(array, offset);
@@ -278,7 +288,14 @@ uint16_t AddMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 
 uint16_t InfoResponse::size() const
 {
-   return ( min_size + sizeof(char)*name.length() + sizeof(Member)*members.size());
+   if (code != Common::Result::OK)
+   {
+      return min_size;
+   }
+
+   HF::Common::SerializableHelper<std::vector<Member>> helper(const_cast<std::vector<Member> &>(members));
+
+   return (min_size + HF::Common::SerializableHelper<std::string>::size(name) + helper.size());
 }
 
 uint16_t InfoResponse::pack(Common::ByteArray &array, uint16_t offset) const

@@ -264,8 +264,8 @@ namespace HF
             // =============================================================================
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = Protocol::Response::min_size            // Response Code
-                                               + GroupAddress::min_size;          // Group Address
+            static constexpr uint16_t min_size = Protocol::Response::min_size;            // Response Code
+
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -310,7 +310,8 @@ namespace HF
             // =============================================================================
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = GroupAddress::min_size + Protocol::Address::min_size;
+            static constexpr uint16_t min_size = GroupAddress::min_size
+                                               + Protocol::Address::min_size;
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -354,10 +355,10 @@ namespace HF
              */
             InfoResponse()
             {}
+
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = Protocol::Response::min_size
-                                                + sizeof(uint8_t)                // Group Name size("")
-                                                + sizeof(uint16_t);              // Number of members (=0)
+            static constexpr uint16_t min_size = Protocol::Response::min_size;
+
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size () const;
