@@ -20,6 +20,8 @@
 using namespace HF;
 using namespace HF::Core;
 
+using namespace HF::Common;
+
 using namespace HF::Testing;
 
 using namespace HF::Core::GroupManagement;
@@ -84,6 +86,464 @@ TEST(GroupManagement, InvalidAttribute)
    CHECK_TRUE(attr == nullptr);
 }
 
+/* =====================================
+ *    Client to Servers Commands
+ * =====================================*/
+
+ /* ----- Create Group ------------- */
+
+//! @test Check the Create Group message size
+TEST(GroupManagement, CreateGroup_Size)
+{
+   CreateMessage *message;
+
+   message = new CreateMessage("");
+
+   UNSIGNED_LONGS_EQUAL(1, message->size());
+   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
+
+   delete message;
+
+   std::string group_name("TestGroup");
+   message = new CreateMessage(group_name);
+
+   UNSIGNED_LONGS_EQUAL(1+group_name.length(), message->size());
+
+
+   delete message;
+}
+
+//! @test Check the Create Group message pack
+TEST(GroupManagement, CreateGroup_Pack)
+{
+   CreateMessage *message;
+
+   std::string group_name("TestGroup");
+   message = new CreateMessage(group_name);
+
+   ByteArray expected = ByteArray { (uint8_t) group_name.length(), 'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p' };
+   ByteArray got = ByteArray(group_name.length() + 1);
+
+   message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+
+   delete message;
+}
+
+//! @test Check the Create Group message unpack
+TEST(GroupManagement, CreateGroup_Unpack)
+{
+   CreateMessage *message;
+   std::string group_name("TestGroup");
+
+   message = new CreateMessage();
+   ByteArray input = ByteArray { (uint8_t) group_name.length(), 'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p' };
+
+   message->unpack(input);
+
+   UNSIGNED_LONGS_EQUAL(1+group_name.length(), message->size());
+   CHECK_EQUAL(group_name, message->name);
+
+   delete message;
+}
+
+/* ----- Create Group Response ------------- */
+
+//! @test Check the CreateGroup Response message size
+TEST(GroupManagement, CreateGroupResponse_size)
+{
+   CreateResponse *message;
+
+   message = new CreateResponse();
+
+   CHECK_EQUAL(Common::Result::OK, message->code);
+   UNSIGNED_LONGS_EQUAL(message->min_size
+                        +sizeof(uint16_t)    //Group Addr
+                        , message->size());
+
+   delete message;
+
+   // ------ Check for response failure -----
+
+   message = new CreateResponse();
+   message->code= Common::Result::FAIL_AUTH; //create a FAIL  result code
+
+   CHECK_EQUAL(Common::Result::FAIL_AUTH, message->code);
+   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
+   UNSIGNED_LONGS_EQUAL(1, message->size());
+
+   delete message;
+
+}
+
+//! @test Check the CreateGroup Response message pack
+TEST(GroupManagement, CreateGroupResponse_Pack)
+{
+   CreateResponse *message;
+
+   // ----- Normal Case -------
+
+   uint16_t addr= 0x5A55;
+   message = new CreateResponse(addr);
+
+   ByteArray expected = ByteArray{ 0x00,    // Response code : OK
+                                 0x5A,    // addr MSB
+                                 0x55 };   // addr LSB
+   ByteArray got = ByteArray(1 + 1 + 1);
+
+   message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+
+   delete message;
+
+   // ---- Wrong address -----
+
+   addr = 0x8FFF;             //Addr outside range
+   message = new CreateResponse(addr);
+
+   CHECK_EQUAL(0, message->pack(got));
+
+   delete message;
+
+   // ----- FAIL response code ----
+
+   addr = 0x5A55;
+   message = new CreateResponse(addr);
+   message->code = Common::Result::FAIL_AUTH;
+
+   expected = ByteArray{ 0x01};
+   got      = ByteArray(message->size());
+
+   message->pack(got);
+
+   CHECK_EQUAL(message->min_size, message->pack(got));
+   CHECK_EQUAL(expected,got);
+
+
+   delete message;
+}
+
+//! @test Check the CreateGroup Response message unpack
+TEST(GroupManagement, CreateGroupResponse_UnPack)
+{
+   CreateResponse *message;
+
+   // ----- Normal Case -------
+
+   uint16_t addr= 0x5A55;
+   message = new CreateResponse();
+
+   ByteArray input = ByteArray{ 0x00,    // Response code : OK
+                                 0x5A,    // addr MSB
+                                 0x55 };   // addr LSB
+
+   message->unpack(input);
+
+   CHECK_EQUAL(0x00, (uint8_t)message->code);
+   CHECK_EQUAL(addr, message->address);
+
+   delete message;
+
+   // ----- FAIL Case -------
+
+   message = new CreateResponse();
+
+   input = ByteArray { 0x01,    // Response code : FAIL: Not Auth
+         0x5A,    // addr MSB
+         0x55 };   // addr LSB
+
+   message->unpack(input);
+
+   CHECK_EQUAL(0x01, (uint8_t )message->code);
+   CHECK_TEXT(addr != message->address,"On response code fail the addr is being unpacked\n");
+
+   delete message;
+}
+
+//! @test Check the DeleteGroup message size
+TEST(GroupManagement, DeleteGroupMessage_size)
+{
+   DeleteMessage *message;
+   uint16_t addr;
+
+   addr= 0x5A55;
+   message = new DeleteMessage(addr);
+
+   UNSIGNED_LONGS_EQUAL(2, message->size());
+   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
+
+   delete message;
+
+}
+
+//! @test Check the DeleteGroup message pack
+TEST(GroupManagement, DeleteGroupMessage_Pack)
+{
+   DeleteMessage *message;
+   uint16_t addr;
+   ByteArray expected;
+   ByteArray got;
+
+   uint16_t size;
+
+   addr= 0x5A55;
+   expected= ByteArray{0x5A, 0x55};
+   got=ByteArray(2);
+   message = new DeleteMessage(addr);
+
+   size = message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+   UNSIGNED_LONGS_EQUAL(2, size);
+
+   delete message;
+}
+
+//! @test Check the DeleteGroup message unpack
+TEST(GroupManagement, DeleteGroupMessage_UnPack)
+{
+   DeleteMessage *message;
+   uint16_t addr;
+   ByteArray input;
+
+   // -------- Normal Case ---------
+
+   addr= 0x5A55;
+   input= ByteArray{0x5A, 0x55};
+
+   message = new DeleteMessage();
+   message->unpack(input);
+
+   CHECK_EQUAL(addr, message->address);
+
+   delete message;
+}
+
+//! @test Check the Add to group message size
+TEST(GroupManagement, AddMessage_size)
+{
+   AddMessage *message;
+   uint16_t group_addr, dev_addr, unit_id;
+
+   group_addr = 0x5A55;
+   dev_addr = 0x0001;
+   unit_id = 0xAA;
+
+   message = new AddMessage(group_addr, dev_addr, unit_id);
+
+   UNSIGNED_LONGS_EQUAL(5, message->size());
+   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
+
+   delete message;
+}
+
+//! @test Check the Add to group message pack
+TEST(GroupManagement, AddMessage_Pack)
+{
+   AddMessage *message;
+   uint16_t group_addr, dev_addr, unit_id;
+   ByteArray expected, got;
+
+   uint16_t size;
+
+   group_addr  = 0x5A55;
+   dev_addr    = 0x0102;
+   unit_id     = 0xAB;
+   expected    = ByteArray{0x5A,    //Group Addr (MSB)
+                           0x55,    //Group Addr (LSB)
+                           0x01,    //Dev Addr  (MSB)
+                           0x02,    //Dev Addr  (LSB)
+                           0xAB};   //UnitID
+   got = ByteArray(5);
+
+   message = new AddMessage(group_addr, dev_addr, unit_id);
+
+   size = message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+   UNSIGNED_LONGS_EQUAL(5,size);
+
+   delete message;
+}
+
+//! @test Check the Add to group message unpack
+TEST(GroupManagement, AddMessage_UnPack)
+{
+   AddMessage *message;
+   uint16_t group_addr, dev_addr, unit_id;
+   ByteArray input;
+
+   uint16_t size;
+
+   group_addr  = 0x5A55;
+   dev_addr    = 0x0102;
+   unit_id     = 0xAB;
+   input       = ByteArray{0x5A,    //Group Addr (MSB)
+                           0x55,    //Group Addr (LSB)
+                           0x01,    //Dev Addr  (MSB)
+                           0x02,    //Dev Addr  (LSB)
+                           0xAB};   //UnitID
+
+
+   message = new AddMessage();
+
+   size = message->unpack(input);
+
+   UNSIGNED_LONGS_EQUAL(5,size);
+   UNSIGNED_LONGS_EQUAL(group_addr  , message->address);
+   UNSIGNED_LONGS_EQUAL(dev_addr    , message->device );
+   UNSIGNED_LONGS_EQUAL(unit_id     , message->unit);
+
+   delete message;
+
+}
+
+//! @test Check the Get group Info Response size
+TEST(GroupManagement, InfoResponse_size)
+{
+    InfoResponse *message;
+    std::string name("Group");
+    std::vector<Member> members;
+
+    message = new InfoResponse(name,members);
+
+    CHECK_EQUAL(1                      //Response code
+                +1+name.length()       //Group Name
+                +sizeof(uint8_t)      //N Members
+                , message->size());
+
+    message->code = Common::Result::FAIL_AUTH;     //Return code FAIL
+
+    CHECK_EQUAL(message->min_size, message->size());
+    CHECK_EQUAL(1, message->min_size);
+
+    delete message;
+}
+
+//! @test Check the Remove from group message pack
+TEST(GroupManagement, InfoResponse_Pack)
+{
+   InfoResponse *message;
+   std::string name("Group");
+   std::vector<Member> members;
+   ByteArray expected, got;
+
+   uint16_t size;
+
+   message = new InfoResponse(name,members);
+
+   expected    = ByteArray {  (uint8_t)Common::Result::OK,
+                              (uint8_t)name.length(), 'G', 'r', 'o', 'u', 'p',
+                              0};
+
+   LONGS_EQUAL(expected.size(), message->size());
+
+   got         = ByteArray(message->size());
+
+   CHECK_EQUAL(0, message->members.size());
+
+   size = message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+   CHECK_EQUAL(message->size(), size);
+
+   delete message;
+
+   // --- Return error code --------
+
+   message = new InfoResponse(name, members);
+   message->code = Common::Result::FAIL_AUTH;
+
+   expected = ByteArray { (uint8_t) Common::Result::FAIL_AUTH};
+
+   LONGS_EQUAL(expected.size(), message->size());
+
+   got = ByteArray(message->size());
+
+   CHECK_EQUAL(0, message->members.size());
+
+   size = message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+   CHECK_EQUAL(message->size(), size);
+
+   delete message;
+
+}
+
+//! @test Check the Remove from group message unpack
+TEST(GroupManagement, InfoResponse_UnPack)
+{
+   InfoResponse *message;
+   ByteArray input;
+   std::string name("Group");
+
+   uint16_t size;
+
+   message = new InfoResponse();
+
+   input    = ByteArray {  (uint8_t)Common::Result::OK,
+                           (uint8_t)name.length(), 'G', 'r', 'o', 'u', 'p',
+                           0};
+
+   size = message->unpack(input);
+
+   CHECK_EQUAL(input.size(),size);
+   CHECK_EQUAL(input.size(),message->size());
+   CHECK_EQUAL((uint8_t)Common::Result::OK, message->code);
+   CHECK_EQUAL(name,message->name);
+   CHECK_EQUAL(0, message->members.size());
+
+   delete message;
+
+   message = new InfoResponse();
+
+   input = ByteArray { (uint8_t) Common::Result::OK,
+                       (uint8_t) name.length(),
+                       'G', 'r', 'o', 'u', 'p',
+                       1,
+                       0x00, 0x01,
+                       0x12 };
+
+   size = message->unpack(input);
+
+
+   CHECK_EQUAL(input.size(), size);
+   CHECK_EQUAL(input.size(), message->size());
+   CHECK_EQUAL((uint8_t )Common::Result::OK, message->code);
+   CHECK_EQUAL(name, message->name);
+   CHECK_EQUAL(1, message->members.size());
+   UNSIGNED_LONGS_EQUAL(0x0001, message->members.at(0).device);
+   UNSIGNED_LONGS_EQUAL(0x12, message->members.at(0).unit);
+
+   delete message;
+
+}
+
+#if 0
+//! @teste Check the CreateGroup Response message size
+TEST(GroupManagement, CreateGroupResponse_size)
+{
+
+}
+
+//! @teste Check the CreateGroup Response message pack
+TEST(GroupManagement, CreateGroupResponse_Pack)
+{
+
+}
+
+//! @teste Check the CreateGroup Response message unpack
+TEST(GroupManagement, CreateGroupResponse_UnPack)
+{
+
+}
+#endif
+
+
+
 // =============================================================================
 // Group Management Client
 // =============================================================================
@@ -122,6 +582,7 @@ TEST_GROUP(GroupManagementClient)
       mock().clear();
    }
 };
+
 
 //! @test Create support.
 TEST(GroupManagementClient, Create)
