@@ -841,7 +841,7 @@ namespace HF
             return offset - start;
          }
 
-         uint16_t unpack(Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
@@ -916,7 +916,7 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
-            HF_ASSERT(data.size() > UINT8_MAX, { return 0; });
+            HF_ASSERT(data.size() < UINT8_MAX, { return 0; });
 
             uint16_t start = offset;
 
@@ -932,7 +932,7 @@ namespace HF
             return offset - start;
          }
 
-         uint16_t unpack(Common::ByteArray &array, uint16_t offset = 0)
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
