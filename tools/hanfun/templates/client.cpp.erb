@@ -95,7 +95,7 @@ void Client::<%= cmd.name %>(const Protocol::Address &addr)
   <%- end -%>
   Protocol::Message message;
 
-  message.itf.role   = CLIENT_ROLE;
+  message.itf.role   = SERVER_ROLE;
   message.itf.id     = Interface::<%= @interface.to_uid %>;
   message.itf.member = <%= cmd.to_uid %>;
 
