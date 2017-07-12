@@ -17,15 +17,15 @@
 class String
 
   def underscore
-    downcase.gsub("\s+", "_")
+    downcase.gsub("\s+", '_')
   end
 
   def camelize
-    human_name("")
+    human_name('')
   end
 
-  def human_name(sep=' ')
-    underscore.split("_").map { |w| w.capitalize }.join(sep)
+  def human_name(sep = ' ')
+    underscore.split('_').map(&:capitalize).join(sep)
   end
 
 end
@@ -33,7 +33,7 @@ end
 class Integer
 
   def to_hex(lenght = 4)
-    "0x" + to_s(16).rjust(lenght,'0')
+    '0x' + to_s(16).rjust(lenght, '0')
   end
 
 end

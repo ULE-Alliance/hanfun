@@ -15,26 +15,33 @@
 #
 # =============================================================================
 
-require "thor"
-require "yaml"
+require 'thor'
+require 'yaml'
 
-require "hanfun/version"
-require "hanfun/extended"
-require "hanfun/generators/interface"
-require "hanfun/generators/core"
+require 'hanfun/version'
+require 'hanfun/extended'
+require 'hanfun/generators/interface'
+require 'hanfun/generators/core'
 
 module Hanfun
-
+  # HF Scaffold generator class
   class Generator < Thor
-    register(Hanfun::Generators::Interface, "interface", "interface [arguments]", "Generate a new interface scaffolding.")
-    register(Hanfun::Generators::Core, "core", "core [arguments]", "Generate a new service scaffolding.")
+
+    register(Hanfun::Generators::Interface, 'interface', 'interface [arguments]',
+             'Generate a new interface scaffolding.')
+    register(Hanfun::Generators::Core, 'core', 'core [arguments]',
+             'Generate a new service scaffolding.')
 
     desc 'generate [filename]', 'Generate Interface/Services from a YAML file'
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def generate(filename)
-      raise Thor::MalformattedArgumentError, "File #{filename} does not exist !" unless File.exist?(filename)
+      unless File.exist?(filename)
+        raise Thor::MalformattedArgumentError, "File #{filename} does not exist !"
+      end
 
-      config = YAML::load(File.open(filename))
+      config = YAML.safe_load(File.open(filename))
 
       config.each do |interface|
         args = [interface['name'], interface['uid'].to_hex]
@@ -45,12 +52,13 @@ module Hanfun
           args << interface.fetch('interface', false)
           generator = Generators::Core.new(args, interface)
         else
-          generator = Generators::Interface.new(args,interface)
+          generator = Generators::Interface.new(args, interface)
         end
         generator.invoke_all
       end
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
   end
-
 end # Hanfun

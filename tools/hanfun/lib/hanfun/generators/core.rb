@@ -17,76 +17,74 @@
 require_relative 'abstract'
 
 module Hanfun
-
   module Generators
-
     #
     # This class is responsible for the generation of new HAN-FUN services/core interfaces.
     #
     class Core < Abstract
 
-      class_option "interface", desc: "Generate a core interface, NOT a service", aliases: "-i",
+      class_option 'interface', desc: 'Generate a core interface, NOT a service', aliases: '-i',
       type: :boolean, default: false
 
-      desc "Generator for new HAN-FUN services/core interfaces."
+      desc 'Generator for new HAN-FUN services/core interfaces.'
 
+      # rubocop:disable Metrics/MethodLength
       def configure
-        @type = options[:interface] ? "interface" : "service"
-        @arguments = options[:interface] ? nil : "Unit0 &unit"
-        @namespace = Namespace.new("Core", "CORE")
+        @type = options[:interface] ? 'interface' : 'service'
+        @arguments = options[:interface] ? nil : 'Unit0 &unit'
+        @namespace = Namespace.new('Core', 'CORE')
 
         @generator = {}
         @generator[:uid] = {
           reference: /\bDEVICE_MANAGEMENT\b/,
-          insert_at: /^\s+\/\*\s+Functional Interfaces/,
+          insert_at: %r{^\s+/\*\s+Functional Interfaces}
         }
 
         @generator[:config] = {
-          insert_config_at: /^\s+\/\/\s+=+\n\/\/\s+Interfaces/,
-          insert_cmake_at: /^\s+#\s+=+\n#\s+Interfaces/
+          insert_config_at: %r{^\s+//\s+=+\n//\s+Interfaces},
+          insert_cmake_at:  /^\s+#\s+=+\n#\s+Interfaces/
         }
 
         @generator[:debug] = {
-          insert_at: /^\s+\/\/\s+=+\n\/\/\s+Protocol/,
-          protocol: "Interfaces",
+          insert_at: %r{^\s+//\s+=+\n//\s+Protocol},
+          protocol:  'Interfaces'
         }
 
         @generator[:include] = {
-          insert_at: /^\s+\/\/\s+=+\n\/\/\s+Profiles/,
+          insert_at: %r{^\s+//\s+=+\n//\s+Profiles}
         }
 
         @generator[:attributes] = {
           insert_at: {
-          include: /^\susing/,
-          factory: /^\s+\/\*\s+Functional/
+            include: /^\susing/,
+            factory: %r{^\s+/\*\s+Functional}
           }
         }
         @generator[:build] = {
           insert_at: /^\s+##\s+Units/,
-          macro: "add_core"
+          macro:     'add_core'
         }
 
         @generator[:tests] = {
-          insert_config_at: /\s+\/\/\s+=+\n\/\/\s+Other/,
-          insert_cmake_at: /^\s+##\s+Transport/,
+          insert_config_at: %r{\s+//\s+=+\n//\s+Other},
+          insert_cmake_at:  /^\s+##\s+Transport/
         }
         super
       end
+      # rubocop:enable Metrics/MethodLength
 
       protected
 
       def service?
-        @type == "service"
+        @type == 'service'
       end
 
       def parent
         result = super
         result = "Interfaces::#{result}" unless service?
-        return result
+        result
       end
 
     end
-
   end # Hanfun::Generator
-
 end # Hanfun
