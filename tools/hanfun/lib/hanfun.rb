@@ -27,6 +27,8 @@ module Hanfun
   # HF Scaffold generator class
   class Generator < Thor
 
+    include Thor::Actions
+
     register(Hanfun::Generators::Interface, 'interface', 'interface [arguments]',
              'Generate a new interface scaffolding.')
     register(Hanfun::Generators::Core, 'core', 'core [arguments]',
@@ -38,7 +40,9 @@ module Hanfun
     # rubocop:disable Metrics/AbcSize
     def generate(filename)
       unless File.exist?(filename)
-        raise Thor::MalformattedArgumentError, "File #{filename} does not exist !"
+        Generator.source_root(Hanfun::TemplateRoot)
+        template(File.join(__dir__, '..', 'templates', 'scaffold.yml'), filename)
+        exit(0)
       end
 
       config = YAML.safe_load(File.open(filename))

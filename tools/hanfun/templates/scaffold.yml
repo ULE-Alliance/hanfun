@@ -1,0 +1,80 @@
+---
+Template for the HAN-FUN Scaffold generator
+
+Select the entry that matches the type of feature to implement and delete/comment the others.
+---
+
+# Basic interface
+
+- name: my_interface
+  uid: 0x4242
+  attributes:
+    - name: 'attr_1'
+      type: 'uint8_t'
+      uid: 0x01
+      acl: 'RM' # Read Only and Mandatory
+    - name: 'attr_2'
+      type: 'uint8_t'
+      uid: 0x02
+      acl: 'WO' # Writable and Optional
+  commands:
+    - name: 'cmd_1'
+      uid: 0x01
+      server: 'M' # Mandatory on the server role
+      client: 'O' # Optional on the client role
+    - name: 'cmd_2'
+      uid: 0x02
+      event: true
+      server: 'M' # Mandatory on the server role
+      client: 'M' # Mandatory on the client role
+
+# Core Service
+
+- name: my_service
+  uid: 0x4242
+  core: true
+  attributes:
+    - name: 'attr_1'
+      type: 'uint8_t'
+      uid: 0x01
+      acl: 'RM' # Read Only and Mandatory
+    - name: 'attr_2'
+      type: 'uint8_t'
+      uid: 0x02
+      acl: 'WO' # Writable and Optional
+  commands:
+    - name: 'cmd_1'
+      uid: 0x01
+      server: 'M' # Mandatory on the server role
+      client: 'O' # Optional on the client role
+    - name: 'cmd_2'
+      uid: 0x02
+      event: true
+      server: 'M' # Mandatory on the server role
+      client: 'M' # Mandatory on the client role
+
+# Core Interface
+
+- name: my_core_interface
+  uid: 0x4242
+  core: true
+  interface: true
+  attributes:
+    - name: 'attr_1'
+      type: 'uint8_t'
+      uid: 0x01
+      acl: 'RM' # Read Only and Mandatory
+    - name: 'attr_2'
+      type: 'uint8_t'
+      uid: 0x02
+      acl: 'WO' # Writable and Optional
+  commands:
+    - name: 'cmd_1'
+      uid: 0x01
+      server: 'M' # Mandatory on the server role
+      client: 'O' # Optional on the client role
+    - name: 'cmd_2'
+      uid: 0x02
+      event: true
+      server: 'M' # Mandatory on the server role
+      client: 'M' # Mandatory on the client role
