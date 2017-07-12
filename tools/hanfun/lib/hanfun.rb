@@ -45,8 +45,18 @@ module Hanfun
 
       config.each do |interface|
         args = [interface['name'], interface['uid'].to_hex]
-        interface['attributes'] = interface['attributes'].reduce({}, :merge) if interface['attributes'].is_a? Array
-        interface['commands'] = interface['commands'].reduce({}, :merge) if interface['attributes'].is_a? Array
+
+        if interface['attributes'].is_a? Array
+          interface['attributes'] = interface['attributes'].map do |entry|
+            { entry.delete('name') => entry }
+          end.reduce({}, :merge)
+        end
+
+        if interface['commands'].is_a? Array
+          interface['commands'] = interface['commands'].map do |entry|
+            { entry.delete('name') => entry }
+          end.reduce({}, :merge)
+        end
 
         if interface['core']
           args << interface.fetch('interface', false)
