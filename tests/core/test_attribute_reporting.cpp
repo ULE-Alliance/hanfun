@@ -2880,17 +2880,17 @@ TEST_GROUP(AttributeReporting_Server)
       Report::Event report;
       report.unpack(HF::Testing::FactoryGetter, packet->message.payload, 0);
 
-      LONGS_EQUAL_LOCATION(0x5A, report.id, file, line);
-      LONGS_EQUAL_LOCATION(EVENT, report.type, file, line);
+      LONGS_EQUAL_LOCATION(0x5A, report.id, NULL, file, line);
+      LONGS_EQUAL_LOCATION(EVENT, report.type, NULL, file, line);
       LONGS_EQUAL_LOCATION(1, std::distance(report.entries.begin(),
-                                            report.entries.end()), file, line)
+                                            report.entries.end()), NULL, file, line)
 
       auto &entry2 = *report.entries.begin();
 
-      LONGS_EQUAL_LOCATION(1, entry2.unit, file, line);
-      CHECK_EQUAL_LOCATION(0x7ABC, entry2.itf.id, file, line);
+      LONGS_EQUAL_LOCATION(1, entry2.unit, NULL, file, line);
+      CHECK_EQUAL_LOCATION(0x7ABC, entry2.itf.id, NULL, file, line);
 
-      LONGS_EQUAL_LOCATION(1, entry2.fields.size(), file, line);
+      LONGS_EQUAL_LOCATION(1, entry2.fields.size(), NULL, file, line);
    }
 };
 
