@@ -18,6 +18,8 @@
 # Configuration
 # ==============================================================================
 
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-c++14-compat" )
+
 set(CPPUTEST_TESTS OFF CACHE BOOL "Disable CppUTest internal tests" FORCE)
 set(CPPUTEST_COVERAGE OFF CACHE BOOL "Enable CppUTest code coverage." FORCE)
 set(CPPUTEST_C++11 ON CACHE BOOL "Enable CppUTest C++11 support." FORCE)
