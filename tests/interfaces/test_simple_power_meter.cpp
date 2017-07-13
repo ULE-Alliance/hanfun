@@ -456,17 +456,15 @@ TEST_GROUP(SimplePowerMeterServer)
    void check_equal(SimplePowerMeter::Measurement expected,
                     SimplePowerMeter::Measurement actual, uint32_t line)
    {
-      CHECK_EQUAL_LOCATION(expected.unit, actual.unit, __FILE__, line);
-      CHECK_EQUAL_LOCATION(expected.value, actual.value, __FILE__, line);
+      CHECK_EQUAL_LOCATION(expected.unit, actual.unit, NULL, __FILE__, line);
+      CHECK_EQUAL_LOCATION(expected.value, actual.value, NULL, __FILE__, line);
    }
 
    void check_not_equal(SimplePowerMeter::Measurement &expected,
                         SimplePowerMeter::Measurement actual, uint32_t line)
    {
-      CHECK_LOCATION_FALSE(expected.unit == actual.unit, "CHECK_NOT_EQUAL",
-                           "expected.unit == actual.unit", __FILE__, line);
-      CHECK_LOCATION_FALSE(expected.value == actual.value, "CHECK_NOT_EQUAL",
-                           "expected.value == actual.value", __FILE__, line);
+      CHECK_LOCATION_FALSE(expected.unit == actual.unit, __FILE__, line);
+      CHECK_LOCATION_FALSE(expected.value == actual.value, __FILE__, line);
    }
 };
 

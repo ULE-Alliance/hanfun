@@ -77,11 +77,11 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
-#define CHECK_TRUE_LOCATION(condition, file, line) \
-   CHECK_LOCATION_TRUE(condition, "CHECK_TRUE", #condition, file, line)
+#define CHECK_LOCATION_TRUE(condition, file, line) \
+   CHECK_TRUE_LOCATION(condition, "CHECK_TRUE", #condition, NULL, file, line)
 
-#define CHECK_FALSE_LOCATION(condition, file, line) \
-   CHECK_LOCATION_FALSE(condition, "CHECK_FALSE", #condition, file, line)
+#define CHECK_LOCATION_FALSE(condition, file, line) \
+   CHECK_FALSE_LOCATION(condition, "CHECK_FALSE", #condition, NULL, file, line)
 
 template<typename Attribute, typename Interface, typename Getter, typename Setter,
          typename Value = typename Attribute::value_type>
@@ -92,21 +92,21 @@ void check_attribute_common(Interface &itf, bool writable, Value first, Value se
 
    (itf.*setter)(first);
 
-   LONGS_EQUAL_LOCATION(first, (itf.*getter)(), file, lineno);
+   LONGS_EQUAL_LOCATION(first, (itf.*getter)(), NULL, file, lineno);
 
    typedef HF::Attributes::Attribute<typename Attribute::value_type, Interface> __Attribute;
 
    auto attr = static_cast<__Attribute *>(itf.attribute(Attribute::ID));
-   CHECK_TRUE_LOCATION(attr != nullptr, file, lineno);
+   CHECK_LOCATION_TRUE(attr != nullptr, file, lineno);
 
-   CHECK_EQUAL_LOCATION(writable, attr->isWritable(), file, lineno);
-   POINTERS_EQUAL_LOCATION(&itf, attr->owner(), file, lineno);
-   LONGS_EQUAL_LOCATION(itf.uid(), attr->interface(), file, lineno);
+   CHECK_EQUAL_LOCATION(writable, attr->isWritable(), NULL, file, lineno);
+   POINTERS_EQUAL_LOCATION(&itf, attr->owner(), NULL, file, lineno);
+   LONGS_EQUAL_LOCATION(itf.uid(), attr->interface(), NULL, file, lineno);
 
-   LONGS_EQUAL_LOCATION(first, attr->value(), file, lineno);
+   LONGS_EQUAL_LOCATION(first, attr->value(), NULL, file, lineno);
 
    attr->value(second);
-   LONGS_EQUAL_LOCATION(second, attr->value(), file, lineno);
+   LONGS_EQUAL_LOCATION(second, attr->value(), NULL, file, lineno);
 
    mock("Interface").checkExpectations();
 
@@ -120,13 +120,13 @@ void check_attribute(Interface &itf, bool writable, Value first, Value second,
 {
    auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
 
-   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
    attrs = itf.attributes(HF::Attributes::Pack::ALL);
 
-   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
@@ -150,13 +150,13 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
 {
    auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
 
-   CHECK_TRUE_LOCATION(std::none_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::none_of(attrs.begin(), attrs.end(),
                                     [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
    attrs = itf.attributes(HF::Attributes::Pack::ALL);
 
-   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
