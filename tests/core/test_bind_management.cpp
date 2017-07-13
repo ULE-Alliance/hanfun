@@ -349,10 +349,10 @@ TEST_GROUP(BindManagementEntries)
 
       auto res      = entries.save(BindManagement::Entry(src, itf, dst));
 
-      LONGS_EQUAL_LOCATION(size + 1, entries.size(), file, line);
+      LONGS_EQUAL_LOCATION(size + 1, entries.size(), NULL, file, line);
       size = entries.size();
 
-      LONGS_EQUAL_LOCATION(Common::Result::OK, res, file, line);
+      LONGS_EQUAL_LOCATION(Common::Result::OK, res, NULL, file, line);
    }
 
    void should_not_create(Protocol::Address src, Protocol::Address dst, Common::Interface itf,
@@ -362,8 +362,8 @@ TEST_GROUP(BindManagementEntries)
 
       auto res      = entries.save(BindManagement::Entry(src, itf, dst));
 
-      LONGS_EQUAL_LOCATION(size, entries.size(), file, line);
-      LONGS_EQUAL_LOCATION(Common::Result::FAIL_ARG, res, file, line);
+      LONGS_EQUAL_LOCATION(size, entries.size(), NULL, file, line);
+      LONGS_EQUAL_LOCATION(Common::Result::FAIL_ARG, res, NULL, file, line);
    }
 
 };

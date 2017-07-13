@@ -116,7 +116,7 @@ TEST_GROUP(SimpleThermostat)
 
       Common::ByteArray expected;
       CHECK_EQUAL_LOCATION(Common::Result::FAIL_ARG,
-                           interface.handle(packet, expected, 3), file, lineno);
+                           interface.handle(packet, expected, 3), NULL, file, lineno);
    }
 
    void check_invalid_role(SimpleThermostat::Server &server, HF::Interface::Role role,

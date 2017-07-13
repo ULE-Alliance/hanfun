@@ -192,10 +192,10 @@ TEST_GROUP(SimpleButtonServer)
 
    void check_message(SimpleButton::CMD cmd, const char *file, int line)
    {
-      LONGS_EQUAL_LOCATION(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role, file, line);
-      LONGS_EQUAL_LOCATION(server.uid(), server.sendMsg.itf.id, file, line);
-      LONGS_EQUAL_LOCATION(cmd, server.sendMsg.itf.member, file, line);
-      LONGS_EQUAL_LOCATION(Protocol::Message::COMMAND_REQ, server.sendMsg.type, file, line);
+      LONGS_EQUAL_LOCATION(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role, NULL, file, line);
+      LONGS_EQUAL_LOCATION(server.uid(), server.sendMsg.itf.id, NULL, file, line);
+      LONGS_EQUAL_LOCATION(cmd, server.sendMsg.itf.member, NULL, file, line);
+      LONGS_EQUAL_LOCATION(Protocol::Message::COMMAND_REQ, server.sendMsg.type, NULL, file, line);
    }
 };
 
