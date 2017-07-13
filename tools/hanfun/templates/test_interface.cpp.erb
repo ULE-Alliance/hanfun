@@ -267,7 +267,7 @@ TEST_GROUP(<%= class_name %>)
       <%- end -%>
 
       <%- if @commands.any? { |c| c.event } -%>
-        <%- if service -%>
+        <%- if service? -%>
           addr = Protocol::Address(42, 0);
         <%- else -%>
           addr = Protocol::Address(42);
