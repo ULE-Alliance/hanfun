@@ -57,6 +57,8 @@ SimpleString StringFrom(const HF::Common::Serializable &data);
 
 SimpleString StringFrom(const HF::Common::Interface &itf);
 
+SimpleString StringFrom(const HF::Attributes::IAttribute &attr);
+
 template<typename _type>
 void check_index(_type expected, _type actual, uint32_t index, const char *header,
                  const char *fileName,
@@ -114,10 +116,8 @@ void check_attribute_common(Interface &itf, bool writable, Value first, Value se
    delete attr;
 }
 
-template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_attribute(Interface &itf, bool writable, Value first, Value second,
-                     Getter getter, Setter setter, const char *file, int lineno)
+template<typename Attribute, typename Interface>
+void check_attribute_pack(Interface &itf, const char *file, int lineno)
 {
    auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
 
@@ -130,6 +130,15 @@ void check_attribute(Interface &itf, bool writable, Value first, Value second,
    CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
+}
+
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter,
+         typename Value = typename Attribute::value_type>
+void check_attribute(Interface &itf, bool writable, Value first, Value second,
+                     Getter getter, Setter setter, const char *file, int lineno)
+{
+   check_attribute_pack<Attribute>(itf,file,lineno);
 
    check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
 }
@@ -169,6 +178,9 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
                          (Type::value_type (Interface::*)(void) const) & Interface::_name, \
                          (void (Interface::*)(Type::value_type)) & Interface::_name,       \
                          __FILE__, __LINE__)
+
+#define CHECK_ATTRIBUTE_PACK(Interface, Type)                \
+   check_attribute_pack<Type>(*server, __FILE__, __LINE__)
 
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
    check_optional_attribute<Type>(server, _writable, _first, _second,                               \
