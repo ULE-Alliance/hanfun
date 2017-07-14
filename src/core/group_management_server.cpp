@@ -28,21 +28,28 @@ using namespace HF::Core::GroupManagement;
 // Group Management Interface : Server Role
 // =============================================================================
 
-// =============================================================================
-// Server::attributes
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
+uint16_t IServer::payload_size (Protocol::Message::Interface &itf) const
 {
-   HF::Attributes::UIDS result({NUMBER_OF_GROUPS_ATTR});
+   switch (itf.member)
+   {
+      case CREATE_CMD:
+         return payload_size_helper<CreateMessage>();
 
-   if (pack_id == HF::Attributes::ALL)
-   {}
+      case DELETE_CMD:
+         return payload_size_helper<DeleteMessage>();
 
-   return result;
+      case ADD_CMD:
+         return payload_size_helper<AddMessage>();
+
+      case REMOVE_CMD:
+         return payload_size_helper<RemoveMessage>();
+
+      case GET_INFO_CMD:
+         return payload_size_helper<InfoMessage>();
+
+      default:
+         return 0;
+   }
 }
 
 // =============================================================================
@@ -64,8 +71,8 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
       {
          typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_groups;
-         auto setter = (void (Server::*)(uint8_t)) & Server::number_of_groups;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_groups;
+         auto setter = nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfGroups::WRITABLE);
       }
@@ -85,44 +92,56 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
+//   UNUSED(payload);
+//   UNUSED(offset);
 
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
+
+   Common::Result result = AbstractInterface::check_payload_size(packet.message, payload, offset);
+
+   if (result != Common::Result::OK)
+   {
+      return result;
+   }
 
    switch (cmd)
    {
       case CREATE_CMD:
       {
-         create(packet.source);
-         break;
+         CreateMessage msg;
+         msg.unpack(payload, offset);
+         return create(packet, msg);
       }
 
       case DELETE_CMD:
       {
-         // FIXME Retrieve group identifier from message.
-         remove(packet.source, 0x0000);
-         break;
+         DeleteMessage msg;
+         msg.unpack(payload, offset);
+         return remove(packet, msg);
       }
 
       case ADD_CMD:
       {
-         add(packet.source);
-         break;
+
+         AddMessage msg;
+         msg.unpack(payload, offset);
+
+         return add(packet, msg);
       }
 
       case REMOVE_CMD:
       {
-         // FIXME Retrieve group/device/unit identifier from message.
-         remove(packet.source, 0x0000, 0x0000, 0x00);
-         break;
+         RemoveMessage msg;
+         msg.unpack(payload,offset);
+         return remove(packet, msg);
       }
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD
       case GET_INFO_CMD:
       {
-         get_info(packet.source);
-         break;
+         InfoMessage msg;
+         msg.unpack(payload,offset);
+         return get_info(packet, msg);
       }
 #endif
 
@@ -130,7 +149,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
          return Common::Result::FAIL_SUPPORT;
    }
 
-   return Common::Result::OK;
+   return Common::Result::FAIL_SUPPORT;
 }
 
 // =============================================================================
@@ -144,10 +163,62 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void Server::create(const Protocol::Address &addr)
+Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::FAIL_ARG;
+
+   CreateResponse create_response;
+
+   auto temp_entry = entry(msg.name);                // try to find this group
+
+   Group group;
+
+   if( temp_entry == nullptr)                    // Group not found. Create new.
+   {
+      if(entries().size()!=Group::MAX_MEMBERS)  // Check if we have space for the new group
+      {
+         group.address = next_address();
+         group.name = msg.name;
+
+         result = entries().save(group);
+         if (result == Common::Result::OK)
+         {
+            create_response.address = group.address;
+         }
+      }
+      else
+      {
+         result = Common::Result::FAIL_ARG;
+      }
+   }
+   else                             // found a group with the same name. Give an error
+   {
+      result = Common::Result::FAIL_ARG;
+   }
+
+   create_response.code= result;
+
+
+   Protocol::Message response(packet.message, create_response.size());
+
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = GroupManagement::IServer::uid();
+   response.itf.member = CREATE_CMD;
+
+   create_response.pack(response.payload);
+
+   Protocol::Address res_addr(packet.source);
+
+   send(res_addr, response, packet.link);
+
+   if (result == Common::Result::OK)
+   {
+      GroupPtr temp(&group);
+      this->created(temp);
+
+      number_of_groups_update(1);
+   }
+   return result;
 }
 
 // =============================================================================
@@ -157,11 +228,49 @@ void Server::create(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Server::remove(const Protocol::Address &addr, uint16_t group)
+Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(group);
+
+   DeleteResponse receive_response;
+   Common::Result result = Common::Result::FAIL_ARG;
+
+   auto temp_entry = entry(msg.address);                //try to find this group
+
+   Group group;
+
+   if (temp_entry == nullptr)       //Group not found. Give an error
+   {
+      result = Common::Result::FAIL_ARG;
+   }
+   else                             // found a group with the same address.
+   {
+      group  = Group(*temp_entry);
+
+      result = entries().destroy(group);
+   }
+
+   receive_response.code = result;
+
+   Protocol::Message response(packet.message, receive_response.size());
+
+   response.itf.role = SERVER_ROLE;
+   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.member = DELETE_CMD;
+
+   receive_response.pack(response.payload);
+
+   Protocol::Address res_addr(packet.source);
+
+   send(res_addr, response, packet.link);
+
+   if (result == Common::Result::OK)
+   {
+      this->deleted(group);
+      number_of_groups_update(-1);
+   }
+
+
+   return result;
 }
 
 // =============================================================================
@@ -171,10 +280,43 @@ void Server::remove(const Protocol::Address &addr, uint16_t group)
  *
  */
 // =============================================================================
-void Server::add(const Protocol::Address &addr)
+Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::FAIL_ARG;
+
+   auto group = entry(msg.address);                //try to find this group
+
+   if (group == nullptr)       //Group not found. Give an error
+   {
+      result = Common::Result::FAIL_ARG;
+   }
+   else                             // found a group with the same address.
+   {
+      Member received(msg.device, msg.unit);
+      if (group->add_member(received) )
+         result = Common::Result::OK;
+   }
+
+   AddResponse receive_response;
+
+   receive_response.code= result;
+
+   Protocol::Message response(packet.message, receive_response.size());
+
+   response.itf.role = SERVER_ROLE;
+   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.member = ADD_CMD;
+
+   receive_response.pack(response.payload);
+
+   send(packet.source, response, packet.link);
+
+   if (result == Common::Result::OK)
+   {
+      this->added(group);
+   }
+
+   return result;
 }
 
 // =============================================================================
@@ -184,14 +326,43 @@ void Server::add(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Server::remove(const Protocol::Address &addr, uint16_t group, uint16_t device, uint8_t unit)
+Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::FAIL_ARG;
 
-   UNUSED(group);
-   UNUSED(device);
-   UNUSED(unit);
+   auto group = entry(msg.address);                //try to find this group
+
+   if (group == nullptr)       //Group not found. Give an error
+   {
+      result = Common::Result::FAIL_ARG;
+   }
+   else                             // found a group with the same address.
+   {
+      Member received(msg.device, msg.unit);
+      if (group->remove_member(received))
+         result = Common::Result::OK;
+   }
+
+   RemoveResponse receive_response;
+
+   receive_response.code = result;
+
+   Protocol::Message response(packet.message, receive_response.size());
+
+   response.itf.role = SERVER_ROLE;
+   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.member = REMOVE_CMD;
+
+   receive_response.pack(response.payload);
+
+   send(packet.source, response, packet.link);
+
+   if (result == Common::Result::OK)
+   {
+      this->removed(*group);
+   }
+
+   return result;
 }
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD
@@ -202,38 +373,41 @@ void Server::remove(const Protocol::Address &addr, uint16_t group, uint16_t devi
  *
  */
 // =============================================================================
-void Server::get_info(const Protocol::Address &addr)
+Common::Result IServer::get_info (Protocol::Packet &packet, const InfoMessage &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::FAIL_ARG;
+   InfoResponse receive_response;
+
+   auto group = entry(msg.address);                //try to find this group
+
+   if (group == nullptr)       //Group not found. Give an error
+   {
+      result = Common::Result::FAIL_ARG;
+   }
+   else                             // found a group with the same address.
+   {
+      result = Common::Result::OK;
+      receive_response.name=group->name;
+      receive_response.members = group->members;
+   }
+
+   receive_response.code = result;
+
+   Protocol::Message response(packet.message, receive_response.size());
+
+   response.itf.role = SERVER_ROLE;
+   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.member = GET_INFO_CMD;
+
+   receive_response.pack(response.payload);
+
+   send(packet.source, response, packet.link);
+
+   if (result == Common::Result::OK)
+   {
+      this->got_info(*group);
+   }
+
+   return result;
 }
 #endif
-
-
-// =============================================================================
-// Get/Set Attributes
-// =============================================================================
-
-// =============================================================================
-// Server::number_of_groups
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint8_t Server::number_of_groups() const
-{
-   return _number_of_groups;
-}
-
-// =============================================================================
-// Server::number_of_groups
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::number_of_groups(uint8_t __value)
-{
-   HF_SETTER_HELPER(NumberOfGroups, _number_of_groups, __value);
-}

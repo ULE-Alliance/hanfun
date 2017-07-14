@@ -39,20 +39,21 @@ using namespace HF::Core::GroupManagement;
  *
  */
 // =============================================================================
-void Client::create(const Protocol::Address &addr)
+void Client::create(std::string name)
 {
-   // FIXME Generated Stub.
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   Protocol::Address addr(0, 0);
 
-   Protocol::Message message;
+   CreateMessage *payload = new CreateMessage(name);
 
-   message.itf.role   = CLIENT_ROLE;
-   message.itf.id     = Interface::GROUP_MANAGEMENT;
+   Protocol::Message message(payload->size());
+
+   message.itf.role = SERVER_ROLE;
+   message.itf.id = Interface::GROUP_MANAGEMENT;
    message.itf.member = CREATE_CMD;
 
    send(addr, message);
+
+   delete payload;
 }
 
 // =============================================================================
@@ -62,22 +63,21 @@ void Client::create(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::remove(const Protocol::Address &addr, uint16_t group)
+void Client::remove(uint16_t group)
 {
-   // FIXME Generated Stub.
-   UNUSED(group);
+   Protocol::Address addr(0, 0);
 
-   /* *INDENT-OFF* */
-   HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   DeleteMessage *payload = new DeleteMessage(group);
 
    Protocol::Message message;
 
-   message.itf.role   = CLIENT_ROLE;
+   message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = DELETE_CMD;
 
    send(addr, message);
+
+   delete payload;
 }
 
 // =============================================================================
@@ -87,20 +87,21 @@ void Client::remove(const Protocol::Address &addr, uint16_t group)
  *
  */
 // =============================================================================
-void Client::add(const Protocol::Address &addr)
+void Client::add(uint16_t group, uint16_t device, uint8_t unit)
 {
-   // FIXME Generated Stub.
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   Protocol::Address addr(0, 0);
+
+   AddMessage *payload  = new AddMessage(group, device, unit);
 
    Protocol::Message message;
 
-   message.itf.role   = CLIENT_ROLE;
+   message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = ADD_CMD;
 
    send(addr, message);
+
+   delete payload;
 }
 
 // =============================================================================
@@ -110,24 +111,21 @@ void Client::add(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::remove(const Protocol::Address &addr, uint16_t group, uint16_t device, uint8_t unit)
+void Client::remove(uint16_t group, uint16_t device, uint8_t unit)
 {
-   // FIXME Generated Stub.
-   UNUSED(group);
-   UNUSED(device);
-   UNUSED(unit);
+   Protocol::Address addr(0, 0);
 
-   /* *INDENT-OFF* */
-   HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   RemoveMessage *payload = new RemoveMessage(group, device, unit);
 
    Protocol::Message message;
 
-   message.itf.role   = CLIENT_ROLE;
+   message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = REMOVE_CMD;
 
    send(addr, message);
+
+   delete payload;
 }
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD
@@ -138,19 +136,103 @@ void Client::remove(const Protocol::Address &addr, uint16_t group, uint16_t devi
  *
  */
 // =============================================================================
-void Client::get_info(const Protocol::Address &addr)
+void Client::get_info(uint16_t group)
 {
-   // FIXME Generated Stub.
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   Protocol::Address addr(0, 0);
+
+   InfoMessage *payload = new InfoMessage(group);
 
    Protocol::Message message;
 
-   message.itf.role   = CLIENT_ROLE;
+   message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = GET_INFO_CMD;
 
    send(addr, message);
+
+   delete payload;
 }
 #endif
+
+uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
+{
+   switch (itf.member)
+   {
+      case CREATE_CMD:
+         return payload_size_helper<CreateResponse>();
+
+      case DELETE_CMD:
+         return payload_size_helper<DeleteResponse>();
+
+      case ADD_CMD:
+         return payload_size_helper<AddResponse>();
+
+      case REMOVE_CMD:
+         return payload_size_helper<RemoveResponse>();
+
+      case GET_INFO_CMD:
+         return payload_size_helper<InfoResponse>();
+
+      default:
+         return 0;
+   }
+}
+
+Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
+{
+   assert(packet.link != nullptr);
+
+   switch (packet.message.itf.member)
+   {
+      case CREATE_CMD:
+      {
+         CreateResponse response;
+         response.unpack(payload, offset);
+         created(response);
+
+         break;
+      }
+
+      case DELETE_CMD:
+      {
+         DeleteResponse response;
+         response.unpack(payload, offset);
+         deleted(response);
+
+         break;
+      }
+
+      case ADD_CMD:
+      {
+         AddResponse response;
+         response.unpack(payload, offset);
+         added(response);
+
+         break;
+      }
+
+      case REMOVE_CMD:
+      {
+         RemoveResponse response;
+         response.unpack(payload, offset);
+         removed(response);
+
+         break;
+      }
+
+      case GET_INFO_CMD:
+      {
+         InfoResponse response;
+         response.unpack(payload, offset);
+         got_info(response);
+
+         break;
+      }
+
+      default:
+         return Common::Result::FAIL_UNKNOWN;
+   }
+
+   return Common::Result::OK;
+}

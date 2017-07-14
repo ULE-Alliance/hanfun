@@ -377,7 +377,7 @@ namespace HF
          typedef Protocol::Response RemoveResponse;
 
 
-         typedef GroupAddress Info;
+         typedef GroupAddress InfoMessage;
 
          struct InfoResponse: public Protocol::Response
          {
@@ -578,10 +578,6 @@ namespace HF
           */
          class IServer: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
          {
-            protected:
-
-            uint8_t _number_of_groups;   //!< Number Of Groups
-
             public:
 
             //! Constructor
@@ -836,102 +832,120 @@ namespace HF
             //! @{
 
             /*!
-             * Send a HAN-FUN message containing a @c GroupManagement::CREATE_CMD, to the given
-             * network address.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            void create(const Protocol::Address &addr);
-
-            /*!
              * Send a HAN-FUN message containing a @c GroupManagement::CREATE_CMD,
              * to the D:0/U:0 network address.
-             */
-            void create()
-            {
-               Protocol::Address addr(0, 0);
-               create(addr);
-            }
-
-            /*!
-             * Send a HAN-FUN message containing a @c GroupManagement::DELETE_CMD, to the given
-             * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             *  @param [in] name    The name of the group to be created.
              */
-            void remove(const Protocol::Address &addr, uint16_t group);
+            void create(std::string name);
 
             /*!
              * Send a HAN-FUN message containing a @c GroupManagement::DELETE_CMD,
              * to the D:0/U:0 network address.
-             */
-            void remove(uint16_t group)
-            {
-               Protocol::Address addr(0, 0);
-               remove(addr, group);
-            }
-
-            /*!
-             * Send a HAN-FUN message containing a @c GroupManagement::ADD_CMD, to the given
-             * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             *  @param [in] group      The group address to delete.
              */
-            void add(const Protocol::Address &addr);
+            void remove(uint16_t group);
 
             /*!
              * Send a HAN-FUN message containing a @c GroupManagement::ADD_CMD,
              * to the D:0/U:0 network address.
-             */
-            void add()
-            {
-               Protocol::Address addr(0, 0);
-               add(addr);
-            }
-
-            /*!
-             * Send a HAN-FUN message containing a @c GroupManagement::REMOVE_CMD, to the given
-             * network address.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] group      the group identifier the device belongs to.
-             * @param [in] device     the device identifier to delete the unit from.
-             * @param [in] unit       the unit identifier of the given @c device to delete from the given @c group.
+             * @param [in] group      the group identifier to add the device.
+             * @param [in] device     the device identifier to add the unit from.
+             * @param [in] unit       the unit identifier of the given @c device to add from the given @c group.
              */
-            void remove(const Protocol::Address &addr, uint16_t group, uint16_t device, uint8_t unit);
+            void add(uint16_t group, uint16_t device, uint8_t unit);
 
             /*!
              * Send a HAN-FUN message containing a @c GroupManagement::REMOVE_CMD,
              * to the D:0/U:0 network address.
+             *
+             * @param [in] group      the group identifier the device belongs to.
+             * @param [in] device     the device identifier to delete the unit from.
+             * @param [in] unit       the unit identifier of the given @c device to delete from the given @c group.
              */
-            void remove(uint16_t group, uint16_t device, uint8_t unit)
-            {
-               Protocol::Address addr(0, 0);
-               remove(addr, group, device, unit);
-            }
+            void remove(uint16_t group, uint16_t device, uint8_t unit);
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD
             /*!
-             * Send a HAN-FUN message containing a @c GroupManagement::GET_INFO_CMD, to the given
-             * network address.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            void get_info(const Protocol::Address &addr);
-
-            /*!
              * Send a HAN-FUN message containing a @c GroupManagement::GET_INFO_CMD,
              * to the D:0/U:0 network address.
+             *
+             *  @param [in] group      The group address for the info request.
              */
-            void get_info()
-            {
-               Protocol::Address addr(0, 0);
-               get_info(addr);
-            }
+            void get_info(uint16_t group);
 #endif
 
             //! @}
             // ======================================================================
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            /*!
+             * This method is called when a response to a create message
+             * is received.
+             *
+             * @param [in] response    the create response that was received.
+             */
+            virtual void created (CreateResponse &response) = 0;
+
+            /*!
+             * This method is called when a response to a delete message
+             * is received.
+             *
+             * @param [in] response    the create response that was received.
+             */
+            virtual void deleted (DeleteResponse &response)  = 0;
+
+            /*!
+             * This method is called when a response to a add message
+             * is received.
+             *
+             * @param [in] response    the create response that was received.
+             */
+            virtual void added (AddResponse &response)  = 0;
+
+            /*!
+             * This method is called when a response to a remove message
+             * is received.
+             *
+             * @param [in] response    the create response that was received.
+             */
+            virtual void removed (RemoveResponse &response)  = 0;
+
+            /*!
+             * This method is called when a response to a get info message
+             * is received.
+             *
+             * @param [in] response    the create response that was received.
+             */
+            virtual void got_info (InfoResponse &response)  = 0;
+
+            //! @}
+            // ======================================================================
+
+            using Service::send;
+
+            //! @copydoc SessionManagement::AbstractClient::send
+            void send (const Protocol::Address &addr, Protocol::Message &message)
+            {
+               Service::send(addr, message);
+            }
+
+            protected:
+
+            using ServiceRole::payload_size;
+
+            uint16_t payload_size (Protocol::Message::Interface &itf) const;
+
+            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                           uint16_t offset);
+
          };
 
          /*! @} */
