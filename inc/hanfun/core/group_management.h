@@ -126,6 +126,9 @@ namespace HF
             std::string name; 	//!< Group Name
             std::vector<Member> members; //!< Group Members
 
+            constexpr static uint16_t MAX_MEMBERS = GroupAddress::END_ADDR -
+                                                    GroupAddress::START_ADDR +1;
+
             /*!
              * Constructor.
              *
@@ -135,6 +138,48 @@ namespace HF
             Group(uint16_t address=0, std::string name=""):
                GroupAddress(address), name(name)
             {};
+
+            std::vector<Member>::iterator find_member (const Member &member)
+            {
+               /* *INDENT-OFF* */
+               std::vector<Member>::iterator it = std::find_if(members.begin(), members.end(), [member](const Member &i)
+               {
+                  return member == i;
+               });
+               /* *INDENT-ON* */
+
+               return it;
+            }
+
+
+            bool add_member(const Member &member)
+            {
+               auto it = find_member(member);
+
+               if(it == members.end())
+               {
+                  members.push_back(member);
+                  return true;
+               }
+               return false;
+            }
+
+            bool remove_member ( const Member &member)
+            {
+               const auto orig_size = members.size();
+
+               auto it = find_member(member);
+               if(it != members.end())
+               {
+                  members.erase(it);
+
+                  if (members.size() == orig_size-1)
+                     return true;
+
+                  return false;
+               }
+               return false;
+            }
 
             // =============================================================================
             // Serializable API
@@ -175,7 +220,6 @@ namespace HF
          };
 
          typedef Common::Pointer<Group> GroupPtr;
-
 
 //         struct Member{
 //            uint16_t address; //!< Device Address
