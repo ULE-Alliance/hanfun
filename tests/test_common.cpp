@@ -622,9 +622,9 @@ TEST_GROUP(Sandbox)
 
 TEST(Sandbox, Foobar)
 {
-   std::vector<Common::Interface> bd;
-   SerializableHelper<std::vector<Common::Interface>> helper(bd);
-
-//   std::vector<uint16_t> v_int;
-//   SerializableHelper<std::vector<uint16_t>> helper2(v_int);
+//   std::vector<Common::Interface> bd;
+//   SerializableHelper<std::vector<Common::Interface>> helper(bd);
+//
+////   std::vector<uint16_t> v_int;
+////   SerializableHelper<std::vector<uint16_t>> helper2(v_int);
 }
