@@ -29,7 +29,7 @@ namespace HF
       // Forward declaration.
       namespace GroupManagement
       {
-         class Server;
+         class IServer;
       }
 
       /*!
@@ -46,7 +46,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(GroupManagement::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(GroupManagement::IServer *server, uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Group Management service.
@@ -419,7 +419,7 @@ namespace HF
           *
           * This class provides the server side of the Group Management interface.
           */
-         class Server: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
+         class IServer: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -428,11 +428,11 @@ namespace HF
             public:
 
             //! Constructor
-            Server(Unit0 &unit): ServiceRole<GroupManagement::Base,
+            IServer(Unit0 &unit): ServiceRole<GroupManagement::Base,
                                              HF::Interface::SERVER_ROLE>(unit) {}
 
             //! Destructor
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // ======================================================================
             // Events
@@ -521,6 +521,34 @@ namespace HF
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
          };
+
+         template<typename _Entries = Entries>
+         class Server: public IServer
+         {
+            protected:
+
+            _Entries _entries;
+
+            public:
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] unit  reference to the unit containing this service.
+             */
+            Server(Unit0 &unit): IServer(unit)
+            {}
+
+            virtual ~Server()
+            {}
+
+            _Entries &entries() const
+            {
+               return const_cast<_Entries &>(_entries);
+            }
+         };
+
+         typedef Server<> DefaultServer;
 
          /*!
           * Group Management %Service : %Client side implementation.

@@ -32,7 +32,7 @@ using namespace HF::Core::GroupManagement;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Core::create_attribute(Server *server, uint8_t uid)
+HF::Attributes::IAttribute *Core::create_attribute(IServer *server, uint8_t uid)
 {
    if (server != nullptr)
    {

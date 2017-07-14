@@ -52,7 +52,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
+HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 {
    using namespace HF::Core::GroupManagement;
 
@@ -62,7 +62,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    {
       case NUMBER_OF_GROUPS_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
          auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_groups;
          auto setter = (void (Server::*)(uint8_t)) & Server::number_of_groups;
@@ -82,7 +82,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
  *
  */
 // =============================================================================
-Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
    UNUSED(payload);
