@@ -353,3 +353,89 @@ uint16_t InfoResponse::unpack(const Common::ByteArray &array, uint16_t offset)
    _end:
    return offset - start;
 }
+
+
+
+
+uint16_t Entries::size () const
+{
+   return db.size();
+}
+
+Common::Result Entries::save (const Group &entry)
+{
+   db[entry.address] = entry;
+
+   return Common::Result::OK;
+}
+
+Common::Result Entries::destroy (const uint16_t &address)
+{
+   auto it = db.erase(address);
+
+   if (it == 0)
+   {
+      return Common::Result::FAIL_ARG;
+   }
+   else
+   {
+      return Common::Result::OK;
+   }
+
+}
+
+Common::Result Entries::destroy (const Group &group)
+{
+   return destroy(group.address);
+}
+
+GroupPtr Entries::find (uint16_t address) const
+{
+   auto it = db.find(address);
+
+   if (it == db.end())
+   {
+      return GroupPtr();
+   }
+   else
+   {
+      return GroupPtr(const_cast<Group *>(&(*it).second));
+   }
+}
+
+GroupPtr Entries::find (const std::string &name) const
+{
+   /* *INDENT-OFF* */
+   auto it = std::find_if(db.begin(), db.end(), [&name](const std::pair< const uint16_t, Group> &device)
+   {
+      return device.second.name == name;
+   });
+   /* *INDENT-ON* */
+
+   if (it == db.end())
+   {
+      return GroupPtr();
+   }
+   else
+   {
+      return GroupPtr(const_cast<Group *>(&((it->second))));
+   }
+
+   return GroupPtr();
+}
+
+uint16_t Entries::next_address () const
+{
+   uint16_t address = 0;
+
+   for(address = GroupAddress::START_ADDR; address <= GroupAddress::END_ADDR; ++address)
+   {
+      if(db.find(address) == db.end())
+      {
+         return address;
+      }
+   }
+
+   return GroupAddress::END_ADDR;
+}
+

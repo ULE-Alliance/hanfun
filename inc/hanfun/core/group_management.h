@@ -21,6 +21,7 @@
 #include "hanfun/core.h"
 
 #include <string>
+#include <map>
 
 namespace HF
 {
@@ -445,6 +446,118 @@ namespace HF
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
+
+         /*!
+          * Device Management - Persistent Storage API.
+          */
+         struct IEntries: public Common::IEntries<Group>
+         {
+            /*!
+             * Return the Device entry for the given address.
+             *
+             * @param [in] address    the device address.
+             *
+             * @retval  a pointer to the Device entry associated with the given address,
+             * @retval  nullptr if the entry does not exist.
+             */
+            virtual GroupPtr find (uint16_t address) const = 0;
+
+            virtual GroupPtr find (const std::string &name) const = 0;
+
+            /*!
+             * Return next available address for registering a device.
+             *
+             * @return  the address to use in the next registration.
+             */
+            virtual uint16_t next_address () const = 0;
+         };
+
+
+         /*!
+          * Default implementation of the persistence API.
+          */
+         struct Entries: public IEntries
+         {
+            typedef std::map<uint16_t, Group> Container;
+            typedef Container::iterator iterator;
+            typedef Container::const_iterator const_iterator;
+            typedef Container::value_type value_type;
+
+            virtual ~Entries() {}
+
+            uint16_t size () const;
+
+            Common::Result save (const Group &entry);
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @param [in] address     The @c Group address to destroy
+             * @return
+             */
+            Common::Result destroy (const uint16_t &address);
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             *
+             */
+            Common::Result destroy (const Group &entry);
+
+            GroupPtr find (uint16_t address) const;
+
+            GroupPtr find (const std::string &name) const;
+
+            uint16_t next_address () const;
+
+            /*!
+             * Get an iterator to the start of the entries in this container.
+             *
+             * @return  iterator to the start of the entries present in this container.
+             */
+            iterator begin ()
+            {
+               return db.begin();
+            }
+
+            /*!
+             * Get an iterator to the end of the entries in this container.
+             *
+             * @return  iterator to the end of the entries present in this container.
+             */
+            iterator end ()
+            {
+               return db.end();
+            }
+
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
+            const_iterator begin () const
+            {
+               return db.cbegin();
+            }
+
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
+            const_iterator end () const
+            {
+               return db.cend();
+            }
+
+            protected:
+
+            //! Actual container for the entries.
+            Container db;
+         };
+
          /*!
           * Group Management %Service : Parent.
           *
@@ -488,50 +601,131 @@ namespace HF
              * Callback that is called when a @c GroupManagement::CREATE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet      The message Packet.
+             * @param [in] msg         The @c CreateMessage sent.
+             * @return                 The response code sent in response.
              */
-            virtual void create(const Protocol::Address &addr);
+            virtual Common::Result create(Protocol::Packet &packet, CreateMessage &msg);
+
+            /*!
+             * Indicate that a new group was created.
+             *
+             * @param [in] group       Pointer to the group entry corresponding to the created group.
+             */
+            virtual void created(const GroupPtr &group)
+            {
+               UNUSED(group);
+            }
 
             /*!
              * Callback that is called when a @c GroupManagement::DELETE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] group      the group identifier to delete.
+             * @param [in] packet      The message Packet.
+             * @param [in] msg         The @c DeleteMessage sent.
+             * @return                 The response code sent in response.
              */
-           virtual void remove(const Protocol::Address &addr, uint16_t group);
+           virtual Common::Result remove(Protocol::Packet &packet, DeleteMessage &msg);
+
+           /*!
+            * Indicate that a group was deleted.
+            *
+            * @param [in] group     Copy of the group entry that was deleted.
+            */
+           virtual void deleted(Group group)
+           {
+              //TODO : Check this! Can we pass it by reference pointer???
+              UNUSED(group);
+           }
 
             /*!
              * Callback that is called when a @c GroupManagement::ADD_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet      The message Packet.
+             * @param [in] msg         The @c CreateMessage sent.
+             * @return                 The response code sent in response.
              */
-            virtual void add(const Protocol::Address &addr);
+            virtual Common::Result add(Protocol::Packet &packet, const AddMessage &msg);
+
+            /*!
+             * Indicate that a new device/unit was added to an existing group.
+             *
+             * @param [in] group       Pointer to the group entry corresponding to the group.
+             */
+            virtual void added(const GroupPtr &group)
+            {
+               UNUSED(group);
+            }
 
             /*!
              * Callback that is called when a @c GroupManagement::REMOVE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] group      the group identifier the device belongs to.
-             * @param [in] device     the device identifier to delete the unit from.
-             * @param [in] unit       the unit identifier of the given @c device to delete from the given @c group.
+             * @param [in] packet      The message Packet.
+             * @param [in] msg         The @c RemoveMessage sent.
+             * @return                 The response code sent in response.
              */
-            virtual void remove(const Protocol::Address &addr, uint16_t group, uint16_t device, uint8_t unit);
+            virtual Common::Result remove(Protocol::Packet &packet, const RemoveMessage &msg);
+
+            /*!
+             * Indicate that a device/unit was removed from an existing group.
+             *
+             * @param [in] group       Pointer to the group entry corresponding to the affected group.
+             */
+            virtual void removed (const GroupPtr &group)
+            {
+               UNUSED(group);
+            }
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD
             /*!
              * Callback that is called when a @c GroupManagement::GET_INFO_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet      The message Packet.
+             * @param [in] msg         The @c InfoMessage sent.
+             * @return                 The response code sent in response.
              */
-            virtual void get_info(const Protocol::Address &addr);
+            virtual Common::Result get_info(Protocol::Packet &packet, const InfoMessage &msg);
+
+            /*!
+             * Indicate that group info was requested.
+             *
+             * @param [in] group       Pointer to the group entry corresponding to the affected group.
+             */
+            virtual void got_info (const GroupPtr &group)
+            {
+               UNUSED(group);
+            }
+
 #endif
 
             //! @}
             // ======================================================================
+
+            // =============================================================================
+            // API.
+            // =============================================================================
+
+
+            GroupPtr entry(const uint16_t address) const
+            {
+               return entries().find(address);
+            }
+
+            GroupPtr entry(const std::string &name) const
+            {
+               return entries().find(name);
+            }
+
+            /*!
+             * Get a reference to the current object implementing the persistence API,
+             * for the device information.
+             *
+             * @return  reference to the current object for the persistence API.
+             */
+            virtual IEntries &entries() const = 0;
 
             // =============================================================================
             // Get/Set API.
@@ -542,14 +736,10 @@ namespace HF
              *
              * @return  the current Number Of Groups.
              */
-            uint8_t number_of_groups() const;
-
-            /*!
-             * Set the Number Of Groups for the Group Management server.
-             *
-             * @param [in] __value the  Number Of Groups value to set the server to.
-             */
-            void number_of_groups(uint8_t __value);
+            uint8_t number_of_groups() const
+            {
+               return (uint8_t) entries().size();
+            }
 
             // =============================================================================
             // Attribute API.
@@ -558,9 +748,42 @@ namespace HF
             HF::Attributes::IAttribute *attribute(uint8_t uid);
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
-                                               HF::Attributes::Pack::MANDATORY) const;
+                                               HF::Attributes::Pack::MANDATORY) const
+            {
+               UNUSED(pack_id);
+               return HF::Attributes::UIDS {NUMBER_OF_GROUPS_ATTR};
+            }
+
+            /*!
+             * Return next available address for device group.
+             *
+             * @return  the address to use in the next group.
+             */
+            virtual uint16_t next_address ()
+            {
+               return entries().next_address();
+            }
 
             protected:
+
+            /*!
+             * Get the Number Of Groups for the Group Management server.
+             *
+             * @param [in] diff  number of groups added/removed.
+             *
+             * @return  the current Number Of Groups.
+             */
+            void number_of_groups_update(int8_t diff) const
+            {
+               uint8_t value = number_of_groups();
+
+               NumberOfGroups old_attr(value - diff, this);
+               NumberOfGroups new_attr(value, this);
+
+               notify(old_attr, new_attr);
+            }
+
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
