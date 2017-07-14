@@ -132,7 +132,7 @@ namespace HF
              * @param [in] GroupAddr 	Group Address
              * @param [in] GroupName	Group Name
              */
-            Group(uint16_t address, std::string name):
+            Group(uint16_t address=0, std::string name=""):
                GroupAddress(address), name(name)
             {};
 
@@ -159,7 +159,7 @@ namespace HF
             // =============================================================================
 
             //!Equals operator
-            bool operator == (Group &other)
+            bool operator == (const Group &other) const
             {
                if (this->address == other.address)
                   return true;
@@ -167,13 +167,14 @@ namespace HF
                   return false;
             }
             //!Not equals operator
-            bool operator != (Group &other)
+            bool operator != (const Group &other) const
             {
                return !(*this == other);
             }
 
          };
 
+         typedef Common::Pointer<Group> GroupPtr;
 
 
 //         struct Member{
@@ -383,7 +384,7 @@ namespace HF
             static constexpr uint8_t ID       = NUMBER_OF_GROUPS_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = false;                 //!< Attribute Read/Write
 
-            NumberOfGroups(uint8_t value = 0, HF::Interface *owner = nullptr):
+            NumberOfGroups(uint8_t value = 0, const HF::Interface *owner = nullptr):
                Attribute<uint8_t>(HF::Interface::GROUP_MANAGEMENT, ID, owner, value, WRITABLE)
             {}
          };
