@@ -805,16 +805,20 @@ namespace HF
          }
       };
 
-      template<typename T>
-      struct SerializableHelper<T, EnableIf<IsIntegral<typename T::value_type>>>: public Serializable
+      template<typename T, typename S, typename E = void>
+      struct SerializableHelperVector: public Serializable
+      {};
+
+      template<typename T, typename S>
+      struct SerializableHelperVector<T, S, EnableIf<IsIntegral<typename T::value_type>>>: public Serializable
       {
          T &data;
 
          using value_type = typename T::value_type;
 
-         SerializableHelper(T &data): data(data) {}
+         SerializableHelperVector(T &data): data(data) {}
 
-         static constexpr uint16_t min_size = sizeof(uint8_t);
+         static constexpr uint16_t min_size = sizeof(S);
 
          uint16_t size() const
          {
@@ -825,11 +829,11 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
-            HF_ASSERT(data.size() > UINT8_MAX, { return 0; });
+            HF_ASSERT(data.size() > std::numeric_limits<S>::max(), { return 0; });
 
             uint16_t start = offset;
 
-            offset += array.write(offset, (uint8_t) data_size());
+            offset += array.write(offset, (S) data_size());
 
             SerializableHelper<value_type> h;
             std::for_each(data.cbegin(), data.cend(), [&h, &offset, &array](const value_type e)
@@ -847,7 +851,7 @@ namespace HF
 
             uint16_t start = offset;
 
-            uint8_t size = 0;
+            S size = 0;
 
             offset += array.read(offset, size);
 
@@ -856,7 +860,7 @@ namespace HF
             SerializableHelper<value_type> h;
             auto it = std::back_inserter<T>(data);
 
-            for(uint8_t i = 0; i < size; ++i)
+            for(S i = 0; i < size; ++i)
             {
                h.data = 0;
                offset += h.unpack(array, offset);
@@ -887,16 +891,16 @@ namespace HF
          }
       };
 
-      template<typename T>
-      struct SerializableHelper<T, EnableIf<IsClass<typename T::value_type>>>: public Serializable
+      template<typename T, typename S>
+      struct SerializableHelperVector<T, S, EnableIf<IsClass<typename T::value_type>>>: public Serializable
       {
          T &data;
 
          using value_type = typename T::value_type;
 
-         SerializableHelper(T &data): data(data) {}
+         SerializableHelperVector(T &data): data(data) {}
 
-         static constexpr uint16_t min_size = sizeof(uint8_t);
+         static constexpr uint16_t min_size = sizeof(S);
 
          uint16_t size() const
          {
@@ -916,11 +920,11 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
-            HF_ASSERT(data.size() < UINT8_MAX, { return 0; });
+            HF_ASSERT(data.size() < std::numeric_limits<S>::max(), { return 0; });
 
             uint16_t start = offset;
 
-            offset += array.write(offset, (uint8_t) data_size());
+            offset += array.write(offset, (S) data_size());
 
             SerializableHelper<value_type *> h;
             std::for_each(data.cbegin(), data.cend(), [&h, &offset, &array](const value_type &e)
@@ -938,13 +942,13 @@ namespace HF
 
             uint16_t start = offset;
 
-            uint8_t size = 0;
+            S size = 0;
 
             offset += array.read(offset, size);
 
             auto it = std::back_inserter<T>(data);
 
-            for(uint8_t i = 0; i < size; ++i)
+            for(S i = 0; i < size; ++i)
             {
                SerializableHelper<value_type> h;
 
