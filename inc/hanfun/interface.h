@@ -66,6 +66,7 @@ namespace HF
          BATCH_PROGRAM_MANGEMENT = 0x0007, //!< Batch Program Management interface UID. __Not implemented__
          EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
          WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
+         GROUP_TABLE             = 0x000A, //!< Group Table interface UID.
          TAMPER_ALERT            = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
          TIME                    = 0x0102, //!< %Time interface UID. __Not implemented__
          POWER                   = 0x0110, //!< Power interface UID. __Not implemented__
