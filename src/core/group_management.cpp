@@ -121,7 +121,7 @@ uint16_t Group::pack (Common::ByteArray &array, uint16_t offset) const
    HF_ASSERT(size > 0, return 0;);
    offset += size;
 
-   HF::Common::SerializableHelper<std::vector<Member>> helper(const_cast<std::vector<Member> &>(members));
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(const_cast<std::vector<Member> &>(members));
    offset += helper.pack(array, offset);
 
    return offset - start;
@@ -141,7 +141,7 @@ uint16_t Group::unpack(const Common::ByteArray &array, uint16_t offset)
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   HF::Common::SerializableHelper<std::vector<Member>> helper(members);
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(members);
    size += helper.unpack(array, offset);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
@@ -293,7 +293,7 @@ uint16_t InfoResponse::size() const
       return min_size;
    }
 
-   HF::Common::SerializableHelper<std::vector<Member>> helper(const_cast<std::vector<Member> &>(members));
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(const_cast<std::vector<Member> &>(members));
 
    return (min_size + HF::Common::SerializableHelper<std::string>::size(name) + helper.size());
 }
@@ -313,7 +313,7 @@ uint16_t InfoResponse::pack(Common::ByteArray &array, uint16_t offset) const
 
    offset += HF::Common::SerializableHelper<std::string>::pack(name,array,offset);
 
-   HF::Common::SerializableHelper<std::vector<Member> > helper(const_cast<std::vector<Member> &>(members));
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(const_cast<std::vector<Member> &>(members));
 
    offset += helper.pack(array, offset);
 
@@ -332,7 +332,7 @@ uint16_t InfoResponse::unpack(const Common::ByteArray &array, uint16_t offset)
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   HF::Common::SerializableHelper<std::vector<Member>> helper(members);
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(members);
 
    if (this->code != Common::Result::OK)
    {
