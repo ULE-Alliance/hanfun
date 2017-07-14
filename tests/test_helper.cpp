@@ -25,6 +25,7 @@
 // =============================================================================
 
 STRING_FROM(HF::Common::Interface)
+STRING_FROM(HF::Attributes::IAttribute)
 
 SimpleString StringFrom(const std::vector<uint8_t> &array)
 {
@@ -73,6 +74,23 @@ void HF::Testing::Assert(const char *expr, const char *file, int line)
       .withParameter("line", line);
 }
 
+class IAttributeComparator: public MockNamedValueComparator
+{
+   public:
+
+   bool isEqual (const void* object1, const void* object2)
+   {
+      return ((HF::Attributes::IAttribute *) object1)->compare(
+            *((HF::Attributes::IAttribute *) object2))
+             == 0;
+   }
+
+   SimpleString valueToString (const void* object)
+   {
+      return StringFrom(*((const HF::Attributes::IAttribute *) object));
+   }
+};
+
 // =============================================================================
 // Library Overrides
 // =============================================================================
@@ -106,5 +124,8 @@ void __assert_fail(const char *__assertion, const char *__file, unsigned int __l
 
 int main(int ac, char **av)
 {
+   IAttributeComparator iattr_comparator;
+   mock().installComparator("IAttribute", iattr_comparator);
+
    return CommandLineTestRunner::RunAllTests(ac, av);
 }
