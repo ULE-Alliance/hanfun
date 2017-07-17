@@ -35,7 +35,7 @@ using namespace HF::Core::GroupTable;
  *
  */
 // =============================================================================
-HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
+HF::Attributes::UIDS IServer::attributes(uint8_t pack_id) const
 {
    HF::Attributes::UIDS result({NUMBER_OF_ENTRIES_ATTR, NUMBER_OF_MAX_ENTRIES_ATTR});
 
@@ -52,7 +52,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
+HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 {
    using namespace HF::Core::GroupTable;
 
@@ -62,20 +62,20 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    {
       case NUMBER_OF_ENTRIES_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_entries;
-         auto setter = (void (Server::*)(uint8_t)) & Server::number_of_entries;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_entries;
+         auto setter = (void (IServer::*)(uint8_t)) nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfEntries::WRITABLE);
       }
 
       case NUMBER_OF_MAX_ENTRIES_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_max_entries;
-         auto setter = (void (Server::*)(uint8_t)) & Server::number_of_max_entries;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_max_entries;
+         auto setter = (void (IServer::*)(uint8_t)) & IServer::number_of_max_entries;
 
          return new Attribute(*this, attr, getter, setter, NumberOfMaxEntries::WRITABLE);
       }
@@ -92,8 +92,8 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
  *
  */
 // =============================================================================
-Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
-                                      uint16_t offset)
+Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                       uint16_t offset)
 {
    UNUSED(payload);
    UNUSED(offset);
@@ -144,7 +144,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Server::add(const Protocol::Address &addr)
+void IServer::add(const Protocol::Address &addr)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -157,7 +157,7 @@ void Server::add(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Server::remove(const Protocol::Address &addr)
+void IServer::remove(const Protocol::Address &addr)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -170,7 +170,7 @@ void Server::remove(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Server::remove_all(const Protocol::Address &addr)
+void IServer::remove_all(const Protocol::Address &addr)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -183,7 +183,7 @@ void Server::remove_all(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Server::read_entries(const Protocol::Address &addr)
+void IServer::read_entries(const Protocol::Address &addr)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -201,21 +201,9 @@ void Server::read_entries(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-uint8_t Server::number_of_entries() const
+uint8_t IServer::number_of_entries() const
 {
-   return _number_of_entries;
-}
-
-// =============================================================================
-// Server::number_of_entries
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::number_of_entries(uint8_t __value)
-{
-   HF_SETTER_HELPER(NumberOfEntries, _number_of_entries, __value);
+   return (uint8_t) entries().size();
 }
 
 // =============================================================================
@@ -225,7 +213,7 @@ void Server::number_of_entries(uint8_t __value)
  *
  */
 // =============================================================================
-uint8_t Server::number_of_max_entries() const
+uint8_t IServer::number_of_max_entries() const
 {
    return _number_of_max_entries;
 }
@@ -237,7 +225,7 @@ uint8_t Server::number_of_max_entries() const
  *
  */
 // =============================================================================
-void Server::number_of_max_entries(uint8_t __value)
+void IServer::number_of_max_entries(uint8_t __value)
 {
    HF_SETTER_HELPER(NumberOfMaxEntries, _number_of_max_entries, __value);
 }

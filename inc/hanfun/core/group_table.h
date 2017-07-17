@@ -27,7 +27,7 @@ namespace HF
       // Forward declaration.
       namespace GroupTable
       {
-         class Server;
+         class IServer;
       }
 
       /*!
@@ -44,7 +44,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(GroupTable::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(GroupTable::IServer *server, uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Group Table service.
@@ -101,6 +101,9 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
+
+         typedef HF::Common::Pointer<const Entry> EntryPtr;
+
          // =============================================================================
          // Attribute Helper classes
          // =============================================================================
@@ -143,6 +146,54 @@ namespace HF
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
+         // =============================================================================
+         // API
+         // =============================================================================
+
+         /*!
+          * Group Table persistent storage API.
+          */
+         struct IEntries: public Common::IEntries<Entry>
+         {
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * Clear all entries in database.
+             */
+            virtual void clear() = 0;
+
+            /*!
+             * Call the given function for all the entries with given @c group address.
+             *
+             * @param [in] group    group address to search for.
+             */
+            virtual void for_each(uint16_t group, std::function<void(const Entry &)> func) const = 0;
+         };
+
+         struct Entries: public IEntries
+         {
+            typedef std::vector<Entry> Container;
+
+            //! @copydoc
+            uint16_t size() const;
+
+            Common::Result save(const Entry &entry);
+
+            Common::Result destroy(const Entry&entry);
+
+            void clear();
+
+            void for_each(uint16_t group, std::function<void(const Entry &)> func) const;
+
+            protected:
+
+            bool any_of(uint16_t group, uint8_t unit) const;
+
+            Container db;  //!< Group table entries database.
+         };
+
          /*!
           * Group Table %Service : Parent.
           *
@@ -161,20 +212,21 @@ namespace HF
           *
           * This class provides the server side of the Group Table interface.
           */
-         class Server: public ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>
+         class IServer: public ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>
          {
             protected:
 
-            uint8_t _number_of_entries;     //!< Number Of Entries
-            uint8_t _number_of_max_entries; //!< Number Of Max Entries
+            //! Number Of Max Entries
+            uint8_t _number_of_max_entries = std::numeric_limits<uint8_t>::max();
 
             public:
 
             //! Constructor
-            Server(Unit0 &unit): ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>(unit) {}
+            IServer(Unit0 &unit):
+               ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>(unit) {}
 
             //! Destructor
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // ======================================================================
             // Events
@@ -229,13 +281,6 @@ namespace HF
             uint8_t number_of_entries() const;
 
             /*!
-             * Set the Number Of Entries for the Group Table server.
-             *
-             * @param [in] __value the  Number Of Entries value to set the server to.
-             */
-            void number_of_entries(uint8_t __value);
-
-            /*!
              * Get the Number Of Max Entries for the Group Table server.
              *
              * @return  the current Number Of Max Entries.
@@ -258,11 +303,40 @@ namespace HF
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
 
+            // =============================================================================
+            // Attribute API.
+            // =============================================================================
+
+            virtual const IEntries &entries() const = 0;
+
             protected:
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
          };
+
+         template<typename _Entries = GroupTable::Entries>
+         class Server: public IServer
+         {
+            public:
+
+            //! Constructor
+            Server(Unit0 &unit):
+               IServer(unit) {}
+
+            virtual ~Server() {}
+
+            const IEntries &entries() const
+            {
+               return db;
+            }
+
+            protected:
+
+            _Entries db;
+         };
+
+         typedef Server<> DefaultServer;
 
          /*!
           * Group Table %Service : %Client side implementation.
@@ -356,6 +430,20 @@ namespace HF
             //! @}
             // ======================================================================
          };
+
+         // =============================================================================
+         // Operators
+         // =============================================================================
+
+         inline bool operator==(const Entry &lhs, const Entry &rhs)
+         {
+            return lhs.group == rhs.group && lhs.unit == rhs.unit;
+         }
+
+         inline bool operator!=(const Entry &lhs, const Entry &rhs)
+         {
+            return !(lhs == rhs);
+         }
 
          /*! @} */
 

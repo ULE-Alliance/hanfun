@@ -32,7 +32,7 @@ using namespace HF::Core::GroupTable;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Core::create_attribute(Server *server, uint8_t uid)
+HF::Attributes::IAttribute *Core::create_attribute(IServer *server, uint8_t uid)
 {
    if (server != nullptr)
    {
@@ -124,4 +124,108 @@ uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
    offset += array.read(offset, unit);
 
    return min_size;
+}
+
+// =============================================================================
+// GroupTable::Entries
+// =============================================================================
+
+// =============================================================================
+// Entries::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Entries::size() const
+{
+   return this->db.size();
+}
+
+// =============================================================================
+// Entries::save
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Entries::save(const Entry &entry)
+{
+   if(!any_of(entry.group, entry.unit))
+   {
+      this->db.push_back(entry);
+   }
+
+   return Common::Result::OK;
+}
+
+// =============================================================================
+// Entries::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Entries::destroy(const Entry &entry)
+{
+   uint8_t size = db.size();
+
+   auto res = std::remove_if(db.begin(), db.end (), [&entry](const Entry &e){
+      return entry == e;
+   });
+
+   db.erase(res, db.end());
+
+   return size == db.size() ? Common::Result::FAIL_ARG : Common::Result::OK;
+}
+
+// =============================================================================
+// Entries::clear
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Entries::clear()
+{
+   db.clear();
+}
+
+// =============================================================================
+// Entries::any_of
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Entries::any_of(uint16_t group, uint8_t unit) const
+{
+   UNUSED(group);
+   UNUSED(unit);
+
+   Entry value(group, unit);
+
+   /* *INDENT-OFF* */
+   return std::find_if(this->db.cbegin(), this->db.cend(), [&value](const Entry &entry)
+   {
+      return value == entry;
+   }) != this->db.cend();
+   /* *INDENT-ON* */
+}
+
+// =============================================================================
+// Entries::for_each
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Entries::for_each(uint16_t group, std::function<void(const Entry &)> func) const
+{
+   std::for_each(db.begin(), db.end(), [&group, &func](const Entry &e) {
+      if (e.group == group)
+      {
+         func(e);
+      }
+   });
 }

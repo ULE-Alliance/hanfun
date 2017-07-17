@@ -149,6 +149,34 @@ TEST(GroupTable, Entry_Unpack)
    LONGS_EQUAL(0x42, entry.unit);
 }
 
+TEST(GroupTable, EntryEqual)
+{
+   GroupTable::Entry lhs;
+   GroupTable::Entry rhs;
+
+   lhs.group = 0x5A5A;
+   lhs.unit  = 0x42;
+
+   memcpy(&rhs, &lhs, sizeof(lhs));
+
+   CHECK_TRUE(lhs == rhs);
+   CHECK_FALSE(lhs != rhs);
+
+   ++rhs.unit;
+
+   CHECK_FALSE(lhs == rhs);
+   CHECK_TRUE(lhs != rhs);
+
+   memcpy(&rhs, &lhs, sizeof(lhs));
+
+   CHECK_TRUE(lhs == rhs);
+
+   ++rhs.group;
+
+   CHECK_FALSE(lhs == rhs);
+   CHECK_TRUE(lhs != rhs);
+}
+
 // =============================================================================
 // Group Table Client
 // =============================================================================
@@ -260,34 +288,43 @@ TEST(GroupTableClient, ReadEntries)
 TEST_GROUP(GroupTableServer)
 {
    // TODO Add required unit tests.
-   struct GroupTableServer: public InterfaceHelper<GroupTable::Server>
+   struct GroupTableServer: public GroupTable::DefaultServer
    {
-      GroupTableServer(HF::Core::Unit0 &unit): InterfaceHelper<GroupTable::Server>(unit) {}
+      GroupTableServer(HF::Core::Unit0 &unit):
+         GroupTable::DefaultServer(unit) {}
 
       void add(const Protocol::Address &addr) override
       {
          mock("GroupTable::Server").actualCall("add");
-         InterfaceHelper<GroupTable::Server>::add(addr);
+         GroupTable::DefaultServer::add(addr);
       }
 
       void remove(const Protocol::Address &addr) override
       {
          mock("GroupTable::Server").actualCall("remove");
-         InterfaceHelper<GroupTable::Server>::remove(addr);
+         GroupTable::DefaultServer::remove(addr);
       }
 
       void remove_all(const Protocol::Address &addr) override
       {
          mock("GroupTable::Server").actualCall("remove_all");
-         InterfaceHelper<GroupTable::Server>::remove_all(addr);
+         GroupTable::DefaultServer::remove_all(addr);
       }
 
       void read_entries(const Protocol::Address &addr) override
       {
          mock("GroupTable::Server").actualCall("read_entries");
-         InterfaceHelper<GroupTable::Server>::read_entries(addr);
+         GroupTable::DefaultServer::read_entries(addr);
       }
 
+      void notify(const HF::Attributes::IAttribute &old_value,
+                  const HF::Attributes::IAttribute &new_value) const
+      {
+         UNUSED(old_value);
+         UNUSED(new_value);
+
+         mock("Interface").actualCall("notify");
+      }
    };
 
    Testing::Device *device;
@@ -320,7 +357,7 @@ TEST_GROUP(GroupTableServer)
 };
 
 //! @test Number Of Entries support.
-TEST(GroupTableServer, NumberOfEntries)
+IGNORE_TEST(GroupTableServer, NumberOfEntries)
 {
    // FIXME Generated Stub.
    CHECK_ATTRIBUTE(GroupTableServer, NumberOfEntries, false, number_of_entries, 42, 142);
@@ -329,7 +366,6 @@ TEST(GroupTableServer, NumberOfEntries)
 //! @test Number Of Max Entries support.
 TEST(GroupTableServer, NumberOfMaxEntries)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(GroupTableServer, NumberOfMaxEntries, false, number_of_max_entries, 42, 142);
 }
 
@@ -383,4 +419,186 @@ TEST(GroupTableServer, ReadEntries)
    CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupTable::Server").checkExpectations();
+}
+
+// =============================================================================
+// BindManagement - Entries
+// =============================================================================
+
+TEST_GROUP(GroupTableEntries)
+{
+   struct TestEntries: public GroupTable::Entries
+   {
+      GroupTable::Entries::Container &data()
+      {
+         return db;
+      }
+   };
+
+   TestEntries entries;
+
+   uint16_t group = 0;
+   uint8_t  unit  = 0;
+
+   TEST_SETUP()
+   {
+      group = 0x5A5A;
+      unit  = 0x42;
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+
+   void should_create(uint16_t group, uint8_t unit, const char *file, int line)
+   {
+      uint16_t size = entries.size();
+
+      auto res      = entries.save(GroupTable::Entry(group, unit));
+
+      LONGS_EQUAL_LOCATION(size + 1, entries.size(), NULL, file, line);
+      LONGS_EQUAL_LOCATION(Common::Result::OK, res, NULL, file, line);
+   }
+
+   void should_not_create(uint16_t group, uint8_t unit, const char *file, int line,
+                          Common::Result expected)
+   {
+      uint16_t size = entries.size();
+
+      auto res      = entries.save(GroupTable::Entry(group, unit));
+
+      LONGS_EQUAL_LOCATION(size, entries.size(), NULL, file, line);
+      LONGS_EQUAL_LOCATION(expected, res, NULL, file, line);
+   }
+
+   std::vector<GroupTable::Entry> create_entries(uint8_t groups = 1, uint8_t units = 1)
+   {
+      std::vector<GroupTable::Entry> result;
+
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<uint16_t> dist1(1, 0x7FFF);
+      std::uniform_int_distribution<uint8_t> dist2(1, 0xFF);
+
+      auto g_group = std::bind(dist1, gen);
+      auto g_unit  = std::bind(dist2, gen);
+
+      for(int i = 0; i < groups; ++i)
+      {
+         for(int j = 0; j < units; ++j)
+         {
+            uint16_t group = g_group();
+            uint8_t   unit = g_unit();
+            entries.data().emplace_back(group, unit);
+            result.emplace_back(group, unit);;
+         }
+      }
+
+      return std::move(result);
+   }
+
+   GroupTable::Entry setup_entries(uint8_t groups = 1, uint8_t units = 1)
+   {
+      auto entries = create_entries(groups, units);
+
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<uint8_t> dist(0, entries.size() - 1);
+
+      auto select  = std::bind(dist, gen);
+
+      return entries.at(select());
+   }
+};
+
+#define SHOULD_CREATE(group, unit) \
+   should_create(group, unit, __FILE__, __LINE__)
+
+#define SHOULD_NOT_CREATE(group, unit, ...) \
+   should_not_create(group, unit, __FILE__, __LINE__, ## __VA_ARGS__)
+
+TEST(GroupTableEntries, Initialization)
+{
+   // Should be empty.
+   LONGS_EQUAL(0, entries.size());
+}
+
+TEST(GroupTableEntries, Save)
+{
+   // Should create a new entry.
+   SHOULD_CREATE(group, unit);
+}
+
+TEST(GroupTableEntries, Save_Equal)
+{
+   // Should create a new entry.
+   SHOULD_CREATE(group, unit);
+
+   // Should NOT create a entry with the same parameters.
+   SHOULD_NOT_CREATE(group, unit, Common::Result::OK);
+}
+
+TEST(GroupTableEntries, Destroy_OK)
+{
+   auto entry = setup_entries(10, 20);
+
+   uint8_t size = entries.size();
+
+   LONGS_EQUAL (Common::Result::OK, entries.destroy(entry));
+   LONGS_EQUAL (size - 1, entries.size());
+}
+
+TEST(GroupTableEntries, Destroy_Fail)
+{
+   auto entry = setup_entries(10, 20);
+
+   uint8_t size = entries.size();
+
+   LONGS_EQUAL (Common::Result::OK, entries.destroy(entry));
+   LONGS_EQUAL (size - 1, entries.size());
+
+   LONGS_EQUAL (Common::Result::FAIL_ARG, entries.destroy(entry));
+   LONGS_EQUAL (size - 1, entries.size());
+}
+
+TEST(GroupTableEntries, Clear)
+{
+   setup_entries(10, 20);
+
+   LONGS_EQUAL (10 * 20, entries.size());
+
+   entries.clear();
+
+   LONGS_EQUAL (0, entries.size());
+}
+
+TEST(GroupTableEntries, ForEach)
+{
+   // Create a multiple entries for multiple groups.
+   for(uint8_t groups = 1; groups <= 10; ++groups)
+   {
+      for(int units = 0; units < 20; ++units)
+      {
+         entries.save(GroupTable::Entry(groups, units));
+      }
+   }
+
+   mock("GroupTableEntries").expectNCalls(20, "for_each_predicate");
+
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<uint8_t> dist(1, 10);
+
+   auto group = std::bind(dist, gen);
+
+   /* *INDENT-OFF* */
+   entries.for_each(group(), [](const Entry &e)
+   {
+      UNUSED(e);
+      mock("GroupTableEntries").actualCall("for_each_predicate");
+   });
+   /* *INDENT-ON* */
+
+   mock("GroupTableEntries").checkExpectations();
 }
