@@ -185,10 +185,9 @@ TEST(GroupTable, EntryEqual)
 TEST_GROUP(GroupTableClient)
 {
    // TODO Add required unit tests.
-   struct GroupTableClient: public InterfaceHelper<GroupTable::Client>
+   struct GroupTableClient: public GroupTable::Client
    {
-      GroupTableClient(HF::Core::Unit0 &unit): InterfaceHelper<GroupTable::Client>(unit) {}
-
+      GroupTableClient(HF::Core::Unit0 &unit): GroupTable::Client(unit) {}
    };
 
    Testing::Device *device;
@@ -220,64 +219,76 @@ TEST_GROUP(GroupTableClient)
 TEST(GroupTableClient, Add)
 {
    // FIXME Generated Stub.
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
    client->add(addr);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
-   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
-   LONGS_EQUAL(GroupTable::ADD_CMD, client->sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+
 }
 
 //! @test Remove support.
 TEST(GroupTableClient, Remove)
 {
    // FIXME Generated Stub.
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
    client->remove(addr);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
-   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
-   LONGS_EQUAL(GroupTable::REMOVE_CMD, client->sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
 }
 
 //! @test Remove All support.
 TEST(GroupTableClient, RemoveAll)
 {
    // FIXME Generated Stub.
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
    client->remove_all(addr);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
-   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
-   LONGS_EQUAL(GroupTable::REMOVE_ALL_CMD, client->sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_ALL_CMD, packet->message.itf.member);
 }
 
 //! @test Read Entries support.
 TEST(GroupTableClient, ReadEntries)
 {
    // FIXME Generated Stub.
-   mock("Interface").expectOneCall("send");
+   mock("AbstractDevice").expectOneCall("send");
 
    client->read_entries(addr);
 
-   mock("Interface").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
-   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
-   LONGS_EQUAL(GroupTable::READ_ENTRIES_CMD, client->sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::READ_ENTRIES_CMD, packet->message.itf.member);
 }
 
 // =============================================================================
