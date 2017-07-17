@@ -64,3 +64,55 @@ void Client::level(Protocol::Address &addr, float new_level)
    uint8_t value = HF::Common::from_percent<uint8_t>(new_level);
    level(addr, value);
 }
+
+// =============================================================================
+// Client::increase_level
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::increase_level(Protocol::Address &addr, uint8_t increment)
+{
+   UNUSED(addr);
+   UNUSED(increment);
+}
+
+// =============================================================================
+// Client::increase_level
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::increase_level(Protocol::Address &addr, float increment)
+{
+   UNUSED(addr);
+   UNUSED(increment);
+}
+
+// =============================================================================
+// Client::decrease_level
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::decrease_level(Protocol::Address &addr, uint8_t decrement)
+{
+   UNUSED(addr);
+   UNUSED(decrement);
+}
+
+// =============================================================================
+// Client::decrease_level
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::decrease_level(Protocol::Address &addr, float decrement)
+{
+   UNUSED(addr);
+   UNUSED(decrement);
+}

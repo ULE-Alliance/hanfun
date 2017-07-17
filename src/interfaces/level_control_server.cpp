@@ -73,6 +73,31 @@ void Server::level(float new_level)
    level(value);
 }
 
+void Server::increase(uint8_t increment)
+{
+   UNUSED(increment);
+}
+
+void Server::increase(float increment)
+{
+   check_and_fix(increment);
+   uint8_t value = HF::Common::from_percent<uint8_t>(increment);
+   increase(value);
+}
+
+void Server::decrease(uint8_t decrement)
+{
+   UNUSED(decrement);
+}
+
+void Server::decrease(float decrement)
+{
+   check_and_fix(decrement);
+   uint8_t value = HF::Common::from_percent<uint8_t>(decrement);
+   decrease(value);
+}
+
+
 // =============================================================================
 // Server::handle_command
 // =============================================================================
@@ -102,22 +127,45 @@ Common::Result Server::handle_attribute(Protocol::Packet &packet, Common::ByteAr
  *
  */
 // =============================================================================
-Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
-                                      uint16_t offset)
+Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
+                                       uint16_t offset)
 {
-   Message level_msg;
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
-   if (packet.message.itf.member != LevelControl::SET_LEVEL_CMD)
+   Common::Result result = AbstractInterface::check_payload_size(packet.message, payload, offset);
+
+   if (result != Common::Result::OK)
    {
-      return Common::Result::FAIL_SUPPORT;
+      return result;
    }
 
+   Message level_msg;
    level_msg.unpack(payload, offset);
 
    uint8_t old_value = level();
-   level(level_msg.level);
 
-   level_change(packet.source, old_value, level_msg.level);
+   switch (cmd)
+   {
+      case SET_LEVEL_CMD:
+      {
+         level(level_msg.level);
+      }
+
+      case INCREASE_LEVEL_CMD:
+      {
+         increase(level_msg.level);
+      }
+
+      case DECREASE_LEVEL_CMD:
+      {
+         decrease(level_msg.level);
+      }
+
+      default:
+         return Common::Result::FAIL_SUPPORT;
+   }
+
+   level_change(packet.source, old_value, this->_level);
 
    return Common::Result::OK;
 }
