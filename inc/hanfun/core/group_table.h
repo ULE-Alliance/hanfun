@@ -76,6 +76,31 @@ namespace HF
             __LAST_ATTR__              = NUMBER_OF_MAX_ENTRIES_ATTR
          } Attributes;
 
+         /*!
+          * This represents a group table entry data structure.
+          */
+         struct Entry
+         {
+            uint16_t group;   //!< Group address the entry belongs to.
+
+            uint8_t  unit;    //!< Unit ID to route the group messages to.
+
+            Entry(uint16_t _group = 0, uint8_t _unit = 0):
+               group(_group), unit(_unit) {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint16_t)  // Group Address
+                                               + sizeof(uint8_t);  // Unit ID
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const;
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+         };
          // =============================================================================
          // Attribute Helper classes
          // =============================================================================

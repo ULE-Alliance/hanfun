@@ -100,6 +100,55 @@ TEST(GroupTable, InvalidAttribute)
    CHECK_TRUE(attr == nullptr);
 }
 
+TEST(GroupTable, Entry_Size)
+{
+   using namespace HF::Core::GroupTable;
+
+   Entry entry;
+   LONGS_EQUAL(sizeof(uint16_t) + sizeof(uint8_t), entry.size());
+}
+
+TEST(GroupTable, Entry_Pack)
+{
+   using namespace HF::Core::GroupTable;
+
+   /* *INDENT-OFF* */
+   Common::ByteArray expected { 0x00, 0x00, 0x00,
+                                0x5A, 0x5A,  // Group Address.
+                                0x42,        // Unit ID
+                                0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   Entry entry(0x5A5A, 0x42);
+
+   Common::ByteArray data(entry.size() + 6);
+
+   uint16_t size = entry.pack(data, 3);
+
+   LONGS_EQUAL(entry.size(), size);
+
+   CHECK_EQUAL(expected, data);
+}
+
+TEST(GroupTable, Entry_Unpack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray data { 0x00, 0x00, 0x00,
+                            0x5A, 0x5A,  // Group Address.
+                            0x42,        // Unit ID
+                            0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   Entry entry;
+
+   uint16_t size = entry.unpack(data, 3);
+
+   LONGS_EQUAL(entry.size(), size);
+
+   LONGS_EQUAL(0x5A5A, entry.group);
+   LONGS_EQUAL(0x42, entry.unit);
+}
+
 // =============================================================================
 // Group Table Client
 // =============================================================================

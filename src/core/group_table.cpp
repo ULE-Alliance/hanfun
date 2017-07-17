@@ -75,3 +75,53 @@ HF::Attributes::IAttribute *GroupTable::create_attribute(uint8_t uid)
          return nullptr;
    }
 }
+
+// =============================================================================
+// GroupTable::Entry
+// =============================================================================
+
+// =============================================================================
+// GroupTable::Entry::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Entry::size() const
+{
+   return min_size;
+}
+
+// =============================================================================
+// GroupTable::Entry::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   offset += array.write(offset, group);
+   offset += array.write(offset, unit);
+
+   return min_size;
+}
+
+// =============================================================================
+// GroupTable::Entry::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   offset += array.read(offset, group);
+   offset += array.read(offset, unit);
+
+   return min_size;
+}
