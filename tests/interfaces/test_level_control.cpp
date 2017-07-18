@@ -86,6 +86,48 @@ TEST(LevelControlClient, Level)
    BYTES_EQUAL(0x42, level.get());
 }
 
+//! @test Should send an LevelControl::INCREASE_LEVEL_CMD message.
+TEST(LevelControlClient, Increase_level)
+{
+   mock("Interface").expectOneCall("send");
+
+   client.increase_level(addr, (uint8_t) 0x42);
+
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
+   LONGS_EQUAL(LevelControl::INCREASE_LEVEL_CMD, client.sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   LevelControl::Level level;
+
+   level.unpack(client.sendMsg.payload);
+
+   BYTES_EQUAL(0x42, level.get());
+}
+
+//! @test Should send an LevelControl::INCREASE_LEVEL_CMD message.
+TEST(LevelControlClient, Increase_level_float)
+{
+   mock("Interface").expectOneCall("send");
+
+   client.increase_level(addr, (float) 10.0);
+
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
+   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
+   LONGS_EQUAL(LevelControl::INCREASE_LEVEL_CMD, client.sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   LevelControl::Level level;
+
+   level.unpack(client.sendMsg.payload);
+
+   BYTES_EQUAL(0x1A, level.get());
+}
+
 // =============================================================================
 // LevelControlServer Tests
 // =============================================================================;
@@ -156,9 +198,89 @@ TEST(LevelControlServer, Level)
    CHECK_EQUAL(42, server.level());
 }
 
-//! @test Should handle valid message.
-TEST(LevelControlServer, Handle_Valid_Message)
+TEST(LevelControlServer, Increase)
 {
+   CHECK_EQUAL(0, server.level());
+
+   Level old_value(0, &server);
+   Level new_value(200, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
+   server.increase((uint8_t) 200);
+   mock("Interface").checkExpectations();
+   CHECK_EQUAL(200, server.level());
+}
+
+TEST(LevelControlServer, Increase_float)
+{
+   server.level((uint8_t) 0x80);
+   CHECK_EQUAL(0x80, server.level());
+
+   Level old_value(0x80, &server);
+   Level new_value(0x9A, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
+   server.increase((float) 10.0f);
+   mock("Interface").checkExpectations();
+   CHECK_EQUAL(0x9A, server.level());
+}
+
+TEST(LevelControlServer, Increase_more_than_max)
+{
+   server.level((uint8_t) 200);
+   CHECK_EQUAL(200, server.level());
+
+   Level old_value(200, &server);
+   Level new_value(255, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
+   server.increase((uint8_t) 70);
+   mock("Interface").checkExpectations();
+
+   CHECK_EQUAL(255, server.level());
+}
+
+TEST(LevelControlServer, Increase_more_when_in_max)
+{
+   server.level((uint8_t) 255);
+   CHECK_EQUAL(255, server.level());
+
+   mock("Interface").expectNoCall("notify");
+
+   server.increase((uint8_t) 70);
+   mock("Interface").checkExpectations();
+
+   CHECK_EQUAL(255, server.level());
+}
+
+//! @test Should handle valid message.
+TEST(LevelControlServer, Handle_Valid_Message_SET_LEVEL)
+{
+   mock("LevelControlServer").expectOneCall("level_change");
+
+   Result result = server.handle(packet, expected, 3);
+   CHECK_EQUAL(Result::OK, result);
+
+   LONGS_EQUAL(0xAA, server.level());
+
+   mock("LevelControlServer").checkExpectations();
+}
+
+//! @test Should handle valid message.
+TEST(LevelControlServer, Handle_Valid_Message_INCREASE_LEVEL)
+{
+   packet.message.itf.member = LevelControl::INCREASE_LEVEL_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+
    mock("LevelControlServer").expectOneCall("level_change");
 
    Result result = server.handle(packet, expected, 3);

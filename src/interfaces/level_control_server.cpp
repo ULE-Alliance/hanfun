@@ -75,7 +75,16 @@ void Server::level(float new_level)
 
 void Server::increase(uint8_t increment)
 {
-   UNUSED(increment);
+   int16_t new_value;
+
+   new_value = this->_level + increment;
+
+   check_and_fix(new_value);
+
+   if(new_value != level())
+   {
+      level(static_cast<uint8_t>(new_value));
+   }
 }
 
 void Server::increase(float increment)
@@ -149,16 +158,19 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
       case SET_LEVEL_CMD:
       {
          level(level_msg.level);
+         break;
       }
 
       case INCREASE_LEVEL_CMD:
       {
          increase(level_msg.level);
+         break;
       }
 
       case DECREASE_LEVEL_CMD:
       {
          decrease(level_msg.level);
+         break;
       }
 
       default:

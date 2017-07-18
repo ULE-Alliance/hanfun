@@ -173,6 +173,23 @@ namespace HF
                   value = 100;
                }
             }
+
+            /*!
+             * Make sure level percentage values is in range [0,255].
+             *
+             * @param [in] value    reference to the value to check and fix.
+             */
+            void check_and_fix (int16_t &value)
+            {
+               if (value < 0)
+               {
+                  value = 0;
+               }
+               else if (value > 255)
+               {
+                  value = 255;
+               }
+            }
          };
 
          /*!
@@ -365,6 +382,7 @@ namespace HF
                level(addr, new_level);
             }
 
+#ifdef HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD
             /*!
              * Send a @c INCREASE_LEVEL_CMD to the given address to increase the level
              * by @c increment.
@@ -405,6 +423,7 @@ namespace HF
                Protocol::Address addr;
                increase_level(addr, increment);
             }
+#endif
 
             /*!
              * Send a @c DECREASE_LEVEL_CMD to the given address to decrease the level

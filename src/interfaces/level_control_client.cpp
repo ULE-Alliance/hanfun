@@ -65,6 +65,7 @@ void Client::level(Protocol::Address &addr, float new_level)
    level(addr, value);
 }
 
+#ifdef HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD
 // =============================================================================
 // Client::increase_level
 // =============================================================================
@@ -74,8 +75,17 @@ void Client::level(Protocol::Address &addr, float new_level)
 // =============================================================================
 void Client::increase_level(Protocol::Address &addr, uint8_t increment)
 {
-   UNUSED(addr);
-   UNUSED(increment);
+   Message level_msg(increment);
+
+   Protocol::Message message(level_msg.size());
+
+   message.itf.role = SERVER_ROLE;
+   message.itf.id = LevelControl::Client::uid();
+   message.itf.member = INCREASE_LEVEL_CMD;
+
+   level_msg.pack(message.payload);
+
+   send(addr, message);
 }
 
 // =============================================================================
@@ -87,10 +97,12 @@ void Client::increase_level(Protocol::Address &addr, uint8_t increment)
 // =============================================================================
 void Client::increase_level(Protocol::Address &addr, float increment)
 {
-   UNUSED(addr);
-   UNUSED(increment);
+   check_and_fix (increment);
+   uint8_t value = HF::Common::from_percent<uint8_t>(increment);
+   increase_level(addr, value);
 }
 
+#endif
 // =============================================================================
 // Client::decrease_level
 // =============================================================================
