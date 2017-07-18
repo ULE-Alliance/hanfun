@@ -96,7 +96,15 @@ void Server::increase(float increment)
 
 void Server::decrease(uint8_t decrement)
 {
-   UNUSED(decrement);
+   int16_t new_value;
+
+   new_value = this->_level - decrement;
+
+   check_and_fix(new_value);
+   if (new_value != level())
+   {
+      level(static_cast<uint8_t>(new_value));
+   }
 }
 
 void Server::decrease(float decrement)

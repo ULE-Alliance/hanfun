@@ -425,6 +425,7 @@ namespace HF
             }
 #endif
 
+#ifdef HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD
             /*!
              * Send a @c DECREASE_LEVEL_CMD to the given address to decrease the level
              * by @c decrement.
@@ -465,7 +466,7 @@ namespace HF
                Protocol::Address addr;
                decrease_level(addr, decrement);
             }
-
+#endif
             //! @}
             // =============================================================================
          };

@@ -28,6 +28,7 @@ using namespace HF::Interfaces::LevelControl;
 // Level Control Interface : Client Role
 // =============================================================================
 
+#ifdef HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD
 // =============================================================================
 // Client::level
 // =============================================================================
@@ -64,6 +65,8 @@ void Client::level(Protocol::Address &addr, float new_level)
    uint8_t value = HF::Common::from_percent<uint8_t>(new_level);
    level(addr, value);
 }
+
+#endif
 
 #ifdef HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD
 // =============================================================================
@@ -103,6 +106,8 @@ void Client::increase_level(Protocol::Address &addr, float increment)
 }
 
 #endif
+
+#ifdef HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD
 // =============================================================================
 // Client::decrease_level
 // =============================================================================
@@ -112,8 +117,17 @@ void Client::increase_level(Protocol::Address &addr, float increment)
 // =============================================================================
 void Client::decrease_level(Protocol::Address &addr, uint8_t decrement)
 {
-   UNUSED(addr);
-   UNUSED(decrement);
+   Message level_msg(decrement);
+
+   Protocol::Message message(level_msg.size());
+
+   message.itf.role = SERVER_ROLE;
+   message.itf.id = LevelControl::Client::uid();
+   message.itf.member = DECREASE_LEVEL_CMD;
+
+   level_msg.pack(message.payload);
+
+   send(addr, message);
 }
 
 // =============================================================================
@@ -125,6 +139,8 @@ void Client::decrease_level(Protocol::Address &addr, uint8_t decrement)
 // =============================================================================
 void Client::decrease_level(Protocol::Address &addr, float decrement)
 {
-   UNUSED(addr);
-   UNUSED(decrement);
+   check_and_fix (decrement);
+   uint8_t value = HF::Common::from_percent<uint8_t>(decrement);
+   decrease_level(addr, value);
 }
+#endif
