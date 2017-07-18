@@ -22,6 +22,8 @@ using namespace HF::Interfaces;
 
 using namespace HF::Testing;
 
+using namespace HF::Interfaces::LevelControl;
+
 // =============================================================================
 // LevelControl
 // =============================================================================
@@ -99,6 +101,14 @@ TEST_GROUP(LevelControlServer)
          mock("LevelControlServer").actualCall("level_change");
          LevelControl::Server::level_change(source, old_level, new_level);
       }
+
+      void notify (const HF::Attributes::IAttribute &old_value,
+                   const HF::Attributes::IAttribute &new_value) const
+      {
+         mock("Interface").actualCall("notify")
+               .withParameterOfType("IAttribute", "old", &old_value)
+               .withParameterOfType("IAttribute", "new", &new_value);
+      }
    };
 
    TestLevelControlServer server;
@@ -133,7 +143,14 @@ TEST_GROUP(LevelControlServer)
 TEST(LevelControlServer, Level)
 {
    CHECK_EQUAL(0, server.level());
-   mock("Interface").expectOneCall("notify");
+
+   Level old_value(0, &server);
+   Level new_value(42, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
    server.level((uint8_t) 42);
    mock("Interface").checkExpectations();
    CHECK_EQUAL(42, server.level());
