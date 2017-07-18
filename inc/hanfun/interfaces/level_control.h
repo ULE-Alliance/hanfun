@@ -245,6 +245,7 @@ namespace HF
              */
             void level(float new_level);
 
+#ifdef HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD
             /*!
              * Increase the current level.
              *
@@ -259,7 +260,9 @@ namespace HF
              * range of [0,100] to the range used by the interface [0-255].
              */
             void increase(float increment);
+#endif
 
+#ifdef HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD
             /*!
              * Decrease the current level.
              *
@@ -274,6 +277,7 @@ namespace HF
              * range of [0,100] to the range used by the interface [0-255].
              */
             void decrease(float decrement);
+#endif
 
             // =============================================================================
             // Events

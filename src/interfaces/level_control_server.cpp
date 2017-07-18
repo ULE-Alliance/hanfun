@@ -28,6 +28,7 @@ using namespace HF::Interfaces::LevelControl;
 // Level Control Interface : Server Role
 // =============================================================================
 
+
 // =============================================================================
 // Server::level
 // =============================================================================
@@ -73,6 +74,9 @@ void Server::level(float new_level)
    level(value);
 }
 
+
+#ifdef HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD
+
 void Server::increase(uint8_t increment)
 {
    int16_t new_value;
@@ -93,6 +97,9 @@ void Server::increase(float increment)
    uint8_t value = HF::Common::from_percent<uint8_t>(increment);
    increase(value);
 }
+#endif
+
+#ifdef HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD
 
 void Server::decrease(uint8_t decrement)
 {
@@ -113,7 +120,7 @@ void Server::decrease(float decrement)
    uint8_t value = HF::Common::from_percent<uint8_t>(decrement);
    decrease(value);
 }
-
+#endif
 
 // =============================================================================
 // Server::handle_command
@@ -163,24 +170,30 @@ Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArr
 
    switch (cmd)
    {
+
+#ifdef HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD
       case SET_LEVEL_CMD:
       {
          level(level_msg.level);
          break;
       }
+#endif
 
+#ifdef HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD
       case INCREASE_LEVEL_CMD:
       {
          increase(level_msg.level);
          break;
       }
+#endif
 
+#ifdef HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD
       case DECREASE_LEVEL_CMD:
       {
          decrease(level_msg.level);
          break;
       }
-
+#endif
       default:
          return Common::Result::FAIL_SUPPORT;
    }
