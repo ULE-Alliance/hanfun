@@ -265,6 +265,16 @@ TEST_GROUP(GroupTableClient)
 
          GroupTable::Client::added(addr, response);
       }
+
+      void removed(const Protocol::Address &addr, const GroupTable::Response &response) override
+      {
+         mock("GroupTable::Client").actualCall("removed");
+
+         this->addr     = addr;
+         this->response = response;
+
+         GroupTable::Client::added(addr, response);
+      }
    };
 
    Testing::Device *device;
@@ -442,19 +452,137 @@ TEST(GroupTableClient, Added)
 //! @test Remove support.
 TEST(GroupTableClient, Remove)
 {
-   // FIXME Generated Stub.
    mock("AbstractDevice").expectOneCall("send");
 
-   client->remove(addr);
+   Entry expected(0x5A5A, 0x42);
+   client->remove(addr, expected);
 
    mock("AbstractDevice").checkExpectations();
 
    auto packet = device->packets.back();
 
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL(client->uid(), packet->message.itf.id);
    LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload);
+
+   CHECK_TRUE (expected == expected);
+}
+
+//! @test Remove support.
+TEST(GroupTableClient, Remove_2)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   Entry expected(0x5A5A, 0x42);
+   client->remove(addr, expected.group, expected.unit);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload);
+
+   CHECK_TRUE (expected == expected);
+}
+
+TEST(GroupTableClient, Remove_3)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   Entry expected(0x5A5A, 0x42);
+
+   client->remove(0x4242, expected);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(0x4242, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload, 0);
+
+   CHECK_TRUE (expected == entry);
+}
+
+TEST(GroupTableClient, Remove_4)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   Entry expected(0x5A5A, 0x42);
+
+   client->remove(0x4242, expected.group, expected.unit);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(0x4242, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload);
+
+   CHECK_TRUE (expected == entry);
+}
+
+//! @test Removed callback support.
+TEST(GroupTableClient, Removed)
+{
+   /* *INDENT-OFF* */
+   payload =
+   {
+     0x00, 0x00, 0x00,
+     Common::Result::FAIL_AUTH,  // Result code.
+     0x5A, 0x5A,                 // Group Address.
+     0x42,                       // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+   /* *INDENT-ON* */
+
+   mock("GroupTable::Client").expectOneCall("removed");
+
+   packet.message.itf.member = GroupTable::REMOVE_CMD;
+   packet.message.type = Protocol::Message::COMMAND_RES;
+   packet.message.length = GroupTable::Response::min_size;
+
+   LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
+
+   mock("GroupTable::Client").checkExpectations();
+
+   LONGS_EQUAL(42, client->addr.device);
+   LONGS_EQUAL(0, client->addr.unit);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, client->response.code);
+   LONGS_EQUAL(0x5A5A, client->response.group);
+   LONGS_EQUAL(0x42, client->response.unit);
 }
 
 //! @test Remove All support.
@@ -512,10 +640,10 @@ TEST_GROUP(GroupTableServer)
          return GroupTable::DefaultServer::add(addr, entry);
       }
 
-      void remove(const Protocol::Address &addr) override
+      Common::Result remove(const Protocol::Address &addr, const Entry &entry) override
       {
          mock("GroupTable::Server").actualCall("remove");
-         GroupTable::DefaultServer::remove(addr);
+         return GroupTable::DefaultServer::remove(addr, entry);
       }
 
       void remove_all(const Protocol::Address &addr) override
@@ -740,16 +868,239 @@ TEST(GroupTableServer, Add_Source)
 }
 
 //! @test Remove support.
-TEST(GroupTableServer, Remove)
+TEST(GroupTableServer, Remove_OK)
 {
-   // FIXME Generated Stub.
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<uint8_t> dist(0, 9);
+
+   uint8_t index = dist(gen);
+
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, (uint8_t) (0x5A + index),   // Group Address.
+     0x42,                             // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
+   // Fill in some entries
+   for(int i = 0; i < 10; ++i)
+   {
+      Entry e(0x5A5A + i, 0x42);
+      server->entries().save(e);
+   }
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
    mock("GroupTable::Server").expectOneCall("remove");
+   mock("AbstractDevice").expectOneCall("send");
 
    packet.message.itf.member = GroupTable::REMOVE_CMD;
+   packet.message.length     = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(9, server->number_of_entries());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(0, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::OK, response.code);
+   LONGS_EQUAL(0x5A5A + index, response.group);
+   LONGS_EQUAL(0x42, response.unit);
+}
+
+//! @test Remove support - No group entry (Group Address).
+TEST(GroupTableServer, Remove_Fail_No_Entry_Group)
+{
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, 0x80,   // Group Address.
+     0x42,         // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
+   // Fill in some entries
+   for(int i = 0; i < 10; ++i)
+   {
+      Entry e(0x5A5A + i, 0x42);
+      server->entries().save(e);
+   }
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   mock("GroupTable::Server").expectOneCall("remove");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::REMOVE_CMD;
+   packet.message.length     = payload.size();
+
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(0, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
+   LONGS_EQUAL(0x5A80, response.group);
+   LONGS_EQUAL(0x42, response.unit);
+}
+
+//! @test Remove support - No group entry (Group Address).
+TEST(GroupTableServer, Remove_Fail_No_Entry_Unit_ID)
+{
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<uint8_t> dist(0, 9);
+
+   uint8_t index = dist(gen);
+
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, (uint8_t) (0x5A + index),   // Group Address.
+     0x24,                             // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
+   // Fill in some entries
+   for(int i = 0; i < 10; ++i)
+   {
+      Entry e(0x5A5A + i, 0x42);
+      server->entries().save(e);
+   }
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   mock("GroupTable::Server").expectOneCall("remove");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::REMOVE_CMD;
+   packet.message.length     = payload.size();
+
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(0, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
+   LONGS_EQUAL(0x5A5A + index, response.group);
+   LONGS_EQUAL(0x24, response.unit);
+}
+
+//! @test Remove support - Command source.
+TEST(GroupTableServer, Remove_Source)
+{
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<uint8_t> dist(0, 9);
+
+   uint8_t index = dist(gen);
+
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, (uint8_t) (0x5A + index),   // Group Address.
+     0x42,                             // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
+   // Fill in some entries
+   for(int i = 0; i < 10; ++i)
+   {
+      Entry e(0x5A5A + i, 0x42);
+      server->entries().save(e);
+   }
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   mock("GroupTable::Server").expectOneCall("remove");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::REMOVE_CMD;
+   packet.message.length     = payload.size();
+
+   packet.source             = Protocol::Address(42, 0);
+
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL(0x5A5A + index, response.group);
+   LONGS_EQUAL(0x42, response.unit);
 }
 
 //! @test Remove All support.

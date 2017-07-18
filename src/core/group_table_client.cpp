@@ -52,6 +52,16 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          break;
       }
 
+      case REMOVE_CMD:
+      {
+         GroupTable::Response response;
+         response.unpack(payload, offset);
+
+         this->removed(packet.source, response);
+
+         break;
+      }
+
       default:
       {
          return Common::Result::FAIL_SUPPORT;
@@ -61,6 +71,13 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
    return Common::Result::OK;
 }
 
+// =============================================================================
+// Client::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 {
    UNUSED(itf);
@@ -105,18 +122,19 @@ void Client::add(const Protocol::Address &addr, const Entry &entry)
  *
  */
 // =============================================================================
-void Client::remove(const Protocol::Address &addr)
+void Client::remove(const Protocol::Address &addr, const Entry &entry)
 {
-   // FIXME Generated Stub.
    /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
+   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
 
-   Protocol::Message message;
+   Protocol::Message message(entry.size());
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_TABLE;
    message.itf.member = REMOVE_CMD;
+
+   entry.pack(message.payload);
 
    send(addr, message);
 }
@@ -179,6 +197,19 @@ void Client::read_entries(const Protocol::Address &addr)
  */
 // =============================================================================
 void Client::added(const Protocol::Address &addr, const GroupTable::Response &response)
+{
+   UNUSED(addr);
+   UNUSED(response);
+}
+
+// =============================================================================
+// Client::removed
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::removed(const Protocol::Address &addr, const GroupTable::Response &response)
 {
    UNUSED(addr);
    UNUSED(response);

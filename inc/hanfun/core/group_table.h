@@ -475,17 +475,50 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] entry      the group table entry to remove.
              */
-            void remove(const Protocol::Address &addr);
+            void remove(const Protocol::Address &addr, const Entry &entry);
 
             /*!
-             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_CMD,
-             * to the D:0/U:0 network address.
+             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_CMD, to the given
+             * @c device and the given @c entry.
+             *
+             * @param [in] device   the device address to send the entry to.
+             * @param [in] entry    the group table entry to remove.
              */
-            void remove()
+            void remove(const uint16_t device, const Entry &entry)
             {
-               Protocol::Address addr(0, 0);
-               remove(addr);
+               Protocol::Address addr(device, 0);
+               remove(addr, entry);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_CMD, to the given
+             * network address, for the given @c group and @c unit.
+             *
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] group    the group address for the entry to remove.
+             * @param [in] group    the unit ID for the entry to remove.
+             */
+            void remove(const Protocol::Address &addr, uint16_t group, uint8_t unit)
+            {
+               Entry entry(group, unit);
+               remove(addr, entry);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_CMD, to the given
+             * @c device, for the given @c group and @c unit.
+             *
+             * @param [in] device   the device address to send the entry to.
+             * @param [in] group    the group address for the entry to remove.
+             * @param [in] group    the unit ID for the entry to remove.
+             */
+            void remove(const uint16_t device, uint16_t group, uint8_t unit)
+            {
+               Protocol::Address addr(device, 0);
+               Entry entry(group, unit);
+               remove(addr, entry);
             }
 
             /*!
@@ -540,6 +573,14 @@ namespace HF
              * @param [in] response    the response received.
              */
             virtual void added(const Protocol::Address &addr, const GroupTable::Response &response);
+
+            /*!
+             * Callback for processing the response of a @c GroupTable::REMOVE_CMD.
+             *
+             * @param [in] addr        address for device that sent the response.
+             * @param [in] response    the response received.
+             */
+            virtual void removed(const Protocol::Address &addr, const GroupTable::Response &response);
 
             //! @}
             // ======================================================================

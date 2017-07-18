@@ -118,7 +118,18 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case REMOVE_CMD:
       {
-         remove(packet.source);
+         Entry entry;
+         entry.unpack(payload, offset);
+
+         Common::Result res = remove(packet.source, entry);
+
+         GroupTable::Response response(res, entry);
+         Protocol::Message message(packet.message, response.size());
+
+         response.pack(message.payload);
+
+         send(packet.source, message);
+
          break;
       }
 
@@ -176,10 +187,16 @@ Common::Result IServer::add(const Protocol::Address &addr, const Entry &entry)
  *
  */
 // =============================================================================
-void IServer::remove(const Protocol::Address &addr)
+Common::Result IServer::remove(const Protocol::Address &addr, const Entry &entry)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   if(addr == Protocol::Address(0, 0))
+   {
+      return entries().destroy(entry);
+   }
+   else
+   {
+      return Common::Result::FAIL_AUTH;
+   }
 }
 
 // =============================================================================
