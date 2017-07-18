@@ -166,8 +166,18 @@ namespace HF
 
             public:
 
-            //! Constructor
-            Server(): InterfaceRole<SimpleLightSensor::Base, HF::Interface::SERVER_ROLE>() {}
+            /*!
+             * Constructor
+             *
+             * @param [in] minimum     Minimum measurable lux.
+             * @param [in] maximum     Maximum measurable lux.
+             * @param [in] tolerance   Tolerance.
+             */
+            Server(uint32_t minimum   = std::numeric_limits<uint32_t>::min(),
+                   uint32_t maximum   = std::numeric_limits<uint32_t>::max(),
+                   uint32_t tolerance = 0):
+               _value(0),_minimum(minimum), _maximum(maximum), _tolerance(tolerance)
+            {}
 
             //! Destructor
             virtual ~Server() {}
