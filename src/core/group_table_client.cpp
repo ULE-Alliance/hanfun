@@ -62,6 +62,16 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          break;
       }
 
+      case REMOVE_ALL_CMD:
+      {
+         Protocol::Response response;
+         response.unpack(payload, offset);
+
+         this->removed_all(packet.source, response);
+
+         break;
+      }
+
       default:
       {
          return Common::Result::FAIL_SUPPORT;
@@ -80,9 +90,24 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 // =============================================================================
 uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 {
-   UNUSED(itf);
+   CMD cmd = static_cast<CMD>(itf.member);
 
-   return payload_size_helper<GroupTable::Response>();
+   switch (cmd)
+   {
+      case ADD_CMD:
+      case REMOVE_CMD:
+      {
+         return payload_size_helper<GroupTable::Response>();
+      }
+      case REMOVE_ALL_CMD:
+      {
+         return payload_size_helper<Protocol::Response>();
+      }
+      default:
+      {
+         return 0;
+      }
+   }
 }
 
 // =============================================================================
@@ -148,9 +173,8 @@ void Client::remove(const Protocol::Address &addr, const Entry &entry)
 // =============================================================================
 void Client::remove_all(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
+   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
 
    Protocol::Message message;
@@ -210,6 +234,19 @@ void Client::added(const Protocol::Address &addr, const GroupTable::Response &re
  */
 // =============================================================================
 void Client::removed(const Protocol::Address &addr, const GroupTable::Response &response)
+{
+   UNUSED(addr);
+   UNUSED(response);
+}
+
+// =============================================================================
+// Client::removed_all
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::removed_all(const Protocol::Address &addr, const Protocol::Response &response)
 {
    UNUSED(addr);
    UNUSED(response);

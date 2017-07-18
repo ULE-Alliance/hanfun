@@ -254,6 +254,8 @@ TEST_GROUP(GroupTableClient)
       Protocol::Address addr;
       GroupTable::Response response;
 
+      Common::Result code = Common::Result::FAIL_UNKNOWN;
+
       GroupTableClient(HF::Core::Unit0 &unit): GroupTable::Client(unit) {}
 
       void added(const Protocol::Address &addr, const GroupTable::Response &response) override
@@ -273,7 +275,17 @@ TEST_GROUP(GroupTableClient)
          this->addr     = addr;
          this->response = response;
 
-         GroupTable::Client::added(addr, response);
+         GroupTable::Client::removed(addr, response);
+      }
+
+      void removed_all(const Protocol::Address &addr, const Protocol::Response &response) override
+      {
+         mock("GroupTable::Client").actualCall("removed_all");
+
+         this->addr = addr;
+         this->code = response.code;
+
+         GroupTable::Client::removed_all(addr, response);
       }
    };
 
@@ -588,7 +600,6 @@ TEST(GroupTableClient, Removed)
 //! @test Remove All support.
 TEST(GroupTableClient, RemoveAll)
 {
-   // FIXME Generated Stub.
    mock("AbstractDevice").expectOneCall("send");
 
    client->remove_all(addr);
@@ -597,10 +608,60 @@ TEST(GroupTableClient, RemoveAll)
 
    auto packet = device->packets.back();
 
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL(client->uid(), packet->message.itf.id);
    LONGS_EQUAL(GroupTable::REMOVE_ALL_CMD, packet->message.itf.member);
+}
+
+//! @test Remove All support.
+TEST(GroupTableClient, RemoveAll_2)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   client->remove_all(0x4242);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(0x4242, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_ALL_CMD, packet->message.itf.member);
+}
+
+//! @test Removed All callback support.
+TEST(GroupTableClient, RemovedAll)
+{
+   /* *INDENT-OFF* */
+   payload =
+   {
+     0x00, 0x00, 0x00,
+     Common::Result::FAIL_AUTH,  // Result code.
+   };
+   /* *INDENT-ON* */
+
+   mock("GroupTable::Client").expectOneCall("removed_all");
+
+   packet.message.itf.member = GroupTable::REMOVE_ALL_CMD;
+   packet.message.type = Protocol::Message::COMMAND_RES;
+   packet.message.length = Protocol::Response::min_size;
+
+   LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
+
+   mock("GroupTable::Client").checkExpectations();
+
+   LONGS_EQUAL(42, client->addr.device);
+   LONGS_EQUAL(0, client->addr.unit);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, client->code);
 }
 
 //! @test Read Entries support.
@@ -646,10 +707,10 @@ TEST_GROUP(GroupTableServer)
          return GroupTable::DefaultServer::remove(addr, entry);
       }
 
-      void remove_all(const Protocol::Address &addr) override
+      Common::Result remove_all(const Protocol::Address &addr) override
       {
          mock("GroupTable::Server").actualCall("remove_all");
-         GroupTable::DefaultServer::remove_all(addr);
+         return GroupTable::DefaultServer::remove_all(addr);
       }
 
       void read_entries(const Protocol::Address &addr) override
@@ -1106,14 +1167,90 @@ TEST(GroupTableServer, Remove_Source)
 //! @test Remove All support.
 TEST(GroupTableServer, RemoveAll)
 {
-   // FIXME Generated Stub.
+   // Fill in some entries
+   for(int i = 0; i < 10; ++i)
+   {
+      Entry e(0x5A5A + i, 0x42);
+      server->entries().save(e);
+   }
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
    mock("GroupTable::Server").expectOneCall("remove_all");
+   mock("AbstractDevice").expectOneCall("send");
 
    packet.message.itf.member = GroupTable::REMOVE_ALL_CMD;
 
    CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(0, server->number_of_entries());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(0, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_ALL_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   Protocol::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::OK, response.code);
+}
+
+//! @test Remove All support - Command Source.
+TEST(GroupTableServer, RemoveAll_Source)
+{
+   // Fill in some entries
+   for(int i = 0; i < 10; ++i)
+   {
+      Entry e(0x5A5A + i, 0x42);
+      server->entries().save(e);
+   }
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   mock("GroupTable::Server").expectOneCall("remove_all");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::REMOVE_ALL_CMD;
+   packet.source             = Protocol::Address(42, 0);
+
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(10, server->number_of_entries());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::REMOVE_ALL_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   Protocol::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
 }
 
 //! @test Read Entries support.

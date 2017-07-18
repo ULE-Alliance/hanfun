@@ -530,12 +530,14 @@ namespace HF
             void remove_all(const Protocol::Address &addr);
 
             /*!
-             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_ALL_CMD,
-             * to the D:0/U:0 network address.
+             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_ALL_CMD, to the device
+             * with the givenaddress.
+             *
+             * @param [in] device   the device's network address to send the message to.
              */
-            void remove_all()
+            void remove_all(uint16_t device)
             {
-               Protocol::Address addr(0, 0);
+               Protocol::Address addr(device, 0);
                remove_all(addr);
             }
 
@@ -581,6 +583,15 @@ namespace HF
              * @param [in] response    the response received.
              */
             virtual void removed(const Protocol::Address &addr, const GroupTable::Response &response);
+
+            /*!
+             * Callback for processing the response of a @c GroupTable::REMOVE_ALL_CMD.
+             *
+             * @param [in] addr        address for device that sent the response.
+             * @param [in] response    the response received.
+             */
+            virtual void removed_all(const Protocol::Address &addr,
+                                     const Protocol::Response &response);
 
             //! @}
             // ======================================================================

@@ -135,7 +135,15 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case REMOVE_ALL_CMD:
       {
-         remove_all(packet.source);
+         Common::Result res = remove_all(packet.source);
+
+         Protocol::Response response(res);
+         Protocol::Message message(packet.message, response.size());
+
+         response.pack(message.payload);
+
+         send(packet.source, message);
+
          break;
       }
 
@@ -206,10 +214,18 @@ Common::Result IServer::remove(const Protocol::Address &addr, const Entry &entry
  *
  */
 // =============================================================================
-void IServer::remove_all(const Protocol::Address &addr)
+Common::Result IServer::remove_all(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   if(addr == Protocol::Address(0, 0))
+   {
+      entries().clear();
+
+      return Common::Result::OK;
+   }
+   else
+   {
+      return Common::Result::FAIL_AUTH;
+   }
 }
 
 // =============================================================================
