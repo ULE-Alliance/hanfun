@@ -95,16 +95,24 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                        uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
-
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
       case ADD_CMD:
       {
-         add(packet.source);
+         Entry entry;
+         entry.unpack(payload, offset);
+
+         Common::Result res = add(packet.source, entry);
+
+         GroupTable::Response response(res, entry);
+         Protocol::Message message(packet.message, response.size());
+
+         response.pack(message.payload);
+
+         send(packet.source, message);
+
          break;
       }
 
@@ -144,10 +152,21 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void IServer::add(const Protocol::Address &addr)
+Common::Result IServer::add(const Protocol::Address &addr, const Entry &entry)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   if(addr != Protocol::Address(0, 0))
+   {
+      return Common::Result::FAIL_AUTH;
+   }
+
+   if (entries().size() + 1 <= number_of_max_entries())
+   {
+      return entries().save(entry);
+   }
+   else
+   {
+      return Common::Result::FAIL_RESOURCES;
+   }
 }
 
 // =============================================================================
@@ -228,4 +247,28 @@ uint8_t IServer::number_of_max_entries() const
 void IServer::number_of_max_entries(uint8_t __value)
 {
    HF_SETTER_HELPER(NumberOfMaxEntries, _number_of_max_entries, __value);
+}
+
+// =============================================================================
+// IServer::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t IServer::payload_size(Protocol::Message::Interface &itf) const
+{
+   CMD cmd = static_cast<CMD>(itf.member);
+
+   switch (cmd)
+   {
+      case ADD_CMD:
+      {
+         return payload_size_helper<Entry>();
+      }
+      default:
+      {
+         return 0;
+      }
+   }
 }

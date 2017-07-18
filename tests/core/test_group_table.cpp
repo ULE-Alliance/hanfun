@@ -100,6 +100,14 @@ TEST(GroupTable, InvalidAttribute)
    CHECK_TRUE(attr == nullptr);
 }
 
+TEST(GroupTable, Entry)
+{
+   HF::Core::GroupTable::Entry entry;
+
+   LONGS_EQUAL(0x0000, entry.group);
+   LONGS_EQUAL(0x00, entry.unit);
+}
+
 TEST(GroupTable, Entry_Size)
 {
    using namespace HF::Core::GroupTable;
@@ -177,6 +185,63 @@ TEST(GroupTable, EntryEqual)
    CHECK_TRUE(lhs != rhs);
 }
 
+TEST(GroupTable, Response)
+{
+   HF::Core::GroupTable::Response response;
+
+   LONGS_EQUAL(Common::Result::FAIL_UNKNOWN, response.code);
+   LONGS_EQUAL(0x0000, response.group);
+   LONGS_EQUAL(0x00, response.unit);
+}
+
+TEST(GroupTable, Response_Size)
+{
+   HF::Core::GroupTable::Response response;
+   LONGS_EQUAL(sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint8_t), response.size());
+}
+
+TEST(GroupTable, Response_Pack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray expected { 0x00, 0x00, 0x00,
+                                Common::Result::FAIL_AUTH,  // Operation result.
+                                0x5A, 0x5A,                 // Group Address.
+                                0x42,                       // Unit ID
+                                0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   HF::Core::GroupTable::Response response(Common::Result::FAIL_AUTH, 0x5A5A, 0x42);
+
+   Common::ByteArray data(response.size() + 6);
+
+   uint16_t size = response.pack(data, 3);
+
+   LONGS_EQUAL(response.size(), size);
+
+   CHECK_EQUAL(expected, data);
+}
+
+TEST(GroupTable, Response_Unpack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray data { 0x00, 0x00, 0x00,
+                            Common::Result::FAIL_AUTH,  // Operation result.
+                            0x5A, 0x5A,                 // Group Address.
+                            0x42,                       // Unit ID
+                            0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   HF::Core::GroupTable::Response response;
+
+   uint16_t size = response.unpack(data, 3);
+
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL(0x5A5A, response.group);
+   LONGS_EQUAL(0x42, response.unit);
+}
+
 // =============================================================================
 // Group Table Client
 // =============================================================================
@@ -184,10 +249,22 @@ TEST(GroupTable, EntryEqual)
 //! Test Group for Group Table Client interface class.
 TEST_GROUP(GroupTableClient)
 {
-   // TODO Add required unit tests.
    struct GroupTableClient: public GroupTable::Client
    {
+      Protocol::Address addr;
+      GroupTable::Response response;
+
       GroupTableClient(HF::Core::Unit0 &unit): GroupTable::Client(unit) {}
+
+      void added(const Protocol::Address &addr, const GroupTable::Response &response) override
+      {
+         mock("GroupTable::Client").actualCall("added");
+
+         this->addr     = addr;
+         this->response = response;
+
+         GroupTable::Client::added(addr, response);
+      }
    };
 
    Testing::Device *device;
@@ -195,6 +272,8 @@ TEST_GROUP(GroupTableClient)
 
    Protocol::Address addr;
 
+   Protocol::Packet packet;
+   Common::ByteArray payload;
 
    TEST_SETUP()
    {
@@ -202,6 +281,13 @@ TEST_GROUP(GroupTableClient)
       client = new GroupTableClient(*(device->unit0()));
 
       addr   = Protocol::Address(42, 0);
+
+      packet                    = Protocol::Packet();
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id     = client->uid();
+      packet.message.itf.member = 0xFF;
+
+      packet.source             = addr;
 
       mock().ignoreOtherCalls();
    }
@@ -218,10 +304,11 @@ TEST_GROUP(GroupTableClient)
 //! @test Add support.
 TEST(GroupTableClient, Add)
 {
-   // FIXME Generated Stub.
    mock("AbstractDevice").expectOneCall("send");
 
-   client->add(addr);
+   Entry expected(0x5A5A, 0x42);
+
+   client->add(addr, expected);
 
    mock("AbstractDevice").checkExpectations();
 
@@ -235,6 +322,121 @@ TEST(GroupTableClient, Add)
    LONGS_EQUAL(client->uid(), packet->message.itf.id);
    LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
 
+   Entry entry;
+   entry.unpack(packet->message.payload, 0);
+
+   CHECK_TRUE (expected == entry);
+}
+
+//! @test Add support.
+TEST(GroupTableClient, Add_2)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   Entry expected(0x5A5A, 0x42);
+
+   client->add(addr, expected.group, expected.unit);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload, 0);
+
+   CHECK_TRUE (expected == entry);
+}
+
+TEST(GroupTableClient, Add_3)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   Entry expected(0x5A5A, 0x42);
+
+   client->add(0x4242, expected);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(0x4242, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload, 0);
+
+   CHECK_TRUE (expected == entry);
+}
+
+TEST(GroupTableClient, Add_4)
+{
+   mock("AbstractDevice").expectOneCall("send");
+
+   Entry expected(0x5A5A, 0x42);
+
+   client->add(0x4242, expected.group, expected.unit);
+
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   LONGS_EQUAL(0x4242, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
+   LONGS_EQUAL(client->uid(), packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+
+   Entry entry;
+   entry.unpack(packet->message.payload, 0);
+
+   CHECK_TRUE (expected == entry);
+}
+
+//! @test Added callback support.
+TEST(GroupTableClient, Added)
+{
+   /* *INDENT-OFF* */
+   payload =
+   {
+     0x00, 0x00, 0x00,
+     Common::Result::FAIL_AUTH,  // Result code.
+     0x5A, 0x5A,                 // Group Address.
+     0x42,                       // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+   /* *INDENT-ON* */
+
+   mock("GroupTable::Client").expectOneCall("added");
+
+   packet.message.itf.member = GroupTable::ADD_CMD;
+   packet.message.type = Protocol::Message::COMMAND_RES;
+   packet.message.length = GroupTable::Response::min_size;
+
+   LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
+
+   mock("GroupTable::Client").checkExpectations();
+
+   LONGS_EQUAL(42, client->addr.device);
+   LONGS_EQUAL(0, client->addr.unit);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, client->response.code);
+   LONGS_EQUAL(0x5A5A, client->response.group);
+   LONGS_EQUAL(0x42, client->response.unit);
 }
 
 //! @test Remove support.
@@ -304,10 +506,10 @@ TEST_GROUP(GroupTableServer)
       GroupTableServer(HF::Core::Unit0 &unit):
          GroupTable::DefaultServer(unit) {}
 
-      void add(const Protocol::Address &addr) override
+      Common::Result add(const Protocol::Address &addr, const Entry &entry) override
       {
          mock("GroupTable::Server").actualCall("add");
-         GroupTable::DefaultServer::add(addr);
+         return GroupTable::DefaultServer::add(addr, entry);
       }
 
       void remove(const Protocol::Address &addr) override
@@ -355,6 +557,8 @@ TEST_GROUP(GroupTableServer)
       packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
+      packet.source             = Protocol::Address(0, 0);
+
       mock().ignoreOtherCalls();
    }
 
@@ -381,16 +585,158 @@ TEST(GroupTableServer, NumberOfMaxEntries)
 }
 
 //! @test Add support.
-TEST(GroupTableServer, Add)
+TEST(GroupTableServer, Add_OK)
 {
-   // FIXME Generated Stub.
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, 0x5A,  // Group Address.
+     0x42,        // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
    mock("GroupTable::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
 
    packet.message.itf.member = GroupTable::ADD_CMD;
+   packet.message.length     = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   LONGS_EQUAL(0, server->number_of_entries());
+
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(1, server->number_of_entries());
+
+   int count = 0;
+   server->entries().for_each(0x5A5A, [&count](const Entry &e){
+      UNUSED(e);
+      ++count;
+   });
+
+   LONGS_EQUAL(1, count);
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(0, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::OK, response.code);
+   LONGS_EQUAL(0x5A5A, response.group);
+   LONGS_EQUAL(0x42, response.unit);
+}
+
+//! @test Add support - Max Entries.
+TEST(GroupTableServer, Add_Fail_Max_Entries)
+{
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, 0x5A,  // Group Address.
+     0x42,        // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
+   mock("GroupTable::Server").expectOneCall("add");
+   mock("AbstractDevice").actualCall("send");
+
+   packet.message.itf.member = GroupTable::ADD_CMD;
+   packet.message.length     = payload.size();
+
+   server->number_of_max_entries(2);
+
+   Entry e1(0x5A5A, 0x42);
+   LONGS_EQUAL(Common::Result::OK, server->entries().save(e1));
+   Entry e2(0x5A5A, 0x43);
+   LONGS_EQUAL(Common::Result::OK, server->entries().save(e2));
+
+   int size = server->entries().size();
+   LONGS_EQUAL(2, size);
+
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(0, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_RESOURCES, response.code);
+   LONGS_EQUAL(0x5A5A, response.group);
+   LONGS_EQUAL(0x42, response.unit);
+}
+
+//! @test Add support - Command source.
+TEST(GroupTableServer, Add_Source)
+{
+   payload = {
+     0x00, 0x00, 0x00,
+     0x5A, 0x5A,  // Group Address.
+     0x42,        // Unit ID.
+     0x00, 0x00, 0x00,
+   };
+
+   mock("GroupTable::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::ADD_CMD;
+   packet.message.length     = payload.size();
+
+   packet.source             = Protocol::Address(42, 0);
+
+   LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::ADD_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   GroupTable::Response response;
+   LONGS_EQUAL(response.size(), packet->message.payload.size());
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL(0x5A5A, response.group);
+   LONGS_EQUAL(0x42, response.unit);
 }
 
 //! @test Remove support.

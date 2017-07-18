@@ -88,6 +88,8 @@ namespace HF
             Entry(uint16_t _group = 0, uint8_t _unit = 0):
                group(_group), unit(_unit) {}
 
+            Entry(const Entry &entry) = default;
+
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint16_t)  // Group Address
                                                + sizeof(uint8_t);  // Unit ID
@@ -145,6 +147,55 @@ namespace HF
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
+
+         // =============================================================================
+         // Messages
+         // =============================================================================
+
+         struct Response: public Protocol::Response, public Entry
+         {
+            static constexpr uint16_t min_size = Protocol::Response::min_size
+                                               + Entry::min_size;
+
+            Response(Common::Result code = Common::Result::FAIL_UNKNOWN,
+                     uint16_t group = 0x0000, uint8_t unit = 0x00):
+               Protocol::Response(code), Entry(group, unit) {}
+
+            Response(Common::Result code, const Entry &entry):
+               Protocol::Response(code), Entry(entry) {}
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const
+            {
+               return Protocol::Response::size() + Entry::size();
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, size());
+
+               uint16_t start = offset;
+
+               offset += Protocol::Response::pack(array, offset);
+               offset += Entry::pack(array, offset);
+
+               return offset - start;
+            }
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, size());
+
+               uint16_t start = offset;
+
+               offset += Protocol::Response::unpack(array, offset);
+               offset += Entry::unpack(array, offset);
+
+               return offset - start;
+            }
+         };
 
          // =============================================================================
          // API
@@ -238,17 +289,27 @@ namespace HF
              * Callback that is called when a @c GroupTable::ADD_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr   the network address the message was sent from.
+             * @param [in] entry  the entry to add to the server.
+             *
+             * @retval Common::Result::OK                if the entry was added;
+             * @retval Common::Result::FAIL_RESOURCES    if the @c number_of_max_entries would be exceed;
+             * @retval Common::Result::FAIL_AUTH         if the request did not came from the Concentrator (0, 0).
              */
-            virtual void add(const Protocol::Address &addr);
+            virtual Common::Result add(const Protocol::Address &addr, const Entry &entry);
 
             /*!
              * Callback that is called when a @c GroupTable::REMOVE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr       the network address to the message was received from.
+             *
+             * @retval Common::Result::OK          if the @c entry was removed;
+             * @retval Common::Result::FAIL_ARG    if no entry exits that matches the given @c entry;
+             * @retval Common::Result::FAIL_AUTH   if the request did not came from the Concentrator (0, 0).
+             *
              */
-            virtual void remove(const Protocol::Address &addr);
+            virtual Common::Result remove(const Protocol::Address &addr, const Entry &entry);
 
             /*!
              * Callback that is called when a @c GroupTable::REMOVE_ALL_CMD,
@@ -256,7 +317,7 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void remove_all(const Protocol::Address &addr);
+            virtual Common::Result remove_all(const Protocol::Address &addr);
 
             /*!
              * Callback that is called when a @c GroupTable::READ_ENTRIES_CMD,
@@ -307,12 +368,15 @@ namespace HF
             // Attribute API.
             // =============================================================================
 
-            virtual const IEntries &entries() const = 0;
+            virtual IEntries &entries() const = 0;
 
             protected:
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
+
+
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
          };
 
          template<typename _Entries = GroupTable::Entries>
@@ -326,9 +390,9 @@ namespace HF
 
             virtual ~Server() {}
 
-            const IEntries &entries() const
+            IEntries &entries() const
             {
-               return db;
+               return *(const_cast<_Entries *>(&db));
             }
 
             protected:
@@ -360,17 +424,50 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] entry      the group table entry to add.
              */
-            void add(const Protocol::Address &addr);
+            void add(const Protocol::Address &addr, const Entry &entry);
 
             /*!
-             * Send a HAN-FUN message containing a @c GroupTable::ADD_CMD,
-             * to the D:0/U:0 network address.
+             * Send a HAN-FUN message containing a @c GroupTable::ADD_CMD, to the given
+             * @c device and the given @c entry.
+             *
+             * @param [in] device   the device address to send the entry to.
+             * @param [in] entry    the group table entry to add.
              */
-            void add()
+            void add(const uint16_t device, const Entry &entry)
             {
-               Protocol::Address addr(0, 0);
-               add(addr);
+               Protocol::Address addr(device, 0);
+               add(addr, entry);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c GroupTable::ADD_CMD, to the given
+             * network address, for the given @c group and @c unit.
+             *
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] group    the group address for the entry to add.
+             * @param [in] group    the unit ID for the entry to add.
+             */
+            void add(const Protocol::Address &addr, uint16_t group, uint8_t unit)
+            {
+               Entry entry(group, unit);
+               add(addr, entry);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c GroupTable::ADD_CMD, to the given
+             * @c device, for the given @c group and @c unit.
+             *
+             * @param [in] device   the device address to send the entry to.
+             * @param [in] group    the group address for the entry to add.
+             * @param [in] group    the unit ID for the entry to add.
+             */
+            void add(const uint16_t device, uint16_t group, uint8_t unit)
+            {
+               Protocol::Address addr(device, 0);
+               Entry entry(group, unit);
+               add(addr, entry);
             }
 
             /*!
@@ -429,6 +526,31 @@ namespace HF
 
             //! @}
             // ======================================================================
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            /*!
+             * Callback for processing the response of a @c GroupTable::ADD_CMD.
+             *
+             * @param [in] addr        address for device that sent the response.
+             * @param [in] response    the response received.
+             */
+            virtual void added(const Protocol::Address &addr, const GroupTable::Response &response);
+
+            //! @}
+            // ======================================================================
+
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+
+
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
          };
 
          // =============================================================================

@@ -29,6 +29,46 @@ using namespace HF::Core::GroupTable;
 // =============================================================================
 
 // =============================================================================
+// Client::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
+{
+   CMD cmd = static_cast<GroupTable::CMD>(packet.message.itf.member);
+
+   switch (cmd)
+   {
+      case ADD_CMD:
+      {
+         GroupTable::Response response;
+         response.unpack(payload, offset);
+
+         this->added(packet.source, response);
+
+         break;
+      }
+
+      default:
+      {
+         return Common::Result::FAIL_SUPPORT;
+      }
+   }
+
+   return Common::Result::OK;
+}
+
+uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
+{
+   UNUSED(itf);
+
+   return payload_size_helper<GroupTable::Response>();
+}
+
+// =============================================================================
 // Commands
 // =============================================================================
 
@@ -39,14 +79,17 @@ using namespace HF::Core::GroupTable;
  *
  */
 // =============================================================================
-void Client::add(const Protocol::Address &addr)
+void Client::add(const Protocol::Address &addr, const Entry &entry)
 {
-   // FIXME Generated Stub.
    /* *INDENT-OFF* */
   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
 
    Protocol::Message message;
+
+   message.payload    = Common::ByteArray(entry.size());
+
+   entry.pack(message.payload, 0);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_TABLE;
@@ -122,4 +165,21 @@ void Client::read_entries(const Protocol::Address &addr)
    message.itf.member = READ_ENTRIES_CMD;
 
    send(addr, message);
+}
+
+// =============================================================================
+// Events
+// =============================================================================
+
+// =============================================================================
+// Client::added
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::added(const Protocol::Address &addr, const GroupTable::Response &response)
+{
+   UNUSED(addr);
+   UNUSED(response);
 }
