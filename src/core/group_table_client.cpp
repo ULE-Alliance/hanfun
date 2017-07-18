@@ -72,6 +72,20 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          break;
       }
 
+      case READ_ENTRIES_CMD:
+      {
+         ReadEntriesResponse response;
+
+         /* *INDENT-OFF* */
+         HF_ASSERT(response.unpack(payload, offset) > 0,
+                   { return Common::Result::FAIL_ARG; });
+         /* *INDENT-ON* */
+
+         this->read_entries(packet.source, response);
+
+         break;
+      }
+
       default:
       {
          return Common::Result::FAIL_SUPPORT;
@@ -102,6 +116,10 @@ uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
       case REMOVE_ALL_CMD:
       {
          return payload_size_helper<Protocol::Response>();
+      }
+      case READ_ENTRIES_CMD:
+      {
+         return payload_size_helper<ReadEntriesResponse>();
       }
       default:
       {
@@ -193,18 +211,19 @@ void Client::remove_all(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::read_entries(const Protocol::Address &addr)
+void Client::read_entries(const Protocol::Address &addr, const ReadEntries &params)
 {
-   // FIXME Generated Stub.
    /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
+   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
 
-   Protocol::Message message;
+   Protocol::Message message(params.size());
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_TABLE;
    message.itf.member = READ_ENTRIES_CMD;
+
+   params.pack(message.payload);
 
    send(addr, message);
 }
@@ -247,6 +266,19 @@ void Client::removed(const Protocol::Address &addr, const GroupTable::Response &
  */
 // =============================================================================
 void Client::removed_all(const Protocol::Address &addr, const Protocol::Response &response)
+{
+   UNUSED(addr);
+   UNUSED(response);
+}
+
+// =============================================================================
+// Client::read_entries
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Client::read_entries(const Protocol::Address &addr, const ReadEntriesResponse &response)
 {
    UNUSED(addr);
    UNUSED(response);

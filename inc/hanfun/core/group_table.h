@@ -199,6 +199,150 @@ namespace HF
             }
          };
 
+         /*!
+          * This class contains the required parameters for a
+          * @c GroupTable::READ_ENTRIES_CMD command.
+          */
+         struct ReadEntries
+         {
+            uint8_t start; //!< Offset to start reading entries from.
+            uint8_t count; //!< Number of entries to read.
+
+            ReadEntries(uint8_t _start = 0, uint8_t _count = 1):
+               start(_start), count(_count){}
+
+            // =================================================================
+            // Serializable API
+            // =================================================================
+
+            static constexpr uint16_t min_size = sizeof(uint8_t)
+                                               + sizeof(uint8_t);
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               offset += array.write(offset, start);
+               offset += array.write(offset, count);
+
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               offset += array.read(offset, start);
+               offset += array.read(offset, count);
+
+               return min_size;
+            }
+         };
+
+         /*!
+          * This class the response for a @c GroupTable::READ_ENTRIES_CMD command.
+          */
+         struct ReadEntriesResponse: public Protocol::Response
+         {
+            uint8_t start;                //!< Offset to start reading entries from.
+
+            std::vector<Entry> entries;   //!< Vector containing the entries in the response.
+
+            /*!
+             * Constructor
+             *
+             * @param [in] _code    the response code for the response.
+             * @param [in] _start   the offset for the entries in the response.
+             * @param [in] _count   number of entries this response will contain.
+             */
+            ReadEntriesResponse(Common::Result _code = Common::Result::OK,
+                               uint8_t _start = 0, uint8_t _count = 0):
+               Protocol::Response(_code), start(_start)
+            {
+               entries.reserve(_count);
+            }
+
+            // =================================================================
+            // Serializable API
+            // =================================================================
+
+            static constexpr uint16_t min_size = Protocol::Response::min_size
+                                               + sizeof(uint8_t)
+                                               + sizeof(uint8_t);
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const
+            {
+               uint16_t res = Protocol::Response::size()
+                            + sizeof(uint8_t)
+                            + sizeof(uint8_t);
+
+               std::for_each(entries.begin(), entries.end(), [&res](const Entry &entry)
+               {
+                  res += entry.size();
+               });
+
+               return res;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, size());
+
+               uint16_t _start = offset;
+
+               offset += Protocol::Response::pack(array, offset);
+
+               offset += array.write(offset, start);
+               offset += array.write(offset, (uint8_t) entries.size());
+
+               std::for_each(entries.begin(), entries.end(),
+                             [&array, &offset](const Entry &entry)
+               {
+                  offset += entry.pack(array, offset);
+               });
+
+               return offset - _start;
+            }
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+            {
+               HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+               uint16_t _start = offset;
+
+               offset += Protocol::Response::unpack(array, offset);
+
+               offset += array.read(offset, start);
+
+               uint8_t count = 0;
+               offset += array.read(offset, count);
+
+               HF_SERIALIZABLE_CHECK(array, offset, count * Entry::min_size);
+
+               entries.reserve(count * Entry::min_size);
+
+               for(int i = 0; i < count; ++i)
+               {
+                  Entry entry;
+                  offset += entry.unpack(array, offset);
+                  entries.push_back(entry);
+               }
+
+               return offset - _start;
+            }
+         };
+
          // =============================================================================
          // API
          // =============================================================================
@@ -223,6 +367,15 @@ namespace HF
              * @param [in] group    group address to search for.
              */
             virtual void for_each(uint16_t group, std::function<void(const Entry &)> func) const = 0;
+
+            /*!
+             * Retrive the entry at the given @c index.
+             *
+             * @param [in] index    the index to retrive the entry from.
+             *
+             * @return  a reference to the requested entry.
+             */
+            virtual Entry const &operator[](uint8_t index) const = 0;
          };
 
          struct Entries: public IEntries
@@ -239,6 +392,11 @@ namespace HF
             void clear();
 
             void for_each(uint16_t group, std::function<void(const Entry &)> func) const;
+
+            Entry const &operator[](uint8_t index) const
+            {
+               return db.at(index);
+            }
 
             protected:
 
@@ -325,9 +483,11 @@ namespace HF
              * Callback that is called when a @c GroupTable::READ_ENTRIES_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr     the network address that sent the message.
+             * @param [in] params   the parameters for the command.
              */
-            virtual void read_entries(const Protocol::Address &addr);
+            virtual ReadEntriesResponse read_entries(const Protocol::Address &addr,
+                                                     const ReadEntries &params);
 
             //! @}
             // ======================================================================
@@ -548,17 +708,51 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] params     parameters to the GroupTable::READ_ENTRIES_CMD.
              */
-            void read_entries(const Protocol::Address &addr);
+            void read_entries(const Protocol::Address &addr, const ReadEntries &params);
 
             /*!
-             * Send a HAN-FUN message containing a @c GroupTable::READ_ENTRIES_CMD,
-             * to the D:0/U:0 network address.
+             * Send a HAN-FUN message containing a @c GroupTable::READ_ENTRIES_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] offset   offset to start reading the entries from.
+             * @param [in] count    number of entries to read.
              */
-            void read_entries()
+            void read_entries(const Protocol::Address &addr, const uint8_t offset,
+                              const uint8_t count)
             {
-               Protocol::Address addr(0, 0);
-               read_entries(addr);
+               ReadEntries params(offset, count);
+               read_entries(addr, params);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_ALL_CMD, to the device
+             * with the given address.
+             *
+             * @param [in] device   the device's network address to send the message to.
+             * @param [in] params   parameters to the GroupTable::READ_ENTRIES_CMD.
+             */
+            void read_entries(const uint16_t device, const ReadEntries &params)
+            {
+               Protocol::Address addr(device, 0);
+               read_entries(addr, params);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c GroupTable::REMOVE_ALL_CMD, to the device
+             * with the given address.
+             *
+             * @param [in] device   the device's network address to send the message to.
+             * @param [in] offset   offset to start reading the entries from.
+             * @param [in] count    number of entries to read.
+             */
+            void read_entries(const uint16_t device, const uint8_t offset, const uint8_t count)
+            {
+               Protocol::Address addr(device, 0);
+               ReadEntries params(offset, count);
+               read_entries(addr, params);
             }
 
             //! @}
@@ -594,6 +788,15 @@ namespace HF
              */
             virtual void removed_all(const Protocol::Address &addr,
                                      const Protocol::Response &response);
+
+            /*!
+             * Callback for processing the response of a @c GroupTable::READ_ENTRIES_CMD.
+             *
+             * @param [in] addr        address for device that sent the response.
+             * @param [in] response    the response received.
+             */
+            virtual void read_entries(const Protocol::Address &addr,
+                                      const ReadEntriesResponse &response);
 
             //! @}
             // ======================================================================

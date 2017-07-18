@@ -149,7 +149,16 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case READ_ENTRIES_CMD:
       {
-         read_entries(packet.source);
+         ReadEntries params;
+         params.unpack(payload, offset);
+
+         ReadEntriesResponse response = read_entries(packet.source, params);
+         Protocol::Message message(packet.message, response.size());
+
+         response.pack(message.payload);
+
+         send(packet.source, message);
+
          break;
       }
 
@@ -235,12 +244,39 @@ Common::Result IServer::remove_all(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void IServer::read_entries(const Protocol::Address &addr)
+ReadEntriesResponse IServer::read_entries(const Protocol::Address &addr, const ReadEntries &params)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
-}
 
+   ReadEntriesResponse result;
+
+   uint8_t offset = params.start;
+   uint8_t count  = params.count;
+
+   if(offset > entries().size())
+   {
+      result.code = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   if((offset + count) > entries().size())
+   {
+      count = entries().size() - offset;
+   }
+
+   result.entries.reserve(count * Entry::min_size);
+
+   for(uint8_t i = 0; i < count; ++i)
+   {
+      result.entries.push_back(entries()[offset + i]);
+   }
+
+   _end:
+
+   result.start = offset;
+
+   return std::move(result);
+}
 
 // =============================================================================
 // Get/Set Attributes
@@ -296,8 +332,13 @@ uint16_t IServer::payload_size(Protocol::Message::Interface &itf) const
    switch (cmd)
    {
       case ADD_CMD:
+      case REMOVE_CMD:
       {
          return payload_size_helper<Entry>();
+      }
+      case READ_ENTRIES_CMD:
+      {
+         return payload_size_helper<ReadEntries>();
       }
       default:
       {

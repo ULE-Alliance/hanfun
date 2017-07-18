@@ -13,6 +13,9 @@
  */
 // =============================================================================
 
+#include <iostream>
+#include <iomanip>
+
 #include "hanfun/core/group_table.h"
 
 #include "test_helper.h"
@@ -23,6 +26,21 @@ using namespace HF::Core;
 using namespace HF::Testing;
 
 using namespace HF::Core::GroupTable;
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::Entry &entry)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   stream << "G: 0x" << std::hex << entry.group << ", U: 0x" << std::hex << entry.unit;
+
+   stream << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
 
 // =============================================================================
 // Group Table
@@ -242,6 +260,186 @@ TEST(GroupTable, Response_Unpack)
    LONGS_EQUAL(0x42, response.unit);
 }
 
+TEST(GroupTable, ReadEntries)
+{
+   ReadEntries params;
+
+   LONGS_EQUAL(0, params.start);
+   LONGS_EQUAL(1, params.count);
+}
+
+TEST(GroupTable, GetEntries_Size)
+{
+   ReadEntries params;
+
+   LONGS_EQUAL(sizeof(uint8_t) + sizeof(uint8_t), params.size());
+   LONGS_EQUAL(sizeof(uint8_t) + sizeof(uint8_t), ReadEntries::min_size);
+}
+
+TEST(GroupTable, GetEntries_Pack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray expected { 0x00, 0x00, 0x00,
+                                0x5A,  // Start Index
+                                0x42,  // Number of entries.
+                                0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   ReadEntries params(0x5A, 0x42);
+
+   Common::ByteArray data(params.size() + 6);
+
+   uint16_t size = params.pack(data, 3);
+
+   LONGS_EQUAL(params.size(), size);
+
+   CHECK_EQUAL(expected, data);
+}
+
+TEST(GroupTable, GetEntries_Unpack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray data { 0x00, 0x00, 0x00,
+                            0x5A,  // Start Index
+                            0x42,  // Number of entries.
+                            0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   ReadEntries params;
+
+   uint16_t size = params.unpack(data, 3);
+
+   LONGS_EQUAL(params.size(), size);
+
+   LONGS_EQUAL(0x5A, params.start);
+   LONGS_EQUAL(0x42, params.count);
+}
+
+TEST(GroupTable, ReadEntriesResponse)
+{
+   ReadEntriesResponse response;
+
+   LONGS_EQUAL(0, response.start);
+   CHECK_TRUE(response.entries.empty());
+}
+
+TEST(GroupTable, GetEntriesResponse_Size)
+{
+   ReadEntriesResponse params;
+
+                   // Result code  + Start Index     + Number of entries.
+   uint16_t size = sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint8_t);
+
+   LONGS_EQUAL(size, params.size());
+
+   params = ReadEntriesResponse(Common::Result::OK, 0, 10);
+
+   for(int i = 0; i < 10; ++i)
+   {
+      params.entries.emplace_back(0x5A5A, 42);
+   }
+
+   LONGS_EQUAL(size + 10 * Entry::min_size, params.size());
+}
+
+TEST(GroupTable, GetEntriesResponse_Pack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray expected { 0x00, 0x00, 0x00,
+                                Common::Result::FAIL_AUTH,
+                                0x22,        // Start Index
+                                0x05,        // Number of entries.
+                                0x5A, 0x01,  // Entry 1
+                                0x71,
+                                0x5A, 0x02,  // Entry 2
+                                0x72,
+                                0x5A, 0x03,  // Entry 3
+                                0x73,
+                                0x5A, 0x04,  // Entry 4
+                                0x74,
+                                0x5A, 0x05,  // Entry 5
+                                0x75,
+                                0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   ReadEntriesResponse response(Common::Result::FAIL_AUTH, 0x22, 5);
+
+   for(int i = 1; i <= 5; ++i)
+   {
+      response.entries.emplace_back(0x5A00 | i, 0x70 | i);
+   }
+
+   Common::ByteArray data(response.size() + 6);
+
+   uint16_t size = response.pack(data, 3);
+
+   LONGS_EQUAL(response.size(), size);
+
+   CHECK_EQUAL(expected, data);
+}
+
+TEST(GroupTable, GetEntriesResponse_Unpack)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray data { 0x00, 0x00, 0x00,
+                            Common::Result::FAIL_AUTH,
+                            0x22,        // Start Index
+                            0x05,        // Number of entries.
+                            0x5A, 0x01,  // Entry 1
+                            0x71,
+                            0x5A, 0x02,  // Entry 2
+                            0x72,
+                            0x5A, 0x03,  // Entry 3
+                            0x73,
+                            0x5A, 0x04,  // Entry 4
+                            0x74,
+                            0x5A, 0x05,  // Entry 5
+                            0x75,
+                            0x00, 0x00, 0x00};
+   /* *INDENT-ON* */
+
+   ReadEntriesResponse response;
+
+   uint16_t size = response.unpack(data, 3);
+
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
+   LONGS_EQUAL(0x22, response.start);
+   LONGS_EQUAL(0x05, response.entries.size());
+
+   for(int i = 1; i <= 5; ++i)
+   {
+      Entry e(0x5A00 | i, 0x70 | i);
+      check_index(e, response.entries[i - 1], i, "Entries", __FILE__, __LINE__);
+   }
+}
+
+TEST(GroupTable, GetEntriesResponse_Unpack_Fail)
+{
+   /* *INDENT-OFF* */
+   Common::ByteArray data { 0x00, 0x00, 0x00,
+                            Common::Result::FAIL_AUTH,
+                            0x22,        // Start Index
+                            0x05,        // Number of entries.
+                            0x5A, 0x01,  // Entry 1
+                            0x71,
+                            0x5A, 0x02,  // Entry 2
+                            0x72};
+   /* *INDENT-ON* */
+
+   ReadEntriesResponse response;
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
+   LONGS_EQUAL(0, response.unpack(data, 3));
+
+   mock("support").checkExpectations();
+
+   LONGS_EQUAL(0x22, response.start);
+   LONGS_EQUAL(0, response.entries.size());
+}
+
 // =============================================================================
 // Group Table Client
 // =============================================================================
@@ -253,6 +451,8 @@ TEST_GROUP(GroupTableClient)
    {
       Protocol::Address addr;
       GroupTable::Response response;
+
+      GroupTable::ReadEntriesResponse read_entries_res;
 
       Common::Result code = Common::Result::FAIL_UNKNOWN;
 
@@ -284,6 +484,18 @@ TEST_GROUP(GroupTableClient)
 
          this->addr = addr;
          this->code = response.code;
+
+         GroupTable::Client::removed_all(addr, response);
+      }
+
+      using GroupTable::Client::read_entries;
+
+      void read_entries(const Protocol::Address &addr, const ReadEntriesResponse &response) override
+      {
+         mock("GroupTable::Client").actualCall("read_entries");
+
+         this->addr = addr;
+         this->read_entries_res = response;
 
          GroupTable::Client::removed_all(addr, response);
       }
@@ -667,19 +879,108 @@ TEST(GroupTableClient, RemovedAll)
 //! @test Read Entries support.
 TEST(GroupTableClient, ReadEntries)
 {
-   // FIXME Generated Stub.
    mock("AbstractDevice").expectOneCall("send");
 
-   client->read_entries(addr);
+   ReadEntries expected(42, 24);
+   client->read_entries(addr, expected);
 
    mock("AbstractDevice").checkExpectations();
 
    auto packet = device->packets.back();
 
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, packet->message.type);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, packet->message.itf.role);
    LONGS_EQUAL(client->uid(), packet->message.itf.id);
    LONGS_EQUAL(GroupTable::READ_ENTRIES_CMD, packet->message.itf.member);
+
+   ReadEntries params;
+   params.unpack(packet->message.payload);
+
+   LONGS_EQUAL(42, params.start);
+   LONGS_EQUAL(24, params.count);
+}
+
+//! @test Read entries callback support.
+TEST(GroupTableClient, ReadEntries_Callback)
+{
+   /* *INDENT-OFF* */
+   payload =
+   {
+       0x00, 0x00, 0x00,
+       Common::Result::FAIL_AUTH,
+       0x22,        // Start Index
+       0x05,        // Number of entries.
+       0x5A, 0x01,  // Entry 1
+       0x71,
+       0x5A, 0x02,  // Entry 2
+       0x72,
+       0x5A, 0x03,  // Entry 3
+       0x73,
+       0x5A, 0x04,  // Entry 4
+       0x74,
+       0x5A, 0x05,  // Entry 5
+       0x75,
+       0x00, 0x00, 0x00
+   };
+   /* *INDENT-ON* */
+
+   mock("GroupTable::Client").expectOneCall("read_entries");
+
+   packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
+   packet.message.type = Protocol::Message::COMMAND_RES;
+   packet.message.length = payload.size() - 6;
+
+   LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
+
+   mock("GroupTable::Client").checkExpectations();
+
+   LONGS_EQUAL(42, client->addr.device);
+   LONGS_EQUAL(0, client->addr.unit);
+
+   LONGS_EQUAL(Common::Result::FAIL_AUTH, client->read_entries_res.code);
+   LONGS_EQUAL(0x22, client->read_entries_res.start);
+
+   LONGS_EQUAL(0x05, client->read_entries_res.entries.size());
+
+   for(int i = 1; i <= 5; ++i)
+   {
+      Entry e(0x5A00 | i, 0x70 | i);
+      check_index(e, client->read_entries_res.entries[i - 1], i, "Entries", __FILE__, __LINE__);
+   }
+}
+
+//! @test Read entries callback support.
+TEST(GroupTableClient, ReadEntries_Callback_Fail)
+{
+   /* *INDENT-OFF* */
+   payload =
+   {
+       0x00, 0x00, 0x00,
+       Common::Result::FAIL_AUTH,
+       0x22,        // Start Index
+       0x05,        // Number of entries.
+       0x5A, 0x01,  // Entry 1
+       0x71,
+       0x5A, 0x02,  // Entry 2
+       0x72,
+       0x00, 0x00, 0x00
+   };
+   /* *INDENT-ON* */
+
+   mock("GroupTable::Client").expectNoCall("read_entries");
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
+
+   packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
+   packet.message.type = Protocol::Message::COMMAND_RES;
+   packet.message.length = payload.size() - 6;
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, client->handle(packet, payload, 3));
+
+   mock("GroupTable::Client").checkExpectations();
+   mock("support").checkExpectations();
 }
 
 // =============================================================================
@@ -713,10 +1014,11 @@ TEST_GROUP(GroupTableServer)
          return GroupTable::DefaultServer::remove_all(addr);
       }
 
-      void read_entries(const Protocol::Address &addr) override
+      ReadEntriesResponse read_entries(const Protocol::Address &addr,
+                                       const ReadEntries &params) override
       {
          mock("GroupTable::Server").actualCall("read_entries");
-         GroupTable::DefaultServer::read_entries(addr);
+         return GroupTable::DefaultServer::read_entries(addr, params);
       }
 
       void notify(const HF::Attributes::IAttribute &old_value,
@@ -1254,16 +1556,171 @@ TEST(GroupTableServer, RemoveAll_Source)
 }
 
 //! @test Read Entries support.
-TEST(GroupTableServer, ReadEntries)
+TEST(GroupTableServer, ReadEntries_OK)
 {
-   // FIXME Generated Stub.
+   // Fill in some entries
+   for(int i = 1; i <= 10; ++i)
+   {
+      Entry e(0x5A00 | i, 0x70 | i);
+      server->entries().save(e);
+   }
+
+   payload = {
+     0x00, 0x00, 0x00,
+     0x02, // Read Offset.
+     0x05, // Number of entries to read.
+     0x00, 0x00, 0x00,
+   };
+
    mock("GroupTable::Server").expectOneCall("read_entries");
+   mock("AbstractDevice").expectOneCall("send");
 
    packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
+   packet.source             = Protocol::Address(42, 0);
+   packet.message.length     = ReadEntries::min_size;
 
    CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::READ_ENTRIES_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   ReadEntriesResponse response;
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::OK, response.code);
+
+   LONGS_EQUAL(0x02, response.start);
+
+   LONGS_EQUAL(0x05, response.entries.size());
+
+   for(int i = 0; i < 5; ++i)
+   {
+      Entry e(0x5A00 | (i + 3), 0x70 | (i + 3));
+      check_index(e, response.entries[i], i, "Entries", __FILE__, __LINE__);
+   }
+}
+
+//! @test Read Entries support.
+TEST(GroupTableServer, ReadEntries_Bad_Index)
+{
+   // Fill in some entries
+   for(int i = 1; i <= 10; ++i)
+   {
+      Entry e(0x5A00 | i, 0x70 | i);
+      server->entries().save(e);
+   }
+
+   payload = {
+     0x00, 0x00, 0x00,
+     0x22, // Read Offset.
+     0x01, // Number of entries to read.
+     0x00, 0x00, 0x00,
+   };
+
+   mock("GroupTable::Server").expectOneCall("read_entries");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
+   packet.source             = Protocol::Address(42, 0);
+   packet.message.length     = ReadEntries::min_size;
+
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::READ_ENTRIES_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   ReadEntriesResponse response;
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
+
+   LONGS_EQUAL(0x22, response.start);
+
+   LONGS_EQUAL(0x00, response.entries.size());
+}
+
+//! @test Read Entries support.
+TEST(GroupTableServer, ReadEntries_Count)
+{
+   // Fill in some entries
+   for(int i = 1; i <= 10; ++i)
+   {
+      Entry e(0x5A00 | i, 0x70 | i);
+      server->entries().save(e);
+   }
+
+   payload = {
+     0x00, 0x00, 0x00,
+     0x02, // Read Offset.
+     0x5A, // Number of entries to read.
+     0x00, 0x00, 0x00,
+   };
+
+   mock("GroupTable::Server").expectOneCall("read_entries");
+   mock("AbstractDevice").expectOneCall("send");
+
+   packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
+   packet.source             = Protocol::Address(42, 0);
+   packet.message.length     = ReadEntries::min_size;
+
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupTable::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   auto packet = device->packets.back();
+
+   CHECK_TRUE(packet != nullptr);
+
+   LONGS_EQUAL(42, packet->destination.device);
+   LONGS_EQUAL(0, packet->destination.unit);
+
+   LONGS_EQUAL(Interface::GROUP_TABLE, packet->message.itf.id);
+   LONGS_EQUAL(GroupTable::READ_ENTRIES_CMD, packet->message.itf.member);
+   LONGS_EQUAL(Interface::SERVER_ROLE, packet->message.itf.role);
+
+   ReadEntriesResponse response;
+
+   uint16_t size = response.unpack(packet->message.payload);
+   LONGS_EQUAL(response.size(), size);
+
+   LONGS_EQUAL(Common::Result::OK, response.code);
+
+   LONGS_EQUAL(0x02, response.start);
+
+   LONGS_EQUAL(0x08, response.entries.size());
+
+   for(int i = 0; i < 8; ++i)
+   {
+      Entry e(0x5A00 | (i + 3), 0x70 | (i + 3));
+      check_index(e, response.entries[i], i, "Entries", __FILE__, __LINE__);
+   }
 }
 
 // =============================================================================
