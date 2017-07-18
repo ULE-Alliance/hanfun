@@ -104,8 +104,6 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         typedef HF::Common::Pointer<const Entry> EntryPtr;
-
          // =============================================================================
          // Attribute Helper classes
          // =============================================================================
@@ -154,15 +152,19 @@ namespace HF
 
          struct Response: public Protocol::Response, public Entry
          {
-            static constexpr uint16_t min_size = Protocol::Response::min_size
-                                               + Entry::min_size;
-
             Response(Common::Result code = Common::Result::FAIL_UNKNOWN,
                      uint16_t group = 0x0000, uint8_t unit = 0x00):
                Protocol::Response(code), Entry(group, unit) {}
 
             Response(Common::Result code, const Entry &entry):
                Protocol::Response(code), Entry(entry) {}
+
+            // =================================================================
+            // Serializable API
+            // =================================================================
+
+            static constexpr uint16_t min_size = Protocol::Response::min_size
+                                               + Entry::min_size;
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
@@ -531,7 +533,7 @@ namespace HF
 
             /*!
              * Send a HAN-FUN message containing a @c GroupTable::REMOVE_ALL_CMD, to the device
-             * with the givenaddress.
+             * with the given address.
              *
              * @param [in] device   the device's network address to send the message to.
              */
