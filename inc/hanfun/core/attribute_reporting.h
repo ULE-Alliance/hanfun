@@ -1435,6 +1435,18 @@ namespace HF
                UNUSED(response);
             }
 
+            /*!
+             * Event indicating the result of a @c UPDATE_INTERVAL_CMD.
+             *
+             * @param [in] address     device address that originated the event.
+             * @param [in] response    result of the operation.
+             */
+            virtual void updated (const Protocol::Address &address, const Response &response)
+            {
+               UNUSED(address);
+               UNUSED(response);
+            }
+
             //! @}
             // ======================================================================
 
@@ -1525,6 +1537,16 @@ namespace HF
              */
             void add(Protocol::Address &destination, Reference report,
                      event_iterator begin, event_iterator end);
+
+            /*!
+             * Update the interval of an existent report.
+             *
+             * @param [in] destination    device address the rule should be sent to.
+             * @param [in] report      report reference
+             * @param [in] interval    time interval in seconds for the periodic rule.
+             */
+            void update_interval(Protocol::Address &destination,
+                                 Reference report, uint32_t interval);
 
             //! @}
             // ======================================================================

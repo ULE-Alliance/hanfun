@@ -2765,6 +2765,16 @@ TEST_GROUP(AttributeReporting_Client)
 
          mock("AttributeReporting::Client").actualCall("deleted");
       }
+
+      void updated(const Protocol::Address &address,
+                   const AttributeReporting::Response &response)
+      {
+         UNUSED(address);
+         UNUSED(response);
+
+         mock("AttributeReporting::Client").actualCall("updated")
+                                           .withParameter("Response", response.code);
+      }
    };
 
    TestAttributeReportingClient client;
@@ -2853,6 +2863,19 @@ TEST(AttributeReporting_Client, Deleted)
    create_response(DELETE_REPORT_CMD);
 
    mock("AttributeReporting::Client").expectOneCall("deleted");
+
+   LONGS_EQUAL(Common::Result::OK, client.handle(packet, packet.message.payload, 0));
+
+   mock("AttributeReporting::Client").checkExpectations();
+}
+
+TEST(AttributeReporting_Client, Updated)
+{
+   create_response(UPDATE_INTERVAL_CMD);
+
+   /*Check if the callback is called and it receives the response code from the message */
+   mock("AttributeReporting::Client").expectOneCall("updated")
+         .withParameter("Response", Common::Result::FAIL_UNKNOWN);
 
    LONGS_EQUAL(Common::Result::OK, client.handle(packet, packet.message.payload, 0));
 
