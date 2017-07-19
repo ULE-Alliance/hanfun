@@ -1485,6 +1485,82 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::Time::Date &date)
 }
 
 // =============================================================================
+// HF::Core::GroupTable
+// =============================================================================
+
+#include "hanfun/core/group_table.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::GroupTable;
+
+   switch (command)
+   {
+      case ADD_CMD:
+         result = "Add";
+         break;
+      case REMOVE_CMD:
+         result = "Remove";
+         break;
+      case REMOVE_ALL_CMD:
+         result = "Remove All";
+         break;
+      case READ_ENTRIES_CMD:
+         result = "Read Entries";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::GroupTable;
+
+   switch (attribute)
+   {
+      case NUMBER_OF_ENTRIES_ATTR:
+         result = "Number Of Entries";
+         break;
+      case NUMBER_OF_MAX_ENTRIES_ATTR:
+         result = "Number Of Max Entries";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1658,6 +1734,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::CMD>(message.itf.member);
                break;
+            case HF::Interface::GROUP_TABLE:
+               stream << static_cast<GroupTable::CMD>(message.itf.member);
+               break;
             case HF::Interface::SUOTA:
                stream << static_cast<SUOTA::CMD>(message.itf.member);
                break;
@@ -1711,6 +1790,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::GROUP_TABLE:
+               stream << static_cast<GroupTable::Attributes>(message.itf.member);
                break;
             case HF::Interface::RSSI:
                stream << static_cast<RSSI::Attributes>(message.itf.member);

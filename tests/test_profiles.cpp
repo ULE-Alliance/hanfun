@@ -352,6 +352,7 @@ TEST(Profiles, Profile2_Handle)
 TEST(Profiles, Profile2_Attributes)
 {
    TestProfile profile;
+
    Common::Interface itf(TestInterface::UID, Interface::SERVER_ROLE);
    HF::Attributes::UIDS uids;
 

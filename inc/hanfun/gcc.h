@@ -24,8 +24,7 @@ const class nullptr_t
    public:
 
    /* Return 0 for any class pointer */
-   template<typename T>
-   operator T *() const
+   template<typename T> operator T *() const
    {
       return 0;
    }

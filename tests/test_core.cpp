@@ -130,15 +130,18 @@ TEST(Unit0, OptionalInterfaces)
 
    LONGS_EQUAL(3, itfs.size());
 
-   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf) {
+   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+   {
       return itf.id == HF::Interface::POWER;
    }));
 
-   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf) {
+   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+   {
       return itf.id == HF::Interface::RSSI;
    }));
 
-   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf) {
+   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+   {
       return itf.id == HF::Interface::TIME;
    }));
 }

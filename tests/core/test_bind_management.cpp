@@ -282,8 +282,7 @@ TEST(BindManagementClient, ResponseOK)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::OK,   // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = BindManagement::ADD_BIND_CMD;
@@ -301,8 +300,7 @@ TEST(BindManagementClient, ResponseFAIL)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::FAIL_ARG,   // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = BindManagement::REMOVE_BIND_CMD;
@@ -717,6 +715,7 @@ TEST_GROUP(BindManagementServer)
    };
 
    TestBindManagementServer *server;
+
    Testing::Concentrator *device;
 
    Protocol::Packet packet;

@@ -199,6 +199,7 @@ namespace HF
             int compare(const Measurement &other) const
             {
                int res = value - other.value;
+
                return res;
             }
 

@@ -82,6 +82,7 @@ TEST(Message_Address, Pack)
 TEST(Message_Address, Unpack)
 {
    uint16_t rsize = addr.unpack(expected_1, 3);
+
    LONGS_EQUAL(addr.size(), rsize);
 
    LONGS_EQUAL(1, addr.mod);
@@ -154,6 +155,7 @@ TEST(Message_Interface, Pack)
 TEST(Message_Interface, Unpack)
 {
    uint16_t rsize = addr.unpack(expected_1, 3);
+
    LONGS_EQUAL(addr.size(), rsize);
 
    LONGS_EQUAL(1, addr.role);
@@ -235,6 +237,7 @@ TEST(Message, Pack)
 TEST(Message, Unpack)
 {
    uint16_t rsize = message.unpack(expected, 3);
+
    LONGS_EQUAL(7, rsize);
 
    LONGS_EQUAL(0xAA, message.reference);
@@ -428,6 +431,7 @@ TEST(Packet, Pack)
 TEST(Packet, Unpack)
 {
    uint16_t rsize = packet->unpack(expected, 3);
+
    LONGS_EQUAL(6 + 2 + 7, rsize);
 
    LONGS_EQUAL(Protocol::Address::DEVICE, packet->source.mod);
@@ -498,6 +502,7 @@ TEST(Response, Pack)
 TEST(Response, Unpack)
 {
    uint16_t rsize = response->unpack(expected, 3);
+
    LONGS_EQUAL(1, rsize);   // Response code.
 
    LONGS_EQUAL(Result::FAIL_ARG, response->code);
@@ -528,8 +533,7 @@ TEST(AttributesProtocol, GetAttributePack_Request_Pack)
                               // Attribute uid's.
                        0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
                        0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    ByteArray result(expected.size());
 
@@ -547,8 +551,7 @@ TEST(AttributesProtocol, GetAttributePack_Request_Unpack)
                               // Attribute uid's.
                        0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
                        0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    GetAttributePack::Request request;
 
@@ -588,8 +591,7 @@ TEST(AttributesProtocol, GetAttributePack_Response_Pack)
                        Result::OK,                                            // Response code.
                        0x03,                                                  // Number of attribute uid's.
                        0x01, 0xAA, 0xAA, 0x02, 0xBB, 0xBB, 0x03, 0xCC, 0xCC,  // Attribute's.
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    ByteArray result(expected.size());
 
@@ -606,8 +608,7 @@ TEST(AttributesProtocol, GetAttributePack_Response_Unpack)
                        Result::OK,                                            // Response code.
                        0x03,                                                  // Number of attribute uid's.
                        0x01, 0xAA, 0xAA, 0x02, 0xBB, 0xBB, 0x03, 0xCC, 0xCC,  // Attribute's.
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    GetAttributePack::Response response(Testing::TestInterface::create_attribute);
 
@@ -653,8 +654,7 @@ TEST(AttributesProtocol, SetAttributePack_Request_Pack)
    ByteArray expected({0x00, 0x00, 0x00,
                        0x03,                                                  // Number of attribute uid's.
                        0x01, 0xAA, 0xAA, 0x02, 0xBB, 0xBB, 0x03, 0xCC, 0xCC,  // Attribute's.
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    ByteArray result(expected.size());
 
@@ -672,8 +672,7 @@ TEST(AttributesProtocol, SetAttributePack_Request_Unpack)
                        0x01, 0xAA, 0xAA,  // Attribute 1
                        0x02, 0xBB, 0xBB,  // Attribute 2
                        0x03, 0xCC, 0xCC,  // Attribute 3
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    Testing::TestInterface itf;
    SetAttributePack::Request request;
@@ -721,8 +720,7 @@ TEST(AttributesProtocol, SetAttributePack_Response_Pack)
                        0x01, Result::OK,            // Attribute 1
                        0x02, Result::FAIL_RO_ATTR,  // Attribute 2
                        0x06, Result::FAIL_SUPPORT,  // Attribute 3
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
    ByteArray result(expected.size());
 
    fill(result.begin(), result.end(), 0);
@@ -739,8 +737,7 @@ TEST(AttributesProtocol, SetAttributePack_Response_Unpack)
                        0x01, Result::OK,            // Attribute 1
                        0x02, Result::FAIL_RO_ATTR,  // Attribute 2
                        0x06, Result::FAIL_SUPPORT,  // Attribute 3
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
 
    SetAttributePack::Response response;
 
@@ -783,6 +780,7 @@ TEST_GROUP(ResponseRequired)
    };
 
    FilterTest filter;
+
    Testing::Link link;
 
    Packet packet;

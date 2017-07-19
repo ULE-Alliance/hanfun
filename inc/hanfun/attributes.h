@@ -227,6 +227,7 @@ namespace HF
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint8_t count = 0;
+
             return unpack(array, offset, count);
          }
 
@@ -648,6 +649,7 @@ namespace HF
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint16_t result = helper.unpack(array, offset);
+
             setter(_owner, helper.data);
             return result;
          }
