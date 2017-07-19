@@ -316,6 +316,7 @@ namespace HF
          uint16_t payload_size_helper() const
          {
             _Message message;
+
             return message.size();
          }
 
@@ -528,7 +529,7 @@ namespace HF
           * @return  a pointer to the optional implemented interface.
           */
          template<uint8_t N>
-         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
+         const typename std::tuple_element<N, interfaces_t>::type::base *get() const
          {
             return &std::get<N>(_interfaces);
          }

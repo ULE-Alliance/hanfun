@@ -327,14 +327,14 @@ TEST(GroupTable, GetEntriesResponse_Size)
 {
    ReadEntriesResponse params;
 
-                   // Result code  + Start Index     + Number of entries.
+   //              Result code     + Start Index     + Number of entries.
    uint16_t size = sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint8_t);
 
    LONGS_EQUAL(size, params.size());
 
    params = ReadEntriesResponse(Common::Result::OK, 0, 10);
 
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       params.entries.emplace_back(0x5A5A, 42);
    }
@@ -364,7 +364,7 @@ TEST(GroupTable, GetEntriesResponse_Pack)
 
    ReadEntriesResponse response(Common::Result::FAIL_AUTH, 0x22, 5);
 
-   for(int i = 1; i <= 5; ++i)
+   for (int i = 1; i <= 5; ++i)
    {
       response.entries.emplace_back(0x5A00 | i, 0x70 | i);
    }
@@ -408,7 +408,7 @@ TEST(GroupTable, GetEntriesResponse_Unpack)
    LONGS_EQUAL(0x22, response.start);
    LONGS_EQUAL(0x05, response.entries.size());
 
-   for(int i = 1; i <= 5; ++i)
+   for (int i = 1; i <= 5; ++i)
    {
       Entry e(0x5A00 | i, 0x70 | i);
       check_index(e, response.entries[i - 1], i, "Entries", __FILE__, __LINE__);
@@ -449,12 +449,12 @@ TEST_GROUP(GroupTableClient)
 {
    struct GroupTableClient: public GroupTable::Client
    {
-      Protocol::Address addr;
-      GroupTable::Response response;
+      Protocol::Address                        addr;
+      GroupTable::Response                     response;
 
-      GroupTable::ReadEntriesResponse read_entries_res;
+      GroupTable::ReadEntriesResponse          read_entries_res;
 
-      Common::Result code = Common::Result::FAIL_UNKNOWN;
+      Common::Result                           code = Common::Result::FAIL_UNKNOWN;
 
       GroupTableClient(HF::Core::Unit0 &unit): GroupTable::Client(unit) {}
 
@@ -494,7 +494,7 @@ TEST_GROUP(GroupTableClient)
       {
          mock("GroupTable::Client").actualCall("read_entries");
 
-         this->addr = addr;
+         this->addr             = addr;
          this->read_entries_res = response;
 
          GroupTable::Client::removed_all(addr, response);
@@ -511,10 +511,10 @@ TEST_GROUP(GroupTableClient)
 
    TEST_SETUP()
    {
-      device = new Testing::Device();
-      client = new GroupTableClient(*(device->unit0()));
+      device                    = new Testing::Device();
+      client                    = new GroupTableClient(*(device->unit0()));
 
-      addr   = Protocol::Address(42, 0);
+      addr                      = Protocol::Address(42, 0);
 
       packet                    = Protocol::Packet();
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
@@ -559,7 +559,7 @@ TEST(GroupTableClient, Add)
    Entry entry;
    entry.unpack(packet->message.payload, 0);
 
-   CHECK_TRUE (expected == entry);
+   CHECK_TRUE(expected == entry);
 }
 
 //! @test Add support.
@@ -586,7 +586,7 @@ TEST(GroupTableClient, Add_2)
    Entry entry;
    entry.unpack(packet->message.payload, 0);
 
-   CHECK_TRUE (expected == entry);
+   CHECK_TRUE(expected == entry);
 }
 
 TEST(GroupTableClient, Add_3)
@@ -612,7 +612,7 @@ TEST(GroupTableClient, Add_3)
    Entry entry;
    entry.unpack(packet->message.payload, 0);
 
-   CHECK_TRUE (expected == entry);
+   CHECK_TRUE(expected == entry);
 }
 
 TEST(GroupTableClient, Add_4)
@@ -638,7 +638,7 @@ TEST(GroupTableClient, Add_4)
    Entry entry;
    entry.unpack(packet->message.payload, 0);
 
-   CHECK_TRUE (expected == entry);
+   CHECK_TRUE(expected == entry);
 }
 
 //! @test Added callback support.
@@ -658,8 +658,8 @@ TEST(GroupTableClient, Added)
    mock("GroupTable::Client").expectOneCall("added");
 
    packet.message.itf.member = GroupTable::ADD_CMD;
-   packet.message.type = Protocol::Message::COMMAND_RES;
-   packet.message.length = GroupTable::Response::min_size;
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+   packet.message.length     = GroupTable::Response::min_size;
 
    LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
 
@@ -696,7 +696,7 @@ TEST(GroupTableClient, Remove)
    Entry entry;
    entry.unpack(packet->message.payload);
 
-   CHECK_TRUE (expected == expected);
+   CHECK_TRUE(expected == expected);
 }
 
 //! @test Remove support.
@@ -722,7 +722,7 @@ TEST(GroupTableClient, Remove_2)
    Entry entry;
    entry.unpack(packet->message.payload);
 
-   CHECK_TRUE (expected == expected);
+   CHECK_TRUE(expected == expected);
 }
 
 TEST(GroupTableClient, Remove_3)
@@ -748,7 +748,7 @@ TEST(GroupTableClient, Remove_3)
    Entry entry;
    entry.unpack(packet->message.payload, 0);
 
-   CHECK_TRUE (expected == entry);
+   CHECK_TRUE(expected == entry);
 }
 
 TEST(GroupTableClient, Remove_4)
@@ -774,7 +774,7 @@ TEST(GroupTableClient, Remove_4)
    Entry entry;
    entry.unpack(packet->message.payload);
 
-   CHECK_TRUE (expected == entry);
+   CHECK_TRUE(expected == entry);
 }
 
 //! @test Removed callback support.
@@ -794,8 +794,8 @@ TEST(GroupTableClient, Removed)
    mock("GroupTable::Client").expectOneCall("removed");
 
    packet.message.itf.member = GroupTable::REMOVE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_RES;
-   packet.message.length = GroupTable::Response::min_size;
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+   packet.message.length     = GroupTable::Response::min_size;
 
    LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
 
@@ -863,8 +863,8 @@ TEST(GroupTableClient, RemovedAll)
    mock("GroupTable::Client").expectOneCall("removed_all");
 
    packet.message.itf.member = GroupTable::REMOVE_ALL_CMD;
-   packet.message.type = Protocol::Message::COMMAND_RES;
-   packet.message.length = Protocol::Response::min_size;
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+   packet.message.length     = Protocol::Response::min_size;
 
    LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
 
@@ -930,8 +930,8 @@ TEST(GroupTableClient, ReadEntries_Callback)
    mock("GroupTable::Client").expectOneCall("read_entries");
 
    packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
-   packet.message.type = Protocol::Message::COMMAND_RES;
-   packet.message.length = payload.size() - 6;
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+   packet.message.length     = payload.size() - 6;
 
    LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
 
@@ -945,7 +945,7 @@ TEST(GroupTableClient, ReadEntries_Callback)
 
    LONGS_EQUAL(0x05, client->read_entries_res.entries.size());
 
-   for(int i = 1; i <= 5; ++i)
+   for (int i = 1; i <= 5; ++i)
    {
       Entry e(0x5A00 | i, 0x70 | i);
       check_index(e, client->read_entries_res.entries[i - 1], i, "Entries", __FILE__, __LINE__);
@@ -974,8 +974,8 @@ TEST(GroupTableClient, ReadEntries_Callback_Fail)
    mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
 
    packet.message.itf.member = GroupTable::READ_ENTRIES_CMD;
-   packet.message.type = Protocol::Message::COMMAND_RES;
-   packet.message.length = payload.size() - 6;
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+   packet.message.length     = payload.size() - 6;
 
    LONGS_EQUAL(Common::Result::FAIL_ARG, client->handle(packet, payload, 3));
 
@@ -1078,11 +1078,12 @@ TEST(GroupTableServer, NumberOfMaxEntries)
 //! @test Add support.
 TEST(GroupTableServer, Add_OK)
 {
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, 0x5A,  // Group Address.
-     0x42,        // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, 0x5A, // Group Address.
+      0x42,       // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    mock("GroupTable::Server").expectOneCall("add");
@@ -1101,7 +1102,8 @@ TEST(GroupTableServer, Add_OK)
    LONGS_EQUAL(1, server->number_of_entries());
 
    int count = 0;
-   server->entries().for_each(0x5A5A, [&count](const Entry &e){
+   server->entries().for_each(0x5A5A, [&count](const Entry &e)
+   {
       UNUSED(e);
       ++count;
    });
@@ -1133,11 +1135,12 @@ TEST(GroupTableServer, Add_OK)
 //! @test Add support - Max Entries.
 TEST(GroupTableServer, Add_Fail_Max_Entries)
 {
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, 0x5A,  // Group Address.
-     0x42,        // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, 0x5A, // Group Address.
+      0x42,       // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    mock("GroupTable::Server").expectOneCall("add");
@@ -1188,11 +1191,12 @@ TEST(GroupTableServer, Add_Fail_Max_Entries)
 //! @test Add support - Command source.
 TEST(GroupTableServer, Add_Source)
 {
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, 0x5A,  // Group Address.
-     0x42,        // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, 0x5A, // Group Address.
+      0x42,       // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    mock("GroupTable::Server").expectOneCall("add");
@@ -1239,15 +1243,16 @@ TEST(GroupTableServer, Remove_OK)
 
    uint8_t index = dist(gen);
 
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, (uint8_t) (0x5A + index),   // Group Address.
-     0x42,                             // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, (uint8_t) (0x5A + index), // Group Address.
+      0x42,                           // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    // Fill in some entries
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       Entry e(0x5A5A + i, 0x42);
       server->entries().save(e);
@@ -1293,15 +1298,16 @@ TEST(GroupTableServer, Remove_OK)
 //! @test Remove support - No group entry (Group Address).
 TEST(GroupTableServer, Remove_Fail_No_Entry_Group)
 {
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, 0x80,   // Group Address.
-     0x42,         // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, 0x80, // Group Address.
+      0x42,       // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    // Fill in some entries
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       Entry e(0x5A5A + i, 0x42);
       server->entries().save(e);
@@ -1353,15 +1359,16 @@ TEST(GroupTableServer, Remove_Fail_No_Entry_Unit_ID)
 
    uint8_t index = dist(gen);
 
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, (uint8_t) (0x5A + index),   // Group Address.
-     0x24,                             // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, (uint8_t) (0x5A + index), // Group Address.
+      0x24,                           // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    // Fill in some entries
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       Entry e(0x5A5A + i, 0x42);
       server->entries().save(e);
@@ -1413,15 +1420,16 @@ TEST(GroupTableServer, Remove_Source)
 
    uint8_t index = dist(gen);
 
-   payload = {
-     0x00, 0x00, 0x00,
-     0x5A, (uint8_t) (0x5A + index),   // Group Address.
-     0x42,                             // Unit ID.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x5A, (uint8_t) (0x5A + index), // Group Address.
+      0x42,                           // Unit ID.
+      0x00, 0x00, 0x00,
    };
 
    // Fill in some entries
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       Entry e(0x5A5A + i, 0x42);
       server->entries().save(e);
@@ -1470,7 +1478,7 @@ TEST(GroupTableServer, Remove_Source)
 TEST(GroupTableServer, RemoveAll)
 {
    // Fill in some entries
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       Entry e(0x5A5A + i, 0x42);
       server->entries().save(e);
@@ -1514,7 +1522,7 @@ TEST(GroupTableServer, RemoveAll)
 TEST(GroupTableServer, RemoveAll_Source)
 {
    // Fill in some entries
-   for(int i = 0; i < 10; ++i)
+   for (int i = 0; i < 10; ++i)
    {
       Entry e(0x5A5A + i, 0x42);
       server->entries().save(e);
@@ -1559,17 +1567,18 @@ TEST(GroupTableServer, RemoveAll_Source)
 TEST(GroupTableServer, ReadEntries_OK)
 {
    // Fill in some entries
-   for(int i = 1; i <= 10; ++i)
+   for (int i = 1; i <= 10; ++i)
    {
       Entry e(0x5A00 | i, 0x70 | i);
       server->entries().save(e);
    }
 
-   payload = {
-     0x00, 0x00, 0x00,
-     0x02, // Read Offset.
-     0x05, // Number of entries to read.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x02, // Read Offset.
+      0x05, // Number of entries to read.
+      0x00, 0x00, 0x00,
    };
 
    mock("GroupTable::Server").expectOneCall("read_entries");
@@ -1606,7 +1615,7 @@ TEST(GroupTableServer, ReadEntries_OK)
 
    LONGS_EQUAL(0x05, response.entries.size());
 
-   for(int i = 0; i < 5; ++i)
+   for (int i = 0; i < 5; ++i)
    {
       Entry e(0x5A00 | (i + 3), 0x70 | (i + 3));
       check_index(e, response.entries[i], i, "Entries", __FILE__, __LINE__);
@@ -1617,17 +1626,18 @@ TEST(GroupTableServer, ReadEntries_OK)
 TEST(GroupTableServer, ReadEntries_Bad_Index)
 {
    // Fill in some entries
-   for(int i = 1; i <= 10; ++i)
+   for (int i = 1; i <= 10; ++i)
    {
       Entry e(0x5A00 | i, 0x70 | i);
       server->entries().save(e);
    }
 
-   payload = {
-     0x00, 0x00, 0x00,
-     0x22, // Read Offset.
-     0x01, // Number of entries to read.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x22, // Read Offset.
+      0x01, // Number of entries to read.
+      0x00, 0x00, 0x00,
    };
 
    mock("GroupTable::Server").expectOneCall("read_entries");
@@ -1669,17 +1679,18 @@ TEST(GroupTableServer, ReadEntries_Bad_Index)
 TEST(GroupTableServer, ReadEntries_Count)
 {
    // Fill in some entries
-   for(int i = 1; i <= 10; ++i)
+   for (int i = 1; i <= 10; ++i)
    {
       Entry e(0x5A00 | i, 0x70 | i);
       server->entries().save(e);
    }
 
-   payload = {
-     0x00, 0x00, 0x00,
-     0x02, // Read Offset.
-     0x5A, // Number of entries to read.
-     0x00, 0x00, 0x00,
+   payload =
+   {
+      0x00, 0x00, 0x00,
+      0x02, // Read Offset.
+      0x5A, // Number of entries to read.
+      0x00, 0x00, 0x00,
    };
 
    mock("GroupTable::Server").expectOneCall("read_entries");
@@ -1716,7 +1727,7 @@ TEST(GroupTableServer, ReadEntries_Count)
 
    LONGS_EQUAL(0x08, response.entries.size());
 
-   for(int i = 0; i < 8; ++i)
+   for (int i = 0; i < 8; ++i)
    {
       Entry e(0x5A00 | (i + 3), 0x70 | (i + 3));
       check_index(e, response.entries[i], i, "Entries", __FILE__, __LINE__);
@@ -1740,7 +1751,7 @@ TEST_GROUP(GroupTableEntries)
    TestEntries entries;
 
    uint16_t group = 0;
-   uint8_t  unit  = 0;
+   uint8_t unit   = 0;
 
    TEST_SETUP()
    {
@@ -1786,14 +1797,14 @@ TEST_GROUP(GroupTableEntries)
       auto g_group = std::bind(dist1, gen);
       auto g_unit  = std::bind(dist2, gen);
 
-      for(int i = 0; i < groups; ++i)
+      for (int i = 0; i < groups; ++i)
       {
-         for(int j = 0; j < units; ++j)
+         for (int j = 0; j < units; ++j)
          {
             uint16_t group = g_group();
-            uint8_t   unit = g_unit();
+            uint8_t unit   = g_unit();
             entries.data().emplace_back(group, unit);
-            result.emplace_back(group, unit);;
+            result.emplace_back(group, unit);
          }
       }
 
@@ -1808,7 +1819,7 @@ TEST_GROUP(GroupTableEntries)
       std::mt19937 gen(rd());
       std::uniform_int_distribution<uint8_t> dist(0, entries.size() - 1);
 
-      auto select  = std::bind(dist, gen);
+      auto select = std::bind(dist, gen);
 
       return entries.at(select());
    }
@@ -1818,7 +1829,7 @@ TEST_GROUP(GroupTableEntries)
    should_create(group, unit, __FILE__, __LINE__)
 
 #define SHOULD_NOT_CREATE(group, unit, ...) \
-   should_not_create(group, unit, __FILE__, __LINE__, ## __VA_ARGS__)
+   should_not_create(group, unit, __FILE__, __LINE__,##__VA_ARGS__)
 
 TEST(GroupTableEntries, Initialization)
 {
@@ -1843,44 +1854,44 @@ TEST(GroupTableEntries, Save_Equal)
 
 TEST(GroupTableEntries, Destroy_OK)
 {
-   auto entry = setup_entries(10, 20);
+   auto entry   = setup_entries(10, 20);
 
    uint8_t size = entries.size();
 
-   LONGS_EQUAL (Common::Result::OK, entries.destroy(entry));
-   LONGS_EQUAL (size - 1, entries.size());
+   LONGS_EQUAL(Common::Result::OK, entries.destroy(entry));
+   LONGS_EQUAL(size - 1, entries.size());
 }
 
 TEST(GroupTableEntries, Destroy_Fail)
 {
-   auto entry = setup_entries(10, 20);
+   auto entry   = setup_entries(10, 20);
 
    uint8_t size = entries.size();
 
-   LONGS_EQUAL (Common::Result::OK, entries.destroy(entry));
-   LONGS_EQUAL (size - 1, entries.size());
+   LONGS_EQUAL(Common::Result::OK, entries.destroy(entry));
+   LONGS_EQUAL(size - 1, entries.size());
 
-   LONGS_EQUAL (Common::Result::FAIL_ARG, entries.destroy(entry));
-   LONGS_EQUAL (size - 1, entries.size());
+   LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(entry));
+   LONGS_EQUAL(size - 1, entries.size());
 }
 
 TEST(GroupTableEntries, Clear)
 {
    setup_entries(10, 20);
 
-   LONGS_EQUAL (10 * 20, entries.size());
+   LONGS_EQUAL(10 * 20, entries.size());
 
    entries.clear();
 
-   LONGS_EQUAL (0, entries.size());
+   LONGS_EQUAL(0, entries.size());
 }
 
 TEST(GroupTableEntries, ForEach)
 {
    // Create a multiple entries for multiple groups.
-   for(uint8_t groups = 1; groups <= 10; ++groups)
+   for (uint8_t groups = 1; groups <= 10; ++groups)
    {
-      for(int units = 0; units < 20; ++units)
+      for (int units = 0; units < 20; ++units)
       {
          entries.save(GroupTable::Entry(groups, units));
       }

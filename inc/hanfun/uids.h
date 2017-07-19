@@ -274,6 +274,7 @@ namespace HF
          int compare(const UID_T &other) const
          {
             int res = Abstract<_type>::compare(other);
+
             return (res ==
                     0 ? memcmp(value, ((_Class *) &other)->value, sizeof(value)) : res);
          }
@@ -503,6 +504,7 @@ namespace HF
          int compare(const UID_T &other) const
          {
             int res = Abstract<URI_UID>::compare(other);
+
             return (res == 0 ? value.compare(((URI *) &other)->value) : res);
          }
 

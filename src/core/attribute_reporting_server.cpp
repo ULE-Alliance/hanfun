@@ -80,6 +80,7 @@ static uint8_t find_available_id(Iterator begin, Iterator end)
 void IServer::response(Protocol::Packet &packet, Reference &report, Common::Result result)
 {
    Response *resp = new Response();
+
    resp->code   = result;
    resp->report = report;
 
@@ -515,6 +516,7 @@ static Report::Periodic::Entry *create_report_entry(const Units::IUnit *unit,
    auto result = new Report::Periodic::Entry(unit->id(), itf);
 
    auto attrs  = unit->attributes(itf, pack_id, uids);
+
    /* *INDENT-OFF* */
    std::for_each (attrs.begin(), attrs.end(), [result](HF::Attributes::IAttribute *attr)
    {

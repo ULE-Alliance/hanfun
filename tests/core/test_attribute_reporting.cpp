@@ -121,6 +121,7 @@ TEST(AttrReport_Entry, Size)
 TEST(AttrReport_Entry, Empty)
 {
    ByteArray temp(entry.size());
+
    entry.pack(temp);
    entry.unpack(temp);
 }
@@ -181,6 +182,7 @@ TEST(AttrReport_Rule, Size)
 TEST(AttrReport_Rule, Empty)
 {
    ByteArray temp(rule.size());
+
    rule.pack(temp);
    rule.unpack(temp);
 }
@@ -255,6 +257,7 @@ TEST(AttrReport_Periodic_Entry, Size)
 TEST(AttrReport_Periodic_Entry, Empty)
 {
    ByteArray temp(entry.size());
+
    entry.pack(temp);
    entry.unpack(temp);
 }
@@ -402,6 +405,7 @@ TEST(AttrReport_Periodic_Rule, Size)
 TEST(AttrReport_Periodic_Rule, Empty)
 {
    ByteArray temp(rule.size());
+
    rule.pack(temp);
    rule.unpack(temp);
 }
@@ -654,6 +658,7 @@ TEST(AttrReport_Event_Entry, Size)
 TEST(AttrReport_Event_Entry, Empty)
 {
    ByteArray temp(entry.size());
+
    entry.pack(temp);
    entry.unpack(temp);
 }
@@ -917,6 +922,7 @@ TEST(AttrReport_Event_Rule, Size)
 TEST(AttrReport_Event_Rule, Empty)
 {
    ByteArray temp(rule.size());
+
    rule.pack(temp);
    rule.unpack(temp);
 }
@@ -979,6 +985,7 @@ TEST(AttrReport_Report_Entry, Size)
 TEST(AttrReport_Report_Entry, Empty)
 {
    ByteArray temp(entry.size());
+
    entry.pack(temp);
    entry.unpack(HF::Testing::FactoryGetter, temp);
 }
@@ -1042,6 +1049,7 @@ TEST(AttrReport_Report_Periodic_Entry, Size)
 TEST(AttrReport_Report_Periodic_Entry, Empty)
 {
    ByteArray temp(entry.size());
+
    entry.pack(temp);
 
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
@@ -1268,6 +1276,7 @@ TEST(AttrReport_Report_Periodic, Size)
 TEST(AttrReport_Report_Periodic, Empty)
 {
    ByteArray temp(report.size());
+
    report.pack(temp);
 
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
@@ -1538,6 +1547,7 @@ TEST(AttrReport_Report_Event_Entry, Size)
 TEST(AttrReport_Report_Event_Entry, Empty)
 {
    ByteArray temp(entry.size());
+
    entry.pack(temp);
 
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
@@ -1787,6 +1797,7 @@ TEST(AttrReport_Report_Event, Size)
 TEST(AttrReport_Report_Event, Empty)
 {
    ByteArray temp(report.size());
+
    report.pack(temp);
 
    HF::Attributes::FactoryGetter get_factory = HF::Testing::FactoryGetter;
@@ -1934,6 +1945,7 @@ TEST(AttrReport_Report_CreateMessage, Size)
 TEST(AttrReport_Report_CreateMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -1985,6 +1997,7 @@ TEST(AttrReport_Report_Periodic_CreateMessage, Size)
 TEST(AttrReport_Report_Periodic_CreateMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -2036,6 +2049,7 @@ TEST(AttrReport_Report_DeleteMessage, Size)
 TEST(AttrReport_Report_DeleteMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -2126,6 +2140,7 @@ TEST(AttrReport_Report_AddEntryMessage, Size)
 TEST(AttrReport_Report_AddEntryMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -2209,6 +2224,7 @@ TEST(AttrReport_Report_Periodic_AddEntryMessage, Size)
 TEST(AttrReport_Report_Periodic_AddEntryMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -2411,6 +2427,7 @@ TEST(AttrReport_Report_Event_AddEntryMessage, Size)
 TEST(AttrReport_Report_Event_AddEntryMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -2471,6 +2488,7 @@ TEST(AttributeReporting_Response, Size)
 TEST(AttributeReporting_Response, Empty)
 {
    ByteArray temp(response.size());
+
    response.pack(temp);
    response.unpack(temp);
 }

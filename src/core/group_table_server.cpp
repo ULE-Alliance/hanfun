@@ -182,7 +182,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 // =============================================================================
 Common::Result IServer::add(const Protocol::Address &addr, const Entry &entry)
 {
-   if(addr != Protocol::Address(0, 0))
+   if (addr != Protocol::Address(0, 0))
    {
       return Common::Result::FAIL_AUTH;
    }
@@ -206,7 +206,7 @@ Common::Result IServer::add(const Protocol::Address &addr, const Entry &entry)
 // =============================================================================
 Common::Result IServer::remove(const Protocol::Address &addr, const Entry &entry)
 {
-   if(addr == Protocol::Address(0, 0))
+   if (addr == Protocol::Address(0, 0))
    {
       return entries().destroy(entry);
    }
@@ -225,7 +225,7 @@ Common::Result IServer::remove(const Protocol::Address &addr, const Entry &entry
 // =============================================================================
 Common::Result IServer::remove_all(const Protocol::Address &addr)
 {
-   if(addr == Protocol::Address(0, 0))
+   if (addr == Protocol::Address(0, 0))
    {
       entries().clear();
 
@@ -253,20 +253,20 @@ ReadEntriesResponse IServer::read_entries(const Protocol::Address &addr, const R
    uint8_t offset = params.start;
    uint8_t count  = params.count;
 
-   if(offset > entries().size())
+   if (offset > entries().size())
    {
       result.code = Common::Result::FAIL_ARG;
       goto _end;
    }
 
-   if((offset + count) > entries().size())
+   if ((offset + count) > entries().size())
    {
       count = entries().size() - offset;
    }
 
    result.entries.reserve(count * Entry::min_size);
 
-   for(uint8_t i = 0; i < count; ++i)
+   for (uint8_t i = 0; i < count; ++i)
    {
       result.entries.push_back(entries()[offset + i]);
    }

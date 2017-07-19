@@ -528,7 +528,7 @@ namespace HF
       /*!
        * Simple Level Controllable Switchable profile implementation.
        */
-      template<typename OnOffServer        = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class SimpleLevelControllableSwitchable:
          public Profile2<SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
@@ -558,7 +558,7 @@ namespace HF
       /*!
        * Simple Level Control Switch profile implementation.
        */
-      template<typename OnOffClient        = Interfaces::OnOff::Client,
+      template<typename OnOffClient = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class SimpleLevelControlSwitch:
          public Profile2<SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
@@ -597,7 +597,7 @@ namespace HF
       /*!
        * AC Outlet profile implementation.
        */
-      template<typename OnOffServer            = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename SimplePowerMeterServer = Interfaces::SimplePowerMeter::Server>
       class AC_OutletWithPowerMetering:
          public Profile2<AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
@@ -637,7 +637,7 @@ namespace HF
       /*!
        * Dimmable Light profile implementation.
        */
-      template<typename OnOffServer        = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class DimmableLight: public Profile2<DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
       {
@@ -666,7 +666,7 @@ namespace HF
       /*!
        * Dimmer Switch profile implementation.
        */
-      template<typename OnOffClient        = Interfaces::OnOff::Client,
+      template<typename OnOffClient = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class DimmerSwitch: public Profile2<DIMMER_SWITCH, OnOffClient, LevelControlClient>
       {
@@ -748,7 +748,7 @@ namespace HF
       /*!
        * Controllable thermostat profile implementation.
        */
-      template<typename OnOffServer            = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
       class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer,
                                                    SimpleThermostatServer>

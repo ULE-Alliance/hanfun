@@ -91,8 +91,8 @@ namespace HF
             Entry(const Entry &entry) = default;
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint16_t)  // Group Address
-                                               + sizeof(uint8_t);  // Unit ID
+            static constexpr uint16_t min_size = sizeof(uint16_t)   // Group Address
+                                                 + sizeof(uint8_t); // Unit ID
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -164,7 +164,7 @@ namespace HF
             // =================================================================
 
             static constexpr uint16_t min_size = Protocol::Response::min_size
-                                               + Entry::min_size;
+                                                 + Entry::min_size;
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
@@ -209,14 +209,14 @@ namespace HF
             uint8_t count; //!< Number of entries to read.
 
             ReadEntries(uint8_t _start = 0, uint8_t _count = 1):
-               start(_start), count(_count){}
+               start(_start), count(_count) {}
 
             // =================================================================
             // Serializable API
             // =================================================================
 
             static constexpr uint16_t min_size = sizeof(uint8_t)
-                                               + sizeof(uint8_t);
+                                                 + sizeof(uint8_t);
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
@@ -252,7 +252,7 @@ namespace HF
           */
          struct ReadEntriesResponse: public Protocol::Response
          {
-            uint8_t start;                //!< Offset to start reading entries from.
+            uint8_t            start;     //!< Offset to start reading entries from.
 
             std::vector<Entry> entries;   //!< Vector containing the entries in the response.
 
@@ -264,7 +264,7 @@ namespace HF
              * @param [in] _count   number of entries this response will contain.
              */
             ReadEntriesResponse(Common::Result _code = Common::Result::OK,
-                               uint8_t _start = 0, uint8_t _count = 0):
+                                uint8_t _start = 0, uint8_t _count = 0):
                Protocol::Response(_code), start(_start)
             {
                entries.reserve(_count);
@@ -275,15 +275,15 @@ namespace HF
             // =================================================================
 
             static constexpr uint16_t min_size = Protocol::Response::min_size
-                                               + sizeof(uint8_t)
-                                               + sizeof(uint8_t);
+                                                 + sizeof(uint8_t)
+                                                 + sizeof(uint8_t);
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                uint16_t res = Protocol::Response::size()
-                            + sizeof(uint8_t)
-                            + sizeof(uint8_t);
+                              + sizeof(uint8_t)
+                              + sizeof(uint8_t);
 
                std::for_each(entries.begin(), entries.end(), [&res](const Entry &entry)
                {
@@ -332,7 +332,7 @@ namespace HF
 
                entries.reserve(count * Entry::min_size);
 
-               for(int i = 0; i < count; ++i)
+               for (int i = 0; i < count; ++i)
                {
                   Entry entry;
                   offset += entry.unpack(array, offset);
@@ -366,7 +366,8 @@ namespace HF
              *
              * @param [in] group    group address to search for.
              */
-            virtual void for_each(uint16_t group, std::function<void(const Entry &)> func) const = 0;
+            virtual void for_each(uint16_t group,
+                                  std::function<void(const Entry &)> func) const = 0;
 
             /*!
              * Retrive the entry at the given @c index.
@@ -387,7 +388,7 @@ namespace HF
 
             Common::Result save(const Entry &entry);
 
-            Common::Result destroy(const Entry&entry);
+            Common::Result destroy(const Entry &entry);
 
             void clear();
 
@@ -614,6 +615,7 @@ namespace HF
             void add(const Protocol::Address &addr, uint16_t group, uint8_t unit)
             {
                Entry entry(group, unit);
+
                add(addr, entry);
             }
 
@@ -665,6 +667,7 @@ namespace HF
             void remove(const Protocol::Address &addr, uint16_t group, uint8_t unit)
             {
                Entry entry(group, unit);
+
                remove(addr, entry);
             }
 
@@ -724,6 +727,7 @@ namespace HF
                               const uint8_t count)
             {
                ReadEntries params(offset, count);
+
                read_entries(addr, params);
             }
 
@@ -778,7 +782,8 @@ namespace HF
              * @param [in] addr        address for device that sent the response.
              * @param [in] response    the response received.
              */
-            virtual void removed(const Protocol::Address &addr, const GroupTable::Response &response);
+            virtual void removed(const Protocol::Address &addr,
+                                 const GroupTable::Response &response);
 
             /*!
              * Callback for processing the response of a @c GroupTable::REMOVE_ALL_CMD.

@@ -983,6 +983,7 @@ namespace HF
                   void set_attribute(HF::Attributes::IAttribute *attr)
                   {
                      Attribute temp(attr);
+
                      attribute = std::move(temp);
                   }
                };

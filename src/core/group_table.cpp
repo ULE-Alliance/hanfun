@@ -151,7 +151,7 @@ uint16_t Entries::size() const
 // =============================================================================
 Common::Result Entries::save(const Entry &entry)
 {
-   if(!any_of(entry.group, entry.unit))
+   if (!any_of(entry.group, entry.unit))
    {
       this->db.push_back(entry);
    }
@@ -170,7 +170,8 @@ Common::Result Entries::destroy(const Entry &entry)
 {
    uint8_t size = db.size();
 
-   auto res = std::remove_if(db.begin(), db.end (), [&entry](const Entry &e){
+   auto res     = std::remove_if(db.begin(), db.end(), [&entry](const Entry &e)
+   {
       return entry == e;
    });
 
@@ -222,7 +223,8 @@ bool Entries::any_of(uint16_t group, uint8_t unit) const
 // =============================================================================
 void Entries::for_each(uint16_t group, std::function<void(const Entry &)> func) const
 {
-   std::for_each(db.begin(), db.end(), [&group, &func](const Entry &e) {
+   std::for_each(db.begin(), db.end(), [&group, &func](const Entry &e)
+   {
       if (e.group == group)
       {
          func(e);
