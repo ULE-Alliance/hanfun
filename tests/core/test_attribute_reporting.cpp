@@ -2163,6 +2163,73 @@ TEST(AttrReport_Report_AddEntryMessage, Unpack)
 }
 
 
+TEST_GROUP(AttrReport_Report_UpdateIntervalMessage)
+{
+   typedef Report::UpdateIntervalMessage TestMessage;
+
+   TestMessage message;
+   ByteArray expected;
+
+   TEST_SETUP()
+   {
+      message  = TestMessage();
+
+      expected = {0x00, 0x00, 0x00,
+                  (Type::PERIODIC <<7 | 0x5A),                   // Report type + Report identification.
+                  0x12, 0x34, 0x56, 0x78, // New time interval
+                  0x00, 0x00, 0x00};
+   }
+};
+
+TEST(AttrReport_Report_UpdateIntervalMessage, Size)
+{
+   LONGS_EQUAL(1 + 4, message.size());
+}
+
+TEST(AttrReport_Report_UpdateIntervalMessage, Empty)
+{
+   ByteArray temp(message.size());
+   message.pack(temp);
+   message.unpack(temp);
+}
+
+TEST(AttrReport_Report_UpdateIntervalMessage, Pack)
+{
+   message.report.type = Type::PERIODIC;
+   message.report.id   = 0x5A;
+
+   message.interval = 0x12345678;
+
+   ByteArray result(expected.size());
+
+   LONGS_EQUAL(message.size(), message.pack(result, 3));
+
+   CHECK_EQUAL(expected, result);
+}
+
+TEST(AttrReport_Report_UpdateIntervalMessage, Pack_using_constructor)
+{
+   message = TestMessage(Type::PERIODIC, 0x5A, 0x12345678);
+
+   ByteArray result(expected.size());
+
+   LONGS_EQUAL(message.size(), message.pack(result, 3));
+
+   CHECK_EQUAL(expected, result);
+}
+
+TEST(AttrReport_Report_UpdateIntervalMessage, Unpack)
+{
+   message.report.type = Type::PERIODIC;
+
+   LONGS_EQUAL(message.size(), message.unpack(expected, 3));
+
+   LONGS_EQUAL(Type::PERIODIC, message.report.type);
+   LONGS_EQUAL(0x5A, message.report.id);
+
+   LONGS_EQUAL(0x12345678, message.interval);
+}
+
 TEST_GROUP(AttrReport_Report_Periodic_AddEntryMessage)
 {
    Report::Periodic::AddEntryMessage message;

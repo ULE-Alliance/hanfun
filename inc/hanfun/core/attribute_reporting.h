@@ -757,6 +757,46 @@ namespace HF
                }
             };
 
+            /*!
+             * This message is used to update the report interval.
+             */
+            struct UpdateIntervalMessage
+            {
+
+               Reference report;    //!< Identification of the rule to delete.
+               uint32_t interval;   //!< The new interval.
+
+               /*!
+                * Constructor.
+                *
+                * @param [in] report_type    Type of report.
+                * @param [in] ID             Report ID.
+                * @param [in] interval       New report interval.
+                */
+               UpdateIntervalMessage(Type report_type, uint8_t ID, uint32_t interval):
+                  report(report_type, ID) , interval(interval)
+               {}
+
+               /*!
+                * Empty constructor.
+                */
+               UpdateIntervalMessage(void): report(), interval(0)
+               {}
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = Reference::min_size    // Report ID.
+                                                  + sizeof(interval);      // Periodic interval
+
+               //! @copydoc HF::Common::Serializable::size
+               uint16_t size () const;
+
+               //! @copydoc HF::Common::Serializable::pack
+               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+               //! @copydoc HF::Common::Serializable::unpack
+               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            };
+
             // =============================================================================
             // Periodic Report Support
             // =============================================================================
