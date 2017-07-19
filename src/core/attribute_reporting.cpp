@@ -2084,3 +2084,42 @@ Protocol::Message *AttributeReporting::add(Reference report,
    return message;
 }
 
+Protocol::Message* AttributeReporting::update (Reference report,
+                                                         uint32_t new_interval)
+{
+   if (report.type != PERIODIC)
+   {
+      return nullptr;
+   }
+
+   Report::UpdateIntervalMessage *update_msg =
+         new Report::UpdateIntervalMessage(static_cast<Type>(report.type),
+                                           report.id,
+                                           new_interval);
+
+   assert(update_msg != nullptr);
+
+   if (update_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   Protocol::Message *message = new Protocol::Message(update_msg->size());
+   assert(message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   update_msg->pack(message->payload);
+
+   delete update_msg;
+
+   message->type = Protocol::Message::COMMAND_REQ;
+   message->itf.role = HF::Interface::SERVER_ROLE;
+   message->itf.id = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::UPDATE_INTERVAL_CMD;
+
+   return message;
+}

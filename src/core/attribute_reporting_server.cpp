@@ -17,6 +17,8 @@
 
 #include "hanfun/core/attribute_reporting.h"
 
+#include <algorithm>    // std::for_each
+
 // =============================================================================
 // API
 // =============================================================================
@@ -140,6 +142,9 @@ uint16_t Server::payload_size(Protocol::Message::Interface &itf) const
       case DELETE_REPORT_CMD:
          return payload_size_helper<Report::DeleteMessage>();
 
+      case UPDATE_INTERVAL_CMD:
+         return payload_size_helper<Report::UpdateIntervalMessage>();
+
       default:
          return 0;
    }
@@ -258,6 +263,21 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
       case DELETE_REPORT_CMD:
       {
          Report::DeleteMessage *message = new Report::DeleteMessage();
+
+         message->unpack(payload, offset);
+
+         result = this->handle(*message);
+
+         response(packet, message->report, result);
+
+         delete message;
+
+         break;
+      }
+
+      case UPDATE_INTERVAL_CMD:
+      {
+         Report::UpdateIntervalMessage *message = new Report::UpdateIntervalMessage();
 
          message->unpack(payload, offset);
 
@@ -489,6 +509,63 @@ Common::Result Server::handle(const Report::DeleteMessage &message)
 
          break;
       }
+      default:
+         break;
+   }
+
+   return result;
+}
+
+// =============================================================================
+// Server::handle
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::handle (const Report::UpdateIntervalMessage &message)
+{
+   Common::Result result = Common::Result::FAIL_UNKNOWN;
+
+   switch (message.report.type)
+   {
+      case PERIODIC:
+      {
+         if (message.report.id == ALL_ADDR)
+         {
+            std::for_each(periodic_rules.begin(), periodic_rules.end(),
+                          [&message](Periodic::Rule &rule)
+                          {
+                             rule.interval = message.interval;
+                          });
+         }
+         else
+         {
+            /* *INDENT-OFF* */
+            auto it = std::find_if(periodic_rules.begin(), periodic_rules.end(),
+                                   [&message](const Periodic::Rule &rule)
+                                   {
+                                      return rule.report.id == message.report.id;
+                                   });
+            /* *INDENT-ON* */
+
+            if (it == periodic_rules.end())
+            {
+               return Common::Result::FAIL_ARG;
+            }
+
+            it->interval = message.interval;
+         }
+
+         result = Common::Result::OK;
+
+         break;
+      }
+      case EVENT:
+      {
+         result = Common::Result::FAIL_ARG;
+      }
+
       default:
          break;
    }
