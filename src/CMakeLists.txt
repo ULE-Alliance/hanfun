@@ -53,6 +53,7 @@ add_interface("simple_thermostat")
 add_interface("simple_button")
 add_interface("simple_visual_effects")
 add_interface("simple_air_pressure")
+add_interface("simple_light_sensor")
 
 ## Core Services & Interfaces
 macro(add_core __name)
