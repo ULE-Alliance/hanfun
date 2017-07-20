@@ -61,6 +61,7 @@ namespace HF
       HELPER_CLASS(SimpleLED);
 
       HELPER_CLASS(EnvironmentMonitor);
+      HELPER_CLASS(Tracker);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -207,6 +208,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::EnvironmentMonitor();
    CHECK_EQUAL(Profiles::ENVIRONMENT_MONITOR, profile->uid());
+   delete profile;
+
+   profile = new Testing::Tracker();
+   CHECK_EQUAL(Profiles::TRACKER, profile->uid());
    delete profile;
 
    // =============================================================================

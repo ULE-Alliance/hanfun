@@ -127,6 +127,9 @@ namespace HF
          //! Environment Monitoring
          ENVIRONMENT_MONITOR = 0x0114,
 
+         //! Tracker
+         TRACKER = 0x0117,
+
          // =============================================================================
          // Security Unit Types
          // =============================================================================
@@ -821,6 +824,22 @@ namespace HF
          public:
 
          virtual ~EnvironmentMonitor() {}
+      };
+
+      /*!
+       * Tracker profile implementation.
+       */
+      class Tracker: public AbstractProfile<TRACKER>
+      {
+         public:
+
+         virtual ~Tracker() {}
+
+         //! @copydoc HF::Interface::periodic
+         virtual void periodic(uint32_t time)
+         {
+            UNUSED(time);
+         }
       };
 
       // =============================================================================
