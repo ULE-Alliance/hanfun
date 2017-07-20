@@ -132,7 +132,6 @@ TEST(SimpleLightSensor, InvalidAttribute)
 //! Test Group for Simple Light Sensor Client interface class.
 TEST_GROUP(SimpleLightSensorClient)
 {
-   // TODO Add required unit tests.
    struct SimpleLightSensorClient: public InterfaceHelper<SimpleLightSensor::Client>
    {
       void read_resp (const Protocol::Address &addr,
@@ -418,13 +417,10 @@ TEST(SimpleLightSensorClient, Read_Tolerance_Response)
 //! Test Group for Simple Light Sensor Server interface class.
 TEST_GROUP(SimpleLightSensorServer)
 {
-   // TODO Add required unit tests.
    struct SimpleLightSensorServer: public InterfaceHelper<SimpleLightSensor::Server>
    {};
 
    SimpleLightSensorServer server;
-
-
 
    TEST_SETUP()
    {
@@ -443,27 +439,23 @@ TEST_GROUP(SimpleLightSensorServer)
 //! @test Value support.
 TEST(SimpleLightSensorServer, Value)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleLightSensorServer, Value, false, value, 42, 142);
 }
 
 //! @test Minimum support.
 TEST(SimpleLightSensorServer, Minimum)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleLightSensorServer, Minimum, false, minimum, 42, 142);
 }
 
 //! @test Maximum support.
 TEST(SimpleLightSensorServer, Maximum)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleLightSensorServer, Maximum, false, maximum, 42, 142);
 }
 
 //! @test Tolerance support.
 TEST(SimpleLightSensorServer, Tolerance)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE(SimpleLightSensorServer, Tolerance, false, tolerance, 42, 142);
 }
