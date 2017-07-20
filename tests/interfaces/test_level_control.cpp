@@ -240,6 +240,58 @@ TEST(LevelControlServer, Level)
    CHECK_EQUAL(42, server.level());
 }
 
+TEST(LevelControlServer, Level_Float)
+{
+   CHECK_EQUAL(0, server.level());
+
+   Level old_value(0, &server);
+   Level new_value(128, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
+   server.level((float)50.0);
+   mock("Interface").checkExpectations();
+   CHECK_EQUAL(128, server.level());
+}
+
+TEST(LevelControlServer, Level_Float_Min)
+{
+   server.level((float)50.0);
+
+   CHECK_EQUAL(128, server.level());
+
+   Level old_value(128, &server);
+   Level new_value(0, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
+   server.level((float)-0.01);
+   mock("Interface").checkExpectations();
+   CHECK_EQUAL(0, server.level());
+}
+
+TEST(LevelControlServer, Level_Float_Max)
+{
+   server.level((float)50.0);
+
+   CHECK_EQUAL(128, server.level());
+
+   Level old_value(128, &server);
+   Level new_value(255, &server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
+   server.level((float)100.01);
+   mock("Interface").checkExpectations();
+   CHECK_EQUAL(255, server.level());
+}
+
 TEST(LevelControlServer, Increase)
 {
    CHECK_EQUAL(0, server.level());
