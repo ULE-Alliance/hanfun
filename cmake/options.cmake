@@ -160,6 +160,14 @@ option(HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD    "Interface - Simple Visual Effec
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD "Interface - Simple Visual Effects - Breathe")
 
 # =============================================================================
+# Level Control Configuration
+# =============================================================================
+
+option(HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD       "Interface - Level Control - Set Level")
+option(HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD  "Interface - Level Control - Increase Level")
+option(HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD  "Interface - Level Control - Decrease Level")
+
+# =============================================================================
 # Dependecies
 # =============================================================================
 
