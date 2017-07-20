@@ -2177,6 +2177,82 @@ TEST(AttrReport_Report_AddEntryMessage, Unpack)
    LONGS_EQUAL(0x78, message.entries[3]);
 }
 
+// =============================================================================
+// AttributeReporting::Report::UpdateIntervalMessage
+// =============================================================================
+TEST_GROUP(AttrReport_Report_UpdateIntervalMessage)
+{
+   typedef Report::UpdateIntervalMessage TestMessage;
+
+   TestMessage message;
+   ByteArray expected;
+
+   TEST_SETUP()
+   {
+      message  = TestMessage();
+
+      expected = {0x00, 0x00, 0x00,
+                  (Type::PERIODIC <<7 | 0x5A),                   // Report type + Report identification.
+                  0x12, 0x34, 0x56, 0x78, // New time interval
+                  0x00, 0x00, 0x00};
+   }
+};
+
+//! @test Test if the size of the @c UpdateIntervalMessage is the expected.
+TEST(AttrReport_Report_UpdateIntervalMessage, Size)
+{
+   LONGS_EQUAL(1 + 4, message.size());
+}
+
+TEST(AttrReport_Report_UpdateIntervalMessage, Empty)
+{
+   ByteArray temp(message.size());
+   message.pack(temp);
+   message.unpack(temp);
+}
+
+//! @test Test the pack of the @c UpdateIntervalMessage.
+TEST(AttrReport_Report_UpdateIntervalMessage, Pack)
+{
+   message.report.type = Type::PERIODIC;
+   message.report.id   = 0x5A;
+
+   message.interval = 0x12345678;
+
+   ByteArray result(expected.size());
+
+   LONGS_EQUAL(message.size(), message.pack(result, 3));
+
+   CHECK_EQUAL(expected, result);
+}
+
+/*!
+ * @test Test the pack of the @c UpdateIntervalMessage,
+ * using the constructor with arguments.
+ */
+TEST(AttrReport_Report_UpdateIntervalMessage, Pack_using_constructor)
+{
+   message = TestMessage(Type::PERIODIC, 0x5A, 0x12345678);
+
+   ByteArray result(expected.size());
+
+   LONGS_EQUAL(message.size(), message.pack(result, 3));
+
+   CHECK_EQUAL(expected, result);
+}
+
+//! @test Test the unpack of the @c UpdateIntervalMessage.
+TEST(AttrReport_Report_UpdateIntervalMessage, Unpack)
+{
+   message.report.type = Type::PERIODIC;
+
+   LONGS_EQUAL(message.size(), message.unpack(expected, 3));
+
+   LONGS_EQUAL(Type::PERIODIC, message.report.type);
+   LONGS_EQUAL(0x5A, message.report.id);
+
+   LONGS_EQUAL(0x12345678, message.interval);
+}
 
 TEST_GROUP(AttrReport_Report_Periodic_AddEntryMessage)
 {
@@ -2707,6 +2783,16 @@ TEST_GROUP(AttributeReporting_Client)
 
          mock("AttributeReporting::Client").actualCall("deleted");
       }
+
+      void updated(const Protocol::Address &address,
+                   const AttributeReporting::Response &response)
+      {
+         UNUSED(address);
+         UNUSED(response);
+
+         mock("AttributeReporting::Client").actualCall("updated")
+                                           .withParameter("Response", response.code);
+      }
    };
 
    TestAttributeReportingClient client;
@@ -2801,6 +2887,19 @@ TEST(AttributeReporting_Client, Deleted)
    mock("AttributeReporting::Client").checkExpectations();
 }
 
+TEST(AttributeReporting_Client, Updated)
+{
+   create_response(UPDATE_INTERVAL_CMD);
+
+   /*Check if the callback is called and it receives the response code from the message */
+   mock("AttributeReporting::Client").expectOneCall("updated")
+         .withParameter("Response", Common::Result::FAIL_UNKNOWN);
+
+   LONGS_EQUAL(Common::Result::OK, client.handle(packet, packet.message.payload, 0));
+
+   mock("AttributeReporting::Client").checkExpectations();
+}
+
 TEST(AttributeReporting_Client, Report_Periodic)
 {
    Report::Periodic report;
@@ -2889,6 +2988,22 @@ TEST_GROUP(AttributeReporting_Server)
       rule.add(entry);
 
       server->event_rules.push_front(rule);
+   }
+
+   void setup_Periodic_rule(uint8_t ID = 0x5A, uint32_t interval = 60)
+   {
+      Periodic::Rule rule(interval);
+      Periodic::Entry entry;
+
+      entry.itf.id = 0x5A5A;
+      entry.itf.role = HF::Interface::SERVER_ROLE;
+      entry.pack_id = HF::Attributes::MANDATORY;
+      entry.unit = 1;
+
+      rule.report.id = ID;
+      rule.add(entry);
+
+      server->periodic_rules.push_front(rule);
    }
 
    void check_event_report(const char *file, int line)
@@ -3130,3 +3245,73 @@ TEST(AttributeReporting_Server, Handle_Create_Event)
    LONGS_EQUAL(AttributeReporting::EVENT, resp.report.type);
    LONGS_EQUAL(2, resp.report.id);
 }
+
+TEST(AttributeReporting_Server, Handle_Update_Periodic_Report_Interval)
+{
+   setup_Periodic_rule(0x5A, 60);
+
+   LONGS_EQUAL(1, server->count(AttributeReporting::PERIODIC));
+
+   Protocol::Message *message = AttributeReporting::update(Reference(Type::EVENT, 0x5A), 30);
+
+   CHECK_TRUE(message == nullptr);
+
+   message = AttributeReporting::update(Reference(Type::PERIODIC, 0x5A),30);
+
+   CHECK_FALSE(message == nullptr);
+
+   Protocol::Packet packet(*message);
+
+   packet.message.length = packet.message.payload.size();
+
+   delete message;
+
+   // Update a rule entry.
+   LONGS_EQUAL(Result::OK, server->handle(packet, packet.message.payload, 0));
+
+   LONGS_EQUAL( (uint32_t) 30, server->periodic_rules.begin()->interval );
+
+
+   LONGS_EQUAL(1, base->packets.size());
+   auto resp_pkt = base->packets.back();
+
+   AttributeReporting::Response resp;
+   resp.unpack(resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL(Result::OK, resp.code);
+   LONGS_EQUAL(AttributeReporting::PERIODIC, resp.report.type);
+   LONGS_EQUAL(0x5A, resp.report.id);
+}
+
+TEST(AttributeReporting_Server, Handle_Update_Periodic_Report_Interval_No_Report)
+{
+   setup_Periodic_rule(0x5A, 60);
+
+   LONGS_EQUAL(1, server->count(AttributeReporting::PERIODIC));
+
+   Protocol::Message *message = AttributeReporting::update(Reference(Type::PERIODIC, 0x11), 30);
+
+   CHECK_FALSE(message == nullptr);
+
+   Protocol::Packet packet(*message);
+
+   packet.message.length = packet.message.payload.size();
+
+   delete message;
+
+   // Update a rule entry.
+   LONGS_EQUAL(Result::OK, server->handle(packet, packet.message.payload, 0));
+
+   LONGS_EQUAL((uint32_t ) 60, server->periodic_rules.begin()->interval);  //The interval is the original
+
+   LONGS_EQUAL(1, base->packets.size());
+   auto resp_pkt = base->packets.back();
+
+   AttributeReporting::Response resp;
+   resp.unpack(resp_pkt->message.payload, 0);
+
+   LONGS_EQUAL(Result::FAIL_ARG, resp.code);                      // Response code is FAIL_ARG.
+   LONGS_EQUAL(AttributeReporting::PERIODIC, resp.report.type);
+   LONGS_EQUAL(0x11, resp.report.id);
+}
+

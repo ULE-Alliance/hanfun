@@ -82,7 +82,8 @@ namespace HF
             DELETE_REPORT_CMD      = 0x05, //!< Delete report.
             GET_PERIODIC_ENTRIES   = 0x06, //!< Get periodic entries.
             GET_EVENT_ENTRIES      = 0x07, //!< Get event entries.
-            __LAST_CMD__           = GET_EVENT_ENTRIES
+            UPDATE_INTERVAL_CMD    = 0x08, //!< Update the interval of an existent report.
+            __LAST_CMD__           = UPDATE_INTERVAL_CMD
          } CMD;
 
          //! Attributes.
@@ -757,6 +758,46 @@ namespace HF
                }
             };
 
+            /*!
+             * This message is used to update the report interval.
+             */
+            struct UpdateIntervalMessage
+            {
+
+               Reference report;    //!< Identification of the rule to delete.
+               uint32_t interval;   //!< The new interval.
+
+               /*!
+                * Constructor.
+                *
+                * @param [in] report_type    Type of report.
+                * @param [in] ID             Report ID.
+                * @param [in] interval       New report interval.
+                */
+               UpdateIntervalMessage(Type report_type, uint8_t ID, uint32_t interval):
+                  report(report_type, ID) , interval(interval)
+               {}
+
+               /*!
+                * Empty constructor.
+                */
+               UpdateIntervalMessage(void): report(), interval(0)
+               {}
+
+               //! Minimum pack/unpack required data size.
+               static constexpr uint16_t min_size = Reference::min_size    // Report ID.
+                                                  + sizeof(interval);      // Periodic interval
+
+               //! @copydoc HF::Common::Serializable::size
+               uint16_t size () const;
+
+               //! @copydoc HF::Common::Serializable::pack
+               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+               //! @copydoc HF::Common::Serializable::unpack
+               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            };
+
             // =============================================================================
             // Periodic Report Support
             // =============================================================================
@@ -1287,6 +1328,17 @@ namespace HF
          Protocol::Message *add(Reference report, event_iterator begin, event_iterator end);
 
          /*!
+          * Change the Update Interval for the specified report.
+          *
+          * @param [in] report         Report reference
+          * @param [in] new_interval   New updata interval.
+          *
+          * @return  pointer to a message indicating the result of the operation to be
+          *          sent to the requesting device.
+          */
+         Protocol::Message *update(Reference report, uint32_t new_interval);
+
+         /*!
           * @copybrief HF::Core::create_attribute (HF::Core::AttributeReporting::Server *,uint8_t)
           *
           * @see HF::Core::create_attribute (HF::Core::AttributeReporting::Server *,uint8_t)
@@ -1384,6 +1436,18 @@ namespace HF
                UNUSED(response);
             }
 
+            /*!
+             * Event indicating the result of a @c UPDATE_INTERVAL_CMD.
+             *
+             * @param [in] address     device address that originated the event.
+             * @param [in] response    result of the operation.
+             */
+            virtual void updated (const Protocol::Address &address, const Response &response)
+            {
+               UNUSED(address);
+               UNUSED(response);
+            }
+
             //! @}
             // ======================================================================
 
@@ -1474,6 +1538,16 @@ namespace HF
              */
             void add(Protocol::Address &destination, Reference report,
                      event_iterator begin, event_iterator end);
+
+            /*!
+             * Update the interval of an existent report.
+             *
+             * @param [in] destination    device address the rule should be sent to.
+             * @param [in] report      report reference
+             * @param [in] interval    time interval in seconds for the periodic rule.
+             */
+            void update_interval(Protocol::Address &destination,
+                                 Reference report, uint32_t interval);
 
             //! @}
             // ======================================================================
@@ -1684,6 +1758,16 @@ namespace HF
              * @retval Common::Result::OK          if the rule was deleted.
              */
             virtual Common::Result handle(const Report::DeleteMessage &message);
+
+            /*!
+             * Handle a update periodic report interval request.
+             *
+             * @param [in] message  update interval request message.
+             *
+             * @retval Common::Result::FAIL_ARG    if the rule cannot be found.
+             * @retval Common::Result::OK          if the rule was deleted.
+             */
+            virtual Common::Result handle (const Report::UpdateIntervalMessage &message);
 
             using HF::Interfaces::AbstractInterface::handle;
 
