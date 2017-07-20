@@ -662,7 +662,7 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
-   // HF::Profiles::VIBRATION_DETECTOR
+   // HF::Profiles::SIMPLE_LIGHT_SENSOR
    itf = Profiles::interfaces(HF::Profiles::SIMPLE_LIGHT_SENSOR, count);
    CHECK_FALSE(itf == nullptr);
    LONGS_EQUAL(1, count);
