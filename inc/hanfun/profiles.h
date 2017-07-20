@@ -29,6 +29,7 @@
 #include "hanfun/interfaces/simple_air_pressure.h"
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
+#include "hanfun/interfaces/simple_light_sensor.h"
 
 // =============================================================================
 // API
@@ -156,6 +157,9 @@ namespace HF
 
          //! Use for a vibration detector that senses and sends an alert.
          VIBRATION_DETECTOR = 0x0208,
+
+         //! Allows a unit to provide light readings.
+         SIMPLE_LIGHT_SENSOR = 0x0209,
 
          //! This unit will be acting upon some physical siren that will sound an alert.
          SIREN = 0x0280,
@@ -919,6 +923,20 @@ namespace HF
 
          virtual ~VibrationDetector() {}
       };
+
+      /*!
+       * Simple Light Sensor profile implementation.
+       */
+      class SimpleLightSensor: public Profile<SIMPLE_LIGHT_SENSOR,
+            Interfaces::SimpleLightSensor::Server>
+      {
+         public:
+
+         virtual ~SimpleLightSensor ()
+         {
+         }
+      };
+
 
       /*!
        * Siren profile implementation.

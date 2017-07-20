@@ -74,6 +74,7 @@ namespace HF
       HELPER_CLASS(FloodDetector);
       HELPER_CLASS(GlassBreakDetector);
       HELPER_CLASS(VibrationDetector);
+      HELPER_CLASS(SimpleLightSensor);
       HELPER_CLASS(Siren);
       HELPER_CLASS(Alertable);
 
@@ -246,6 +247,10 @@ TEST(Profiles, UIDs)
 
    profile = new VibrationDetector();
    CHECK_EQUAL(Profiles::VIBRATION_DETECTOR, profile->uid());
+   delete profile;
+
+   profile = new SimpleLightSensor();
+   CHECK_EQUAL(Profiles::SIMPLE_LIGHT_SENSOR, profile->uid());
    delete profile;
 
    profile = new Siren();
@@ -656,6 +661,14 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LIGHT_SENSOR
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_LIGHT_SENSOR, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_LIGHT_SENSOR, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::SIREN
