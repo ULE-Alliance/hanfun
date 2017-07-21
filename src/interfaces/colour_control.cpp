@@ -263,3 +263,61 @@ uint16_t MoveHueMessage::unpack (const Common::ByteArray& array, uint16_t offset
    return (offset - start);
 }
 
+// =============================================================================
+// ColourControl::StepHueMessage
+// =============================================================================
+
+// =============================================================================
+// StepHueMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t StepHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   HF_ASSERT(direction <= DIRECTION_MAX, {return 0;});
+
+   uint16_t start = offset;
+
+   offset += array.write(offset, step_size);
+   offset += array.write(offset, static_cast<uint8_t>(direction));
+   offset += array.write(offset, time);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// StepHueMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t StepHueMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+   uint8_t temp_dir;
+
+   size = array.read(offset,step_size);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,temp_dir);
+   HF_ASSERT(size != 0, {return 0;});
+   HF_ASSERT(temp_dir <= DIRECTION_MAX, {return 0;});
+   direction = static_cast<Direction>(temp_dir);
+   offset += size;
+
+   size = array.read(offset,time);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+

@@ -478,6 +478,157 @@ TEST(ColourControlMessages, MoveHue_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x0118, message.rate);
 }
 
+// ---- Step hue Message ----
+
+//! @test StepHue message basic test.
+TEST(ColourControlMessages, StepHue)
+{
+   StepHueMessage message(0x5A, Direction::UP, 0xA5);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test StepHue message basic test with wrong array size passed.
+TEST(ColourControlMessages, StepHue_wrong_array_size)
+{
+   StepHueMessage message(0x5A, Direction::UP, 0xA5);
+
+   expected = ByteArray(2);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test StepHue message size test.
+TEST(ColourControlMessages, StepHue_size)
+{
+   StepHueMessage message(0x5A, Direction::UP, 0xA5);
+
+   expected = ByteArray({
+                           0x5A,          // Step size
+                           Direction::UP, // Direction
+                           0xA5           // time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(3, message.size());
+}
+
+//! @test StepHue message pack test.
+TEST(ColourControlMessages, StepHue_pack)
+{
+   StepHueMessage message(0x5A, Direction::UP, 0xA5);
+
+   expected = ByteArray({
+                           0x5A,          // Step size
+                           Direction::UP, // Direction
+                           0xA5           // time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+/*! @test StepHue message pack test.
+ *
+ * Invalid value passed to the direction field.
+ */
+TEST(ColourControlMessages, StepHue_pack_invalid_value)
+{
+   // -- On the constructor --
+
+   StepHueMessage message(0x5A, Direction::LONGEST, 0xA5); // Invalid Value (Direction).
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+
+   // -- Direct access - Direction --
+
+   message.direction = Direction::LONGEST;   // Invalid Value.
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+}
+
+//! @test StepHue message unpack test.
+TEST(ColourControlMessages, StepHue_unpack)
+{
+   StepHueMessage message;
+
+   payload = ByteArray({
+                           0x5A,          // Step size
+                           Direction::UP, // Direction
+                           0xA5           // time
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x5A, message.step_size);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0xA5, message.time);
+}
+
+/*! @test StepHue message unpack test.
+ *
+ * Invalid value passed to the Direction field.
+ */
+TEST(ColourControlMessages, StepHue_unpack_invalid_value)
+{
+   StepHueMessage message;
+
+   payload = ByteArray({
+                           0x5A,                // Step size
+                           Direction::SHORTEST, // Direction (Invalid Value)
+                           0xA5                 // time
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
+}
+
+/*! @test StepHue message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, StepHue_unpack_incomplete)
+{
+   StepHueMessage message;
+
+   payload = ByteArray({
+                           0x5A,                // Step size
+                           Direction::SHORTEST  // Direction (Invalid Value)
+                                                // time (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.step_size);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0, message.time);
+}
+
+/*! @test StepHue message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, StepHue_unpack_incomplete_keep_values)
+{
+   StepHueMessage message(0x5A, Direction::UP, 0xA5);
+
+   payload = ByteArray({
+                           0x2A,                // Step size
+                           Direction::DOWN      // Direction (Invalid Value)
+                                                // time (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x5A, message.step_size);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0xA5, message.time);
+}
 // =============================================================================
 // Colour Control
 // =============================================================================
