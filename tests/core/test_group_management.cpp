@@ -148,13 +148,13 @@ TEST(GroupManagementEntries, Destroy_by_group)
    LONGS_EQUAL(10, entries.size());
 
    // Try to destroy group 11 (NOK)
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(Group(11, "G11")));
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(Group(11, "G11")));
 
    // Try to destroy group 10 (OK)
-   CHECK_EQUAL(Common::Result::OK, entries.destroy(Group(10, "G10")));
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, entries.destroy(Group(10, "G10")));
 
    // Try to destroy group 10 again (NOK)
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(Group(10, "G10")));
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(Group(10, "G10")));
 
    LONGS_EQUAL(9, entries.size());
 }
@@ -166,7 +166,7 @@ TEST(GroupManagementEntries, Save)
 
    entries.save(Group(1, "G"));
 
-   LONGS_EQUAL(1, entries.size());
+   UNSIGNED_LONGS_EQUAL(1, entries.size());
    CHECK_EQUAL(std::string("G"), entries.data()[1].name);
 }
 
@@ -213,7 +213,7 @@ TEST(GroupManagement, UID)
 TEST(GroupManagement, NumberOfGroups)
 {
    HF::Attributes::IAttribute *attr =
-         GroupManagement::create_attribute(GroupManagement::NUMBER_OF_GROUPS_ATTR);
+      GroupManagement::create_attribute(GroupManagement::NUMBER_OF_GROUPS_ATTR);
 
    CHECK_TRUE(attr != nullptr);
 
@@ -228,7 +228,7 @@ TEST(GroupManagement, NumberOfGroups)
 TEST(GroupManagement, InvalidAttribute)
 {
    HF::Attributes::IAttribute *attr =
-         GroupManagement::create_attribute(GroupManagement::__LAST_ATTR__ + 1);
+      GroupManagement::create_attribute(GroupManagement::__LAST_ATTR__ + 1);
 
    CHECK_TRUE(attr == nullptr);
 }
@@ -285,69 +285,57 @@ TEST(GroupManagement, Find_member)
    LONGS_EQUAL(2, group.find_member(member)->unit);            // Confirm the unit address
 }
 
-/* =====================================
- *    Client to Servers Commands
- * =====================================*/
+// =============================================================================
+// Client to Servers Commands
+// =============================================================================
 
-/* ----- Create Group ------------- */
+// =============================================================================
+// Create Group
+// =============================================================================
 
 //! @test Check the Create Group message size
 TEST(GroupManagement, CreateGroup_Size)
 {
-   CreateMessage *message;
+   CreateMessage message("");
 
-   message = new CreateMessage("");
-
-   UNSIGNED_LONGS_EQUAL(1, message->size());
-   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(1, message.size());
+   UNSIGNED_LONGS_EQUAL(message.min_size, message.size());
 
    std::string group_name("TestGroup");
-   message = new CreateMessage(group_name);
+   message = CreateMessage(group_name);
 
-   UNSIGNED_LONGS_EQUAL(1 + group_name.length(), message->size());
-
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(1 + group_name.length(), message.size());
 }
 
 //! @test Check the Create Group message pack
 TEST(GroupManagement, CreateGroup_Pack)
 {
-   CreateMessage *message;
-
    std::string group_name("TestGroup");
-   message = new CreateMessage(group_name);
 
+   CreateMessage message(group_name);
    ByteArray expected = ByteArray { (uint8_t) group_name.length(),
                                     'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
-   ByteArray got      = ByteArray(group_name.length() + 1);
+   ByteArray got      = ByteArray(message.size());
 
-   message->pack(got);
+   message.pack(got);
 
    CHECK_EQUAL(expected, got);
-
-   delete message;
 }
 
 //! @test Check the Create Group message unpack
 TEST(GroupManagement, CreateGroup_Unpack)
 {
-   CreateMessage *message;
-
    std::string group_name("TestGroup");
 
-   message = new CreateMessage();
+   CreateMessage message(group_name);
+
    ByteArray input = ByteArray { (uint8_t) group_name.length(),
                                  'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
 
-   message->unpack(input);
+   message.unpack(input);
 
-   UNSIGNED_LONGS_EQUAL(1 + group_name.length(), message->size());
-   CHECK_EQUAL(group_name, message->name);
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(1 + group_name.length(), message.size());
+   CHECK_EQUAL(group_name, message.name);
 }
 
 // =============================================================================
@@ -357,109 +345,83 @@ TEST(GroupManagement, CreateGroup_Unpack)
 //! @test Check the CreateGroup Response message size
 TEST(GroupManagement, CreateGroupResponse_size)
 {
-   CreateResponse *message;
+   CreateResponse message;
 
-   message = new CreateResponse();
-
-   CHECK_EQUAL(Common::Result::OK, message->code);
-   UNSIGNED_LONGS_EQUAL(message->min_size + sizeof(uint16_t),   // Group Address
-                        message->size());
-
-   delete message;
+   CHECK_EQUAL(Common::Result::OK, message.code);
+   UNSIGNED_LONGS_EQUAL(CreateResponse::min_size + sizeof(uint16_t),   // Group Address
+                        message.size());
 
    // ----- Check for response failure -----
 
-   message       = new CreateResponse();
-   message->code = Common::Result::FAIL_AUTH; // Create a FAIL result code
+   // Create a FAIL result code
+   message = CreateResponse(Common::Result::FAIL_AUTH);
 
-   CHECK_EQUAL(Common::Result::FAIL_AUTH, message->code);
-   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
-   UNSIGNED_LONGS_EQUAL(1, message->size());
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_AUTH, message.code);
+   UNSIGNED_LONGS_EQUAL(CreateResponse::min_size, message.size());
+   UNSIGNED_LONGS_EQUAL(1, message.size());
 }
 
 //! @test Check the CreateGroup Response message pack
 TEST(GroupManagement, CreateGroupResponse_Pack)
 {
-   CreateResponse *message;
-
    // ----- Normal Case -----
 
-   uint16_t addr = 0x5A55;
-
-   message = new CreateResponse(addr);
+   CreateResponse message(0x5A55);
 
    ByteArray expected = ByteArray{ Common::Result::OK,  // Response code : OK
                                    0x5A, 0x55};         // Group Address
-   ByteArray got = ByteArray(1 + 1 + 1);
+   ByteArray got      = ByteArray(1 + 1 + 1);
 
-   message->pack(got);
+   UNSIGNED_LONGS_EQUAL(message.size(), message.pack(got));
 
    CHECK_EQUAL(expected, got);
-
-   delete message;
 
    // ----- Wrong address -----
 
-   addr    = 0x8FFF;                   // Address outside range
-   message = new CreateResponse(addr);
+   message = CreateResponse(0x8FFF);
 
-   CHECK_EQUAL(0, message->pack(got));
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(0, message.pack(got));
 
    // ----- FAIL response code -----
 
-   addr          = 0x5A55;
-   message       = new CreateResponse(addr);
-   message->code = Common::Result::FAIL_AUTH;
+   message  = CreateResponse(Common::Result::FAIL_AUTH, 0x5A55);
 
-   expected      = ByteArray{ 0x01};
-   got           = ByteArray(message->size());
+   expected = ByteArray{Common::Result::FAIL_AUTH};
+   got      = ByteArray(message.size());
 
-   message->pack(got);
+   UNSIGNED_LONGS_EQUAL(CreateResponse::min_size, message.pack(got));
 
-   CHECK_EQUAL(message->min_size, message->pack(got));
    CHECK_EQUAL(expected, got);
-
-   delete message;
 }
 
 //! @test Check the CreateGroup Response message unpack
 TEST(GroupManagement, CreateGroupResponse_UnPack)
 {
-   CreateResponse *message;
-
    // ----- Normal Case -----
 
-   uint16_t addr = 0x5A55;
-
-   message = new CreateResponse();
+   CreateResponse message(0x5A55);
 
    ByteArray input = ByteArray{ Common::Result::OK,   // Response code
                                 0x5A, 0x55};          // Group address
 
-   message->unpack(input);
+   message.unpack(input);
 
-   CHECK_EQUAL(Common::Result::OK, (uint8_t) message->code);
-   CHECK_EQUAL(addr, message->address);
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, message.code);
+   UNSIGNED_LONGS_EQUAL(0x5A55, message.address);
 
    // ----- FAIL Case -----
 
-   message = new CreateResponse();
+   message = CreateResponse(0x5A55);
 
    input   = ByteArray { Common::Result::FAIL_AUTH,   // Response code
                          0x5A, 0x55};                 // Group address
 
-   message->unpack(input);
+   UNSIGNED_LONGS_EQUAL(CreateResponse::min_size, message.unpack(input));
 
-   CHECK_EQUAL(0x01, (uint8_t) message->code);
-   CHECK_TEXT(addr != message->address, "On response code fail the addr is being unpacked\n");
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_AUTH, message.code);
+   UNSIGNED_LONGS_EQUAL(GroupAddress::NO_ADDR, message.address);
 
-   delete message;
+   CHECK_TEXT(0x5A55 != message.address, "On response code fail the addr is being unpacked\n");
 }
 
 // =============================================================================
@@ -469,59 +431,36 @@ TEST(GroupManagement, CreateGroupResponse_UnPack)
 //! @test Check the DeleteGroup message size
 TEST(GroupManagement, DeleteGroupMessage_size)
 {
-   DeleteMessage *message;
-   uint16_t addr;
+   DeleteMessage message(0x5A55);
 
-   addr    = 0x5A55;
-   message = new DeleteMessage(addr);
-
-   UNSIGNED_LONGS_EQUAL(2, message->size());
-   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(2, message.size());
+   UNSIGNED_LONGS_EQUAL(DeleteMessage::min_size, message.size());
 }
 
 //! @test Check the DeleteGroup message pack
 TEST(GroupManagement, DeleteGroupMessage_Pack)
 {
-   DeleteMessage *message;
-   uint16_t addr;
-   ByteArray expected;
-   ByteArray got;
+   DeleteMessage message(0x5A55);
 
-   uint16_t size;
+   ByteArray expected {0x5A, 0x55};
+   ByteArray got(2);
 
-   addr     = 0x5A55;
-   expected = ByteArray{0x5A, 0x55};
-   got      = ByteArray(2);
-   message  = new DeleteMessage(addr);
-
-   size     = message->pack(got);
+   UNSIGNED_LONGS_EQUAL(DeleteMessage::min_size, message.pack(got));
 
    CHECK_EQUAL(expected, got);
-   UNSIGNED_LONGS_EQUAL(2, size);
-
-   delete message;
 }
 
 //! @test Check the DeleteGroup message unpack
 TEST(GroupManagement, DeleteGroupMessage_UnPack)
 {
-   DeleteMessage *message;
-   uint16_t addr;
-   ByteArray input;
-
    // ----- Normal Case -----
+   DeleteMessage message(0x5A55);
 
-   addr    = 0x5A55;
-   input   = ByteArray{0x5A, 0x55};
+   ByteArray input{0x5A, 0x55};
 
-   message = new DeleteMessage();
-   message->unpack(input);
+   message.unpack(input);
 
-   CHECK_EQUAL(addr, message->address);
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(0x5A55, message.address);
 }
 
 // =============================================================================
@@ -531,80 +470,41 @@ TEST(GroupManagement, DeleteGroupMessage_UnPack)
 //! @test Check the Add to group message size
 TEST(GroupManagement, AddMessage_size)
 {
-   AddMessage *message;
-   uint16_t group_addr, dev_addr, unit_id;
+   AddMessage message(0x5A55, 0x0001, 0xAA);
 
-   group_addr = 0x5A55;
-   dev_addr   = 0x0001;
-   unit_id    = 0xAA;
-
-   message    = new AddMessage(group_addr, dev_addr, unit_id);
-
-   UNSIGNED_LONGS_EQUAL(5, message->size());
-   UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(AddMessage::min_size, message.size());
 }
 
 //! @test Check the Add to group message pack
 TEST(GroupManagement, AddMessage_Pack)
 {
-   AddMessage *message;
-   uint16_t group_addr, dev_addr, unit_id;
-   ByteArray expected, got;
+   ByteArray expected {0x5A, 0x55,  // Group Address
+                       0x01, 0x02,  // Dev Address
+                       0xAB};       // Unit ID
 
-   uint16_t size;
+   ByteArray got(5);
 
-   group_addr = 0x5A55;
-   dev_addr   = 0x0102;
-   unit_id    = 0xAB;
-   expected   = ByteArray{0x5A,     // Group Addr (MSB)
-                          0x55,     // Group Addr (LSB)
-                          0x01,     // Dev Addr  (MSB)
-                          0x02,     // Dev Addr  (LSB)
-                          0xAB};    // UnitID
-   got     = ByteArray(5);
+   AddMessage message(0x5A55, 0x0102, 0xAB);
 
-   message = new AddMessage(group_addr, dev_addr, unit_id);
-
-   size    = message->pack(got);
+   UNSIGNED_LONGS_EQUAL(AddMessage::min_size, message.pack(got));
 
    CHECK_EQUAL(expected, got);
-   UNSIGNED_LONGS_EQUAL(5, size);
-
-   delete message;
 }
 
 //! @test Check the Add to group message unpack
 TEST(GroupManagement, AddMessage_UnPack)
 {
-   AddMessage *message;
-   uint16_t group_addr, dev_addr, unit_id;
-   ByteArray input;
+   ByteArray input {0x5A, 0x55,  // Group Address
+                    0x01, 0x02,  // Device Address
+                    0xAB};       // Unit ID
 
-   uint16_t size;
+   AddMessage message;
 
-   group_addr = 0x5A55;
-   dev_addr   = 0x0102;
-   unit_id    = 0xAB;
-   input      = ByteArray{0x5A,     // Group Addr (MSB)
-                          0x55,     // Group Addr (LSB)
-                          0x01,     // Dev Addr  (MSB)
-                          0x02,     // Dev Addr  (LSB)
-                          0xAB};    // UnitID
+   UNSIGNED_LONGS_EQUAL(AddMessage::min_size, message.unpack(input));
 
-
-   message = new AddMessage();
-
-   size    = message->unpack(input);
-
-   UNSIGNED_LONGS_EQUAL(5, size);
-   UNSIGNED_LONGS_EQUAL(group_addr, message->address);
-   UNSIGNED_LONGS_EQUAL(dev_addr, message->device);
-   UNSIGNED_LONGS_EQUAL(unit_id, message->unit);
-
-   delete message;
-
+   UNSIGNED_LONGS_EQUAL(0x5A55, message.address);
+   UNSIGNED_LONGS_EQUAL(0x0102, message.device);
+   UNSIGNED_LONGS_EQUAL(0xAB, message.unit);
 }
 
 // =============================================================================
@@ -614,104 +514,83 @@ TEST(GroupManagement, AddMessage_UnPack)
 //! @test Check the Get group Info Response size
 TEST(GroupManagement, InfoResponse_size)
 {
-   InfoResponse *message;
-
    std::string name("Group");
    std::vector<Member> members;
 
-   message = new InfoResponse(name, members);
+   InfoResponse message(name, members);
 
-   CHECK_EQUAL(1                       // Response code
-               + 1 + name.length()     // Group Name
-               + sizeof(uint16_t),     // N Members
-               message->size());
+   UNSIGNED_LONGS_EQUAL(1                       // Response code
+                        + 1 + name.length()     // Group Name
+                        + sizeof(uint16_t),     // N Members
+                        message.size());
 
-   message->code = Common::Result::FAIL_AUTH;      // Return code FAIL
+   message.code = Common::Result::FAIL_AUTH;
 
-   CHECK_EQUAL(message->min_size, message->size());
-   CHECK_EQUAL(1, message->min_size);
-
-   delete message;
+   UNSIGNED_LONGS_EQUAL(1, InfoResponse::min_size);
+   UNSIGNED_LONGS_EQUAL(InfoResponse::min_size, message.size());
 }
 
 //! @test Check the Remove from group message pack
 TEST(GroupManagement, InfoResponse_Pack)
 {
-   InfoResponse *message;
-
    std::string name("Group");
    std::vector<Member> members;
-   ByteArray expected, got;
 
-   uint16_t size;
+   InfoResponse message(name, members);
 
-   message  = new InfoResponse(name, members);
+   ByteArray expected {Common::Result::OK,
+                       (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
+                       0x00, 0x00};
 
-   expected = ByteArray { Common::Result::OK,
-                          (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
-                          0x00, 0x00};
+   ByteArray got(message.size());
 
-   LONGS_EQUAL(expected.size(), message->size());
+   UNSIGNED_LONGS_EQUAL(expected.size(), message.size());
 
-   got = ByteArray(message->size());
+   UNSIGNED_LONGS_EQUAL(0, message.members.size());
 
-   CHECK_EQUAL(0, message->members.size());
-
-   size = message->pack(got);
+   UNSIGNED_LONGS_EQUAL(message.size(), message.pack(got));
 
    CHECK_EQUAL(expected, got);
-   CHECK_EQUAL(message->size(), size);
-
-   delete message;
 
    // ----- Return error code -----
 
-   message       = new InfoResponse(name, members);
-   message->code = Common::Result::FAIL_AUTH;
+   message  = InfoResponse(Common::Result::FAIL_AUTH, name, members);
 
-   expected      = ByteArray { (uint8_t) Common::Result::FAIL_AUTH};
+   expected = ByteArray { (uint8_t) Common::Result::FAIL_AUTH};
 
-   LONGS_EQUAL(expected.size(), message->size());
+   LONGS_EQUAL(expected.size(), message.size());
 
-   got = ByteArray(message->size());
+   got = ByteArray(message.size());
 
-   CHECK_EQUAL(0, message->members.size());
+   UNSIGNED_LONGS_EQUAL(0, message.members.size());
 
-   size = message->pack(got);
+   UNSIGNED_LONGS_EQUAL(message.size(), message.pack(got));
 
    CHECK_EQUAL(expected, got);
-   CHECK_EQUAL(message->size(), size);
-
-   delete message;
 }
 
 //! @test Check the Remove from group message unpack
 TEST(GroupManagement, InfoResponse_UnPack)
 {
-   InfoResponse *message;
-   ByteArray input;
-
    std::string name("Group");
 
-   uint16_t size;
+   InfoResponse message;
 
-   message = new InfoResponse();
+   ByteArray input {(uint8_t) Common::Result::OK,
+                    (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
+                    0x00, 0x00};
 
-   input   = ByteArray {  (uint8_t) Common::Result::OK,
-                          (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
-                          0x00, 0x00};
+   UNSIGNED_LONGS_EQUAL(message.size(), message.unpack(input));
 
-   size = message->unpack(input);
+   UNSIGNED_LONGS_EQUAL(input.size(), message.size());
 
-   CHECK_EQUAL(input.size(), size);
-   CHECK_EQUAL(input.size(), message->size());
-   CHECK_EQUAL((uint8_t) Common::Result::OK, message->code);
-   CHECK_EQUAL(name, message->name);
-   CHECK_EQUAL(0, message->members.size());
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, message.code);
 
-   delete message;
+   CHECK_EQUAL(name, message.name);
 
-   message = new InfoResponse();
+   UNSIGNED_LONGS_EQUAL(0, message.members.size());
+
+   message = InfoResponse();
 
    input   = ByteArray { (uint8_t) Common::Result::OK,
                          (uint8_t) name.length(),
@@ -720,18 +599,17 @@ TEST(GroupManagement, InfoResponse_UnPack)
                          0x00, 0x01,               // dev addr
                          0x12};                    // Unit addr
 
-   size = message->unpack(input);
+   UNSIGNED_LONGS_EQUAL(message.size(), message.unpack(input));
 
+   UNSIGNED_LONGS_EQUAL(input.size(), message.size());
 
-   CHECK_EQUAL(input.size(), size);
-   CHECK_EQUAL(input.size(), message->size());
-   CHECK_EQUAL((uint8_t) Common::Result::OK, message->code);
-   CHECK_EQUAL(name, message->name);
-   CHECK_EQUAL(1, message->members.size());
-   UNSIGNED_LONGS_EQUAL(0x0001, message->members.at(0).device);
-   UNSIGNED_LONGS_EQUAL(0x12, message->members.at(0).unit);
+   UNSIGNED_LONGS_EQUAL((uint8_t) Common::Result::OK, message.code);
 
-   delete message;
+   CHECK_EQUAL(name, message.name);
+
+   UNSIGNED_LONGS_EQUAL(1, message.members.size());
+   UNSIGNED_LONGS_EQUAL(0x0001, message.members.at(0).device);
+   UNSIGNED_LONGS_EQUAL(0x12, message.members.at(0).unit);
 }
 
 // =============================================================================
@@ -909,8 +787,8 @@ TEST(GroupManagementClient, Created_OK)
 
    mock("GroupManagement::Client").expectOneCall("created");
 
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -918,11 +796,10 @@ TEST(GroupManagementClient, Created_OK)
 //! @test Created support - Creation failed.
 TEST(GroupManagementClient, Created_FAIL)
 {
-   Common::ByteArray payload =
-   {
-      0x00,                      0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::FAIL_AUTH,
-      0x00,                      0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -930,10 +807,8 @@ TEST(GroupManagementClient, Created_FAIL)
 
    mock("GroupManagement::Client").expectOneCall("created");
 
-   // This needs to use a temporary variable
-   // otherwise the handle method will be called twice.
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -941,11 +816,10 @@ TEST(GroupManagementClient, Created_FAIL)
 //! @test deleted support.
 TEST(GroupManagementClient, Deleted_OK)
 {
-   Common::ByteArray payload =
-   {
-      0x00,               0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::OK,
-      0x00,               0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -953,8 +827,8 @@ TEST(GroupManagementClient, Deleted_OK)
 
    mock("GroupManagement::Client").expectOneCall("deleted");
 
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -962,11 +836,10 @@ TEST(GroupManagementClient, Deleted_OK)
 //! @test deleted support - deleted failed.
 TEST(GroupManagementClient, Deleted_FAIL)
 {
-   Common::ByteArray payload =
-   {
-      0x00,                      0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::FAIL_AUTH,
-      0x00,                      0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -974,10 +847,8 @@ TEST(GroupManagementClient, Deleted_FAIL)
 
    mock("GroupManagement::Client").expectOneCall("deleted");
 
-   // This needs to use a temporary variable
-   // otherwise the handle method will be called twice.
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -985,11 +856,10 @@ TEST(GroupManagementClient, Deleted_FAIL)
 //! @test added support.
 TEST(GroupManagementClient, Added_OK)
 {
-   Common::ByteArray payload =
-   {
-      0x00,               0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::OK,
-      0x00,               0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -997,8 +867,8 @@ TEST(GroupManagementClient, Added_OK)
 
    mock("GroupManagement::Client").expectOneCall("added");
 
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -1006,11 +876,10 @@ TEST(GroupManagementClient, Added_OK)
 //! @test added support - added failed.
 TEST(GroupManagementClient, Added_FAIL)
 {
-   Common::ByteArray payload =
-   {
-      0x00,                      0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::FAIL_AUTH,
-      0x00,                      0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1018,23 +887,19 @@ TEST(GroupManagementClient, Added_FAIL)
 
    mock("GroupManagement::Client").expectOneCall("added");
 
-   // This needs to use a temporary variable
-   // otherwise the handle method will be called twice.
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
 
-
 //! @test removed support.
 TEST(GroupManagementClient, Removed_OK)
 {
-   Common::ByteArray payload =
-   {
-      0x00,               0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::OK,
-      0x00,               0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1042,8 +907,8 @@ TEST(GroupManagementClient, Removed_OK)
 
    mock("GroupManagement::Client").expectOneCall("removed");
 
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -1063,10 +928,8 @@ TEST(GroupManagementClient, Removed_FAIL)
 
    mock("GroupManagement::Client").expectOneCall("removed");
 
-   // This needs to use a temporary variable
-   // otherwise the handle method will be called twice.
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -1074,15 +937,14 @@ TEST(GroupManagementClient, Removed_FAIL)
 //! @test got_info support.
 TEST(GroupManagementClient, GOT_INFO_OK)
 {
-   Common::ByteArray payload =
-   {
-      0x00,               0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::OK,
-      0x04,               'N',  'A', 'M','E',
+      0x04, 'N', 'A', 'M', 'E',
       0x01,
-      0x12,               0x34,
+      0x12, 0x34,
       0x56,
-      0x00,               0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1090,8 +952,8 @@ TEST(GroupManagementClient, GOT_INFO_OK)
 
    mock("GroupManagement::Client").expectOneCall("got_info");
 
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -1099,11 +961,10 @@ TEST(GroupManagementClient, GOT_INFO_OK)
 //! @test got_info support - got_info failed.
 TEST(GroupManagementClient, GOT_INFO_FAIL)
 {
-   Common::ByteArray payload =
-   {
-      0x00,                      0x00, 0x00,
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
       Common::Result::FAIL_AUTH,
-      0x00,                      0x00, 0x00,
+      0x00, 0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1111,10 +972,8 @@ TEST(GroupManagementClient, GOT_INFO_FAIL)
 
    mock("GroupManagement::Client").expectOneCall("got_info");
 
-   // This needs to use a temporary variable
-   // otherwise the handle method will be called twice.
-   Result result = client->handle(packet, payload, 3);
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -1305,7 +1164,8 @@ TEST(GroupManagementServer, Create)
    mock("GroupManagement::Server").expectOneCall("create");
    mock("GroupManagement::Server").expectOneCall("created");
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, received_payload, 0));
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        server->handle(packet, received_payload, 0));
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
@@ -1337,8 +1197,7 @@ TEST(GroupManagementServer, Create)
 //! @test Delete support.
 TEST(GroupManagementServer, Delete_no_group_before)
 {
-   uint16_t group_addr = 0x0001;
-   DeleteMessage received(group_addr);
+   DeleteMessage received(0x0001);
    ByteArray received_payload(received.size());
 
    received.pack(received_payload);    // Pack it
@@ -1352,9 +1211,8 @@ TEST(GroupManagementServer, Delete_no_group_before)
    mock("GroupManagement::Server").expectNCalls(0, "deleted");
    mock("Interface").expectNoCall("notify");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::FAIL_ARG, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1387,7 +1245,6 @@ TEST(GroupManagementServer, Delete_existing_group)
 
    LONGS_EQUAL(10, server->entries().size());
 
-
    uint16_t group_addr = 0x0002;                         // Group Address to remove
    DeleteMessage received(group_addr);
    ByteArray received_payload(received.size());
@@ -1411,9 +1268,8 @@ TEST(GroupManagementServer, Delete_existing_group)
       .withParameterOfType("IAttribute", "old", &old_value)
       .withParameterOfType("IAttribute", "new", &new_value);
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1469,9 +1325,8 @@ TEST(GroupManagementServer, Add_1)
    mock("GroupManagement::Server").expectOneCall("add");
    mock("GroupManagement::Server").expectOneCall("added");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1501,7 +1356,6 @@ TEST(GroupManagementServer, Add_without_groups)
    AddMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
-
    received.pack(received_payload);          // pack it
 
    packet.message.itf.member = GroupManagement::ADD_CMD;
@@ -1513,9 +1367,8 @@ TEST(GroupManagementServer, Add_without_groups)
    mock("GroupManagement::Server").expectOneCall("add");
    mock("GroupManagement::Server").expectNoCall("added");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::FAIL_ARG, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1544,17 +1397,14 @@ TEST(GroupManagementServer, Add_2)
 
    LONGS_EQUAL(10, server->entries().size());
 
-   uint16_t group_addr;                   // Group Address to add
-   uint16_t dev_addr;
+   uint16_t group_addr = 0x0002;                   // Group Address to add
+   uint16_t dev_addr   = 0x1234;
    uint16_t dev_unit;
-   Common::Result result;
-   AddResponse resp;
 
    for (uint16_t i = 0; i < 2; ++i)
    {
-      group_addr = 0x0002;                // Group Address to add
-      dev_addr   = 0x1234;
-      dev_unit   = 0x56 + i;
+      dev_unit = 0x56 + i;
+
       AddMessage received(group_addr, dev_addr, dev_unit);
       ByteArray received_payload(received.size());
 
@@ -1569,9 +1419,8 @@ TEST(GroupManagementServer, Add_2)
       mock("GroupManagement::Server").expectOneCall("add");
       mock("GroupManagement::Server").expectOneCall("added");
 
-      result = server->handle(packet, received_payload, 0);
-
-      CHECK_EQUAL(Common::Result::OK, result);
+      UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                           server->handle(packet, received_payload, 0));
 
       Protocol::Packet *response = device->packets.back();
 
@@ -1584,6 +1433,7 @@ TEST(GroupManagementServer, Add_2)
       mock("GroupManagement::Server").checkExpectations();
       mock("AbstractDevice").checkExpectations();
 
+      AddResponse resp;
       LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
       LONGS_EQUAL(Common::Result::OK, resp.code);
    }
@@ -1624,9 +1474,8 @@ TEST(GroupManagementServer, Add_twice)
    mock("GroupManagement::Server").expectOneCall("add");
    mock("GroupManagement::Server").expectNoCall("added");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::FAIL_ARG, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, received_payload, 0));
 
    // Check if the members size is still 1
    LONGS_EQUAL(1, group_ptr->members.size());
@@ -1674,9 +1523,8 @@ TEST(GroupManagementServer, Remove_without_groups)
    mock("GroupManagement::Server").expectOneCall("remove");
    mock("GroupManagement::Server").expectNoCall("added");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::FAIL_ARG, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1725,9 +1573,8 @@ TEST(GroupManagementServer, Remove_non_existing_device)
    mock("GroupManagement::Server").expectOneCall("remove");
    mock("GroupManagement::Server").expectNoCall("added");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::FAIL_ARG, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, received_payload, 0));
 
    LONGS_EQUAL(1, group_ptr->members.size());
 
@@ -1779,9 +1626,8 @@ TEST(GroupManagementServer, Remove_existing_device_with_other_dev_in_group)
    mock("GroupManagement::Server").expectOneCall("remove");
    mock("GroupManagement::Server").expectOneCall("removed");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        server->handle(packet, received_payload, 0));
 
    LONGS_EQUAL(1, group_ptr->members.size());
    CHECK_EQUAL(no_del.device, group_ptr->members[0].device);
@@ -1824,9 +1670,8 @@ TEST(GroupManagementServer, GetInfo_no_group)
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectNoCall("got_info");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::FAIL_ARG, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1869,9 +1714,8 @@ TEST(GroupManagementServer, GetInfo_no_members)
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectOneCall("got_info");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1926,9 +1770,8 @@ TEST(GroupManagementServer, GetInfo_10_members)
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectOneCall("got_info");
 
-   Common::Result result = server->handle(packet, received_payload, 0);
-
-   CHECK_EQUAL(Common::Result::OK, result);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        server->handle(packet, received_payload, 0));
 
    Protocol::Packet *response = device->packets.back();
 

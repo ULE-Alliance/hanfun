@@ -20,6 +20,8 @@
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
 
+#include "hanfun/core/group_table.h"
+
 #include <string>
 #include <map>
 
@@ -84,6 +86,7 @@ namespace HF
          {
             uint16_t                  address; //!< Group Address
 
+            constexpr static uint16_t NO_ADDR    = 0x0000;  //!< Empty Group Address.
             constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN Group Address.
             constexpr static uint16_t END_ADDR   = 0x7FFF;  //!< Last HAN-FUN Group Address.
 
@@ -266,17 +269,25 @@ namespace HF
 
          struct CreateResponse: public Protocol::Response, GroupAddress
          {
-
             /*!
              * Constructor.
              *
              * @param [in] address     Group address
              */
-            CreateResponse(uint16_t address = 0):
-               GroupAddress(address)
+            CreateResponse(uint16_t address):
+               Protocol::Response(), GroupAddress(address)
             {}
 
-            // virtual ~CreateResponse();
+            /*!
+             * Constructor.
+             *
+             * @param [in] address     Group address
+             * @param [in] code        Response code.
+             */
+            CreateResponse(Common::Result code = Common::Result::OK,
+                           uint16_t address = GroupAddress::NO_ADDR):
+               Protocol::Response(code), GroupAddress(address)
+            {}
 
             // =============================================================================
             // Serializable API
@@ -363,8 +374,19 @@ namespace HF
              * @param name       Group Name
              * @param members    Member vector
              */
-            InfoResponse(std::string name, std::vector<Member> members):
-               name(name), members(members)
+            InfoResponse(const std::string &name, std::vector<Member> &members):
+               Protocol::Response(), name(name), members(members)
+            {}
+
+            /*!
+             * Constructor.
+             *
+             * @param name       Group Name
+             * @param members    Member vector
+             */
+            InfoResponse(Common::Result code, const std::string &name,
+                         std::vector<Member> &members):
+               Protocol::Response(code), name(name), members(members)
             {}
 
             /*!
@@ -378,7 +400,6 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = Protocol::Response::min_size;
 
-
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
 
@@ -387,7 +408,6 @@ namespace HF
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
-
          };
 
          // =============================================================================
@@ -758,6 +778,10 @@ namespace HF
                                           uint16_t offset);
          };
 
+         /*!
+          * Helper class used to implement custom functionality to the group management
+          * server side.
+          */
          template<typename _Entries = Entries>
          class Server: public IServer
          {
@@ -778,6 +802,7 @@ namespace HF
             virtual ~Server()
             {}
 
+            //! @copydoc IServer::entries
             _Entries &entries() const
             {
                return const_cast<_Entries &>(_entries);

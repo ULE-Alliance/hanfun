@@ -349,7 +349,9 @@ uint16_t CreateResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 
    uint16_t start = offset;
 
-   offset += Response::unpack(array, offset);
+   offset       += Response::unpack(array, offset);
+
+   this->address = GroupAddress::NO_ADDR;
 
    if (this->code != Common::Result::OK)
    {
