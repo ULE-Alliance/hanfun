@@ -555,3 +555,51 @@ uint16_t MoveToHueSaturationMessage::unpack (const Common::ByteArray& array, uin
    return (offset - start);
 }
 
+// =============================================================================
+// ColourControl::MoveToXYMessage
+// =============================================================================
+
+// =============================================================================
+// MoveToXYMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveToXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += this->colour.pack(array,offset);
+   offset += array.write(offset, time);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// MoveToXYMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveToXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = this->colour.unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,time);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+

@@ -545,6 +545,44 @@ namespace HF
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
 
+         /*!
+          * Move to XY Message class.
+          *
+          * @copydetails HF::Interfaces::ColourControl::XY_Colour
+          */
+         struct MoveToXYMessage
+         {
+            XY_Colour colour;
+            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+
+            /*!
+             * Constructor
+             *
+             * @param [in] colour       The colour value.
+             * @param [in] time        Time of a single step transition in units of 100msec.
+             */
+            MoveToXYMessage (XY_Colour colour = XY_Colour(0,0), uint16_t time = 0) :
+                  colour(colour), time(time)
+            {
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(XY_Colour::X)    // X
+                                               + sizeof(XY_Colour::Y)    // Y
+                                               + sizeof(time);          // time
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
           * Colour Control %Interface : Parent.
           *
           * This is the parent class for the Colour Control interface implementation.

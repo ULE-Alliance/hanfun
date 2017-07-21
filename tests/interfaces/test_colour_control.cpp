@@ -1231,6 +1231,121 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x6789, message.time);
 }
 
+
+// ---- Move To XY Message ----
+
+//! @test MoveToXY message basic test.
+TEST(ColourControlMessages, MoveToXY)
+{
+   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveToXY message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveToXY_wrong_array_size)
+{
+   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+
+   expected = ByteArray(1);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveToXY message size test.
+TEST(ColourControlMessages, MoveToXY_size)
+{
+   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // X
+                           0x56, 0x78,    // Y
+                           0x9A, 0xBC     // Time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(6, message.size());
+}
+
+//! @test MoveToXY message pack test.
+TEST(ColourControlMessages,MoveToXY_pack)
+{
+   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // X
+                           0x56, 0x78,    // Y
+                           0x9A, 0xBC     // Time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+//! @test MoveToXY message unpack test.
+TEST(ColourControlMessages, MoveToXY_unpack)
+{
+   MoveToXYMessage message;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // X
+                           0x56, 0x78,    // Y
+                           0x9A, 0xBC     // Time
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x1234, message.colour.X);
+   LONGS_EQUAL(0x5678, message.colour.Y);
+   LONGS_EQUAL(0x9ABC, message.time);
+}
+
+/*! @test MoveToXY message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveToXY_unpack_incomplete)
+{
+   MoveToXYMessage message;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // X
+                           0x56, 0x78,    // Y
+                           0x9A           // Time (incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.colour.X);
+   LONGS_EQUAL(0, message.colour.Y);
+   LONGS_EQUAL(0, message.time);
+}
+
+/*! @test MoveToXY message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveToXY_unpack_incomplete_keep_values)
+{
+   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+
+   payload = ByteArray({
+                           0xCB, 0xA9,    // X
+                           0x87, 0x65,    // Y
+                           0x43           // Time (incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x1234, message.colour.X);
+   LONGS_EQUAL(0x5678, message.colour.Y);
+   LONGS_EQUAL(0x9ABC, message.time);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================
