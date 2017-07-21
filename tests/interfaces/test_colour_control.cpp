@@ -1569,6 +1569,112 @@ TEST(ColourControlMessages, StepXY_unpack_incomplete_keep_values)
 }
 
 
+// ---- Move To Colour Message ----
+
+//! @test MoveToTemperature message basic test.
+TEST(ColourControlMessages, MoveToTemperature)
+{
+   MoveToTemperatureMessage message(0x1234, 0x5678);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveToTemperature message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveToTemperature_wrong_array_size)
+{
+   MoveToTemperatureMessage message(0x1234, 0x5678);
+
+   expected = ByteArray(1);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveToTemperature message size test.
+TEST(ColourControlMessages, MoveToTemperature_size)
+{
+   MoveToTemperatureMessage message(0x1234, 0x5678);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Colour Temperature
+                           0x56, 0x78,    // Time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(4, message.size());
+}
+
+//! @test MoveToTemperature message pack test.
+TEST(ColourControlMessages, MoveToTemperature_pack)
+{
+   MoveToTemperatureMessage message(0x1234, 0x5678);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Colour Temperature
+                           0x56, 0x78,    // Time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+//! @test MoveToTemperature message unpack test.
+TEST(ColourControlMessages, MoveToTemperature_unpack)
+{
+   MoveToTemperatureMessage message;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // Colour Temperature
+                           0x56, 0x78,    // Time
+                        });
+
+   LONGS_EQUAL(payload.size(),   message.unpack(payload));
+   LONGS_EQUAL(0x1234,           message.colour);
+   LONGS_EQUAL(0x5678,           message.time);
+}
+
+/*! @test MoveToTemperature message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveToTemperature_unpack_incomplete)
+{
+   MoveToTemperatureMessage message;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // Colour Temperature
+                           0x56           // Time        (Incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.colour);
+   LONGS_EQUAL(0, message.time);
+}
+
+/*! @test MoveToTemperature message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveToTemperature_unpack_incomplete_keep_values)
+{
+   MoveToTemperatureMessage message(0x1234, 0x5678);
+
+   payload = ByteArray({
+                           0x65, 0x43,   // Colour Temperature
+                           0x21          // Time        (Incomplete)
+                        });
+
+   LONGS_EQUAL(0,       message.unpack(payload));
+   LONGS_EQUAL(0x1234,  message.colour);
+   LONGS_EQUAL(0x5678,  message.time);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================

@@ -662,6 +662,46 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
+
+         /*!
+          * Move to Colour Temperature Message class.
+          *
+          * @copydetails HF::Interfaces::ColourControl::XY_Colour
+          */
+         struct MoveToTemperatureMessage
+         {
+            uint16_t colour;
+            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+
+            /*!
+             * Constructor
+             *
+             * @param [in] colour       The colour value.
+             * @param [in] time        Time of a single step transition in units of 100msec.
+             */
+            MoveToTemperatureMessage (uint16_t colour = 0, uint16_t time = 0) :
+                  colour(colour), time(time)
+            {
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(colour)   // temperature
+                                               + sizeof(time);   // time
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
+
+         /*!
           * Colour Control %Interface : Parent.
           *
           * This is the parent class for the Colour Control interface implementation.
@@ -687,15 +727,21 @@ namespace HF
             uint8_t _mode;      //!< Mode
 
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
+
             uint32_t _hue_and_saturation;   //!< Hue And Saturation
+
 #endif
 
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
+
             uint32_t _xy;   //!< XY
+
 #endif
 
 #ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
+
             uint16_t _colour_temperature;   //!< Colour Temperature
+
 #endif
 
             public:
@@ -801,6 +847,7 @@ namespace HF
             virtual void move_to_colour_temperature(const Protocol::Address &addr);
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
+
             /*!
              * Callback that is called when a @c ColourControl::STOP_CMD,
              * is received.
@@ -808,6 +855,7 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              */
             virtual void stop(const Protocol::Address &addr);
+
 #endif
 
             //! @}
@@ -846,6 +894,7 @@ namespace HF
             void mode(uint8_t __value);
 
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
+
             /*!
              * Get the Hue And Saturation for the Colour Control server.
              *
@@ -859,9 +908,11 @@ namespace HF
              * @param [in] __value the  Hue And Saturation value to set the server to.
              */
             void hue_and_saturation(uint32_t __value);
+
 #endif
 
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
+
             /*!
              * Get the XY for the Colour Control server.
              *
@@ -875,9 +926,11 @@ namespace HF
              * @param [in] __value the  XY value to set the server to.
              */
             void xy(uint32_t __value);
+
 #endif
 
 #ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
+
             /*!
              * Get the Colour Temperature for the Colour Control server.
              *
@@ -891,6 +944,7 @@ namespace HF
              * @param [in] __value the  Colour Temperature value to set the server to.
              */
             void colour_temperature(uint16_t __value);
+
 #endif
 
             // =============================================================================
