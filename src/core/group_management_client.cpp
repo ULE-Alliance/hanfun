@@ -47,8 +47,8 @@ void Client::create(std::string name)
 
    Protocol::Message message(payload->size());
 
-   message.itf.role = SERVER_ROLE;
-   message.itf.id = Interface::GROUP_MANAGEMENT;
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = CREATE_CMD;
 
    send(addr, message);
@@ -91,7 +91,7 @@ void Client::add(uint16_t group, uint16_t device, uint8_t unit)
 {
    Protocol::Address addr(0, 0);
 
-   AddMessage *payload  = new AddMessage(group, device, unit);
+   AddMessage *payload = new AddMessage(group, device, unit);
 
    Protocol::Message message;
 
@@ -154,7 +154,14 @@ void Client::get_info(uint16_t group)
 }
 #endif
 
-uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
+// =============================================================================
+// Client::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -178,8 +185,15 @@ uint16_t Client::payload_size (Protocol::Message::Interface &itf) const
    }
 }
 
-Common::Result Client::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                               uint16_t offset)
+// =============================================================================
+// Client::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
    assert(packet.link != nullptr);
 

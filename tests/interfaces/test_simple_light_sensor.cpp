@@ -134,20 +134,21 @@ TEST_GROUP(SimpleLightSensorClient)
 {
    struct SimpleLightSensorClient: public InterfaceHelper<SimpleLightSensor::Client>
    {
-      void read_resp (const Protocol::Address &addr,
-                      const HF::Attributes::Attribute<uint32_t> &attr)
+      void read_resp(const Protocol::Address &addr,
+                     const HF::Attributes::Attribute<uint32_t> &attr)
       {
          UNUSED(addr);
 
          int value = (int) attr.value();
 
          mock("SimpleLightSensor::Client").actualCall("read_resp")
-                                          .withParameter("attr_uid", attr.uid())
-                                          .withParameter("attr_value", value);
+            .withParameter("attr_uid", attr.uid())
+            .withParameter("attr_value", value);
       }
    };
 
    SimpleLightSensorClient client;
+
    Protocol::Address addr;
 
 
@@ -284,20 +285,20 @@ TEST(SimpleLightSensorClient, ReadAll_Response)
                                   0x00, 0x00, 0x00};
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                    .withParameter("attr_uid", (uint8_t) SimpleLightSensor::VALUE_ATTR)
-                                    .withParameter("attr_value", (uint32_t) 0x01020304);
+      .withParameter("attr_uid", (uint8_t) SimpleLightSensor::VALUE_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x01020304);
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                    .withParameter("attr_uid", (uint8_t) SimpleLightSensor::MINIMUM_ATTR)
-                                    .withParameter("attr_value", (uint32_t) 0x11121314);
+      .withParameter("attr_uid", (uint8_t) SimpleLightSensor::MINIMUM_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x11121314);
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                    .withParameter("attr_uid", (uint8_t) SimpleLightSensor::MAXIMUM_ATTR)
-                                    .withParameter("attr_value", (uint32_t) 0x21222324);
+      .withParameter("attr_uid", (uint8_t) SimpleLightSensor::MAXIMUM_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x21222324);
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                    .withParameter("attr_uid", (uint8_t) SimpleLightSensor::TOLERANCE_ATTR)
-                                    .withParameter("attr_value", (uint32_t) 0x31323334);
+      .withParameter("attr_uid", (uint8_t) SimpleLightSensor::TOLERANCE_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x31323334);
 
    CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
@@ -322,8 +323,8 @@ TEST(SimpleLightSensorClient, Read_Lux_Response)
                                   0x00, 0x00, 0x00};
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                    .withParameter("attr_uid", SimpleLightSensor::VALUE_ATTR)
-                                    .withParameter("attr_value", (uint32_t) 0x12345678);
+      .withParameter("attr_uid", SimpleLightSensor::VALUE_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x12345678);
 
    CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
@@ -349,8 +350,8 @@ TEST(SimpleLightSensorClient, Read_Min_Lux_Response)
                                   0x00, 0x00, 0x00};
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                    .withParameter("attr_uid", SimpleLightSensor::MINIMUM_ATTR)
-                                    .withParameter("attr_value", (uint32_t) 0x12345678);
+      .withParameter("attr_uid", SimpleLightSensor::MINIMUM_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x12345678);
 
    CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
@@ -376,8 +377,8 @@ TEST(SimpleLightSensorClient, Read_Max_Lux_Response)
                                   0x00, 0x00, 0x00};
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                       .withParameter("attr_uid", SimpleLightSensor::MAXIMUM_ATTR)
-                                       .withParameter("attr_value", (uint32_t) 0x12345678);
+      .withParameter("attr_uid", SimpleLightSensor::MAXIMUM_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x12345678);
 
    CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 
@@ -402,8 +403,8 @@ TEST(SimpleLightSensorClient, Read_Tolerance_Response)
                                   0x00, 0x00, 0x00};
 
    mock("SimpleLightSensor::Client").expectOneCall("read_resp")
-                                       .withParameter("attr_uid", SimpleLightSensor::TOLERANCE_ATTR)
-                                       .withParameter("attr_value", (uint32_t) 0x12345678);
+      .withParameter("attr_uid", SimpleLightSensor::TOLERANCE_ATTR)
+      .withParameter("attr_value", (uint32_t) 0x12345678);
 
    CHECK_EQUAL(Result::OK, client.handle(packet, payload, 3));
 

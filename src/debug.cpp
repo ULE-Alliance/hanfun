@@ -946,7 +946,8 @@ std::ostream &operator<<(std::ostream &stream,
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleLightSensor::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::SimpleLightSensor::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');

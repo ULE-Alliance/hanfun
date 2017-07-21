@@ -82,7 +82,7 @@ namespace HF
 
          struct GroupAddress
          {
-            uint16_t address;    //!< Group Address
+            uint16_t                  address; //!< Group Address
 
             constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN Group Address.
             constexpr static uint16_t END_ADDR   = 0x7FFF;  //!< Last HAN-FUN Group Address.
@@ -94,8 +94,8 @@ namespace HF
              */
             GroupAddress(uint16_t address = 0)
             {
-               //static_assert(START_ADDR <= address && address <= END_ADDR, "Group Address outside range");
-               this->address=address;
+               // static_assert(START_ADDR <= address && address <= END_ADDR, "Group Address outside range");
+               this->address = address;
             }
 
             //! Minimum pack/unpack required data size.
@@ -122,25 +122,25 @@ namespace HF
          // Group Entry Data structure
          // =============================================================================
 
-         struct Group:public GroupAddress
+         struct Group: public GroupAddress
          {
-            std::string name; 	//!< Group Name
-            std::vector<Member> members; //!< Group Members
+            std::string               name;    //!< Group Name
+            std::vector<Member>       members; //!< Group Members
 
             constexpr static uint16_t MAX_MEMBERS = GroupAddress::END_ADDR -
-                                                    GroupAddress::START_ADDR +1;
+                                                    GroupAddress::START_ADDR + 1;
 
             /*!
              * Constructor.
              *
-             * @param [in] GroupAddr 	Group Address
+             * @param [in] GroupAddr    Group Address
              * @param [in] GroupName	Group Name
              */
-            Group(uint16_t address=0, std::string name=""):
+            Group(uint16_t address = 0, std::string name = ""):
                GroupAddress(address), name(name)
-            {};
+            {}
 
-            std::vector<Member>::iterator find_member (const Member &member)
+            std::vector<Member>::iterator find_member(const Member &member)
             {
                /* *INDENT-OFF* */
                std::vector<Member>::iterator it = std::find_if(members.begin(), members.end(), [member](const Member &i)
@@ -157,28 +157,33 @@ namespace HF
             {
                auto it = find_member(member);
 
-               if(it == members.end())
+               if (it == members.end())
                {
                   members.push_back(member);
                   return true;
                }
+
                return false;
             }
 
-            bool remove_member ( const Member &member)
+            bool remove_member(const Member &member)
             {
                const auto orig_size = members.size();
 
-               auto it = find_member(member);
-               if(it != members.end())
+               auto it              = find_member(member);
+
+               if (it != members.end())
                {
                   members.erase(it);
 
-                  if (members.size() == orig_size-1)
+                  if (members.size() == orig_size - 1)
+                  {
                      return true;
+                  }
 
                   return false;
                }
+
                return false;
             }
 
@@ -187,9 +192,9 @@ namespace HF
             // =============================================================================
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = GroupAddress::min_size						         // Group Address
-        	                                      + sizeof(uint8_t)                 	 	// Group Name (Length)
-        	                                      + sizeof(uint16_t); 				        	// Members Count
+            static constexpr uint16_t min_size = GroupAddress::min_size                // Group Address
+                                                 + sizeof(uint8_t)                     // Group Name (Length)
+                                                 + sizeof(uint16_t);                   // Members Count
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -204,16 +209,20 @@ namespace HF
             // Operators
             // =============================================================================
 
-            //!Equals operator
-            bool operator == (const Group &other) const
+            //! Equals operator
+            bool operator==(const Group &other) const
             {
                if (this->address == other.address)
+               {
                   return true;
+               }
                else
+               {
                   return false;
+               }
             }
-            //!Not equals operator
-            bool operator != (const Group &other) const
+            //! Not equals operator
+            bool operator!=(const Group &other) const
             {
                return !(*this == other);
             }
@@ -221,42 +230,6 @@ namespace HF
          };
 
          typedef Common::Pointer<Group> GroupPtr;
-
-//         struct Member{
-//            uint16_t address; //!< Device Address
-//            uint8_t unit_id; //!< Unit ID
-//
-//            constexpr static uint16_t START_ADDR = 0x0000;  //!< First HAN-FUN Device Address.
-//            constexpr static uint16_t END_ADDR   = 0x7FFE;  //!< Last HAN-FUN Device Address.
-//
-//            /*!
-//             * Constructor.
-//             *
-//             * @param [in] address		Device Address
-//             * @param [in] unit_id		Unit Member ID
-//             */
-//            Member(uint16_t address, uint8_t unit_id):
-//               address(address), unit_id(unit_id)
-//            {};
-//
-//            // =============================================================================
-//            // Serializable API
-//            // =============================================================================
-//
-//            //! Minimum pack/unpack required data size.
-//            static constexpr uint16_t min_size = sizeof(uint16_t)					      	// Member Address
-//        	         	                              + sizeof(uint8_t);					 	// Member Unit ID
-//
-//            //! @copydoc HF::Common::Serializable::size
-//            uint16_t size() const;
-//
-//            //! @copydoc HF::Common::Serializable::pack
-//            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
-//
-//            //! @copydoc HF::Common::Serializable::unpack
-//            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
-//
-//         };
 
          struct CreateMessage
          {
@@ -267,11 +240,11 @@ namespace HF
              *
              * @param [in] name     Group Name
              */
-            CreateMessage(std::string name=""):
+            CreateMessage(std::string name = ""):
                name(name)
-            {};
+            {}
 
-            //virtual ~CreateMessage();
+            // virtual ~CreateMessage();
 
             // =============================================================================
             // Serializable API
@@ -291,7 +264,7 @@ namespace HF
 
          };
 
-         struct CreateResponse : public Protocol::Response, GroupAddress
+         struct CreateResponse: public Protocol::Response, GroupAddress
          {
 
             /*!
@@ -301,9 +274,9 @@ namespace HF
              */
             CreateResponse(uint16_t address = 0):
                GroupAddress(address)
-            {};
+            {}
 
-            //virtual ~CreateResponse();
+            // virtual ~CreateResponse();
 
             // =============================================================================
             // Serializable API
@@ -329,7 +302,7 @@ namespace HF
          typedef Protocol::Response DeleteResponse;
 
 
-         struct AddMessage : public GroupAddress, Protocol::Address
+         struct AddMessage: public GroupAddress, Protocol::Address
          {
 
             /*!
@@ -339,7 +312,7 @@ namespace HF
              */
             AddMessage(uint16_t group, uint16_t device, uint8_t unit):
                GroupAddress(group), Protocol::Address(device, unit)
-            {};
+            {}
 
             /*!
              * Empty Constructor.
@@ -347,9 +320,9 @@ namespace HF
              * Mainly used for the unpack function.
              */
             AddMessage()
-            {};
+            {}
 
-            //virtual ~AddMessage();
+            // virtual ~AddMessage();
 
             // =============================================================================
             // Serializable API
@@ -357,7 +330,7 @@ namespace HF
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = GroupAddress::min_size
-                                               + Protocol::Address::min_size;
+                                                 + Protocol::Address::min_size;
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -381,7 +354,7 @@ namespace HF
 
          struct InfoResponse: public Protocol::Response
          {
-            std::string name;
+            std::string         name;
             std::vector<Member> members;
 
             /*!
@@ -407,13 +380,13 @@ namespace HF
 
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
          };
 
@@ -460,16 +433,16 @@ namespace HF
              * @retval  a pointer to the Device entry associated with the given address,
              * @retval  nullptr if the entry does not exist.
              */
-            virtual GroupPtr find (uint16_t address) const = 0;
+            virtual GroupPtr find(uint16_t address) const        = 0;
 
-            virtual GroupPtr find (const std::string &name) const = 0;
+            virtual GroupPtr find(const std::string &name) const = 0;
 
             /*!
              * Return next available address for registering a device.
              *
              * @return  the address to use in the next registration.
              */
-            virtual uint16_t next_address () const = 0;
+            virtual uint16_t next_address() const = 0;
          };
 
 
@@ -485,9 +458,9 @@ namespace HF
 
             virtual ~Entries() {}
 
-            uint16_t size () const;
+            uint16_t size() const;
 
-            Common::Result save (const Group &entry);
+            Common::Result save(const Group &entry);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -495,7 +468,7 @@ namespace HF
              * @param [in] address     The @c Group address to destroy
              * @return
              */
-            Common::Result destroy (const uint16_t &address);
+            Common::Result destroy(const uint16_t &address);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -504,20 +477,20 @@ namespace HF
              *          valid if it was obtained by calling the find method.
              *
              */
-            Common::Result destroy (const Group &entry);
+            Common::Result destroy(const Group &entry);
 
-            GroupPtr find (uint16_t address) const;
+            GroupPtr find(uint16_t address) const;
 
-            GroupPtr find (const std::string &name) const;
+            GroupPtr find(const std::string &name) const;
 
-            uint16_t next_address () const;
+            uint16_t next_address() const;
 
             /*!
              * Get an iterator to the start of the entries in this container.
              *
              * @return  iterator to the start of the entries present in this container.
              */
-            iterator begin ()
+            iterator begin()
             {
                return db.begin();
             }
@@ -527,7 +500,7 @@ namespace HF
              *
              * @return  iterator to the end of the entries present in this container.
              */
-            iterator end ()
+            iterator end()
             {
                return db.end();
             }
@@ -537,7 +510,7 @@ namespace HF
              *
              * @return  constant iterator to the start of the entries present in this container.
              */
-            const_iterator begin () const
+            const_iterator begin() const
             {
                return db.cbegin();
             }
@@ -547,7 +520,7 @@ namespace HF
              *
              * @return  constant iterator to the start of the entries present in this container.
              */
-            const_iterator end () const
+            const_iterator end() const
             {
                return db.cend();
             }
@@ -582,7 +555,7 @@ namespace HF
 
             //! Constructor
             IServer(Unit0 &unit): ServiceRole<GroupManagement::Base,
-                                             HF::Interface::SERVER_ROLE>(unit) {}
+                                              HF::Interface::SERVER_ROLE>(unit) {}
 
             //! Destructor
             virtual ~IServer() {}
@@ -621,18 +594,18 @@ namespace HF
              * @param [in] msg         The @c DeleteMessage sent.
              * @return                 The response code sent in response.
              */
-           virtual Common::Result remove(Protocol::Packet &packet, DeleteMessage &msg);
+            virtual Common::Result remove(Protocol::Packet &packet, DeleteMessage &msg);
 
-           /*!
-            * Indicate that a group was deleted.
-            *
-            * @param [in] group     Copy of the group entry that was deleted.
-            */
-           virtual void deleted(Group group)
-           {
-              //TODO : Check this! Can we pass it by reference pointer???
-              UNUSED(group);
-           }
+            /*!
+             * Indicate that a group was deleted.
+             *
+             * @param [in] group     Copy of the group entry that was deleted.
+             */
+            virtual void deleted(Group group)
+            {
+               // TODO : Check this! Can we pass it by reference pointer???
+               UNUSED(group);
+            }
 
             /*!
              * Callback that is called when a @c GroupManagement::ADD_CMD,
@@ -669,7 +642,7 @@ namespace HF
              *
              * @param [in] group       Pointer to the group entry corresponding to the affected group.
              */
-            virtual void removed (const GroupPtr &group)
+            virtual void removed(const GroupPtr &group)
             {
                UNUSED(group);
             }
@@ -690,7 +663,7 @@ namespace HF
              *
              * @param [in] group       Pointer to the group entry corresponding to the affected group.
              */
-            virtual void got_info (const GroupPtr &group)
+            virtual void got_info(const GroupPtr &group)
             {
                UNUSED(group);
             }
@@ -755,7 +728,7 @@ namespace HF
              *
              * @return  the address to use in the next group.
              */
-            virtual uint16_t next_address ()
+            virtual uint16_t next_address()
             {
                return entries().next_address();
             }
@@ -892,7 +865,7 @@ namespace HF
              *
              * @param [in] response    the create response that was received.
              */
-            virtual void created (CreateResponse &response) = 0;
+            virtual void created(CreateResponse &response) = 0;
 
             /*!
              * This method is called when a response to a delete message
@@ -900,7 +873,7 @@ namespace HF
              *
              * @param [in] response    the create response that was received.
              */
-            virtual void deleted (DeleteResponse &response)  = 0;
+            virtual void deleted(DeleteResponse &response) = 0;
 
             /*!
              * This method is called when a response to a add message
@@ -908,7 +881,7 @@ namespace HF
              *
              * @param [in] response    the create response that was received.
              */
-            virtual void added (AddResponse &response)  = 0;
+            virtual void added(AddResponse &response) = 0;
 
             /*!
              * This method is called when a response to a remove message
@@ -916,7 +889,7 @@ namespace HF
              *
              * @param [in] response    the create response that was received.
              */
-            virtual void removed (RemoveResponse &response)  = 0;
+            virtual void removed(RemoveResponse &response) = 0;
 
             /*!
              * This method is called when a response to a get info message
@@ -924,7 +897,7 @@ namespace HF
              *
              * @param [in] response    the create response that was received.
              */
-            virtual void got_info (InfoResponse &response)  = 0;
+            virtual void got_info(InfoResponse &response) = 0;
 
             //! @}
             // ======================================================================
@@ -932,7 +905,7 @@ namespace HF
             using Service::send;
 
             //! @copydoc SessionManagement::AbstractClient::send
-            void send (const Protocol::Address &addr, Protocol::Message &message)
+            void send(const Protocol::Address &addr, Protocol::Message &message)
             {
                Service::send(addr, message);
             }
@@ -941,10 +914,10 @@ namespace HF
 
             using ServiceRole::payload_size;
 
-            uint16_t payload_size (Protocol::Message::Interface &itf) const;
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
-            Common::Result handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                           uint16_t offset);
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
 
          };
 

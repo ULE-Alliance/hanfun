@@ -148,32 +148,36 @@ namespace HF
    template<typename T>
    using IsIntegral = std::is_integral<Invoke<std::remove_reference<T>>>;
 
-   template<typename ...Args> struct Or;
+   template<typename... Args> struct Or;
 
-   template<typename T, typename ...Args>
-   struct Or<T, Args...> {
+   template<typename T, typename... Args>
+   struct Or<T, Args...>
+   {
       static constexpr bool value = T::value || Or<Args...>::value;
    };
 
    template<typename T>
-   struct Or<T> {
+   struct Or<T>
+   {
       static constexpr bool value = T::value;
    };
 
-   template<typename ...Args> struct And;
+   template<typename... Args> struct And;
 
-   template<typename T, typename ...Args>
-   struct And<T, Args...> {
+   template<typename T, typename... Args>
+   struct And<T, Args...>
+   {
       static constexpr bool value = T::value && And<Args...>::value;
    };
 
    template<typename T>
-   struct And<T> {
+   struct And<T>
+   {
       static constexpr bool value = T::value;
    };
 
-   template<typename T> using IsClassPointer     = And<std::is_pointer<T>,
-                                                       std::is_class<std::remove_pointer<T>>>;
+   template<typename T> using IsClassPointer = And<std::is_pointer<T>,
+                                                   std::is_class<std::remove_pointer<T>>>;
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -810,7 +814,9 @@ namespace HF
       {};
 
       template<typename T, typename S>
-      struct SerializableHelperVector<T, S, EnableIf<IsIntegral<typename T::value_type>>>: public Serializable
+      struct SerializableHelperVector<T, S,
+                                      EnableIf<IsIntegral<typename T::value_type>>>: public
+         Serializable
       {
          T &data;
 
@@ -829,7 +835,7 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
-            HF_ASSERT(data.size() > std::numeric_limits<S>::max(), { return 0; });
+            HF_ASSERT(data.size() > std::numeric_limits<S>::max(), {return 0;});
 
             uint16_t start = offset;
 
@@ -851,7 +857,7 @@ namespace HF
 
             uint16_t start = offset;
 
-            S size = 0;
+            S size         = 0;
 
             offset += array.read(offset, size);
 
@@ -860,11 +866,11 @@ namespace HF
             SerializableHelper<value_type> h;
             auto it = std::back_inserter<T>(data);
 
-            for(S i = 0; i < size; ++i)
+            for (S i = 0; i < size; ++i)
             {
-               h.data = 0;
+               h.data  = 0;
                offset += h.unpack(array, offset);
-               it = h.data;
+               it      = h.data;
             }
 
             return offset - start;
@@ -892,7 +898,9 @@ namespace HF
       };
 
       template<typename T, typename S>
-      struct SerializableHelperVector<T, S, EnableIf<IsClass<typename T::value_type>>>: public Serializable
+      struct SerializableHelperVector<T, S,
+                                      EnableIf<IsClass<typename T::value_type>>>: public
+         Serializable
       {
          T &data;
 
@@ -909,7 +917,7 @@ namespace HF
             SerializableHelper<value_type *> h;
             std::for_each(data.cbegin(), data.cend(), [&h, &result](const value_type e)
             {
-               h.data  = const_cast<value_type *>(&e);
+               h.data = const_cast<value_type *>(&e);
                result += h.size();
             });
 
@@ -920,7 +928,7 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
-            HF_ASSERT(data.size() < std::numeric_limits<S>::max(), { return 0; });
+            HF_ASSERT(data.size() < std::numeric_limits<S>::max(), {return 0;});
 
             uint16_t start = offset;
 
@@ -929,7 +937,7 @@ namespace HF
             SerializableHelper<value_type *> h;
             std::for_each(data.cbegin(), data.cend(), [&h, &offset, &array](const value_type &e)
             {
-               h.data  = const_cast<value_type *>(&e);
+               h.data = const_cast<value_type *>(&e);
                offset += h.pack(array, offset);
             });
 
@@ -942,13 +950,13 @@ namespace HF
 
             uint16_t start = offset;
 
-            S size = 0;
+            S size         = 0;
 
             offset += array.read(offset, size);
 
             auto it = std::back_inserter<T>(data);
 
-            for(S i = 0; i < size; ++i)
+            for (S i = 0; i < size; ++i)
             {
                SerializableHelper<value_type> h;
 
@@ -956,7 +964,7 @@ namespace HF
 
                offset += h.unpack(array, offset);
 
-               it = h.data;
+               it      = h.data;
             }
 
             return offset - start;

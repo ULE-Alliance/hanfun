@@ -28,7 +28,14 @@ using namespace HF::Core::GroupManagement;
 // Group Management Interface : Server Role
 // =============================================================================
 
-uint16_t IServer::payload_size (Protocol::Message::Interface &itf) const
+// =============================================================================
+// IServer::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t IServer::payload_size(Protocol::Message::Interface &itf) const
 {
    switch (itf.member)
    {
@@ -90,12 +97,9 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
  */
 // =============================================================================
 Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
-                                      uint16_t offset)
+                                       uint16_t offset)
 {
-//   UNUSED(payload);
-//   UNUSED(offset);
-
-   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+   CMD cmd               = static_cast<CMD>(packet.message.itf.member);
 
    Common::Result result = AbstractInterface::check_payload_size(packet.message, payload, offset);
 
@@ -132,7 +136,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
       case REMOVE_CMD:
       {
          RemoveMessage msg;
-         msg.unpack(payload,offset);
+         msg.unpack(payload, offset);
          return remove(packet, msg);
       }
 
@@ -140,7 +144,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
       case GET_INFO_CMD:
       {
          InfoMessage msg;
-         msg.unpack(payload,offset);
+         msg.unpack(payload, offset);
          return get_info(packet, msg);
       }
 #endif
@@ -173,14 +177,15 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
 
    Group group;
 
-   if( temp_entry == nullptr)                    // Group not found. Create new.
+   if (temp_entry == nullptr)                    // Group not found. Create new.
    {
-      if(entries().size()!=Group::MAX_MEMBERS)  // Check if we have space for the new group
+      if (entries().size() != Group::MAX_MEMBERS)  // Check if we have space for the new group
       {
          group.address = next_address();
-         group.name = msg.name;
+         group.name    = msg.name;
 
-         result = entries().save(group);
+         result        = entries().save(group);
+
          if (result == Common::Result::OK)
          {
             create_response.address = group.address;
@@ -196,7 +201,7 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
       result = Common::Result::FAIL_ARG;
    }
 
-   create_response.code= result;
+   create_response.code = result;
 
 
    Protocol::Message response(packet.message, create_response.size());
@@ -218,6 +223,7 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
 
       number_of_groups_update(1);
    }
+
    return result;
 }
 
@@ -232,13 +238,14 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 {
 
    DeleteResponse receive_response;
+
    Common::Result result = Common::Result::FAIL_ARG;
 
-   auto temp_entry = entry(msg.address);                //try to find this group
+   auto temp_entry       = entry(msg.address);          // try to find this group
 
    Group group;
 
-   if (temp_entry == nullptr)       //Group not found. Give an error
+   if (temp_entry == nullptr)       // Group not found. Give an error
    {
       result = Common::Result::FAIL_ARG;
    }
@@ -253,8 +260,8 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 
    Protocol::Message response(packet.message, receive_response.size());
 
-   response.itf.role = SERVER_ROLE;
-   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = GroupManagement::IServer::uid();
    response.itf.member = DELETE_CMD;
 
    receive_response.pack(response.payload);
@@ -284,27 +291,30 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 {
    Common::Result result = Common::Result::FAIL_ARG;
 
-   auto group = entry(msg.address);                //try to find this group
+   auto group            = entry(msg.address);     // try to find this group
 
-   if (group == nullptr)       //Group not found. Give an error
+   if (group == nullptr)       // Group not found. Give an error
    {
       result = Common::Result::FAIL_ARG;
    }
    else                             // found a group with the same address.
    {
       Member received(msg.device, msg.unit);
-      if (group->add_member(received) )
+
+      if (group->add_member(received))
+      {
          result = Common::Result::OK;
+      }
    }
 
    AddResponse receive_response;
 
-   receive_response.code= result;
+   receive_response.code = result;
 
    Protocol::Message response(packet.message, receive_response.size());
 
-   response.itf.role = SERVER_ROLE;
-   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = GroupManagement::IServer::uid();
    response.itf.member = ADD_CMD;
 
    receive_response.pack(response.payload);
@@ -330,17 +340,20 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 {
    Common::Result result = Common::Result::FAIL_ARG;
 
-   auto group = entry(msg.address);                //try to find this group
+   auto group            = entry(msg.address);     // try to find this group
 
-   if (group == nullptr)       //Group not found. Give an error
+   if (group == nullptr)       // Group not found. Give an error
    {
       result = Common::Result::FAIL_ARG;
    }
    else                             // found a group with the same address.
    {
       Member received(msg.device, msg.unit);
+
       if (group->remove_member(received))
+      {
          result = Common::Result::OK;
+      }
    }
 
    RemoveResponse receive_response;
@@ -349,8 +362,8 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 
    Protocol::Message response(packet.message, receive_response.size());
 
-   response.itf.role = SERVER_ROLE;
-   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = GroupManagement::IServer::uid();
    response.itf.member = REMOVE_CMD;
 
    receive_response.pack(response.payload);
@@ -373,21 +386,21 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
  *
  */
 // =============================================================================
-Common::Result IServer::get_info (Protocol::Packet &packet, const InfoMessage &msg)
+Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &msg)
 {
    Common::Result result = Common::Result::FAIL_ARG;
    InfoResponse receive_response;
 
-   auto group = entry(msg.address);                //try to find this group
+   auto group = entry(msg.address);                // try to find this group
 
-   if (group == nullptr)       //Group not found. Give an error
+   if (group == nullptr)       // Group not found. Give an error
    {
       result = Common::Result::FAIL_ARG;
    }
    else                             // found a group with the same address.
    {
-      result = Common::Result::OK;
-      receive_response.name=group->name;
+      result                   = Common::Result::OK;
+      receive_response.name    = group->name;
       receive_response.members = group->members;
    }
 
@@ -395,8 +408,8 @@ Common::Result IServer::get_info (Protocol::Packet &packet, const InfoMessage &m
 
    Protocol::Message response(packet.message, receive_response.size());
 
-   response.itf.role = SERVER_ROLE;
-   response.itf.id = GroupManagement::IServer::uid();
+   response.itf.role   = SERVER_ROLE;
+   response.itf.id     = GroupManagement::IServer::uid();
    response.itf.member = GET_INFO_CMD;
 
    receive_response.pack(response.payload);

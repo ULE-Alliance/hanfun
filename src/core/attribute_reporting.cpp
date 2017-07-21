@@ -1451,7 +1451,7 @@ uint16_t Report::AddEntryMessage::unpack(const Common::ByteArray &array, uint16_
  *
  */
 // =============================================================================
-uint16_t Report::UpdateIntervalMessage::size () const
+uint16_t Report::UpdateIntervalMessage::size() const
 {
    return min_size;
 }
@@ -1463,7 +1463,7 @@ uint16_t Report::UpdateIntervalMessage::size () const
  *
  */
 // =============================================================================
-uint16_t Report::UpdateIntervalMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t Report::UpdateIntervalMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
@@ -1483,7 +1483,7 @@ uint16_t Report::UpdateIntervalMessage::pack (Common::ByteArray& array, uint16_t
  *
  */
 // =============================================================================
-uint16_t Report::UpdateIntervalMessage::unpack ( const Common::ByteArray& array, uint16_t offset)
+uint16_t Report::UpdateIntervalMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
@@ -1491,12 +1491,17 @@ uint16_t Report::UpdateIntervalMessage::unpack ( const Common::ByteArray& array,
    uint16_t size;
 
    size = report.unpack(array, offset);
-   HF_ASSERT(size != 0, {return 0;});
-      offset += size;
 
-   size = array.read(offset, interval);
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
-         offset += size;
+   /* *INDENT-ON* */
+
+   offset += size;
+
+   size    = array.read(offset, interval);
+   HF_ASSERT(size != 0, {return 0;
+             });
+   offset += size;
 
    return (offset - start);
 }
@@ -2084,8 +2089,8 @@ Protocol::Message *AttributeReporting::add(Reference report,
    return message;
 }
 
-Protocol::Message* AttributeReporting::update (Reference report,
-                                                         uint32_t new_interval)
+Protocol::Message *AttributeReporting::update(Reference report,
+                                              uint32_t new_interval)
 {
    if (report.type != PERIODIC)
    {
@@ -2093,9 +2098,9 @@ Protocol::Message* AttributeReporting::update (Reference report,
    }
 
    Report::UpdateIntervalMessage *update_msg =
-         new Report::UpdateIntervalMessage(static_cast<Type>(report.type),
-                                           report.id,
-                                           new_interval);
+      new Report::UpdateIntervalMessage(static_cast<Type>(report.type),
+                                        report.id,
+                                        new_interval);
 
    assert(update_msg != nullptr);
 
@@ -2116,9 +2121,9 @@ Protocol::Message* AttributeReporting::update (Reference report,
 
    delete update_msg;
 
-   message->type = Protocol::Message::COMMAND_REQ;
-   message->itf.role = HF::Interface::SERVER_ROLE;
-   message->itf.id = HF::Interface::ATTRIBUTE_REPORTING;
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
    message->itf.member = AttributeReporting::UPDATE_INTERVAL_CMD;
 
    return message;

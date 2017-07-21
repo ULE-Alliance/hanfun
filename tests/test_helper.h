@@ -138,7 +138,7 @@ template<typename Attribute, typename Interface, typename Getter, typename Sette
 void check_attribute(Interface &itf, bool writable, Value first, Value second,
                      Getter getter, Setter setter, const char *file, int lineno)
 {
-   check_attribute_pack<Attribute>(itf,file,lineno);
+   check_attribute_pack<Attribute>(itf, file, lineno);
 
    check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
 }
@@ -179,7 +179,7 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
                          (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                          __FILE__, __LINE__)
 
-#define CHECK_ATTRIBUTE_PACK(Interface, Type)                \
+#define CHECK_ATTRIBUTE_PACK(Interface, Type) \
    check_attribute_pack<Type>(*server, __FILE__, __LINE__)
 
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \

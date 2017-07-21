@@ -63,10 +63,10 @@ namespace HF
          //! Command IDs.
          typedef enum _CMD
          {
-            SET_LEVEL_CMD        = 0x01,                 //!< Set Level Command ID.
-            INCREASE_LEVEL_CMD   = 0x02,                 //!< Increase Level Command ID.
-            DECREASE_LEVEL_CMD   = 0x03,                 //!< Decrease Level Command ID.
-            __LAST_CMD__         = DECREASE_LEVEL_CMD
+            SET_LEVEL_CMD      = 0x01,                   //!< Set Level Command ID.
+            INCREASE_LEVEL_CMD = 0x02,                   //!< Increase Level Command ID.
+            DECREASE_LEVEL_CMD = 0x03,                   //!< Decrease Level Command ID.
+            __LAST_CMD__       = DECREASE_LEVEL_CMD
          } CMD;
 
          //! Attributes
@@ -179,7 +179,7 @@ namespace HF
              *
              * @param [in] value    reference to the value to check and fix.
              */
-            void check_and_fix (int16_t &value)
+            void check_and_fix(int16_t &value)
             {
                if (value < 0)
                {
@@ -402,7 +402,7 @@ namespace HF
              *
              * @param [in] increment   increment value to send in the message.
              */
-            void increase_level (uint8_t increment)
+            void increase_level(uint8_t increment)
             {
                Protocol::Address addr;
                increase_level(addr, increment);
@@ -414,7 +414,7 @@ namespace HF
              * @remark This method converts the given @c new_level percentage value in the
              * range of [0,100] to the range used by the interface [0-255].
              */
-            void increase_level (Protocol::Address &addr, float increment);
+            void increase_level(Protocol::Address &addr, float increment);
 
             /*!
              * @copydoc Client::increase_level(uint8_t)
@@ -422,7 +422,7 @@ namespace HF
              * @remark This method converts the given @c new_level percentage value in the
              * range of [0,100] to the range used by the interface [0-255].
              */
-            void increase_level (float increment)
+            void increase_level(float increment)
             {
                Protocol::Address addr;
                increase_level(addr, increment);
@@ -437,7 +437,7 @@ namespace HF
              * @param [in] addr        network address to send the message to.
              * @param [in] decrement   decrement value to send in the message.
              */
-            void decrease_level (Protocol::Address &addr, uint8_t decrement);
+            void decrease_level(Protocol::Address &addr, uint8_t decrement);
 
             /*!
              * Send a @c DECREASE_LEVEL_CMD to broadcast network address to decrease
@@ -445,7 +445,7 @@ namespace HF
              *
              * @param [in] decrement   decrement value to send in the message.
              */
-            void decrease_level (uint8_t decrement)
+            void decrease_level(uint8_t decrement)
             {
                Protocol::Address addr;
                decrease_level(addr, decrement);
@@ -457,7 +457,7 @@ namespace HF
              * @remark This method converts the given @c new_level percentage value in the
              * range of [0,100] to the range used by the interface [0-255].
              */
-            void decrease_level (Protocol::Address &addr, float decrement);
+            void decrease_level(Protocol::Address &addr, float decrement);
 
             /*!
              * @copydoc Client::decrease_level(uint8_t)
@@ -465,7 +465,7 @@ namespace HF
              * @remark This method converts the given @c new_level percentage value in the
              * range of [0,100] to the range used by the interface [0-255].
              */
-            void decrease_level (float decrement)
+            void decrease_level(float decrement)
             {
                Protocol::Address addr;
                decrease_level(addr, decrement);

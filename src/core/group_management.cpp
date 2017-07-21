@@ -70,63 +70,123 @@ HF::Attributes::IAttribute *GroupManagement::create_attribute(uint8_t uid)
    }
 }
 
+// =============================================================================
+// GroupManagement::GroupAddress
+// =============================================================================
 
+// =============================================================================
+// GroupAddress::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t GroupAddress::size() const
 {
    return min_size;
 }
 
+// =============================================================================
+// GroupAddress::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t GroupAddress::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
-   HF_ASSERT(START_ADDR <= address && address <= END_ADDR,return 0;);
+
+   /* *INDENT-OFF* */
+   HF_ASSERT(START_ADDR <= address && address <= END_ADDR, {return 0;});
+   /* *INDENT-ON* */
 
    array.write(offset, address);
 
    return min_size;
 }
 
+// =============================================================================
+// GroupAddress::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t GroupAddress::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-   array.read(offset,address);
+   array.read(offset, address);
 
    return min_size;
 }
 
+// =============================================================================
+// GroupManagement::Group
+// =============================================================================
 
-
-
+// =============================================================================
+// Group::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t Group::size() const
 {
    uint16_t result = min_size;
+
    result += name.length();
    return result;
 }
 
-uint16_t Group::pack (Common::ByteArray &array, uint16_t offset) const
+// =============================================================================
+// Group::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Group::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
-   HF_ASSERT(GroupAddress::START_ADDR <= address && address <= GroupAddress::END_ADDR, return 0;);
+   /* *INDENT-OFF* */
+   HF_ASSERT(GroupAddress::START_ADDR <= address && address <= GroupAddress::END_ADDR,
+             {return 0;});
+   /* *INDENT-ON* */
 
    uint16_t start = offset;
    uint16_t size;
 
    size = GroupAddress::pack(array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   /* *INDENT-OFF* */
+   HF_ASSERT(size > 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
-   size = HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   size    = HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
+   /* *INDENT-OFF* */
+   HF_ASSERT(size > 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
-   HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(const_cast<std::vector<Member> &>(members));
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(
+      const_cast<std::vector<Member> &>(members));
    offset += helper.pack(array, offset);
 
    return offset - start;
 }
 
+// =============================================================================
+// Group::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t Group::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -134,33 +194,59 @@ uint16_t Group::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t start = offset;
    uint16_t size;
 
-   offset  += GroupAddress::unpack(array, offset);
+   offset += GroupAddress::unpack(array, offset);
 
-   size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
+   size    = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
 
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(members);
    size += helper.unpack(array, offset);
+
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    return offset - start;
 }
 
+// =============================================================================
+// Messages
+// =============================================================================
 
-/*====================================================================================
- * Messages
- *====================================================================================*/
+// =============================================================================
+// Create Group
+// =============================================================================
 
-/*==== Create Group ====*/
+// =============================================================================
+// GroupManagement::CreateMessage
+// =============================================================================
 
+// =============================================================================
+// CreateMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t CreateMessage::size() const
 {
    return (name.length() + min_size);
 }
 
+// =============================================================================
+// CreateMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t CreateMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -172,6 +258,13 @@ uint16_t CreateMessage::pack(Common::ByteArray &array, uint16_t offset) const
    return (offset - start);
 }
 
+// =============================================================================
+// CreateMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t CreateMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -180,18 +273,30 @@ uint16_t CreateMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t size;
 
    size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
+
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    return (offset - start);
 }
 
+// =============================================================================
+// GroupManagement::CreateResponse
+// =============================================================================
 
-/*==== Create Group Response ====*/
-
+// =============================================================================
+// CreateResponse::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t CreateResponse::size() const
 {
-   if(code != Common::Result::OK)
+   if (code != Common::Result::OK)
    {
       return min_size;
    }
@@ -199,7 +304,14 @@ uint16_t CreateResponse::size() const
    return (Response::size() + GroupAddress::size());
 }
 
-uint16_t CreateResponse::pack (Common::ByteArray &array, uint16_t offset) const
+// =============================================================================
+// CreateResponse::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t CreateResponse::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -214,12 +326,23 @@ uint16_t CreateResponse::pack (Common::ByteArray &array, uint16_t offset) const
    }
 
    size = GroupAddress::pack(array, offset);
+
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    return offset - start;
 }
 
+// =============================================================================
+// CreateResponse::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t CreateResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -241,29 +364,57 @@ uint16_t CreateResponse::unpack(const Common::ByteArray &array, uint16_t offset)
    return offset - start;
 }
 
+// =============================================================================
+// Add to Group
+// =============================================================================
 
-/*==== Add to Group ====*/
+// =============================================================================
+// GroupManagement::AddMessage
+// =============================================================================
 
+// =============================================================================
+// AddMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t AddMessage::size() const
 {
-   return (GroupAddress::size()+Protocol::Address::size());
+   return (GroupAddress::size() + Protocol::Address::size());
 }
 
+// =============================================================================
+// AddMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t AddMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
+   /* *INDENT-OFF* */
    HF_ASSERT(device != 0, {return 0;});
+   /* *INDENT-ON* */
 
    uint16_t start = offset;
 
-   offset += GroupAddress::pack(array, offset);
+   offset        += GroupAddress::pack(array, offset);
 
-   offset += Protocol::Address::pack(array, offset);
+   offset        += Protocol::Address::pack(array, offset);
 
    return (offset - start);
 }
 
+// =============================================================================
+// AddMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t AddMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -272,20 +423,39 @@ uint16_t AddMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t size;
 
    size = GroupAddress::unpack(array, offset);
+
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
-   size = Protocol::Address::unpack(array, offset);
+   size    = Protocol::Address::unpack(array, offset);
+
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    return (offset - start);
 }
 
+// =============================================================================
+// Group Information
+// =============================================================================
 
+// =============================================================================
+// GroupManagement::InfoResponse
+// =============================================================================
 
-/*==== Group Info Response ====*/
-
+// =============================================================================
+// InfoResponse::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t InfoResponse::size() const
 {
    if (code != Common::Result::OK)
@@ -293,11 +463,19 @@ uint16_t InfoResponse::size() const
       return min_size;
    }
 
-   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(const_cast<std::vector<Member> &>(members));
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(
+      const_cast<std::vector<Member> &>(members));
 
    return (min_size + HF::Common::SerializableHelper<std::string>::size(name) + helper.size());
 }
 
+// =============================================================================
+// InfoResponse::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t InfoResponse::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -311,25 +489,36 @@ uint16_t InfoResponse::pack(Common::ByteArray &array, uint16_t offset) const
       return min_size;
    }
 
-   offset += HF::Common::SerializableHelper<std::string>::pack(name,array,offset);
+   offset += HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
 
-   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(const_cast<std::vector<Member> &>(members));
+   HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(
+      const_cast<std::vector<Member> &>(members));
 
    offset += helper.pack(array, offset);
 
    return offset - start;
 }
 
+// =============================================================================
+// InfoResponse::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t InfoResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
-
 
    uint16_t start = offset;
    uint16_t size;
 
    size = Response::unpack(array, offset);
+
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    HF::Common::SerializableHelperVector<std::vector<Member>, uint16_t> helper(members);
@@ -341,35 +530,62 @@ uint16_t InfoResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 
    HF_SERIALIZABLE_CHECK(array, offset, sizeof(uint16_t));
 
-   size = HF::Common::SerializableHelper<std::string>::unpack(name,array,offset);
+   size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
+   size    = helper.unpack(array, offset);
 
-   size = helper.unpack(array, offset);
+   /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
+   /* *INDENT-ON* */
+
    offset += size;
 
    _end:
    return offset - start;
 }
 
+// =============================================================================
+// GroupManagement::Entries
+// =============================================================================
 
-
-
-uint16_t Entries::size () const
+// =============================================================================
+// Entries::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Entries::size() const
 {
    return db.size();
 }
 
-Common::Result Entries::save (const Group &entry)
+// =============================================================================
+// Entries::save
+// =============================================================================
+/*!
+ */
+// =============================================================================
+Common::Result Entries::save(const Group &entry)
 {
    db[entry.address] = entry;
 
    return Common::Result::OK;
 }
 
-Common::Result Entries::destroy (const uint16_t &address)
+// =============================================================================
+// Entries::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Entries::destroy(const uint16_t &address)
 {
    auto it = db.erase(address);
 
@@ -384,12 +600,26 @@ Common::Result Entries::destroy (const uint16_t &address)
 
 }
 
-Common::Result Entries::destroy (const Group &group)
+// =============================================================================
+// Entries::destroy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Entries::destroy(const Group &group)
 {
    return destroy(group.address);
 }
 
-GroupPtr Entries::find (uint16_t address) const
+// =============================================================================
+// Entries::find
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+GroupPtr Entries::find(uint16_t address) const
 {
    auto it = db.find(address);
 
@@ -403,7 +633,14 @@ GroupPtr Entries::find (uint16_t address) const
    }
 }
 
-GroupPtr Entries::find (const std::string &name) const
+// =============================================================================
+// Entries::find
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+GroupPtr Entries::find(const std::string &name) const
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(db.begin(), db.end(), [&name](const std::pair< const uint16_t, Group> &device)
@@ -424,13 +661,20 @@ GroupPtr Entries::find (const std::string &name) const
    return GroupPtr();
 }
 
-uint16_t Entries::next_address () const
+// =============================================================================
+// Entries::next_address
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Entries::next_address() const
 {
    uint16_t address = 0;
 
-   for(address = GroupAddress::START_ADDR; address <= GroupAddress::END_ADDR; ++address)
+   for (address = GroupAddress::START_ADDR; address <= GroupAddress::END_ADDR; ++address)
    {
-      if(db.find(address) == db.end())
+      if (db.find(address) == db.end())
       {
          return address;
       }
@@ -438,4 +682,3 @@ uint16_t Entries::next_address () const
 
    return GroupAddress::END_ADDR;
 }
-

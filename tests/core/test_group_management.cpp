@@ -19,14 +19,9 @@
 
 using namespace HF;
 using namespace HF::Core;
-
 using namespace HF::Common;
-
 using namespace HF::Testing;
-
 using namespace HF::Core::GroupManagement;
-
-
 
 // =============================================================================
 // Group Management - Entries
@@ -56,62 +51,57 @@ TEST_GROUP(GroupManagementEntries)
       mock().clear();
    }
 };
+
 //! @test Entries next address
 TEST(GroupManagementEntries, Next_address)
 {
-   LONGS_EQUAL(GroupManagement::GroupAddress::START_ADDR,entries.next_address());   // 1st address
+   LONGS_EQUAL(GroupManagement::GroupAddress::START_ADDR, entries.next_address());   // 1st address
 
    // Fill the container to the max
-   for (uint16_t i = GroupAddress::START_ADDR;
-                 i <= GroupAddress::END_ADDR+10;
-                 ++i)
+   for (uint16_t i = GroupAddress::START_ADDR; i <= GroupAddress::END_ADDR + 10; ++i)
    {
       entries.data()[i] = Group(i, "G");
    }
 
-   entries.data().erase(2);                     // erase group 2
-   LONGS_EQUAL(2,entries.next_address());       // check if the next available address is 2
-   entries.data()[2] = Group(2, "G");           // restore it
+   entries.data().erase(2);                  // erase group 2
+   LONGS_EQUAL(2, entries.next_address());   // check if the next available address is 2
+   entries.data()[2] = Group(2, "G");        // restore it
 
-   LONGS_EQUAL(GroupManagement::GroupAddress::END_ADDR,entries.next_address());
+   LONGS_EQUAL(GroupManagement::GroupAddress::END_ADDR, entries.next_address());
 }
 
 //! @test Entries find by address
 TEST(GroupManagementEntries, Find_by_address)
 {
    // Create 10 Groups
-   for (uint16_t i = GroupAddress::START_ADDR;
-         i <=  10;
-         ++i)
+   for (uint16_t i = GroupAddress::START_ADDR; i <= 10; ++i)
    {
-      entries.data()[i] = Group(i, std::string("G")+std::to_string(i));
+      entries.data()[i] = Group(i, std::string("G") + std::to_string(i));
    }
 
-   entries.data().erase(2);                                       // erase group 2
-   POINTERS_EQUAL( nullptr,  entries.find("G2").operator ->());   //Try to find group 2 (should fail)
-   entries.data()[2] = Group(2, "G2");                            // restore it
+   entries.data().erase(2);                                    // erase group 2
+   POINTERS_EQUAL(nullptr, entries.find("G2").operator->());   // Try to find group 2 (should fail)
+   entries.data()[2] = Group(2, "G2");                         // restore it
 
-   CHECK( nullptr !=  entries.find("G2").operator ->());          //Try to find group 2 (OK)
-   CHECK_EQUAL(std::string("G2"), entries.find("G2")->name);      //Confirm by name.
+   CHECK(nullptr != entries.find("G2").operator->());          // Try to find group 2 (OK)
+   CHECK_EQUAL(std::string("G2"), entries.find("G2")->name);   // Confirm by name.
 }
 
 //! @test Entries find by @c Group name
 TEST(GroupManagementEntries, Find_by_name)
 {
    // Create 10 Groups
-   for (uint16_t i = GroupAddress::START_ADDR;
-         i <=  10;
-         ++i)
+   for (uint16_t i = GroupAddress::START_ADDR; i <= 10; ++i)
    {
-      entries.data()[i] = Group(i, std::string("G")+std::to_string(i));
+      entries.data()[i] = Group(i, std::string("G") + std::to_string(i));
    }
 
-   entries.data().erase(2);                                       // erase group 2
-   POINTERS_EQUAL( nullptr,  entries.find(2).operator ->());      //Try to find group 2 (should fail)
-   entries.data()[2] = Group(2, "G2");                            // restore it
+   entries.data().erase(2);                                   // erase group 2
+   POINTERS_EQUAL(nullptr, entries.find(2).operator->());     // Try to find group 2 (should fail)
+   entries.data()[2] = Group(2, "G2");                        // restore it
 
-   CHECK( nullptr !=  entries.find(2).operator ->());             //Try to find group 2 (OK)
-   CHECK_EQUAL(std::string("G2"), entries.find("G2")->name);      //Confirm by name.
+   CHECK(nullptr != entries.find(2).operator->());            // Try to find group 2 (OK)
+   CHECK_EQUAL(std::string("G2"), entries.find("G2")->name);  // Confirm by name.
 }
 
 //! @test Entries size
@@ -120,11 +110,9 @@ TEST(GroupManagementEntries, Size)
    LONGS_EQUAL(0, entries.size());
 
    // Create 10 Groups
-   for (uint16_t i = GroupAddress::START_ADDR;
-         i <=  10;
-         ++i)
+   for (uint16_t i = GroupAddress::START_ADDR; i <= 10; ++i)
    {
-      entries.data()[i] = Group(i, std::string("G")+std::to_string(i));
+      entries.data()[i] = Group(i, std::string("G") + std::to_string(i));
    }
 
    LONGS_EQUAL(10, entries.size());
@@ -134,18 +122,16 @@ TEST(GroupManagementEntries, Size)
 TEST(GroupManagementEntries, Destroy_by_address)
 {
    // Create 10 Groups
-   for (uint16_t i = GroupAddress::START_ADDR;
-         i <=  10;
-         ++i)
+   for (uint16_t i = GroupAddress::START_ADDR; i <= 10; ++i)
    {
-      entries.data()[i] = Group(i, std::string("G")+std::to_string(i));
+      entries.data()[i] = Group(i, std::string("G") + std::to_string(i));
    }
 
    LONGS_EQUAL(10, entries.size());
 
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(11));       //Try to destroy group 11 (NOK)
-   CHECK_EQUAL(Common::Result::OK, entries.destroy(10));             //Try to destroy group 10 (OK)
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(10));       //Try to destroy group 10 again (NOK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(11));    // Try to destroy group 11 (NOK)
+   CHECK_EQUAL(Common::Result::OK, entries.destroy(10));          // Try to destroy group 10 (OK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(10));    // Try to destroy group 10 again (NOK)
 
    LONGS_EQUAL(9, entries.size());
 }
@@ -154,18 +140,21 @@ TEST(GroupManagementEntries, Destroy_by_address)
 TEST(GroupManagementEntries, Destroy_by_group)
 {
    // Create 10 Groups
-   for (uint16_t i = GroupAddress::START_ADDR;
-         i <=  10;
-         ++i)
+   for (uint16_t i = GroupAddress::START_ADDR; i <= 10; ++i)
    {
-      entries.data()[i] = Group(i, std::string("G")+std::to_string(i));
+      entries.data()[i] = Group(i, std::string("G") + std::to_string(i));
    }
 
    LONGS_EQUAL(10, entries.size());
 
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy( Group(11,"G11") ) );       //Try to destroy group 11 (NOK)
-   CHECK_EQUAL(Common::Result::OK, entries.destroy( Group(10,"G10") ) );             //Try to destroy group 10 (OK)
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy( Group(10,"G10") ) );       //Try to destroy group 10 again (NOK)
+   // Try to destroy group 11 (NOK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(Group(11, "G11")));
+
+   // Try to destroy group 10 (OK)
+   CHECK_EQUAL(Common::Result::OK, entries.destroy(Group(10, "G10")));
+
+   // Try to destroy group 10 again (NOK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(Group(10, "G10")));
 
    LONGS_EQUAL(9, entries.size());
 }
@@ -175,10 +164,10 @@ TEST(GroupManagementEntries, Save)
 {
    LONGS_EQUAL(0, entries.size());
 
-   entries.save( Group(1,"G"));
+   entries.save(Group(1, "G"));
 
    LONGS_EQUAL(1, entries.size());
-   CHECK_EQUAL(std::string("G"),entries.data()[1].name);
+   CHECK_EQUAL(std::string("G"), entries.data()[1].name);
 }
 
 // =============================================================================
@@ -190,7 +179,8 @@ TEST_GROUP(GroupManagement)
 {
    struct GroupManagementBase: public InterfaceParentHelper<GroupManagement::Base>
    {
-      GroupManagementBase(HF::Core::Unit0 &unit): InterfaceParentHelper<GroupManagement::Base>(unit) {}
+      GroupManagementBase(HF::Core::Unit0 &unit):
+         InterfaceParentHelper<GroupManagement::Base>(unit) {}
    };
 
    Testing::Device *device;
@@ -222,7 +212,8 @@ TEST(GroupManagement, UID)
 //! @test Number Of Groups support.
 TEST(GroupManagement, NumberOfGroups)
 {
-   HF::Attributes::IAttribute *attr = GroupManagement::create_attribute(GroupManagement::NUMBER_OF_GROUPS_ATTR);
+   HF::Attributes::IAttribute *attr =
+         GroupManagement::create_attribute(GroupManagement::NUMBER_OF_GROUPS_ATTR);
 
    CHECK_TRUE(attr != nullptr);
 
@@ -236,7 +227,8 @@ TEST(GroupManagement, NumberOfGroups)
 //! @test Check nullptr return for invalid attribute
 TEST(GroupManagement, InvalidAttribute)
 {
-   HF::Attributes::IAttribute *attr = GroupManagement::create_attribute(GroupManagement::__LAST_ATTR__ + 1);
+   HF::Attributes::IAttribute *attr =
+         GroupManagement::create_attribute(GroupManagement::__LAST_ATTR__ + 1);
 
    CHECK_TRUE(attr == nullptr);
 }
@@ -248,11 +240,11 @@ TEST(GroupManagement, InvalidAttribute)
 //! @test Group add_member
 TEST(GroupManagement, Add_member)
 {
-   Group group(1,"G1");
+   Group group(1, "G1");
 
    LONGS_EQUAL(0, group.members.size());
 
-   group.add_member(Member(1,2));
+   group.add_member(Member(1, 2));
 
    LONGS_EQUAL(1, group.members.size());
 
@@ -263,23 +255,24 @@ TEST(GroupManagement, Add_member)
 //! @test Group remove_member
 TEST(GroupManagement, Remove_member)
 {
-   Group group(1,"G1");
-   Member member(1,2);
+   Group group(1, "G1");
+   Member member(1, 2);
+
    group.add_member(member);
 
    LONGS_EQUAL(1, group.members.size());
-   CHECK_TRUE( group.remove_member(member) );   // Remove member once (OK)
-   CHECK_FALSE( group.remove_member(member) );  // Remove again (NOK)
+   CHECK_TRUE(group.remove_member(member));     // Remove member once (OK)
+   CHECK_FALSE(group.remove_member(member));    // Remove again (NOK)
    LONGS_EQUAL(0, group.members.size());        // Members is empty
 }
 
 //! @test Group find_member
 TEST(GroupManagement, Find_member)
 {
-   Group group(1,"G1");
-   Member member(1,2);
+   Group group(1, "G1");
+   Member member(1, 2);
 
-   group.add_member(Member(3,4));
+   group.add_member(Member(3, 4));
 
    CHECK(group.members.end() == group.find_member(member));    // Try to find the member (NOK)
 
@@ -296,7 +289,7 @@ TEST(GroupManagement, Find_member)
  *    Client to Servers Commands
  * =====================================*/
 
- /* ----- Create Group ------------- */
+/* ----- Create Group ------------- */
 
 //! @test Check the Create Group message size
 TEST(GroupManagement, CreateGroup_Size)
@@ -313,7 +306,7 @@ TEST(GroupManagement, CreateGroup_Size)
    std::string group_name("TestGroup");
    message = new CreateMessage(group_name);
 
-   UNSIGNED_LONGS_EQUAL(1+group_name.length(), message->size());
+   UNSIGNED_LONGS_EQUAL(1 + group_name.length(), message->size());
 
 
    delete message;
@@ -327,8 +320,9 @@ TEST(GroupManagement, CreateGroup_Pack)
    std::string group_name("TestGroup");
    message = new CreateMessage(group_name);
 
-   ByteArray expected = ByteArray { (uint8_t) group_name.length(), 'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p' };
-   ByteArray got = ByteArray(group_name.length() + 1);
+   ByteArray expected = ByteArray { (uint8_t) group_name.length(),
+                                    'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
+   ByteArray got      = ByteArray(group_name.length() + 1);
 
    message->pack(got);
 
@@ -341,20 +335,24 @@ TEST(GroupManagement, CreateGroup_Pack)
 TEST(GroupManagement, CreateGroup_Unpack)
 {
    CreateMessage *message;
+
    std::string group_name("TestGroup");
 
    message = new CreateMessage();
-   ByteArray input = ByteArray { (uint8_t) group_name.length(), 'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p' };
+   ByteArray input = ByteArray { (uint8_t) group_name.length(),
+                                 'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
 
    message->unpack(input);
 
-   UNSIGNED_LONGS_EQUAL(1+group_name.length(), message->size());
+   UNSIGNED_LONGS_EQUAL(1 + group_name.length(), message->size());
    CHECK_EQUAL(group_name, message->name);
 
    delete message;
 }
 
-/* ----- Create Group Response ------------- */
+// =============================================================================
+// Create Group Response
+// =============================================================================
 
 //! @test Check the CreateGroup Response message size
 TEST(GroupManagement, CreateGroupResponse_size)
@@ -364,23 +362,21 @@ TEST(GroupManagement, CreateGroupResponse_size)
    message = new CreateResponse();
 
    CHECK_EQUAL(Common::Result::OK, message->code);
-   UNSIGNED_LONGS_EQUAL(message->min_size
-                        +sizeof(uint16_t)    //Group Addr
-                        , message->size());
+   UNSIGNED_LONGS_EQUAL(message->min_size + sizeof(uint16_t),   // Group Address
+                        message->size());
 
    delete message;
 
-   // ------ Check for response failure -----
+   // ----- Check for response failure -----
 
-   message = new CreateResponse();
-   message->code= Common::Result::FAIL_AUTH; //create a FAIL  result code
+   message       = new CreateResponse();
+   message->code = Common::Result::FAIL_AUTH; // Create a FAIL result code
 
    CHECK_EQUAL(Common::Result::FAIL_AUTH, message->code);
    UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
    UNSIGNED_LONGS_EQUAL(1, message->size());
 
    delete message;
-
 }
 
 //! @test Check the CreateGroup Response message pack
@@ -388,14 +384,14 @@ TEST(GroupManagement, CreateGroupResponse_Pack)
 {
    CreateResponse *message;
 
-   // ----- Normal Case -------
+   // ----- Normal Case -----
 
-   uint16_t addr= 0x5A55;
+   uint16_t addr = 0x5A55;
+
    message = new CreateResponse(addr);
 
-   ByteArray expected = ByteArray{ 0x00,    // Response code : OK
-                                 0x5A,    // addr MSB
-                                 0x55 };   // addr LSB
+   ByteArray expected = ByteArray{ Common::Result::OK,  // Response code : OK
+                                   0x5A, 0x55};         // Group Address
    ByteArray got = ByteArray(1 + 1 + 1);
 
    message->pack(got);
@@ -404,29 +400,28 @@ TEST(GroupManagement, CreateGroupResponse_Pack)
 
    delete message;
 
-   // ---- Wrong address -----
+   // ----- Wrong address -----
 
-   addr = 0x8FFF;             //Addr outside range
+   addr    = 0x8FFF;                   // Address outside range
    message = new CreateResponse(addr);
 
    CHECK_EQUAL(0, message->pack(got));
 
    delete message;
 
-   // ----- FAIL response code ----
+   // ----- FAIL response code -----
 
-   addr = 0x5A55;
-   message = new CreateResponse(addr);
+   addr          = 0x5A55;
+   message       = new CreateResponse(addr);
    message->code = Common::Result::FAIL_AUTH;
 
-   expected = ByteArray{ 0x01};
-   got      = ByteArray(message->size());
+   expected      = ByteArray{ 0x01};
+   got           = ByteArray(message->size());
 
    message->pack(got);
 
    CHECK_EQUAL(message->min_size, message->pack(got));
-   CHECK_EQUAL(expected,got);
-
+   CHECK_EQUAL(expected, got);
 
    delete message;
 }
@@ -436,39 +431,40 @@ TEST(GroupManagement, CreateGroupResponse_UnPack)
 {
    CreateResponse *message;
 
-   // ----- Normal Case -------
+   // ----- Normal Case -----
 
-   uint16_t addr= 0x5A55;
+   uint16_t addr = 0x5A55;
+
    message = new CreateResponse();
 
-   ByteArray input = ByteArray{ 0x00,    // Response code : OK
-                                 0x5A,    // addr MSB
-                                 0x55 };   // addr LSB
+   ByteArray input = ByteArray{ Common::Result::OK,   // Response code
+                                0x5A, 0x55};          // Group address
 
    message->unpack(input);
 
-   CHECK_EQUAL(0x00, (uint8_t)message->code);
+   CHECK_EQUAL(Common::Result::OK, (uint8_t) message->code);
    CHECK_EQUAL(addr, message->address);
 
    delete message;
 
-   // ----- FAIL Case -------
+   // ----- FAIL Case -----
 
    message = new CreateResponse();
 
-   input = ByteArray { 0x01,    // Response code : FAIL: Not Auth
-         0x5A,    // addr MSB
-         0x55 };   // addr LSB
+   input   = ByteArray { Common::Result::FAIL_AUTH,   // Response code
+                         0x5A, 0x55};                 // Group address
 
    message->unpack(input);
 
-   CHECK_EQUAL(0x01, (uint8_t )message->code);
-   CHECK_TEXT(addr != message->address,"On response code fail the addr is being unpacked\n");
+   CHECK_EQUAL(0x01, (uint8_t) message->code);
+   CHECK_TEXT(addr != message->address, "On response code fail the addr is being unpacked\n");
 
    delete message;
 }
 
-/* ----- Delete Group ------------- */
+// =============================================================================
+// Delete Group
+// =============================================================================
 
 //! @test Check the DeleteGroup message size
 TEST(GroupManagement, DeleteGroupMessage_size)
@@ -476,14 +472,13 @@ TEST(GroupManagement, DeleteGroupMessage_size)
    DeleteMessage *message;
    uint16_t addr;
 
-   addr= 0x5A55;
+   addr    = 0x5A55;
    message = new DeleteMessage(addr);
 
    UNSIGNED_LONGS_EQUAL(2, message->size());
    UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
 
    delete message;
-
 }
 
 //! @test Check the DeleteGroup message pack
@@ -496,12 +491,12 @@ TEST(GroupManagement, DeleteGroupMessage_Pack)
 
    uint16_t size;
 
-   addr= 0x5A55;
-   expected= ByteArray{0x5A, 0x55};
-   got=ByteArray(2);
-   message = new DeleteMessage(addr);
+   addr     = 0x5A55;
+   expected = ByteArray{0x5A, 0x55};
+   got      = ByteArray(2);
+   message  = new DeleteMessage(addr);
 
-   size = message->pack(got);
+   size     = message->pack(got);
 
    CHECK_EQUAL(expected, got);
    UNSIGNED_LONGS_EQUAL(2, size);
@@ -516,10 +511,10 @@ TEST(GroupManagement, DeleteGroupMessage_UnPack)
    uint16_t addr;
    ByteArray input;
 
-   // -------- Normal Case ---------
+   // ----- Normal Case -----
 
-   addr= 0x5A55;
-   input= ByteArray{0x5A, 0x55};
+   addr    = 0x5A55;
+   input   = ByteArray{0x5A, 0x55};
 
    message = new DeleteMessage();
    message->unpack(input);
@@ -529,7 +524,9 @@ TEST(GroupManagement, DeleteGroupMessage_UnPack)
    delete message;
 }
 
-/* ----- Add Member ------------- */
+// =============================================================================
+// Add Member
+// =============================================================================
 
 //! @test Check the Add to group message size
 TEST(GroupManagement, AddMessage_size)
@@ -538,10 +535,10 @@ TEST(GroupManagement, AddMessage_size)
    uint16_t group_addr, dev_addr, unit_id;
 
    group_addr = 0x5A55;
-   dev_addr = 0x0001;
-   unit_id = 0xAA;
+   dev_addr   = 0x0001;
+   unit_id    = 0xAA;
 
-   message = new AddMessage(group_addr, dev_addr, unit_id);
+   message    = new AddMessage(group_addr, dev_addr, unit_id);
 
    UNSIGNED_LONGS_EQUAL(5, message->size());
    UNSIGNED_LONGS_EQUAL(message->min_size, message->size());
@@ -558,22 +555,22 @@ TEST(GroupManagement, AddMessage_Pack)
 
    uint16_t size;
 
-   group_addr  = 0x5A55;
-   dev_addr    = 0x0102;
-   unit_id     = 0xAB;
-   expected    = ByteArray{0x5A,    //Group Addr (MSB)
-                           0x55,    //Group Addr (LSB)
-                           0x01,    //Dev Addr  (MSB)
-                           0x02,    //Dev Addr  (LSB)
-                           0xAB};   //UnitID
-   got = ByteArray(5);
+   group_addr = 0x5A55;
+   dev_addr   = 0x0102;
+   unit_id    = 0xAB;
+   expected   = ByteArray{0x5A,     // Group Addr (MSB)
+                          0x55,     // Group Addr (LSB)
+                          0x01,     // Dev Addr  (MSB)
+                          0x02,     // Dev Addr  (LSB)
+                          0xAB};    // UnitID
+   got     = ByteArray(5);
 
    message = new AddMessage(group_addr, dev_addr, unit_id);
 
-   size = message->pack(got);
+   size    = message->pack(got);
 
    CHECK_EQUAL(expected, got);
-   UNSIGNED_LONGS_EQUAL(5,size);
+   UNSIGNED_LONGS_EQUAL(5, size);
 
    delete message;
 }
@@ -587,88 +584,72 @@ TEST(GroupManagement, AddMessage_UnPack)
 
    uint16_t size;
 
-   group_addr  = 0x5A55;
-   dev_addr    = 0x0102;
-   unit_id     = 0xAB;
-   input       = ByteArray{0x5A,    //Group Addr (MSB)
-                           0x55,    //Group Addr (LSB)
-                           0x01,    //Dev Addr  (MSB)
-                           0x02,    //Dev Addr  (LSB)
-                           0xAB};   //UnitID
+   group_addr = 0x5A55;
+   dev_addr   = 0x0102;
+   unit_id    = 0xAB;
+   input      = ByteArray{0x5A,     // Group Addr (MSB)
+                          0x55,     // Group Addr (LSB)
+                          0x01,     // Dev Addr  (MSB)
+                          0x02,     // Dev Addr  (LSB)
+                          0xAB};    // UnitID
 
 
    message = new AddMessage();
 
-   size = message->unpack(input);
+   size    = message->unpack(input);
 
-   UNSIGNED_LONGS_EQUAL(5,size);
-   UNSIGNED_LONGS_EQUAL(group_addr  , message->address);
-   UNSIGNED_LONGS_EQUAL(dev_addr    , message->device );
-   UNSIGNED_LONGS_EQUAL(unit_id     , message->unit);
+   UNSIGNED_LONGS_EQUAL(5, size);
+   UNSIGNED_LONGS_EQUAL(group_addr, message->address);
+   UNSIGNED_LONGS_EQUAL(dev_addr, message->device);
+   UNSIGNED_LONGS_EQUAL(unit_id, message->unit);
 
    delete message;
 
 }
 
-/* ----- Get Info Response ------------- */
+// =============================================================================
+// Get Info Response
+// =============================================================================
 
 //! @test Check the Get group Info Response size
 TEST(GroupManagement, InfoResponse_size)
 {
-    InfoResponse *message;
-    std::string name("Group");
-    std::vector<Member> members;
+   InfoResponse *message;
 
-    message = new InfoResponse(name,members);
+   std::string name("Group");
+   std::vector<Member> members;
 
-    CHECK_EQUAL(1                      //Response code
-                +1+name.length()       //Group Name
-                +sizeof(uint16_t)      //N Members
-                , message->size());
+   message = new InfoResponse(name, members);
 
-    message->code = Common::Result::FAIL_AUTH;     //Return code FAIL
+   CHECK_EQUAL(1                       // Response code
+               + 1 + name.length()     // Group Name
+               + sizeof(uint16_t),     // N Members
+               message->size());
 
-    CHECK_EQUAL(message->min_size, message->size());
-    CHECK_EQUAL(1, message->min_size);
+   message->code = Common::Result::FAIL_AUTH;      // Return code FAIL
 
-    delete message;
+   CHECK_EQUAL(message->min_size, message->size());
+   CHECK_EQUAL(1, message->min_size);
+
+   delete message;
 }
 
 //! @test Check the Remove from group message pack
 TEST(GroupManagement, InfoResponse_Pack)
 {
    InfoResponse *message;
+
    std::string name("Group");
    std::vector<Member> members;
    ByteArray expected, got;
 
    uint16_t size;
 
-   message = new InfoResponse(name,members);
+   message  = new InfoResponse(name, members);
 
-   expected    = ByteArray {  (uint8_t)Common::Result::OK,
-                              (uint8_t)name.length(), 'G', 'r', 'o', 'u', 'p',
-                              0x00,0x00};
-
-   LONGS_EQUAL(expected.size(), message->size());
-
-   got         = ByteArray(message->size());
-
-   CHECK_EQUAL(0, message->members.size());
-
-   size = message->pack(got);
-
-   CHECK_EQUAL(expected, got);
-   CHECK_EQUAL(message->size(), size);
-
-   delete message;
-
-   // --- Return error code --------
-
-   message = new InfoResponse(name, members);
-   message->code = Common::Result::FAIL_AUTH;
-
-   expected = ByteArray { (uint8_t) Common::Result::FAIL_AUTH};
+   expected = ByteArray { Common::Result::OK,
+                          (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
+                          0x00, 0x00};
 
    LONGS_EQUAL(expected.size(), message->size());
 
@@ -683,6 +664,25 @@ TEST(GroupManagement, InfoResponse_Pack)
 
    delete message;
 
+   // ----- Return error code -----
+
+   message       = new InfoResponse(name, members);
+   message->code = Common::Result::FAIL_AUTH;
+
+   expected      = ByteArray { (uint8_t) Common::Result::FAIL_AUTH};
+
+   LONGS_EQUAL(expected.size(), message->size());
+
+   got = ByteArray(message->size());
+
+   CHECK_EQUAL(0, message->members.size());
+
+   size = message->pack(got);
+
+   CHECK_EQUAL(expected, got);
+   CHECK_EQUAL(message->size(), size);
+
+   delete message;
 }
 
 //! @test Check the Remove from group message unpack
@@ -690,50 +690,49 @@ TEST(GroupManagement, InfoResponse_UnPack)
 {
    InfoResponse *message;
    ByteArray input;
+
    std::string name("Group");
 
    uint16_t size;
 
    message = new InfoResponse();
 
-   input    = ByteArray {  (uint8_t)Common::Result::OK,
-                           (uint8_t)name.length(), 'G', 'r', 'o', 'u', 'p',
-                           0x00,0x00};
+   input   = ByteArray {  (uint8_t) Common::Result::OK,
+                          (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
+                          0x00, 0x00};
 
    size = message->unpack(input);
 
-   CHECK_EQUAL(input.size(),size);
-   CHECK_EQUAL(input.size(),message->size());
-   CHECK_EQUAL((uint8_t)Common::Result::OK, message->code);
-   CHECK_EQUAL(name,message->name);
+   CHECK_EQUAL(input.size(), size);
+   CHECK_EQUAL(input.size(), message->size());
+   CHECK_EQUAL((uint8_t) Common::Result::OK, message->code);
+   CHECK_EQUAL(name, message->name);
    CHECK_EQUAL(0, message->members.size());
 
    delete message;
 
    message = new InfoResponse();
 
-   input = ByteArray { (uint8_t) Common::Result::OK,
-                       (uint8_t) name.length(),
-                       'G', 'r', 'o', 'u', 'p',
-                       0x00,0x01,                  //# of groups
-                       0x00, 0x01,                 //dev addr
-                       0x12 };                     //Unit addr
+   input   = ByteArray { (uint8_t) Common::Result::OK,
+                         (uint8_t) name.length(),
+                         'G', 'r', 'o', 'u', 'p',
+                         0x00, 0x01,               // # of groups
+                         0x00, 0x01,               // dev addr
+                         0x12};                    // Unit addr
 
    size = message->unpack(input);
 
 
    CHECK_EQUAL(input.size(), size);
    CHECK_EQUAL(input.size(), message->size());
-   CHECK_EQUAL((uint8_t )Common::Result::OK, message->code);
+   CHECK_EQUAL((uint8_t) Common::Result::OK, message->code);
    CHECK_EQUAL(name, message->name);
    CHECK_EQUAL(1, message->members.size());
    UNSIGNED_LONGS_EQUAL(0x0001, message->members.at(0).device);
    UNSIGNED_LONGS_EQUAL(0x12, message->members.at(0).unit);
 
    delete message;
-
 }
-
 
 // =============================================================================
 // Group Management Client
@@ -742,36 +741,36 @@ TEST(GroupManagement, InfoResponse_UnPack)
 //! Test Group for Group Management Client interface class.
 TEST_GROUP(GroupManagementClient)
 {
-   // TODO Add required unit tests.
    struct GroupManagementClient: public InterfaceHelper<GroupManagement::Client>
    {
-      GroupManagementClient(HF::Core::Unit0 &unit): InterfaceHelper<GroupManagement::Client>(unit) {}
+      GroupManagementClient(HF::Core::Unit0 &unit):
+         InterfaceHelper<GroupManagement::Client>(unit) {}
 
-      void created (CreateResponse &response)
+      void created(CreateResponse &response)
       {
          UNUSED(response);
          mock("GroupManagement::Client").actualCall("created");
       }
 
-      void deleted (DeleteResponse &response)
+      void deleted(DeleteResponse &response)
       {
          UNUSED(response);
          mock("GroupManagement::Client").actualCall("deleted");
       }
 
-      void added (AddResponse &response)
+      void added(AddResponse &response)
       {
          UNUSED(response);
          mock("GroupManagement::Client").actualCall("added");
       }
 
-      void removed (RemoveResponse &response)
+      void removed(RemoveResponse &response)
       {
          UNUSED(response);
          mock("GroupManagement::Client").actualCall("removed");
       }
 
-      void got_info (InfoResponse &response)
+      void got_info(InfoResponse &response)
       {
          UNUSED(response);
          mock("GroupManagement::Client").actualCall("got_info");
@@ -788,17 +787,17 @@ TEST_GROUP(GroupManagementClient)
 
    TEST_SETUP()
    {
-      device = new Testing::Device();
-      client = new GroupManagementClient(*(device->unit0()));
+      device                  = new Testing::Device();
+      client                  = new GroupManagementClient(*(device->unit0()));
 
-      addr   = Protocol::Address(42, 0);
+      addr                    = Protocol::Address(42, 0);
 
-      link = Testing::Link();
+      link                    = Testing::Link();
       packet                  = Protocol::Packet();
       packet.message.type     = Protocol::Message::COMMAND_RES;
       packet.message.itf.role = HF::Interface::SERVER_ROLE;
-      packet.message.itf.id = HF::Interface::GROUP_MANAGEMENT;
-      packet.link = &link;
+      packet.message.itf.id   = HF::Interface::GROUP_MANAGEMENT;
+      packet.link             = &link;
 
       mock().ignoreOtherCalls();
    }
@@ -812,12 +811,10 @@ TEST_GROUP(GroupManagementClient)
    }
 };
 
-
 //! @test Create support.
 TEST(GroupManagementClient, Create)
 {
    std::string name = "GroupName";
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->create(name);
@@ -833,7 +830,6 @@ TEST(GroupManagementClient, Create)
 //! @test Delete support.
 TEST(GroupManagementClient, Delete)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->remove(0x00);
@@ -849,11 +845,10 @@ TEST(GroupManagementClient, Delete)
 //! @test Add support.
 TEST(GroupManagementClient, Add)
 {
-   uint16_t group    = 0x0001;
-   uint16_t device   = 0x1234;
-   uint8_t unit      = 0x56;
+   uint16_t group  = 0x0001;
+   uint16_t device = 0x1234;
+   uint8_t unit    = 0x56;
 
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->add(group, device, unit);
@@ -869,7 +864,6 @@ TEST(GroupManagementClient, Add)
 //! @test Remove support.
 TEST(GroupManagementClient, Remove)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->remove(0x00, 0x00, 0x00);
@@ -885,9 +879,8 @@ TEST(GroupManagementClient, Remove)
 //! @test Get Info support.
 TEST(GroupManagementClient, GetInfo)
 {
-   uint16_t group    = 0x0001;
+   uint16_t group = 0x0001;
 
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->get_info(group);
@@ -905,19 +898,16 @@ TEST(GroupManagementClient, Created_OK)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::OK,
-       0x12, 0x34,
-       0x00, 0x00, 0x00,
+      0x00,               0x00, 0x00,
+      Common::Result::OK,
+      0x12,               0x34,
+      0x00,               0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
    packet.message.itf.member = GroupManagement::CREATE_CMD;
 
-
-
    mock("GroupManagement::Client").expectOneCall("created");
-
 
    Result result = client->handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, result);
@@ -930,9 +920,9 @@ TEST(GroupManagementClient, Created_FAIL)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::FAIL_AUTH,
-       0x00, 0x00, 0x00,
+      0x00,                      0x00, 0x00,
+      Common::Result::FAIL_AUTH,
+      0x00,                      0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -948,24 +938,20 @@ TEST(GroupManagementClient, Created_FAIL)
    mock("GroupManagement::Client").checkExpectations();
 }
 
-
 //! @test deleted support.
 TEST(GroupManagementClient, Deleted_OK)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::OK,
-       0x00, 0x00, 0x00,
+      0x00,               0x00, 0x00,
+      Common::Result::OK,
+      0x00,               0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
    packet.message.itf.member = GroupManagement::DELETE_CMD;
 
-
-
    mock("GroupManagement::Client").expectOneCall("deleted");
-
 
    Result result = client->handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, result);
@@ -978,9 +964,9 @@ TEST(GroupManagementClient, Deleted_FAIL)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::FAIL_AUTH,
-       0x00, 0x00, 0x00,
+      0x00,                      0x00, 0x00,
+      Common::Result::FAIL_AUTH,
+      0x00,                      0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1001,18 +987,15 @@ TEST(GroupManagementClient, Added_OK)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::OK,
-       0x00, 0x00, 0x00,
+      0x00,               0x00, 0x00,
+      Common::Result::OK,
+      0x00,               0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
    packet.message.itf.member = GroupManagement::ADD_CMD;
 
-
-
    mock("GroupManagement::Client").expectOneCall("added");
-
 
    Result result = client->handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, result);
@@ -1025,9 +1008,9 @@ TEST(GroupManagementClient, Added_FAIL)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::FAIL_AUTH,
-       0x00, 0x00, 0x00,
+      0x00,                      0x00, 0x00,
+      Common::Result::FAIL_AUTH,
+      0x00,                      0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1049,18 +1032,15 @@ TEST(GroupManagementClient, Removed_OK)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::OK,
-       0x00, 0x00, 0x00,
+      0x00,               0x00, 0x00,
+      Common::Result::OK,
+      0x00,               0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
    packet.message.itf.member = GroupManagement::REMOVE_CMD;
 
-
-
    mock("GroupManagement::Client").expectOneCall("removed");
-
 
    Result result = client->handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, result);
@@ -1073,9 +1053,9 @@ TEST(GroupManagementClient, Removed_FAIL)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::FAIL_AUTH,
-       0x00, 0x00, 0x00,
+      0x00,                      0x00, 0x00,
+      Common::Result::FAIL_AUTH,
+      0x00,                      0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1096,22 +1076,19 @@ TEST(GroupManagementClient, GOT_INFO_OK)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::OK,
-       0x04 ,'N', 'A', 'M', 'E',
-       0x01,
-       0x12,0x34,
-       0x56,
-       0x00, 0x00, 0x00,
+      0x00,               0x00, 0x00,
+      Common::Result::OK,
+      0x04,               'N',  'A', 'M','E',
+      0x01,
+      0x12,               0x34,
+      0x56,
+      0x00,               0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
    packet.message.itf.member = GroupManagement::GET_INFO_CMD;
 
-
-
    mock("GroupManagement::Client").expectOneCall("got_info");
-
 
    Result result = client->handle(packet, payload, 3);
    CHECK_EQUAL(Common::Result::OK, result);
@@ -1124,9 +1101,9 @@ TEST(GroupManagementClient, GOT_INFO_FAIL)
 {
    Common::ByteArray payload =
    {
-       0x00, 0x00, 0x00,
-       Common::Result::FAIL_AUTH,
-       0x00, 0x00, 0x00,
+      0x00,                      0x00, 0x00,
+      Common::Result::FAIL_AUTH,
+      0x00,                      0x00, 0x00,
    };
 
    packet.message.length     = payload.size();
@@ -1149,10 +1126,10 @@ TEST(GroupManagementClient, GOT_INFO_FAIL)
 //! Test Group for Group Management Server interface class.
 TEST_GROUP(GroupManagementServer)
 {
-   // TODO Add required unit tests.
    struct GroupManagementServer: public GroupManagement::DefaultServer
    {
-      GroupManagementServer(HF::Core::Unit0 &unit): GroupManagement::DefaultServer(unit) {}
+      GroupManagementServer(HF::Core::Unit0 &unit):
+         GroupManagement::DefaultServer(unit) {}
 
       Common::Result create(Protocol::Packet &packet, CreateMessage &msg) override
       {
@@ -1160,7 +1137,7 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::create(packet, msg);
       }
 
-      void created (const GroupPtr &group) override
+      void created(const GroupPtr &group) override
       {
          mock("GroupManagement::Server").actualCall("created");
          GroupManagement::IServer::created(group);
@@ -1172,7 +1149,7 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::remove(packet, msg);
       }
 
-      void deleted (const Group group) override
+      void deleted(const Group group) override
       {
          mock("GroupManagement::Server").actualCall("deleted");
          GroupManagement::IServer::deleted(group);
@@ -1184,19 +1161,19 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::add(packet, msg);
       }
 
-      void added (const GroupPtr &group) override
+      void added(const GroupPtr &group) override
       {
          mock("GroupManagement::Server").actualCall("added");
          GroupManagement::IServer::added(group);
       }
 
-      virtual Common::Result remove(Protocol::Packet &packet, const RemoveMessage &msg) override
+      Common::Result remove(Protocol::Packet &packet, const RemoveMessage &msg) override
       {
          mock("GroupManagement::Server").actualCall("remove");
          return GroupManagement::DefaultServer::remove(packet, msg);
       }
 
-      void removed (const GroupPtr &group) override
+      void removed(const GroupPtr &group) override
       {
          mock("GroupManagement::Server").actualCall("removed");
          GroupManagement::IServer::removed(group);
@@ -1208,7 +1185,7 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::get_info(packet, msg);
       }
 
-      void got_info (const GroupPtr &group) override
+      void got_info(const GroupPtr &group) override
       {
          mock("GroupManagement::Server").actualCall("got_info");
          GroupManagement::IServer::got_info(group);
@@ -1218,8 +1195,8 @@ TEST_GROUP(GroupManagementServer)
                   const HF::Attributes::IAttribute &new_value) const
       {
          mock("Interface").actualCall("notify")
-               .withParameterOfType("IAttribute", "old", &old_value)
-               .withParameterOfType("IAttribute", "new", &new_value);
+            .withParameterOfType("IAttribute", "old", &old_value)
+            .withParameterOfType("IAttribute", "new", &new_value);
       }
    };
 
@@ -1237,8 +1214,8 @@ TEST_GROUP(GroupManagementServer)
       device                    = new Testing::Device();
       server                    = new GroupManagementServer(*(device->unit0()));
 
-      addr = Protocol::Address(42, 0);
-      link = Testing::Link();
+      addr                      = Protocol::Address(42, 0);
+      link                      = Testing::Link();
 
       packet                    = Protocol::Packet();
       packet.source             = addr;
@@ -1246,9 +1223,8 @@ TEST_GROUP(GroupManagementServer)
       packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
-      packet.message.type = Protocol::Message::COMMAND_RES;
-      //packet.message.itf.id = HF::Interface::GROUP_MANAGEMENT;
-      packet.link = &link;
+      packet.message.type       = Protocol::Message::COMMAND_RES;
+      packet.link               = &link;
 
       mock().ignoreOtherCalls();
    }
@@ -1266,16 +1242,17 @@ TEST_GROUP(GroupManagementServer)
       Group group;
 
       group.address = server->next_address();
-      group.name = group_name;
+      group.name    = group_name;
 
       server->entries().save(group);
 
       return server->entries().find(group_name);
    }
 
-   Member add_member (Group &group, const uint16_t dev, const uint8_t unit)
+   Member add_member(Group &group, const uint16_t dev, const uint8_t unit)
    {
       Member member(dev, unit);
+
       group.add_member(member);
 
       return member;
@@ -1285,24 +1262,20 @@ TEST_GROUP(GroupManagementServer)
    {
       auto it = server->entries().find(name);
 
-      return add_member(*(const_cast<Group *>(it.operator ->())),dev,unit);
+      return add_member(*(const_cast<Group *>(it.operator->())), dev, unit);
    }
 
-   Member add_member (uint16_t addr, const uint16_t dev, const uint8_t unit)
+   Member add_member(uint16_t addr, const uint16_t dev, const uint8_t unit)
    {
       auto it = server->entries().find(addr);
 
-      return add_member(*(const_cast<Group *>(it.operator ->())),dev,unit);
+      return add_member(*(const_cast<Group *>(it.operator->())), dev, unit);
    }
-
-
-
 };
 
 //! @test Number Of Groups support.
 TEST(GroupManagementServer, NumberOfGroups)
 {
-   // FIXME Generated Stub.
    CHECK_ATTRIBUTE_PACK(GroupManagementServer, NumberOfGroups);
 }
 
@@ -1311,21 +1284,22 @@ TEST(GroupManagementServer, Create)
 {
    std::string group_name("MyGroup");
 
-   CreateMessage received(group_name);              //Create a new Group request with the name "MyGroup"
+   // Create a new Group request with the name "MyGroup"
+   CreateMessage received(group_name);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);    // pack it
 
    packet.message.itf.member = GroupManagement::CREATE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = received_payload.size();
 
    NumberOfGroups old_value(0, server);
    NumberOfGroups new_value(1, server);
 
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &old_value)
-         .withParameterOfType("IAttribute", "new", &new_value);
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("create");
@@ -1337,7 +1311,7 @@ TEST(GroupManagementServer, Create)
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(1,server->entries().size());        //Check if the new group is on the DB.
+   LONGS_EQUAL(1, server->entries().size());    // Check if the new group is on the DB.
 
    // Check response packet destination address.
    LONGS_EQUAL(1, device->packets.size());
@@ -1352,7 +1326,7 @@ TEST(GroupManagementServer, Create)
 
    CHECK_EQUAL(group_name, server->entries().begin()->second.name);
 
-   // ------ Check the response message ----
+   // ----- Check the response message -----
 
    CreateResponse resp;
    resp.unpack(response->message.payload);
@@ -1367,11 +1341,11 @@ TEST(GroupManagementServer, Delete_no_group_before)
    DeleteMessage received(group_addr);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);    // Pack it
 
    packet.message.itf.member = GroupManagement::DELETE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("delete");
@@ -1394,7 +1368,7 @@ TEST(GroupManagementServer, Delete_no_group_before)
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
 
-   // ------ Check the response message ----
+   // ----- Check the response message -----
 
    DeleteResponse resp;
    LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
@@ -1404,39 +1378,38 @@ TEST(GroupManagementServer, Delete_no_group_before)
 //! @test Delete support.
 TEST(GroupManagementServer, Delete_existing_group)
 {
-   // ----- Create 10 EMPTY groups -------
-   for (uint16_t i= 0; i<10; ++i)
+   // ----- Create 10 EMPTY groups -----
+   for (uint16_t i = 0; i < 10; ++i)
    {
-      std::string name = std::string("MyGroup")+ std::to_string(i);
+      std::string name = std::string("MyGroup") + std::to_string(i);
       create_group(name);
    }
 
    LONGS_EQUAL(10, server->entries().size());
 
 
-   uint16_t group_addr = 0x0002;             //Group Address to remove
+   uint16_t group_addr = 0x0002;                         // Group Address to remove
    DeleteMessage received(group_addr);
    ByteArray received_payload(received.size());
 
-   auto _entry = server->entries().find(group_addr);     //try to find the group with "group_addr"
-   CHECK_TRUE(_entry != nullptr);                        //should be != that nullptr
+   auto _entry = server->entries().find(group_addr);     // try to find the group with "group_addr"
+   CHECK_TRUE(_entry != nullptr);                        // should be != than nullptr
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);                      // pack it
 
    packet.message.itf.member = GroupManagement::DELETE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
 
    NumberOfGroups old_value(10, server);
    NumberOfGroups new_value(9, server);
-
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("delete");
    mock("GroupManagement::Server").expectOneCall("deleted");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &old_value)
-         .withParameterOfType("IAttribute", "new", &new_value);
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
 
    Common::Result result = server->handle(packet, received_payload, 0);
 
@@ -1454,13 +1427,13 @@ TEST(GroupManagementServer, Delete_existing_group)
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
 
-   // ------ Check if the group was deleted ----
+   // ----- Check if the group was deleted -----
 
    LONGS_EQUAL(9, server->entries().size());
    _entry = server->entries().find(group_addr);
    CHECK_TRUE(_entry == nullptr);
 
-   // ------ Check the response message ----
+   // ----- Check the response message -----
 
    DeleteResponse resp;
    LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
@@ -1470,7 +1443,7 @@ TEST(GroupManagementServer, Delete_existing_group)
 //! @test Add support.
 TEST(GroupManagementServer, Add_1)
 {
-   // ----- Create 10 EMPTY groups -------
+   // ----- Create 10 EMPTY groups -----
    for (uint16_t i = 0; i < 10; ++i)
    {
       std::string name = std::string("MyGroup") + std::to_string(i);
@@ -1479,19 +1452,18 @@ TEST(GroupManagementServer, Add_1)
 
    LONGS_EQUAL(10, server->entries().size());
 
-   uint16_t group_addr  = 0x0002;             //Group Address to add
-   uint16_t dev_addr    = 0x1234;
-   uint16_t dev_unit    = 0x56;
+   uint16_t group_addr = 0x0002;       // Group Address to add
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
    AddMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
-
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);    // pack it
 
    packet.message.itf.member = GroupManagement::ADD_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload=received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("add");
@@ -1512,7 +1484,7 @@ TEST(GroupManagementServer, Add_1)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
 
-   // ------ Check the response message ----
+   // ----- Check the response message -----
 
    AddResponse resp;
    LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
@@ -1521,21 +1493,21 @@ TEST(GroupManagementServer, Add_1)
 
 TEST(GroupManagementServer, Add_without_groups)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());  // check if there are no groups
 
-   uint16_t group_addr  = 0x0002;             //Group Address to add
-   uint16_t dev_addr    = 0x1234;
-   uint16_t dev_unit    = 0x56;
+   uint16_t group_addr = 0x0002;              // Group Address to add
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
    AddMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);          // pack it
 
    packet.message.itf.member = GroupManagement::ADD_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload=received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("add");
@@ -1563,7 +1535,7 @@ TEST(GroupManagementServer, Add_without_groups)
 
 TEST(GroupManagementServer, Add_2)
 {
-   // ----- Create 10 EMPTY groups -------
+   // ----- Create 10 EMPTY groups -----
    for (uint16_t i = 0; i < 10; ++i)
    {
       std::string name = std::string("MyGroup") + std::to_string(i);
@@ -1572,7 +1544,7 @@ TEST(GroupManagementServer, Add_2)
 
    LONGS_EQUAL(10, server->entries().size());
 
-   uint16_t group_addr;             //Group Address to add
+   uint16_t group_addr;                   // Group Address to add
    uint16_t dev_addr;
    uint16_t dev_unit;
    Common::Result result;
@@ -1580,18 +1552,18 @@ TEST(GroupManagementServer, Add_2)
 
    for (uint16_t i = 0; i < 2; ++i)
    {
-      group_addr  = 0x0002;             //Group Address to add
-      dev_addr    = 0x1234;
-      dev_unit    = 0x56+i;
+      group_addr = 0x0002;                // Group Address to add
+      dev_addr   = 0x1234;
+      dev_unit   = 0x56 + i;
       AddMessage received(group_addr, dev_addr, dev_unit);
       ByteArray received_payload(received.size());
 
-      received.pack(received_payload);              //pack it
+      received.pack(received_payload);              // pack it
 
       packet.message.itf.member = GroupManagement::ADD_CMD;
-      packet.message.type = Protocol::Message::COMMAND_REQ;
-      packet.message.length = received_payload.size();
-      packet.message.payload = received_payload;
+      packet.message.type       = Protocol::Message::COMMAND_REQ;
+      packet.message.length     = received_payload.size();
+      packet.message.payload    = received_payload;
 
       mock("AbstractDevice").expectOneCall("send");
       mock("GroupManagement::Server").expectOneCall("add");
@@ -1622,29 +1594,31 @@ TEST(GroupManagementServer, Add_twice)
 {
    std::string group_name("MyGroup");
 
-   // --------- Create Group -----------
+   // ----- Create Group -----
    GroupPtr group_ptr = create_group(group_name);
 
    LONGS_EQUAL(1, server->entries().size());
 
-   uint16_t group_addr = 0x0001;             //Group Address to add
-   uint16_t dev_addr = 0x1234;
-   uint16_t dev_unit = 0x56;
+   // Group Address to add
+   uint16_t group_addr = 0x0001;
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
 
-   add_member(group_name,dev_addr,dev_unit);    //Manually add to the group
+   // Manually add to the group
+   add_member(group_name, dev_addr, dev_unit);
 
    LONGS_EQUAL(1, group_ptr->members.size());
 
-   AddMessage received(group_addr, dev_addr, dev_unit);  //Add message to test...
+   // Add message to test
+   AddMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
-
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);              // pack it
 
    packet.message.itf.member = GroupManagement::ADD_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload=received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("add");
@@ -1653,8 +1627,9 @@ TEST(GroupManagementServer, Add_twice)
    Common::Result result = server->handle(packet, received_payload, 0);
 
    CHECK_EQUAL(Common::Result::FAIL_ARG, result);
-   LONGS_EQUAL(1, group_ptr->members.size());               //check if the members size is still 1
 
+   // Check if the members size is still 1
+   LONGS_EQUAL(1, group_ptr->members.size());
 
    Protocol::Packet *response = device->packets.back();
 
@@ -1667,7 +1642,7 @@ TEST(GroupManagementServer, Add_twice)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
 
-   // ------ Check the response message ----
+   // ----- Check the response message -----
 
    AddResponse resp;
    LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
@@ -1677,21 +1652,23 @@ TEST(GroupManagementServer, Add_twice)
 //! @test Remove support.
 TEST(GroupManagementServer, Remove_without_groups)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   // Check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());
 
-   uint16_t group_addr  = 0x0002;             //Group Address to remove
-   uint16_t dev_addr    = 0x1234;
-   uint16_t dev_unit    = 0x56;
+   // Group Address to remove
+   uint16_t group_addr = 0x0002;
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
    RemoveMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
-
-   received.pack(received_payload);              //pack it
+   // Pack it
+   received.pack(received_payload);
 
    packet.message.itf.member = GroupManagement::REMOVE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload=received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("remove");
@@ -1719,30 +1696,30 @@ TEST(GroupManagementServer, Remove_without_groups)
 
 TEST(GroupManagementServer, Remove_non_existing_device)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());    // check if there are no groups
 
    std::string group_name("MyGroup");
 
-   uint16_t group_addr  = 0x0002;             //Group Address to remove
-   uint16_t dev_addr    = 0x1234;
-   uint16_t dev_unit    = 0x56;
+   uint16_t group_addr = 0x0002;                // Group Address to remove
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
    RemoveMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);             // pack it
 
-   // --------- Create Group -----------
+   // ----- Create Group -----
    GroupPtr group_ptr = create_group(group_name);
 
-   // -------- Add Member -------------
-   add_member(group_name,0x0001,0x12);
+   // ----- Add Member -----
+   add_member(group_name, 0x0001, 0x12);
 
    LONGS_EQUAL(1, group_ptr->members.size());
 
    packet.message.itf.member = GroupManagement::REMOVE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload=received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("remove");
@@ -1772,31 +1749,31 @@ TEST(GroupManagementServer, Remove_non_existing_device)
 
 TEST(GroupManagementServer, Remove_existing_device_with_other_dev_in_group)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());    // Check if there are no groups
 
    std::string group_name("MyGroup");
 
-   uint16_t group_addr  = 0x0001;             //Group Address to remove
-   uint16_t dev_addr    = 0x1234;
-   uint16_t dev_unit    = 0x56;
+   uint16_t group_addr = 0x0001;                // Group Address to remove
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
    RemoveMessage received(group_addr, dev_addr, dev_unit);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);             // pack it
 
    // --------- Create Group -----------
    GroupPtr group_ptr = create_group(group_name);
 
    // -------- Add Member -------------
-   Member no_del = add_member(group_name,0x0001,0x12);
-   add_member(group_name,dev_addr,dev_unit);
+   Member no_del = add_member(group_name, 0x0001, 0x12);
+   add_member(group_name, dev_addr, dev_unit);
 
    LONGS_EQUAL(2, group_ptr->members.size());
 
    packet.message.itf.member = GroupManagement::REMOVE_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload=received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("remove");
@@ -1829,19 +1806,19 @@ TEST(GroupManagementServer, Remove_existing_device_with_other_dev_in_group)
 //! @test Get Info support.
 TEST(GroupManagementServer, GetInfo_no_group)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());    // check if there are no groups
 
-   uint16_t group_addr = 0x0002;             //Group Address to remove
+   uint16_t group_addr = 0x0002;                // Group Address to remove
 
    InfoMessage received(group_addr);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);             // pack it
 
    packet.message.itf.member = GroupManagement::GET_INFO_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload = received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
@@ -1870,23 +1847,23 @@ TEST(GroupManagementServer, GetInfo_no_group)
 //! @test Get Info support.
 TEST(GroupManagementServer, GetInfo_no_members)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());    // Check if there are no groups
 
-   uint16_t group_addr = 0x0001;             //Group Address to remove
+   uint16_t group_addr = 0x0001;                // Group Address to remove
 
    std::string group_name("MyGroup");
    InfoMessage received(group_addr);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);             // Pack it
 
-   // --------- Create Group -----------
+   // ----- Create Group -----
    GroupPtr group_ptr = create_group(group_name);
 
    packet.message.itf.member = GroupManagement::GET_INFO_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload = received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
@@ -1917,33 +1894,33 @@ TEST(GroupManagementServer, GetInfo_no_members)
 //! @test Get Info support.
 TEST(GroupManagementServer, GetInfo_10_members)
 {
-   LONGS_EQUAL(0, server->entries().size());  //check if there are no groups
+   LONGS_EQUAL(0, server->entries().size());    // check if there are no groups
 
-   uint16_t group_addr = 0x0001;             //Group Address to remove
+   uint16_t group_addr = 0x0001;                // Group Address to remove
 
    std::string group_name("MyGroup");
    InfoMessage received(group_addr);
    ByteArray received_payload(received.size());
 
-   received.pack(received_payload);              //pack it
+   received.pack(received_payload);             // pack it
 
-   // --------- Create Group -----------
+   // ----- Create Group -----
    GroupPtr group_ptr = create_group(group_name);
 
-   for(uint16_t i = 0; i<5; ++i)
+   for (uint16_t i = 0; i < 5; ++i)
    {
-      for(uint16_t j = 0; j<2; ++j)
+      for (uint16_t j = 0; j < 2; ++j)
       {
-         add_member(group_name,0x0001+i,0x12+j);
+         add_member(group_name, 0x0001 + i, 0x12 + j);
       }
    }
 
-   LONGS_EQUAL(10, group_ptr->members.size());  //check if there are 10 members
+   LONGS_EQUAL(10, group_ptr->members.size());  // check if there are 10 members
 
    packet.message.itf.member = GroupManagement::GET_INFO_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = received_payload.size();
-   packet.message.payload = received_payload;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received_payload.size();
+   packet.message.payload    = received_payload;
 
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
