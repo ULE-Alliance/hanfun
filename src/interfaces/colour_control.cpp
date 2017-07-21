@@ -93,3 +93,51 @@ HF::Attributes::IAttribute *ColourControl::create_attribute(uint8_t uid)
          return nullptr;
    }
 }
+
+// =============================================================================
+// ColourControl::XY_Colour
+// =============================================================================
+
+// =============================================================================
+// XY_Colour::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t XY_Colour::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += array.write(offset,X);
+   offset += array.write(offset,Y);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// XY_Colour::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t XY_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = array.read(offset,X);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,Y);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}

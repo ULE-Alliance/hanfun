@@ -26,7 +26,128 @@ using namespace HF::Common;
 using namespace HF::Interfaces::ColourControl;
 
 // =============================================================================
-// Color Control
+// Colour Control Messages
+// =============================================================================
+TEST_GROUP(ColourControlMessages)
+{
+
+   ByteArray expected;
+   ByteArray payload;
+   TEST_SETUP()
+   {
+      expected = ByteArray();
+      payload  = ByteArray();
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+
+//! @test XY_Colour helper class basic test.
+TEST(ColourControlMessages, XY_Colour)
+{
+   XY_Colour colour(0,10);
+
+   expected = ByteArray(4);
+
+   LONGS_EQUAL(4, colour.pack(expected));
+   LONGS_EQUAL(4, colour.unpack(expected));
+}
+
+//! @test XY_Colour helper class basic test with wrong array size passed.
+TEST(ColourControlMessages, XY_Colour_wrong_array_size)
+{
+   XY_Colour colour(0,10);
+
+   expected = ByteArray(2);
+
+   LONGS_EQUAL(0, colour.pack(expected,1));
+   LONGS_EQUAL(0, colour.unpack(expected));
+}
+
+//! @test XY_Colour helper class size test.
+TEST(ColourControlMessages, XY_Colour_size)
+{
+   XY_Colour colour(0x1234,0x5678);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // X value
+                           0x56, 0x78     // Y value
+                        });
+
+   LONGS_EQUAL(expected.size(), colour.size());
+   LONGS_EQUAL(4, colour.size());
+}
+
+//! @test XY_Colour helper class pack test.
+TEST(ColourControlMessages, XY_Colour_pack)
+{
+   XY_Colour colour(0x1234,0x5678);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // X value
+                           0x56, 0x78     // Y value
+                        });
+   payload = ByteArray(colour.size());
+
+   LONGS_EQUAL(expected.size(), colour.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+//! @test XY_Colour helper class unpack test.
+TEST(ColourControlMessages, XY_Colour_unpack)
+{
+   XY_Colour colour;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // X value
+                           0x56, 0x78     // Y value
+                        });
+
+   LONGS_EQUAL(payload.size(), colour.unpack(payload));
+   LONGS_EQUAL(0x1234, colour.X);
+   LONGS_EQUAL(0x5678, colour.Y);
+}
+
+/*! @test XY_Colour helper class unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, XY_Colour_unpack_incomplete)
+{
+   XY_Colour colour;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // X value
+                           0x56           // Y value
+                        });
+
+   LONGS_EQUAL(0, colour.unpack(payload));
+   LONGS_EQUAL(0, colour.X);
+   LONGS_EQUAL(0, colour.Y);
+}
+
+/*! @test XY_Colour helper class unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the colour values are maintained.
+ */
+TEST(ColourControlMessages, XY_Colour_unpack_incomplete_keep_values)
+{
+   XY_Colour colour(0x1234, 0x5678);
+
+   payload = ByteArray({
+                           0x12, 0x34,    // X value
+                           0x56           // Y value
+                        });
+
+   LONGS_EQUAL(0, colour.unpack(payload));
+   LONGS_EQUAL(0x1234, colour.X);
+   LONGS_EQUAL(0x5678, colour.Y);
+}
 // =============================================================================
 // Colour Control
 // =============================================================================

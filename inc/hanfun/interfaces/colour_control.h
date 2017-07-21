@@ -87,6 +87,68 @@ namespace HF
             __LAST_ATTR__           = COLOUR_TEMPERATURE_ATTR
          } Attributes;
 
+         //! Mask elements for Colour Modes.
+         typedef enum _Mask : uint8_t
+         {
+            HS_MODE           = 0x01,              //!< Hue and Saturation mode.
+            XY_MODE           = 0x02,              //!< XY mode. CIE 1931 standard.
+            TEMPERATURE_MODE  = 0x04,              //!< Colour temperature mode.
+            __LAST_MODE__     = TEMPERATURE_MODE
+         }Mask;
+
+         //! Direction of movement
+         typedef enum _Direction : uint8_t
+         {
+            UP                = 0x01,
+            DOWN              = 0x02,
+            SHORTEST          = 0x03,
+            LONGEST           = 0x04,
+            __LAST_DIRECTION_ = LONGEST
+         }Direction;
+
+         /*!
+          * Helper class that supports the XY colour mode.
+          *
+          * This class implements the necessary functions
+          * for message serialization.
+          */
+         struct XY_Colour
+         {
+            uint16_t X;
+            uint16_t Y;
+
+            /*!
+             * Constructor
+             *
+             * @param [in] X     X colour value.
+             * @param [in] Y     Y colour value.
+             */
+            XY_Colour(uint16_t X, uint16_t Y): X(X),Y(Y)
+            {}
+
+            /*!
+             * Empty Constructor
+             */
+            XY_Colour(): X(0), Y(0)
+            {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(X)  // X
+                                               + sizeof(Y); // Y
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
+
          // =============================================================================
          // Attribute Helper classes
          // =============================================================================
