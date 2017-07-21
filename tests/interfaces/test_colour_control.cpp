@@ -774,6 +774,142 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x1234, message.time);
 }
 
+
+// ---- Move Saturation Message ----
+
+//! @test MoveSaturation message basic test.
+TEST(ColourControlMessages, MoveSaturation)
+{
+   MoveSaturationMessage message(Direction::UP, 0x12);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveSaturation message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveSaturation_wrong_array_size)
+{
+   MoveSaturationMessage message(Direction::UP, 0x12);
+
+   expected = ByteArray(1);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveSaturation message size test.
+TEST(ColourControlMessages, MoveSaturation_size)
+{
+   MoveSaturationMessage message(Direction::UP, 0x12);
+
+   expected = ByteArray({
+                           Direction::UP, // Direction
+                           0x12           // Rate
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(2, message.size());
+}
+
+//! @test MoveSaturation message pack test.
+TEST(ColourControlMessages, MoveSaturation_pack)
+{
+   MoveSaturationMessage message(Direction::UP, 0x12);
+
+   expected = ByteArray({
+                           Direction::UP, // Direction
+                           0x12           // Rate
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+/*! @test MoveSaturation message pack test.
+ *
+ * Invalid value passed to the direction field.
+ */
+TEST(ColourControlMessages, MoveSaturation_pack_invalid_value)
+{
+   MoveSaturationMessage message(Direction::SHORTEST, 0x12); // Invalid Value (Direction).
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+}
+
+//! @test MoveSaturation message unpack test.
+TEST(ColourControlMessages, MoveSaturation_unpack)
+{
+   MoveSaturationMessage message;
+
+   payload = ByteArray({
+                           Direction::UP, // Direction
+                           0x12           // Rate
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x12, message.rate);
+}
+
+/*! @test MoveSaturation message unpack test.
+ *
+ * Invalid value passed to the Direction field.
+ */
+TEST(ColourControlMessages, MoveSaturation_unpack_invalid_value)
+{
+   MoveSaturationMessage message;
+
+   payload = ByteArray({
+                           Direction::SHORTEST, // Direction (Invalid Value)
+                           0x12                 // Rate
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
+}
+
+/*! @test MoveSaturation message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveSaturation_unpack_incomplete)
+{
+   MoveSaturationMessage message;
+
+   payload = ByteArray({
+                           Direction::SHORTEST  // Direction (Invalid Value)
+                                                // Rate (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0, message.rate);
+}
+
+/*! @test MoveSaturation message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveSaturation_unpack_incomplete_keep_values)
+{
+   MoveSaturationMessage message(Direction::UP, 0x12);
+
+   payload = ByteArray({
+                           Direction::DOWN      // Direction (Invalid Value)
+                                                // time (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x12, message.rate);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================
