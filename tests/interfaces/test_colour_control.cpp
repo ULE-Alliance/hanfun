@@ -1346,6 +1346,113 @@ TEST(ColourControlMessages, MoveToXY_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x9ABC, message.time);
 }
 
+
+// ---- Move XY Message ----
+
+//! @test MoveXY message basic test.
+TEST(ColourControlMessages, MoveXY)
+{
+   MoveXYMessage message(0x1234,0x5678);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveXY message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveXY_wrong_array_size)
+{
+   MoveXYMessage message(0x1234,0x5678);
+
+   expected = ByteArray(1);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveXY message size test.
+TEST(ColourControlMessages, MoveXY_size)
+{
+   MoveXYMessage message(0x1234,0x5678);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Rate of X
+                           0x56, 0x78     // Rate of Y
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(4, message.size());
+}
+
+//! @test MoveXY message pack test.
+TEST(ColourControlMessages, MoveXY_pack)
+{
+   MoveXYMessage message(0x1234,0x5678);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Rate of X
+                           0x56, 0x78     // Rate of Y
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+//! @test MoveXY message unpack test.
+TEST(ColourControlMessages, MoveXY_unpack)
+{
+   MoveXYMessage message;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // Rate of X
+                           0x56, 0x78     // Rate of Y
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x1234, message.X_rate);
+   LONGS_EQUAL(0x5678, message.Y_rate);
+}
+
+/*! @test MoveXY message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveXY_unpack_incomplete)
+{
+   MoveXYMessage message;
+
+   payload = ByteArray({
+                           0x12, 0x34,    // Rate of X
+                           0x56,          // Rate of Y (Incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.X_rate);
+   LONGS_EQUAL(0, message.Y_rate);
+}
+
+/*! @test MoveXY message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveXY_unpack_incomplete_keep_values)
+{
+   MoveXYMessage message(0x1234,0x5678);
+
+   payload = ByteArray({
+                           0xCB, 0xA9,    // X
+                           0x87,          // Y
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x1234, message.X_rate);
+   LONGS_EQUAL(0x5678, message.Y_rate);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================

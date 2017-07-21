@@ -583,6 +583,44 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
+
+         /*!
+          * Move XY Message class.
+          *
+          * @copydetails HF::Interfaces::ColourControl::XY_Colour
+          */
+         struct MoveXYMessage
+         {
+            int16_t X_rate;
+            int16_t Y_rate;
+
+            /*!
+             * Constructor
+             *
+             * @param [in] X_rate       The rate of change in units per seconds
+             * @param [in] Y_step       The rate of change in units per seconds
+             */
+            MoveXYMessage (int16_t X_rate = 0, int16_t Y_rate = 0) :
+               X_rate(X_rate), Y_rate(Y_rate)
+            {
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(X_rate)  // X_rate
+                                               + sizeof(Y_rate); // Y_rate
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
           * Colour Control %Interface : Parent.
           *
           * This is the parent class for the Colour Control interface implementation.

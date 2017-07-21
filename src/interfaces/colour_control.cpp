@@ -603,3 +603,51 @@ uint16_t MoveToXYMessage::unpack (const Common::ByteArray& array, uint16_t offse
    return (offset - start);
 }
 
+// =============================================================================
+// ColourControl::MoveXYMessage
+// =============================================================================
+
+// =============================================================================
+// MoveXYMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += array.write(offset, X_rate);
+   offset += array.write(offset, Y_rate);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// MoveXYMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = array.read(offset,X_rate);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,Y_rate);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
