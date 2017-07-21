@@ -1,13 +1,13 @@
 // =============================================================================
 /*!
- * @file       src/core/bind_management.cpp
+ * @file       src/core/group_table.cpp
  *
  * This file contains the implementation of the common functionality for the
- * Bind Management core interface.
+ * Group Table service.
  *
- * @version    1.4.3
+ * @version    x.x.x
  *
- * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
+ * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
  * For licensing information, please see the file 'LICENSE' in the root folder.
  *
@@ -15,8 +15,7 @@
  */
 // =============================================================================
 
-#include "hanfun/interface.h"
-#include "hanfun/core/bind_management.h"
+#include "hanfun/core/group_table.h"
 
 // =============================================================================
 // API
@@ -24,26 +23,65 @@
 
 using namespace HF;
 using namespace HF::Core;
-using namespace HF::Core::BindManagement;
+using namespace HF::Core::GroupTable;
 
 // =============================================================================
-// BindManagement::create_attribute
+// Core::create_attribute
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *BindManagement::create_attribute(uint8_t uid)
+HF::Attributes::IAttribute *Core::create_attribute(IServer *server, uint8_t uid)
 {
-   return Core::create_attribute((BindManagement::IServer *) nullptr, uid);
+   if (server != nullptr)
+   {
+      return server->attribute(uid);
+   }
+   else
+   {
+      return GroupTable::create_attribute(uid);
+   }
 }
 
 // =============================================================================
-// BindManagement::Entry
+// GroupTable::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Attributes::IAttribute *GroupTable::create_attribute(uint8_t uid)
+{
+   using namespace HF::Core::GroupTable;
+
+   GroupTable::Attributes attr = static_cast<GroupTable::Attributes>(uid);
+
+   switch (attr)
+   {
+      case NUMBER_OF_ENTRIES_ATTR:
+      {
+         return new HF::Attributes::Attribute<uint8_t>(HF::Interface::GROUP_TABLE, attr,
+                                                       NumberOfEntries::WRITABLE);
+      }
+
+      case NUMBER_OF_MAX_ENTRIES_ATTR:
+      {
+         return new HF::Attributes::Attribute<uint8_t>(HF::Interface::GROUP_TABLE, attr,
+                                                       NumberOfMaxEntries::WRITABLE);
+      }
+
+      default:
+         return nullptr;
+   }
+}
+
+// =============================================================================
+// GroupTable::Entry
 // =============================================================================
 
 // =============================================================================
-// BindManagement::Entry::size
+// GroupTable::Entry::size
 // =============================================================================
 /*!
  *
@@ -55,7 +93,7 @@ uint16_t Entry::size() const
 }
 
 // =============================================================================
-// BindManagement::Entry::pack
+// GroupTable::Entry::pack
 // =============================================================================
 /*!
  *
@@ -65,17 +103,14 @@ uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += this->source.pack(array, offset);
-
-   offset += this->itf.pack(array, offset);
-
-   this->destination.pack(array, offset);
+   offset += array.write(offset, group);
+   offset += array.write(offset, unit);
 
    return min_size;
 }
 
 // =============================================================================
-// BindManagement::Entry::unpack
+// GroupTable::Entry::unpack
 // =============================================================================
 /*!
  *
@@ -85,17 +120,14 @@ uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
-   offset += this->source.unpack(array, offset);
-
-   offset += this->itf.unpack(array, offset);
-
-   this->destination.unpack(array, offset);
+   offset += array.read(offset, group);
+   offset += array.read(offset, unit);
 
    return min_size;
 }
 
 // =============================================================================
-// BindManagement::Entries
+// GroupTable::Entries
 // =============================================================================
 
 // =============================================================================
@@ -119,41 +151,12 @@ uint16_t Entries::size() const
 // =============================================================================
 Common::Result Entries::save(const Entry &entry)
 {
-   auto res              = this->db.insert(entry);
-
-   Common::Result result = Common::Result::FAIL_ARG;
-
-   if (res.second)
+   if (!any_of(entry.group, entry.unit))
    {
-      result = Common::Result::OK;
+      this->db.push_back(entry);
    }
 
-   return result;
-}
-
-// =============================================================================
-// Entries::destroy
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-Common::Result Entries::destroy(uint16_t address, Protocol::Address::Type type)
-{
-   /* *INDENT-OFF* */
-   return destroy ([address, type](BindManagement::Entry const &entry)
-   {
-      if ((entry.source.device == address && entry.source.mod == type) ||
-            (entry.destination.device == address && entry.destination.mod == type))
-      {
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   });
-   /* *INDENT-ON* */
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -165,40 +168,28 @@ Common::Result Entries::destroy(uint16_t address, Protocol::Address::Type type)
 // =============================================================================
 Common::Result Entries::destroy(const Entry &entry)
 {
-   if (this->db.erase(entry) == 1)
-   {
-      return Common::Result::OK;
-   }
+   uint8_t size = db.size();
 
-   return Common::Result::FAIL_ARG;
+   auto res     = std::remove_if(db.begin(), db.end(), [&entry](const Entry &e)
+   {
+      return entry == e;
+   });
+
+   db.erase(res, db.end());
+
+   return size == db.size() ? Common::Result::FAIL_ARG : Common::Result::OK;
 }
 
 // =============================================================================
-// Entries - Query API
-// =============================================================================
-
-// =============================================================================
-// Entries::find
+// Entries::clear
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-EntryPtr Entries::find(const Protocol::Address &source, const Common::Interface &itf,
-                       const Protocol::Address &destination) const
+void Entries::clear()
 {
-   Entry temp(source, itf, destination);
-
-   auto it = this->db.find(temp);
-
-   if (it == this->db.end())
-   {
-      return EntryPtr();
-   }
-   else
-   {
-      return EntryPtr(&(*it));
-   }
+   db.clear();
 }
 
 // =============================================================================
@@ -208,11 +199,19 @@ EntryPtr Entries::find(const Protocol::Address &source, const Common::Interface 
  *
  */
 // =============================================================================
-bool Entries::any_of(Protocol::Address const &source, Common::Interface const &itf) const
+bool Entries::any_of(uint16_t group, uint8_t unit) const
 {
-   auto range = find(source, itf);
+   UNUSED(group);
+   UNUSED(unit);
 
-   return range.first != db.end() || range.second != db.end();
+   Entry value(group, unit);
+
+   /* *INDENT-OFF* */
+   return std::find_if(this->db.cbegin(), this->db.cend(), [&value](const Entry &entry)
+   {
+      return value == entry;
+   }) != this->db.cend();
+   /* *INDENT-ON* */
 }
 
 // =============================================================================
@@ -222,29 +221,13 @@ bool Entries::any_of(Protocol::Address const &source, Common::Interface const &i
  *
  */
 // =============================================================================
-void Entries::for_each(Protocol::Address const &source, Common::Interface const &itf,
-                       std::function<void(const Entry &)> func) const
+void Entries::for_each(uint16_t group, std::function<void(const Entry &)> func) const
 {
-   auto range = find(source, itf);
-
-   std::for_each(range.first, range.second, func);
-}
-
-// =============================================================================
-// Entries::find
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::pair<Entries::iterator, Entries::iterator> Entries::find(Protocol::Address const &source,
-                                                              Common::Interface const &itf) const
-{
-   Entry _begin(source, itf);
-   Entry _end(source, itf);
-
-   memset(&(_begin.destination), 0x00, sizeof(Protocol::Address));
-   memset(&(_end.destination), 0xFF, sizeof(Protocol::Address));
-
-   return std::make_pair(db.lower_bound(_begin), db.upper_bound(_end));
+   std::for_each(db.begin(), db.end(), [&group, &func](const Entry &e)
+   {
+      if (e.group == group)
+      {
+         func(e);
+      }
+   });
 }

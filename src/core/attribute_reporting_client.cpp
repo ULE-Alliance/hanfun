@@ -71,6 +71,7 @@ uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
       case CREATE_EVENT_CMD:
       case ADD_EVENT_ENTRY_CMD:
       case DELETE_REPORT_CMD:
+      case UPDATE_INTERVAL_CMD:
          return payload_size_helper<Response>();
 
       default:
@@ -115,6 +116,12 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          case DELETE_REPORT_CMD:
          {
             this->deleted(packet.source, *response);
+            break;
+         }
+
+         case UPDATE_INTERVAL_CMD:
+         {
+            this->updated(packet.source, *response);
             break;
          }
 
@@ -260,6 +267,23 @@ void AbstractClient::add(Protocol::Address &destination, Reference report,
                          event_iterator begin, event_iterator end)
 {
    auto msg = AttributeReporting::add(report, begin, end);
+
+   send(destination, *msg);
+
+   delete msg;
+}
+
+// =============================================================================
+// AbstractClient::update_interval
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void AbstractClient::update_interval(Protocol::Address &destination,
+                                     Reference report, uint32_t interval)
+{
+   auto msg = AttributeReporting::update(report, interval);
 
    send(destination, *msg);
 

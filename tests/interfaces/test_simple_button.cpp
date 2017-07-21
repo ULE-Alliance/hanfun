@@ -91,6 +91,7 @@ TEST_GROUP(SimpleButtonClient)
    };
 
    SimpleButtonClient client;
+
    Protocol::Packet packet;
    Common::ByteArray payload;
 
@@ -175,6 +176,7 @@ TEST_GROUP(SimpleButtonServer)
    };
 
    SimpleButtonServer server;
+
    Protocol::Address addr;
 
    TEST_SETUP()

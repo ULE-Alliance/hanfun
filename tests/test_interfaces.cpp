@@ -30,6 +30,7 @@ using namespace HF::Common;
 TEST_GROUP(AbstractInterface)
 {
    TestInterface *itf;
+
    Protocol::Packet packet;
    ByteArray payload;
 

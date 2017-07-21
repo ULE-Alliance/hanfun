@@ -48,6 +48,7 @@
 HF::Common::Result DeviceManagement::Entries::save(const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::save(device);
+
    HF::Application::Save();
    return res;
 }
@@ -74,6 +75,7 @@ void DeviceManagement::Entries::insert(const Device &device)
 HF::Common::Result DeviceManagement::Entries::destroy(const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::destroy(device);
+
    HF::Application::Save();
    return res;
 }
@@ -206,6 +208,7 @@ void DeviceManagement::Server::restore(Json::Value root)
 HF::Common::Result BindManagement::Entries::save(const Entry &entry)
 {
    auto res = HF::Core::BindManagement::Entries::save(entry);
+
    HF::Application::Save();
    return res;
 }
@@ -232,6 +235,7 @@ void BindManagement::Entries::insert(Entry &entry)
 HF::Common::Result BindManagement::Entries::destroy(const Entry &entry)
 {
    auto res = HF::Core::BindManagement::Entries::destroy(entry);
+
    HF::Application::Save();
    return res;
 }

@@ -96,6 +96,14 @@
 #define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD           1
 
 // =============================================================================
+// Level Control Configuration
+// =============================================================================
+
+#define HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD          1
+#define HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD     1
+#define HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD     1
+
+// =============================================================================
 // Other Configuration
 // =============================================================================
 

@@ -66,6 +66,7 @@ namespace HF
          BATCH_PROGRAM_MANGEMENT = 0x0007, //!< Batch Program Management interface UID. __Not implemented__
          EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
          WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
+         GROUP_TABLE             = 0x000A, //!< Group Table interface UID.
          TAMPER_ALERT            = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
          TIME                    = 0x0102, //!< %Time interface UID. __Not implemented__
          POWER                   = 0x0110, //!< Power interface UID. __Not implemented__
@@ -84,6 +85,7 @@ namespace HF
          SIMPLE_BUTTON         = 0x0304, //!< Simple Button interface UID.
          SIMPLE_VISUAL_EFFECTS = 0x0305, //!< Simple Visual Effects interface UID.
          SIMPLE_AIR_PRESSURE   = 0x0306, //!< Simple Air Pressure interface UID.
+         SIMPLE_LIGHT_SENSOR   = 0x0307, //!< Simple Light Sensor interface UID.
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.
@@ -315,6 +317,7 @@ namespace HF
          uint16_t payload_size_helper() const
          {
             _Message message;
+
             return message.size();
          }
 
@@ -527,7 +530,7 @@ namespace HF
           * @return  a pointer to the optional implemented interface.
           */
          template<uint8_t N>
-         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
+         const typename std::tuple_element<N, interfaces_t>::type::base *get() const
          {
             return &std::get<N>(_interfaces);
          }

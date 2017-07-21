@@ -114,7 +114,8 @@ namespace HF
 
             itfs.erase(std::remove_if(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
             {
-               return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid) {
+               return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid)
+               {
                   return itf.id == uid;
                });
             }), itfs.end());
@@ -388,6 +389,7 @@ namespace HF
       std::vector<Common::Interface> interfaces() const
       {
          auto result = InterfacesWrapper::interfaces();
+
          Base::remove_mandatory(result);
          return result;
       }

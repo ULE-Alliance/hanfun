@@ -176,7 +176,7 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
 #define CHECK_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                \
    check_attribute<Type>(server, _writable, _first, _second,                               \
                          (Type::value_type (Interface::*)(void) const) & Interface::_name, \
-                         (void (Interface::*)(Type::value_type)) & Interface::_name,       \
+                         (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                          __FILE__, __LINE__)
 
 #define CHECK_ATTRIBUTE_PACK(Interface, Type)                \
@@ -185,7 +185,7 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
    check_optional_attribute<Type>(server, _writable, _first, _second,                               \
                                   (Type::value_type (Interface::*)(void) const) & Interface::_name, \
-                                  (void (Interface::*)(Type::value_type)) & Interface::_name,       \
+                                  (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                                   __FILE__, __LINE__)
 
 // =============================================================================
@@ -282,7 +282,7 @@ namespace HF
       template<class Base>
       struct InterfaceParentHelper: public InterfaceHelper<Base>
       {
-         InterfaceParentHelper() : InterfaceHelper<Base>()
+         InterfaceParentHelper(): InterfaceHelper<Base>()
          {}
 
          template<typename Arg>

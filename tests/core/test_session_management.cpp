@@ -212,6 +212,7 @@ TEST_GROUP(SessionManagementServer)
       void send(const Protocol::Address &addr, Protocol::Message &message)
       {
          auto &call = mock("SessionManagementServer").actualCall("send");
+
          call.withParameter("addr_dev", addr.device);
          call.withParameter("addr_unit", addr.unit);
 
@@ -586,6 +587,7 @@ TEST_GROUP(SessionManagementClient)
       void send(const Protocol::Address &addr, Protocol::Message &message)
       {
          auto &call = mock("SessionManagementClient").actualCall("send");
+
          call.withParameter("addr_dev", addr.device);
          call.withParameter("addr_unit", addr.unit);
 
@@ -613,6 +615,7 @@ TEST_GROUP(SessionManagementClient)
       void entries(const GetEntriesResponse<TestType> &response)
       {
          auto &call = mock("SessionManagementClient").actualCall("entries");
+
          call.withParameter("code", response.code);
          call.withParameter("size", response.entries.size());
       }
@@ -620,6 +623,7 @@ TEST_GROUP(SessionManagementClient)
       void session_started(StartResponse &response)
       {
          auto &call = mock("SessionManagementClient").actualCall("session_started");
+
          call.withParameter("code", response.code);
          call.withParameter("count", response.count);
       }
@@ -627,6 +631,7 @@ TEST_GROUP(SessionManagementClient)
       void session_ended(Protocol::Response &response)
       {
          auto &call = mock("SessionManagementClient").actualCall("session_ended");
+
          call.withParameter("code", response.code);
       }
    };
@@ -647,6 +652,7 @@ TEST_GROUP(SessionManagementClient)
 TEST(SessionManagementClient, Start)
 {
    auto &call = mock("SessionManagementClient").expectOneCall("send");
+
    call.withParameter("addr_dev", 0);
    call.withParameter("addr_unit", 0);
 
@@ -668,6 +674,7 @@ TEST(SessionManagementClient, Start)
 TEST(SessionManagementClient, Get)
 {
    auto &call = mock("SessionManagementClient").expectOneCall("send");
+
    call.withParameter("addr_dev", 0);
    call.withParameter("addr_unit", 0);
 
@@ -695,6 +702,7 @@ TEST(SessionManagementClient, Get)
 TEST(SessionManagementClient, End)
 {
    auto &call = mock("SessionManagementClient").expectOneCall("send");
+
    call.withParameter("addr_dev", 0);
    call.withParameter("addr_unit", 0);
 

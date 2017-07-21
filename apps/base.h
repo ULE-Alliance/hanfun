@@ -276,9 +276,9 @@ namespace Commands
 
 //! Custom Unit0 declaration
 typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
-                                            ::DeviceManagement::Server,
+                                         ::DeviceManagement::Server,
                                          HF::Core::AttributeReporting::Server,
-                                            ::BindManagement::Server> Unit0;
+                                         ::BindManagement::Server> Unit0;
 
 /*!
  * This class represents a HAN-FUN Concentrator.

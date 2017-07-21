@@ -32,6 +32,7 @@ find_program(LCOV_PATH lcov)
 find_program(GENHTML_PATH genhtml)
 find_program(FIND_PATH find)
 find_program(GIT_PATH git)
+find_program(CPPFILT_PATH c++filt)
 
 if(NOT GCOV_PATH)
     message(WARNING "gcov not found!")
@@ -78,9 +79,16 @@ function(generate_code_coverage_report _targets)
     return()
   endif()
 
+  set(LCOV_ARGS_COMMON --rc lcov_branch_coverage=1 --directory .)
+
+  set(GENHTML_ARGS --rc lcov_branch_coverage=1 -f -s --legend --ignore-errors source)
+  if(CPPFILT_PATH)
+    list(APPEND GENHTML_ARGS --demangle-cpp)
+  endif()
+
   add_custom_target(coverage_prepare
-                    COMMAND ${LCOV_PATH} --directory . --zerocounters
-                    COMMAND ${LCOV_PATH} --directory . --capture --initial --output-file hanfun.info
+                    COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --zerocounters
+                    COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --capture --initial --output-file hanfun.info
                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                     DEPENDS ${_targets}
                     COMMENT "Resetting code coverage counters to zero.")
@@ -90,9 +98,9 @@ function(generate_code_coverage_report _targets)
                   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
   add_custom_target(coverage_report
-                    COMMAND ${LCOV_PATH} --rc lcov_branch_coverage=1 --directory . --capture --output-file hanfun.info
-                    COMMAND ${LCOV_PATH} --remove hanfun.info 'tests/cpputest*' '/usr/*' --output-file hanfun.info
-                    COMMAND ${GENHTML_PATH} --legend -title "HAN-FUN ${GIT_DESCRIBE}" -o coverage hanfun.info
+                    COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --capture --output-file hanfun.info
+                    COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --remove hanfun.info 'tests/cpputest*' '/usr/*' --output-file hanfun.info
+                    COMMAND ${GENHTML_PATH} ${GENHTML_ARGS} --title "HAN-FUN ${GIT_DESCRIBE}" -o coverage hanfun.info
                     COMMAND ${CMAKE_COMMAND} -E remove hanfun.info
                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                     DEPENDS check

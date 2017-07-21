@@ -197,7 +197,7 @@ TEST(<%= class_name %>, <%= cmd.to_class %>)
 
   mock("Interface").checkExpectations();
 
-  LONGS_EQUAL(HF::Interface::CLIENT_ROLE, <%= object %>sendMsg.itf.role);
+  LONGS_EQUAL(HF::Interface::SERVER_ROLE, <%= object %>sendMsg.itf.role);
   LONGS_EQUAL(<%= object %>uid(), <%= object %>sendMsg.itf.id);
   LONGS_EQUAL(<%= @interface.to_class %>::<%= cmd.to_uid %>, <%= object %>sendMsg.itf.member);
   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, <%= object %>sendMsg.type);

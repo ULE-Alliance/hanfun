@@ -29,6 +29,7 @@
 #include "hanfun/interfaces/simple_air_pressure.h"
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
+#include "hanfun/interfaces/simple_light_sensor.h"
 
 // =============================================================================
 // API
@@ -126,6 +127,9 @@ namespace HF
          //! Environment Monitoring
          ENVIRONMENT_MONITOR = 0x0114,
 
+         //! Tracker
+         TRACKER = 0x0117,
+
          // =============================================================================
          // Security Unit Types
          // =============================================================================
@@ -156,6 +160,9 @@ namespace HF
 
          //! Use for a vibration detector that senses and sends an alert.
          VIBRATION_DETECTOR = 0x0208,
+
+         //! Allows a unit to provide light readings.
+         SIMPLE_LIGHT_SENSOR = 0x0209,
 
          //! This unit will be acting upon some physical siren that will sound an alert.
          SIREN = 0x0280,
@@ -528,7 +535,7 @@ namespace HF
       /*!
        * Simple Level Controllable Switchable profile implementation.
        */
-      template<typename OnOffServer        = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class SimpleLevelControllableSwitchable:
          public Profile2<SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
@@ -558,7 +565,7 @@ namespace HF
       /*!
        * Simple Level Control Switch profile implementation.
        */
-      template<typename OnOffClient        = Interfaces::OnOff::Client,
+      template<typename OnOffClient = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class SimpleLevelControlSwitch:
          public Profile2<SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
@@ -597,7 +604,7 @@ namespace HF
       /*!
        * AC Outlet profile implementation.
        */
-      template<typename OnOffServer            = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename SimplePowerMeterServer = Interfaces::SimplePowerMeter::Server>
       class AC_OutletWithPowerMetering:
          public Profile2<AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
@@ -637,7 +644,7 @@ namespace HF
       /*!
        * Dimmable Light profile implementation.
        */
-      template<typename OnOffServer        = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class DimmableLight: public Profile2<DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
       {
@@ -666,7 +673,7 @@ namespace HF
       /*!
        * Dimmer Switch profile implementation.
        */
-      template<typename OnOffClient        = Interfaces::OnOff::Client,
+      template<typename OnOffClient = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class DimmerSwitch: public Profile2<DIMMER_SWITCH, OnOffClient, LevelControlClient>
       {
@@ -748,7 +755,7 @@ namespace HF
       /*!
        * Controllable thermostat profile implementation.
        */
-      template<typename OnOffServer            = Interfaces::OnOff::Server,
+      template<typename OnOffServer = Interfaces::OnOff::Server,
                typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
       class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer,
                                                    SimpleThermostatServer>
@@ -817,6 +824,22 @@ namespace HF
          public:
 
          virtual ~EnvironmentMonitor() {}
+      };
+
+      /*!
+       * Tracker profile implementation.
+       */
+      class Tracker: public AbstractProfile<TRACKER>
+      {
+         public:
+
+         virtual ~Tracker() {}
+
+         //! @copydoc HF::Interface::periodic
+         virtual void periodic(uint32_t time)
+         {
+            UNUSED(time);
+         }
       };
 
       // =============================================================================
@@ -918,6 +941,19 @@ namespace HF
          public:
 
          virtual ~VibrationDetector() {}
+      };
+
+      /*!
+       * Simple Light Sensor profile implementation.
+       */
+      class SimpleLightSensor: public Profile<SIMPLE_LIGHT_SENSOR,
+            Interfaces::SimpleLightSensor::Server>
+      {
+         public:
+
+         virtual ~SimpleLightSensor ()
+         {
+         }
       };
 
       /*!

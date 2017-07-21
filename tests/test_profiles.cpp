@@ -61,6 +61,7 @@ namespace HF
       HELPER_CLASS(SimpleLED);
 
       HELPER_CLASS(EnvironmentMonitor);
+      HELPER_CLASS(Tracker);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
@@ -74,6 +75,7 @@ namespace HF
       HELPER_CLASS(FloodDetector);
       HELPER_CLASS(GlassBreakDetector);
       HELPER_CLASS(VibrationDetector);
+      HELPER_CLASS(SimpleLightSensor);
       HELPER_CLASS(Siren);
       HELPER_CLASS(Alertable);
 
@@ -208,6 +210,10 @@ TEST(Profiles, UIDs)
    CHECK_EQUAL(Profiles::ENVIRONMENT_MONITOR, profile->uid());
    delete profile;
 
+   profile = new Testing::Tracker();
+   CHECK_EQUAL(Profiles::TRACKER, profile->uid());
+   delete profile;
+
    // =============================================================================
    // Security Unit Types
    // =============================================================================
@@ -246,6 +252,10 @@ TEST(Profiles, UIDs)
 
    profile = new VibrationDetector();
    CHECK_EQUAL(Profiles::VIBRATION_DETECTOR, profile->uid());
+   delete profile;
+
+   profile = new SimpleLightSensor();
+   CHECK_EQUAL(Profiles::SIMPLE_LIGHT_SENSOR, profile->uid());
    delete profile;
 
    profile = new Siren();
@@ -352,6 +362,7 @@ TEST(Profiles, Profile2_Handle)
 TEST(Profiles, Profile2_Attributes)
 {
    TestProfile profile;
+
    Common::Interface itf(TestInterface::UID, Interface::SERVER_ROLE);
    HF::Attributes::UIDS uids;
 
@@ -655,6 +666,14 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LIGHT_SENSOR
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_LIGHT_SENSOR, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_LIGHT_SENSOR, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::SIREN

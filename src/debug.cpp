@@ -934,6 +934,50 @@ std::ostream &operator<<(std::ostream &stream,
 }
 
 // =============================================================================
+// HF::Interfaces::SimpleLightSensor
+// =============================================================================
+
+#include "hanfun/interfaces/simple_light_sensor.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleLightSensor::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleLightSensor;
+
+   switch (attribute)
+   {
+      case VALUE_ATTR:
+         result = "Value";
+         break;
+      case MINIMUM_ATTR:
+         result = "Minimum";
+         break;
+      case MAXIMUM_ATTR:
+         result = "Maximum";
+         break;
+      case TOLERANCE_ATTR:
+         result = "Tolerance";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Core Services & Interfaces
 // =============================================================================
 
@@ -1485,82 +1529,6 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::Time::Date &date)
 }
 
 // =============================================================================
-// HF::Core::GroupManagement
-// =============================================================================
-
-#include "hanfun/core/group_management.h"
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupManagement::CMD command)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::GroupManagement;
-
-   switch (command)
-   {
-      case CREATE_CMD:
-         result = "Create";
-         break;
-      case DELETE_CMD:
-         result = "Delete";
-         break;
-      case ADD_CMD:
-         result = "Add";
-         break;
-      case REMOVE_CMD:
-         result = "Remove";
-         break;
-      case GET_INFO_CMD:
-         result = "Get Info";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
-// operator <<
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupManagement::Attributes attribute)
-{
-   std::ios_base::fmtflags ff = stream.flags();
-   char f                     = stream.fill(' ');
-
-   std::string result         = "Unknown";
-
-   using namespace HF::Core::GroupManagement;
-
-   switch (attribute)
-   {
-      case NUMBER_OF_GROUPS_ATTR:
-         result = "Number Of Groups";
-         break;
-      default:
-         break;
-   }
-
-   stream << result << std::setfill(f) << std::setiosflags(ff);
-   return stream;
-}
-
-// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1737,9 +1705,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SUOTA:
                stream << static_cast<SUOTA::CMD>(message.itf.member);
                break;
-            case HF::Interface::GROUP_MANAGEMENT:
-               stream << static_cast<GroupManagement::CMD>(message.itf.member);
-               break;            /* Interfaces [C] */
+            /* Interfaces [C] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::CMD>(message.itf.member);
                break;
@@ -1796,9 +1762,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::TIME:
                stream << static_cast<Time::Attributes>(message.itf.member);
                break;
-            case HF::Interface::GROUP_MANAGEMENT:
-               stream << static_cast<GroupManagement::Attributes>(message.itf.member);
-               break;            /* Interfaces [A] */
+            /* Interfaces [A] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::Attributes>(message.itf.member);
                break;

@@ -31,7 +31,7 @@
 // Group Management Configuration
 // =============================================================================
 
-#define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD           @HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD@
+#define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD   @HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD@
 
 // =============================================================================
 // Interfaces
@@ -90,5 +90,13 @@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD    @HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD     @HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD  @HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD@
+
+// =============================================================================
+// Level Control Configuration
+// =============================================================================
+
+#define HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD          @HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD@
+#define HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD     @HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD@
+#define HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD     @HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD@
 
 #endif  /* HF_CONFIG_H */

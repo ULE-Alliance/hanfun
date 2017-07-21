@@ -50,6 +50,7 @@
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/simple_light_sensor.h"
 
 // =============================================================================
 // Core Services & Interfaces.
@@ -61,6 +62,7 @@
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/group_management.h"
+#include "hanfun/core/group_table.h"
 #include "hanfun/core/rssi.h"
 #include "hanfun/core/suota.h"
 #include "hanfun/core/time.h"

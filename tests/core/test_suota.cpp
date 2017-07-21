@@ -49,6 +49,7 @@ static void check_version(const HF::Common::ByteArray &payload, const char *file
                           uint16_t offset = 0)
 {
    Version version;
+
    LONGS_EQUAL_LOCATION(18, version.unpack(payload, offset), file, line);
 
    check_version(version, file, line);
@@ -106,6 +107,7 @@ TEST(SUOTA, UID)
 TEST(SUOTA, Version_Size)
 {
    Version version;
+
    LONGS_EQUAL(2 * sizeof(uint8_t), Version::min_size);
    LONGS_EQUAL(2 * sizeof(uint8_t), version.size());
 
@@ -176,6 +178,7 @@ TEST(SUOTA, Version_Unpack)
 TEST(SUOTA, CheckVersionResponse_Size)
 {
    CheckVersionResponse response(CheckVersionResponse::FAIL_INFRASTUCTURE);
+
    LONGS_EQUAL(3 * sizeof(uint8_t), CheckVersionResponse::min_size);
    LONGS_EQUAL(3 * sizeof(uint8_t), response.size());
 
@@ -241,6 +244,7 @@ TEST(SUOTA, CheckVersionResponse_Unpack)
 TEST(SUOTA, UpgradeStatus_Size)
 {
    UpgradeStatus status;
+
    LONGS_EQUAL(sizeof(uint8_t), UpgradeStatus::min_size);
    LONGS_EQUAL(sizeof(uint8_t), status.size());
 

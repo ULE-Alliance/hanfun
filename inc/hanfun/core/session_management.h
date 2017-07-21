@@ -575,6 +575,7 @@ namespace HF
             Common::Result save(const value_type &entry)
             {
                auto res = Parent::save(entry);
+
                manager.invalidate();
                return res;
             }
@@ -583,6 +584,7 @@ namespace HF
             Common::Result destroy(const value_type &entry)
             {
                auto res = Parent::destroy(entry);
+
                manager.invalidate();
                return res;
             }
