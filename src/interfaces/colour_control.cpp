@@ -202,3 +202,64 @@ uint16_t MoveToHueMessage::unpack (const Common::ByteArray& array, uint16_t offs
    return (offset - start);
 }
 
+// =============================================================================
+// ColourControl::MoveHueMessage
+// =============================================================================
+
+// =============================================================================
+// MoveHueMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   HF_ASSERT(rate <= RATE_MAX, {return 0;});
+   HF_ASSERT(direction<=DIRECTION_MAX, {return 0;});
+
+   uint16_t start = offset;
+
+   offset += array.write(offset, static_cast<uint8_t>(direction));
+   offset += array.write(offset, rate);
+
+
+   return (offset - start);
+}
+
+
+// =============================================================================
+// MoveHueMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveHueMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+   uint8_t temp_dir;
+
+   size = array.read(offset,temp_dir);
+   HF_ASSERT(size != 0, {return 0;});
+   HF_ASSERT(temp_dir<= DIRECTION_MAX, {return 0;});
+   direction = static_cast<Direction>(temp_dir);
+   offset += size;
+
+   size = array.read(offset,rate);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   if (rate > RATE_MAX)
+   {
+      rate = RATE_MAX;
+   }
+
+   return (offset - start);
+}
+

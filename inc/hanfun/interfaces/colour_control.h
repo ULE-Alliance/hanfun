@@ -280,6 +280,48 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
+
+         /*!
+          * Move Hue Message class.
+          *
+          * @copydetails HF::Interfaces::ColourControl::XY_Colour
+          */
+         struct MoveHueMessage
+         {
+            Direction direction;    //!< @c Direction of movement.
+            uint16_t rate;          //!< Time of transition in units of 100msec.
+
+            static constexpr uint16_t RATE_MAX = 359;
+            static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
+
+            /*!
+             * Constructor
+             *
+             * @param [in] dir      @c Direction of movement
+             * @param [in] time     Time for the movement
+             */
+            MoveHueMessage (Direction dir = Direction::UP, uint16_t rate = 0) :
+                  direction(dir), rate(rate)
+            {
+               this->rate = rate<=RATE_MAX ? rate : RATE_MAX;
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t)     // Direction
+                                               + sizeof(rate);       // Rate
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
          /*!
           * Colour Control %Interface : Parent.
           *

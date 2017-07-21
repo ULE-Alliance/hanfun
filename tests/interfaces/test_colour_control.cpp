@@ -313,6 +313,171 @@ TEST(ColourControlMessages, MoveToHue_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x1234, message.time);
 }
 
+
+// ---- Move hue Message ----
+
+//! @test MoveHue message basic test.
+TEST(ColourControlMessages, MoveHue)
+{
+   MoveHueMessage message(Direction::UP, 0x0118);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveHue message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveHue_wrong_array_size)
+{
+   MoveHueMessage message(Direction::UP, 0x10);
+
+   expected = ByteArray(2);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveHue message size test.
+TEST(ColourControlMessages, MoveHue_size)
+{
+   MoveHueMessage message(Direction::UP, 0x10);
+
+   expected = ByteArray({
+                           Direction::UP, // Direction
+                           0x00, 0x10     // Rate
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(3, message.size());
+}
+
+//! @test MoveHue message pack test.
+TEST(ColourControlMessages, MoveHue_pack)
+{
+   MoveHueMessage message(Direction::UP, 0x0118);
+
+   expected = ByteArray({
+                              Direction::UP, // Direction
+                              0x01, 0x18     // Rate
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+/*! @test MoveHue message pack test.
+ *
+ * Invalid value passed to the rate field.
+ */
+TEST(ColourControlMessages, MoveHue_pack_invalid_value)
+{
+   // -- On the constructor --
+
+   MoveHueMessage message(Direction::UP, 600);
+
+   expected = ByteArray({
+                              Direction::UP, // Direction
+                              0x01, 0x67     // Rate (MAX_Value)
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+
+   // -- Direct access --
+
+   message.rate = 600;
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+
+   // -- Direct access - Direction --
+   message.rate = 300;
+   message.direction = Direction::LONGEST;   // Invalid Value.
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+}
+
+//! @test MoveHue message unpack test.
+TEST(ColourControlMessages, MoveHue_unpack)
+{
+   MoveHueMessage message;
+
+   payload = ByteArray({
+                                 Direction::UP, // Direction
+                                 0x01, 0x18     // Rate
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x0118, message.rate);
+}
+
+/*! @test MoveHue message unpack test.
+ *
+ * Invalid value passed to the Rate and Direction field.
+ */
+TEST(ColourControlMessages, MoveHue_unpack_invalid_value)
+{
+   MoveHueMessage message;
+
+   payload = ByteArray({
+                                 Direction::UP, // Direction
+                                 0xFF, 0x34     // Rate (over max)
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(359, message.rate);
+
+   payload = ByteArray({
+                                 Direction::SHORTEST, // Direction (Invalid Value)
+                                 0x01, 0x18           // Rate
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
+}
+
+/*! @test MoveHue message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveHue_unpack_incomplete)
+{
+   MoveHueMessage message;
+
+   payload = ByteArray({
+                           Direction::UP, // Direction
+                           0x01           // Rate (incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0, message.rate);
+}
+
+/*! @test MoveHue message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveHue_unpack_incomplete_keep_values)
+{
+   MoveHueMessage message(Direction::UP, 0x0118);
+
+   payload = ByteArray({
+                          Direction::DOWN,   // Direction
+                          0x01,              // Rate (incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x0118, message.rate);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================
