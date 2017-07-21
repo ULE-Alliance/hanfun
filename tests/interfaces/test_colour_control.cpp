@@ -148,6 +148,171 @@ TEST(ColourControlMessages, XY_Colour_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x1234, colour.X);
    LONGS_EQUAL(0x5678, colour.Y);
 }
+
+// ---- Move to hue Message ----
+
+//! @test MoveToHue message basic test.
+TEST(ColourControlMessages, MoveToHue)
+{
+   MoveToHueMessage message(100,Direction::UP, 0x10);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveToHue message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveToHue_wrong_array_size)
+{
+   MoveToHueMessage message(100,Direction::UP, 0x10);
+
+   expected = ByteArray(2);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveToHue message size test.
+TEST(ColourControlMessages, MoveToHue_size)
+{
+   MoveToHueMessage message(100,Direction::UP, 0x10);
+
+   expected = ByteArray({
+                           0x00, 0x64,    // Hue
+                           Direction::UP, // Direction
+                           0x00, 0x10     // Transition time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(5, message.size());
+}
+
+//! @test MoveToHue message pack test.
+TEST(ColourControlMessages, MoveToHue_pack)
+{
+   MoveToHueMessage message(0x0118,Direction::UP, 0x1234);
+
+   expected = ByteArray({
+                              0x01, 0x18,    // Hue
+                              Direction::UP, // Direction
+                              0x12, 0x34     // Transition time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+/*! @test MoveToHue message pack test.
+ *
+ * Invalid value passed to the hue field.
+ */
+TEST(ColourControlMessages, MoveToHue_pack_invalid_value)
+{
+   // -- On the constructor --
+
+   MoveToHueMessage message(600,Direction::UP, 0x1234);
+
+   expected = ByteArray({
+                              0x01, 0x67,    // Hue
+                              Direction::UP, // Direction
+                              0x12, 0x34     // Transition time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+
+   // -- Direct access --
+
+   message.hue = 600;
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+}
+
+//! @test MoveToHue message unpack test.
+TEST(ColourControlMessages, MoveToHue_unpack)
+{
+   MoveToHueMessage message;
+
+   payload = ByteArray({
+                                 0x01, 0x18,    // Hue
+                                 Direction::UP, // Direction
+                                 0x12, 0x34     // Transition time
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x0118, message.hue);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x1234, message.time);
+}
+
+/*! @test MoveToHue message unpack test.
+ *
+ * Invalid value passed to the hue field.
+ */
+TEST(ColourControlMessages, MoveToHue_unpack_invalid_value)
+{
+   MoveToHueMessage message;
+
+   payload = ByteArray({
+                                 0xFF, 0x18,    // Hue
+                                 Direction::UP, // Direction
+                                 0x12, 0x34     // Transition time
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(359, message.hue);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x1234, message.time);
+}
+
+/*! @test MoveToHue message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveToHue_unpack_incomplete)
+{
+   MoveToHueMessage message;
+
+      payload = ByteArray({
+                                    0x01, 0x18,    // Hue
+                                    Direction::UP, // Direction
+                                    0x12           // Transition time (incomplete)
+                           });
+
+      LONGS_EQUAL(0, message.unpack(payload));
+      LONGS_EQUAL(0, message.hue);
+      CHECK_EQUAL(Direction::SHORTEST, message.direction);
+      LONGS_EQUAL(0, message.time);
+}
+
+/*! @test MoveToHue message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveToHue_unpack_incomplete_keep_values)
+{
+   MoveToHueMessage message(0x0118,Direction::UP, 0x1234);
+
+   payload = ByteArray({
+                          0x00, 0x22,        // Hue
+                          Direction::DOWN,   // Direction
+                          0x21,              // Transition time (incomplete)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x0118, message.hue);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x1234, message.time);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================
