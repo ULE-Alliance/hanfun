@@ -910,6 +910,150 @@ TEST(ColourControlMessages, MoveSaturation_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x12, message.rate);
 }
 
+
+// ---- Step Saturation Message ----
+
+//! @test StepSaturation message basic test.
+TEST(ColourControlMessages, StepSaturation)
+{
+   StepSaturationMessage message(0x12, Direction::UP, 0x34);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test StepSaturation message basic test with wrong array size passed.
+TEST(ColourControlMessages, StepSaturation_wrong_array_size)
+{
+   StepSaturationMessage message(0x12, Direction::UP, 0x34);
+
+   expected = ByteArray(1);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test StepSaturation message size test.
+TEST(ColourControlMessages, StepSaturation_size)
+{
+   StepSaturationMessage message(0x12, Direction::UP, 0x34);
+
+   expected = ByteArray({
+                           0x12,          // Step
+                           Direction::UP, // Direction
+                           0x34           // Time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(3, message.size());
+}
+
+//! @test StepSaturation message pack test.
+TEST(ColourControlMessages,StepSaturation_pack)
+{
+   StepSaturationMessage message(0x12, Direction::UP, 0x34);
+
+   expected = ByteArray({
+                           0x12,          // Step
+                           Direction::UP, // Direction
+                           0x34           // Time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+/*! @test StepSaturation message pack test.
+ *
+ * Invalid value passed to the direction field.
+ */
+TEST(ColourControlMessages, StepSaturation_pack_invalid_value)
+{
+   StepSaturationMessage message(0x12, Direction::SHORTEST, 0x34); // Invalid Value (Direction).
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+}
+
+//! @test StepSaturation message unpack test.
+TEST(ColourControlMessages, StepSaturation_unpack)
+{
+   StepSaturationMessage message;
+
+   payload = ByteArray({
+                           0x12,          // Step
+                           Direction::UP, // Direction
+                           0x34           // Time
+   });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x12, message.step_size);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x34, message.time);
+}
+
+/*! @test StepSaturation message unpack test.
+ *
+ * Invalid value passed to the Direction field.
+ */
+TEST(ColourControlMessages, StepSaturation_unpack_invalid_value)
+{
+   StepSaturationMessage message;
+
+   payload = ByteArray({
+                           0x12,                // Step
+                           Direction::SHORTEST, // Direction (invalid)
+                           0x34                 // Time
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
+}
+
+/*! @test StepSaturation message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, StepSaturation_unpack_incomplete)
+{
+   StepSaturationMessage message;
+
+   payload = ByteArray({
+                           0x12,          // Step
+                           Direction::UP  // Direction
+                                          // Time (missing)
+                        });
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.step_size);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0, message.time);
+}
+
+/*! @test StepSaturation message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, StepSaturation_unpack_incomplete_keep_values)
+{
+   StepSaturationMessage message(0x12, Direction::UP, 0x34);
+
+   payload = ByteArray({
+                           0x21,                // Step
+                           Direction::DOWN      // Direction
+                                                // time (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x12, message.step_size);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x34, message.time);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================
