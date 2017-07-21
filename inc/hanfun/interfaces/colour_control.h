@@ -1,0 +1,694 @@
+// =============================================================================
+/*!
+ * @file       inc/hanfun/interfaces/colour_control.h
+ *
+ * This file contains the definitions for the Colour Control interface.
+ *
+ * @version    x.x.x
+ *
+ * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
+ *
+ * For licensing information, please see the file 'LICENSE' in the root folder.
+ *
+ * Initial development by Bithium S.A. [http://www.bithium.com]
+ */
+// =============================================================================
+
+#ifndef HF_ITF_COLOUR_CONTROL_H
+#define HF_ITF_COLOUR_CONTROL_H
+
+#include "hanfun/protocol.h"
+#include "hanfun/interface.h"
+
+namespace HF
+{
+   namespace Interfaces
+   {
+      // Forward declaration.
+      namespace ColourControl
+      {
+         class Server;
+      }
+
+      /*!
+       * @ingroup colour_control_itf
+       *
+       * Create an attribute object that can hold the attribute with the given @c uid.
+       *
+       * If @c server is not equal to @c nullptr then initialize it with the current
+       * value.
+       *
+       * @param [in] server   pointer to the object to read the current value from.
+       * @param [in] uid      attribute's UID to create the attribute object for.
+       *
+       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       *          exist.
+       */
+      HF::Attributes::IAttribute *create_attribute(ColourControl::Server *server, uint8_t uid);
+
+      /*!
+       * This namespace contains the implementation of the Colour Control interface.
+       */
+      namespace ColourControl
+      {
+         /*!
+          * @addtogroup colour_control_itf  Colour Control interface
+          * @ingroup interfaces
+          *
+          * This module contains the classes that define and implement the Colour Control interface API.
+          * @{
+          */
+         //! Command IDs.
+         typedef enum _CMD
+         {
+            MOVE_TO_HUE_CMD                = 0x01, //!< Move To Hue command UID.
+            MOVE_HUE_CMD                   = 0x02, //!< Move Hue command UID.
+            STEP_HUE_CMD                   = 0x03, //!< Step Hue command UID.
+            MOVE_TO_SATURATION_CMD         = 0x04, //!< Move To Saturation command UID.
+            MOVE_SATURATION_CMD            = 0x05, //!< Move Saturation command UID.
+            STEP_SATURATION_CMD            = 0x06, //!< Step Saturation command UID.
+            MOVE_TO_HUE_AND_SATURATION_CMD = 0x07, //!< Move To Hue And Saturation command UID.
+            MOVE_TO_XY_CMD                 = 0x08, //!< Move To Xy command UID.
+            MOVE_XY_CMD                    = 0x09, //!< Move Xy command UID.
+            STEP_XY_CMD                    = 0x0a, //!< Step Xy command UID.
+            MOVE_TO_COLOUR_TEMPERATURE_CMD  = 0x0b, //!< Move To Colour Temperature command UID.
+            STOP_CMD                       = 0x0c, //!< Stop command UID.
+            __LAST_CMD__                   = STOP_CMD
+         } CMD;
+
+         //! Attributes
+         typedef enum _Attributes
+         {
+            SUPPORTED_ATTR          = 0x01,  //!< Supported attribute UID.
+            MODE_ATTR               = 0x02,  //!< Mode attribute UID.
+            HUE_AND_SATURATION_ATTR = 0x03,  //!< Hue And Saturation attribute UID.
+            XY_ATTR                 = 0x04,  //!< XY attribute UID.
+            COLOUR_TEMPERATURE_ATTR  = 0x05, //!< Colour Temperature attribute UID.
+            __LAST_ATTR__           = COLOUR_TEMPERATURE_ATTR
+         } Attributes;
+
+         // =============================================================================
+         // Attribute Helper classes
+         // =============================================================================
+
+         /*!
+          * Helper class to handle the Supported attribute for the Colour Control interface.
+          */
+         struct Supported: public HF::Attributes::Attribute<uint8_t>
+         {
+            static constexpr uint8_t ID       = SUPPORTED_ATTR; //!< Attribute UID.
+            static constexpr bool    WRITABLE = false;          //!< Attribute Read/Write
+
+            Supported(uint8_t value = 0, HF::Interface *owner = nullptr):
+               Attribute<uint8_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         /*!
+          * Helper class to handle the Mode attribute for the Colour Control interface.
+          */
+         struct Mode: public HF::Attributes::Attribute<uint8_t>
+         {
+            static constexpr uint8_t ID       = MODE_ATTR; //!< Attribute UID.
+            static constexpr bool    WRITABLE = false;     //!< Attribute Read/Write
+
+            Mode(uint8_t value = 0, HF::Interface *owner = nullptr):
+               Attribute<uint8_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         /*!
+          * Helper class to handle the Hue And Saturation attribute for the Colour Control interface.
+          */
+         struct HueAndSaturation: public HF::Attributes::Attribute<uint32_t>
+         {
+            static constexpr uint8_t ID       = HUE_AND_SATURATION_ATTR; //!< Attribute UID.
+            static constexpr bool    WRITABLE = false;                   //!< Attribute Read/Write
+
+            HueAndSaturation(uint32_t value = 0, HF::Interface *owner = nullptr):
+               Attribute<uint32_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         /*!
+          * Helper class to handle the XY attribute for the Colour Control interface.
+          */
+         struct Xy: public HF::Attributes::Attribute<uint32_t>
+         {
+            static constexpr uint8_t ID       = XY_ATTR; //!< Attribute UID.
+            static constexpr bool    WRITABLE = false;   //!< Attribute Read/Write
+
+            Xy(uint32_t value = 0, HF::Interface *owner = nullptr):
+               Attribute<uint32_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         /*!
+          * Helper class to handle the Colour Temperature attribute for the Colour Control interface.
+          */
+         struct ColourTemperature: public HF::Attributes::Attribute<uint16_t>
+         {
+            static constexpr uint8_t ID       = COLOUR_TEMPERATURE_ATTR; //!< Attribute UID.
+            static constexpr bool    WRITABLE = false;                  //!< Attribute Read/Write
+
+            ColourTemperature(uint16_t value = 0, HF::Interface *owner = nullptr):
+               Attribute<uint16_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            {}
+         };
+
+         /*!
+          * @copybrief HF::Interfaces::create_attribute (HF::Interfaces::ColourControl::Server *,uint8_t)
+          *
+          * @see HF::Interfaces::create_attribute (HF::Interfaces::ColourControl::Server *,uint8_t)
+          *
+          * @param [in] uid   attribute %UID to create the attribute object for.
+          *
+          * @retval  pointer to an attribute object
+          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          */
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
+
+         /*!
+          * Colour Control %Interface : Parent.
+          *
+          * This is the parent class for the Colour Control interface implementation.
+          */
+         struct Base: public Interface<HF::Interface::COLOUR_CONTROL>
+         {
+            protected:
+
+            //! Constructor
+            Base(): Interface<HF::Interface::COLOUR_CONTROL>() {}
+         };
+
+         /*!
+          * Colour Control %Interface : %Server side implementation.
+          *
+          * This class provides the server side of the Colour Control interface.
+          */
+         class Server: public InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>
+         {
+            protected:
+
+            uint8_t _supported; //!< Supported
+            uint8_t _mode;      //!< Mode
+
+#ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
+            uint32_t _hue_and_saturation;   //!< Hue And Saturation
+#endif
+
+#ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
+            uint32_t _xy;   //!< XY
+#endif
+
+#ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
+            uint16_t _colour_temperature;   //!< Colour Temperature
+#endif
+
+            public:
+
+            //! Constructor
+            Server(): InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>() {}
+
+            //! Destructor
+            virtual ~Server() {}
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_to_hue(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_HUE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_hue(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::STEP_HUE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void step_hue(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_to_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::STEP_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void step_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_to_hue_and_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_XY_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_to_xy(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_xy(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::STEP_XY_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void step_xy(const Protocol::Address &addr);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void move_to_colour_temperature(const Protocol::Address &addr);
+
+#ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
+            /*!
+             * Callback that is called when a @c ColourControl::STOP_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            virtual void stop(const Protocol::Address &addr);
+#endif
+
+            //! @}
+            // ======================================================================
+
+            // =============================================================================
+            // Get/Set API.
+            // =============================================================================
+
+            /*!
+             * Get the Supported for the Colour Control server.
+             *
+             * @return  the current Supported.
+             */
+            uint8_t supported() const;
+
+            /*!
+             * Set the Supported for the Colour Control server.
+             *
+             * @param [in] __value the  Supported value to set the server to.
+             */
+            void supported(uint8_t __value);
+
+            /*!
+             * Get the Mode for the Colour Control server.
+             *
+             * @return  the current Mode.
+             */
+            uint8_t mode() const;
+
+            /*!
+             * Set the Mode for the Colour Control server.
+             *
+             * @param [in] __value the  Mode value to set the server to.
+             */
+            void mode(uint8_t __value);
+
+#ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
+            /*!
+             * Get the Hue And Saturation for the Colour Control server.
+             *
+             * @return  the current Hue And Saturation.
+             */
+            uint32_t hue_and_saturation() const;
+
+            /*!
+             * Set the Hue And Saturation for the Colour Control server.
+             *
+             * @param [in] __value the  Hue And Saturation value to set the server to.
+             */
+            void hue_and_saturation(uint32_t __value);
+#endif
+
+#ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
+            /*!
+             * Get the XY for the Colour Control server.
+             *
+             * @return  the current XY.
+             */
+            uint32_t xy() const;
+
+            /*!
+             * Set the XY for the Colour Control server.
+             *
+             * @param [in] __value the  XY value to set the server to.
+             */
+            void xy(uint32_t __value);
+#endif
+
+#ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
+            /*!
+             * Get the Colour Temperature for the Colour Control server.
+             *
+             * @return  the current Colour Temperature.
+             */
+            uint16_t colour_temperature() const;
+
+            /*!
+             * Set the Colour Temperature for the Colour Control server.
+             *
+             * @param [in] __value the  Colour Temperature value to set the server to.
+             */
+            void colour_temperature(uint16_t __value);
+#endif
+
+            // =============================================================================
+            // Attribute API.
+            // =============================================================================
+
+            HF::Attributes::IAttribute *attribute(uint8_t uid);
+
+            HF::Attributes::UIDS attributes(uint8_t pack_id =
+                                               HF::Attributes::Pack::MANDATORY) const;
+
+            protected:
+
+            Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                          uint16_t offset);
+         };
+
+         /*!
+          * Colour Control %Interface : %Client side implementation.
+          *
+          * This class provides the client side of the Colour Control interface.
+          */
+         struct Client: public InterfaceRole<ColourControl::Base, HF::Interface::CLIENT_ROLE>
+         {
+            Client(): InterfaceRole<ColourControl::Base, HF::Interface::CLIENT_ROLE>() {}
+
+            virtual ~Client() {}
+
+            // ======================================================================
+            // Commands
+            // ======================================================================
+            //! @name Commands
+            //! @{
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_to_hue(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_CMD,
+             * to the broadcast network address.
+             */
+            void move_to_hue()
+            {
+               Protocol::Address addr;
+               move_to_hue(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_hue(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD,
+             * to the broadcast network address.
+             */
+            void move_hue()
+            {
+               Protocol::Address addr;
+               move_hue(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_HUE_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void step_hue(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_HUE_CMD,
+             * to the broadcast network address.
+             */
+            void step_hue()
+            {
+               Protocol::Address addr;
+               step_hue(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_SATURATION_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_to_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_SATURATION_CMD,
+             * to the broadcast network address.
+             */
+            void move_to_saturation()
+            {
+               Protocol::Address addr;
+               move_to_saturation(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_SATURATION_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_SATURATION_CMD,
+             * to the broadcast network address.
+             */
+            void move_saturation()
+            {
+               Protocol::Address addr;
+               move_saturation(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void step_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD,
+             * to the broadcast network address.
+             */
+            void step_saturation()
+            {
+               Protocol::Address addr;
+               step_saturation(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_to_hue_and_saturation(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
+             * to the broadcast network address.
+             */
+            void move_to_hue_and_saturation()
+            {
+               Protocol::Address addr;
+               move_to_hue_and_saturation(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_to_xy(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD,
+             * to the broadcast network address.
+             */
+            void move_to_xy()
+            {
+               Protocol::Address addr;
+               move_to_xy(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_xy(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD,
+             * to the broadcast network address.
+             */
+            void move_xy()
+            {
+               Protocol::Address addr;
+               move_xy(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void step_xy(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD,
+             * to the broadcast network address.
+             */
+            void step_xy()
+            {
+               Protocol::Address addr;
+               step_xy(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void move_to_colour_temperature(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
+             * to the broadcast network address.
+             */
+            void move_to_colour_temperature()
+            {
+               Protocol::Address addr;
+               move_to_colour_temperature(addr);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STOP_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void stop(const Protocol::Address &addr);
+
+            /*!
+             * Send a HAN-FUN message containing a @c ColourControl::STOP_CMD,
+             * to the broadcast network address.
+             */
+            void stop()
+            {
+               Protocol::Address addr;
+               stop(addr);
+            }
+
+            //! @}
+            // ======================================================================
+         };
+
+         /*! @} */
+
+      }  // namespace ColourControl
+
+   }  // namespace Interfaces
+
+}   // namespace HF
+
+/*!
+ * @addtogroup colour_control_itf
+ * @{
+ */
+
+// =============================================================================
+// Stream Helpers
+// =============================================================================
+
+/*!
+ * Convert the given @c command into a string and write it to the given @c stream.
+ *
+ * @param [in] stream   out stream to write the string to.
+ * @param [in] command  role value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::ColourControl::CMD command);
+
+/*!
+ * Convert the given @c attribute into a string and write it to the given @c stream.
+ *
+ * @param [in] stream      out stream to write the string to.
+ * @param [in] attribute   attribute value to convert to a string.
+ *
+ * @return   <tt>stream</tt>
+ */
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::ColourControl::Attributes attribute);
+/*! @} */
+
+#endif /* HF_ITF_COLOUR_CONTROL_H */

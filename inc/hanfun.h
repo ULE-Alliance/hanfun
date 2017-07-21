@@ -50,6 +50,7 @@
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/colour_control.h"
 
 // =============================================================================
 // Core Services & Interfaces.

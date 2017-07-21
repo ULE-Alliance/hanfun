@@ -84,6 +84,7 @@ namespace HF
          SIMPLE_BUTTON         = 0x0304, //!< Simple Button interface UID.
          SIMPLE_VISUAL_EFFECTS = 0x0305, //!< Simple Visual Effects interface UID.
          SIMPLE_AIR_PRESSURE   = 0x0306, //!< Simple Air Pressure interface UID.
+         COLOUR_CONTROL        = 0x0202, //!< FIXME Colour Control interface UID.
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.
