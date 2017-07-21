@@ -621,6 +621,47 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
+
+         /*!
+          * Step XY Message class.
+          *
+          * @copydetails HF::Interfaces::ColourControl::XY_Colour
+          */
+         struct StepXYMessage
+         {
+            int16_t X_step;
+            int16_t Y_step;
+            uint8_t time;     //!< Time of a single step transition in units of 100msec.
+
+            /*!
+             * Constructor
+             *
+             * @param [in] X_step       The rate of change in units per seconds
+             * @param [in] Y_step       The rate of change in units per seconds
+             * @param [in] time         Time of a single step transition in units of 100msec.
+             */
+            StepXYMessage (int16_t X_step = 0, int16_t Y_step = 0, uint8_t time = 0) :
+                  X_step(X_step), Y_step(Y_step), time(time)
+            {
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(X_step)  // X_step
+                                               + sizeof(Y_step)  // Y_step
+                                               + sizeof(time);   // Time
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
           * Colour Control %Interface : Parent.
           *
           * This is the parent class for the Colour Control interface implementation.

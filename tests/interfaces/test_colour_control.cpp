@@ -1453,6 +1453,122 @@ TEST(ColourControlMessages, MoveXY_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x5678, message.Y_rate);
 }
 
+
+// ---- Step XY Message ----
+
+//! @test StepXY message basic test.
+TEST(ColourControlMessages, StepXY)
+{
+   StepXYMessage message(0x1234,0x5678, 0x9A);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test StepXY message basic test with wrong array size passed.
+TEST(ColourControlMessages, StepXY_wrong_array_size)
+{
+   StepXYMessage message(0x1234,0x5678, 0x9A);
+
+   expected = ByteArray(1);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test StepXY message size test.
+TEST(ColourControlMessages, StepXY_size)
+{
+   StepXYMessage message(0x1234,0x5678, 0x9A);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Step of X
+                           0x56, 0x78,    // Step of Y
+                           0x9A           // Time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(5, message.size());
+}
+
+//! @test StepXY message pack test.
+TEST(ColourControlMessages, StepXY_pack)
+{
+   StepXYMessage message(0x1234,0x5678, 0x9A);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Step of X
+                           0x56, 0x78,    // Step of Y
+                           0x9A           // Time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+//! @test StepXY message unpack test.
+TEST(ColourControlMessages, StepXY_unpack)
+{
+   StepXYMessage message;
+
+   payload = ByteArray({
+                        0x12, 0x34,    // Step of X
+                        0x56, 0x78,    // Step of Y
+                        0x9A           // Time
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x1234,  message.X_step);
+   LONGS_EQUAL(0x5678,  message.Y_step);
+   LONGS_EQUAL(0x9A,    message.time);
+}
+
+/*! @test StepXY message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, StepXY_unpack_incomplete)
+{
+   StepXYMessage message;
+
+   payload = ByteArray({
+                        0x12, 0x34,    // Step of X
+                        0x56, 0x78     // Step of Y
+                                       // Time        (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0,  message.X_step);
+   LONGS_EQUAL(0,  message.Y_step);
+   LONGS_EQUAL(0,    message.time);
+}
+
+/*! @test StepXY message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, StepXY_unpack_incomplete_keep_values)
+{
+   StepXYMessage message(0x1234,0x5678, 0x9A);
+
+   payload = ByteArray({
+                        0x87, 0x65,    // Step of X
+                        0x43, 0x21     // Step of Y
+                                       // Time        (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x1234,  message.X_step);
+   LONGS_EQUAL(0x5678,  message.Y_step);
+   LONGS_EQUAL(0x9A,    message.time);
+}
+
+
 // =============================================================================
 // Colour Control
 // =============================================================================

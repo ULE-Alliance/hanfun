@@ -651,3 +651,56 @@ uint16_t MoveXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
    return (offset - start);
 }
 
+// =============================================================================
+// ColourControl::StepXYMessage
+// =============================================================================
+
+// =============================================================================
+// StepXYMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t StepXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   offset += array.write(offset, X_step);
+   offset += array.write(offset, Y_step);
+   offset += array.write(offset, time);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// StepXYMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t StepXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = array.read(offset,X_step);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,Y_step);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,time);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
