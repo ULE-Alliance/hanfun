@@ -629,6 +629,151 @@ TEST(ColourControlMessages, StepHue_unpack_incomplete_keep_values)
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0xA5, message.time);
 }
+
+// ---- Move To Saturation Message ----
+
+//! @test MoveToSaturation message basic test.
+TEST(ColourControlMessages, MoveToSaturation)
+{
+   MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
+
+   expected = ByteArray(message.size());
+
+   LONGS_EQUAL(message.size(), message.pack(expected));
+   LONGS_EQUAL(message.size(), message.unpack(expected));
+}
+
+//! @test MoveToSaturation message basic test with wrong array size passed.
+TEST(ColourControlMessages, MoveToSaturation_wrong_array_size)
+{
+   MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
+
+   expected = ByteArray(2);
+
+   LONGS_EQUAL(0, message.pack(expected));
+   LONGS_EQUAL(0, message.unpack(expected));
+}
+
+//! @test MoveToSaturation message size test.
+TEST(ColourControlMessages, MoveToSaturation_size)
+{
+   MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
+
+   expected = ByteArray({
+                           0x5A,          // Saturation
+                           Direction::UP, // Direction
+                           0x12, 0x34     // Time
+                        });
+
+   LONGS_EQUAL(expected.size(), message.size());
+   LONGS_EQUAL(4, message.size());
+}
+
+//! @test MoveToSaturation message pack test.
+TEST(ColourControlMessages, MoveToSaturation_pack)
+{
+   MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
+
+   expected = ByteArray({
+                           0x5A,          // Saturation
+                           Direction::UP, // Direction
+                           0x12, 0x34     // Time
+                        });
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(expected.size(), message.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+/*! @test MoveToSaturation message pack test.
+ *
+ * Invalid value passed to the direction field.
+ */
+TEST(ColourControlMessages, MoveToSaturation_pack_invalid_value)
+{
+   MoveToSaturationMessage message(0x5A, Direction::SHORTEST, 0x1234); // Invalid Value (Direction).
+
+   payload = ByteArray(message.size());
+
+   LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
+}
+
+//! @test MoveToSaturation message unpack test.
+TEST(ColourControlMessages, MoveToSaturation_unpack)
+{
+   MoveToSaturationMessage message;
+
+   payload = ByteArray({
+                           0x5A,          // Saturation
+                           Direction::UP, // Direction
+                           0x12, 0x34     // Time
+                        });
+
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x5A, message.saturation);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x1234, message.time);
+}
+
+/*! @test MoveToSaturation message unpack test.
+ *
+ * Invalid value passed to the Direction field.
+ */
+TEST(ColourControlMessages, MoveToSaturation_unpack_invalid_value)
+{
+   MoveToSaturationMessage message;
+
+   payload = ByteArray({
+                           0x5A,                // Saturation
+                           Direction::SHORTEST, // Direction (Invalid Value)
+                           0x12, 0x34           // Time
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
+}
+
+/*! @test MoveToSaturation message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete)
+{
+   MoveToSaturationMessage message;
+
+   payload = ByteArray({
+                           0x5A,                // Saturation
+                           Direction::SHORTEST  // Direction (Invalid Value)
+                                                // time (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.saturation);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0, message.time);
+}
+
+/*! @test MoveToSaturation message unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the values are maintained.
+ */
+TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete_keep_values)
+{
+   MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
+
+   payload = ByteArray({
+                           0x2A,                // Saturation
+                           Direction::DOWN      // Direction (Invalid Value)
+                                                // time (Missing)
+                        });
+
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x5A, message.saturation);
+   CHECK_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(0x1234, message.time);
+}
+
 // =============================================================================
 // Colour Control
 // =============================================================================
