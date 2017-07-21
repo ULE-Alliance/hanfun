@@ -495,6 +495,56 @@ namespace HF
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
          };
+
+         /*!
+          * Move to Hue and Saturation Message class.
+          *
+          * @copydetails HF::Interfaces::ColourControl::XY_Colour
+          */
+         struct MoveToHueSaturationMessage
+         {
+            uint16_t hue;           //!< New Hue value
+            uint8_t saturation;     //!< New Saturation value in degrees.
+            Direction direction;    //!< @c Direction of movement.
+            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+
+            static constexpr uint16_t HUE_MAX = 359;
+
+            /*!
+             * Constructor
+             *
+             * @param [in] hue         New hue value.
+             * @param [in] saturation  The value of new saturation.
+             * @param [in] dir         @c Direction of movement.
+             * @param [in] time        Time of a single step transition in units of 100msec.
+             */
+            MoveToHueSaturationMessage (uint16_t hue = 0, uint8_t saturation = 0,
+                                     Direction dir = Direction::UP,
+                                     uint16_t time = 0) :
+                  saturation(saturation), direction(dir), time(time)
+            {
+               this->hue = hue<=HUE_MAX ? hue : HUE_MAX;
+            }
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(hue)            // Hue
+                                               + sizeof(saturation)     // Saturation
+                                               + sizeof(uint8_t)        // Direction
+                                               + sizeof(time);          // time
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+         };
+
           * Colour Control %Interface : Parent.
           *
           * This is the parent class for the Colour Control interface implementation.

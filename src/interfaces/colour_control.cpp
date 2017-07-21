@@ -490,3 +490,68 @@ uint16_t StepSaturationMessage::unpack (const Common::ByteArray& array, uint16_t
    return (offset - start);
 }
 
+// =============================================================================
+// ColourControl::MoveToHueSaturationMessage
+// =============================================================================
+
+// =============================================================================
+// MoveToHueSaturationMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveToHueSaturationMessage::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   HF_ASSERT(hue<=HUE_MAX, {return 0;});
+
+   offset += array.write(offset, hue);
+   offset += array.write(offset, saturation);
+   offset += array.write(offset, static_cast<uint8_t>(direction));
+   offset += array.write(offset, time);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// MoveToHueSaturationMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t MoveToHueSaturationMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = array.read(offset,hue);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   if (hue > HUE_MAX)
+   {
+      hue = HUE_MAX;
+   }
+
+   size = array.read(offset,saturation);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,direction);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size = array.read(offset,time);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
