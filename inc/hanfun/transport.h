@@ -372,6 +372,58 @@ namespace HF
          }
       };
 
+      /*!
+       * This namespace contains the API used for managing groups of devices at the
+       * transport layer level.
+       */
+      namespace Group
+      {
+         /*!
+          * Create a new @c group of devices at the transport layer with the given address.
+          *
+          * The new link associated with the group @b MUST be sent to the
+          * given end-point via the Endpoint::connected API.
+          *
+          * @param [in] ep       reference to the end-point to create the new group for.
+          * @param [in] group    HF address for the new @c group, i.e. the address for the new link.
+          *
+          * @returns @c Common::Result::OK if the group was created.
+          */
+         Common::Result create(Endpoint &ep, uint16_t group);
+
+         /*!
+          * Add the given @c device to the given @c group for the given end-point @c ep.
+          *
+          * @param [in] ep       reference to the end-point.
+          * @param [in] group    HF address for the @c group to add the @c device for.
+          * @param [in] device   HF address of the @c device to add to the @c group.
+          *
+          * @returns @c Common::Result::OK if the @c device was added to the @c group.
+          */
+         Common::Result add(Endpoint &ep, uint16_t group, uint16_t device);
+
+         /*!
+          * Remove the given @c device from the given @c group for the given end-point @c ep.
+          *
+          * @param [in] ep       reference to the end-point.
+          * @param [in] group    HF address for the @c group to remove the @c device from.
+          * @param [in] device   HF address of the @c device to remove from the @c group.
+          */
+         void remove(Endpoint &ep, uint16_t group, uint16_t device);
+
+         /*!
+          * Remove the given @c group of devices at the transport layer.
+          *
+          * The link associated with the group @b MUST be disconnected from the
+          * given end-point via the Endpoint::disconnected API.
+          *
+          * @param [in] ep       reference to the end-point to remove the group from.
+          * @param [in] group    HF address of the @c group to remove.
+          */
+         void remove(Endpoint &ep, uint16_t group);
+
+      }  // namespace Group
+
       /*! @} */
 
    }  // namespace Transport

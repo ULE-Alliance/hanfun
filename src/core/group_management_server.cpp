@@ -192,10 +192,18 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
       goto _end;
    }
 
+   result = HF::Transport::Group::create(unit().device(), address);
+
+   if (result != Common::Result::OK)
+   {
+      goto _end;
+   }
+
    result = entries().save(address, msg.name);
 
    if (result != Common::Result::OK)
    {
+      HF::Transport::Group::remove(unit().device(), address);
       goto _end;
    }
 
@@ -248,6 +256,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
    this->deleted(group);
    number_of_groups_update(-1);
 
+   HF::Transport::Group::remove(unit().device(), group.address);
 
    _end:
 
@@ -285,14 +294,20 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 
    member = Member(msg.device, msg.unit);
 
+   result = HF::Transport::Group::add(unit().device(), group->address, member.device);
+   if(result != Common::Result::OK)
+   {
+      goto _end;
+   }
+
    if (!group->add_member(member))
    {
       result = Common::Result::FAIL_ARG;
+      HF::Transport::Group::remove(unit().device(), group->address, member.device);
       goto _end;
    }
 
    this->added(group, member);
-
 
    _end:
 
@@ -338,6 +353,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 
    this->removed(*group, member);
 
+   HF::Transport::Group::remove(unit().device(), group->address, member.device);
 
    _end:
 

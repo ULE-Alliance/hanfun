@@ -1162,6 +1162,9 @@ TEST(GroupManagementServer, Create)
 
    mock("GroupManagement::Server").expectOneCall("create");
    mock("GroupManagement::Server").expectOneCall("created");
+   mock("HF::Transport::Group").expectOneCall("create")
+         .ignoreOtherParameters()
+         .andReturnValue(Common::Result::OK);
    mock("AbstractDevice").expectOneCall("send");
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
@@ -1170,6 +1173,7 @@ TEST(GroupManagementServer, Create)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
 
    LONGS_EQUAL(1, server->entries().size());    // Check if the new group is on the DB.
 
@@ -1267,6 +1271,9 @@ TEST(GroupManagementServer, Delete_existing_group)
    mock("Interface").expectOneCall("notify")
       .withParameterOfType("IAttribute", "old", &old_value)
       .withParameterOfType("IAttribute", "new", &new_value);
+   mock("HF::Transport::Group").expectOneCall("remove")
+         .withParameter("group", group_addr)
+         .ignoreOtherParameters();
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));
@@ -1282,6 +1289,7 @@ TEST(GroupManagementServer, Delete_existing_group)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
 
    // ----- Check if the group was deleted -----
 
@@ -1324,6 +1332,11 @@ TEST(GroupManagementServer, Add_1)
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("add");
    mock("GroupManagement::Server").expectOneCall("added");
+   mock("HF::Transport::Group").expectOneCall("add")
+         .withParameter("group", group_addr)
+         .withParameter("device", dev_addr)
+         .ignoreOtherParameters()
+         .andReturnValue(Common::Result::OK);
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));
@@ -1338,6 +1351,7 @@ TEST(GroupManagementServer, Add_1)
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
 
    // ----- Check the response message -----
 
@@ -1418,9 +1432,17 @@ TEST(GroupManagementServer, Add_2)
       mock("AbstractDevice").expectOneCall("send");
       mock("GroupManagement::Server").expectOneCall("add");
       mock("GroupManagement::Server").expectOneCall("added");
+      mock("HF::Transport::Group").expectOneCall("add")
+            .ignoreOtherParameters()
+            .andReturnValue(Common::Result::OK);
 
       UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                            server->handle(packet, received_payload, 0));
+
+      mock("GroupManagement::Server").checkExpectations();
+      mock("AbstractDevice").checkExpectations();
+      mock("HF::Transport::Group").checkExpectations();
+      mock("AbstractDevice").checkExpectations();
 
       Protocol::Packet *response = device->packets.back();
 
@@ -1430,8 +1452,6 @@ TEST(GroupManagementServer, Add_2)
       LONGS_EQUAL(0, response->destination.unit);
       LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
 
-      mock("GroupManagement::Server").checkExpectations();
-      mock("AbstractDevice").checkExpectations();
 
       AddResponse resp;
       LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
@@ -1473,6 +1493,9 @@ TEST(GroupManagementServer, Add_twice)
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("add");
    mock("GroupManagement::Server").expectNoCall("added");
+   mock("HF::Transport::Group").expectOneCall("add")
+         .ignoreOtherParameters()
+         .andReturnValue(Common::Result::OK);
 
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
                         server->handle(packet, received_payload, 0));
@@ -1490,6 +1513,7 @@ TEST(GroupManagementServer, Add_twice)
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
 
    // ----- Check the response message -----
 
