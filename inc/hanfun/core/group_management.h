@@ -146,7 +146,8 @@ namespace HF
             std::vector<Member>::iterator find_member(const Member &member)
             {
                /* *INDENT-OFF* */
-               std::vector<Member>::iterator it = std::find_if(members.begin(), members.end(), [member](const Member &i)
+               auto it = std::find_if(members.begin(), members.end(),
+                                      [&member](const Member &i)
                {
                   return member == i;
                });
@@ -584,14 +585,19 @@ namespace HF
           */
          class IServer: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
          {
+            using Server = ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>;
+
             public:
 
             //! Constructor
-            IServer(Unit0 &unit): ServiceRole<GroupManagement::Base,
-                                              HF::Interface::SERVER_ROLE>(unit) {}
+            IServer(Unit0 &unit): Server(unit) {}
 
             //! Destructor
             virtual ~IServer() {}
+
+            // ======================================================================
+            // API
+            // ======================================================================
 
             // ======================================================================
             // Events
@@ -702,7 +708,6 @@ namespace HF
             {
                UNUSED(group);
             }
-
 #endif
 
             //! @}
@@ -711,7 +716,6 @@ namespace HF
             // =============================================================================
             // API.
             // =============================================================================
-
 
             GroupPtr entry(const uint16_t address) const
             {

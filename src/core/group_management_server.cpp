@@ -99,14 +99,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                        uint16_t offset)
 {
-   CMD cmd               = static_cast<CMD>(packet.message.itf.member);
-
-   Common::Result result = AbstractInterface::check_payload_size(packet.message, payload, offset);
-
-   if (result != Common::Result::OK)
-   {
-      return result;
-   }
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {

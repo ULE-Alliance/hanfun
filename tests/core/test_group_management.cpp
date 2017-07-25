@@ -1145,13 +1145,13 @@ TEST(GroupManagementServer, Create)
 
    // Create a new Group request with the name "MyGroup"
    CreateMessage received(group_name);
-   ByteArray received_payload(received.size());
+   payload = ByteArray(received.size());
 
-   received.pack(received_payload);    // pack it
+   received.pack(payload);    // pack it
 
    packet.message.itf.member = GroupManagement::CREATE_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
-   packet.message.length     = received_payload.size();
+   packet.message.length     = payload.size();
 
    NumberOfGroups old_value(0, server);
    NumberOfGroups new_value(1, server);
@@ -1168,12 +1168,12 @@ TEST(GroupManagementServer, Create)
    mock("AbstractDevice").expectOneCall("send");
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
-                        server->handle(packet, received_payload, 0));
+                        server->handle(packet, payload, 0));
 
    mock("GroupManagement::Server").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
-   mock("HF::Transport::Group").checkExpectations();
 
    LONGS_EQUAL(1, server->entries().size());    // Check if the new group is on the DB.
 
@@ -1199,7 +1199,7 @@ TEST(GroupManagementServer, Create)
 }
 
 //! @test Delete support.
-TEST(GroupManagementServer, Delete_no_group_before)
+TEST(GroupManagementServer, Delete_No_Group_Before)
 {
    DeleteMessage received(0x0001);
    ByteArray received_payload(received.size());
@@ -1238,7 +1238,7 @@ TEST(GroupManagementServer, Delete_no_group_before)
 }
 
 //! @test Delete support.
-TEST(GroupManagementServer, Delete_existing_group)
+TEST(GroupManagementServer, Delete_Existing_Group)
 {
    // ----- Create 10 EMPTY groups -----
    for (uint16_t i = 0; i < 10; ++i)
@@ -1304,6 +1304,7 @@ TEST(GroupManagementServer, Delete_existing_group)
    LONGS_EQUAL(Common::Result::OK, resp.code);
 }
 
+#if 0
 //! @test Add support.
 TEST(GroupManagementServer, Add_1)
 {
@@ -1672,6 +1673,7 @@ TEST(GroupManagementServer, Remove_existing_device_with_other_dev_in_group)
    LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
    LONGS_EQUAL(Common::Result::OK, resp.code);
 }
+#endif
 
 //! @test Get Info support.
 TEST(GroupManagementServer, GetInfo_no_group)
