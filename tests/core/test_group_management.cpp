@@ -1020,10 +1020,10 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::add(packet, msg);
       }
 
-      void added(const GroupPtr &group) override
+      void added(const GroupPtr &group, const Member &member) override
       {
          mock("GroupManagement::Server").actualCall("added");
-         GroupManagement::IServer::added(group);
+         GroupManagement::IServer::added(group, member);
       }
 
       Common::Result remove(Protocol::Packet &packet, const RemoveMessage &msg) override
@@ -1032,10 +1032,10 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::remove(packet, msg);
       }
 
-      void removed(const GroupPtr &group) override
+      void removed(const GroupPtr &group, const Member &member) override
       {
          mock("GroupManagement::Server").actualCall("removed");
-         GroupManagement::IServer::removed(group);
+         GroupManagement::IServer::removed(group, member);
       }
 
       Common::Result get_info(Protocol::Packet &packet, const InfoMessage &msg) override
@@ -1160,9 +1160,9 @@ TEST(GroupManagementServer, Create)
       .withParameterOfType("IAttribute", "old", &old_value)
       .withParameterOfType("IAttribute", "new", &new_value);
 
-   mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("create");
    mock("GroupManagement::Server").expectOneCall("created");
+   mock("AbstractDevice").expectOneCall("send");
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));

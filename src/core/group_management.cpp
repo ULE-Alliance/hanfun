@@ -575,7 +575,20 @@ uint16_t Entries::size() const
 // =============================================================================
 Common::Result Entries::save(const Group &entry)
 {
-   db[entry.address] = entry;
+   db.insert(db.end(), std::pair<uint16_t, Group>(entry.address, entry));
+
+   return Common::Result::OK;
+}
+
+// =============================================================================
+// Entries::save
+// =============================================================================
+/*!
+ */
+// =============================================================================
+Common::Result Entries::save(uint16_t address, const std::string &name)
+{
+   db.insert(db.end(), std::pair<uint16_t, Group>(address, Group(address,name)));
 
    return Common::Result::OK;
 }
@@ -589,9 +602,9 @@ Common::Result Entries::save(const Group &entry)
 // =============================================================================
 Common::Result Entries::destroy(const uint16_t &address)
 {
-   auto it = db.erase(address);
+   auto count = db.erase(address);
 
-   if (it == 0)
+   if (count != 1)
    {
       return Common::Result::FAIL_ARG;
    }
@@ -599,7 +612,6 @@ Common::Result Entries::destroy(const uint16_t &address)
    {
       return Common::Result::OK;
    }
-
 }
 
 // =============================================================================

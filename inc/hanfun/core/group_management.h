@@ -446,6 +446,17 @@ namespace HF
          struct IEntries: public Common::IEntries<Group>
          {
             /*!
+             * Store the given @c entry to persistent storage.
+             *
+             * @param [in] address  HF group address for the new group.
+             * @param [in] name     name for the new group.
+             *
+             * @retval  Common::Result::OK if the entry was saved,
+             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
+             */
+            virtual Common::Result save(uint16_t address, const std::string &name) = 0;
+
+            /*!
              * Return the Device entry for the given address.
              *
              * @param [in] address    the device address.
@@ -481,6 +492,8 @@ namespace HF
             uint16_t size() const;
 
             Common::Result save(const Group &entry);
+
+            Common::Result save(uint16_t address, const std::string &name);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -642,9 +655,10 @@ namespace HF
              *
              * @param [in] group       Pointer to the group entry corresponding to the group.
              */
-            virtual void added(const GroupPtr &group)
+            virtual void added(const GroupPtr &group, const Member &member)
             {
                UNUSED(group);
+               UNUSED(member);
             }
 
             /*!
@@ -662,9 +676,10 @@ namespace HF
              *
              * @param [in] group       Pointer to the group entry corresponding to the affected group.
              */
-            virtual void removed(const GroupPtr &group)
+            virtual void removed(const GroupPtr &group, const Member &member)
             {
                UNUSED(group);
+               UNUSED(member);
             }
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD

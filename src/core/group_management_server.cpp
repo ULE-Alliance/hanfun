@@ -169,60 +169,49 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 // =============================================================================
 Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
 {
-   Common::Result result = Common::Result::FAIL_ARG;
+   Common::Result result = Common::Result::OK;
 
-   CreateResponse create_response;
+   uint16_t address      = Group::NO_ADDR;
 
-   auto temp_entry = entry(msg.name);                // try to find this group
-
-   Group group;
-
-   if (temp_entry == nullptr)                    // Group not found. Create new.
-   {
-      if (entries().size() != Group::MAX_MEMBERS)  // Check if we have space for the new group
-      {
-         group.address = next_address();
-         group.name    = msg.name;
-
-         result        = entries().save(group);
-
-         if (result == Common::Result::OK)
-         {
-            create_response.address = group.address;
-         }
-      }
-      else
-      {
-         result = Common::Result::FAIL_ARG;
-      }
-   }
-   else                             // found a group with the same name. Give an error
+   if (entry(msg.name) != nullptr)
    {
       result = Common::Result::FAIL_ARG;
+      goto _end;
    }
 
-   create_response.code = result;
-
-
-   Protocol::Message response(packet.message, create_response.size());
-
-   response.itf.role   = SERVER_ROLE;
-   response.itf.id     = GroupManagement::IServer::uid();
-   response.itf.member = CREATE_CMD;
-
-   create_response.pack(response.payload);
-
-   Protocol::Address res_addr(packet.source);
-
-   send(res_addr, response, packet.link);
-
-   if (result == Common::Result::OK)
+   if (entries().size() == Group::MAX_MEMBERS)  // Check if we have space for the new group
    {
-      GroupPtr temp(&group);
-      this->created(temp);
-
-      number_of_groups_update(1);
+      result = Common::Result::FAIL_RESOURCES;
+      goto _end;
    }
+
+   address = next_address();
+
+   if (address == Group::NO_ADDR)
+   {
+      goto _end;
+   }
+
+   result = entries().save(address, msg.name);
+
+   if (result != Common::Result::OK)
+   {
+      goto _end;
+   }
+
+   this->created(entries().find(address));
+
+   number_of_groups_update(1);
+
+   _end:
+
+   CreateResponse response(result, address);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
 
    return result;
 }
@@ -236,46 +225,39 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
 // =============================================================================
 Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 {
+   Common::Result result = Common::Result::OK;
 
-   DeleteResponse receive_response;
-
-   Common::Result result = Common::Result::FAIL_ARG;
-
-   auto temp_entry       = entry(msg.address);          // try to find this group
+   auto entry            = entries().find(msg.address);
 
    Group group;
 
-   if (temp_entry == nullptr)       // Group not found. Give an error
+   if (entry == nullptr)
    {
       result = Common::Result::FAIL_ARG;
+      goto _end;
    }
-   else                             // found a group with the same address.
+
+   group  = *entry;
+   result = entries().destroy(*entry);
+
+   if (result != Common::Result::OK)
    {
-      group  = Group(*temp_entry);
-
-      result = entries().destroy(group);
+      goto _end;
    }
 
-   receive_response.code = result;
+   this->deleted(group);
+   number_of_groups_update(-1);
 
-   Protocol::Message response(packet.message, receive_response.size());
 
-   response.itf.role   = SERVER_ROLE;
-   response.itf.id     = GroupManagement::IServer::uid();
-   response.itf.member = DELETE_CMD;
+   _end:
 
-   receive_response.pack(response.payload);
+   DeleteResponse response(result);
 
-   Protocol::Address res_addr(packet.source);
+   Protocol::Message message(packet.message, response.size());
 
-   send(res_addr, response, packet.link);
+   response.pack(message.payload);
 
-   if (result == Common::Result::OK)
-   {
-      this->deleted(group);
-      number_of_groups_update(-1);
-   }
-
+   send(packet.source, message, packet.link);
 
    return result;
 }
@@ -289,42 +271,38 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 // =============================================================================
 Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 {
-   Common::Result result = Common::Result::FAIL_ARG;
+   Member member;
 
-   auto group            = entry(msg.address);     // try to find this group
+   Common::Result result = Common::Result::OK;
 
-   if (group == nullptr)       // Group not found. Give an error
+   auto group            = entry(msg.address);
+
+   if (group == nullptr)
    {
       result = Common::Result::FAIL_ARG;
+      goto _end;
    }
-   else                             // found a group with the same address.
+
+   member = Member(msg.device, msg.unit);
+
+   if (!group->add_member(member))
    {
-      Member received(msg.device, msg.unit);
-
-      if (group->add_member(received))
-      {
-         result = Common::Result::OK;
-      }
+      result = Common::Result::FAIL_ARG;
+      goto _end;
    }
 
-   AddResponse receive_response;
+   this->added(group, member);
 
-   receive_response.code = result;
 
-   Protocol::Message response(packet.message, receive_response.size());
+   _end:
 
-   response.itf.role   = SERVER_ROLE;
-   response.itf.id     = GroupManagement::IServer::uid();
-   response.itf.member = ADD_CMD;
+   AddResponse response(result);
 
-   receive_response.pack(response.payload);
+   Protocol::Message message(packet.message, response.size());
 
-   send(packet.source, response, packet.link);
+   response.pack(message.payload);
 
-   if (result == Common::Result::OK)
-   {
-      this->added(group);
-   }
+   send(packet.source, message, packet.link);
 
    return result;
 }
@@ -338,42 +316,38 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 // =============================================================================
 Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &msg)
 {
-   Common::Result result = Common::Result::FAIL_ARG;
+   Member member;
 
-   auto group            = entry(msg.address);     // try to find this group
+   Common::Result result = Common::Result::OK;
 
-   if (group == nullptr)       // Group not found. Give an error
+   auto group            = entry(msg.address);  // Try to find this group
+
+   if (group == nullptr)                        // Group not found. Give an error
    {
       result = Common::Result::FAIL_ARG;
+      goto _end;
    }
-   else                             // found a group with the same address.
+
+   member = Member(msg.device, msg.unit);
+
+   if (!group->remove_member(member))
    {
-      Member received(msg.device, msg.unit);
-
-      if (group->remove_member(received))
-      {
-         result = Common::Result::OK;
-      }
+      result = Common::Result::FAIL_ARG;
+      goto _end;
    }
 
-   RemoveResponse receive_response;
+   this->removed(*group, member);
 
-   receive_response.code = result;
 
-   Protocol::Message response(packet.message, receive_response.size());
+   _end:
 
-   response.itf.role   = SERVER_ROLE;
-   response.itf.id     = GroupManagement::IServer::uid();
-   response.itf.member = REMOVE_CMD;
+   RemoveResponse response(result);
 
-   receive_response.pack(response.payload);
+   Protocol::Message message(packet.message, response.size());
 
-   send(packet.source, response, packet.link);
+   response.pack(message.payload);
 
-   if (result == Common::Result::OK)
-   {
-      this->removed(*group);
-   }
+   send(packet.source, message, packet.link);
 
    return result;
 }
@@ -389,7 +363,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &msg)
 {
    Common::Result result = Common::Result::FAIL_ARG;
-   InfoResponse receive_response;
+   InfoResponse response;
 
    auto group = entry(msg.address);                // try to find this group
 
@@ -399,27 +373,20 @@ Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &ms
    }
    else                             // found a group with the same address.
    {
-      result                   = Common::Result::OK;
-      receive_response.name    = group->name;
-      receive_response.members = group->members;
-   }
+      result           = Common::Result::OK;
+      response.name    = group->name;
+      response.members = group->members;
 
-   receive_response.code = result;
-
-   Protocol::Message response(packet.message, receive_response.size());
-
-   response.itf.role   = SERVER_ROLE;
-   response.itf.id     = GroupManagement::IServer::uid();
-   response.itf.member = GET_INFO_CMD;
-
-   receive_response.pack(response.payload);
-
-   send(packet.source, response, packet.link);
-
-   if (result == Common::Result::OK)
-   {
       this->got_info(*group);
    }
+
+   response.code = result;
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
 
    return result;
 }
