@@ -1286,11 +1286,11 @@ namespace HF
          virtual uint16_t size() const = 0;
 
          /*!
-          * Store the given bind @c entry to persistent storage.
+          * Store the given @c entry to persistent storage.
           *
-          * @param [in] entry the bind entry to store.
+          * @param [in] entry the entry to save to storage.
           *
-          * @retval  Common::Result::OK if the bind entry was saved,
+          * @retval  Common::Result::OK if the entry was saved,
           * @retval  Common::Result::FAIL_UNKNOWN otherwise.
           */
          virtual Result save(const T &entry) = 0;
@@ -1298,7 +1298,7 @@ namespace HF
          /*!
           * Destroy the given @c entry in the persistent storage.
           *
-          * @param [in] entry   reference to the bind entry to erase.
+          * @param [in] entry   reference to the entry to erase.
           *
           * @retval  Common::Result::OK, if the entry was destroyed.
           * @retval  Common::Result::FAIL_ARG otherwise.
