@@ -191,24 +191,6 @@ namespace HF
             }
 
             // =============================================================================
-            // Serializable API
-            // =============================================================================
-
-            //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = GroupAddress::min_size                // Group Address
-                                                 + sizeof(uint8_t)                     // Group Name (Length)
-                                                 + sizeof(uint16_t);                   // Members Count
-
-            //! @copydoc HF::Common::Serializable::size
-            uint16_t size() const;
-
-            //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
-
-            //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
-
-            // =============================================================================
             // Operators
             // =============================================================================
 
