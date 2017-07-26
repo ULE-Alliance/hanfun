@@ -244,7 +244,7 @@ TEST(GroupManagement, Add_member)
 
    LONGS_EQUAL(0, group.members.size());
 
-   group.add_member(Member(1, 2));
+   group.add(Member(1, 2));
 
    LONGS_EQUAL(1, group.members.size());
 
@@ -258,12 +258,12 @@ TEST(GroupManagement, Remove_member)
    Group group(1, "G1");
    Member member(1, 2);
 
-   group.add_member(member);
+   group.add(member);
 
    LONGS_EQUAL(1, group.members.size());
-   CHECK_TRUE(group.remove_member(member));     // Remove member once (OK)
-   CHECK_FALSE(group.remove_member(member));    // Remove again (NOK)
-   LONGS_EQUAL(0, group.members.size());        // Members is empty
+   CHECK_TRUE(group.remove(member));     // Remove member once (OK)
+   CHECK_FALSE(group.remove(member));    // Remove again (NOK)
+   LONGS_EQUAL(0, group.members.size()); // Members is empty
 }
 
 //! @test Group find_member
@@ -272,11 +272,11 @@ TEST(GroupManagement, Find_member)
    Group group(1, "G1");
    Member member(1, 2);
 
-   group.add_member(Member(3, 4));
+   group.add(Member(3, 4));
 
    CHECK(group.members.end() == group.find_member(member));    // Try to find the member (NOK)
 
-   group.add_member(member);                                   // Add the member
+   group.add(member);                                          // Add the member
 
    LONGS_EQUAL(2, group.members.size());                       // Group size should now be 2
 
@@ -1112,7 +1112,7 @@ TEST_GROUP(GroupManagementServer)
    {
       Member member(dev, unit);
 
-      group.add_member(member);
+      group.add(member);
 
       return member;
    }

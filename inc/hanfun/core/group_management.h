@@ -60,7 +60,9 @@ namespace HF
           * @addtogroup group_management_itf  Group Management service
           * @ingroup interfaces
           *
-          * This module contains the classes that define and implement the Group Management service API.
+          * This module contains the classes that define and implement the
+          * Group Management service API.
+          *
           * @{
           */
          //! Command IDs.
@@ -157,7 +159,7 @@ namespace HF
             }
 
 
-            bool add_member(const Member &member)
+            bool add(const Member &member)
             {
                auto it = find_member(member);
 
@@ -170,7 +172,7 @@ namespace HF
                return false;
             }
 
-            bool remove_member(const Member &member)
+            bool remove(const Member &member)
             {
                const auto orig_size = members.size();
 
@@ -196,9 +198,9 @@ namespace HF
             // =============================================================================
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = GroupAddress::min_size                // Group Address
-                                                 + sizeof(uint8_t)                     // Group Name (Length)
-                                                 + sizeof(uint16_t);                   // Members Count
+            static constexpr uint16_t min_size = GroupAddress::min_size  // Group Address
+                                                 + sizeof(uint8_t)       // Group Name (Length)
+                                                 + sizeof(uint16_t);     // Members Count
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -225,16 +227,19 @@ namespace HF
                   return false;
                }
             }
+
             //! Not equals operator
             bool operator!=(const Group &other) const
             {
                return !(*this == other);
             }
-
          };
 
          typedef Common::Pointer<Group> GroupPtr;
 
+         /*!
+          * Message payload for a @c HF::GroupManagement::CREATE_CMD request.
+          */
          struct CreateMessage
          {
             std::string name; //!< Group Name.
@@ -268,6 +273,9 @@ namespace HF
 
          };
 
+         /*!
+          * Message payload for a @c HF::GroupManagement::CREATE_CMD response.
+          */
          struct CreateResponse: public Protocol::Response, GroupAddress
          {
             /*!
@@ -309,20 +317,24 @@ namespace HF
 
          };
 
+         //! Message payload for a @c HF::GroupManagement::DELETE_CMD request.
          typedef GroupAddress DeleteMessage;
 
+         //! Message payload for a @c HF::GroupManagement::DELETE_CMD response.
          typedef Protocol::Response DeleteResponse;
 
-
-         struct AddMessage: public GroupAddress, Protocol::Address
+         /*!
+          * Parent class for the message payload for a @c HF::GroupManagement::ADD_CMD and
+          * @c HF::GroupManagement::REMOVE_CMD requests.
+          */
+         struct Message: public GroupAddress, Protocol::Address
          {
-
             /*!
              * Constructor.
              *
              * @param [in] address     Group address
              */
-            AddMessage(uint16_t group, uint16_t device, uint8_t unit):
+            Message(uint16_t group, uint16_t device, uint8_t unit):
                GroupAddress(group), Protocol::Address(device, unit)
             {}
 
@@ -331,10 +343,8 @@ namespace HF
              *
              * Mainly used for the unpack function.
              */
-            AddMessage()
+            Message()
             {}
-
-            // virtual ~AddMessage();
 
             // =============================================================================
             // Serializable API
@@ -352,18 +362,24 @@ namespace HF
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
-
          };
 
+         //! Message payload for a @c HF::GroupManagement::ADD_CMD request.
+         typedef Message AddMessage;
+
+         //! Message payload for a @c HF::GroupManagement::ADD_CMD response.
          typedef Protocol::Response AddResponse;
 
-         typedef AddMessage RemoveMessage;
+         //! Message payload for a @c HF::GroupManagement::REMOVE_CMD request.
+         typedef Message RemoveMessage;
 
+         //! Message payload for a @c HF::GroupManagement::REMOVE_CMD response.
          typedef Protocol::Response RemoveResponse;
 
-
+         //! Message payload for a @c HF::GroupManagement::GET_INFO_CMD request.
          typedef GroupAddress InfoMessage;
 
+         //! Message payload for a @c HF::GroupManagement::GET_INFO_CMD response.
          struct InfoResponse: public Protocol::Response
          {
             std::string         name;
@@ -440,7 +456,6 @@ namespace HF
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
-
          /*!
           * Device Management - Persistent Storage API.
           */
@@ -476,7 +491,6 @@ namespace HF
              */
             virtual uint16_t next_address() const = 0;
          };
-
 
          /*!
           * Default implementation of the persistence API.
@@ -618,7 +632,8 @@ namespace HF
             /*!
              * Indicate that a new group was created.
              *
-             * @param [in] group       Pointer to the group entry corresponding to the created group.
+             * @param [in] group       Pointer to the group entry corresponding to the
+             *                         created group.
              */
             virtual void created(const GroupPtr &group)
             {
@@ -945,14 +960,6 @@ namespace HF
 
             //! @}
             // ======================================================================
-
-            using Service::send;
-
-            //! @copydoc SessionManagement::AbstractClient::send
-            void send(const Protocol::Address &addr, Protocol::Message &message)
-            {
-               Service::send(addr, message);
-            }
 
             protected:
 

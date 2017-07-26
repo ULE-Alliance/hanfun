@@ -381,7 +381,7 @@ uint16_t CreateResponse::unpack(const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t AddMessage::size() const
+uint16_t Message::size() const
 {
    return (GroupAddress::size() + Protocol::Address::size());
 }
@@ -393,7 +393,7 @@ uint16_t AddMessage::size() const
  *
  */
 // =============================================================================
-uint16_t AddMessage::pack(Common::ByteArray &array, uint16_t offset) const
+uint16_t Message::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -417,7 +417,7 @@ uint16_t AddMessage::pack(Common::ByteArray &array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t AddMessage::unpack(const Common::ByteArray &array, uint16_t offset)
+uint16_t Message::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 

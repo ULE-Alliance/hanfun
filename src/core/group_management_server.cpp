@@ -293,7 +293,7 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
       goto _end;
    }
 
-   if (!group->add_member(member))
+   if (!group->add(member))
    {
       result = Common::Result::FAIL_ARG;
       HF::Transport::Group::remove(unit().device(), group->address, member.device);
@@ -338,7 +338,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 
    member = Member(msg.device, msg.unit);
 
-   if (!group->remove_member(member))
+   if (!group->remove(member))
    {
       result = Common::Result::FAIL_ARG;
       goto _end;
