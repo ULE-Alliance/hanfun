@@ -1214,7 +1214,7 @@ TEST(ColourControlMessages, StepSaturation_unpack_incomplete_keep_values)
 //! @test MoveToHueSaturation message basic test.
 TEST(ColourControlMessages, MoveToHueSaturation)
 {
-   MoveToHueSaturationMessage message(0x0123, 0x45, Direction::UP, 0x6789);
+   MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    expected = ByteArray(message.size());
 
@@ -1225,7 +1225,7 @@ TEST(ColourControlMessages, MoveToHueSaturation)
 //! @test MoveToHueSaturation message basic test with wrong array size passed.
 TEST(ColourControlMessages, MoveToHueSaturation_wrong_array_size)
 {
-   MoveToHueSaturationMessage message(0x0123, 0x45, Direction::UP, 0x6789);
+   MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    expected = ByteArray(1);
 
@@ -1236,7 +1236,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_wrong_array_size)
 //! @test MoveToHueSaturation message size test.
 TEST(ColourControlMessages, MoveToHueSaturation_size)
 {
-   MoveToHueSaturationMessage message(0x0123, 0x45, Direction::UP, 0x6789);
+   MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    expected = ByteArray({
                            0x01, 0x23,    // Hue
@@ -1252,7 +1252,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_size)
 //! @test MoveToHueSaturation message pack test.
 TEST(ColourControlMessages,MoveToHueSaturation_pack)
 {
-   MoveToHueSaturationMessage message(0x0123, 0x45, Direction::UP, 0x6789);
+   MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    expected = ByteArray({
                            0x01, 0x23,    // Hue
@@ -1276,7 +1276,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_pack_invalid_value)
    // --- HUE invalid value ---
 
    // -- On the constructor --
-   MoveToHueSaturationMessage message(0xFF23, 0x45, Direction::UP, 0x6789); // Invalid Value (Hue).
+   MoveToHueSaturationMessage message(HS_Colour(0xFF23, 0x45), Direction::UP, 0x6789); // Invalid Value (Hue).
 
    expected = ByteArray({
                            0x01, 0x67,    // Hue
@@ -1292,7 +1292,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_pack_invalid_value)
 
    // -- Direct access --
 
-   message.hue = 600;
+   message.colour.hue = 600;
 
    payload = ByteArray(message.size());
 
@@ -1312,8 +1312,8 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack)
                         });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
-   LONGS_EQUAL(0x0123, message.hue);
-   LONGS_EQUAL(0x45, message.saturation);
+   LONGS_EQUAL(0x0123, message.colour.hue);
+   LONGS_EQUAL(0x45, message.colour.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x6789, message.time);
 }
@@ -1334,8 +1334,8 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_invalid_value)
                         });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
-   LONGS_EQUAL(359, message.hue);
-   LONGS_EQUAL(0x45, message.saturation);
+   LONGS_EQUAL(359, message.colour.hue);
+   LONGS_EQUAL(0x45, message.colour.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x6789, message.time);
 }
@@ -1356,8 +1356,8 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete)
                         });
 
    LONGS_EQUAL(0, message.unpack(payload));
-   LONGS_EQUAL(0, message.hue);
-   LONGS_EQUAL(0, message.saturation);
+   LONGS_EQUAL(0, message.colour.hue);
+   LONGS_EQUAL(0, message.colour.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0, message.time);
 }
@@ -1369,7 +1369,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete)
  */
 TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete_keep_values)
 {
-   MoveToHueSaturationMessage message(0x0123, 0x45, Direction::UP, 0x6789);
+   MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    payload = ByteArray({
                         0x01, 0x00,    // Hue
@@ -1379,8 +1379,8 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete_keep_values)
                         });
 
    LONGS_EQUAL(0, message.unpack(payload));
-   LONGS_EQUAL(0x0123, message.hue);
-   LONGS_EQUAL(0x45, message.saturation);
+   LONGS_EQUAL(0x0123, message.colour.hue);
+   LONGS_EQUAL(0x45, message.colour.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x6789, message.time);
 }

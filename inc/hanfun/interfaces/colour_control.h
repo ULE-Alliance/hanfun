@@ -655,8 +655,7 @@ namespace HF
           */
          struct MoveToHueSaturationMessage
          {
-            uint16_t hue;           //!< New Hue value
-            uint8_t saturation;     //!< New Saturation value in degrees.
+            HS_Colour colour;       //!< New Hue and Saturation Colour.
             Direction direction;    //!< @c Direction of movement.
             uint16_t time;          //!< Time of a single step transition in units of 100msec.
 
@@ -670,17 +669,14 @@ namespace HF
              * @param [in] dir         @c Direction of movement.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            MoveToHueSaturationMessage (uint16_t hue = 0, uint8_t saturation = 0,
+            MoveToHueSaturationMessage (HS_Colour colour = HS_Colour(0,0),
                                      Direction dir = Direction::UP,
                                      uint16_t time = 0) :
-                  saturation(saturation), direction(dir), time(time)
-            {
-               this->hue = hue<=HUE_MAX ? hue : HUE_MAX;
-            }
+                  colour(colour), direction(dir), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(hue)            // Hue
-                                               + sizeof(saturation)     // Saturation
+            static constexpr uint16_t min_size = HS_Colour::min_size    // HS colour
                                                + sizeof(uint8_t)        // Direction
                                                + sizeof(time);          // time
 
