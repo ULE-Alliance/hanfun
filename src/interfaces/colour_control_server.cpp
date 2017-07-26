@@ -274,6 +274,29 @@ void Server::step_hue(const Protocol::Address &addr)
 }
 
 // =============================================================================
+// Server::hue_callback
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Server::hue_callback(callback_args_t &arg)
+{
+   if (arg.hs.n_steps != 0)
+   {
+      hue_and_saturation(HS_Colour(hue_and_saturation().hue + arg.hs.step,
+                                   hue_and_saturation().saturation));
+      arg.hs.n_steps--;
+      return 1;
+   }
+   else
+   {
+      hue_and_saturation(HS_Colour(arg.hs.end,hue_and_saturation().saturation));
+      return 0;
+   }
+}
+
+// =============================================================================
 // Server::move_to_saturation
 // =============================================================================
 /*!
