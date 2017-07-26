@@ -105,10 +105,10 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
       case XY_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint32_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<XY_Colour, Server> Attribute;
 
-         auto getter = (uint32_t (Server::*)(void) const) & Server::xy;
-         auto setter = (void (Server::*)(uint32_t)) & Server::xy;
+         auto getter = (XY_Colour (Server::*)(void) const) & Server::xy;
+         auto setter = (void (Server::*)(XY_Colour)) & Server::xy;
 
          return new Attribute(*this, attr, getter, setter, Xy::WRITABLE);
       }
@@ -480,7 +480,7 @@ void Server::hue_and_saturation(uint32_t __value)
  *
  */
 // =============================================================================
-uint32_t Server::xy() const
+XY_Colour Server::xy() const
 {
    return _xy;
 }
@@ -492,7 +492,7 @@ uint32_t Server::xy() const
  *
  */
 // =============================================================================
-void Server::xy(uint32_t __value)
+void Server::xy(XY_Colour __value)
 {
    HF_SETTER_HELPER(Xy, _xy, __value);
 }

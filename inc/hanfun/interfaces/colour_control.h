@@ -117,6 +117,8 @@ namespace HF
             uint16_t X;
             uint16_t Y;
 
+            XY_Colour() = default;
+
             /*!
              * Constructor
              *
@@ -124,12 +126,6 @@ namespace HF
              * @param [in] Y     Y colour value.
              */
             XY_Colour(uint16_t X, uint16_t Y): X(X),Y(Y)
-            {}
-
-            /*!
-             * Empty Constructor
-             */
-            XY_Colour(): X(0), Y(0)
             {}
 
             //! Minimum pack/unpack required data size.
@@ -147,6 +143,46 @@ namespace HF
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+
+            //! @copydoc HF::Attributes::IAttribute::compare
+            int compare (const XY_Colour &other) const
+            {
+               if( this->X != other.X)
+               {
+                  return (this->X-other.X);
+               }
+               else
+               {
+                  if (this->Y != other.Y)
+                  {
+                     return (this->Y - other.Y);
+                  }
+                  else
+                  {
+                     return 0;
+                  }
+               }
+            }
+
+            //! @copydoc HF::Attributes::IAttribute::changed
+            float changed (const XY_Colour &other) const
+            {
+               if (this->X != other.X)
+               {
+                  return ( 100*(this->X - other.X)/static_cast<float>(this->X));
+               }
+               else
+               {
+                  if (this->Y != other.Y)
+                  {
+                     return ( 100*(this->Y - other.Y)/static_cast<float>(this->Y));
+                  }
+                  else
+                  {
+                     return 0.0f;
+                  }
+               }
+            }
          };
 
          // =============================================================================
@@ -195,13 +231,13 @@ namespace HF
          /*!
           * Helper class to handle the XY attribute for the Colour Control interface.
           */
-         struct Xy: public HF::Attributes::Attribute<uint32_t>
+         struct Xy: public HF::Attributes::Attribute<XY_Colour>
          {
             static constexpr uint8_t ID       = XY_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = false;   //!< Attribute Read/Write
 
-            Xy(uint32_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<uint32_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            Xy(XY_Colour value = XY_Colour(0,0), HF::Interface *owner = nullptr):
+               Attribute<XY_Colour>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
             {}
          };
 
@@ -734,7 +770,7 @@ namespace HF
 
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
 
-            uint32_t _xy;   //!< XY
+            XY_Colour _xy;   //!< XY
 
 #endif
 
@@ -918,14 +954,14 @@ namespace HF
              *
              * @return  the current XY.
              */
-            uint32_t xy() const;
+            XY_Colour xy() const;
 
             /*!
              * Set the XY for the Colour Control server.
              *
              * @param [in] __value the  XY value to set the server to.
              */
-            void xy(uint32_t __value);
+            void xy(XY_Colour __value);
 
 #endif
 
