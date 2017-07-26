@@ -24,6 +24,7 @@
 
 #include <string>
 #include <map>
+#include <forward_list>
 
 namespace HF
 {
@@ -158,6 +159,24 @@ namespace HF
                return it;
             }
 
+            bool exists(const Member &member)
+            {
+               return !(find_member(member) == members.end());
+            }
+
+            bool exists(uint16_t device, uint8_t unit)
+            {
+               const Member member(device, unit);
+
+               return !(find_member(member) == members.end());
+            }
+
+            bool add(uint16_t device, uint8_t unit)
+            {
+               const Member member(device, unit);
+
+               return add(member);
+            }
 
             bool add(const Member &member)
             {
@@ -592,6 +611,9 @@ namespace HF
             Base(Unit0 &unit): Service<HF::Interface::GROUP_MANAGEMENT>(unit) {}
          };
 
+         // Forward declaration.
+         struct IGroupTable;
+
          /*!
           * Group Management %Service : %Server side implementation.
           *
@@ -787,6 +809,10 @@ namespace HF
                return entries().next_address();
             }
 
+            //! @copydoc HF::Interface::handle
+            Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                                  uint16_t offset);
+
             protected:
 
             /*!
@@ -810,18 +836,107 @@ namespace HF
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
+
+            /*!
+             * Process the result of adding a device to a group.
+             *
+             * @param [in] addr        HF address of the device that requested the
+             *                         @c HF::GroupManagement::ADD_CMD command.
+             * @param [in] result      the result of the operation.
+             * @param [in] request     the payload for the @c HF::GroupManagement::ADD_CMD command.
+             * @param [in] reference   Application reference for the initial request.
+             */
+            void added(const Protocol::Address &addr, Common::Result result,
+                       const AddMessage &request, uint8_t reference);
+
+            virtual IGroupTable &group_table() const = 0;
+
+            friend IGroupTable;
+         };
+
+         /*!
+          * Interface to the HF::GroupTable API used to update the device's group tables
+          * entries on add/remove events.
+          *
+          * Implementations of this interface are responsible for calling HF::IGroupTable::added,
+          * when the device responds to the @c HF::GroupTable::ADD_CMD / @c HF::GroupTable::REMOVE_CMD
+          * commands.
+          */
+         struct IGroupTable: protected GroupTable::Client
+         {
+            IGroupTable(IServer &_server): GroupTable::Client(_server.unit()),
+               server(_server)
+            {}
+
+            using GroupTable::Client::uid;
+            using GroupTable::Client::handle;
+
+            /*!
+             * Send a GroupTable::ADD_CMD to the device given by the @c AddMessage request.
+             *
+             * @param source     HF address of the device that requested the @c HF::GroupManagement::ADD_CMD.
+             * @param request    the payload for the @c HF::GroupManagement::ADD_CMD command.
+             * @param reference  application reference of the message.
+             */
+            virtual void add(const Protocol::Address &source, const Message &request,
+                             uint8_t reference);
+
+            protected:
+
+            IServer &server;
+
+            using GroupTable::Client::added;
+
+            void added(const Protocol::Address &dest, Common::Result result,
+                       const AddMessage &request, uint8_t reference)
+            {
+               server.added(dest, result, request, reference);
+            }
+         };
+
+         /*!
+          * Default implementation of the @c IGroupTable interface.
+          */
+         struct GroupTableClient: public IGroupTable
+         {
+            using Entry = std::tuple<Protocol::Address, Message, uint8_t>;
+
+            enum Fields
+            {
+               ADDRESS,
+               MESSAGE,
+               REFERENCE,
+            };
+
+            GroupTableClient(IServer &_server): IGroupTable(_server)
+            {}
+
+            //! @copydoc IGroupTable::add
+            void add(const Protocol::Address &source, const AddMessage &request,
+                     uint8_t reference);
+
+            protected:
+
+            std::forward_list<Entry> requests;
+
+            using IGroupTable::added;
+            using IGroupTable::removed;
+
+            //! @copydoc GroupTable::Client::added
+            void added(const Protocol::Address &addr, const GroupTable::Response &response);
          };
 
          /*!
           * Helper class used to implement custom functionality to the group management
           * server side.
           */
-         template<typename _Entries = Entries>
+         template<typename _Entries = Entries, typename _GroupTable = GroupTableClient>
          class Server: public IServer
          {
             protected:
 
             _Entries _entries;
+            _GroupTable _group_table;
 
             public:
 
@@ -830,7 +945,7 @@ namespace HF
              *
              * @param [in] unit  reference to the unit containing this service.
              */
-            Server(Unit0 &unit): IServer(unit)
+            Server(Unit0 &unit): IServer(unit), _group_table(*this)
             {}
 
             virtual ~Server()
@@ -840,6 +955,14 @@ namespace HF
             _Entries &entries() const
             {
                return const_cast<_Entries &>(_entries);
+            }
+
+            protected:
+
+            //! @copydoc IServer::group_table
+            _GroupTable &group_table() const
+            {
+               return const_cast<_GroupTable &>(_group_table);
             }
          };
 

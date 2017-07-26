@@ -1068,6 +1068,10 @@ TEST_GROUP(GroupManagementServer)
    Protocol::Address addr;
    Testing::Link link;
 
+   uint16_t group_addr = 0x0002;       // Group Address to add
+   uint16_t dev_addr   = 0x1234;
+   uint16_t dev_unit   = 0x56;
+
    TEST_SETUP()
    {
       device                    = new Testing::Device();
@@ -1082,7 +1086,7 @@ TEST_GROUP(GroupManagementServer)
       packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
-      packet.message.type       = Protocol::Message::COMMAND_RES;
+      packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
       mock().ignoreOtherCalls();
@@ -1129,6 +1133,15 @@ TEST_GROUP(GroupManagementServer)
       auto it = server->entries().find(addr);
 
       return add_member(*(const_cast<Group *>(it.operator->())), dev, unit);
+   }
+
+   void fill_groups(uint8_t count = 10, const std::string prefix = std::string("MyGroup"))
+   {
+      for (uint8_t i = 0; i < count; ++i)
+      {
+         std::string name = prefix + std::to_string(i);
+         create_group(name);
+      }
    }
 };
 
@@ -1304,225 +1317,364 @@ TEST(GroupManagementServer, Delete_Existing_Group)
    LONGS_EQUAL(Common::Result::OK, resp.code);
 }
 
-#if 0
-//! @test Add support.
-TEST(GroupManagementServer, Add_1)
+//! @test Add support - Step 1.
+TEST(GroupManagementServer, Add_Step1)
 {
-   // ----- Create 10 EMPTY groups -----
-   for (uint16_t i = 0; i < 10; ++i)
-   {
-      std::string name = std::string("MyGroup") + std::to_string(i);
-      create_group(name);
-   }
+   fill_groups();
 
-   LONGS_EQUAL(10, server->entries().size());
-
-   uint16_t group_addr = 0x0002;       // Group Address to add
-   uint16_t dev_addr   = 0x1234;
-   uint16_t dev_unit   = 0x56;
    AddMessage received(group_addr, dev_addr, dev_unit);
-   ByteArray received_payload(received.size());
 
-   received.pack(received_payload);    // pack it
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);   // pack it
 
    packet.message.itf.member = GroupManagement::ADD_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
-   packet.message.length     = received_payload.size();
-   packet.message.payload    = received_payload;
+   packet.message.length     = received.size();
 
-   mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(dev_addr, _packet->destination.device);
+   LONGS_EQUAL(0, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_REQ, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_TABLE, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupTable::ADD_CMD, _packet->message.itf.member);
+
+   GroupTable::Entry entry;
+
+   LONGS_EQUAL(entry.size(), entry.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(group_addr, entry.group);
+   LONGS_EQUAL(dev_unit, entry.unit);
+}
+
+//! @test Add support - Step 1 - Fail Group.
+TEST(GroupManagementServer, Add_Step1_Fail_Group)
+{
+   fill_groups();
+
+   group_addr = server->entries().size() + 1;
+
+   AddMessage received(group_addr, dev_addr, dev_unit);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);   // pack it
+
+   packet.message.itf.member = GroupManagement::ADD_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received.size();
+
+   mock("GroupManagement::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(packet.source.device, _packet->destination.device);
+   LONGS_EQUAL(packet.source.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::ADD_CMD, _packet->message.itf.member);
+
+   AddResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
+}
+
+//! @test Add support - Step 1 - Fail Group.
+TEST(GroupManagementServer, Add_Step1_Fail_Member)
+{
+   fill_groups();
+
+   auto group = server->entries().find(group_addr);
+
+   CHECK_TRUE(group != nullptr);
+
+   CHECK_TRUE(group->add(dev_addr, dev_unit));
+
+   AddMessage received(group_addr, dev_addr, dev_unit);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);   // pack it
+
+   packet.message.itf.member = GroupManagement::ADD_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received.size();
+
+   mock("GroupManagement::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(packet.source.device, _packet->destination.device);
+   LONGS_EQUAL(packet.source.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::ADD_CMD, _packet->message.itf.member);
+
+   AddResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
+}
+
+//! @test Add support - Step 2.
+TEST(GroupManagementServer, Add_Step2)
+{
+   fill_groups();
+
+   // Create request for the response below.
+   packet.message.reference = 0xAA;
+   AddMessage request(group_addr, dev_addr, dev_unit);
+
+   server->add(packet, request);
+
+   // Handle response from GroupTable::Server
+
+   GroupTable::Response response_gt(Common::Result::OK, group_addr, dev_unit);
+
+   payload                   = ByteArray(response_gt.size() + 6);
+
+   packet.source             = Protocol::Address(dev_addr, 0);
+
+   packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id     = HF::Interface::GROUP_TABLE;
+   packet.message.itf.member = GroupTable::ADD_CMD;
+
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+
+   packet.message.length     = payload.size();
+
+   response_gt.pack(payload, 3);
+
    mock("GroupManagement::Server").expectOneCall("added");
    mock("HF::Transport::Group").expectOneCall("add")
-         .withParameter("group", group_addr)
-         .withParameter("device", dev_addr)
-         .ignoreOtherParameters()
-         .andReturnValue(Common::Result::OK);
+      .withParameter("group", group_addr)
+      .withParameter("device", dev_addr)
+      .ignoreOtherParameters()
+      .andReturnValue(Common::Result::OK);
+   mock("AbstractDevice").expectOneCall("send");
 
-   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
-                        server->handle(packet, received_payload, 0));
-
-   Protocol::Packet *response = device->packets.back();
-
-   CHECK_TRUE(response != nullptr);
-
-   LONGS_EQUAL(42, response->destination.device);
-   LONGS_EQUAL(0, response->destination.unit);
-   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(addr.device, _packet->destination.device);
+   LONGS_EQUAL(addr.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(0xAA, _packet->message.reference);
+
    // ----- Check the response message -----
 
    AddResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
+   LONGS_EQUAL(resp.size(), resp.unpack(_packet->message.payload));
    LONGS_EQUAL(Common::Result::OK, resp.code);
 }
 
-TEST(GroupManagementServer, Add_without_groups)
+//! @test Add support - Step 2 (No Request).
+TEST(GroupManagementServer, Add_Step2_NoRequest)
 {
-   LONGS_EQUAL(0, server->entries().size());  // check if there are no groups
+   fill_groups();
 
-   uint16_t group_addr = 0x0002;              // Group Address to add
-   uint16_t dev_addr   = 0x1234;
-   uint16_t dev_unit   = 0x56;
-   AddMessage received(group_addr, dev_addr, dev_unit);
-   ByteArray received_payload(received.size());
+   // Handle response from GroupTable::Server
 
-   received.pack(received_payload);          // pack it
+   GroupTable::Response response_gt(Common::Result::OK, group_addr, dev_unit);
 
-   packet.message.itf.member = GroupManagement::ADD_CMD;
-   packet.message.type       = Protocol::Message::COMMAND_REQ;
-   packet.message.length     = received_payload.size();
-   packet.message.payload    = received_payload;
+   payload                   = ByteArray(response_gt.size() + 6);
 
-   mock("AbstractDevice").expectOneCall("send");
-   mock("GroupManagement::Server").expectOneCall("add");
+   packet.source             = Protocol::Address(dev_addr, 0);
+
+   packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id     = HF::Interface::GROUP_TABLE;
+   packet.message.itf.member = GroupTable::ADD_CMD;
+
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+
+   packet.message.length     = payload.size();
+
+   response_gt.pack(payload, 3);
+
    mock("GroupManagement::Server").expectNoCall("added");
+   mock("HF::Transport::Group").expectNoCall("add");
+   mock("AbstractDevice").expectNoCall("send");
 
-   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
-                        server->handle(packet, received_payload, 0));
-
-   Protocol::Packet *response = device->packets.back();
-
-   CHECK_TRUE(response != nullptr);
-
-   LONGS_EQUAL(42, response->destination.device);
-   LONGS_EQUAL(0, response->destination.unit);
-   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
-
-   AddResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
-   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+   mock("HF::Transport::Group").checkExpectations();
 }
 
-TEST(GroupManagementServer, Add_2)
+//! @test Add support - Step 2.
+TEST(GroupManagementServer, Add_Step2_No_Group)
 {
-   // ----- Create 10 EMPTY groups -----
-   for (uint16_t i = 0; i < 10; ++i)
-   {
-      std::string name = std::string("MyGroup") + std::to_string(i);
-      create_group(name);
-   }
+   fill_groups();
 
-   LONGS_EQUAL(10, server->entries().size());
+   // Create request for the response below.
 
-   uint16_t group_addr = 0x0002;                   // Group Address to add
-   uint16_t dev_addr   = 0x1234;
-   uint16_t dev_unit;
+   packet.message.reference = 0xAA;
+   AddMessage request(group_addr, dev_addr, dev_unit);
 
-   for (uint16_t i = 0; i < 2; ++i)
-   {
-      dev_unit = 0x56 + i;
+   server->add(packet, request);
 
-      AddMessage received(group_addr, dev_addr, dev_unit);
-      ByteArray received_payload(received.size());
+   // Remove group before response is received.
 
-      received.pack(received_payload);              // pack it
+   server->entries().destroy(group_addr);
 
-      packet.message.itf.member = GroupManagement::ADD_CMD;
-      packet.message.type       = Protocol::Message::COMMAND_REQ;
-      packet.message.length     = received_payload.size();
-      packet.message.payload    = received_payload;
+   // Handle response from GroupTable::Server
 
-      mock("AbstractDevice").expectOneCall("send");
-      mock("GroupManagement::Server").expectOneCall("add");
-      mock("GroupManagement::Server").expectOneCall("added");
-      mock("HF::Transport::Group").expectOneCall("add")
-            .ignoreOtherParameters()
-            .andReturnValue(Common::Result::OK);
+   GroupTable::Response response_gt(Common::Result::OK, group_addr, dev_unit);
 
-      UNSIGNED_LONGS_EQUAL(Common::Result::OK,
-                           server->handle(packet, received_payload, 0));
+   payload                   = ByteArray(response_gt.size() + 6);
 
-      mock("GroupManagement::Server").checkExpectations();
-      mock("AbstractDevice").checkExpectations();
-      mock("HF::Transport::Group").checkExpectations();
-      mock("AbstractDevice").checkExpectations();
+   packet.source             = Protocol::Address(dev_addr, 0);
 
-      Protocol::Packet *response = device->packets.back();
+   packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id     = HF::Interface::GROUP_TABLE;
+   packet.message.itf.member = GroupTable::ADD_CMD;
 
-      CHECK_TRUE(response != nullptr);
+   packet.message.type       = Protocol::Message::COMMAND_RES;
 
-      LONGS_EQUAL(42, response->destination.device);
-      LONGS_EQUAL(0, response->destination.unit);
-      LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+   packet.message.length     = payload.size();
 
+   response_gt.pack(payload, 3);
 
-      AddResponse resp;
-      LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
-      LONGS_EQUAL(Common::Result::OK, resp.code);
-   }
-}
-
-//! @test Add support.
-TEST(GroupManagementServer, Add_twice)
-{
-   std::string group_name("MyGroup");
-
-   // ----- Create Group -----
-   GroupPtr group_ptr = create_group(group_name);
-
-   LONGS_EQUAL(1, server->entries().size());
-
-   // Group Address to add
-   uint16_t group_addr = 0x0001;
-   uint16_t dev_addr   = 0x1234;
-   uint16_t dev_unit   = 0x56;
-
-   // Manually add to the group
-   add_member(group_name, dev_addr, dev_unit);
-
-   LONGS_EQUAL(1, group_ptr->members.size());
-
-   // Add message to test
-   AddMessage received(group_addr, dev_addr, dev_unit);
-   ByteArray received_payload(received.size());
-
-   received.pack(received_payload);              // pack it
-
-   packet.message.itf.member = GroupManagement::ADD_CMD;
-   packet.message.type       = Protocol::Message::COMMAND_REQ;
-   packet.message.length     = received_payload.size();
-   packet.message.payload    = received_payload;
-
-   mock("AbstractDevice").expectOneCall("send");
-   mock("GroupManagement::Server").expectOneCall("add");
    mock("GroupManagement::Server").expectNoCall("added");
-   mock("HF::Transport::Group").expectOneCall("add")
-         .ignoreOtherParameters()
-         .andReturnValue(Common::Result::OK);
+   mock("HF::Transport::Group").expectNoCall("add");
+   mock("AbstractDevice").expectOneCall("send");
 
-   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
-                        server->handle(packet, received_payload, 0));
-
-   // Check if the members size is still 1
-   LONGS_EQUAL(1, group_ptr->members.size());
-
-   Protocol::Packet *response = device->packets.back();
-
-   CHECK_TRUE(response != nullptr);
-
-   LONGS_EQUAL(42, response->destination.device);
-   LONGS_EQUAL(0, response->destination.unit);
-   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(addr.device, _packet->destination.device);
+   LONGS_EQUAL(addr.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(0xAA, _packet->message.reference);
+
    // ----- Check the response message -----
 
    AddResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
+   LONGS_EQUAL(resp.size(), resp.unpack(_packet->message.payload));
    LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
+//! @test Add support - Step 2 (Transport Layer Failure).
+TEST(GroupManagementServer, Add_Step2_Transport_Fail)
+{
+   fill_groups();
+
+   // Create request for the response below.
+
+   packet.message.reference = 0xAA;
+   AddMessage request(group_addr, dev_addr, dev_unit);
+
+   server->add(packet, request);
+
+   // Handle response from GroupTable::Server
+
+   GroupTable::Response response_gt(Common::Result::OK, group_addr, dev_unit);
+
+   payload                   = ByteArray(response_gt.size() + 6);
+
+   packet.source             = Protocol::Address(dev_addr, 0);
+
+   packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id     = HF::Interface::GROUP_TABLE;
+   packet.message.itf.member = GroupTable::ADD_CMD;
+
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+
+   packet.message.length     = payload.size();
+
+   response_gt.pack(payload, 3);
+
+   mock("GroupManagement::Server").expectNoCall("added");
+   mock("HF::Transport::Group").expectOneCall("add")
+      .withParameter("group", group_addr)
+      .withParameter("device", dev_addr)
+      .ignoreOtherParameters()
+      .andReturnValue(Common::Result::FAIL_RESOURCES);
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(addr.device, _packet->destination.device);
+   LONGS_EQUAL(addr.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(0xAA, _packet->message.reference);
+
+   // ----- Check the response message -----
+
+   AddResponse resp;
+   LONGS_EQUAL(resp.size(), resp.unpack(_packet->message.payload));
+   LONGS_EQUAL(Common::Result::FAIL_RESOURCES, resp.code);
+}
+
+#if 0
 //! @test Remove support.
 TEST(GroupManagementServer, Remove_without_groups)
 {

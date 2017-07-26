@@ -25,6 +25,17 @@ using namespace HF::Core;
 using namespace HF::Core::GroupManagement;
 
 // =============================================================================
+// Helper Functions
+// =============================================================================
+
+static bool operator==(Message const &lhs, Message const &rhs)
+{
+   return lhs.address == rhs.address &&
+          lhs.device == rhs.device &&
+          lhs.unit == rhs.unit;
+}
+
+// =============================================================================
 // Group Management Interface : Server Role
 // =============================================================================
 
@@ -86,6 +97,26 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 
       default:
          return nullptr;
+   }
+}
+
+// =============================================================================
+// IServer::handle
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result IServer::handle(Protocol::Packet &packet, Common::ByteArray &payload,
+                               uint16_t offset)
+{
+   if (packet.message.itf.id == group_table().uid())
+   {
+      return group_table().handle(packet, payload, offset);
+   }
+   else
+   {
+      return Server::handle(packet, payload, offset);
    }
 }
 
@@ -279,38 +310,15 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 
    auto group            = entry(msg.address);
 
-   if (group == nullptr)
+   if (group != nullptr && !group->exists(msg.device, msg.unit))
+   {
+      group_table().add(packet.source, msg, packet.message.reference);
+   }
+   else
    {
       result = Common::Result::FAIL_ARG;
-      goto _end;
+      added(packet.source, result, msg, packet.message.reference);
    }
-
-   member = Member(msg.device, msg.unit);
-
-   result = HF::Transport::Group::add(unit().device(), group->address, member.device);
-   if(result != Common::Result::OK)
-   {
-      goto _end;
-   }
-
-   if (!group->add(member))
-   {
-      result = Common::Result::FAIL_ARG;
-      HF::Transport::Group::remove(unit().device(), group->address, member.device);
-      goto _end;
-   }
-
-   this->added(group, member);
-
-   _end:
-
-   AddResponse response(result);
-
-   Protocol::Message message(packet.message, response.size());
-
-   response.pack(message.payload);
-
-   send(packet.source, message, packet.link);
 
    return result;
 }
@@ -324,6 +332,8 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 // =============================================================================
 Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &msg)
 {
+   UNUSED(packet);
+
    Member member;
 
    Common::Result result = Common::Result::OK;
@@ -400,3 +410,130 @@ Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &ms
    return result;
 }
 #endif
+
+// =============================================================================
+// IServer::added
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void IServer::added(const Protocol::Address &addr, Common::Result result,
+                    const AddMessage &request, uint8_t reference)
+{
+   GroupPtr group;
+
+   if (result != Common::Result::OK)
+   {
+      goto _end;
+   }
+
+   group = entries().find(request.address);
+
+   if (group == nullptr)
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   result = HF::Transport::Group::add(unit().device(), request.address, request.device);
+
+   if (result != Common::Result::OK)
+   {
+      goto _end;
+   }
+
+   if (!group->add(request.device, request.unit))
+   {
+      result = Common::Result::FAIL_ARG;
+
+      HF::Transport::Group::remove(unit().device(), request.address, request.device);
+
+      goto _end;
+   }
+
+   added(*group, Member(request.device, request.unit));
+
+   _end:
+
+   AddResponse response(result);
+
+   Protocol::Message message(response.size());
+
+   message.type       = Protocol::Message::COMMAND_RES;
+
+   message.reference  = reference;
+
+   message.itf.id     = IServer::uid();
+   message.itf.member = ADD_CMD;
+   message.itf.role   = SERVER_ROLE;
+
+   response.pack(message.payload);
+
+   send(addr, message);
+}
+
+// =============================================================================
+// GroupManagement::IGroupTable
+// =============================================================================
+
+// =============================================================================
+// IGroupTable::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void IGroupTable::add(const Protocol::Address &source, const Message &request, uint8_t reference)
+{
+   UNUSED(source);
+   UNUSED(reference);
+
+   GroupTable::Client::add(request.device, request.address, request.unit);
+}
+
+// =============================================================================
+// GroupManagement::GroupTableClient
+// =============================================================================
+
+// =============================================================================
+// IGroupTable::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void GroupTableClient::add(const Protocol::Address &source, const Message &request,
+                           uint8_t reference)
+{
+   requests.emplace_front(source, request, reference);
+   IGroupTable::add(source, request, reference);
+}
+
+// =============================================================================
+// GroupTableClient::added
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void GroupTableClient::added(const Protocol::Address &addr, const GroupTable::Response &response)
+{
+   Message message(response.group, addr.device, response.unit);
+
+   auto it = std::find_if(requests.begin(), requests.end(), [&message](const Entry &entry)
+   {
+      return message == std::get<MESSAGE>(entry);
+   });
+
+   /* *INDENT-OFF* */
+   HF_ASSERT(it != requests.end(), {return;});
+   /* *INDENT-ON* */
+
+   Protocol::Address source;
+   uint8_t reference;
+
+   std::tie(source, std::ignore, reference) = *it;
+
+   IGroupTable::added(source, response.code, message, reference);
+}
