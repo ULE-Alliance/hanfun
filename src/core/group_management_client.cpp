@@ -43,17 +43,17 @@ void Client::create(std::string name)
 {
    Protocol::Address addr(0, 0);
 
-   CreateMessage *payload = new CreateMessage(name);
+   CreateMessage request(name);
 
-   Protocol::Message message(payload->size());
+   Protocol::Message message(request.size());
 
-   message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Interface::GROUP_MANAGEMENT;
+   request.pack(message.payload);
+
+   message.itf.role = SERVER_ROLE;
+   message.itf.id = Interface::GROUP_MANAGEMENT;
    message.itf.member = CREATE_CMD;
 
    send(addr, message);
-
-   delete payload;
 }
 
 // =============================================================================
@@ -67,17 +67,17 @@ void Client::remove(uint16_t group)
 {
    Protocol::Address addr(0, 0);
 
-   DeleteMessage *payload = new DeleteMessage(group);
+   DeleteMessage request(group);
 
-   Protocol::Message message;
+   Protocol::Message message(request.size());
+
+   request.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = DELETE_CMD;
 
    send(addr, message);
-
-   delete payload;
 }
 
 // =============================================================================
@@ -91,17 +91,17 @@ void Client::add(uint16_t group, uint16_t device, uint8_t unit)
 {
    Protocol::Address addr(0, 0);
 
-   AddMessage *payload = new AddMessage(group, device, unit);
+   AddMessage request(group, device, unit);
 
-   Protocol::Message message;
+   Protocol::Message message(request.size());
+
+   request.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = ADD_CMD;
 
    send(addr, message);
-
-   delete payload;
 }
 
 // =============================================================================
@@ -115,17 +115,17 @@ void Client::remove(uint16_t group, uint16_t device, uint8_t unit)
 {
    Protocol::Address addr(0, 0);
 
-   RemoveMessage *payload = new RemoveMessage(group, device, unit);
+   RemoveMessage request(group, device, unit);
 
-   Protocol::Message message;
+   Protocol::Message message(request.size());
+
+   request.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = REMOVE_CMD;
 
    send(addr, message);
-
-   delete payload;
 }
 
 #ifdef HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD
@@ -140,17 +140,17 @@ void Client::get_info(uint16_t group)
 {
    Protocol::Address addr(0, 0);
 
-   InfoMessage *payload = new InfoMessage(group);
+   InfoMessage request(group);
 
-   Protocol::Message message;
+   Protocol::Message message(request.size());
+
+   request.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = GET_INFO_CMD;
 
    send(addr, message);
-
-   delete payload;
 }
 #endif
 
