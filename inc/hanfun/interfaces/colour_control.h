@@ -1234,16 +1234,20 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            void move_to_hue(const Protocol::Address &addr);
+            void move_to_hue(const Protocol::Address &addr, uint16_t hue,
+                             Direction direction,
+                             uint16_t transition);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_CMD,
              * to the broadcast network address.
              */
-            void move_to_hue()
+            void move_to_hue(uint16_t hue,
+                             Direction direction,
+                             uint16_t transition)
             {
                Protocol::Address addr;
-               move_to_hue(addr);
+               move_to_hue(addr, hue, direction, transition);
             }
 
             /*!

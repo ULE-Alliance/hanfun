@@ -272,9 +272,46 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 // =============================================================================
 Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+
+   Protocol::Response response;
+
    Common::Result result = Common::Result::OK;
+
+   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
+   {
+      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
+      goto _end;
+   }
+
+   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+
+   callback_args.hs.end = message.hue;
+
+   if (message.time != 0)
+   {
+      callback_args.hs.n_steps = message.time - 1;
+
+      callback_args.hs.step = HS_Colour::get_hue_travel_distance(message.direction,
+                                                                 hue_and_saturation().hue,
+                                                                 message.hue);
+
+      callback_args.hs.step /= message.time;
+
+   }
+   else
+   {
+      callback_args.hs.n_steps = 0;
+   }
+
+   if(hue_callback(callback_args))  //Run once immediately
+   {
+      //If there are still iterations, inform the APP.
+      add_transition(1, &HF::Interfaces::ColourControl::Server::hue_callback, &callback_args);
+   }
+
+   _end:
+
   return result;
 }
 

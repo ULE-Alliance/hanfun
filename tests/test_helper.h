@@ -91,7 +91,7 @@ template<typename Attribute, typename Interface, typename Getter, typename Sette
 void check_attribute_common(Interface &itf, bool writable, Value first, Value second,
                             Getter getter, Setter setter, const char *file, int lineno)
 {
-   mock("Interface").expectNCalls(2, "notify");
+   mock("Interface").expectNCalls(2, "notify").ignoreOtherParameters();
 
    (itf.*setter)(first);
 

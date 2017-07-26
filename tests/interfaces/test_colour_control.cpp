@@ -1975,10 +1975,9 @@ TEST_GROUP(ColourControlClient)
 //! @test Move To Hue support.
 TEST(ColourControlClient, MoveToHue)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_to_hue(addr);
+   client.move_to_hue(addr, 100, Direction::UP, 10);
 
    mock("Interface").checkExpectations();
 
@@ -1986,6 +1985,13 @@ TEST(ColourControlClient, MoveToHue)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::MOVE_TO_HUE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   MoveToHueMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(100,           message.hue);
+   LONGS_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(10,            message.time);
 }
 
 //! @test Move Hue support.
@@ -2263,28 +2269,58 @@ TEST_GROUP(ColourControlServer)
          return InterfaceHelper<ColourControl::Server>::stop(addr);
       }
 
+      void notify (const HF::Attributes::IAttribute &old_value,
+                   const HF::Attributes::IAttribute &new_value) const
+      {
+         mock("Interface").actualCall("notify")
+               .withParameterOfType("IAttribute", "old", &old_value)
+               .withParameterOfType("IAttribute", "new", &new_value);
+      }
+
+      void add_transition(uint16_t time, ColourControl::Server::fptr callback,
+                          ColourControl::Server::callback_args_t *arg)
+      {
+         UNUSED(time);
+         UNUSED(callback);
+         UNUSED(arg);
+         mock("ColourControl::Server").actualCall("add_transition")
+               .withParameter("n_steps", arg->hs.n_steps)
+               .withParameter("step", arg->hs.step)
+               .withParameter("end", arg->hs.end);
+      }
    };
 
    ColourControlServer server;
 
-
    Protocol::Packet packet;
    Common::ByteArray payload;
+
+   Protocol::Address addr;
+   Testing::Link link;
+
 
    TEST_SETUP()
    {
       server                    = ColourControlServer();
 
+      addr = Protocol::Address(42, 0);
+      link = Testing::Link();
+
       packet                    = Protocol::Packet();
+      packet.source             = addr;
       packet.message.itf.role   = HF::Interface::SERVER_ROLE;
       packet.message.itf.id     = server.uid();
       packet.message.itf.member = 0xFF;
+
+      packet.message.type = Protocol::Message::COMMAND_REQ;
+      packet.link = &link;
 
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      payload = ByteArray(0);
       mock().clear();
    }
 };
@@ -2325,15 +2361,223 @@ TEST(ColourControlServer, ColourTemperature)
 }
 
 //! @test Move To Hue support.
-TEST(ColourControlServer, MoveToHue)
+TEST(ColourControlServer, MoveToHue_No_Support)
 {
-   // FIXME Generated Stub.
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
+
+   MoveToHueMessage received(150,Direction::UP,0);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
    mock("ColourControl::Server").expectOneCall("move_to_hue");
+   mock("ColourControl::Server").expectNoCall("add_transition");
+   mock("ColourControl::Server").expectNoCall("hue_callback");
+   mock("Interface").expectNoCall("notify");
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+}
+
+//! @test Move To Hue support instantaneously.
+TEST(ColourControlServer, MoveToHue_Instantly)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);
+
+   MoveToHueMessage received(150,Direction::UP,0);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE, &server);
+
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(150, 50), &server);
+
+   mock("ColourControl::Server").expectOneCall("move_to_hue");
+   mock("ColourControl::Server").expectNoCall("add_transition");  // change value now.
+   mock("ColourControl::Server").expectOneCall("hue_callback");
+   mock("Interface").expectOneCall("notify")
+            .withParameterOfType("IAttribute", "new", &mode_new)
+            .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+            .withParameterOfType("IAttribute", "old", &HS_old)
+            .withParameterOfType("IAttribute", "new", &HS_new);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   LONGS_EQUAL(150, server.hue_and_saturation().hue);
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+}
+
+//! @test Move To Hue support with time frame.
+TEST(ColourControlServer, MoveToHue_With_Time)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);
+
+   MoveToHueMessage received(150,Direction::UP,5);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE,&server);
+
+   HueAndSaturation HS_old(HS_Colour(100,50),&server);
+   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+
+   mock("ColourControl::Server").expectOneCall("move_to_hue");
+
+   mock("ColourControl::Server").expectOneCall("add_transition")
+         .withParameter("n_steps",3)
+         .withParameter("step",10)
+         .withParameter("end", 150);
+   mock("ColourControl::Server").expectOneCall("hue_callback");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &HS_old)
+         .withParameterOfType("IAttribute", "new", &HS_new);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+   LONGS_EQUAL(110, server.hue_and_saturation().hue);
+
+   mock("Interface").checkExpectations();
+   mock("ColourControl::Server").checkExpectations();
+}
+
+//! @test Move To Hue support direction UP.
+TEST(ColourControlServer, MoveToHue_Check_step_DIR_UP)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+
+   MoveToHueMessage received(150,Direction::UP,5);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE,&server);
+
+   HueAndSaturation HS_old(HS_Colour(100,50),&server);
+   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+
+   mock("ColourControl::Server").expectOneCall("add_transition")
+         .withParameter("n_steps",3)
+         .withParameter("step",10)
+         .ignoreOtherParameters();
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("Interface").checkExpectations();
+   mock("ColourControl::Server").checkExpectations();
+}
+
+//! @test Move To Hue support Direction DOWN.
+TEST(ColourControlServer, MoveToHue_Check_step_DIR_Down)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+
+   MoveToHueMessage received(150,Direction::DOWN,5);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE,&server);
+
+   HueAndSaturation HS_old(HS_Colour(100,50),&server);
+   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+
+   mock("ColourControl::Server").expectOneCall("add_transition")
+         .withParameter("n_steps",3)
+         .withParameter("step",-62)
+         .ignoreOtherParameters();
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("Interface").checkExpectations();
+   mock("ColourControl::Server").checkExpectations();
+}
+
+//! @test Move To Hue support Direction SHORTEST.
+TEST(ColourControlServer, MoveToHue_Check_step_DIR_Shortest)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+
+   MoveToHueMessage received(150,Direction::SHORTEST,5);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE,&server);
+
+   HueAndSaturation HS_old(HS_Colour(100,50),&server);
+   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+
+   mock("ColourControl::Server").expectOneCall("add_transition")
+         .withParameter("n_steps",3)
+         .withParameter("step",10)
+         .ignoreOtherParameters();
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("Interface").checkExpectations();
+   mock("ColourControl::Server").checkExpectations();
+}
+
+//! @test Move To Hue support Direction LONGEST.
+TEST(ColourControlServer, MoveToHue_Check_step_DIR_Longest)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+
+   MoveToHueMessage received(150,Direction::LONGEST,5);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE,&server);
+
+   HueAndSaturation HS_old(HS_Colour(100,50),&server);
+   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+
+   mock("ColourControl::Server").expectOneCall("add_transition")
+         .withParameter("n_steps",3)
+         .withParameter("step",-62)
+         .ignoreOtherParameters();
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("Interface").checkExpectations();
    mock("ColourControl::Server").checkExpectations();
 }
 

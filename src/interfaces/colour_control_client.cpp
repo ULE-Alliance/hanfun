@@ -39,10 +39,14 @@ using namespace HF::Interfaces::ColourControl;
  *
  */
 // =============================================================================
-void Client::move_to_hue(const Protocol::Address &addr)
+void Client::move_to_hue(const Protocol::Address &addr, uint16_t hue,
+                         Direction direction,
+                         uint16_t transition)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   ColourControl::MoveToHueMessage move_msg(hue, direction, transition);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;
