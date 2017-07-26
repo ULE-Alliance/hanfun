@@ -2174,76 +2174,93 @@ TEST_GROUP(ColourControlServer)
    // TODO Add required unit tests.
    struct ColourControlServer: public InterfaceHelper<ColourControl::Server>
    {
-      void move_to_hue(const Protocol::Address &addr) override
+      Common::Result move_to_hue(const Protocol::Address &addr,
+                       const MoveToHueMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_hue");
-         InterfaceHelper<ColourControl::Server>::move_to_hue(addr);
+         return InterfaceHelper<ColourControl::Server>::move_to_hue(addr, message);
       }
 
-      void move_hue(const Protocol::Address &addr) override
+      Common::Result move_hue(const Protocol::Address &addr,
+                    const MoveHueMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_hue");
-         InterfaceHelper<ColourControl::Server>::move_hue(addr);
+         return InterfaceHelper<ColourControl::Server>::move_hue(addr, message);
       }
 
-      void step_hue(const Protocol::Address &addr) override
+      Common::Result step_hue(const Protocol::Address &addr,
+                    const  StepHueMessage &message) override
       {
          mock("ColourControl::Server").actualCall("step_hue");
-         InterfaceHelper<ColourControl::Server>::step_hue(addr);
+         return InterfaceHelper<ColourControl::Server>::step_hue(addr, message);
       }
 
-      void move_to_saturation(const Protocol::Address &addr) override
+      bool hue_callback(callback_args_t &arg) override
+      {
+         mock("ColourControl::Server").actualCall("hue_callback");
+         return InterfaceHelper<ColourControl::Server>::hue_callback(arg);
+      }
+
+      Common::Result move_to_saturation(const Protocol::Address &addr,
+                              const MoveToSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_saturation");
-         InterfaceHelper<ColourControl::Server>::move_to_saturation(addr);
+         return InterfaceHelper<ColourControl::Server>::move_to_saturation(addr, message);
       }
 
-      void move_saturation(const Protocol::Address &addr) override
+      Common::Result move_saturation(const Protocol::Address &addr,
+                           const MoveSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_saturation");
-         InterfaceHelper<ColourControl::Server>::move_saturation(addr);
+         return InterfaceHelper<ColourControl::Server>::move_saturation(addr, message);
       }
 
-      void step_saturation(const Protocol::Address &addr) override
+      Common::Result step_saturation(const Protocol::Address &addr,
+                           const StepSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("step_saturation");
-         InterfaceHelper<ColourControl::Server>::step_saturation(addr);
+         return InterfaceHelper<ColourControl::Server>::step_saturation(addr, message);
       }
 
-      void move_to_hue_and_saturation(const Protocol::Address &addr) override
+      Common::Result move_to_hue_and_saturation(const Protocol::Address &addr,
+                                      const MoveToHueSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_hue_and_saturation");
-         InterfaceHelper<ColourControl::Server>::move_to_hue_and_saturation(addr);
+         return InterfaceHelper<ColourControl::Server>::move_to_hue_and_saturation(addr, message);
       }
 
-      void move_to_xy(const Protocol::Address &addr) override
+      Common::Result move_to_xy(const Protocol::Address &addr,
+                      const MoveToXYMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_xy");
-         InterfaceHelper<ColourControl::Server>::move_to_xy(addr);
+         return InterfaceHelper<ColourControl::Server>::move_to_xy(addr, message);
       }
 
-      void move_xy(const Protocol::Address &addr) override
+      Common::Result move_xy(const Protocol::Address &addr,
+                   const MoveXYMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_xy");
-         InterfaceHelper<ColourControl::Server>::move_xy(addr);
+         return InterfaceHelper<ColourControl::Server>::move_xy(addr, message);
       }
 
-      void step_xy(const Protocol::Address &addr) override
+      Common::Result step_xy(const Protocol::Address &addr,
+                   const StepXYMessage &message) override
       {
          mock("ColourControl::Server").actualCall("step_xy");
-         InterfaceHelper<ColourControl::Server>::step_xy(addr);
+         return InterfaceHelper<ColourControl::Server>::step_xy(addr, message);
       }
 
-      void move_to_colour_temperature(const Protocol::Address &addr) override
+      Common::Result move_to_colour_temperature(const Protocol::Address &addr,
+                                      const MoveToTemperatureMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_colour_temperature");
-         InterfaceHelper<ColourControl::Server>::move_to_colour_temperature(addr);
+         return InterfaceHelper<ColourControl::Server>::move_to_colour_temperature(addr, message);
       }
 
-      void stop(const Protocol::Address &addr) override
+      Common::Result stop(const Protocol::Address &addr) override
       {
          mock("ColourControl::Server").actualCall("stop");
-         InterfaceHelper<ColourControl::Server>::stop(addr);
+         return InterfaceHelper<ColourControl::Server>::stop(addr);
       }
 
    };

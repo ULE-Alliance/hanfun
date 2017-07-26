@@ -966,28 +966,44 @@ namespace HF
             //! @{
 
             /*!
+             * Inform the APP that its necessary to call the @c callback function
+             * with @c arg arguments after @ time has passed.
+             *
+             * @param [in] time        time in units of 100ms to wait before calling the callback.
+             * @param [in] callback    the callback
+             * @param [in] arg         the arguments to be passed on the callback.
+             */
+            virtual void add_transition(uint16_t time, fptr callback, callback_args_t *arg) =0;
+
+            /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr        the network address to send the message to.
+             * @param [in] message     the @c MoveToHueMessage received.
              */
-            virtual void move_to_hue(const Protocol::Address &addr);
+            virtual Common::Result move_to_hue(const Protocol::Address &addr,
+                                               const MoveToHueMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_HUE_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message    the @c MoveHueMessage received.
              */
-            virtual void move_hue(const Protocol::Address &addr);
+            virtual Common::Result move_hue(const Protocol::Address &addr,
+                                            const MoveHueMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_HUE_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c StepHueMessage received.
              */
-            virtual void step_hue(const Protocol::Address &addr);
+            virtual Common::Result step_hue(const Protocol::Address &addr,
+                                            const  StepHueMessage &message);
 
             /*!
              * Callback that is called when doing an animation on the HUE value.
@@ -1004,64 +1020,80 @@ namespace HF
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToSaturationMessage received.
              */
-            virtual void move_to_saturation(const Protocol::Address &addr);
+            virtual Common::Result move_to_saturation(const Protocol::Address &addr,
+                                                      const MoveToSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_SATURATION_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveSaturationMessage received.
              */
-            virtual void move_saturation(const Protocol::Address &addr);
+            virtual Common::Result move_saturation(const Protocol::Address &addr,
+                                                   const MoveSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_SATURATION_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c StepSaturationMessage received.
              */
-            virtual void step_saturation(const Protocol::Address &addr);
+            virtual Common::Result step_saturation(const Protocol::Address &addr,
+                                                   const StepSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToHueSaturationMessage received.
              */
-            virtual void move_to_hue_and_saturation(const Protocol::Address &addr);
+            virtual Common::Result move_to_hue_and_saturation(const Protocol::Address &addr,
+                                                              const MoveToHueSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_XY_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToXYMessage received.
              */
-            virtual void move_to_xy(const Protocol::Address &addr);
+            virtual Common::Result move_to_xy (const Protocol::Address &addr,
+                                               const MoveToXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveXYMessage received.
              */
-            virtual void move_xy(const Protocol::Address &addr);
+            virtual Common::Result move_xy (const Protocol::Address &addr,
+                                            const MoveXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_XY_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c StepXYMessage received.
              */
-            virtual void step_xy(const Protocol::Address &addr);
+            virtual Common::Result step_xy (const Protocol::Address &addr,
+                                            const StepXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToTemperatureMessage received.
              */
-            virtual void move_to_colour_temperature(const Protocol::Address &addr);
+            virtual Common::Result move_to_colour_temperature(const Protocol::Address &addr,
+                                                              const MoveToTemperatureMessage &message);
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
 
@@ -1071,7 +1103,7 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void stop(const Protocol::Address &addr);
+            virtual Common::Result stop(const Protocol::Address &addr);
 
 #endif
 
