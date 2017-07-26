@@ -95,6 +95,123 @@ HF::Attributes::IAttribute *ColourControl::create_attribute(uint8_t uid)
 }
 
 // =============================================================================
+// ColourControl::HS_Colour
+// =============================================================================
+
+// =============================================================================
+// HS_Colour::invert_angle
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int32_t HS_Colour::invert_angle (const int32_t angle)
+{
+   int32_t temp = (360 - std::abs(angle))%360;
+   if (angle >= 0)
+   {
+      temp *= -1;
+   }
+   return temp;
+}
+
+// =============================================================================
+// HS_Colour::get_hue_travel_distance
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int32_t HS_Colour::get_hue_travel_distance (const Direction dir,
+                                                   const uint16_t initial_hue,
+                                                   uint16_t final_hue)
+{
+   int32_t dist, result;
+
+   if (final_hue<initial_hue)
+   {
+      final_hue += 360;
+   }
+
+   dist = (final_hue-initial_hue)%360;
+   switch(dir)
+   {
+      case Direction::UP:
+      {
+         result = dist;
+         break;
+      }
+      case Direction::DOWN:
+      {
+         result = invert_angle(dist);
+         break;
+      }
+      case Direction::SHORTEST:
+      {
+         result = dist <= 180 ? dist: invert_angle(dist);
+         break;
+      }
+      case Direction::LONGEST:
+         {
+         result = dist > 180 ? dist: invert_angle(dist);
+         break;
+      }
+   }
+   return result;
+}
+// =============================================================================
+// HS_Colour::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t HS_Colour::pack (Common::ByteArray& array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+
+   HF_ASSERT(hue<=HUE_MAX, {return 0;});
+
+   offset += array.write(offset,hue);
+   offset += array.write(offset,saturation);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// HS_Colour::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t HS_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size = array.read(offset,hue);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   if (hue > HUE_MAX)
+   {
+      hue = HUE_MAX;
+   }
+
+   size = array.read(offset,saturation);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
+
+// =============================================================================
 // ColourControl::XY_Colour
 // =============================================================================
 
@@ -506,11 +623,12 @@ uint16_t MoveToHueSaturationMessage::pack (Common::ByteArray& array, uint16_t of
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
+   uint16_t size;
 
-   HF_ASSERT(hue<=HUE_MAX, {return 0;});
+   size = colour.pack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
 
-   offset += array.write(offset, hue);
-   offset += array.write(offset, saturation);
    offset += array.write(offset, static_cast<uint8_t>(direction));
    offset += array.write(offset, time);
 
@@ -531,16 +649,7 @@ uint16_t MoveToHueSaturationMessage::unpack (const Common::ByteArray& array, uin
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset,hue);
-   HF_ASSERT(size != 0, {return 0;});
-   offset += size;
-
-   if (hue > HUE_MAX)
-   {
-      hue = HUE_MAX;
-   }
-
-   size = array.read(offset,saturation);
+   size = colour.unpack(array, offset);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 

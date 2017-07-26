@@ -16,6 +16,7 @@
 
 #include "hanfun/interfaces/colour_control.h"
 
+
 // =============================================================================
 // API
 // =============================================================================
@@ -93,10 +94,10 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
       case HUE_AND_SATURATION_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint32_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<HS_Colour, Server> Attribute;
 
-         auto getter = (uint32_t (Server::*)(void) const) & Server::hue_and_saturation;
-         auto setter = (void (Server::*)(uint32_t)) & Server::hue_and_saturation;
+         auto getter = (HS_Colour (Server::*)(void) const) & Server::hue_and_saturation;
+         auto setter = (void (Server::*)(HS_Colour)) & Server::hue_and_saturation;
 
          return new Attribute(*this, attr, getter, setter, HueAndSaturation::WRITABLE);
       }
@@ -453,7 +454,7 @@ void Server::mode(uint8_t __value)
  *
  */
 // =============================================================================
-uint32_t Server::hue_and_saturation() const
+HS_Colour Server::hue_and_saturation() const
 {
    return _hue_and_saturation;
 }
@@ -465,7 +466,7 @@ uint32_t Server::hue_and_saturation() const
  *
  */
 // =============================================================================
-void Server::hue_and_saturation(uint32_t __value)
+void Server::hue_and_saturation(HS_Colour __value)
 {
    HF_SETTER_HELPER(HueAndSaturation, _hue_and_saturation, __value);
 }

@@ -46,6 +46,159 @@ TEST_GROUP(ColourControlMessages)
    }
 };
 
+// ---- Hue and Saturation colour ----
+
+//! @test HS_Colour helper class basic test.
+TEST(ColourControlMessages, HS_Colour)
+{
+   HS_Colour colour(0,10);
+
+   expected = ByteArray(3);
+
+   LONGS_EQUAL(3, colour.pack(expected));
+   LONGS_EQUAL(3, colour.unpack(expected));
+}
+
+//! @test HS_Colour helper class basic test with wrong array size passed.
+TEST(ColourControlMessages, HS_Colour_wrong_array_size)
+{
+   HS_Colour colour(0,10);
+
+   expected = ByteArray(2);
+
+   LONGS_EQUAL(0, colour.pack(expected,1));
+   LONGS_EQUAL(0, colour.unpack(expected));
+}
+
+//! @test HS_Colour helper class size test.
+TEST(ColourControlMessages, HS_Colour_size)
+{
+   HS_Colour colour(0x1234,0x56);
+
+   expected = ByteArray({
+                           0x12, 0x34,    // Hue value
+                           0x56           // Saturation value
+                        });
+
+   LONGS_EQUAL(expected.size(), colour.size());
+   LONGS_EQUAL(3, colour.size());
+}
+
+//! @test HS_Colour helper class pack test.
+TEST(ColourControlMessages, HS_Colour_pack)
+{
+   HS_Colour colour(0x0123,0x45);
+
+   expected = ByteArray({
+                           0x01, 0x23,    // Hue value
+                           0x45           // Saturation value
+                        });
+   payload = ByteArray(colour.size());
+
+   LONGS_EQUAL(expected.size(), colour.pack(payload));
+   CHECK_EQUAL(expected, payload);
+}
+
+//! @test HS_Colour helper class unpack test.
+TEST(ColourControlMessages, HS_Colour_unpack)
+{
+   HS_Colour colour;
+
+   payload = ByteArray({
+                        0x01, 0x23,    // Hue value
+                        0x45           // Saturation value
+                        });
+
+   LONGS_EQUAL(payload.size(), colour.unpack(payload));
+   LONGS_EQUAL(0x0123, colour.hue);
+   LONGS_EQUAL(0x45, colour.saturation);
+}
+
+/*! @test HS_Colour helper class unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ */
+IGNORE_TEST(ColourControlMessages, HS_Colour_unpack_incomplete)
+{
+   HS_Colour colour;
+
+   payload = ByteArray({
+                        0x12, 0x34     // Hue value
+                                       // Saturation value
+                        });
+
+   LONGS_EQUAL(0, colour.unpack(payload));
+   LONGS_EQUAL(0, colour.hue);
+   LONGS_EQUAL(0, colour.saturation);
+}
+
+/*! @test HS_Colour helper class unpack test.
+ *
+ * Incomplete payload passed to the unpack function.
+ * Test if the colour values are maintained.
+ */
+TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
+{
+   HS_Colour colour(0x0111, 0x22);
+
+   payload = ByteArray({
+                           0x01, 0x23     // X value
+                                          // Y value
+                        });
+
+   LONGS_EQUAL(0, colour.unpack(payload));
+   LONGS_EQUAL(0x0111, colour.hue);
+   LONGS_EQUAL(0x22, colour.saturation);
+}
+
+/*!
+ * @test HS_Colour invert_angle test
+ */
+TEST(ColourControlMessages, HS_Colour_invert_angle)
+{
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle(-360));
+   LONGS_EQUAL( 45,  HS_Colour::invert_angle(-315));
+   LONGS_EQUAL( 90,  HS_Colour::invert_angle(-270));
+   LONGS_EQUAL( 135, HS_Colour::invert_angle(-225));
+   LONGS_EQUAL( 180, HS_Colour::invert_angle(-180));
+   LONGS_EQUAL( 225, HS_Colour::invert_angle(-135));
+   LONGS_EQUAL( 270, HS_Colour::invert_angle(-90));
+   LONGS_EQUAL( 315, HS_Colour::invert_angle(-45));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle( 0));
+   LONGS_EQUAL(-315, HS_Colour::invert_angle( 45));
+   LONGS_EQUAL(-270, HS_Colour::invert_angle( 90));
+   LONGS_EQUAL(-225, HS_Colour::invert_angle( 135));
+   LONGS_EQUAL(-180, HS_Colour::invert_angle( 180));
+   LONGS_EQUAL(-135, HS_Colour::invert_angle( 225));
+   LONGS_EQUAL(-90,  HS_Colour::invert_angle( 270));
+   LONGS_EQUAL(-45,  HS_Colour::invert_angle( 315));
+   LONGS_EQUAL(0,   HS_Colour::invert_angle( 360));
+}
+
+//! @test HS_Colour get hue travel distance function.
+TEST(ColourControlMessages, HS_Colour_Get_Hue_travel_distance)
+{
+   // Both on the same quadrant. Short distance = CW
+   LONGS_EQUAL(50,   HS_Colour::get_hue_travel_distance(Direction::UP,        100, 150));
+   LONGS_EQUAL(-310, HS_Colour::get_hue_travel_distance(Direction::DOWN,      100, 150));
+   LONGS_EQUAL(50,   HS_Colour::get_hue_travel_distance(Direction::SHORTEST,  100, 150));
+   LONGS_EQUAL(-310, HS_Colour::get_hue_travel_distance(Direction::LONGEST,   100, 150));
+
+   // Different quadrants. Short distance = CW
+   LONGS_EQUAL(30,   HS_Colour::get_hue_travel_distance(Direction::UP,        340, 10));
+   LONGS_EQUAL(-330, HS_Colour::get_hue_travel_distance(Direction::DOWN,      340, 10));
+   LONGS_EQUAL(30,   HS_Colour::get_hue_travel_distance(Direction::SHORTEST,  340, 10));
+   LONGS_EQUAL(-330, HS_Colour::get_hue_travel_distance(Direction::LONGEST,   340, 10));
+
+   // Different quadrants. Short distance = CCW
+   LONGS_EQUAL(330,  HS_Colour::get_hue_travel_distance(Direction::UP,        10, 340));
+   LONGS_EQUAL(-30,  HS_Colour::get_hue_travel_distance(Direction::DOWN,      10, 340));
+   LONGS_EQUAL(-30,  HS_Colour::get_hue_travel_distance(Direction::SHORTEST,  10, 340));
+   LONGS_EQUAL(330,  HS_Colour::get_hue_travel_distance(Direction::LONGEST,   10, 340));
+}
+
+// ---- XY colour ----
+
 //! @test XY_Colour helper class basic test.
 TEST(ColourControlMessages, XY_Colour)
 {
@@ -148,6 +301,7 @@ TEST(ColourControlMessages, XY_Colour_unpack_incomplete_keep_values)
    LONGS_EQUAL(0x1234, colour.X);
    LONGS_EQUAL(0x5678, colour.Y);
 }
+
 
 // ---- Move to hue Message ----
 
@@ -2136,7 +2290,7 @@ TEST(ColourControlServer, Mode)
 TEST(ColourControlServer, HueAndSaturation)
 {
    // FIXME Generated Stub.
-   CHECK_OPT_ATTRIBUTE(ColourControlServer, HueAndSaturation, false, hue_and_saturation, 42, 142);
+   //CHECK_OPT_ATTRIBUTE(ColourControlServer, HueAndSaturation, false, hue_and_saturation, 42, 142);
 }
 
 //! @test XY support.

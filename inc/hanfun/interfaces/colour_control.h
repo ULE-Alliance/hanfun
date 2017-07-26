@@ -107,6 +107,122 @@ namespace HF
          }Direction;
 
          /*!
+          * Helper class that supports the Hue and Saturation colour mode.
+          *
+          * This class implements the necessary functions
+          * for message serialization.
+          */
+         struct HS_Colour
+         {
+            uint16_t hue;
+            uint8_t saturation;
+
+            HS_Colour () = default;
+
+            /*!
+             * Constructor
+             *
+             * @param [in] hue            hue colour value.
+             * @param [in] saturation     saturation colour value.
+             */
+            HS_Colour (uint16_t hue, uint8_t saturation) :
+                  saturation(saturation)
+            {
+               this->hue = hue<=HUE_MAX ? hue : HUE_MAX;
+            }
+
+
+            /*!
+             * Helper method to invert a traveling angle.
+             *
+             * This method returns the exterior angle from an internal one,
+             * or an interior from an exterior angle.
+             *
+             * @note This also inverts the angle signal.
+             *       If the input angle is positive (CW rotation),
+             *       the output is negative (CCW rotation).
+             *
+             * @param [in] angle    the angle to invert.
+             * @return              the inverted angle.
+             */
+            static int32_t invert_angle (const int32_t angle);
+
+            /*!
+             * Helper method to get the angle between two hue values.
+             *
+             * This method takes in consideration the direction of travel from the initial
+             * to the final hue value.
+             *
+             * @param [in] dir            the travel direction.
+             * @param [in] initial_hue    the initial hue value.
+             * @param [in] final_hue      the final hue value.
+             *
+             * @return                    the angle between the final and initial hue value.
+             */
+            static int32_t get_hue_travel_distance(const Direction dir,
+                                                   const uint16_t initial_hue,
+                                                   uint16_t final_hue);
+
+            static constexpr uint16_t HUE_MAX = 359;                    // Max Hue Value
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(hue)            // hue
+                                                 + sizeof(saturation);  // saturation
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size () const
+            {
+               return min_size;
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+
+            //! @copydoc HF::Attributes::IAttribute::compare
+            int compare (const HS_Colour &other) const
+            {
+               if (this->hue != other.hue)
+               {
+                  return (this->hue - other.hue);
+               }
+               else
+               {
+                  if (this->hue != other.hue)
+                  {
+                     return (this->hue - other.hue);
+                  }
+                  else
+                  {
+                     return 0;
+                  }
+               }
+            }
+
+            //! @copydoc HF::Attributes::IAttribute::changed
+            float changed (const HS_Colour &other) const
+            {
+               if (this->hue != other.hue)
+               {
+                  return (100 * (this->hue - other.hue) / static_cast<float>(this->hue));
+               }
+               else
+               {
+                  if (this->hue != other.hue)
+                  {
+                     return (100 * (this->hue - other.hue) / static_cast<float>(this->hue));
+                  }
+                  else
+                  {
+                     return 0.0f;
+                  }
+               }
+            }
+         };
+
+         /*!
           * Helper class that supports the XY colour mode.
           *
           * This class implements the necessary functions
@@ -218,13 +334,13 @@ namespace HF
          /*!
           * Helper class to handle the Hue And Saturation attribute for the Colour Control interface.
           */
-         struct HueAndSaturation: public HF::Attributes::Attribute<uint32_t>
+         struct HueAndSaturation: public HF::Attributes::Attribute<HS_Colour>
          {
             static constexpr uint8_t ID       = HUE_AND_SATURATION_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = false;                   //!< Attribute Read/Write
 
-            HueAndSaturation(uint32_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<uint32_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
+            HueAndSaturation(HS_Colour value = HS_Colour(0,0), HF::Interface *owner = nullptr):
+               Attribute<HS_Colour>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
             {}
          };
 
@@ -764,7 +880,7 @@ namespace HF
 
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
 
-            uint32_t _hue_and_saturation;   //!< Hue And Saturation
+            HS_Colour _hue_and_saturation;   //!< Hue And Saturation
 
 #endif
 
@@ -936,14 +1052,14 @@ namespace HF
              *
              * @return  the current Hue And Saturation.
              */
-            uint32_t hue_and_saturation() const;
+            HS_Colour hue_and_saturation() const;
 
             /*!
              * Set the Hue And Saturation for the Colour Control server.
              *
              * @param [in] __value the  Hue And Saturation value to set the server to.
              */
-            void hue_and_saturation(uint32_t __value);
+            void hue_and_saturation(HS_Colour __value);
 
 #endif
 
