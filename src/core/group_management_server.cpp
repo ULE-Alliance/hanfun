@@ -269,6 +269,12 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
       goto _end;
    }
 
+   std::for_each(entry->members.begin(), entry->members.end(),
+                 [this,entry](const Member &m)
+   {
+      group_table().remove(m.device, entry->address, m.unit);
+   });
+
    group  = *entry;
    result = entries().destroy(*entry);
 

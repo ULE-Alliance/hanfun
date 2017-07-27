@@ -1008,7 +1008,7 @@ TEST_GROUP(GroupManagementServer)
          return GroupManagement::DefaultServer::remove(packet, msg);
       }
 
-      void deleted(const Group group) override
+      void deleted(const Group &group) override
       {
          mock("GroupManagement::Server").actualCall("deleted");
          GroupManagement::IServer::deleted(group);
@@ -1233,109 +1233,171 @@ TEST(GroupManagementServer, Create)
 }
 
 //! @test Delete support.
-TEST(GroupManagementServer, Delete_No_Group_Before)
+TEST(GroupManagementServer, Delete)
 {
-   DeleteMessage received(0x0001);
-   ByteArray received_payload(received.size());
+   fill_groups();
 
-   received.pack(received_payload);    // Pack it
+   auto group = server->entry(group_addr);
 
-   packet.message.itf.member = GroupManagement::DELETE_CMD;
-   packet.message.type       = Protocol::Message::COMMAND_REQ;
-   packet.message.length     = received_payload.size();
+   CHECK_TRUE(group != nullptr);
 
-   mock("AbstractDevice").expectOneCall("send");
-   mock("GroupManagement::Server").expectOneCall("delete");
-   mock("GroupManagement::Server").expectNCalls(0, "deleted");
-   mock("Interface").expectNoCall("notify");
+   fill_group(*group, dev_addr, dev_unit, 10);
 
-   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
-                        server->handle(packet, received_payload, 0));
+   auto dev_entries = group->members;
 
-   Protocol::Packet *response = device->packets.back();
+   uint8_t size = server->entries().size();
 
-   CHECK_TRUE(response != nullptr);
-
-   LONGS_EQUAL(42, response->destination.device);
-   LONGS_EQUAL(0, response->destination.unit);
-   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
-
-   mock("GroupManagement::Server").checkExpectations();
-   mock("AbstractDevice").checkExpectations();
-   mock("Interface").checkExpectations();
-
-   // ----- Check the response message -----
-
-   DeleteResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
-   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
-}
-
-//! @test Delete support.
-TEST(GroupManagementServer, Delete_Existing_Group)
-{
-   // ----- Create 10 EMPTY groups -----
-   for (uint16_t i = 0; i < 10; ++i)
-   {
-      std::string name = std::string("MyGroup") + std::to_string(i);
-      create_group(name);
-   }
-
-   LONGS_EQUAL(10, server->entries().size());
-
-   uint16_t group_addr = 0x0002;                         // Group Address to remove
    DeleteMessage received(group_addr);
-   ByteArray received_payload(received.size());
 
-   auto _entry = server->entries().find(group_addr);     // try to find the group with "group_addr"
-   CHECK_TRUE(_entry != nullptr);                        // should be != than nullptr
+   payload = ByteArray(received.size() + 6);
 
-   received.pack(received_payload);                      // pack it
+   received.pack(payload, 3);
 
    packet.message.itf.member = GroupManagement::DELETE_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
-   packet.message.length     = received_payload.size();
+   packet.message.length     = payload.size();
 
    NumberOfGroups old_value(10, server);
    NumberOfGroups new_value(9, server);
 
-   mock("AbstractDevice").expectOneCall("send");
+   mock("AbstractDevice").expectNCalls(dev_entries.size() + 1, "send");
+
    mock("GroupManagement::Server").expectOneCall("delete");
    mock("GroupManagement::Server").expectOneCall("deleted");
+
    mock("Interface").expectOneCall("notify")
       .withParameterOfType("IAttribute", "old", &old_value)
       .withParameterOfType("IAttribute", "new", &new_value);
+
    mock("HF::Transport::Group").expectOneCall("remove")
-         .withParameter("group", group_addr)
-         .ignoreOtherParameters();
+      .withParameter("group", group_addr)
+      .ignoreOtherParameters();
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
-                        server->handle(packet, received_payload, 0));
-
-   Protocol::Packet *response = device->packets.back();
-
-   CHECK_TRUE(response != nullptr);
-
-   LONGS_EQUAL(42, response->destination.device);
-   LONGS_EQUAL(0, response->destination.unit);
-   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+                        server->handle(packet, payload, 3));
 
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("Interface").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   // ----- Check if the group was deleted -----
+   LONGS_EQUAL(size - 1, server->entries().size());
 
-   LONGS_EQUAL(9, server->entries().size());
-   _entry = server->entries().find(group_addr);
-   CHECK_TRUE(_entry == nullptr);
+   // Should send messages to devices to remove them from the group.
 
-   // ----- Check the response message -----
+   for (uint8_t i = 0; i < dev_entries.size(); ++i)
+   {
+      auto packet  = device->packets[i];
+      auto &member = dev_entries[i];
 
-   DeleteResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
-   LONGS_EQUAL(Common::Result::OK, resp.code);
+      CHECK_INDEX("Dst Address : ", i, member.device, packet->destination.device);
+      CHECK_INDEX("Dst Unit : ", i, (uint8_t) 0, packet->destination.unit);
+
+      CHECK_INDEX("Dst Mod : ", i,
+                  (uint8_t) Protocol::Address::DEVICE,
+                  (uint8_t) packet->destination.mod);
+
+      CHECK_INDEX("Msg Type : ", i,
+                  HF::Protocol::Message::COMMAND_REQ, packet->message.type);
+
+      CHECK_INDEX("Msg Itf UID : ", i,
+                  (uint16_t) HF::Interface::GROUP_TABLE, (uint16_t) packet->message.itf.id);
+      CHECK_INDEX("Msg Itf Role : ", i,
+                  (uint8_t) HF::Interface::Role::SERVER_ROLE, (uint8_t) packet->message.itf.role);
+      CHECK_INDEX("Msg Itf Member : ", i,
+                  (uint8_t) GroupTable::REMOVE_CMD, packet->message.itf.member);
+
+      GroupTable::Entry entry;
+
+      CHECK_INDEX("GroupTable::Entry Unpack : ", i,
+                  entry.size(), entry.unpack(packet->message.payload));
+
+      CHECK_INDEX("GroupTable::Entry::group : ", i, group_addr, entry.group);
+      CHECK_INDEX("GroupTable::Entry::unit : ", i, member.unit, entry.unit);
+   }
+
+   // Should respond to message.
+
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(42, _packet->destination.device);
+   LONGS_EQUAL(0, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::DELETE_CMD, _packet->message.itf.member);
+
+   DeleteResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::OK, response.code);
+}
+
+//! @test Delete support - Fail Group.
+TEST(GroupManagementServer, Delete_Fail_Group)
+{
+   fill_groups();
+
+   group_addr = server->entries().size() + 1;
+
+   uint8_t size = server->entries().size();
+
+   DeleteMessage received(group_addr);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);
+
+   packet.message.itf.member = GroupManagement::DELETE_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
+
+   mock("AbstractDevice").expectOneCall("send");
+
+   mock("GroupManagement::Server").expectOneCall("delete");
+   mock("GroupManagement::Server").expectNoCall("deleted");
+
+   mock("Interface").expectNoCall("notify");
+
+   mock("HF::Transport::Group").expectNoCall("remove");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   // Should respond to message.
+
+   Protocol::Packet *_packet = device->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(42, _packet->destination.device);
+   LONGS_EQUAL(0, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::DELETE_CMD, _packet->message.itf.member);
+
+   DeleteResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
 }
 
 //! @test Add support - Step 1.

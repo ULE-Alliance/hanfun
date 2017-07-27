@@ -677,7 +677,7 @@ namespace HF
              *
              * @param [in] group     Copy of the group entry that was deleted.
              */
-            virtual void deleted(Group group)
+            virtual void deleted(const Group &group)
             {
                // TODO : Check this! Can we pass it by reference pointer???
                UNUSED(group);
