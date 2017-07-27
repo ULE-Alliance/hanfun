@@ -26,17 +26,17 @@ using namespace HF::Interfaces;
 using namespace HF::Interfaces::ColourControl;
 
 // =============================================================================
-// Colour Control Interface : Server Role
+// Colour Control Interface : IServer Role
 // =============================================================================
 
 // =============================================================================
-// Server::attributes
+// IServer::attributes
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
+HF::Attributes::UIDS IServer::attributes(uint8_t pack_id) const
 {
    HF::Attributes::UIDS result({SUPPORTED_ATTR, MODE_ATTR});
 
@@ -57,13 +57,13 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
 }
 
 // =============================================================================
-// Server::attributes
+// IServer::attributes
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
+HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 {
    using namespace HF::Interfaces::ColourControl;
 
@@ -73,20 +73,20 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    {
       case SUPPORTED_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::supported;
-         auto setter = (void (Server::*)(uint8_t)) & Server::supported;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::supported;
+         auto setter = (void (IServer::*)(uint8_t)) & IServer::supported;
 
          return new Attribute(*this, attr, getter, setter, Supported::WRITABLE);
       }
 
       case MODE_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::mode;
-         auto setter = (void (Server::*)(uint8_t)) & Server::mode;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::mode;
+         auto setter = (void (IServer::*)(uint8_t)) & IServer::mode;
 
          return new Attribute(*this, attr, getter, setter, Mode::WRITABLE);
       }
@@ -94,10 +94,10 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
       case HUE_AND_SATURATION_ATTR:
       {
-         typedef HF::Attributes::Attribute<HS_Colour, Server> Attribute;
+         typedef HF::Attributes::Attribute<HS_Colour, IServer> Attribute;
 
-         auto getter = (HS_Colour (Server::*)(void) const) & Server::hue_and_saturation;
-         auto setter = (void (Server::*)(HS_Colour)) & Server::hue_and_saturation;
+         auto getter = (HS_Colour (IServer::*)(void) const) & IServer::hue_and_saturation;
+         auto setter = (void (IServer::*)(HS_Colour)) & IServer::hue_and_saturation;
 
          return new Attribute(*this, attr, getter, setter, HueAndSaturation::WRITABLE);
       }
@@ -106,10 +106,10 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
       case XY_ATTR:
       {
-         typedef HF::Attributes::Attribute<XY_Colour, Server> Attribute;
+         typedef HF::Attributes::Attribute<XY_Colour, IServer> Attribute;
 
-         auto getter = (XY_Colour (Server::*)(void) const) & Server::xy;
-         auto setter = (void (Server::*)(XY_Colour)) & Server::xy;
+         auto getter = (XY_Colour (IServer::*)(void) const) & IServer::xy;
+         auto setter = (void (IServer::*)(XY_Colour)) & IServer::xy;
 
          return new Attribute(*this, attr, getter, setter, Xy::WRITABLE);
       }
@@ -118,10 +118,10 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 #ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
       case COLOUR_TEMPERATURE_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint16_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint16_t, IServer> Attribute;
 
-         auto getter = (uint16_t (Server::*)(void) const) & Server::colour_temperature;
-         auto setter = (void (Server::*)(uint16_t)) & Server::colour_temperature;
+         auto getter = (uint16_t (IServer::*)(void) const) & IServer::colour_temperature;
+         auto setter = (void (IServer::*)(uint16_t)) & IServer::colour_temperature;
 
          return new Attribute(*this, attr, getter, setter, ColourTemperature::WRITABLE);
       }
@@ -133,13 +133,13 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 }
 
 // =============================================================================
-// Server::handle_command
+// IServer::handle_command
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
    UNUSED(payload);
@@ -264,13 +264,13 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 // =============================================================================
 
 // =============================================================================
-// Server::move_to_hue
+// IServer::move_to_hue
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
+Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
    UNUSED(addr);
 
@@ -307,7 +307,7 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
    if(hue_callback(callback_args))  //Run once immediately
    {
       //If there are still iterations, inform the APP.
-      add_transition(1, &HF::Interfaces::ColourControl::Server::hue_callback, &callback_args);
+      add_transition(1, &HF::Interfaces::ColourControl::IServer::hue_callback, &callback_args);
    }
 
    _end:
@@ -316,13 +316,13 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
 }
 
 // =============================================================================
-// Server::move_hue
+// IServer::move_hue
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
+Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -331,13 +331,13 @@ Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMess
 }
 
 // =============================================================================
-// Server::step_hue
+// IServer::step_hue
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
+Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -346,13 +346,13 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
 }
 
 // =============================================================================
-// Server::hue_callback
+// IServer::hue_callback
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-bool Server::hue_callback(callback_args_t &arg)
+bool IServer::hue_callback(callback_args_t &arg)
 {
    if (arg.hs.n_steps != 0)
    {
@@ -369,13 +369,13 @@ bool Server::hue_callback(callback_args_t &arg)
 }
 
 // =============================================================================
-// Server::move_to_saturation
+// IServer::move_to_saturation
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_to_saturation(const Protocol::Address &addr,
+Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
                                 const MoveToSaturationMessage &message)
 {
    // FIXME Generated Stub.
@@ -385,13 +385,13 @@ Common::Result Server::move_to_saturation(const Protocol::Address &addr,
 }
 
 // =============================================================================
-// Server::move_saturation
+// IServer::move_saturation
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_saturation(const Protocol::Address &addr,
+Common::Result IServer::move_saturation(const Protocol::Address &addr,
                                            const MoveSaturationMessage &message)
 {
    // FIXME Generated Stub.
@@ -401,13 +401,13 @@ Common::Result Server::move_saturation(const Protocol::Address &addr,
 }
 
 // =============================================================================
-// Server::step_saturation
+// IServer::step_saturation
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::step_saturation(const Protocol::Address &addr,
+Common::Result IServer::step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message)
 {
    // FIXME Generated Stub.
@@ -417,13 +417,13 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 }
 
 // =============================================================================
-// Server::move_to_hue_and_saturation
+// IServer::move_to_hue_and_saturation
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
+Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr,
                                         const MoveToHueSaturationMessage &message)
 {
    // FIXME Generated Stub.
@@ -433,13 +433,13 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
 }
 
 // =============================================================================
-// Server::move_to_xy
+// IServer::move_to_xy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
+Common::Result IServer::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -448,13 +448,13 @@ Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYM
 }
 
 // =============================================================================
-// Server::move_xy
+// IServer::move_xy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessage &message)
+Common::Result IServer::move_xy(const Protocol::Address &addr, const MoveXYMessage &message)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -463,13 +463,13 @@ Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessag
 }
 
 // =============================================================================
-// Server::step_xy
+// IServer::step_xy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessage &message)
+Common::Result IServer::step_xy(const Protocol::Address &addr, const StepXYMessage &message)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -478,13 +478,13 @@ Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessag
 }
 
 // =============================================================================
-// Server::move_to_colour_temperature
+// IServer::move_to_colour_temperature
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
+Common::Result IServer::move_to_colour_temperature(const Protocol::Address &addr,
                                         const MoveToTemperatureMessage &message)
 {
    // FIXME Generated Stub.
@@ -495,13 +495,13 @@ Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
 // =============================================================================
-// Server::stop
+// IServer::stop
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Server::stop(const Protocol::Address &addr)
+Common::Result IServer::stop(const Protocol::Address &addr)
 {
    // FIXME Generated Stub.
    UNUSED(addr);
@@ -515,49 +515,49 @@ Common::Result Server::stop(const Protocol::Address &addr)
 // =============================================================================
 
 // =============================================================================
-// Server::supported
+// IServer::supported
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint8_t Server::supported() const
+uint8_t IServer::supported() const
 {
    return _supported;
 }
 
 // =============================================================================
-// Server::supported
+// IServer::supported
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::supported(uint8_t __value)
+void IServer::supported(uint8_t __value)
 {
    HF_SETTER_HELPER(Supported, _supported, __value);
 }
 
 // =============================================================================
-// Server::mode
+// IServer::mode
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint8_t Server::mode() const
+uint8_t IServer::mode() const
 {
    return _mode;
 }
 
 // =============================================================================
-// Server::mode
+// IServer::mode
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::mode(uint8_t __value)
+void IServer::mode(uint8_t __value)
 {
    HF_SETTER_HELPER(Mode, _mode, __value);
 }
@@ -565,25 +565,25 @@ void Server::mode(uint8_t __value)
 
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
 // =============================================================================
-// Server::hue_and_saturation
+// IServer::hue_and_saturation
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-HS_Colour Server::hue_and_saturation() const
+HS_Colour IServer::hue_and_saturation() const
 {
    return _hue_and_saturation;
 }
 
 // =============================================================================
-// Server::hue_and_saturation
+// IServer::hue_and_saturation
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::hue_and_saturation(HS_Colour __value)
+void IServer::hue_and_saturation(HS_Colour __value)
 {
    HF_SETTER_HELPER(HueAndSaturation, _hue_and_saturation, __value);
 }
@@ -592,25 +592,25 @@ void Server::hue_and_saturation(HS_Colour __value)
 
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
 // =============================================================================
-// Server::xy
+// IServer::xy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-XY_Colour Server::xy() const
+XY_Colour IServer::xy() const
 {
    return _xy;
 }
 
 // =============================================================================
-// Server::xy
+// IServer::xy
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::xy(XY_Colour __value)
+void IServer::xy(XY_Colour __value)
 {
    HF_SETTER_HELPER(Xy, _xy, __value);
 }
@@ -619,25 +619,25 @@ void Server::xy(XY_Colour __value)
 
 #ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
 // =============================================================================
-// Server::colour_temperature
+// IServer::colour_temperature
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint16_t Server::colour_temperature() const
+uint16_t IServer::colour_temperature() const
 {
    return _colour_temperature;
 }
 
 // =============================================================================
-// Server::colour_temperature
+// IServer::colour_temperature
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-void Server::colour_temperature(uint16_t __value)
+void IServer::colour_temperature(uint16_t __value)
 {
    HF_SETTER_HELPER(ColourTemperature, _colour_temperature, __value);
 }

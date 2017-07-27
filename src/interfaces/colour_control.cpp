@@ -32,7 +32,7 @@ using namespace HF::Interfaces::ColourControl;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Interfaces::create_attribute(Server *server, uint8_t uid)
+HF::Attributes::IAttribute *Interfaces::create_attribute(IServer *server, uint8_t uid)
 {
    if (server != nullptr)
    {

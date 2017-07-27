@@ -27,7 +27,7 @@ namespace HF
       // Forward declaration.
       namespace ColourControl
       {
-         class Server;
+         class IServer;
       }
 
       /*!
@@ -44,7 +44,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(ColourControl::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(ColourControl::IServer *server, uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Colour Control interface.
@@ -867,7 +867,7 @@ namespace HF
           *
           * This class provides the server side of the Colour Control interface.
           */
-         class Server: public InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>
+         class IServer: public InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>
          {
             public:
 
@@ -926,7 +926,7 @@ namespace HF
             callback_args_t callback_args;
 
             //! Typedef for the callback function.
-            typedef bool (Server::*fptr) (callback_args_t &arg);
+            typedef bool (IServer::*fptr) (callback_args_t &arg);
 
             protected:
 
@@ -954,10 +954,10 @@ namespace HF
             public:
 
             //! Constructor
-            Server(): InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>() {}
+            IServer(): InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>() {}
 
             //! Destructor
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // ======================================================================
             // Events
@@ -1209,6 +1209,11 @@ namespace HF
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
+         };
+
+         struct Server: public IServer
+         {
+
          };
 
          /*!
