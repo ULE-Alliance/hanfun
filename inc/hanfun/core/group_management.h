@@ -751,18 +751,8 @@ namespace HF
             // ======================================================================
 
             // =============================================================================
-            // API.
+            // API
             // =============================================================================
-
-            GroupPtr entry(const uint16_t address) const
-            {
-               return entries().find(address);
-            }
-
-            GroupPtr entry(const std::string &name) const
-            {
-               return entries().find(name);
-            }
 
             /*!
              * Get a reference to the current object implementing the persistence API,
@@ -771,6 +761,42 @@ namespace HF
              * @return  reference to the current object for the persistence API.
              */
             virtual IEntries &entries() const = 0;
+
+            /*!
+             * Get the group entry given by @c address.
+             *
+             * @param [in] address  group address of the group to retrieve.
+             *
+             * @return  a pointer to the group if it exists,
+             *          @c nullptr otherwise.
+             */
+            GroupPtr entry(const uint16_t address) const
+            {
+               return entries().find(address);
+            }
+
+            /*!
+             * Get the group entry given by @c name.
+             *
+             * @param [in] name  group name of the group to retrieve.
+             *
+             * @return  a pointer to the group if it exists,
+             *          @c nullptr otherwise.
+             */
+            GroupPtr entry(const std::string &name) const
+            {
+               return entries().find(name);
+            }
+
+            /*!
+             * Return next available address for device group.
+             *
+             * @return  the address to use in the next group.
+             */
+            uint16_t next_address()
+            {
+               return entries().next_address();
+            }
 
             // =============================================================================
             // Get/Set API.
@@ -797,16 +823,6 @@ namespace HF
             {
                UNUSED(pack_id);
                return HF::Attributes::UIDS {NUMBER_OF_GROUPS_ATTR};
-            }
-
-            /*!
-             * Return next available address for device group.
-             *
-             * @return  the address to use in the next group.
-             */
-            virtual uint16_t next_address()
-            {
-               return entries().next_address();
             }
 
             //! @copydoc HF::Interface::handle
