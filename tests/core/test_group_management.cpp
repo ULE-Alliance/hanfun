@@ -1197,8 +1197,8 @@ TEST(GroupManagementServer, Create)
    mock("GroupManagement::Server").expectOneCall("create");
    mock("GroupManagement::Server").expectOneCall("created");
    mock("HF::Transport::Group").expectOneCall("create")
-         .ignoreOtherParameters()
-         .andReturnValue(Common::Result::OK);
+      .ignoreOtherParameters()
+      .andReturnValue(Common::Result::OK);
    mock("AbstractDevice").expectOneCall("send");
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
@@ -1898,12 +1898,10 @@ TEST(GroupManagementServer, Remove_Fail_Member)
 
    fill_group(*group, dev_addr, dev_unit);
 
-   do
-   {
+   do {
       dev_addr = generate_random(1, Protocol::BROADCAST_ADDR - 1);
       dev_unit = generate_random(1, Protocol::BROADCAST_UNIT - 1);
-   }
-   while(group->exists(dev_addr, dev_unit));
+   } while (group->exists(dev_addr, dev_unit));
 
    RemoveMessage received(group_addr, dev_addr, dev_unit);
 
