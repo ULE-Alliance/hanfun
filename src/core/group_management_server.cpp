@@ -332,8 +332,6 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 // =============================================================================
 Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &msg)
 {
-   UNUSED(packet);
-
    Member member;
 
    Common::Result result = Common::Result::OK;
@@ -343,7 +341,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
    if (group == nullptr)                        // Group not found. Give an error
    {
       result = Common::Result::FAIL_ARG;
-      goto _end;
+      goto _error;
    }
 
    member = Member(msg.device, msg.unit);
@@ -351,14 +349,16 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
    if (!group->remove(member))
    {
       result = Common::Result::FAIL_ARG;
-      goto _end;
+      goto _error;
    }
 
    this->removed(*group, member);
 
    HF::Transport::Group::remove(unit().device(), group->address, member.device);
 
-   _end:
+   group_table().remove(member.device, group->address, member.unit);
+
+   _error:
 
    RemoveResponse response(result);
 

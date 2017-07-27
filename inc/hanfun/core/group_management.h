@@ -870,6 +870,7 @@ namespace HF
 
             using GroupTable::Client::uid;
             using GroupTable::Client::handle;
+            using GroupTable::Client::remove;
 
             /*!
              * Send a GroupTable::ADD_CMD to the device given by the @c AddMessage request.
@@ -920,7 +921,6 @@ namespace HF
             std::forward_list<Entry> requests;
 
             using IGroupTable::added;
-            using IGroupTable::removed;
 
             //! @copydoc GroupTable::Client::added
             void added(const Protocol::Address &addr, const GroupTable::Response &response);
