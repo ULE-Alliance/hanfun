@@ -59,7 +59,7 @@ SimpleString StringFrom(const HF::Common::Interface &itf);
 
 SimpleString StringFrom(const HF::Attributes::IAttribute &attr);
 
-template<typename _type>
+template<typename _type = uint8_t>
 void check_index(_type expected, _type actual, uint32_t index, const char *header,
                  const char *fileName,
                  int lineNumber)
@@ -76,6 +76,9 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
       FAIL_TEST_LOCATION(error.str().c_str(), fileName, lineNumber);
    }
 }
+
+#define CHECK_INDEX(_header, _index, _expected, _actual) \
+      check_index(_expected, _actual, _index, _header, __FILE__, __LINE__)
 
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
