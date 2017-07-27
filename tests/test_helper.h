@@ -825,6 +825,17 @@ namespace HF
 
       typedef AbstractDevice<HF::Devices::Concentrator::Abstract<ConcentratorUnit0>> Concentrator;
 
+      template<typename T>
+      T generate_random(T start = std::numeric_limits<T>::min,
+                        T end = std::numeric_limits<T>::max)
+      {
+         std::random_device rd;
+         std::mt19937 generator(rd());
+         std::uniform_int_distribution<T> distribution(start, end);
+
+         return static_cast<T>(distribution(generator));
+      }
+
    } // namespace Testing
 
 } // namespace HF
