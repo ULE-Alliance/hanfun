@@ -282,7 +282,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
    }
 
    std::for_each(entry->members.begin(), entry->members.end(),
-                 [this,entry](const Member &m)
+                 [this, entry](const Member &m)
    {
       group_table().remove(m.device, entry->address, m.unit);
    });
@@ -486,7 +486,7 @@ void IServer::added(const Protocol::Address &addr, Common::Result result,
 
    if (!group->add(request.device, request.unit))
    {
-      result = Common::Result::FAIL_ARG;
+      result = Common::Result::FAIL_MODIFIED;
 
       HF::Transport::Group::remove(unit().device(), request.address, request.device);
 

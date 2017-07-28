@@ -1255,7 +1255,7 @@ TEST(GroupManagementServer, Delete)
 
    auto dev_entries = group->members;
 
-   uint8_t size = server->entries().size();
+   uint8_t size     = server->entries().size();
 
    DeleteMessage received(group_addr);
 
