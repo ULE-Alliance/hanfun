@@ -1059,7 +1059,7 @@ TEST_GROUP(GroupManagementServer)
       }
    };
 
-   Testing::Device *device;
+   Testing::Concentrator *base;
    GroupManagementServer *server;
 
    Protocol::Packet packet;
@@ -1074,8 +1074,8 @@ TEST_GROUP(GroupManagementServer)
 
    TEST_SETUP()
    {
-      device                    = new Testing::Device();
-      server                    = new GroupManagementServer(*(device->unit0()));
+      base                      = new Testing::Concentrator();
+      server                    = new GroupManagementServer(*(base->unit0()));
 
       addr                      = Protocol::Address(42, 0);
       link                      = Testing::Link();
@@ -1095,7 +1095,7 @@ TEST_GROUP(GroupManagementServer)
    TEST_TEARDOWN()
    {
       delete server;
-      delete device;
+      delete base;
 
       mock().clear();
    }
@@ -1212,9 +1212,9 @@ TEST(GroupManagementServer, Create)
    LONGS_EQUAL(1, server->entries().size());    // Check if the new group is on the DB.
 
    // Check response packet destination address.
-   LONGS_EQUAL(1, device->packets.size());
+   LONGS_EQUAL(1, base->packets.size());
 
-   Protocol::Packet *response = device->packets.back();
+   Protocol::Packet *response = base->packets.back();
 
    CHECK_TRUE(response != nullptr);
 
@@ -1287,7 +1287,7 @@ TEST(GroupManagementServer, Delete)
 
    for (uint8_t i = 0; i < dev_entries.size(); ++i)
    {
-      auto packet  = device->packets[i];
+      auto packet  = base->packets[i];
       auto &member = dev_entries[i];
 
       CHECK_INDEX("Dst Address : ", i, member.device, packet->destination.device);
@@ -1318,7 +1318,7 @@ TEST(GroupManagementServer, Delete)
 
    // Should respond to message.
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1379,7 +1379,7 @@ TEST(GroupManagementServer, Delete_Fail_Group)
 
    // Should respond to message.
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1423,7 +1423,7 @@ TEST(GroupManagementServer, Add_Step1)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1470,7 +1470,7 @@ TEST(GroupManagementServer, Add_Step1_Fail_Group)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1520,7 +1520,7 @@ TEST(GroupManagementServer, Add_Step1_Fail_Member)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1584,7 +1584,7 @@ TEST(GroupManagementServer, Add_Step2)
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1679,7 +1679,7 @@ TEST(GroupManagementServer, Add_Step2_No_Group)
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1740,7 +1740,7 @@ TEST(GroupManagementServer, Add_Step2_Transport_Fail)
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1783,7 +1783,7 @@ TEST(GroupManagementServer, Remove)
    mock("GroupManagement::Server").expectOneCall("remove");
    mock("AbstractDevice").expectNCalls(2, "send");
    mock("HF::Transport::Group").expectOneCall("remove")
-      .withParameter("ep", device)
+      .withParameter("ep", base)
       .withParameter("group", group_addr)
       .withParameter("device", dev_addr);
 
@@ -1793,7 +1793,7 @@ TEST(GroupManagementServer, Remove)
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.front();
+   Protocol::Packet *_packet = base->packets.front();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1815,7 +1815,7 @@ TEST(GroupManagementServer, Remove)
    LONGS_EQUAL(dev_unit, entry.unit);
 
    // Check for response.
-   _packet = device->packets.back();
+   _packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1866,7 +1866,7 @@ TEST(GroupManagementServer, Remove_Fail_Group)
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1923,7 +1923,7 @@ TEST(GroupManagementServer, Remove_Fail_Member)
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
 
-   Protocol::Packet *_packet = device->packets.back();
+   Protocol::Packet *_packet = base->packets.back();
 
    CHECK_TRUE(_packet != nullptr);
 
@@ -1968,7 +1968,7 @@ TEST(GroupManagementServer, GetInfo_no_group)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
                         server->handle(packet, received_payload, 0));
 
-   Protocol::Packet *response = device->packets.back();
+   Protocol::Packet *response = base->packets.back();
 
    CHECK_TRUE(response != nullptr);
 
@@ -2012,7 +2012,7 @@ TEST(GroupManagementServer, GetInfo_no_members)
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));
 
-   Protocol::Packet *response = device->packets.back();
+   Protocol::Packet *response = base->packets.back();
 
    CHECK_TRUE(response != nullptr);
 
@@ -2068,7 +2068,7 @@ TEST(GroupManagementServer, GetInfo_10_members)
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));
 
-   Protocol::Packet *response = device->packets.back();
+   Protocol::Packet *response = base->packets.back();
 
    CHECK_TRUE(response != nullptr);
 
