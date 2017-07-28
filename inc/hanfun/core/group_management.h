@@ -193,20 +193,12 @@ namespace HF
 
             bool remove(const Member &member)
             {
-               const auto orig_size = members.size();
-
-               auto it              = find_member(member);
+               auto it = find_member(member);
 
                if (it != members.end())
                {
                   members.erase(it);
-
-                  if (members.size() == orig_size - 1)
-                  {
-                     return true;
-                  }
-
-                  return false;
+                  return true;
                }
 
                return false;
