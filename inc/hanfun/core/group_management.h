@@ -21,6 +21,7 @@
 #include "hanfun/core.h"
 
 #include "hanfun/core/group_table.h"
+#include "hanfun/devices.h"
 
 #include <string>
 #include <map>
@@ -626,6 +627,16 @@ namespace HF
             // ======================================================================
             // API
             // ======================================================================
+
+            /*!
+             * Return a reference to the unit that this service belongs to.
+             *
+             * This is the same reference as AbstractService::unit, but static casted
+             * to allow access to the other interfaces.
+             *
+             * @return  a reference to the unit that holds this interface.
+             */
+            HF::Devices::Concentrator::IUnit0 &unit0() const;
 
             // ======================================================================
             // Events

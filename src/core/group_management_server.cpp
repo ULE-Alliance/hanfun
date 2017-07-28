@@ -101,6 +101,18 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 }
 
 // =============================================================================
+// IServer::unit0
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+HF::Devices::Concentrator::IUnit0 &IServer::unit0() const
+{
+   return static_cast<Devices::Concentrator::IUnit0 &>(ServiceRole::unit());
+}
+
+// =============================================================================
 // IServer::handle
 // =============================================================================
 /*!
@@ -310,19 +322,42 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 // =============================================================================
 Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 {
+   using namespace HF::Common;
+
    Member member;
 
-   Common::Result result = Common::Result::OK;
+   Result result = Common::Result::OK;
 
-   auto group            = entry(msg.address);
+   auto device   = unit0().device_management()->entry(msg.device);
 
-   if (group != nullptr && !group->exists(msg.device, msg.unit))
+   auto group    = entry(msg.address);
+
+   if (device == nullptr)
+   {
+      result = Result::FAIL_ARG;
+      goto _end;
+   }
+
+   if (device->unit(0) == nullptr ||
+       !device->unit(0)->has_interface(Interface::GROUP_TABLE, Role::SERVER_ROLE))
+   {
+      result = Result::FAIL_SUPPORT;
+      goto _end;
+   }
+
+   if (group == nullptr || group->exists(msg.device, msg.unit))
+   {
+      result = Result::FAIL_ARG;
+   }
+
+   _end:
+
+   if (result == Result::OK)
    {
       group_table().add(packet.source, msg, packet.message.reference);
    }
    else
    {
-      result = Common::Result::FAIL_ARG;
       added(packet.source, result, msg, packet.message.reference);
    }
 

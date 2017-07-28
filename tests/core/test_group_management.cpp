@@ -1164,6 +1164,16 @@ TEST_GROUP(GroupManagementServer)
          }
       }
    }
+
+   void setup_device(Testing::Concentrator *_base, uint16_t address)
+   {
+      assert(_base != nullptr);
+
+      auto device = DevMgt::create_device(*_base, address);
+      auto unit   = DevMgt::add_unit0(device);
+
+      DevMgt::fill_unit(unit, HF::Interface::GROUP_TABLE, HF::Interface::SERVER_ROLE);
+   }
 };
 
 //! @test Number Of Groups support.
@@ -1405,6 +1415,8 @@ TEST(GroupManagementServer, Add_Step1)
 {
    fill_groups();
 
+   setup_device(base, dev_addr);
+
    AddMessage received(group_addr, dev_addr, dev_unit);
 
    payload = ByteArray(received.size() + 6);
@@ -1445,10 +1457,151 @@ TEST(GroupManagementServer, Add_Step1)
    LONGS_EQUAL(dev_unit, entry.unit);
 }
 
+//! @test Add support - Step 1 (Fail No Device).
+TEST(GroupManagementServer, Add_Step1_Fail_No_Device)
+{
+   // Setup Add request.
+
+   AddMessage received(group_addr, dev_addr, dev_unit);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);   // pack it
+
+   packet.message.itf.member = GroupManagement::ADD_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received.size();
+
+   mock("GroupManagement::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *_packet = base->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(packet.source.device, _packet->destination.device);
+   LONGS_EQUAL(packet.source.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::ADD_CMD, _packet->message.itf.member);
+
+   AddResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
+}
+
+//! @test Add support - Step 1 (Fail No Unit 0).
+TEST(GroupManagementServer, Add_Step1_Fail_No_Unit0)
+{
+   // Setup Add request.
+
+   auto device = DevMgt::create_device(*base, dev_addr);
+
+   AddMessage received(group_addr, dev_addr, dev_unit);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);   // pack it
+
+   packet.message.itf.member = GroupManagement::ADD_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received.size();
+
+   mock("GroupManagement::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *_packet = base->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(packet.source.device, _packet->destination.device);
+   LONGS_EQUAL(packet.source.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::ADD_CMD, _packet->message.itf.member);
+
+   AddResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, response.code);
+}
+
+//! @test Add support - Step 1 (Fail No Interface).
+TEST(GroupManagementServer, Add_Step1_Fail_No_Interface)
+{
+   // Setup Add request.
+
+   auto device = DevMgt::create_device(*base, dev_addr);
+   auto unit   = DevMgt::add_unit0(device);
+
+   DevMgt::fill_unit(unit, HF::Interface::IDENTIFY, HF::Interface::Role::SERVER_ROLE);
+
+   AddMessage received(group_addr, dev_addr, dev_unit);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);   // pack it
+
+   packet.message.itf.member = GroupManagement::ADD_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = received.size();
+
+   mock("GroupManagement::Server").expectOneCall("add");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   Protocol::Packet *_packet = base->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(packet.source.device, _packet->destination.device);
+   LONGS_EQUAL(packet.source.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::ADD_CMD, _packet->message.itf.member);
+
+   AddResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, response.code);
+}
+
 //! @test Add support - Step 1 - Fail Group.
 TEST(GroupManagementServer, Add_Step1_Fail_Group)
 {
    fill_groups();
+
+   setup_device(base, dev_addr);
 
    group_addr = server->entries().size() + 1;
 
@@ -1495,6 +1648,8 @@ TEST(GroupManagementServer, Add_Step1_Fail_Group)
 TEST(GroupManagementServer, Add_Step1_Fail_Member)
 {
    fill_groups();
+
+   setup_device(base, dev_addr);
 
    auto group = server->entries().find(group_addr);
 
@@ -1545,6 +1700,8 @@ TEST(GroupManagementServer, Add_Step1_Fail_Member)
 TEST(GroupManagementServer, Add_Step2)
 {
    fill_groups();
+
+   setup_device(base, dev_addr);
 
    // Create request for the response below.
    packet.message.reference = 0xAA;
@@ -1606,6 +1763,8 @@ TEST(GroupManagementServer, Add_Step2_NoRequest)
 {
    fill_groups();
 
+   setup_device(base, dev_addr);
+
    // Handle response from GroupTable::Server
 
    GroupTable::Response response_gt(Common::Result::OK, group_addr, dev_unit);
@@ -1639,6 +1798,8 @@ TEST(GroupManagementServer, Add_Step2_NoRequest)
 TEST(GroupManagementServer, Add_Step2_No_Group)
 {
    fill_groups();
+
+   setup_device(base, dev_addr);
 
    // Create request for the response below.
 
@@ -1700,6 +1861,8 @@ TEST(GroupManagementServer, Add_Step2_No_Group)
 TEST(GroupManagementServer, Add_Step2_Transport_Fail)
 {
    fill_groups();
+
+   setup_device(base, dev_addr);
 
    // Create request for the response below.
 
