@@ -99,7 +99,7 @@ function(generate_code_coverage_report _targets)
 
   add_custom_target(coverage_report
                     COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --capture --output-file hanfun.info
-                    COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --remove hanfun.info 'tests/cpputest*' '/usr/*' --output-file hanfun.info
+                    COMMAND ${LCOV_PATH} ${LCOV_ARGS_COMMON} --remove hanfun.info '*/cpputest/*' '/usr/*' --output-file hanfun.info
                     COMMAND ${GENHTML_PATH} ${GENHTML_ARGS} --title "HAN-FUN ${GIT_DESCRIBE}" -o coverage hanfun.info
                     COMMAND ${CMAKE_COMMAND} -E remove hanfun.info
                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
