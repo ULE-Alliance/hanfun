@@ -162,6 +162,8 @@ namespace HF
             bool has_interface(uint16_t itf_uid, HF::Interface::Role role) const;
          };
 
+         typedef Common::Pointer<const Unit> UnitPtr;
+
          /*!
           * Device Entry.
           */
@@ -218,6 +220,26 @@ namespace HF
             bool operator!=(Device &other)
             {
                return !(*this == other);
+            }
+
+            // =============================================================================
+            // Helpers
+            // =============================================================================
+
+            UnitPtr unit(uint16_t id) const
+            {
+               auto it = std::find_if(units.begin(), units.end(), [id](const Unit &unit){
+                  return unit.id == id;
+               });
+
+               if (it == units.end())
+               {
+                  return UnitPtr();
+               }
+               else
+               {
+                  return UnitPtr(*(it.base()));
+               }
             }
          };
 
