@@ -78,7 +78,7 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
 }
 
 #define CHECK_INDEX(_header, _index, _expected, _actual) \
-      check_index(_expected, _actual, _index, _header, __FILE__, __LINE__)
+   check_index(_expected, _actual, _index, _header, __FILE__, __LINE__)
 
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
@@ -838,6 +838,21 @@ namespace HF
 
          return static_cast<T>(distribution(generator));
       }
+
+      namespace DevMgt
+      {
+         using DevicePtr = HF::Core::DeviceManagement::DevicePtr;
+         using UnitPtr   = HF::Core::DeviceManagement::UnitPtr;
+
+         DevicePtr create_device(Concentrator &base, uint16_t _dev_addr);
+
+         UnitPtr add_unit(DevicePtr &device, uint8_t unit_id, uint16_t profile);
+
+         UnitPtr add_unit0(DevicePtr &device);
+
+         void fill_unit(UnitPtr unit, Interface::UID uid, Interface::Role role);
+
+      }  // namespace DevMgt
 
    } // namespace Testing
 
