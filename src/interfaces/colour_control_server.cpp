@@ -352,10 +352,24 @@ Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMes
 Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
                                 const MoveToSaturationMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
-   return(Common::Result::OK);
+
+   Protocol::Response response;
+
+   Common::Result result = Common::Result::OK;
+
+   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
+   {
+      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
+      goto _end;
+   }
+
+   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+
+   _end:
+
+   return result;
 }
 
 // =============================================================================
@@ -635,10 +649,41 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
 Common::Result Server::move_to_saturation(const Protocol::Address &addr,
                                 const MoveToSaturationMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   Common::Result result = IServer::move_to_saturation(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   auto step = (message.direction == Direction::UP ? message.saturation : -message.saturation);
+
+   Saturation_Transition *new_transition = new Saturation_Transition(*this,  // server
+                                                       1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1; // Run for time-1 (adjust for base 0 instead of 1)
+      new_transition->step = step / message.time; // Step size.
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   new_transition->end = message.saturation;
+
+   new_transition->run(0);  //Run once immediately
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
+
+   return result;
 }
 
 // =============================================================================

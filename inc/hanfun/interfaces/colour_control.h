@@ -991,6 +991,53 @@ namespace HF
             }
          };
 
+         //! Saturation Transition
+         struct Saturation_Transition: public ITransition
+         {
+            int32_t step;     //!< Hue or Saturation step
+            uint16_t n_steps; //!< Counter for the steps needed.
+            uint16_t end;     //!< End value to stop the iteration.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] step        the step size for each transition iteration.
+             * @param [in] n_steps     number of steps.
+             * @param [in] end         end value for the transition.
+             */
+            Saturation_Transition (IServer &_server, uint16_t period, int32_t step = 0,
+                                   uint16_t n_steps = 0,
+                                   uint16_t end = 0) :
+                  ITransition(_server, period), step(step), n_steps(n_steps), end(end)
+            {
+            }
+
+            //! Default constructor.
+            Saturation_Transition () = default;
+
+            //! Empty destructor.
+            ~Saturation_Transition ()
+            {
+            }
+            ;
+
+            /*!
+             * Run the transition.
+             *
+             * @param [in] time elapsed time since the last call.
+             * @retval 0   The transition didn't ran. Only the remaining time was updated.
+             * @retval 1   The transition ran.
+             */
+            bool run (uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next ()
+            {
+               return (period != 0 ? true : false);
+            }
+         };
 
          /*!
           * Colour Control %Interface : %Server side implementation.
