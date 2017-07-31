@@ -703,6 +703,11 @@ TEST(GroupManagementClient, Create)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(GroupManagement::CREATE_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   CreateMessage message;
+
+   message.unpack(client->sendMsg.payload);
+   CHECK_EQUAL(std::string("GroupName"),message.name);
 }
 
 //! @test Delete support.
@@ -718,6 +723,11 @@ TEST(GroupManagementClient, Delete)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(GroupManagement::DELETE_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   DeleteMessage message;
+
+   message.unpack(client->sendMsg.payload);
+   LONGS_EQUAL(0x00, message.address);
 }
 
 //! @test Add support.
@@ -737,6 +747,13 @@ TEST(GroupManagementClient, Add)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(GroupManagement::ADD_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   AddMessage message;
+
+   message.unpack(client->sendMsg.payload);
+   LONGS_EQUAL(0x001, message.address);
+   LONGS_EQUAL(0x1234, message.device);
+   LONGS_EQUAL(0x56, message.unit);
 }
 
 //! @test Remove support.
@@ -752,6 +769,14 @@ TEST(GroupManagementClient, Remove)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(GroupManagement::REMOVE_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   RemoveMessage message;
+
+   message.unpack(client->sendMsg.payload);
+
+   LONGS_EQUAL(0x00, message.address);
+   LONGS_EQUAL(0x0000, message.device);
+   LONGS_EQUAL(0x00, message.unit);
 }
 
 //! @test Get Info support.
@@ -769,6 +794,11 @@ TEST(GroupManagementClient, GetInfo)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(GroupManagement::GET_INFO_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   InfoMessage message;
+
+   message.unpack(client->sendMsg.payload);
+   LONGS_EQUAL(0x0001, message.address);
 }
 
 //! @test Created support.
