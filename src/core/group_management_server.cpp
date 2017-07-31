@@ -281,7 +281,7 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
       goto _end;
    }
 
-   std::for_each(entry->members.begin(), entry->members.end(),
+   std::for_each(entry->members().begin(), entry->members().end(),
                  [this, entry](const Member &m)
    {
       group_table().remove(m.device, entry->address, m.unit);
@@ -332,22 +332,42 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 
    auto group    = entry(msg.address);
 
-   if (device == nullptr)
+   if (msg.device == Protocol::BROADCAST_ADDR ||
+       msg.unit == Protocol::BROADCAST_UNIT)
+   {
+      result = Result::FAIL_ARG;
+      goto _error;
+   }
+
+   if (group == nullptr)
    {
       result = Result::FAIL_ARG;
       goto _end;
+   }
+
+   if (device == nullptr)
+   {
+      result = Result::FAIL_ARG;
+      goto _error;
    }
 
    if (device->unit(0) == nullptr ||
        !device->unit(0)->has_interface(Interface::GROUP_TABLE, Role::SERVER_ROLE))
    {
       result = Result::FAIL_SUPPORT;
-      goto _end;
+      goto _error;
    }
 
-   if (group == nullptr || group->exists(msg.device, msg.unit))
+   if (group->exists(msg.device, msg.unit))
    {
       result = Result::FAIL_ARG;
+   }
+
+   _error:
+
+   if (!group->reserve())
+   {
+      result = Result::FAIL_RESOURCES;
    }
 
    _end:
@@ -378,6 +398,13 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
    Common::Result result = Common::Result::OK;
 
    auto group            = entry(msg.address);  // Try to find this group
+
+   if (msg.device == Protocol::BROADCAST_ADDR ||
+       msg.unit == Protocol::BROADCAST_UNIT)
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _error;
+   }
 
    if (group == nullptr)                        // Group not found. Give an error
    {
@@ -435,7 +462,7 @@ Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &ms
    {
       result           = Common::Result::OK;
       response.name    = group->name;
-      response.members = group->members;
+      response.members = group->members();
 
       this->got_info(*group);
    }
@@ -462,18 +489,21 @@ Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &ms
 void IServer::added(const Protocol::Address &addr, Common::Result result,
                     const AddMessage &request, uint8_t reference)
 {
-   GroupPtr group;
+   GroupPtr group = entries().find(request.address);
 
-   if (result != Common::Result::OK)
-   {
-      goto _end;
-   }
-
-   group = entries().find(request.address);
+   Group::Container::iterator it;
 
    if (group == nullptr)
    {
       result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   it = group->find_member(Protocol::BROADCAST_ADDR, Protocol::BROADCAST_UNIT);
+
+   if (result != Common::Result::OK)
+   {
+      group->remove(Protocol::BROADCAST_ADDR, Protocol::BROADCAST_UNIT);
       goto _end;
    }
 
@@ -484,16 +514,15 @@ void IServer::added(const Protocol::Address &addr, Common::Result result,
       goto _end;
    }
 
-   if (!group->add(request.device, request.unit))
+   if (it == group->members().end())
    {
       result = Common::Result::FAIL_MODIFIED;
-
-      HF::Transport::Group::remove(unit().device(), request.address, request.device);
-
       goto _end;
    }
 
-   added(*group, Member(request.device, request.unit));
+   *it = Member(request.device, request.unit);
+
+   added(*group, *it);
 
    _end:
 

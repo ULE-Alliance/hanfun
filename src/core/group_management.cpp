@@ -127,6 +127,89 @@ uint16_t GroupAddress::unpack(const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 
 // =============================================================================
+// Group::find_member
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Group::Container::iterator Group::find_member(const Member &member)
+{
+   /* *INDENT-OFF* */
+   auto it = std::find_if(_members.begin(), _members.end(), [&member](const Member &m)
+   {
+      return member == m;
+   });
+   /* *INDENT-ON* */
+
+   return it;
+}
+
+// =============================================================================
+// Group::add
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Group::add(const Member &member)
+{
+   HF_ASSERT(members().size() <= MAX_MEMBERS, {return false;});
+
+   auto it = find_member(member);
+
+   if (it == _members.end())
+   {
+      _members.push_back(member);
+      return true;
+   }
+
+   return false;
+}
+
+// =============================================================================
+// Group::update
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Group::update(const Member &member)
+{
+   auto it = find_member(Protocol::BROADCAST_ADDR, Protocol::BROADCAST_UNIT);
+
+   if(it == _members.end())
+   {
+      return false;
+   }
+   else
+   {
+      *it = member;
+      return true;
+   }
+}
+
+// =============================================================================
+// Group::remove
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Group::remove(const Member &member)
+{
+   auto it = find_member(member);
+
+   if (it != _members.end())
+   {
+      _members.erase(it);
+      return true;
+   }
+
+   return false;
+}
+
+// =============================================================================
 // Group::size
 // =============================================================================
 /*!
@@ -174,7 +257,7 @@ uint16_t Group::pack(Common::ByteArray &array, uint16_t offset) const
    offset += size;
 
    HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(
-      const_cast<std::vector<Member> &>(members));
+      const_cast<Container &>(_members));
    offset += helper.pack(array, offset);
 
    return offset - start;
@@ -204,7 +287,7 @@ uint16_t Group::unpack(const Common::ByteArray &array, uint16_t offset)
 
    offset += size;
 
-   HF::Common::SerializableHelperVector<std::vector<Member>, uint8_t> helper(members);
+   HF::Common::SerializableHelperVector<Container, uint8_t> helper(_members);
    size += helper.unpack(array, offset);
 
    /* *INDENT-OFF* */

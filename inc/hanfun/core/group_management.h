@@ -131,8 +131,15 @@ namespace HF
 
          struct Group: public GroupAddress
          {
-            std::string               name;    //!< Group Name
-            std::vector<Member>       members; //!< Group Members
+            using Container = std::vector<Member>;
+
+            std::string name; //!< Group Name
+
+            protected:
+
+            Container _members;  //!< Group Members
+
+            public:
 
             constexpr static uint16_t MAX_MEMBERS = GroupAddress::END_ADDR -
                                                     GroupAddress::START_ADDR + 1;
@@ -147,31 +154,90 @@ namespace HF
                GroupAddress(address), name(name)
             {}
 
-            std::vector<Member>::iterator find_member(const Member &member)
-            {
-               /* *INDENT-OFF* */
-               auto it = std::find_if(members.begin(), members.end(),
-                                      [&member](const Member &i)
-               {
-                  return member == i;
-               });
-               /* *INDENT-ON* */
+            // =============================================================================
+            // API
+            // =============================================================================
 
-               return it;
+            const Container &members() const
+            {
+               return _members;
             }
 
+            /*!
+             * Find a group member equal to the given @c member.
+             *
+             * @param [in] member   reference to a Member instance to look for.
+             *
+             * @retval  iterator to the element in the @c Container if exists,
+             * @retval  Container::end() otherwise.
+             */
+            Container::iterator find_member(const Member &member);
+
+            /*!
+             * @copydoc Group::find_member(const Member &)
+             *
+             * @param [in] device   device address for the member to look for.
+             * @param [in] unit     unit ID for the member to look for.
+             *
+             * @retval  iterator to the element in the @c Container if exists,
+             * @retval  Container::end() otherwise.
+             */
+            Container::iterator find_member(uint16_t device, uint8_t unit)
+            {
+               const Member member(device, unit);
+
+               return find_member(member);
+            }
+
+            /*!
+             * Check if a member equal to the given @c member already exists in the
+             * group.
+             *
+             * @param [in] member   reference to the member to check presence of.
+             *
+             * @retval true   if the member is already present in the group;
+             * @retval false  otherwise.
+             */
             bool exists(const Member &member)
             {
-               return !(find_member(member) == members.end());
+               return !(find_member(member) == members().end());
             }
 
+            /*!
+             * @copydoc exists(const Member &)
+             *
+             * @param [in] device   device address to check the existence for.
+             * @param [in] unit     unit ID to check the existence for.
+             *
+             * @retval true   if the member is already present in the group;
+             * @retval false  otherwise.
+             */
             bool exists(uint16_t device, uint8_t unit)
             {
                const Member member(device, unit);
 
-               return !(find_member(member) == members.end());
+               return !(find_member(member) == members().end());
             }
 
+            /*!
+             * Add the given @c member to the group.
+             *
+             * @param [in] member   reference to a member to add to the group.
+             *
+             * @retval true   if the member was added;
+             * @retval false  otherwise.
+             */
+            bool add(const Member &member);
+
+            /*!
+             * @copydoc add(const Member &)
+             *
+             * @param [in] device   device address for the new member to add.
+             * @param [in] unit     unit ID for the new member to add.
+             *
+             * @retval true   if the member was added;
+             * @retval false  otherwise.
+             */
             bool add(uint16_t device, uint8_t unit)
             {
                const Member member(device, unit);
@@ -179,30 +245,69 @@ namespace HF
                return add(member);
             }
 
-            bool add(const Member &member)
+            /*!
+             * Reserve a member in group members entries.
+             *
+             * @retval true   if the entry was reserved;
+             * @retval false  otherwise.
+             */
+            bool reserve()
             {
-               auto it = find_member(member);
-
-               if (it == members.end())
-               {
-                  members.push_back(member);
-                  return true;
-               }
-
-               return false;
+               HF_ASSERT(members().size() < MAX_MEMBERS, {return false;});
+               _members.push_back(Member());
+               return true;
             }
 
-            bool remove(const Member &member)
+            /*!
+             * Update a reserved entry with the given @c member.
+             *
+             * @param [in] member   reference to the member to update the reserved entry to.
+             *
+             * @retval true   if the entry was updated;
+             * @retval false  otherwise.
+             */
+            bool update(const Member &member);
+
+            /*!
+             * @copydoc update(const Member &)
+             *
+             * @param device  device address to update the reserved entry with.
+             * @param unit    unit ID to update the reserved entry with.
+             *
+             * @retval true   if the entry was updated;
+             * @retval false  otherwise.
+             */
+            bool update(uint16_t device, uint8_t unit)
             {
-               auto it = find_member(member);
+               const Member member(device, unit);
 
-               if (it != members.end())
-               {
-                  members.erase(it);
-                  return true;
-               }
+               return update(member);
+            }
 
-               return false;
+            /*!
+             * Remove the given @c member from the entries of the group.
+             *
+             * @param [in] member   reference to the member to remove from the group.
+             *
+             * @retval true   if the entry was removed;
+             * @retval false  otherwise.
+             */
+            bool remove(const Member &member);
+
+            /*!
+             * @copydoc remove(const Member &)
+             *
+             * @param device  device address of the member to remove.
+             * @param unit    unit ID of the member to remove.
+             *
+             * @retval true   if the entry was removed;
+             * @retval false  otherwise.
+             */
+            bool remove(uint16_t device, uint8_t unit)
+            {
+               const Member member(device, unit);
+
+               return remove(member);
             }
 
             // =============================================================================
