@@ -2063,10 +2063,9 @@ TEST(ColourControlClient, MoveToSaturation)
 //! @test Move Saturation support.
 TEST(ColourControlClient, MoveSaturation)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_saturation(addr);
+   client.move_saturation(addr, Direction::UP, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2074,6 +2073,12 @@ TEST(ColourControlClient, MoveSaturation)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::MOVE_SATURATION_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   MoveSaturationMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(10, message.rate);
 }
 
 //! @test Step Saturation support.
@@ -2410,6 +2415,55 @@ TEST(ColourControlServer, Hue_Transition)
    LONGS_EQUAL(110, server.hue_and_saturation().hue);
 }
 
+//! @test Hue_transition_Continuous test.
+TEST(ColourControlServer, Hue_Transition_Continuous)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   Hue_Transition_Continuous transition(server,
+                             10,                   // Period
+                             10);                  // Step
+
+   CHECK_FALSE(transition.run(1));              // check if the transition didn't ran
+   LONGS_EQUAL(9, transition.remaining_time);
+   CHECK_TRUE(transition.run(9));               // Now it ran
+   CHECK_TRUE(transition.next());               // it should continue...
+
+   LONGS_EQUAL(110, server.hue_and_saturation().hue);
+}
+
+//! @test Hue_transition test.
+TEST(ColourControlServer, Saturation_Transition)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   Saturation_Transition transition(server,
+                                    1,                    // Period
+                                    10,                   // Step
+                                    0,                    // Number of steps
+                                    110);                 // Final value
+
+   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_FALSE(transition.next());  // it should be no more transitions...
+
+   LONGS_EQUAL(110, server.hue_and_saturation().saturation);
+}
+
+//! @test Hue_transition_Continuous test.
+TEST(ColourControlServer, Saturation_Transition_Continuous)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   Saturation_Transition_Continuous transition(server,
+                                               10,                   // Period
+                                               10);                  // Step
+
+   CHECK_FALSE(transition.run(1));              // check if the transition didn't ran
+   LONGS_EQUAL(9, transition.remaining_time);
+   CHECK_TRUE(transition.run(9));               // Now it ran
+   CHECK_TRUE(transition.next());               // it should continue...
+
+   LONGS_EQUAL(60, server.hue_and_saturation().saturation);
+}
+
+
 //! @test Move To Hue support instantaneously.
 TEST(ColourControlServer, MoveToHue_Instantly)
 {
@@ -2593,22 +2647,6 @@ TEST(ColourControlServer, MoveToHue_No_Support)
 
    mock("ColourControl::Server").checkExpectations();
    mock("Interface").checkExpectations();
-}
-
-//! @test Hue_transition_Continuous test.
-TEST(ColourControlServer, Hue_Transition_Continuous)
-{
-   server.hue_and_saturation(HS_Colour(100,50));
-   Hue_Transition_Continuous transition(server,
-                             10,                   // Period
-                             10);                  // Step
-
-   CHECK_FALSE(transition.run(1));              // check if the transition didn't ran
-   LONGS_EQUAL(9, transition.remaining_time);
-   CHECK_TRUE(transition.run(9));               // Now it ran
-   CHECK_TRUE(transition.next());               // it should continue...
-
-   LONGS_EQUAL(110, server.hue_and_saturation().hue);
 }
 
 //! @test Move Hue support.
@@ -2882,14 +2920,62 @@ TEST(ColourControlServer, MoveToSaturation_no_suport)
 //! @test Move Saturation support.
 TEST(ColourControlServer, MoveSaturation)
 {
-   // FIXME Generated Stub.
+   server.hue_and_saturation(HS_Colour(100, 50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+
+   MoveSaturationMessage received(Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE, &server);
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(100, 60), &server);
+
    mock("ColourControl::Server").expectOneCall("move_saturation");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &HS_old)
+         .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_SATURATION_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->step);
+
+}
+
+//! @test Move Saturation support.
+TEST(ColourControlServer, MoveSaturation_no_suport)
+{
+   server.hue_and_saturation(HS_Colour(100, 50));
+   server.supported(ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //no-HS Support
+
+   MoveSaturationMessage received(Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectOneCall("move_saturation");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::MOVE_SATURATION_CMD;
+
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Step Saturation support.
