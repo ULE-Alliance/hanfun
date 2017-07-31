@@ -293,10 +293,24 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
 // =============================================================================
 Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
-   return(Common::Result::OK);
+
+   Protocol::Response response;
+
+   Common::Result result = Common::Result::OK;
+
+   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
+   {
+      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
+      goto _end;
+   }
+
+   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+
+   _end:
+
+   return result;
 }
 
 // =============================================================================
@@ -554,10 +568,21 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
 // =============================================================================
 Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   Common::Result result = IServer::move_hue(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   auto step = (message.direction == Direction::UP ? message.rate: -message.rate);
+
+   Hue_Transition_Continuous *new_transition = new Hue_Transition_Continuous(*this,
+                                                                             10,    // 1 sec.
+                                                                             step);
+
+   new_transition->run(0);  //Run once immediately
+   add_transition(new_transition);
+
+   return result;
 }
 
 // =============================================================================
@@ -882,4 +907,16 @@ bool Hue_Transition::run(uint16_t time)
       period=0;   //can be deleted
       return true;
    }
+}
+
+bool Hue_Transition_Continuous::run(uint16_t time)
+{
+   if (time!=0 && !ITransition::run(time))
+   {
+      return false;
+   }
+
+   server.hue_and_saturation(HS_Colour(server.hue_and_saturation().hue + step,
+                                             server.hue_and_saturation().saturation));
+   return true;
 }

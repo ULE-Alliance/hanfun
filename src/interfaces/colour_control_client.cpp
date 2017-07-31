@@ -62,10 +62,12 @@ void Client::move_to_hue(const Protocol::Address &addr, uint16_t hue,
  *
  */
 // =============================================================================
-void Client::move_hue(const Protocol::Address &addr)
+void Client::move_hue(const Protocol::Address &addr, Direction direction, uint16_t rate)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   MoveHueMessage move_msg(direction, rate);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;

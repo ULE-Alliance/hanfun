@@ -959,6 +959,38 @@ namespace HF
             }
          };
 
+         struct Hue_Transition_Continuous : public ITransition
+         {
+            int32_t step;     //!< Hue or Saturation step
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] step        the step size for each transition iteration.
+             */
+            Hue_Transition_Continuous(IServer &_server, uint16_t period, int32_t step = 0)
+               :ITransition(_server, period), step(step)
+            {}
+
+            //! Default constructor.
+            Hue_Transition_Continuous() = default;
+
+            //! Empty destructor.
+            ~Hue_Transition_Continuous()
+            {};
+
+            //! @copydoc ColourControl::Hue_Transition::run()
+            bool run(uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next()
+            {
+               return( period != 0? true : false );
+            }
+         };
+
 
          /*!
           * Colour Control %Interface : %Server side implementation.
@@ -1549,18 +1581,20 @@ namespace HF
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD, to the given
              * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr        the network address to send the message to.
+             * @param [in] direction   the direction of change.
+             * @param [in] rate        the rate of change.
              */
-            void move_hue(const Protocol::Address &addr);
+            void move_hue(const Protocol::Address &addr, Direction direction, uint16_t rate);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD,
              * to the broadcast network address.
              */
-            void move_hue()
+            void move_hue(Direction direction, uint16_t rate)
             {
                Protocol::Address addr;
-               move_hue(addr);
+               move_hue(addr, direction, rate);
             }
 
             /*!

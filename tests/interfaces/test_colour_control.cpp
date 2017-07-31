@@ -1997,10 +1997,9 @@ TEST(ColourControlClient, MoveToHue)
 //! @test Move Hue support.
 TEST(ColourControlClient, MoveHue)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_hue(addr);
+   client.move_hue(addr, Direction::UP, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2008,6 +2007,12 @@ TEST(ColourControlClient, MoveHue)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::MOVE_HUE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   MoveHueMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(10, message.rate);
 }
 
 //! @test Step Hue support.
@@ -2274,6 +2279,18 @@ TEST_GROUP(ColourControlServer)
       void changed(void)
       {
          mock("ColourControl::Server").actualCall("changed");
+      }
+
+      void add_transition(ITransition *T)
+      {
+         mock("ColourControl::Server").actualCall("add_transition");
+         return InterfaceHelper<ColourControl::Server>::add_transition(T);
+      }
+
+      void remove(IServer const &itf)
+      {
+         mock("ColourControl::Server").actualCall("remove");
+         return InterfaceHelper<ColourControl::Server>::remove(itf);
       }
 
       Server::Container &transitions()
@@ -2565,18 +2582,84 @@ TEST(ColourControlServer, MoveToHue_No_Support)
    mock("Interface").checkExpectations();
 }
 
+//! @test Hue_transition_Continuous test.
+TEST(ColourControlServer, Hue_Transition_Continuous)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   Hue_Transition_Continuous transition(server,
+                             10,                   // Period
+                             10);                  // Step
+
+   CHECK_FALSE(transition.run(1));              // check if the transition didn't ran
+   LONGS_EQUAL(9, transition.remaining_time);
+   CHECK_TRUE(transition.run(9));               // Now it ran
+   CHECK_TRUE(transition.next());               // it should continue...
+
+   LONGS_EQUAL(110, server.hue_and_saturation().hue);
+}
+
 //! @test Move Hue support.
 TEST(ColourControlServer, MoveHue)
 {
-   // FIXME Generated Stub.
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+
+   MoveHueMessage received(Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE,&server);
+   HueAndSaturation HS_old(HS_Colour(100,50),&server);
+   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+
    mock("ColourControl::Server").expectOneCall("move_hue");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+            .withParameterOfType("IAttribute", "new", &mode_new)
+            .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+           .withParameterOfType("IAttribute", "old", &HS_old)
+           .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_HUE_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->step);
 }
+
+//! @test Move Hue no support.
+TEST(ColourControlServer, MoveHue_no_support)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   server.supported(ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
+
+   MoveHueMessage received(Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectOneCall("move_hue");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::MOVE_HUE_CMD;
+
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+   LONGS_EQUAL(0, server.transitions().size());
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+}
+
+
 
 //! @test Step Hue support.
 TEST(ColourControlServer, StepHue)
@@ -2704,6 +2787,111 @@ TEST(ColourControlServer, Stop)
    packet.message.itf.member = ColourControl::STOP_CMD;
 
    CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+}
+
+// =============================================================================
+// Server transitions
+// =============================================================================
+
+//! @test Add_Transition support.
+TEST(ColourControlServer, Add_Transition)
+{
+   Hue_Transition_Continuous *test = new Hue_Transition_Continuous(server,10, 5);
+
+   LONGS_EQUAL(0, server.transitions().size());
+
+   mock("ColourControl::Server").expectOneCall("add_transition");
+
+   server.add_transition(test);
+   LONGS_EQUAL(1, server.transitions().size());
 
    mock("ColourControl::Server").checkExpectations();
+}
+
+//! @test Remove_Transition support.
+TEST(ColourControlServer, Remove_Transition)
+{
+   Hue_Transition_Continuous *test = new Hue_Transition_Continuous(server,10, 5);
+
+
+   mock("ColourControl::Server").expectOneCall("add_transition");
+   server.add_transition(test);
+
+   mock("ColourControl::Server").expectOneCall("remove");
+   server.remove(server);
+
+   LONGS_EQUAL(0, server.transitions().size());
+
+   mock("ColourControl::Server").checkExpectations();
+}
+
+//! @test Transition support.
+TEST(ColourControlServer, Transition_delete)
+{
+   ColourControlServer server1;
+   ColourControlServer server2;
+
+   server1.hue_and_saturation(HS_Colour(100,50));
+   server2.hue_and_saturation(HS_Colour(100,50));
+
+   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server1,1, 5);
+   Hue_Transition            *test2 = new Hue_Transition(server2, 1, 5, 2, 111);
+
+   server1.add_transition(test1);
+   server2.add_transition(test2);
+
+   LONGS_EQUAL(2, server.transitions().size());
+
+   for(uint8_t i =0; i<10; ++i)
+   {
+      std::string loc = std::to_string(i);
+      loc = "For i=" + loc;
+
+      server.transition();
+
+      if(i<2)
+      {
+         LONGS_EQUAL_TEXT(2, server.transitions().size(),loc.c_str());
+      }
+      else
+      {
+         LONGS_EQUAL_TEXT(1, server.transitions().size(),loc.c_str());
+      }
+   }
+
+   LONGS_EQUAL(1, server.transitions().size());
+   POINTERS_EQUAL(test1, server.transitions().front());
+
+   LONGS_EQUAL(150, server1.hue_and_saturation().hue);
+   LONGS_EQUAL(111, server2.hue_and_saturation().hue);
+
+}
+
+//! @test Transition support.
+TEST(ColourControlServer, Transition_order)
+{
+   ColourControlServer server1;
+   ColourControlServer server2;
+
+   server1.hue_and_saturation(HS_Colour(100,50));
+   server2.hue_and_saturation(HS_Colour(100,50));
+
+   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server1,2, 5);
+   Hue_Transition_Continuous *test2 = new Hue_Transition_Continuous(server2,3, 5);
+
+   server1.add_transition(test1);
+   server2.add_transition(test2);
+
+   LONGS_EQUAL(2, server.transitions().size());
+
+   POINTERS_EQUAL(test1, server.transitions().front());
+
+   server.transition();                                  // Swap test1 and test2
+
+   POINTERS_EQUAL(test2, server.transitions().front());
+
+   server.transition();                                  // Swap test2 and test1
+
+   POINTERS_EQUAL(test1, server.transitions().front());
+
 }
