@@ -765,10 +765,21 @@ Common::Result Server::move_saturation(const Protocol::Address &addr,
 Common::Result Server::step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   Common::Result result = IServer::step_saturation(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   auto step = (message.direction == Direction::UP ? message.step_size : -message.step_size);
+
+   Saturation_Transition_Continuous *new_transition = new Saturation_Transition_Continuous(*this,
+                                                                             message.time,
+                                                                             step);
+
+   new_transition->run(0);  //Run once immediately
+   add_transition(new_transition);
+
+   return result;
 }
 
 // =============================================================================

@@ -1749,17 +1749,21 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] step        the step size.
+             * @param [in] direction   the direction of change.
+             * @param [in] time        time to perform a single step.
              */
-            void step_saturation(const Protocol::Address &addr);
+            void step_saturation(const Protocol::Address &addr, uint8_t step, Direction direction,
+                                 uint8_t time);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD,
              * to the broadcast network address.
              */
-            void step_saturation()
+            void step_saturation(uint8_t step, Direction direction, uint8_t time)
             {
                Protocol::Address addr;
-               step_saturation(addr);
+               step_saturation(addr, step, direction, time);
             }
 
             /*!

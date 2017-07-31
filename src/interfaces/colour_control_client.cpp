@@ -148,10 +148,13 @@ void Client::move_saturation(const Protocol::Address &addr, Direction direction,
  *
  */
 // =============================================================================
-void Client::step_saturation(const Protocol::Address &addr)
+void Client::step_saturation(const Protocol::Address &addr, uint8_t step, Direction direction,
+                             uint8_t time)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   StepSaturationMessage move_msg(step, direction, time);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;
