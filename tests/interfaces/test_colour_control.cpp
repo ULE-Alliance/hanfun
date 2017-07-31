@@ -2018,10 +2018,9 @@ TEST(ColourControlClient, MoveHue)
 //! @test Step Hue support.
 TEST(ColourControlClient, StepHue)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.step_hue(addr);
+   client.step_hue(addr, 10, Direction::UP, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2029,6 +2028,14 @@ TEST(ColourControlClient, StepHue)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::STEP_HUE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   StepHueMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(10, message.step_size);
+   LONGS_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(10, message.time);
+
 }
 
 //! @test Move To Saturation support.
@@ -2664,14 +2671,62 @@ TEST(ColourControlServer, MoveHue_no_support)
 //! @test Step Hue support.
 TEST(ColourControlServer, StepHue)
 {
-   // FIXME Generated Stub.
+   server.hue_and_saturation(HS_Colour(100, 50));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE
+                    +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+
+   StepHueMessage received(10, Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE, &server);
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(110, 50), &server);
+
    mock("ColourControl::Server").expectOneCall("step_hue");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &HS_old)
+         .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::STEP_HUE_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->step);
+}
+
+//! @test Step Hue support.
+TEST(ColourControlServer, StepHue_no_support)
+{
+   server.hue_and_saturation(HS_Colour(100, 50));
+   server.supported(ColourControl::Mask::XY_MODE+
+                    ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
+
+   StepHueMessage received(10, Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectOneCall("step_hue");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::STEP_HUE_CMD;
+
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Move To Saturation support.

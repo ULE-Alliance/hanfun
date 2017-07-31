@@ -322,10 +322,24 @@ Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMes
 // =============================================================================
 Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
-   return(Common::Result::OK);
+
+   Protocol::Response response;
+
+   Common::Result result = Common::Result::OK;
+
+   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
+   {
+      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
+      goto _end;
+   }
+
+   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+
+   _end:
+
+   return result;
 }
 
 // =============================================================================
@@ -594,10 +608,21 @@ Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMess
 // =============================================================================
 Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   Common::Result result = IServer::step_hue(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   auto step = (message.direction == Direction::UP ? message.step_size : -message.step_size);
+
+   Hue_Transition_Continuous *new_transition = new Hue_Transition_Continuous(*this,
+                                                                             message.time,
+                                                                             step);
+
+   new_transition->run(0);  //Run once immediately
+   add_transition(new_transition);
+
+   return result;
 }
 
 // =============================================================================
