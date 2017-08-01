@@ -220,8 +220,7 @@ TEST(GroupManagement, UID)
 //! @test Number Of Groups support.
 TEST(GroupManagement, NumberOfGroups)
 {
-   HF::Attributes::IAttribute *attr =
-      GroupManagement::create_attribute(GroupManagement::NUMBER_OF_GROUPS_ATTR);
+   auto attr = GroupManagement::create_attribute(GroupManagement::NUMBER_OF_GROUPS_ATTR);
 
    CHECK_TRUE(attr != nullptr);
 
@@ -230,15 +229,39 @@ TEST(GroupManagement, NumberOfGroups)
    LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, attr->interface());
 
    delete attr;
+
+   attr = Core::create_attribute((GroupManagement::IServer *) nullptr, NUMBER_OF_GROUPS_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfGroups::ID, attr->uid());
+   CHECK_EQUAL(NumberOfGroups::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, attr->interface());
+
+   POINTERS_EQUAL(nullptr, attr->owner());
+
+   delete attr;
+
+   CHECK_ATTRIBUTE_ALLOC(NumberOfGroups);
 }
 
 //! @test Check nullptr return for invalid attribute
-TEST(GroupManagement, InvalidAttribute)
+TEST(GroupManagement, Invalid_Attribute)
 {
-   HF::Attributes::IAttribute *attr =
-      GroupManagement::create_attribute(GroupManagement::__LAST_ATTR__ + 1);
+   auto attr = GroupManagement::create_attribute(GroupManagement::__LAST_ATTR__ + 1);
 
    CHECK_TRUE(attr == nullptr);
+
+   attr = Core::create_attribute((GroupManagement::IServer *) nullptr,
+                                 GroupManagement::__LAST_ATTR__ + 1);
+
+   CHECK_TRUE(attr == nullptr);
+}
+
+// Code coverage helpers.
+TEST(GroupManagement, Allocation)
+{
+   CHECK_ALLOC(Entries);
 }
 
 // =============================================================================
@@ -1016,6 +1039,21 @@ TEST(GroupManagementClient, GOT_INFO_FAIL)
    mock("GroupManagement::Client").checkExpectations();
 }
 
+//! @test Handle - Invalid CMD.
+TEST(GroupManagementClient, Handle_Invalid)
+{
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00,
+   };
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = GroupManagement::GET_INFO_CMD + 1;
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_UNKNOWN,
+                        client->handle(packet, payload, 3));
+}
+
 // =============================================================================
 // Group Management Server
 // =============================================================================
@@ -1023,15 +1061,62 @@ TEST(GroupManagementClient, GOT_INFO_FAIL)
 //! Test Group for Group Management Server interface class.
 TEST_GROUP(GroupManagementServer)
 {
-   struct GroupManagementServer: public GroupManagement::DefaultServer
+   struct TestEntries: public Entries
+   {
+      Common::Result save(uint16_t address, const std::string &name) override
+      {
+         auto &call = mock("GroupManagement::Entries").actualCall("save");
+
+         if (call.hasReturnValue())
+         {
+            return static_cast<Common::Result>(call.returnIntValue());
+         }
+         else
+         {
+            return Entries::save(address, name);
+         }
+      }
+
+      using Entries::save;
+
+      Common::Result destroy(const Group &entry) override
+      {
+         auto &call = mock("GroupManagement::Entries").actualCall("destroy");
+
+         if (call.hasReturnValue())
+         {
+            return static_cast<Common::Result>(call.returnIntValue());
+         }
+         else
+         {
+            return Entries::destroy(entry);
+         }
+      }
+
+      uint16_t next_address() const
+      {
+         auto &call = mock("GroupManagement::Entries").actualCall("next_address");
+
+         if (call.hasReturnValue())
+         {
+            return call.returnIntValue();
+         }
+         else
+         {
+            return Entries::next_address();
+         }
+      }
+   };
+
+   struct GroupManagementServer: public GroupManagement::Server<TestEntries>
    {
       GroupManagementServer(HF::Core::Unit0 &unit):
-         GroupManagement::DefaultServer(unit) {}
+         GroupManagement::Server<TestEntries>(unit) {}
 
       Common::Result create(Protocol::Packet &packet, CreateMessage &msg) override
       {
          mock("GroupManagement::Server").actualCall("create");
-         return GroupManagement::DefaultServer::create(packet, msg);
+         return GroupManagement::Server<TestEntries>::create(packet, msg);
       }
 
       void created(const GroupPtr &group) override
@@ -1043,19 +1128,19 @@ TEST_GROUP(GroupManagementServer)
       Common::Result remove(Protocol::Packet &packet, DeleteMessage &msg) override
       {
          mock("GroupManagement::Server").actualCall("delete");
-         return GroupManagement::DefaultServer::remove(packet, msg);
+         return GroupManagement::Server<TestEntries>::remove(packet, msg);
       }
 
       void deleted(const Group &group) override
       {
          mock("GroupManagement::Server").actualCall("deleted");
-         GroupManagement::IServer::deleted(group);
+         GroupManagement::Server<TestEntries>::deleted(group);
       }
 
       Common::Result add(Protocol::Packet &packet, const AddMessage &msg) override
       {
          mock("GroupManagement::Server").actualCall("add");
-         return GroupManagement::DefaultServer::add(packet, msg);
+         return GroupManagement::Server<TestEntries>::add(packet, msg);
       }
 
       void added(const GroupPtr &group, const Member &member) override
@@ -1067,7 +1152,7 @@ TEST_GROUP(GroupManagementServer)
       Common::Result remove(Protocol::Packet &packet, const RemoveMessage &msg) override
       {
          mock("GroupManagement::Server").actualCall("remove");
-         return GroupManagement::DefaultServer::remove(packet, msg);
+         return GroupManagement::Server<TestEntries>::remove(packet, msg);
       }
 
       void removed(const GroupPtr &group, const Member &member) override
@@ -1079,7 +1164,7 @@ TEST_GROUP(GroupManagementServer)
       Common::Result get_info(Protocol::Packet &packet, const InfoMessage &msg) override
       {
          mock("GroupManagement::Server").actualCall("get_info");
-         return GroupManagement::DefaultServer::get_info(packet, msg);
+         return GroupManagement::Server<TestEntries>::get_info(packet, msg);
       }
 
       void got_info(const GroupPtr &group) override
@@ -1214,10 +1299,65 @@ TEST_GROUP(GroupManagementServer)
    }
 };
 
+//! @test Attribute pack support.
+TEST(GroupManagementServer, AttributePack)
+{
+   CHECK_ATTRIBUTE_PACK(GroupManagementServer, NumberOfGroups);
+}
+
 //! @test Number Of Groups support.
 TEST(GroupManagementServer, NumberOfGroups)
 {
-   CHECK_ATTRIBUTE_PACK(GroupManagementServer, NumberOfGroups);
+   auto attr = server->attribute(NUMBER_OF_GROUPS_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfGroups::ID, attr->uid());
+   CHECK_EQUAL(NumberOfGroups::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, attr->interface());
+
+   POINTERS_EQUAL(server, attr->owner());
+
+   delete attr;
+
+   attr = Core::create_attribute(server, NUMBER_OF_GROUPS_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfGroups::ID, attr->uid());
+   CHECK_EQUAL(NumberOfGroups::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, attr->interface());
+
+   POINTERS_EQUAL(server, attr->owner());
+
+   delete attr;
+}
+
+//! @test Invalid argument.
+TEST(GroupManagementServer, Invalid_Argument)
+{
+   auto attr = server->attribute(NUMBER_OF_GROUPS_ATTR + 1);
+
+   CHECK_TRUE(attr == nullptr);
+
+   attr = Core::create_attribute(server, NUMBER_OF_GROUPS_ATTR + 1);
+
+   CHECK_TRUE(attr == nullptr);
+}
+
+//! @test Handle - Invalid CMD.
+TEST(GroupManagementServer, Handle_Invalid)
+{
+   Common::ByteArray payload {
+      0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00,
+   };
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = GroupManagement::GET_INFO_CMD + 1;
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_UNKNOWN,
+                        server->handle(packet, payload, 3));
 }
 
 //! @test Create support.
@@ -1278,6 +1418,228 @@ TEST(GroupManagementServer, Create)
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
    LONGS_EQUAL(1, resp.address);
+}
+
+//! @test Create support - Fail.
+TEST(GroupManagementServer, Create_Fail_Group_Exists)
+{
+   std::string group_name("MyGroup");
+
+   Group group(0x4242, group_name);
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->entries().save(group));
+
+   uint16_t size = server->entries().size();
+
+   // Create a new Group request with the name "MyGroup"
+
+   CreateMessage received(group_name);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+
+   packet.message.itf.member = GroupManagement::CREATE_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
+
+   mock("Interface").expectNoCall("notify");
+
+   mock("GroupManagement::Server").expectOneCall("create");
+   mock("GroupManagement::Server").expectNoCall("created");
+   mock("HF::Transport::Group").expectNoCall("create");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
+                        server->handle(packet, payload, 0));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   CreateResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+   LONGS_EQUAL(GroupAddress::NO_ADDR, resp.address);
+}
+
+//! @test Create support - Fail Address.
+TEST(GroupManagementServer, Create_Fail_Address)
+{
+   std::string group_name("MyGroup");
+
+   uint16_t size = server->entries().size();
+
+   // Create a new Group request with the name "MyGroup"
+   CreateMessage received(group_name);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+
+   packet.message.itf.member = GroupManagement::CREATE_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
+
+   mock("Interface").expectNoCall("notify");
+
+   mock("GroupManagement::Server").expectOneCall("create");
+   mock("GroupManagement::Server").expectNoCall("created");
+   mock("HF::Transport::Group").expectNoCall("create");
+   mock("AbstractDevice").expectOneCall("send");
+
+   mock("GroupManagement::Entries").expectOneCall("next_address")
+      .andReturnValue(GroupAddress::NO_ADDR);
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_RESOURCES,
+                        server->handle(packet, payload, 0));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+   mock("GroupManagement::Entries").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   CreateResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_RESOURCES, resp.code);
+   LONGS_EQUAL(GroupAddress::NO_ADDR, resp.address);
+}
+
+//! @test Create support - Fail Transport.
+TEST(GroupManagementServer, Create_Fail_Transport)
+{
+   std::string group_name("MyGroup");
+
+   uint16_t size = server->entries().size();
+
+   // Create a new Group request with the name "MyGroup"
+   CreateMessage received(group_name);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+
+   packet.message.itf.member = GroupManagement::CREATE_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
+
+   NumberOfGroups old_value(0, server);
+   NumberOfGroups new_value(1, server);
+
+   mock("Interface").expectNoCall("notify");
+
+   mock("GroupManagement::Server").expectOneCall("create");
+   mock("GroupManagement::Server").expectNoCall("created");
+   mock("HF::Transport::Group").expectOneCall("create")
+      .ignoreOtherParameters()
+      .andReturnValue(Common::Result::FAIL_RESOURCES);
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_RESOURCES,
+                        server->handle(packet, payload, 0));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   CreateResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_RESOURCES, resp.code);
+   LONGS_EQUAL(GroupAddress::NO_ADDR, resp.address);
+}
+
+//! @test Create support - Fail Entries Save.
+TEST(GroupManagementServer, Create_Fail_Save)
+{
+   std::string group_name("MyGroup");
+
+   uint16_t size = server->entries().size();
+
+   // Create a new Group request with the name "MyGroup"
+   CreateMessage received(group_name);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+
+   packet.message.itf.member = GroupManagement::CREATE_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
+
+   mock("Interface").expectNoCall("notify");
+
+   mock("GroupManagement::Server").expectOneCall("create");
+   mock("GroupManagement::Server").expectNoCall("created");
+   mock("HF::Transport::Group").expectOneCall("create")
+      .ignoreOtherParameters()
+      .andReturnValue(Common::Result::OK);
+   mock("HF::Transport::Group").expectOneCall("remove")
+         .ignoreOtherParameters();
+   mock("GroupManagement::Entries").expectOneCall("save")
+      .andReturnValue(Common::Result::FAIL_UNKNOWN);
+
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_UNKNOWN,
+                        server->handle(packet, payload, 0));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+   mock("GroupManagement::Entries").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   CreateResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_UNKNOWN, resp.code);
+   LONGS_EQUAL(GroupAddress::NO_ADDR, resp.address);
 }
 
 //! @test Delete support.
@@ -1448,6 +1810,69 @@ TEST(GroupManagementServer, Delete_Fail_Group)
    LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
 }
 
+//! @test Delete support - Fail Destroy.
+TEST(GroupManagementServer, Delete_Fail_Destroy)
+{
+   fill_groups();
+
+   uint8_t size = server->entries().size();
+
+   DeleteMessage received(group_addr);
+
+   payload = ByteArray(received.size() + 6);
+
+   received.pack(payload, 3);
+
+   packet.message.itf.member = GroupManagement::DELETE_CMD;
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
+
+   mock("AbstractDevice").expectOneCall("send");
+
+   mock("GroupManagement::Server").expectOneCall("delete");
+   mock("GroupManagement::Server").expectNoCall("deleted");
+
+   mock("Interface").expectNoCall("notify");
+
+   mock("HF::Transport::Group").expectNoCall("remove");
+
+   mock("GroupManagement::Entries").expectOneCall("destroy")
+      .andReturnValue(Common::Result::FAIL_UNKNOWN);
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_UNKNOWN,
+                        server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+   mock("GroupManagement::Entries").checkExpectations();
+
+   LONGS_EQUAL(size, server->entries().size());
+
+   // Should respond to message.
+
+   Protocol::Packet *_packet = base->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(42, _packet->destination.device);
+   LONGS_EQUAL(0, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(HF::Protocol::Message::COMMAND_RES, _packet->message.type);
+
+   LONGS_EQUAL(HF::Interface::GROUP_MANAGEMENT, _packet->message.itf.id);
+   LONGS_EQUAL(HF::Interface::Role::SERVER_ROLE, _packet->message.itf.role);
+   LONGS_EQUAL(GroupManagement::DELETE_CMD, _packet->message.itf.member);
+
+   DeleteResponse response;
+
+   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+
+   LONGS_EQUAL(Common::Result::FAIL_UNKNOWN, response.code);
+}
+
 //! @test Add support - Step 1.
 TEST(GroupManagementServer, Add_Step1)
 {
@@ -1498,6 +1923,8 @@ TEST(GroupManagementServer, Add_Step1)
 //! @test Add support - Step 1 (Fail No Device).
 TEST(GroupManagementServer, Add_Step1_Fail_No_Device)
 {
+   fill_groups();
+
    // Setup Add request.
 
    AddMessage received(group_addr, dev_addr, dev_unit);
@@ -2162,6 +2589,74 @@ TEST(GroupManagementServer, Add_Step2_Transport_Fail)
    LONGS_EQUAL(Common::Result::FAIL_RESOURCES, resp.code);
 }
 
+//! @test Add support - Step 2 - Fail entry update.
+TEST(GroupManagementServer, Add_Step2_Fail_Update)
+{
+   fill_groups();
+
+   setup_device(base, dev_addr);
+
+   // Create request for the response below.
+   packet.message.reference = 0xAA;
+   AddMessage request(group_addr, dev_addr, dev_unit);
+
+   server->add(packet, request);
+
+   auto group = server->entry(group_addr);
+
+   CHECK_TRUE(group != nullptr);
+
+   group->remove(Protocol::BROADCAST_ADDR, Protocol::BROADCAST_UNIT);
+
+   // Handle response from GroupTable::Server
+
+   GroupTable::Response response_gt(Common::Result::OK, group_addr, dev_unit);
+
+   payload                   = ByteArray(response_gt.size() + 6);
+
+   packet.source             = Protocol::Address(dev_addr, 0);
+
+   packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+   packet.message.itf.id     = HF::Interface::GROUP_TABLE;
+   packet.message.itf.member = GroupTable::ADD_CMD;
+
+   packet.message.type       = Protocol::Message::COMMAND_RES;
+
+   packet.message.length     = payload.size();
+
+   response_gt.pack(payload, 3);
+
+   mock("GroupManagement::Server").expectNoCall("added");
+   mock("HF::Transport::Group").expectOneCall("add")
+      .withParameter("group", group_addr)
+      .withParameter("device", dev_addr)
+      .ignoreOtherParameters()
+      .andReturnValue(Common::Result::OK);
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("GroupManagement::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("HF::Transport::Group").checkExpectations();
+
+   Protocol::Packet *_packet = base->packets.back();
+
+   CHECK_TRUE(_packet != nullptr);
+
+   LONGS_EQUAL(addr.device, _packet->destination.device);
+   LONGS_EQUAL(addr.unit, _packet->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, _packet->destination.mod);
+
+   LONGS_EQUAL(0xAA, _packet->message.reference);
+
+   // ----- Check the response message -----
+
+   AddResponse resp;
+   LONGS_EQUAL(resp.size(), resp.unpack(_packet->message.payload));
+   LONGS_EQUAL(Common::Result::FAIL_MODIFIED, resp.code);
+}
+
 //! @test Remove support.
 TEST(GroupManagementServer, Remove)
 {
@@ -2593,4 +3088,10 @@ TEST(GroupManagementServer, GetInfo_10_members)
    LONGS_EQUAL(Common::Result::OK, resp.code);
    CHECK_EQUAL(group_name, resp.name);
    LONGS_EQUAL(10, resp.members.size());
+}
+
+TEST(GroupManagementServer, Allocation)
+{
+   CHECK_ALLOC(IGroupTable, *server);
+   CHECK_ALLOC(GroupTableClient, *server);
 }

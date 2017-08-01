@@ -186,7 +186,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 #endif
 
       default:
-         return Common::Result::FAIL_SUPPORT;
+         return Common::Result::FAIL_UNKNOWN;
    }
 
    return Common::Result::FAIL_SUPPORT;

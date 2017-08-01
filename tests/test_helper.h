@@ -191,6 +191,20 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
                                   (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                                   __FILE__, __LINE__)
 
+#define CHECK_ATTRIBUTE_ALLOC(_name) \
+   {                                 \
+      auto attr = new _name();       \
+      CHECK_TRUE(attr != nullptr);   \
+      delete attr;                   \
+   }
+
+#define CHECK_ALLOC(_name, ...)           \
+   {                                      \
+      auto temp = new _name(__VA_ARGS__); \
+      CHECK_TRUE(temp != nullptr);        \
+      delete temp;                        \
+   }
+
 // =============================================================================
 // Helper Test Classes
 // =============================================================================
