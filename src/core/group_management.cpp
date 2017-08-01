@@ -679,6 +679,11 @@ uint16_t Entries::next_address() const
 {
    uint16_t address = 0;
 
+   if(db.size() >= Group::MAX_MEMBERS)
+   {
+      return GroupAddress::NO_ADDR;
+   }
+
    for (address = GroupAddress::START_ADDR; address <= GroupAddress::END_ADDR; ++address)
    {
       if (db.find(address) == db.end())
@@ -687,5 +692,5 @@ uint16_t Entries::next_address() const
       }
    }
 
-   return GroupAddress::END_ADDR;
+   return GroupAddress::NO_ADDR;
 }

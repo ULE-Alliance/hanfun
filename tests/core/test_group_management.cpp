@@ -57,17 +57,25 @@ TEST(GroupManagementEntries, Next_address)
 {
    LONGS_EQUAL(GroupManagement::GroupAddress::START_ADDR, entries.next_address());   // 1st address
 
-   // Fill the container to the max
-   for (uint16_t i = GroupAddress::START_ADDR; i <= GroupAddress::END_ADDR + 10; ++i)
+   auto &data = entries.data();
+
+   Group group;
+
+   for (uint16_t address = GroupAddress::START_ADDR; address <= GroupAddress::END_ADDR;
+        ++address)
    {
-      entries.data()[i] = Group(i, "G");
+      group.name    = "G";
+      group.address = address;
+      data.emplace(address, group);
    }
 
-   entries.data().erase(2);                  // erase group 2
-   LONGS_EQUAL(2, entries.next_address());   // check if the next available address is 2
-   entries.data()[2] = Group(2, "G");        // restore it
+   LONGS_EQUAL(GroupManagement::GroupAddress::NO_ADDR, entries.next_address());
 
-   LONGS_EQUAL(GroupManagement::GroupAddress::END_ADDR, entries.next_address());
+   data.erase(2);                          // erase group 2
+   LONGS_EQUAL(2, entries.next_address()); // check if the next available address is 2
+   data[2] = Group(2, "G");                // restore it
+
+   LONGS_EQUAL(GroupManagement::GroupAddress::NO_ADDR, entries.next_address());
 }
 
 //! @test Entries find by address

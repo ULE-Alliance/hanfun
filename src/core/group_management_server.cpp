@@ -215,16 +215,11 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
       goto _end;
    }
 
-   if (entries().size() == Group::MAX_MEMBERS)  // Check if we have space for the new group
-   {
-      result = Common::Result::FAIL_RESOURCES;
-      goto _end;
-   }
-
    address = next_address();
 
    if (address == Group::NO_ADDR)
    {
+      result = Common::Result::FAIL_RESOURCES;
       goto _end;
    }
 
