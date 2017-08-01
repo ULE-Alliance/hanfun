@@ -131,6 +131,9 @@ namespace HF
                this->hue = hue<=HUE_MAX ? hue : HUE_MAX;
             }
 
+            static constexpr int HUE = 360;
+            static constexpr int SATURATION = 0x100;
+
 
             /*!
              * Helper method to invert a traveling angle.
@@ -145,25 +148,70 @@ namespace HF
              * @param [in] angle    the angle to invert.
              * @return              the inverted angle.
              */
-            static int32_t invert_angle (const int32_t angle);
+            template<int max_value  = HUE>
+            static int32_t invert_angle (const int32_t angle)
+            {
+               int32_t temp = (max_value - std::abs(angle))%max_value;
+               if (angle >= 0)
+               {
+                  temp *= -1;
+               }
+               return temp;
+            }
 
             /*!
              * Helper method to get the angle between two hue values.
              *
              * This method takes in consideration the direction of travel from the initial
-             * to the final hue value.
+             * to the final value.
              *
              * @param [in] dir            the travel direction.
              * @param [in] initial_hue    the initial hue value.
              * @param [in] final_hue      the final hue value.
              *
-             * @return                    the angle between the final and initial hue value.
+             * @return                    the angle between the final and initial value.
              */
-            static int32_t get_hue_travel_distance(const Direction dir,
+            template<int max_value  = HUE>
+            static int32_t get_travel_distance(const Direction dir,
                                                    const uint16_t initial_hue,
-                                                   uint16_t final_hue);
+                                                   uint16_t final_hue)
+            {
+               int32_t dist, result;
+
+               if (final_hue<initial_hue)
+               {
+                  final_hue += max_value;
+               }
+
+               dist = (final_hue-initial_hue)%max_value;
+               switch(dir)
+               {
+                  case Direction::UP:
+                  {
+                     result = dist;
+                     break;
+                  }
+                  case Direction::DOWN:
+                  {
+                     result = invert_angle<max_value>(dist);
+                     break;
+                  }
+                  case Direction::SHORTEST:
+                  {
+                     result = dist <= max_value/2 ? dist: invert_angle<max_value>(dist);
+                     break;
+                  }
+                  case Direction::LONGEST:
+                     {
+                     result = dist > max_value/2 ? dist: invert_angle<max_value>(dist);
+                     break;
+                  }
+               }
+               return result;
+            }
 
             static constexpr uint16_t HUE_MAX = 359;                    // Max Hue Value
+
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(hue)            // hue
@@ -1075,6 +1123,57 @@ namespace HF
             }
          };
 
+         //! Hue and Saturation Transition
+         struct HS_Transition: public ITransition
+         {
+            int32_t hue_step;     //!< Hue step
+            int32_t sat_step;     //!< Saturation step
+            uint16_t n_steps; //!< Counter for the steps needed.
+            HS_Colour end;     //!< End value to stop the iteration.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] hue_step    the hue step size for each transition iteration.
+             * @param [in] sat_step    the saturation step size for each transition iteration.
+             * @param [in] n_steps     number of steps.
+             * @param [in] end         end value for the transition.
+             */
+            HS_Transition (IServer &_server, uint16_t period,
+                           int32_t hue_step = 0, int32_t sat_step = 0,
+                           uint16_t n_steps = 0, HS_Colour end = HS_Colour(0,0)) :
+                  ITransition(_server, period), hue_step(hue_step),
+                  sat_step(sat_step), n_steps(n_steps), end(end)
+            {
+            }
+
+            //! Default constructor.
+            HS_Transition () = default;
+
+            //! Empty destructor.
+            ~HS_Transition ()
+            {
+            }
+            ;
+
+            /*!
+             * Run the transition.
+             *
+             * @param [in] time elapsed time since the last call.
+             * @retval 0   The transition didn't ran. Only the remaining time was updated.
+             * @retval 1   The transition ran.
+             */
+            bool run (uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next ()
+            {
+               return (period != 0 ? true : false);
+            }
+         };
+
          /*!
           * Colour Control %Interface : %Server side implementation.
           *
@@ -1770,18 +1869,22 @@ namespace HF
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD, to the given
              * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr        the network address to send the message to.
+             * @param [in] colour      the new colour value.
+             * @param [in] direction   direction of movement.
+             * @param [in] transition  transition time (in units of 100ms).
              */
-            void move_to_hue_and_saturation(const Protocol::Address &addr);
+            void move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour colour,
+                                            Direction direction, uint16_t time);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
              * to the broadcast network address.
              */
-            void move_to_hue_and_saturation()
+            void move_to_hue_and_saturation(HS_Colour colour, Direction direction, uint16_t time)
             {
                Protocol::Address addr;
-               move_to_hue_and_saturation(addr);
+               move_to_hue_and_saturation(addr, colour, direction, time);
             }
 
             /*!

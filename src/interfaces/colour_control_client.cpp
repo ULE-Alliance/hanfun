@@ -170,10 +170,13 @@ void Client::step_saturation(const Protocol::Address &addr, uint8_t step, Direct
  *
  */
 // =============================================================================
-void Client::move_to_hue_and_saturation(const Protocol::Address &addr)
+void Client::move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour colour,
+                                        Direction direction, uint16_t time)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   MoveToHueSaturationMessage move_msg(colour, direction, time);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;

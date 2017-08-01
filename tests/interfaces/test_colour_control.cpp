@@ -152,49 +152,86 @@ TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
 }
 
 /*!
- * @test HS_Colour invert_angle test
+ * @test HS_Colour Hue invert_angle test
  */
-TEST(ColourControlMessages, HS_Colour_invert_angle)
+TEST(ColourControlMessages, HS_Colour_Hue_invert_angle)
 {
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle(-360));
-   LONGS_EQUAL( 45,  HS_Colour::invert_angle(-315));
-   LONGS_EQUAL( 90,  HS_Colour::invert_angle(-270));
-   LONGS_EQUAL( 135, HS_Colour::invert_angle(-225));
-   LONGS_EQUAL( 180, HS_Colour::invert_angle(-180));
-   LONGS_EQUAL( 225, HS_Colour::invert_angle(-135));
-   LONGS_EQUAL( 270, HS_Colour::invert_angle(-90));
-   LONGS_EQUAL( 315, HS_Colour::invert_angle(-45));
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle( 0));
-   LONGS_EQUAL(-315, HS_Colour::invert_angle( 45));
-   LONGS_EQUAL(-270, HS_Colour::invert_angle( 90));
-   LONGS_EQUAL(-225, HS_Colour::invert_angle( 135));
-   LONGS_EQUAL(-180, HS_Colour::invert_angle( 180));
-   LONGS_EQUAL(-135, HS_Colour::invert_angle( 225));
-   LONGS_EQUAL(-90,  HS_Colour::invert_angle( 270));
-   LONGS_EQUAL(-45,  HS_Colour::invert_angle( 315));
-   LONGS_EQUAL(0,   HS_Colour::invert_angle( 360));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(-360));
+   LONGS_EQUAL( 45,  HS_Colour::invert_angle<HS_Colour::HUE>(-315));
+   LONGS_EQUAL( 90,  HS_Colour::invert_angle<HS_Colour::HUE>(-270));
+   LONGS_EQUAL( 135, HS_Colour::invert_angle<HS_Colour::HUE>(-225));
+   LONGS_EQUAL( 180, HS_Colour::invert_angle<HS_Colour::HUE>(-180));
+   LONGS_EQUAL( 225, HS_Colour::invert_angle<HS_Colour::HUE>(-135));
+   LONGS_EQUAL( 270, HS_Colour::invert_angle<HS_Colour::HUE>(-90));
+   LONGS_EQUAL( 315, HS_Colour::invert_angle<HS_Colour::HUE>(-45));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>( 0));
+   LONGS_EQUAL(-315, HS_Colour::invert_angle<HS_Colour::HUE>( 45));
+   LONGS_EQUAL(-270, HS_Colour::invert_angle<HS_Colour::HUE>( 90));
+   LONGS_EQUAL(-225, HS_Colour::invert_angle<HS_Colour::HUE>( 135));
+   LONGS_EQUAL(-180, HS_Colour::invert_angle<HS_Colour::HUE>( 180));
+   LONGS_EQUAL(-135, HS_Colour::invert_angle<HS_Colour::HUE>( 225));
+   LONGS_EQUAL(-90,  HS_Colour::invert_angle<HS_Colour::HUE>( 270));
+   LONGS_EQUAL(-45,  HS_Colour::invert_angle<HS_Colour::HUE>( 315));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>( 360));
 }
+
+/*!
+ * @test HS_Colour Sat invert_angle test
+ */
+TEST(ColourControlMessages, HS_Colour_Sat_invert_angle)
+{
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::SATURATION>(-256));
+   LONGS_EQUAL( 46,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-210));
+   LONGS_EQUAL( 76,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-180));
+   LONGS_EQUAL( 91,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-165));
+   LONGS_EQUAL( 121, HS_Colour::invert_angle<HS_Colour::SATURATION>(-135));
+   LONGS_EQUAL( 136, HS_Colour::invert_angle<HS_Colour::SATURATION>(-120));
+   LONGS_EQUAL( 0, HS_Colour::invert_angle<HS_Colour::SATURATION>( 0));
+}
+
 
 //! @test HS_Colour get hue travel distance function.
 TEST(ColourControlMessages, HS_Colour_Get_Hue_travel_distance)
 {
    // Both on the same quadrant. Short distance = CW
-   LONGS_EQUAL(50,   HS_Colour::get_hue_travel_distance(Direction::UP,        100, 150));
-   LONGS_EQUAL(-310, HS_Colour::get_hue_travel_distance(Direction::DOWN,      100, 150));
-   LONGS_EQUAL(50,   HS_Colour::get_hue_travel_distance(Direction::SHORTEST,  100, 150));
-   LONGS_EQUAL(-310, HS_Colour::get_hue_travel_distance(Direction::LONGEST,   100, 150));
+   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::UP,        100, 150));
+   LONGS_EQUAL(-310, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::DOWN,      100, 150));
+   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::SHORTEST,  100, 150));
+   LONGS_EQUAL(-310, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::LONGEST,   100, 150));
 
    // Different quadrants. Short distance = CW
-   LONGS_EQUAL(30,   HS_Colour::get_hue_travel_distance(Direction::UP,        340, 10));
-   LONGS_EQUAL(-330, HS_Colour::get_hue_travel_distance(Direction::DOWN,      340, 10));
-   LONGS_EQUAL(30,   HS_Colour::get_hue_travel_distance(Direction::SHORTEST,  340, 10));
-   LONGS_EQUAL(-330, HS_Colour::get_hue_travel_distance(Direction::LONGEST,   340, 10));
+   LONGS_EQUAL(30,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::UP,        340, 10));
+   LONGS_EQUAL(-330, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::DOWN,      340, 10));
+   LONGS_EQUAL(30,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::SHORTEST,  340, 10));
+   LONGS_EQUAL(-330, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::LONGEST,   340, 10));
 
    // Different quadrants. Short distance = CCW
-   LONGS_EQUAL(330,  HS_Colour::get_hue_travel_distance(Direction::UP,        10, 340));
-   LONGS_EQUAL(-30,  HS_Colour::get_hue_travel_distance(Direction::DOWN,      10, 340));
-   LONGS_EQUAL(-30,  HS_Colour::get_hue_travel_distance(Direction::SHORTEST,  10, 340));
-   LONGS_EQUAL(330,  HS_Colour::get_hue_travel_distance(Direction::LONGEST,   10, 340));
+   LONGS_EQUAL(330,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::UP,        10, 340));
+   LONGS_EQUAL(-30,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::DOWN,      10, 340));
+   LONGS_EQUAL(-30,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::SHORTEST,  10, 340));
+   LONGS_EQUAL(330,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::LONGEST,   10, 340));
+}
+
+//! @test HS_Colour get Sat travel distance function.
+TEST(ColourControlMessages, HS_Colour_Get_Sat_travel_distance)
+{
+   // Both on the same quadrant. Short distance = CW
+   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::UP,        100, 150));
+   LONGS_EQUAL(-206, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::DOWN,      100, 150));
+   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::SHORTEST,  100, 150));
+   LONGS_EQUAL(-206, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::LONGEST,   100, 150));
+
+   // Different quadrants. Short distance = CW
+   LONGS_EQUAL(16,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::UP,        250, 10));
+   LONGS_EQUAL(-240, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::DOWN,      250, 10));
+   LONGS_EQUAL(16,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::SHORTEST,  250, 10));
+   LONGS_EQUAL(-240, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::LONGEST,   250, 10));
+
+   // Different quadrants. Short distance = CCW
+   LONGS_EQUAL(240,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::UP,        10, 250));
+   LONGS_EQUAL(-16,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::DOWN,      10, 250));
+   LONGS_EQUAL(-16,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::SHORTEST,  10, 250));
+   LONGS_EQUAL(240,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::LONGEST,   10, 250));
 }
 
 // ---- XY colour ----
@@ -2109,7 +2146,7 @@ TEST(ColourControlClient, MoveToHueAndSaturation)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_to_hue_and_saturation(addr);
+   client.move_to_hue_and_saturation(addr, HS_Colour(150,50),Direction::UP, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2117,6 +2154,14 @@ TEST(ColourControlClient, MoveToHueAndSaturation)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   MoveToHueSaturationMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(150, message.colour.hue);
+   LONGS_EQUAL(50, message.colour.saturation);
+   LONGS_EQUAL(Direction::UP, message.direction);
+   LONGS_EQUAL(10, message.time);
 }
 
 //! @test Move To Xy support.
@@ -2437,7 +2482,7 @@ TEST(ColourControlServer, Hue_Transition_Continuous)
    LONGS_EQUAL(110, server.hue_and_saturation().hue);
 }
 
-//! @test Hue_transition test.
+//! @test Saturation_transition test.
 TEST(ColourControlServer, Saturation_Transition)
 {
    server.hue_and_saturation(HS_Colour(100,50));
@@ -2453,7 +2498,7 @@ TEST(ColourControlServer, Saturation_Transition)
    LONGS_EQUAL(110, server.hue_and_saturation().saturation);
 }
 
-//! @test Hue_transition_Continuous test.
+//! @test Saturation_transition_Continuous test.
 TEST(ColourControlServer, Saturation_Transition_Continuous)
 {
    server.hue_and_saturation(HS_Colour(100,50));
@@ -2469,6 +2514,29 @@ TEST(ColourControlServer, Saturation_Transition_Continuous)
    LONGS_EQUAL(60, server.hue_and_saturation().saturation);
 }
 
+//! @test HS_transition test.
+TEST(ColourControlServer, HS_Transition)
+{
+   server.hue_and_saturation(HS_Colour(100,50));
+   HS_Transition transition(server,
+                            1,                     // Period
+                            10,                    // Hue Step
+                            5,                     // Saturation Step
+                            1,                     // Number of steps
+                            HS_Colour(121,61));    // Final value
+
+   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_TRUE(transition.next());  // it should be more transitions...
+
+   LONGS_EQUAL(110, server.hue_and_saturation().hue);
+   LONGS_EQUAL(55, server.hue_and_saturation().saturation);
+
+   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_FALSE(transition.next());  // it should be no more transitions...
+
+   LONGS_EQUAL(121, server.hue_and_saturation().hue);
+   LONGS_EQUAL(61, server.hue_and_saturation().saturation);
+}
 
 //! @test Move To Hue support instantaneously.
 TEST(ColourControlServer, MoveToHue_Instantly)
@@ -3046,16 +3114,103 @@ TEST(ColourControlServer, StepSaturation_no_suport)
 }
 
 //! @test Move To Hue And Saturation support.
-TEST(ColourControlServer, MoveToHueAndSaturation)
+TEST(ColourControlServer, MoveToHueAndSaturation_Instantly)
 {
-   // FIXME Generated Stub.
+   server.hue_and_saturation(HS_Colour(100, 50));
+
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+
+   MoveToHueSaturationMessage received(HS_Colour(150,60), Direction::UP, 0);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE, &server);
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(150, 60), &server);
+
    mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &HS_old)
+         .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.transitions().size());
+}
+
+//! @test Move To Hue And Saturation support.
+TEST(ColourControlServer, MoveToHueAndSaturation_with_time)
+{
+   server.hue_and_saturation(HS_Colour(100, 50));
+
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+
+   MoveToHueSaturationMessage received(HS_Colour(150,60), Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::HS_MODE, &server);
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(105, 51), &server);
+
+   mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &HS_old)
+         .withParameterOfType("IAttribute", "new", &HS_new);
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD;
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(1, static_cast<HS_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(5, static_cast<HS_Transition *>(server.transitions().at(0))->hue_step);
+   LONGS_EQUAL(1, static_cast<HS_Transition *>(server.transitions().at(0))->sat_step);
+   LONGS_EQUAL(8, static_cast<HS_Transition *>(server.transitions().at(0))->n_steps);
+}
+
+//! @test Move To Hue And Saturation support.
+TEST(ColourControlServer, MoveToHueAndSaturation_no_support)
+{
+   server.hue_and_saturation(HS_Colour(100, 50));
+
+   server.supported(ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
+
+   MoveToHueSaturationMessage received(HS_Colour(150,60), Direction::UP, 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD;
+
+   LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Move To Xy support.

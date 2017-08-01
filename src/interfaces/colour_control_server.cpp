@@ -595,7 +595,7 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
    if (result != Common::Result::OK)
       return result;
 
-   auto step = HS_Colour::get_hue_travel_distance(message.direction,
+   auto step = HS_Colour::get_travel_distance(message.direction,
                                                                    hue_and_saturation().hue,
                                                                    message.hue);
 
@@ -792,10 +792,47 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
                                         const MoveToHueSaturationMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   Common::Result result = IServer::move_to_hue_and_saturation(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   auto hue_step = HS_Colour::get_travel_distance<HS_Colour::HUE>(message.direction,
+                                                                  hue_and_saturation().hue,
+                                                                  message.colour.hue);
+   auto sat_step = HS_Colour::get_travel_distance<HS_Colour::SATURATION>(message.direction,
+                                                                         hue_and_saturation().saturation,
+                                                                         message.colour.saturation);
+
+   HS_Transition *new_transition = new HS_Transition(*this,  // server
+                                                     1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1; // Run for time-1 (adjust for base 0 instead of 1)
+      new_transition->hue_step = hue_step / message.time; // Hue Step size.
+      new_transition->sat_step = sat_step / message.time; // Saturation Step size.
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   new_transition->end = message.colour;
+
+   new_transition->run(0);  //Run once immediately
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
+
+   return result;
 }
 
 // =============================================================================
@@ -1109,4 +1146,35 @@ bool Saturation_Transition_Continuous::run(uint16_t time)
    server.hue_and_saturation(HS_Colour(server.hue_and_saturation().hue,
                                              server.hue_and_saturation().saturation + step));
    return true;
+}
+
+
+// =============================================================================
+// HS_Transition::run
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool HS_Transition::run(uint16_t time)
+{
+   if( time!=0 && !ITransition::run(time))
+   {
+      return false;
+   }
+
+   if (n_steps != 0)
+   {
+      server.hue_and_saturation(HS_Colour(server.hue_and_saturation().hue+hue_step,
+                                          server.hue_and_saturation().saturation+sat_step));
+      n_steps--;
+      return true;
+   }
+   else
+   {
+      server.hue_and_saturation(end);
+
+      period=0;   //can be deleted
+      return true;
+   }
 }

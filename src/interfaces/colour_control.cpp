@@ -99,67 +99,6 @@ HF::Attributes::IAttribute *ColourControl::create_attribute(uint8_t uid)
 // =============================================================================
 
 // =============================================================================
-// HS_Colour::invert_angle
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-int32_t HS_Colour::invert_angle (const int32_t angle)
-{
-   int32_t temp = (360 - std::abs(angle))%360;
-   if (angle >= 0)
-   {
-      temp *= -1;
-   }
-   return temp;
-}
-
-// =============================================================================
-// HS_Colour::get_hue_travel_distance
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-int32_t HS_Colour::get_hue_travel_distance (const Direction dir,
-                                                   const uint16_t initial_hue,
-                                                   uint16_t final_hue)
-{
-   int32_t dist, result;
-
-   if (final_hue<initial_hue)
-   {
-      final_hue += 360;
-   }
-
-   dist = (final_hue-initial_hue)%360;
-   switch(dir)
-   {
-      case Direction::UP:
-      {
-         result = dist;
-         break;
-      }
-      case Direction::DOWN:
-      {
-         result = invert_angle(dist);
-         break;
-      }
-      case Direction::SHORTEST:
-      {
-         result = dist <= 180 ? dist: invert_angle(dist);
-         break;
-      }
-      case Direction::LONGEST:
-         {
-         result = dist > 180 ? dist: invert_angle(dist);
-         break;
-      }
-   }
-   return result;
-}
-// =============================================================================
 // HS_Colour::pack
 // =============================================================================
 /*!
