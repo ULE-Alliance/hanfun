@@ -15,6 +15,7 @@
 // =============================================================================
 
 #include "hanfun/interfaces/colour_control.h"
+#include <math.h>
 
 
 // =============================================================================
@@ -490,12 +491,6 @@ uint16_t Server::transition (void)
 // =============================================================================
 Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
-
-   Common::Result result = IServer::move_to_hue(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
-
    auto step = HS_Colour::get_travel_distance(message.direction,
                                                                    hue_and_saturation().hue,
                                                                    message.hue);
@@ -506,13 +501,21 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
    if (message.time != 0)
    {
       new_transition->n_steps = message.time - 1;     // Run for time-1 (we will run once)
-      new_transition->step = step/message.time;       // Step size.
+      new_transition->step = round(step/static_cast<float>(message.time));       // Step size.
+
+      if (new_transition->step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
    }
    else
    {
       new_transition->n_steps = 0;                    // Run once
       new_transition->period = 0;                     // Run once
    }
+
+   IServer::move_to_hue(addr, message);   // Common part
 
    new_transition->end = message.hue;
 
@@ -527,7 +530,7 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
       delete new_transition;
    }
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -539,10 +542,7 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
 // =============================================================================
 Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
 {
-   Common::Result result = IServer::move_hue(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
+   IServer::move_hue(addr, message);   // Common part
 
    auto step = (message.direction == Direction::UP ? message.rate: -message.rate);
 
@@ -553,7 +553,7 @@ Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMess
    new_transition->run(0);  //Run once immediately
    add_transition(new_transition);
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -565,10 +565,7 @@ Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMess
 // =============================================================================
 Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
-   Common::Result result = IServer::step_hue(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
+   IServer::step_hue(addr, message);   // Common part
 
    auto step = (message.direction == Direction::UP ? message.step_size : -message.step_size);
 
@@ -579,7 +576,7 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
    new_transition->run(0);  //Run once immediately
    add_transition(new_transition);
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -592,10 +589,6 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
 Common::Result Server::move_to_saturation(const Protocol::Address &addr,
                                 const MoveToSaturationMessage &message)
 {
-   Common::Result result = IServer::move_to_saturation(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
 
    auto step = (message.direction == Direction::UP ? message.saturation : -message.saturation);
 
@@ -605,13 +598,22 @@ Common::Result Server::move_to_saturation(const Protocol::Address &addr,
    if (message.time != 0)
    {
       new_transition->n_steps = message.time - 1; // Run for time-1 (adjust for base 0 instead of 1)
-      new_transition->step = step / message.time; // Step size.
+      new_transition->step = round(step / static_cast<float>(message.time)); // Step size.
+
+      if (new_transition->step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
+
    }
    else
    {
       new_transition->n_steps = 0;                    // Run once
       new_transition->period = 0;                     // Run once
    }
+
+   IServer::move_to_saturation(addr, message);   // Common part
 
    new_transition->end = message.saturation;
 
@@ -626,7 +628,7 @@ Common::Result Server::move_to_saturation(const Protocol::Address &addr,
       delete new_transition;
    }
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -639,10 +641,7 @@ Common::Result Server::move_to_saturation(const Protocol::Address &addr,
 Common::Result Server::move_saturation(const Protocol::Address &addr,
                                            const MoveSaturationMessage &message)
 {
-   Common::Result result = IServer::move_saturation(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
+   IServer::move_saturation(addr, message);   // Common part
 
    auto step = (message.direction == Direction::UP ? message.rate: -message.rate);
 
@@ -653,7 +652,7 @@ Common::Result Server::move_saturation(const Protocol::Address &addr,
    new_transition->run(0);  //Run once immediately
    add_transition(new_transition);
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -666,10 +665,7 @@ Common::Result Server::move_saturation(const Protocol::Address &addr,
 Common::Result Server::step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message)
 {
-   Common::Result result = IServer::step_saturation(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
+   IServer::step_saturation(addr, message);   // Common part
 
    auto step = (message.direction == Direction::UP ? message.step_size : -message.step_size);
 
@@ -680,7 +676,7 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
    new_transition->run(0);  //Run once immediately
    add_transition(new_transition);
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -693,11 +689,6 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
                                         const MoveToHueSaturationMessage &message)
 {
-   Common::Result result = IServer::move_to_hue_and_saturation(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
-
    auto hue_step = HS_Colour::get_travel_distance<HS_Colour::HUE>(message.direction,
                                                                   hue_and_saturation().hue,
                                                                   message.colour.hue);
@@ -711,14 +702,22 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
    if (message.time != 0)
    {
       new_transition->n_steps = message.time - 1; // Run for time-1 (adjust for base 0 instead of 1)
-      new_transition->hue_step = hue_step / message.time; // Hue Step size.
-      new_transition->sat_step = sat_step / message.time; // Saturation Step size.
+      new_transition->hue_step = round(hue_step / static_cast<float>(message.time)); // Hue Step size.
+      new_transition->sat_step = round(sat_step / static_cast<float>(message.time)); // Saturation Step size.
+
+      if(new_transition->hue_step == 0 && new_transition->sat_step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
    }
    else
    {
       new_transition->n_steps = 0;                    // Run once
       new_transition->period = 0;                     // Run once
    }
+
+   IServer::move_to_hue_and_saturation(addr, message);   // Common part
 
    new_transition->end = message.colour;
 
@@ -733,7 +732,7 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
       delete new_transition;
    }
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -745,11 +744,6 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
 // =============================================================================
 Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
 {
-   Common::Result result = IServer::move_to_xy(addr, message);   // Common part
-
-   if (result != Common::Result::OK)
-      return result;
-
    int32_t X_dist = message.colour.X - xy().X;
    int32_t Y_dist = message.colour.Y - xy().Y;
 
@@ -759,14 +753,22 @@ Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYM
    if (message.time != 0)
    {
       new_transition->n_steps = message.time - 1;     // Run for time-1 (we will run once)
-      new_transition->X_step = X_dist / message.time;       // Step size.
-      new_transition->Y_step = Y_dist / message.time;       // Step size.
+      new_transition->X_step = round(X_dist / static_cast<float>(message.time));       // Step size.
+      new_transition->Y_step = round(Y_dist / static_cast<float>(message.time));       // Step size.
+
+      if (new_transition->X_step == 0 && new_transition->Y_step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
    }
    else
    {
       new_transition->n_steps = 0;                    // Run once
       new_transition->period = 0;                     // Run once
    }
+
+   IServer::move_to_xy(addr, message);   // Common part
 
    new_transition->end = message.colour;
 
@@ -781,7 +783,7 @@ Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYM
       delete new_transition;
    }
 
-   return result;
+   return Common::Result::OK;
 }
 
 // =============================================================================
