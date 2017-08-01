@@ -1154,9 +1154,57 @@ namespace HF
 
             //! Empty destructor.
             ~HS_Transition ()
+            {}
+
+            /*!
+             * Run the transition.
+             *
+             * @param [in] time elapsed time since the last call.
+             * @retval 0   The transition didn't ran. Only the remaining time was updated.
+             * @retval 1   The transition ran.
+             */
+            bool run (uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next ()
+            {
+               return (period != 0 ? true : false);
+            }
+         };
+
+         //! XY Transition
+         struct XY_Transition: public ITransition
+         {
+            int32_t X_step;   //!< X step
+            int32_t Y_step;   //!< Y step
+            uint16_t n_steps; //!< Counter for the steps needed.
+            XY_Colour end;     //!< End value to stop the iteration.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] X_step      the X step size for each transition iteration.
+             * @param [in] Y_step      the Y step size for each transition iteration.
+             * @param [in] n_steps     number of steps.
+             * @param [in] end         end value for the transition.
+             */
+            XY_Transition (IServer &_server, uint16_t period,
+                           int32_t X_step = 0, int32_t Y_step = 0,
+                            uint16_t n_steps = 0,
+                            XY_Colour end = XY_Colour(0,0)) :
+                  ITransition(_server, period), X_step(X_step), Y_step(Y_step),
+                  n_steps(n_steps), end(end)
             {
             }
-            ;
+
+            //! Default constructor.
+            XY_Transition () = default;
+
+            //! Empty destructor.
+            ~XY_Transition ()
+            {}
 
             /*!
              * Run the transition.
@@ -1892,17 +1940,20 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] colour      the new colour value.
+             * @param [in] transition  transition time (in units of 100ms).
+             *
              */
-            void move_to_xy(const Protocol::Address &addr);
+            void move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_t time);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD,
              * to the broadcast network address.
              */
-            void move_to_xy()
+            void move_to_xy(XY_Colour colour, uint16_t time)
             {
                Protocol::Address addr;
-               move_to_xy(addr);
+               move_to_xy(addr, colour, time);
             }
 
             /*!

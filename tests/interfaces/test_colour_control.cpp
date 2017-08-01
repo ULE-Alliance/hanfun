@@ -2170,7 +2170,7 @@ TEST(ColourControlClient, MoveToXy)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_to_xy(addr);
+   client.move_to_xy(addr, XY_Colour(0x1234, 0x5678), 10);
 
    mock("Interface").checkExpectations();
 
@@ -2178,6 +2178,13 @@ TEST(ColourControlClient, MoveToXy)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::MOVE_TO_XY_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   MoveToXYMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(0x1234, message.colour.X);
+   LONGS_EQUAL(0x5678, message.colour.Y);
+   LONGS_EQUAL(10, message.time);
 }
 
 //! @test Move Xy support.
@@ -3213,17 +3220,103 @@ TEST(ColourControlServer, MoveToHueAndSaturation_no_support)
    mock("Interface").checkExpectations();
 }
 
-//! @test Move To Xy support.
-TEST(ColourControlServer, MoveToXy)
+//! @test Move To Xy support - Instantly.
+TEST(ColourControlServer, MoveToXy_Instantly)
 {
-   // FIXME Generated Stub.
+   server.xy(XY_Colour(0x1111, 0x2222));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+
+   MoveToXYMessage received(XY_Colour(0x111B,0x222C), 0);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::XY_MODE, &server);
+   Xy XY_old(XY_Colour(0x1111, 0x2222), &server);
+   Xy XY_new(XY_Colour(0x111B, 0x222C), &server);
+
    mock("ColourControl::Server").expectOneCall("move_to_xy");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &XY_old)
+         .withParameterOfType("IAttribute", "new", &XY_new);
+
 
    packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.transitions().size());
+}
+
+//! @test Move To Xy support with time.
+TEST(ColourControlServer, MoveToXy_with_time)
+{
+   server.xy(XY_Colour(0x1111, 0x2222));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+
+   MoveToXYMessage received(XY_Colour(0x111B,0x222C), 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::XY_MODE, &server);
+   Xy XY_old(XY_Colour(0x1111, 0x2222), &server);
+   Xy XY_new(XY_Colour(0x1112, 0x2223), &server);
+
+   mock("ColourControl::Server").expectOneCall("move_to_xy");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &XY_old)
+         .withParameterOfType("IAttribute", "new", &XY_new);
+
+
+   packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
+
+   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->X_step);
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->Y_step);
+   LONGS_EQUAL(8, static_cast<XY_Transition *>(server.transitions().at(0))->n_steps);
+}
+
+//! @test Move To Xy - no support.
+TEST(ColourControlServer, MoveToXy_no_suport)
+{
+   server.xy(XY_Colour(0x1111, 0x2222));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //no XY Support
+
+   MoveToXYMessage received(XY_Colour(0x111B,0x222C), 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectOneCall("move_to_xy");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
+
+   CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 }
 
 //! @test Move Xy support.

@@ -192,10 +192,12 @@ void Client::move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour
  *
  */
 // =============================================================================
-void Client::move_to_xy(const Protocol::Address &addr)
+void Client::move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_t time)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   MoveToXYMessage move_msg(colour, time);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;

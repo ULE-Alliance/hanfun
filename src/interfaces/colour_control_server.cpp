@@ -471,10 +471,24 @@ Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr
 // =============================================================================
 Common::Result IServer::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
-   return(Common::Result::OK);
+
+   Protocol::Response response;
+
+   Common::Result result = Common::Result::OK;
+
+   if (!(_supported & XY_MODE))                 // Check if the XY mode is supported.
+   {
+      result = Common::Result::FAIL_SUPPORT;    // XY mode not supported.
+      goto _end;
+   }
+
+   mode(Mask::XY_MODE);                         // Change mode to XY mode.
+
+   _end:
+
+   return result;
 }
 
 // =============================================================================
@@ -844,10 +858,43 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
 // =============================================================================
 Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   Common::Result result = IServer::move_to_xy(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   int32_t X_dist = message.colour.X - xy().X;
+   int32_t Y_dist = message.colour.Y - xy().Y;
+
+   XY_Transition *new_transition = new XY_Transition(*this,  // server
+                                                       1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1;     // Run for time-1 (we will run once)
+      new_transition->X_step = X_dist / message.time;       // Step size.
+      new_transition->Y_step = Y_dist / message.time;       // Step size.
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   new_transition->end = message.colour;
+
+   new_transition->run(0);  //Run once immediately
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
+
+   return result;
 }
 
 // =============================================================================
@@ -1173,6 +1220,37 @@ bool HS_Transition::run(uint16_t time)
    else
    {
       server.hue_and_saturation(end);
+
+      period=0;   //can be deleted
+      return true;
+   }
+}
+
+
+// =============================================================================
+// XY_Transition::run
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool XY_Transition::run(uint16_t time)
+{
+   if( time!=0 && !ITransition::run(time))
+   {
+      return false;
+   }
+
+   if (n_steps != 0)
+   {
+      server.xy(XY_Colour(server.xy().X+X_step,
+                          server.xy().Y+Y_step));
+      n_steps--;
+      return true;
+   }
+   else
+   {
+      server.xy(end);
 
       period=0;   //can be deleted
       return true;
