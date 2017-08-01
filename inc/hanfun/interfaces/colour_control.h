@@ -361,7 +361,22 @@ namespace HF
             static constexpr uint8_t ID       = SUPPORTED_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = false;          //!< Attribute Read/Write
 
-            Supported(uint8_t value = 0, HF::Interface *owner = nullptr):
+            static constexpr uint8_t get_suport(void)
+            {
+               return
+#ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
+               Mask::HS_MODE +
+#endif
+#ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
+               Mask::XY_MODE +
+#endif
+#ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
+               Mask::TEMPERATURE_MODE
+#endif
+               ;
+            }
+
+            Supported(uint8_t value = get_suport(), HF::Interface *owner = nullptr):
                Attribute<uint8_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
             {}
          };

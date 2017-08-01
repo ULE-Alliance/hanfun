@@ -2716,11 +2716,11 @@ TEST(ColourControlServer, MoveToHue_No_Support)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("move_to_hue");
+   mock("ColourControl::Server").expectNoCall("move_to_hue");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -2778,11 +2778,11 @@ TEST(ColourControlServer, MoveHue_no_support)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("move_hue");
+   mock("ColourControl::Server").expectNoCall("move_hue");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::MOVE_HUE_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
    LONGS_EQUAL(0, server.transitions().size());
@@ -2842,11 +2842,11 @@ TEST(ColourControlServer, StepHue_no_support)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("step_hue");
+   mock("ColourControl::Server").expectNoCall("step_hue");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::STEP_HUE_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -2985,11 +2985,11 @@ TEST(ColourControlServer, MoveToSaturation_no_suport)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("move_to_saturation");
+   mock("ColourControl::Server").expectNoCall("move_to_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::MOVE_TO_SATURATION_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3047,11 +3047,11 @@ TEST(ColourControlServer, MoveSaturation_no_suport)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("move_saturation");
+   mock("ColourControl::Server").expectNoCall("move_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::MOVE_SATURATION_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3108,11 +3108,11 @@ TEST(ColourControlServer, StepSaturation_no_suport)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("step_saturation");
+   mock("ColourControl::Server").expectNoCall("step_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::STEP_SATURATION_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3208,11 +3208,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_no_support)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
+   mock("ColourControl::Server").expectNoCall("move_to_hue_and_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3296,6 +3296,73 @@ TEST(ColourControlServer, MoveToXy_with_time)
    LONGS_EQUAL(8, static_cast<XY_Transition *>(server.transitions().at(0))->n_steps);
 }
 
+//! @test Move To Xy support with time.
+TEST(ColourControlServer, MoveToXy_with_time_decimal_step)
+{
+   server.xy(XY_Colour(0x1111, 0x2222));
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+
+   MoveToXYMessage received(XY_Colour(0x111A,0x222B), 10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::XY_MODE, &server);
+   Xy XY_old(XY_Colour(0x1111, 0x2222), &server);
+   Xy XY_new(XY_Colour(0x1112, 0x2223), &server);
+
+   mock("ColourControl::Server").expectOneCall("move_to_xy");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &XY_old)
+         .withParameterOfType("IAttribute", "new", &XY_new);
+
+
+   packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
+
+   LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->X_step);
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->Y_step);
+   LONGS_EQUAL(8, static_cast<XY_Transition *>(server.transitions().at(0))->n_steps);
+}
+
+//! @test Move To Xy support with time.
+TEST(ColourControlServer, MoveToXy_with_time_decimal_step_0)
+{
+   server.xy(XY_Colour(0x1111, 0x2222));
+   server.mode(HS_MODE);
+   server.supported(ColourControl::Mask::HS_MODE +
+                    ColourControl::Mask::XY_MODE +
+                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+
+   MoveToXYMessage received(XY_Colour(0x111A,0x222B), 30);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectOneCall("move_to_xy");
+   mock("ColourControl::Server").expectNoCall("changed");
+
+
+   packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
+
+   LONGS_EQUAL(Common::Result::FAIL_ARG, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.transitions().size());
+}
+
 //! @test Move To Xy - no support.
 TEST(ColourControlServer, MoveToXy_no_suport)
 {
@@ -3307,11 +3374,11 @@ TEST(ColourControlServer, MoveToXy_no_suport)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   mock("ColourControl::Server").expectOneCall("move_to_xy");
+   mock("ColourControl::Server").expectNoCall("move_to_xy");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 

@@ -148,6 +148,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
    switch (cmd)
    {
+#ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
       case MOVE_TO_HUE_CMD:
       {
          MoveToHueMessage message;
@@ -203,7 +204,9 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
          result = move_to_hue_and_saturation(packet.source, message);
          break;
       }
+#endif
 
+#ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
       case MOVE_TO_XY_CMD:
       {
          MoveToXYMessage message;
@@ -227,6 +230,9 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
          result = step_xy(packet.source, message);
          break;
       }
+#endif
+
+#ifdef HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR
 
       case MOVE_TO_COLOUR_TEMPERATURE_CMD:
       {
@@ -235,6 +241,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
          result = move_to_colour_temperature(packet.source, message);
          break;
       }
+#endif
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
       case STOP_CMD:
@@ -264,24 +271,9 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 // =============================================================================
 Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-  return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -293,24 +285,9 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
 // =============================================================================
 Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -322,24 +299,9 @@ Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMes
 // =============================================================================
 Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -352,24 +314,9 @@ Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMes
 Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
                                 const MoveToSaturationMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -382,24 +329,9 @@ Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
 Common::Result IServer::move_saturation(const Protocol::Address &addr,
                                            const MoveSaturationMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -412,24 +344,9 @@ Common::Result IServer::move_saturation(const Protocol::Address &addr,
 Common::Result IServer::step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -442,24 +359,9 @@ Common::Result IServer::step_saturation(const Protocol::Address &addr,
 Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr,
                                         const MoveToHueSaturationMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & HS_MODE))                 // Check if the HS mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // HS mode not supported.
-      goto _end;
-   }
-
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
@@ -471,24 +373,9 @@ Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr
 // =============================================================================
 Common::Result IServer::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
+   mode(Mask::XY_MODE);                         // Change mode to HS mode.
 
-   Protocol::Response response;
-
-   Common::Result result = Common::Result::OK;
-
-   if (!(_supported & XY_MODE))                 // Check if the XY mode is supported.
-   {
-      result = Common::Result::FAIL_SUPPORT;    // XY mode not supported.
-      goto _end;
-   }
-
-   mode(Mask::XY_MODE);                         // Change mode to XY mode.
-
-   _end:
-
-   return result;
+  return Common::Result::OK;
 }
 
 // =============================================================================
