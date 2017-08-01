@@ -572,21 +572,30 @@ namespace HF
             virtual Common::Result save(uint16_t address, const std::string &name) = 0;
 
             /*!
-             * Return the Device entry for the given address.
+             * Find the group with the given group @c address.
              *
-             * @param [in] address    the device address.
+             * @param [in] address  HF address to search for.
              *
-             * @retval  a pointer to the Device entry associated with the given address,
-             * @retval  nullptr if the entry does not exist.
+             * @returns  pointer to the group with the given @c address,
+             *           @c nullptr otherwise.
              */
-            virtual GroupPtr find(uint16_t address) const        = 0;
+            virtual GroupPtr find(uint16_t address) const = 0;
 
+            /*!
+             * Find the group with the given @c name.
+             *
+             * @param [in] name  group name to search for.
+             *
+             * @returns  pointer to the group with the given @c name,
+             *           @c nullptr otherwise.
+             */
             virtual GroupPtr find(const std::string &name) const = 0;
 
             /*!
-             * Return next available address for registering a device.
+             * Return next available address for device group.
              *
-             * @return  the address to use in the next registration.
+             * @return  the address to use in the next group, or
+             *          @c GroupAddress::NO_ADDR if no address is available.
              */
             virtual uint16_t next_address() const = 0;
          };
@@ -601,7 +610,7 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            virtual ~Entries() {}
+            virtual ~Entries() = default;
 
             uint16_t size() const;
 
@@ -626,10 +635,19 @@ namespace HF
              */
             Common::Result destroy(const Group &entry);
 
+            /*!
+             * @copydoc IEntries::find(uint16_t)
+             */
             GroupPtr find(uint16_t address) const;
 
+            /*!
+             * @copydoc IEntries::find(const std::string &)
+             */
             GroupPtr find(const std::string &name) const;
 
+            /*!
+             * @copydoc IEntries::next_address
+             */
             uint16_t next_address() const;
 
             /*!
@@ -879,11 +897,9 @@ namespace HF
             }
 
             /*!
-             * Return next available address for device group.
-             *
-             * @return  the address to use in the next group.
+             * @copydoc IEntries::next_address
              */
-            uint16_t next_address()
+            uint16_t next_address() const
             {
                return entries().next_address();
             }
