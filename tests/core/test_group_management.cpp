@@ -241,9 +241,9 @@ TEST(GroupManagement, InvalidAttribute)
    CHECK_TRUE(attr == nullptr);
 }
 
-/* =====================================
- *    Helper functions
- * =====================================*/
+// =============================================================================
+// GroupManagement::Group
+// =============================================================================
 
 //! @test Group add_member
 TEST(GroupManagement, Add_member)
@@ -715,7 +715,7 @@ TEST(GroupManagementClient, Create)
    CreateMessage message;
 
    message.unpack(client->sendMsg.payload);
-   CHECK_EQUAL(std::string("GroupName"),message.name);
+   CHECK_EQUAL(std::string("GroupName"), message.name);
 }
 
 //! @test Delete support.
@@ -1803,7 +1803,7 @@ TEST(GroupManagementServer, Add_Step1_Fail_Size_Pending)
    CHECK_TRUE(group != nullptr);
 
    // HACK: Fill all the available members minus 1.
-   const_cast<Group::Container &>(group->members()) = std::vector<Member>(Group::MAX_MEMBERS-1);
+   const_cast<Group::Container &>(group->members()) = std::vector<Member>(Group::MAX_MEMBERS - 1);
 
    AddMessage received(group_addr, dev_addr, dev_unit);
 
@@ -1899,7 +1899,7 @@ TEST(GroupManagementServer, Add_Step1_Fail_Unit_Broadcast_Address)
 
    setup_device(base, dev_addr);
 
-   AddMessage received(group_addr, dev_addr , Protocol::BROADCAST_UNIT);
+   AddMessage received(group_addr, dev_addr, Protocol::BROADCAST_UNIT);
 
    payload = ByteArray(received.size() + 6);
 
