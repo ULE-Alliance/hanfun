@@ -486,15 +486,11 @@ void IServer::added(const Protocol::Address &addr, Common::Result result,
 {
    GroupPtr group = entries().find(request.address);
 
-   Group::Container::iterator it;
-
    if (group == nullptr)
    {
       result = Common::Result::FAIL_ARG;
       goto _end;
    }
-
-   it = group->find_member(Protocol::BROADCAST_ADDR, Protocol::BROADCAST_UNIT);
 
    if (result != Common::Result::OK)
    {
@@ -509,15 +505,13 @@ void IServer::added(const Protocol::Address &addr, Common::Result result,
       goto _end;
    }
 
-   if (it == group->members().end())
+   if (!group->update(request.address, request.unit))
    {
       result = Common::Result::FAIL_MODIFIED;
       goto _end;
    }
 
-   *it = Member(request.device, request.unit);
-
-   added(*group, *it);
+   added(*group, Member(request.address, request.unit));
 
    _end:
 
