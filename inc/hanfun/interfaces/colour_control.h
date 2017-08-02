@@ -1279,6 +1279,54 @@ namespace HF
             }
          };
 
+         //! ColourTemperature Transition
+         struct Temperature_Transition: public ITransition
+         {
+            int32_t step;   //!< temperature step
+            uint16_t n_steps; //!< Counter for the steps needed.
+            uint16_t end;     //!< End value to stop the iteration.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] X_step      the X step size for each transition iteration.
+             * @param [in] Y_step      the Y step size for each transition iteration.
+             * @param [in] n_steps     number of steps.
+             * @param [in] end         end value for the transition.
+             */
+            Temperature_Transition (IServer &_server, uint16_t period,
+                           int32_t step = 0,
+                           uint16_t n_steps = 0,
+                           uint16_t end = 0):
+                  ITransition(_server, period), step(step),
+                  n_steps(n_steps), end(end)
+            {}
+
+            //! Default constructor.
+            Temperature_Transition () = default;
+
+            //! Empty destructor.
+            ~Temperature_Transition ()
+            {}
+
+            /*!
+             * Run the transition.
+             *
+             * @param [in] time elapsed time since the last call.
+             * @retval 0   The transition didn't ran. Only the remaining time was updated.
+             * @retval 1   The transition ran.
+             */
+            bool run (uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next ()
+            {
+               return (period != 0 ? true : false);
+            }
+         };
+
          /*!
           * Colour Control %Interface : %Server side implementation.
           *
@@ -2061,16 +2109,17 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            void move_to_colour_temperature(const Protocol::Address &addr);
+            void move_to_colour_temperature(const Protocol::Address &addr,
+                                            uint16_t colour, uint16_t time);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
              * to the broadcast network address.
              */
-            void move_to_colour_temperature()
+            void move_to_colour_temperature(uint16_t colour, uint16_t time)
             {
                Protocol::Address addr;
-               move_to_colour_temperature(addr);
+               move_to_colour_temperature(addr, colour, time);
             }
 
             /*!

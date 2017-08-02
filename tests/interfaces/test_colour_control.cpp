@@ -2235,7 +2235,7 @@ TEST(ColourControlClient, MoveToColourTemperature)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_to_colour_temperature(addr);
+   client.move_to_colour_temperature(addr, 0x1234, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2243,6 +2243,12 @@ TEST(ColourControlClient, MoveToColourTemperature)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   MoveToTemperatureMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(0x1234, message.colour);
+   LONGS_EQUAL(10, message.time);
 }
 
 //! @test Stop support.
@@ -2601,6 +2607,27 @@ TEST(ColourControlServer, XY_Transition_continuous)
 
    LONGS_EQUAL(120, server.xy().X);
    LONGS_EQUAL(40, server. xy().Y);
+}
+
+//! @test ColourTemperature_transition test.
+TEST(ColourControlServer, Temperature_Transition)
+{
+   server.colour_temperature(6500);
+   Temperature_Transition transition(server,
+                                     1,                   // Period
+                                     10,                  // Step
+                                     1,                   // Number of steps
+                                     6521);               // Final value
+
+   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_TRUE(transition.next());  // it should be more transitions...
+
+   LONGS_EQUAL(6510, server.colour_temperature());
+
+   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_FALSE(transition.next());  // it should be no more transitions...
+
+   LONGS_EQUAL(6521, server.colour_temperature());
 }
 
 //! @test Move To Hue support instantaneously.
@@ -3559,14 +3586,56 @@ TEST(ColourControlServer, StepXy_no_support)
 //! @test Move To Colour Temperature support.
 TEST(ColourControlServer, MoveToColourTemperature)
 {
-   // FIXME Generated Stub.
+   server.colour_temperature(6500);
+   MoveToTemperatureMessage received(7000,10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::TEMPERATURE_MODE, &server);
+   ColourTemperature Temp_old(6500, &server);
+   ColourTemperature Temp_new(6550, &server);
+
    mock("ColourControl::Server").expectOneCall("move_to_colour_temperature");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &Temp_old)
+         .withParameterOfType("IAttribute", "new", &Temp_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(1, static_cast< Temperature_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(50, static_cast<Temperature_Transition *>(server.transitions().at(0))->step);
+}
+
+//! @test Move To Colour Temperature support.
+TEST(ColourControlServer, MoveToColourTemperature_no_support)
+{
+   server.colour_temperature(6500);
+   MoveToTemperatureMessage received(7000,10);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectNoCall("move_to_colour_temperature");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+
+   CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.transitions().size());
 }
 
 //! @test Stop support.

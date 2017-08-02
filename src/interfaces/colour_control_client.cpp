@@ -255,10 +255,13 @@ void Client::step_xy(const Protocol::Address &addr, int16_t X_step, int16_t Y_st
  *
  */
 // =============================================================================
-void Client::move_to_colour_temperature(const Protocol::Address &addr)
+void Client::move_to_colour_temperature(const Protocol::Address &addr,
+                                        uint16_t colour, uint16_t time)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   MoveToTemperatureMessage move_msg(colour, time);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;

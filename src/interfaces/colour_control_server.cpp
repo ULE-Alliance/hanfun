@@ -447,9 +447,11 @@ Common::Result IServer::step_xy(const Protocol::Address &addr, const StepXYMessa
 Common::Result IServer::move_to_colour_temperature(const Protocol::Address &addr,
                                         const MoveToTemperatureMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
+
+   mode(Mask::TEMPERATURE_MODE);                         // Change mode to HS mode.
+
    return(Common::Result::OK);
 }
 
@@ -868,10 +870,44 @@ Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessag
 Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
                                         const MoveToTemperatureMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   int32_t dist = message.colour - colour_temperature();
+
+   Temperature_Transition *new_transition = new Temperature_Transition(*this,  // server
+                                                                       1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1;     // Run for time-1 (we will run once)
+      new_transition->step = round(dist / static_cast<float>(message.time));       // Step size.
+
+      if (new_transition->step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   IServer::move_to_colour_temperature(addr, message);   // Common part
+
+   new_transition->end = message.colour;
+
+   new_transition->run(0);  //Run once immediately
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
+
+   return Common::Result::OK;
 }
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
@@ -1205,5 +1241,35 @@ bool XY_Transition_Continuous::run(uint16_t time)
    server.xy(XY_Colour(server.xy().X + X_step,
                        server.xy().Y + Y_step));
    return true;
+}
+
+
+// =============================================================================
+// Temperature_Transition::run
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Temperature_Transition::run(uint16_t time)
+{
+   if (time!=0 && !ITransition::run(time))
+   {
+      return false;
+   }
+
+   if (n_steps != 0)
+   {
+      server.colour_temperature(server.colour_temperature() + step);
+      n_steps--;
+      return true;
+   }
+   else
+   {
+      server.colour_temperature(end);
+
+      period=0;   //can be deleted
+      return true;
+   }
 }
 
