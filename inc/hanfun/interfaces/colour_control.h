@@ -1237,6 +1237,48 @@ namespace HF
             }
          };
 
+         //! XY Transition
+         struct XY_Transition_Continuous: public ITransition
+         {
+            int16_t X_step;   //!< X step
+            int16_t Y_step;   //!< Y step
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] X_step      the X step size for each transition iteration.
+             * @param [in] Y_step      the Y step size for each transition iteration.
+             */
+            XY_Transition_Continuous (IServer &_server, uint16_t period,
+                           int16_t X_step = 0, int16_t Y_step = 0) :
+                  ITransition(_server, period), X_step(X_step), Y_step(Y_step)
+            {}
+
+            //! Default constructor.
+            XY_Transition_Continuous () = default;
+
+            //! Empty destructor.
+            ~XY_Transition_Continuous ()
+            {}
+
+            /*!
+             * Run the transition.
+             *
+             * @param [in] time elapsed time since the last call.
+             * @retval 0   The transition didn't ran. Only the remaining time was updated.
+             * @retval 1   The transition ran.
+             */
+            bool run (uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next ()
+            {
+               return (period != 0 ? true : false);
+            }
+         };
+
          /*!
           * Colour Control %Interface : %Server side implementation.
           *
@@ -1976,17 +2018,19 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] X_rate     the X rate of change. (in units of sec)
+             * @param [in] Y_rate     the Y rate of change. (in units of sec)
              */
-            void move_xy(const Protocol::Address &addr);
+            void move_xy(const Protocol::Address &addr, int16_t X_rate, int16_t Y_rate);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD,
              * to the broadcast network address.
              */
-            void move_xy()
+            void move_xy(int16_t X_rate, int16_t Y_rate)
             {
                Protocol::Address addr;
-               move_xy(addr);
+               move_xy(addr, X_rate, Y_rate);
             }
 
             /*!

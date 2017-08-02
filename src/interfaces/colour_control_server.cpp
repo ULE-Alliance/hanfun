@@ -272,9 +272,12 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 // =============================================================================
 Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -286,9 +289,12 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
 // =============================================================================
 Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -300,9 +306,12 @@ Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMes
 // =============================================================================
 Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -315,9 +324,12 @@ Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMes
 Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
                                 const MoveToSaturationMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -330,9 +342,12 @@ Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
 Common::Result IServer::move_saturation(const Protocol::Address &addr,
                                            const MoveSaturationMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -345,9 +360,12 @@ Common::Result IServer::move_saturation(const Protocol::Address &addr,
 Common::Result IServer::step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -360,9 +378,12 @@ Common::Result IServer::step_saturation(const Protocol::Address &addr,
 Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr,
                                         const MoveToHueSaturationMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -374,9 +395,12 @@ Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr
 // =============================================================================
 Common::Result IServer::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
 {
+   UNUSED(addr);
+   UNUSED(message);
+
    mode(Mask::XY_MODE);                         // Change mode to HS mode.
 
-  return Common::Result::OK;
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -388,9 +412,11 @@ Common::Result IServer::move_to_xy(const Protocol::Address &addr, const MoveToXY
 // =============================================================================
 Common::Result IServer::move_xy(const Protocol::Address &addr, const MoveXYMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
+
+   mode(Mask::XY_MODE);                         // Change mode to HS mode.
+
    return(Common::Result::OK);
 }
 
@@ -795,10 +821,17 @@ Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYM
 // =============================================================================
 Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   IServer::move_xy(addr, message);   // Common part
+
+   XY_Transition_Continuous *new_transition = new XY_Transition_Continuous(*this,
+                                                                           10, // 1 sec.
+                                                                           message.X_rate,
+                                                                           message.Y_rate);
+
+   new_transition->run(0);  //Run once immediately
+   add_transition(new_transition);
+
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -1145,3 +1178,16 @@ bool XY_Transition::run(uint16_t time)
       return true;
    }
 }
+
+bool XY_Transition_Continuous::run(uint16_t time)
+{
+   if (time!=0 && !ITransition::run(time))
+   {
+      return false;
+   }
+
+   server.xy(XY_Colour(server.xy().X + X_step,
+                       server.xy().Y + Y_step));
+   return true;
+}
+

@@ -213,10 +213,12 @@ void Client::move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_
  *
  */
 // =============================================================================
-void Client::move_xy(const Protocol::Address &addr)
+void Client::move_xy(const Protocol::Address &addr, int16_t X_rate, int16_t Y_rate)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   MoveXYMessage move_msg(X_rate, Y_rate);
+   Protocol::Message message(move_msg.size());
+
+   move_msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::COLOUR_CONTROL;
