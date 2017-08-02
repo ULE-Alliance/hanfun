@@ -2210,10 +2210,9 @@ TEST(ColourControlClient, MoveXy)
 //! @test Step Xy support.
 TEST(ColourControlClient, StepXy)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.step_xy(addr);
+   client.step_xy(addr, -123, +456, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2221,6 +2220,13 @@ TEST(ColourControlClient, StepXy)
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
    LONGS_EQUAL(ColourControl::STEP_XY_CMD, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+
+   StepXYMessage message;
+   message.unpack(client.sendMsg.payload);
+
+   LONGS_EQUAL(-123, message.X_step);
+   LONGS_EQUAL(+456, message.Y_step);
+   LONGS_EQUAL(10, message.time);
 }
 
 //! @test Move To Colour Temperature support.
@@ -3497,14 +3503,57 @@ TEST(ColourControlServer, MoveXy_no_suport)
 //! @test Step Xy support.
 TEST(ColourControlServer, StepXy)
 {
-   // FIXME Generated Stub.
+   server.xy(XY_Colour(500, 1000));
+   StepXYMessage received(-10, +20,20);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   Mode mode_new(Mask::XY_MODE, &server);
+   Xy XY_old(XY_Colour(500, 1000), &server);
+   Xy XY_new(XY_Colour(490, 1020), &server);
+
    mock("ColourControl::Server").expectOneCall("step_xy");
+   mock("ColourControl::Server").expectOneCall("changed");
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "new", &mode_new)
+         .ignoreOtherParameters();
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &XY_old)
+         .withParameterOfType("IAttribute", "new", &XY_new);
 
    packet.message.itf.member = ColourControl::STEP_XY_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
    mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+   LONGS_EQUAL(20, static_cast<XY_Transition_Continuous *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(-10, static_cast<XY_Transition_Continuous *>(server.transitions().at(0))->X_step);
+   LONGS_EQUAL(20, static_cast<XY_Transition_Continuous *>(server.transitions().at(0))->Y_step);
+}
+
+//! @test Step Xy no support.
+TEST(ColourControlServer, StepXy_no_support)
+{
+   server.xy(XY_Colour(500, 1000));
+   StepXYMessage received(-10, +20,20);
+   payload = ByteArray(received.size());
+   received.pack(payload);                         //pack it
+
+   mock("ColourControl::Server").expectNoCall("step_xy");
+   mock("ColourControl::Server").expectNoCall("changed");
+   mock("Interface").expectNoCall("notify");
+
+   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+
+   CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(0, server.transitions().size());
 }
 
 //! @test Move To Colour Temperature support.

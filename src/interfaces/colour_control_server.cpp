@@ -429,9 +429,11 @@ Common::Result IServer::move_xy(const Protocol::Address &addr, const MoveXYMessa
 // =============================================================================
 Common::Result IServer::step_xy(const Protocol::Address &addr, const StepXYMessage &message)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    UNUSED(message);
+
+   mode(Mask::XY_MODE);                         // Change mode to HS mode.
+
    return(Common::Result::OK);
 }
 
@@ -843,10 +845,17 @@ Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessag
 // =============================================================================
 Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessage &message)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
-   UNUSED(message);
-   return(Common::Result::OK);
+   IServer::step_xy(addr, message);   // Common part
+
+   XY_Transition_Continuous *new_transition = new XY_Transition_Continuous(*this,
+                                                                           message.time,
+                                                                           message.X_step,
+                                                                           message.Y_step);
+
+   new_transition->run(0);  //Run once immediately
+   add_transition(new_transition);
+
+   return Common::Result::OK;
 }
 
 // =============================================================================
@@ -1179,6 +1188,13 @@ bool XY_Transition::run(uint16_t time)
    }
 }
 
+// =============================================================================
+// XY_Transition_Continuous::run
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 bool XY_Transition_Continuous::run(uint16_t time)
 {
    if (time!=0 && !ITransition::run(time))

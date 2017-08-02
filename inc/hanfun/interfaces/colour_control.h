@@ -2037,18 +2037,22 @@ namespace HF
              * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD, to the given
              * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr        the network address to send the message to.
+             * @param [in] X_step      the X rate of change. (in units of sec)
+             * @param [in] Y_step      the Y rate of change. (in units of sec)
+             * @param [in] time        time to perform a single step. (in units of 100msec)
              */
-            void step_xy(const Protocol::Address &addr);
+            void step_xy(const Protocol::Address &addr,
+                         int16_t X_step, int16_t Y_step, uint8_t time);
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD,
              * to the broadcast network address.
              */
-            void step_xy()
+            void step_xy(int16_t X_step, int16_t Y_step, uint8_t time)
             {
                Protocol::Address addr;
-               step_xy(addr);
+               step_xy(addr, X_step, Y_step, time);
             }
 
             /*!
