@@ -3641,13 +3641,32 @@ TEST(ColourControlServer, MoveToColourTemperature_no_support)
 //! @test Stop support.
 TEST(ColourControlServer, Stop)
 {
-   // FIXME Generated Stub.
+   ColourControlServer server2;
+
+   server.hue_and_saturation(HS_Colour(100, 50));
+   server2.hue_and_saturation(HS_Colour(100, 50));
+
+   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server, 2, 5);
+   Hue_Transition_Continuous *test2 = new Hue_Transition_Continuous(server2, 3, 5);
+
+   server.add_transition(test1);
+   server2.add_transition(test2);
+
+   LONGS_EQUAL(2, server.transitions().size());
+
    mock("ColourControl::Server").expectOneCall("stop");
 
    packet.message.itf.member = ColourControl::STOP_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
+
+   mock("ColourControl::Server").checkExpectations();
+
+   LONGS_EQUAL(1, server.transitions().size());
+
+   POINTERS_EQUAL(test2, server.transitions().front());
 }
+
 
 // =============================================================================
 // Server transitions

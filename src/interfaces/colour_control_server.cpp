@@ -465,7 +465,6 @@ Common::Result IServer::move_to_colour_temperature(const Protocol::Address &addr
 // =============================================================================
 Common::Result IServer::stop(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
    return(Common::Result::OK);
 }
@@ -920,9 +919,10 @@ Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
 // =============================================================================
 Common::Result Server::stop(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
-   return(Common::Result::OK);
+   remove(*this);
+
+   return Common::Result::OK;
 }
 #endif
 
