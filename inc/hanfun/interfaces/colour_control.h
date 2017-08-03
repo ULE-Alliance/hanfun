@@ -862,6 +862,47 @@ namespace HF
             Base(): Interface<HF::Interface::COLOUR_CONTROL>() {}
          };
 
+         //! Interface for the Transitions
+         struct ITransition
+         {
+            IServer &server;           //!< The server instance
+
+            uint16_t time;             //!< Time period for the transition (in 100 msec units).
+            uint16_t remaining_time;   //!< Remaining time unitl the transition is ran.
+
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     Server instance
+             */
+            ITransition(IServer &_server): server (_server)
+            {}
+
+            /*!
+             * Update the remaining time.
+             *
+             * This also run the transition if needed.
+             *
+             * @param [in] time        Time passed between calls (in units of 100 msec).
+             */
+            void update(uint16_t time)
+            {
+               if(--remaining_time <= 0)
+               {
+                  this->operator ()();
+                  remaining_time = time;
+               }
+            }
+
+            virtual bool operator() () =0;
+
+            virtual bool next() =0;
+         };
+
+
+
+
          /*!
           * Colour Control %Interface : %Server side implementation.
           *
@@ -964,16 +1005,6 @@ namespace HF
             // ======================================================================
             //! @name Events
             //! @{
-
-            /*!
-             * Inform the APP that its necessary to call the @c callback function
-             * with @c arg arguments after @ time has passed.
-             *
-             * @param [in] time        time in units of 100ms to wait before calling the callback.
-             * @param [in] callback    the callback
-             * @param [in] arg         the arguments to be passed on the callback.
-             */
-            virtual void add_transition(uint16_t time, fptr callback, callback_args_t *arg) =0;
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
@@ -1211,9 +1242,224 @@ namespace HF
                                           uint16_t offset);
          };
 
+         /*!
+          * Colour Control %Interface : %Server side implementation.
+          *
+          * This class provides the server side of the Colour Control interface.
+          */
          struct Server: public IServer
          {
+            //! Container for the transitions.
+            using Container = typename std::vector<ITransition*>;
 
+            /*!
+             * Check if there are transitions to run.
+             *
+             * @return The time left for the next transition, or 0 if there are no transitions.
+             */
+            static uint16_t has_transitions ()
+            {
+               return transitions.empty() ? 0 : transitions.front()->remaining_time;
+            }
+
+            /*!
+             * Method responsible for updating the all the transitions.
+             *
+             * This method updates the time remaining until a transition needs to be ran.
+             * If the remaining time is 0 then it runs the transition.
+             *
+             * @param [in] time_step   Elapsed time (in units of 100msec).
+             *
+             * @return  time (in units of 100msec) until the next transition.
+             */
+            static uint16_t transition (const uint16_t time_step)
+            {
+               std::for_each(transitions.begin(), transitions.end(), [time_step](ITransition *entry)
+                             {
+                                 entry->update(time_step);
+                             });
+
+               std::sort(transitions.begin(), transitions.end());
+
+               return has_transitions();
+            }
+
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            /*!
+             * Inform the APP that its necessary to call the @c callback function
+             * with @c arg arguments after @ time has passed.
+             *
+             * @param [in] time        time in units of 100ms to wait before calling the callback.
+             * @param [in] callback    the callback
+             * @param [in] arg         the arguments to be passed on the callback.
+             */
+            virtual void add_transition (uint16_t time, fptr callback, callback_args_t *arg) =0;
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
+             * is received.
+             *
+             * @param [in] addr        the network address to send the message to.
+             * @param [in] message     the @c MoveToHueMessage received.
+             */
+            Common::Result move_to_hue (const Protocol::Address &addr,
+                                                const MoveToHueMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_HUE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message    the @c MoveHueMessage received.
+             */
+            Common::Result move_hue (const Protocol::Address &addr,
+                                             const MoveHueMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::STEP_HUE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c StepHueMessage received.
+             */
+            Common::Result step_hue (const Protocol::Address &addr,
+                                             const StepHueMessage &message);
+
+            /*!
+             * Callback that is called when doing an animation on the HUE value.
+             *
+             * @param [in] arg   the arguments to the colour interaction.
+             *
+             * @retval 0 stop iteration.
+             * @retval 1 continue iteration.
+             */
+            bool hue_callback (callback_args_t &arg);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToSaturationMessage received.
+             */
+            Common::Result move_to_saturation (const Protocol::Address &addr,
+                                                       const MoveToSaturationMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveSaturationMessage received.
+             */
+            Common::Result move_saturation (const Protocol::Address &addr,
+                                                    const MoveSaturationMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::STEP_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c StepSaturationMessage received.
+             */
+            Common::Result step_saturation (const Protocol::Address &addr,
+                                                    const StepSaturationMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToHueSaturationMessage received.
+             */
+            Common::Result move_to_hue_and_saturation (
+                  const Protocol::Address &addr,
+                  const MoveToHueSaturationMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_XY_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToXYMessage received.
+             */
+            Common::Result move_to_xy (const Protocol::Address &addr,
+                                               const MoveToXYMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveXYMessage received.
+             */
+            Common::Result move_xy (const Protocol::Address &addr,
+                                            const MoveXYMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::STEP_XY_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c StepXYMessage received.
+             */
+            Common::Result step_xy (const Protocol::Address &addr,
+                                            const StepXYMessage &message);
+
+            /*!
+             * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] message     the @c MoveToTemperatureMessage received.
+             */
+            Common::Result move_to_colour_temperature (
+                  const Protocol::Address &addr,
+                  const MoveToTemperatureMessage &message);
+
+#ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
+
+            /*!
+             * Callback that is called when a @c ColourControl::STOP_CMD,
+             * is received.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            Common::Result stop (const Protocol::Address &addr);
+
+#endif
+
+            //! @}
+
+            protected:
+
+            static Container transitions;
+
+            void add_transition (ITransition *t)
+            {
+               transitions.push_back(t);
+            }
+
+            void remove (IServer const &itf)
+            {
+               auto compare = [&itf](ITransition *entry)
+               {
+                  if(&(entry->server) == &(itf))
+                  {
+                     delete entry;
+                     return true;
+                  }
+                  return false;
+               };
+
+               transitions.erase(std::remove_if(transitions.begin(), transitions.end(),
+                                                compare), transitions.end());
+            }
          };
 
          /*!

@@ -273,6 +273,8 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
    UNUSED(addr);
+   UNUSED(message);
+
 
    Protocol::Response response;
 
@@ -307,7 +309,7 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
    if(hue_callback(callback_args))  //Run once immediately
    {
       //If there are still iterations, inform the APP.
-      add_transition(1, &HF::Interfaces::ColourControl::IServer::hue_callback, &callback_args);
+      //add_transition(1, &HF::Interfaces::ColourControl::IServer::hue_callback, &callback_args);
    }
 
    _end:
@@ -509,6 +511,217 @@ Common::Result IServer::stop(const Protocol::Address &addr)
 }
 #endif
 
+// =============================================================================
+// Server
+// =============================================================================
+
+// =============================================================================
+// Server::move_to_hue
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
+{
+   UNUSED(addr);
+   UNUSED(message);
+   return IServer::move_to_hue(addr,message);
+}
+
+// =============================================================================
+// Server::move_hue
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::step_hue
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::hue_callback
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Server::hue_callback(callback_args_t &arg)
+{
+   if (arg.hs.n_steps != 0)
+   {
+      hue_and_saturation(HS_Colour(hue_and_saturation().hue + arg.hs.step,
+                                   hue_and_saturation().saturation));
+      arg.hs.n_steps--;
+      return 1;
+   }
+   else
+   {
+      hue_and_saturation(HS_Colour(arg.hs.end,hue_and_saturation().saturation));
+      return 0;
+   }
+}
+
+// =============================================================================
+// Server::move_to_saturation
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_to_saturation(const Protocol::Address &addr,
+                                const MoveToSaturationMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::move_saturation
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_saturation(const Protocol::Address &addr,
+                                           const MoveSaturationMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::step_saturation
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::step_saturation(const Protocol::Address &addr,
+                                           const StepSaturationMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::move_to_hue_and_saturation
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
+                                        const MoveToHueSaturationMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::move_to_xy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::move_xy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::step_xy
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+// =============================================================================
+// Server::move_to_colour_temperature
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
+                                        const MoveToTemperatureMessage &message)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   UNUSED(message);
+   return(Common::Result::OK);
+}
+
+#ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
+// =============================================================================
+// Server::stop
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Server::stop(const Protocol::Address &addr)
+{
+   // FIXME Generated Stub.
+   UNUSED(addr);
+   return(Common::Result::OK);
+}
+#endif
 
 // =============================================================================
 // Get/Set Attributes
