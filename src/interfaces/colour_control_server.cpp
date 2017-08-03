@@ -997,6 +997,7 @@ Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
 Common::Result Server::stop(const Protocol::Address &addr)
 {
    UNUSED(addr);
+   IServer::stop(addr);
    remove(*this);
 
    return Common::Result::OK;
