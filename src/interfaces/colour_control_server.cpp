@@ -594,17 +594,42 @@ Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMess
 // =============================================================================
 Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMessage &message)
 {
-   IServer::step_hue(addr, message);   // Common part
-
    auto step = (message.direction == Direction::UP ? message.step_size : -message.step_size);
 
-   Hue_Transition_Continuous *new_transition = new Hue_Transition_Continuous(*this,
-                                                                             message.time,
-                                                                             step);
+   Hue_Transition *new_transition = new Hue_Transition(*this,  // server
+                                                       1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1;     // Run for time-1 (adjust for base 0)
+      new_transition->step = round(step / static_cast<float>(message.time)); // Step size.
+
+      if (new_transition->step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   IServer::step_hue(addr, message);   // Common part
+
+   new_transition->end = hue_and_saturation().hue + step;
 
    new_transition->run(0);  //Run once immediately
-   add_transition(new_transition);
-
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
    return Common::Result::OK;
 }
 
@@ -694,17 +719,42 @@ Common::Result Server::move_saturation(const Protocol::Address &addr,
 Common::Result Server::step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message)
 {
-   IServer::step_saturation(addr, message);   // Common part
-
    auto step = (message.direction == Direction::UP ? message.step_size : -message.step_size);
 
-   Saturation_Transition_Continuous *new_transition = new Saturation_Transition_Continuous(*this,
-                                                                             message.time,
-                                                                             step);
+   Saturation_Transition *new_transition = new Saturation_Transition(*this,  // server
+                                                                     1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1; // Run for time-1 (adjust for base 0 instead of 1)
+      new_transition->step = round(step / static_cast<float>(message.time)); // Step size.
+
+      if (new_transition->step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   IServer::step_saturation(addr, message);   // Common part
+
+   new_transition->end = hue_and_saturation().saturation + step;
 
    new_transition->run(0);  //Run once immediately
-   add_transition(new_transition);
-
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
    return Common::Result::OK;
 }
 
@@ -846,15 +896,42 @@ Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessag
 // =============================================================================
 Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessage &message)
 {
+   XY_Transition *new_transition = new XY_Transition(*this,  // server
+                                                          1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1;     // Run for time-1 (adjust for base 0)
+      new_transition->X_step = round(message.X_step / static_cast<float>(message.time));       // Step size.
+      new_transition->Y_step = round(message.Y_step / static_cast<float>(message.time));       // Step size.
+
+      if (new_transition->X_step == 0 && new_transition->Y_step == 0)
+      {
+         delete new_transition;
+         return Common::Result::FAIL_ARG;
+      }
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
    IServer::step_xy(addr, message);   // Common part
 
-   XY_Transition_Continuous *new_transition = new XY_Transition_Continuous(*this,
-                                                                           message.time,
-                                                                           message.X_step,
-                                                                           message.Y_step);
+   new_transition->end = XY_Colour(xy().X + message.X_step,
+                                   xy().Y + message.Y_step);
 
    new_transition->run(0);  //Run once immediately
-   add_transition(new_transition);
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
 
    return Common::Result::OK;
 }

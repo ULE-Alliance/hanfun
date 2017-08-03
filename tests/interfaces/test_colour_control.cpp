@@ -2893,7 +2893,7 @@ TEST(ColourControlServer, StepHue)
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
-   HueAndSaturation HS_new(HS_Colour(110, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(101, 50), &server);
 
    mock("ColourControl::Server").expectOneCall("step_hue");
    mock("ColourControl::Server").expectOneCall("changed");
@@ -2912,8 +2912,8 @@ TEST(ColourControlServer, StepHue)
    mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server.transitions().size());
-   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->period);
-   LONGS_EQUAL(10, static_cast<Hue_Transition_Continuous *>(server.transitions().at(0))->step);
+   LONGS_EQUAL(1, static_cast<Hue_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(1, static_cast<Hue_Transition *>(server.transitions().at(0))->step);
 }
 
 //! @test Step Hue no support.
@@ -3159,7 +3159,7 @@ TEST(ColourControlServer, StepSaturation)
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
-   HueAndSaturation HS_new(HS_Colour(100, 60), &server);
+   HueAndSaturation HS_new(HS_Colour(100, 51), &server);
 
    mock("ColourControl::Server").expectOneCall("step_saturation");
    mock("ColourControl::Server").expectOneCall("changed");
@@ -3178,8 +3178,8 @@ TEST(ColourControlServer, StepSaturation)
    mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server.transitions().size());
-   LONGS_EQUAL(10, static_cast<Saturation_Transition_Continuous *>(server.transitions().at(0))->period);
-   LONGS_EQUAL(10, static_cast<Saturation_Transition_Continuous *>(server.transitions().at(0))->step);
+   LONGS_EQUAL(1, static_cast<Saturation_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(1, static_cast<Saturation_Transition *>(server.transitions().at(0))->step);
 }
 
 //! @test Step Saturation support.
@@ -3531,13 +3531,13 @@ TEST(ColourControlServer, MoveXy_no_suport)
 TEST(ColourControlServer, StepXy)
 {
    server.xy(XY_Colour(500, 1000));
-   StepXYMessage received(-10, +20,20);
+   StepXYMessage received(-10, +20,10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(500, 1000), &server);
-   Xy XY_new(XY_Colour(490, 1020), &server);
+   Xy XY_new(XY_Colour(499, 1002), &server);
 
    mock("ColourControl::Server").expectOneCall("step_xy");
    mock("ColourControl::Server").expectOneCall("changed");
@@ -3556,9 +3556,9 @@ TEST(ColourControlServer, StepXy)
    mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server.transitions().size());
-   LONGS_EQUAL(20, static_cast<XY_Transition_Continuous *>(server.transitions().at(0))->period);
-   LONGS_EQUAL(-10, static_cast<XY_Transition_Continuous *>(server.transitions().at(0))->X_step);
-   LONGS_EQUAL(20, static_cast<XY_Transition_Continuous *>(server.transitions().at(0))->Y_step);
+   LONGS_EQUAL(1, static_cast<XY_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(-1, static_cast<XY_Transition *>(server.transitions().at(0))->X_step);
+   LONGS_EQUAL(+2, static_cast<XY_Transition *>(server.transitions().at(0))->Y_step);
 }
 
 //! @test Step Xy no support.
