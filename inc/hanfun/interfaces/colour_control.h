@@ -867,40 +867,97 @@ namespace HF
          {
             IServer &server;           //!< The server instance
 
-            uint16_t time;             //!< Time period for the transition (in 100 msec units).
-            uint16_t remaining_time;   //!< Remaining time unitl the transition is ran.
+            uint16_t period;             //!< Time period for the transition (in 100 msec units).
+            uint16_t remaining_time;   //!< Remaining time until the transition is ran.
 
 
             /*!
              * Constructor.
              *
              * @param [in] _server     Server instance
+             * @param [in] period      The Transition period
              */
-            ITransition(IServer &_server): server (_server)
+            ITransition(IServer &_server, uint16_t period):
+               server (_server), period(period), remaining_time(period)
             {}
 
+            virtual ~ITransition()
+            {}
+
+
             /*!
-             * Update the remaining time.
+             * Common part for the transition run code.
              *
-             * This also run the transition if needed.
+             * This will update the remaining time and check if the transition should run.
              *
-             * @param [in] time        Time passed between calls (in units of 100 msec).
+             * @param [in] time     time elapsed time since the last call.
+             * @retval 0   Don't run the transition specialization.
+             * @retval 1   Run the transition specialization.
              */
-            void update(uint16_t time)
+            virtual bool run(uint16_t time)
             {
-               if(--remaining_time <= 0)
+               remaining_time -= time;
+               if (remaining_time == 0)
                {
-                  this->operator ()();
-                  remaining_time = time;
+                  remaining_time = this->period;
+                  return true;
                }
+               return false;
             }
 
-            virtual bool operator() () =0;
-
-            virtual bool next() =0;
+            /*!
+             * Check if the transition should continue.
+             *
+             * @retval 0   The transition ended.
+             * @retval 1   The transition will continue.
+             */
+            virtual bool next() =0; //check if the transition continues...
          };
 
 
+         //! Hue Transition
+         struct Hue_Transition : public ITransition
+         {
+            int32_t step;     //!< Hue or Saturation step
+            uint16_t n_steps; //!< Counter for the steps needed.
+            uint16_t end;     //!< End value to stop the iteration.
+
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server     server instance
+             * @param [in] period      the Transition period. In units of 100msec.
+             * @param [in] step        the step size for each transition iteration.
+             * @param [in] n_steps     number of steps.
+             * @param [in] end         end value for the transition.
+             */
+            Hue_Transition(IServer &_server, uint16_t period, int32_t step = 0,
+                           uint16_t n_steps = 0, uint16_t end = 0):
+               ITransition(_server, period), step(step), n_steps(n_steps), end(end)
+            {}
+
+            //! Default constructor.
+            Hue_Transition() = default;
+
+            //! Empty destructor.
+            ~Hue_Transition()
+            {};
+
+            /*!
+             * Run the transition.
+             *
+             * @param [in] time elapsed time since the last call.
+             * @retval 0   The transition didn't ran. Only the remaining time was updated.
+             * @retval 1   The transition ran.
+             */
+            bool run(uint16_t time);
+
+            //! @copydoc ITransition::next()
+            bool next()
+            {
+               return( period != 0? true : false );
+            }
+         };
 
 
          /*!
@@ -1035,16 +1092,6 @@ namespace HF
              */
             virtual Common::Result step_hue(const Protocol::Address &addr,
                                             const  StepHueMessage &message);
-
-            /*!
-             * Callback that is called when doing an animation on the HUE value.
-             *
-             * @param [in] arg   the arguments to the colour interaction.
-             *
-             * @retval 0 stop iteration.
-             * @retval 1 continue iteration.
-             */
-            virtual bool hue_callback(callback_args_t &arg);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
@@ -1252,6 +1299,16 @@ namespace HF
             //! Container for the transitions.
             using Container = typename std::vector<ITransition*>;
 
+            public:
+
+            //! Constructor
+            Server(): IServer()
+            {}
+
+            //! Destructor
+            virtual ~Server()
+            {}
+
             /*!
              * Check if there are transitions to run.
              *
@@ -1268,21 +1325,12 @@ namespace HF
              * This method updates the time remaining until a transition needs to be ran.
              * If the remaining time is 0 then it runs the transition.
              *
-             * @param [in] time_step   Elapsed time (in units of 100msec).
+             * @note This method should only be called when a transition should occur. This
+             *       isn't a polling method.
              *
-             * @return  time (in units of 100msec) until the next transition.
+             * @return  period (in units of 100msec) until the next transition.
              */
-            static uint16_t transition (const uint16_t time_step)
-            {
-               std::for_each(transitions.begin(), transitions.end(), [time_step](ITransition *entry)
-                             {
-                                 entry->update(time_step);
-                             });
-
-               std::sort(transitions.begin(), transitions.end());
-
-               return has_transitions();
-            }
+            static uint16_t transition (void);
 
             // ======================================================================
             // Events
@@ -1291,14 +1339,9 @@ namespace HF
             //! @{
 
             /*!
-             * Inform the APP that its necessary to call the @c callback function
-             * with @c arg arguments after @ time has passed.
-             *
-             * @param [in] time        time in units of 100ms to wait before calling the callback.
-             * @param [in] callback    the callback
-             * @param [in] arg         the arguments to be passed on the callback.
+             * Inform the APP that a new transition was added.
              */
-            virtual void add_transition (uint16_t time, fptr callback, callback_args_t *arg) =0;
+            virtual void changed (void) =0;
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
@@ -1329,16 +1372,6 @@ namespace HF
              */
             Common::Result step_hue (const Protocol::Address &addr,
                                              const StepHueMessage &message);
-
-            /*!
-             * Callback that is called when doing an animation on the HUE value.
-             *
-             * @param [in] arg   the arguments to the colour interaction.
-             *
-             * @retval 0 stop iteration.
-             * @retval 1 continue iteration.
-             */
-            bool hue_callback (callback_args_t &arg);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
@@ -1440,11 +1473,22 @@ namespace HF
 
             static Container transitions;
 
+
+            /*!
+             * Add a transition to the list.
+             * @param [in] t     The transition to be added.
+             */
             void add_transition (ITransition *t)
             {
                transitions.push_back(t);
+               changed();
             }
 
+
+            /*!
+             * Remove a transition from the list.
+             * @param [in] itf      The server reference to search for a transition.
+             */
             void remove (IServer const &itf)
             {
                auto compare = [&itf](ITransition *entry)

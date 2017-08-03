@@ -142,17 +142,9 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
-
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
-   Common::Result result = AbstractInterface::check_payload_size(packet.message, payload, offset);
-
-   if (result != Common::Result::OK)
-   {
-      return result;
-   }
+   Common::Result result = Common::Result::OK;
 
    switch (cmd)
    {
@@ -275,7 +267,6 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
    UNUSED(addr);
    UNUSED(message);
 
-
    Protocol::Response response;
 
    Common::Result result = Common::Result::OK;
@@ -287,30 +278,6 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
    }
 
    mode(Mask::HS_MODE);                         // Change mode to HS mode.
-
-   callback_args.hs.end = message.hue;
-
-   if (message.time != 0)
-   {
-      callback_args.hs.n_steps = message.time - 1;
-
-      callback_args.hs.step = HS_Colour::get_hue_travel_distance(message.direction,
-                                                                 hue_and_saturation().hue,
-                                                                 message.hue);
-
-      callback_args.hs.step /= message.time;
-
-   }
-   else
-   {
-      callback_args.hs.n_steps = 0;
-   }
-
-   if(hue_callback(callback_args))  //Run once immediately
-   {
-      //If there are still iterations, inform the APP.
-      //add_transition(1, &HF::Interfaces::ColourControl::IServer::hue_callback, &callback_args);
-   }
 
    _end:
 
@@ -345,29 +312,6 @@ Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMes
    UNUSED(addr);
    UNUSED(message);
    return(Common::Result::OK);
-}
-
-// =============================================================================
-// IServer::hue_callback
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-bool IServer::hue_callback(callback_args_t &arg)
-{
-   if (arg.hs.n_steps != 0)
-   {
-      hue_and_saturation(HS_Colour(hue_and_saturation().hue + arg.hs.step,
-                                   hue_and_saturation().saturation));
-      arg.hs.n_steps--;
-      return 1;
-   }
-   else
-   {
-      hue_and_saturation(HS_Colour(arg.hs.end,hue_and_saturation().saturation));
-      return 0;
-   }
 }
 
 // =============================================================================
@@ -515,6 +459,43 @@ Common::Result IServer::stop(const Protocol::Address &addr)
 // Server
 // =============================================================================
 
+Server::Container Server::transitions;
+
+// =============================================================================
+// Server::transition
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Server::transition (void)
+{
+   auto time_step = transitions.front()->remaining_time;
+
+   std::for_each(transitions.begin(), transitions.end(), [time_step](ITransition *entry)
+   {
+      entry->run(time_step);
+   });
+
+   auto cleanup = [](ITransition *t)
+   {
+      bool res = t->next();
+      if(!res) delete t;
+      return !res;
+   };
+
+   auto it = std::remove_if(transitions.begin(), transitions.end(), cleanup);
+
+   transitions.erase(it, transitions.end());
+
+   std::sort(transitions.begin(), transitions.end(), [ ]( const ITransition *lhs, const ITransition *rhs )
+             {
+                return lhs->remaining_time < rhs->remaining_time;
+             });
+
+   return has_transitions();
+}
+
 // =============================================================================
 // Server::move_to_hue
 // =============================================================================
@@ -524,9 +505,44 @@ Common::Result IServer::stop(const Protocol::Address &addr)
 // =============================================================================
 Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHueMessage &message)
 {
-   UNUSED(addr);
-   UNUSED(message);
-   return IServer::move_to_hue(addr,message);
+
+   Common::Result result = IServer::move_to_hue(addr, message);   // Common part
+
+   if (result != Common::Result::OK)
+      return result;
+
+   auto step = HS_Colour::get_hue_travel_distance(message.direction,
+                                                                   hue_and_saturation().hue,
+                                                                   message.hue);
+
+   Hue_Transition *new_transition = new Hue_Transition(*this,  // server
+                                                       1);     // 100msec period
+
+   if (message.time != 0)
+   {
+      new_transition->n_steps = message.time - 1;     // Run for time-1 (we will run once)
+      new_transition->step = step/message.time;       // Step size.
+   }
+   else
+   {
+      new_transition->n_steps = 0;                    // Run once
+      new_transition->period = 0;                     // Run once
+   }
+
+   new_transition->end = message.hue;
+
+   new_transition->run(0);  //Run once immediately
+   if (new_transition->next())
+   {
+      //If there are still iterations, add the transition to the list and inform the APP.
+      add_transition(new_transition);
+   }
+   else
+   {
+      delete new_transition;
+   }
+
+   return result;
 }
 
 // =============================================================================
@@ -557,29 +573,6 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
    UNUSED(addr);
    UNUSED(message);
    return(Common::Result::OK);
-}
-
-// =============================================================================
-// Server::hue_callback
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-bool Server::hue_callback(callback_args_t &arg)
-{
-   if (arg.hs.n_steps != 0)
-   {
-      hue_and_saturation(HS_Colour(hue_and_saturation().hue + arg.hs.step,
-                                   hue_and_saturation().saturation));
-      arg.hs.n_steps--;
-      return 1;
-   }
-   else
-   {
-      hue_and_saturation(HS_Colour(arg.hs.end,hue_and_saturation().saturation));
-      return 0;
-   }
 }
 
 // =============================================================================
@@ -855,3 +848,38 @@ void IServer::colour_temperature(uint16_t __value)
    HF_SETTER_HELPER(ColourTemperature, _colour_temperature, __value);
 }
 #endif
+
+
+// =============================================================================
+// ColourControl::Hue_Transition
+// =============================================================================
+
+// =============================================================================
+// Hue_Transition::run
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+bool Hue_Transition::run(uint16_t time)
+{
+   if( time!=0 && !ITransition::run(time))
+   {
+      return false;
+   }
+
+   if (n_steps != 0)
+   {
+      server.hue_and_saturation(HS_Colour(server.hue_and_saturation().hue + step,
+                                          server.hue_and_saturation().saturation));
+      n_steps--;
+      return true;
+   }
+   else
+   {
+      server.hue_and_saturation(HS_Colour(end, server.hue_and_saturation().saturation));
+
+      period=0;   //can be deleted
+      return true;
+   }
+}
