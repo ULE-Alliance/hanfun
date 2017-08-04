@@ -1358,65 +1358,6 @@ namespace HF
           */
          class IServer: public InterfaceRole<ColourControl::Base, HF::Interface::SERVER_ROLE>
          {
-            public:
-
-            /*!
-             * Union that contains the callback arguments that
-             * are sent between the APP and the HANFUN implementation.
-             */
-            typedef union _callback_args_t
-            {
-               //! Hue or Saturation arguments.
-               struct _hs
-               {
-                  uint16_t n_steps; //!< Counter for the steps needed.
-                  int32_t step;     //!< Hue or Saturation step
-                  uint16_t end;     //!< End value to stop the iteration.
-               } hs;
-
-               //! Hue + Saturation arguments.
-               struct _has
-               {
-                  typedef struct _colour
-                  {
-                     int32_t hue;
-                     int32_t saturation;
-                  } colour;
-
-                  uint16_t n_steps;       //!< Counter for the steps needed.
-                  colour step;            //!< Hue and saturation step.
-                  HS_Colour end;             //!< End value to stop the iteration.
-               } has;
-
-               //! XY arguments.
-               struct _xy
-               {
-                  typedef struct _colour
-                  {
-                     int32_t X;
-                     int32_t Y;
-                  } colour;
-
-                  uint16_t n_steps; //!< Counter for the steps needed.
-                  colour step;   //!< XY colour step.
-                  XY_Colour end;    //!< XY value to stop the iteration.
-               } xy;
-
-               //! Color temperature arguments.
-               struct _temperature
-               {
-                  uint16_t n_steps; //!< Counter for the steps needed.
-                  int32_t step;    //!< Colour temperature step.
-                  uint16_t end;     //!< Colour temperature end value to stop the iteration.
-               } temperature;
-
-            } callback_args_t;
-
-            callback_args_t callback_args;
-
-            //! Typedef for the callback function.
-            typedef bool (IServer::*fptr) (callback_args_t &arg);
-
             protected:
 
             uint8_t _supported; //!< Supported
