@@ -89,16 +89,27 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
 #define CHECK_LOCATION_FALSE(condition, file, line) \
    CHECK_FALSE_LOCATION(condition, "CHECK_FALSE", #condition, NULL, file, line)
 
-template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_attribute_common(Interface &itf, bool writable, Value first, Value second,
-                            Getter getter, Setter setter, const char *file, int lineno)
+template<typename T> T &to_ref(T &_ref)
+{
+   return _ref;
+}
+template<typename T> T &to_ref(T *_ref)
+{
+   return *_ref;
+}
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter>
+void check_attribute_common(Interface &itf, bool writable,
+                            typename Attribute::value_type first,
+                            typename Attribute::value_type second,
+                            Getter getter, Setter setter,
+                            const char *file, int lineno)
 {
    mock("Interface").expectNCalls(2, "notify");
 
    (itf.*setter)(first);
 
-   LONGS_EQUAL_LOCATION(first, (itf.*getter)(), NULL, file, lineno);
+   CHECK_EQUAL_LOCATION(first, (itf.*getter)(), NULL, file, lineno);
 
    typedef HF::Attributes::Attribute<typename Attribute::value_type, Interface> __Attribute;
 
@@ -109,10 +120,10 @@ void check_attribute_common(Interface &itf, bool writable, Value first, Value se
    POINTERS_EQUAL_LOCATION(&itf, attr->owner(), NULL, file, lineno);
    LONGS_EQUAL_LOCATION(itf.uid(), attr->interface(), NULL, file, lineno);
 
-   LONGS_EQUAL_LOCATION(first, attr->value(), NULL, file, lineno);
+   CHECK_EQUAL_LOCATION(first, attr->value(), NULL, file, lineno);
 
    attr->value(second);
-   LONGS_EQUAL_LOCATION(second, attr->value(), NULL, file, lineno);
+   CHECK_EQUAL_LOCATION(second, attr->value(), NULL, file, lineno);
 
    mock("Interface").checkExpectations();
 
@@ -135,31 +146,26 @@ void check_attribute_pack(Interface &itf, const char *file, int lineno)
                        file, lineno);
 }
 
-
 template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_attribute(Interface &itf, bool writable, Value first, Value second,
-                     Getter getter, Setter setter, const char *file, int lineno)
+         typename = void>
+void check_attribute(Interface &itf, bool writable,
+                     typename Attribute::value_type first,
+                     typename Attribute::value_type second,
+                     Getter getter, Setter setter,
+                     const char *file, int lineno)
 {
    check_attribute_pack<Attribute>(itf, file, lineno);
 
-   check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
-}
-
-template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_attribute(Interface *itf, bool writable, Value first, Value second,
-                     Getter getter, Setter setter, const char *file, int lineno)
-{
-   assert(itf != nullptr);
-   check_attribute<Attribute, Interface, Getter, Setter, Value>(*itf, writable, first, second,
+   check_attribute_common<Attribute, Interface, Getter, Setter>(itf, writable, first, second,
                                                                 getter, setter, file, lineno);
 }
 
-template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_optional_attribute(Interface &itf, bool writable, Value first, Value second,
-                              Getter getter, Setter setter, const char *file, int lineno)
+template<typename Attribute, typename Interface, typename Getter, typename Setter>
+void check_optional_attribute(Interface &itf, bool writable,
+                              typename Attribute::value_type first,
+                              typename Attribute::value_type second,
+                              Getter getter, Setter setter,
+                              const char *file, int lineno)
 {
    auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
 
@@ -173,20 +179,21 @@ void check_optional_attribute(Interface &itf, bool writable, Value first, Value 
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
-   check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
+   check_attribute_common<Attribute, Interface, Getter, Setter>(itf, writable, first, second,
+                                                                getter, setter, file, lineno);
 }
 
 #define CHECK_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                \
-   check_attribute<Type>(server, _writable, _first, _second,                               \
+   check_attribute<Type>(to_ref(server), _writable, _first, _second,                       \
                          (Type::value_type (Interface::*)(void) const) & Interface::_name, \
                          (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                          __FILE__, __LINE__)
 
 #define CHECK_ATTRIBUTE_PACK(Interface, Type) \
-   check_attribute_pack<Type>(*server, __FILE__, __LINE__)
+   check_attribute_pack<Type>(to_ref(server), __FILE__, __LINE__)
 
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
-   check_optional_attribute<Type>(server, _writable, _first, _second,                               \
+   check_optional_attribute<Type>(to_ref(server), _writable, _first, _second,                               \
                                   (Type::value_type (Interface::*)(void) const) & Interface::_name, \
                                   (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                                   __FILE__, __LINE__)
