@@ -727,21 +727,7 @@ namespace HF
             IServer(Unit0 &unit): Server(unit) {}
 
             //! Destructor
-            virtual ~IServer() {}
-
-            // ======================================================================
-            // API
-            // ======================================================================
-
-            /*!
-             * Return a reference to the unit that this service belongs to.
-             *
-             * This is the same reference as AbstractService::unit, but static casted
-             * to allow access to the other interfaces.
-             *
-             * @return  a reference to the unit that holds this interface.
-             */
-            HF::Devices::Concentrator::IUnit0 &unit0() const;
+            virtual ~IServer() = default;
 
             // ======================================================================
             // Events
@@ -843,16 +829,6 @@ namespace HF
              * @return                 The response code sent in response.
              */
             virtual Common::Result get_info(Protocol::Packet &packet, const InfoMessage &msg);
-
-            /*!
-             * Indicate that group info was requested.
-             *
-             * @param [in] group       Pointer to the group entry corresponding to the affected group.
-             */
-            virtual void got_info(const GroupPtr &group)
-            {
-               UNUSED(group);
-            }
 #endif
 
             //! @}
@@ -861,6 +837,16 @@ namespace HF
             // =============================================================================
             // API
             // =============================================================================
+
+            /*!
+             * Return a reference to the unit that this service belongs to.
+             *
+             * This is the same reference as AbstractService::unit, but static casted
+             * to allow access to the other interfaces.
+             *
+             * @return  a reference to the unit that holds this interface.
+             */
+            HF::Devices::Concentrator::IUnit0 &unit0() const;
 
             /*!
              * Get a reference to the current object implementing the persistence API,
@@ -938,6 +924,27 @@ namespace HF
             protected:
 
             /*!
+             * This method serves to indicate if a given @c member of the interface
+             * can be used by the @c source device affecting the @c destination
+             * device configuration on the system.
+             *
+             * @param [in] member       interface member UID.
+             * @param [in] source       HF address for the requesting device.
+             * @param [in] destination  HF address for the affected device.
+             *
+             * @retval  true     the operation is allowed,
+             * @retval  false    otherwise.
+             */
+            virtual bool authorized(CMD member, const Protocol::Address &source,
+                                    const Protocol::Address &destination)
+            {
+               UNUSED(member);
+               UNUSED(source);
+               UNUSED(destination);
+               return true;
+            }
+
+            /*!
              * Get the Number Of Groups for the Group Management server.
              *
              * @param [in] diff  number of groups added/removed.
@@ -954,8 +961,14 @@ namespace HF
                notify(old_attr, new_attr);
             }
 
+            /*!
+             * @copydoc AbstractInterface::payload_size(Protocol::Message::Interface &)
+             */
             uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
+            /*!
+             * @copydoc AbstractInterface::handle_command
+             */
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
 

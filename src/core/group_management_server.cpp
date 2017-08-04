@@ -209,6 +209,13 @@ Common::Result IServer::create(Protocol::Packet &packet, CreateMessage &msg)
 
    uint16_t address      = Group::NO_ADDR;
 
+   // Check if device is authorized to create groups.
+   if (!authorized(CREATE_CMD, packet.source.device, packet.destination.device))
+   {
+      result = Common::Result::FAIL_AUTH;
+      goto _end;
+   }
+
    if (entry(msg.name) != nullptr)
    {
       result = Common::Result::FAIL_ARG;
@@ -270,6 +277,13 @@ Common::Result IServer::remove(Protocol::Packet &packet, DeleteMessage &msg)
 
    Group group;
 
+   // Check if device is authorized to delete groups.
+   if (!authorized(DELETE_CMD, packet.source.device, packet.destination.device))
+   {
+      result = Common::Result::FAIL_AUTH;
+      goto _end;
+   }
+
    if (entry == nullptr)
    {
       result = Common::Result::FAIL_ARG;
@@ -321,23 +335,30 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 
    Member member;
 
-   Result result = Common::Result::OK;
+   Result result = Result::OK;
 
    auto device   = unit0().device_management()->entry(msg.device);
 
    auto group    = entry(msg.address);
+
+   if (group == nullptr)
+   {
+      result = Result::FAIL_ARG;
+      goto _end;
+   }
+
+   // Check if device is authorized to add devices to a group.
+   if (!authorized(ADD_CMD, packet.source.device, msg.device))
+   {
+      result = Result::FAIL_AUTH;
+      goto _error;
+   }
 
    if (msg.device == Protocol::BROADCAST_ADDR ||
        msg.unit == Protocol::BROADCAST_UNIT)
    {
       result = Result::FAIL_ARG;
       goto _error;
-   }
-
-   if (group == nullptr)
-   {
-      result = Result::FAIL_ARG;
-      goto _end;
    }
 
    if (device == nullptr)
@@ -394,6 +415,13 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 
    auto group            = entry(msg.address);  // Try to find this group
 
+   // Check if device is authorized to remove devices from a group.
+   if (!authorized(REMOVE_CMD, packet.source.device, msg.device))
+   {
+      result = Common::Result::FAIL_AUTH;
+      goto _error;
+   }
+
    if (msg.device == Protocol::BROADCAST_ADDR ||
        msg.unit == Protocol::BROADCAST_UNIT)
    {
@@ -444,25 +472,31 @@ Common::Result IServer::remove(Protocol::Packet &packet, const RemoveMessage &ms
 // =============================================================================
 Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &msg)
 {
-   Common::Result result = Common::Result::FAIL_ARG;
    InfoResponse response;
 
-   auto group = entry(msg.address);                // try to find this group
+   // try to find this group
+   auto group = entry(msg.address);
 
-   if (group == nullptr)       // Group not found. Give an error
+   // Check if device is authorized to read the information of a group.
+   if (!authorized(GET_INFO_CMD, packet.source.device, packet.destination.device))
    {
-      result = Common::Result::FAIL_ARG;
+      response.code = Common::Result::FAIL_AUTH;
+      goto _end;
    }
-   else                             // found a group with the same address.
+
+   // Group not found. Give an error
+   if (group == nullptr)
    {
-      result           = Common::Result::OK;
+      response.code = Common::Result::FAIL_ARG;
+   }
+   else  // found a group with the same address.
+   {
+      response.code    = Common::Result::OK;
       response.name    = group->name;
       response.members = group->members();
-
-      this->got_info(*group);
    }
 
-   response.code = result;
+   _end:
 
    Protocol::Message message(packet.message, response.size());
 
@@ -470,7 +504,7 @@ Common::Result IServer::get_info(Protocol::Packet &packet, const InfoMessage &ms
 
    send(packet.source, message, packet.link);
 
-   return result;
+   return response.code;
 }
 #endif
 
