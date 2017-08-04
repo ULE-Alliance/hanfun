@@ -117,24 +117,6 @@ TEST(ColourControlMessages, HS_Colour_unpack)
 /*! @test HS_Colour helper class unpack test.
  *
  * Incomplete payload passed to the unpack function.
- */
-IGNORE_TEST(ColourControlMessages, HS_Colour_unpack_incomplete)
-{
-   HS_Colour colour;
-
-   payload = ByteArray({
-                        0x12, 0x34     // Hue value
-                                       // Saturation value
-                        });
-
-   LONGS_EQUAL(0, colour.unpack(payload));
-   LONGS_EQUAL(0, colour.hue);
-   LONGS_EQUAL(0, colour.saturation);
-}
-
-/*! @test HS_Colour helper class unpack test.
- *
- * Incomplete payload passed to the unpack function.
  * Test if the colour values are maintained.
  */
 TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
@@ -300,24 +282,6 @@ TEST(ColourControlMessages, XY_Colour_unpack)
    LONGS_EQUAL(payload.size(), colour.unpack(payload));
    LONGS_EQUAL(0x1234, colour.X);
    LONGS_EQUAL(0x5678, colour.Y);
-}
-
-/*! @test XY_Colour helper class unpack test.
- *
- * Incomplete payload passed to the unpack function.
- */
-IGNORE_TEST(ColourControlMessages, XY_Colour_unpack_incomplete)
-{
-   XY_Colour colour;
-
-   payload = ByteArray({
-                           0x12, 0x34,    // X value
-                           0x56           // Y value
-                        });
-
-   LONGS_EQUAL(0, colour.unpack(payload));
-   LONGS_EQUAL(0, colour.X);
-   LONGS_EQUAL(0, colour.Y);
 }
 
 /*! @test XY_Colour helper class unpack test.
@@ -2456,14 +2420,15 @@ TEST(ColourControlServer, Mode)
 TEST(ColourControlServer, HueAndSaturation)
 {
    // FIXME Generated Stub.
-   //CHECK_OPT_ATTRIBUTE(ColourControlServer, HueAndSaturation, false, hue_and_saturation, 42, 142);
+   CHECK_OPT_ATTRIBUTE(ColourControlServer, HueAndSaturation, false, hue_and_saturation,
+                       HS_Colour(42,42), HS_Colour(142,142));
 }
 
 //! @test XY support.
 TEST(ColourControlServer, Xy)
 {
    // FIXME Generated Stub.
-   //CHECK_OPT_ATTRIBUTE(ColourControlServer, Xy, false, xy, 42, 142);
+   CHECK_OPT_ATTRIBUTE(ColourControlServer, Xy, false, xy, XY_Colour(42,42), XY_Colour(142,142));
 }
 
 //! @test Colour Temperature support.

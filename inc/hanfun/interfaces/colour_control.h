@@ -268,6 +268,18 @@ namespace HF
                   }
                }
             }
+
+            //! Operator equal
+            bool operator== (const HS_Colour &other) const
+            {
+               return (hue == other.hue && saturation == other.saturation);
+            }
+
+            //! Operator not equal
+            bool operator!= (const HS_Colour &other) const
+            {
+               return !operator==(other);
+            }
          };
 
          /*!
@@ -346,6 +358,18 @@ namespace HF
                      return 0.0f;
                   }
                }
+            }
+
+            //! Operator equal.
+            bool operator== (const XY_Colour &other) const
+            {
+               return (X == other.X && Y == other.Y);
+            }
+
+            //! Operator not equal.
+            bool operator!= (const XY_Colour &other) const
+            {
+               return !operator==(other);
             }
          };
 

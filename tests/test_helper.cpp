@@ -54,6 +54,26 @@ SimpleString StringFrom(const HF::Common::Serializable &data)
    return result;
 }
 
+SimpleString StringFrom(const HF::Interfaces::ColourControl::HS_Colour &colour)
+{
+   SimpleString result = "";
+
+   result += StringFromFormat("%02X ", colour.hue);
+   result += StringFromFormat("%02X ", colour.saturation);
+
+   return result;
+}
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour)
+{
+   SimpleString result = "";
+
+   result += StringFromFormat("%02X ", colour.X);
+   result += StringFromFormat("%02X ", colour.Y);
+
+   return result;
+}
+
 HF::Attributes::Factory HF::Testing::FactoryGetter(HF::Common::Interface itf)
 {
    HF::Attributes::Factory result = HF::Attributes::get_factory(itf);

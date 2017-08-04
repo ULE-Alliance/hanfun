@@ -37,6 +37,8 @@
 
 #include "hanfun/units.h"
 
+#include "hanfun/interfaces/colour_control.h"
+
 using namespace HF;
 using namespace HF::Protocol;
 
@@ -58,6 +60,10 @@ SimpleString StringFrom(const HF::Common::Serializable &data);
 SimpleString StringFrom(const HF::Common::Interface &itf);
 
 SimpleString StringFrom(const HF::Attributes::IAttribute &attr);
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::HS_Colour &colour);
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour);
 
 template<typename _type>
 void check_index(_type expected, _type actual, uint32_t index, const char *header,
