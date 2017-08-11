@@ -26,6 +26,10 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
+#if HF_GROUP_SUPPORT
+   #include "hanfun/core/group_table.h"
+   #include "hanfun/core/group_management.h"
+#endif
 
 #include "hanfun/transport.h"
 
@@ -185,12 +189,16 @@ namespace HF
                                           typename HF::Unit0<IUnit0, ITF...>::DeviceMgt>::value,
                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
+            using interfaces_t = std::tuple<ITF...>;
+
             typedef typename HF::Unit0<IUnit0, ITF...> _Parent;
 
             typedef typename _Parent::DeviceInfo DeviceInfo;
             typedef typename _Parent::DeviceMgt DeviceMgt;
             typedef typename _Parent::AttrReporting AttrReporting;
-
+#if HF_GROUP_SUPPORT
+            typedef typename _Parent::GroupTable GroupTable;
+#endif
             /*!
              * Constructor
              *
@@ -259,20 +267,41 @@ namespace HF
             {
                return _Parent::device_management();
             }
+
+#if HF_GROUP_SUPPORT
+            /*!
+             * Get the pointer to the node's Group Table service.
+             *
+             * @return pointer to the node's Group Table service.
+             */
+            GroupTable *group_table()
+            {
+               return _Parent::group_table();
+            }
+
+            /*!
+             * Get the pointer to the node's Group Table service.
+             *
+             * @return pointer to the node's Group Table service.
+             */
+            GroupTable *group_table() const
+            {
+               return _Parent::group_table();
+            }
+#endif
          };
 
          /*!
           * Unit0 using default classes to provide the core services for node devices.
           */
-         struct DefaultUnit0: public Unit0<HF::Core::DeviceInformation::Server,
-                                           HF::Core::DeviceManagement::Client,
-                                           HF::Core::AttributeReporting::Server>
-         {
-            DefaultUnit0(IDevice &device):
-               Unit0<Core::DeviceInformation::Server, Core::DeviceManagement::Client,
-                     Core::AttributeReporting::Server>(device)
-            {}
-         };
+         typedef Unit0<Core::DeviceInformation::Server,
+                       Core::DeviceManagement::Client,
+                       Core::AttributeReporting::Server
+#if HF_GROUP_SUPPORT
+                       ,Core::GroupTable::DefaultServer
+                       ,Core::GroupManagement::DefaultServer
+#endif
+                      > DefaultUnit0;
 
          /*!
           * Template for declaring HAN-FUN node devices.
@@ -484,6 +513,22 @@ namespace HF
              */
             virtual HF::Core::DeviceManagement::IServer *device_management() const = 0;
 
+#if HF_GROUP_SUPPORT
+            /*!
+             * Return a pointer to unit 0 group management service.
+             *
+             * @return  pointer to unit 0 group management service.
+             */
+            virtual HF::Core::GroupManagement::IServer *group_management() = 0;
+
+            /*!
+             * Return a pointer to unit 0 bind management service.
+             *
+             * @return  pointer to unit 0 bind management service.
+             */
+            virtual HF::Core::GroupManagement::IServer *group_management() const = 0;
+#endif
+
             /*!
              * Return a pointer to unit 0 bind management service.
              *
@@ -497,6 +542,7 @@ namespace HF
              * @return  pointer to unit 0 bind management service.
              */
             virtual HF::Core::BindManagement::IServer *bind_management() const = 0;
+
          };
 
          /*!
@@ -517,8 +563,23 @@ namespace HF
 
             using interfaces_t = std::tuple<ITF...>;
 
+#if HF_GROUP_SUPPORT
+            typedef typename _Parent::GroupTable GroupTable;
+
+            //! Group Management service index.
+            static constexpr uint8_t GROUP_MGT = _Parent::NEXT_ITF;
+
+            typedef typename std::tuple_element<GROUP_MGT, interfaces_t>::type GroupMgt;
+
+            static_assert(std::is_base_of<HF::Core::GroupManagement::IServer, GroupMgt>::value,
+                          "GroupMgt must be of type HF::Core::GroupManagement::IServer");
+
             //! Bind Management service index.
-            static constexpr uint8_t BIND_MGT = _Parent::ATTR_RPT + 1;
+            static constexpr uint8_t BIND_MGT = GROUP_MGT + 1;
+#else
+            //! Bind Management service index.
+            static constexpr uint8_t BIND_MGT = _Parent::NEXT_ITF;
+#endif
 
             typedef typename std::tuple_element<BIND_MGT, interfaces_t>::type BindMgt;
 
@@ -536,12 +597,12 @@ namespace HF
 
             BindMgt *bind_management() const
             {
-               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
+               return _Parent::template get<BindMgt, BIND_MGT>();
             }
 
             BindMgt *bind_management()
             {
-               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
+               return _Parent::template get<BindMgt, BIND_MGT>();
             }
 
             DeviceInfo *device_info() const
@@ -563,25 +624,42 @@ namespace HF
             {
                return _Parent::attribute_reporting();
             }
+
+#if HF_GROUP_SUPPORT
+            GroupMgt *group_management() const
+            {
+               return _Parent::template get<GroupMgt, GROUP_MGT>();
+            }
+
+            GroupMgt *group_management()
+            {
+               return _Parent::template get<GroupMgt, GROUP_MGT>();
+            }
+
+            GroupTable *group_table()
+            {
+               return _Parent::group_table();
+            }
+
+            GroupTable *group_table() const
+            {
+               return _Parent::group_table();
+            }
+#endif
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0: public Unit0<Core::DeviceInformation::Server,
-                                           Core::DeviceManagement::DefaultServer,
-                                           Core::AttributeReporting::Server,
-                                           Core::BindManagement::DefaultServer>
-         {
-            /*!
-             * Constructor
-             *
-             * @param device  reference to the device this unit 0 belongs to.
-             */
-            DefaultUnit0(IDevice &device):
-               Unit0(device)
-            {}
-         };
+         typedef Unit0<Core::DeviceInformation::Server,
+                       Core::DeviceManagement::DefaultServer,
+                       Core::AttributeReporting::Server,
+#if HF_GROUP_SUPPORT
+                       Core::GroupTable::DefaultServer,
+                       Core::GroupManagement::DefaultServer,
+#endif
+                       Core::BindManagement::DefaultServer
+                      > DefaultUnit0;
 
          /*!
           * This is the parent class for the HAN-FUN Concentrator devices

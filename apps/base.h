@@ -278,6 +278,10 @@ namespace Commands
 typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
                                          ::DeviceManagement::Server,
                                          HF::Core::AttributeReporting::Server,
+#if HF_GROUP_SUPPORT
+                                         HF::Core::GroupTable::DefaultServer,
+                                         HF::Core::GroupManagement::DefaultServer,
+#endif
                                          ::BindManagement::Server> Unit0;
 
 /*!

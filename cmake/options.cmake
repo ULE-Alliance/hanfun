@@ -74,6 +74,8 @@ option(HF_APP_EXT_REG "Build example application with external registration supp
 # Library Configuration
 # =============================================================================
 
+option(HF_GROUP_SUPPORT "General - Group Support")
+
 # =============================================================================
 # Core Services & Interfaces Configuration
 # =============================================================================

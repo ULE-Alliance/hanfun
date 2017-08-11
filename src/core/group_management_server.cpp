@@ -16,6 +16,8 @@
 
 #include "hanfun/core/group_management.h"
 
+#include "hanfun/devices.h"
+
 // =============================================================================
 // API
 // =============================================================================
@@ -107,9 +109,9 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
  *
  */
 // =============================================================================
-HF::Devices::Concentrator::IUnit0 &IServer::unit0() const
+HF::Devices::Concentrator::IUnit0 *IServer::unit0() const
 {
-   return static_cast<Devices::Concentrator::IUnit0 &>(ServiceRole::unit());
+   return static_cast<Devices::Concentrator::IUnit0 *>(&ServiceRole::unit());
 }
 
 // =============================================================================
@@ -337,7 +339,7 @@ Common::Result IServer::add(Protocol::Packet &packet, const AddMessage &msg)
 
    Result result = Result::OK;
 
-   auto device   = unit0().device_management()->entry(msg.device);
+   auto device   = unit0()->device_management()->entry(msg.device);
 
    auto group    = entry(msg.address);
 

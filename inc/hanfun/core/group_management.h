@@ -21,7 +21,6 @@
 #include "hanfun/core.h"
 
 #include "hanfun/core/group_table.h"
-#include "hanfun/devices.h"
 
 #include <string>
 #include <map>
@@ -29,6 +28,15 @@
 
 namespace HF
 {
+   // Forward declaration.
+   namespace Devices
+   {
+      namespace Concentrator
+      {
+         struct IUnit0;
+      } // namespace Concentrator
+   }    // namespace Devices
+
    namespace Core
    {
       // Forward declaration.
@@ -773,7 +781,6 @@ namespace HF
              */
             virtual void deleted(const Group &group)
             {
-               // TODO : Check this! Can we pass it by reference pointer???
                UNUSED(group);
             }
 
@@ -846,7 +853,7 @@ namespace HF
              *
              * @return  a reference to the unit that holds this interface.
              */
-            HF::Devices::Concentrator::IUnit0 &unit0() const;
+            HF::Devices::Concentrator::IUnit0 *unit0() const;
 
             /*!
              * Get a reference to the current object implementing the persistence API,

@@ -212,11 +212,7 @@ namespace
       }
    };
 
-   struct AbstractDeviceHelper: public HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>
-   {
-      virtual ~AbstractDeviceHelper()
-      {}
-   };
+   typedef HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0> AbstractDeviceHelper;
 
    struct DeviceHelper: public AbstractDeviceHelper
    {
@@ -228,7 +224,6 @@ namespace
 
       virtual ~DeviceHelper()
       {}
-
    };
 
    struct DeviceHelper2: public AbstractDeviceHelper

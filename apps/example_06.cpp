@@ -63,15 +63,13 @@ namespace
    /*
     * Custom Unit 0 for node devices.
     */
-   struct NodeUnit0: public HF::Devices::Node::Unit0<DeviceInformation,
-                                                     HF::Core::DeviceManagement::Client,
-                                                     HF::Core::AttributeReporting::Server>
-   {
-      NodeUnit0(HF::IDevice &device):
-         HF::Devices::Node::Unit0<DeviceInformation, HF::Core::DeviceManagement::Client,
-                                  HF::Core::AttributeReporting::Server>(device)
-      {}
-   };
+   typedef HF::Devices::Node::Unit0<DeviceInformation,
+                                    HF::Core::DeviceManagement::Client,
+                                    HF::Core::AttributeReporting::Server
+#if HF_GROUP_SUPPORT
+                                    , HF::Core::GroupTable::DefaultServer
+#endif
+                                   > NodeUnit0;
 
    /*!
     * Example node.

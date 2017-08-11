@@ -607,12 +607,13 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::Client *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::GroupTable::IServer *group_table_server;
 
          public:
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr)
+            attr_reporting(nullptr), group_table_server(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -620,6 +621,7 @@ namespace HF
             delete dev_info;
             delete dev_mgt;
             delete attr_reporting;
+            delete group_table_server;
          }
 
          void device_info(HF::Core::DeviceInformation::Server *_dev_info)
@@ -682,6 +684,21 @@ namespace HF
             return attr_reporting;
          }
 
+         void group_table(HF::Core::GroupTable::IServer *_group_table)
+         {
+            SET_SERVICE(group_table_server, _group_table);
+         }
+
+         HF::Core::GroupTable::IServer *group_table()
+         {
+            return group_table_server;
+         }
+
+         HF::Core::GroupTable::IServer *group_table() const
+         {
+            return group_table_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -707,13 +724,15 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::GroupTable::IServer *group_tbl;
+         HF::Core::GroupManagement::IServer *group_mgt;
          HF::Core::BindManagement::IServer *bind_mgt;
 
          public:
 
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr), bind_mgt(nullptr)
+            attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -721,6 +740,8 @@ namespace HF
             delete dev_info;
             delete dev_mgt;
             delete attr_reporting;
+            delete group_tbl;
+            delete group_mgt;
             delete bind_mgt;
          }
 
@@ -808,6 +829,46 @@ namespace HF
             return bind_mgt;
          }
 
+         void group_management(HF::Core::GroupManagement::IServer *_group_mgt)
+         {
+            SET_SERVICE(group_mgt, _group_mgt);
+         }
+
+         HF::Core::GroupManagement::IServer *group_management() override
+         {
+            if (group_mgt == nullptr)
+            {
+               group_management(new HF::Core::GroupManagement::DefaultServer(*this));
+            }
+
+            return group_mgt;
+         }
+
+         HF::Core::GroupManagement::IServer *group_management() const override
+         {
+            return group_mgt;
+         }
+
+         void group_table(HF::Core::GroupTable::IServer *_group_tbl)
+         {
+            SET_SERVICE(group_tbl, _group_tbl);
+         }
+
+         HF::Core::GroupTable::IServer *group_table() override
+         {
+            if (group_tbl == nullptr)
+            {
+               group_table(new HF::Core::GroupTable::DefaultServer(*this));
+            }
+
+            return group_tbl;
+         }
+
+         HF::Core::GroupTable::IServer *group_table() const override
+         {
+            return group_tbl;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -829,6 +890,10 @@ namespace HF
                case HF::Interface::BIND_MANAGEMENT:
                {
                   return bind_management()->handle(packet, payload, offset);
+               }
+               case HF::Interface::GROUP_TABLE:
+               {
+                  return group_table()->handle(packet, payload, offset);
                }
                default:
                   return Common::Result::FAIL_UNKNOWN;
