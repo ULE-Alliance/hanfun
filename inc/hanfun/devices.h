@@ -326,7 +326,6 @@ namespace HF
                        Core::AttributeReporting::Server
 #if HF_GROUP_SUPPORT
                        ,Core::GroupTable::DefaultServer
-                       ,Core::GroupManagement::DefaultServer
 #endif
                       > DefaultUnit0;
 
