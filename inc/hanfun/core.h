@@ -404,7 +404,20 @@ namespace HF
       Common::Result handle(HF::Protocol::Packet &packet, Common::ByteArray &payload,
                             uint16_t offset)
       {
+#if HF_GROUP_SUPPORT
+         Common::Result result = Common::Result::FAIL_UNKNOWN;
+         InterfacesWrapper::for_each([&result, &packet, &payload, offset](HF::Interface &itf)
+         {
+            if(result != Common::Result::OK) // Message already handled, skip.
+            {
+               result = itf.handle(packet, payload, offset);
+            }
+         });
+
+         return result;
+#else
          return InterfacesWrapper::handle(packet, payload, offset);
+#endif
       }
 
       //! @copydoc HF::Profiles::IProfile::attributes
