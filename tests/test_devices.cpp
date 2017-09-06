@@ -124,22 +124,23 @@ TEST(Devices, ResponseRequired)
       Protocol::Message::ATOMIC_SET_ATTR_PACK_RESP_REQ,
    };
 
+   // Make the packet come from a remote device.
+   std::swap(packet.source, packet.destination);
+
    mock("Link").expectNCalls(types.size(), "send");
 
-   /* *INDENT-OFF* */
-   std::for_each (types.begin (), types.end (), [this](Protocol::Message::Type type)
+   for (Protocol::Message::Type type : types)
    {
       packet.message.type = type;
-      device.receive (packet, payload, 0);
+      device.receive(packet, payload, 0);
       Protocol::Packet resp_packet;
       uint16_t offset = resp_packet.unpack(link.data, 0);
-      LONGS_EQUAL (packet.message.reference, resp_packet.message.reference);
+      LONGS_EQUAL(packet.message.reference, resp_packet.message.reference);
 
       Protocol::Response resp;
       offset += resp.unpack(link.data, offset);
-      LONGS_EQUAL (Common::Result::FAIL_UNKNOWN, resp.code);
-   });
-   /* *INDENT-ON* */
+      LONGS_EQUAL(Common::Result::FAIL_UNKNOWN, resp.code);
+   }
 
    mock("Link").checkExpectations();
 }
@@ -494,3 +495,24 @@ TEST(Concentrator, PacketFromAnyUnitAnyItf)
 
    mock().checkExpectations();
 }
+
+TEST(Concentrator, GroupAddSelf)
+{
+   using namespace HF::Common;
+   using namespace HF::Core::GroupManagement;
+
+   LONGS_EQUAL(0, base->unit0()->group_management()->entries().size());
+
+   // Create a new group.
+   base->unit0()->group_management()->entries().save(0x42, "MyGroup");
+
+   // Add base to the group.
+   Protocol::Packet packet;
+   packet.source      = Protocol::Address(1, 0);
+   packet.destination = Protocol::Address(0, 0);
+
+   AddMessage message(0x42, 0, 1);
+
+   LONGS_EQUAL(Result::OK, base->unit0()->group_management()->add(packet, message));
+}
+

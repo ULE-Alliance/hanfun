@@ -116,11 +116,38 @@ namespace HF
           *
           * @param [in] packet   reference to the incoming packet.
           *
-          * @return
+          * @retval true   if the destination is the local device;
+          * @retval false  otherwise.
           */
-         virtual bool is_local(Protocol::Packet &packet)
+         virtual bool to_local(const Protocol::Packet &packet) const
          {
             return packet.destination.device == address();
+         }
+
+         /*!
+          * Check if the given packet is from the local device.
+          *
+          * @param [in] packet   reference to the incoming packet.
+          *
+          * @retval true   if the source is the local device;
+          * @retval false  otherwise.
+          */
+         bool from_local(const Protocol::Packet &packet) const
+         {
+            return packet.source.device == address();
+         }
+
+         /*!
+          * Check if the given packet is from the a remote device.
+          *
+          * @param [in] packet   reference to the incoming packet.
+          *
+          * @retval true   if the source is a remote device;
+          * @retval false  otherwise.
+          */
+         bool from_remote(const Protocol::Packet &packet)
+         {
+            return !from_local(packet);
          }
 
          /*!
@@ -374,9 +401,9 @@ namespace HF
              * @retval  true  if the packet if for the node;
              * @retval  false otherwise.
              */
-            bool is_local(Protocol::Packet &packet)
+            bool to_local(const Protocol::Packet &packet) const override
             {
-               return AbstractDevice::is_local(packet) ||
+               return AbstractDevice::to_local(packet) ||
                       // If we are unregistered only allow packets to unit 0.
                       (address() == Protocol::BROADCAST_ADDR && packet.destination.unit == 0);
             }
