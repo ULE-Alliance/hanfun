@@ -634,7 +634,7 @@ namespace HF
             /*!
              * Copy-Constructor.
              *
-             * Make sure that the entries are copied mantain this object as the session manager.
+             * Make sure that the entries are copied maintaining this object as the session manager.
              *
              * @param [in] other    reference to the object to copy from.
              */
