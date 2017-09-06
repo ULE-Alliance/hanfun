@@ -1090,6 +1090,15 @@ namespace HF
             Server(Unit0 &unit): IServer(unit), _group_table(*this)
             {}
 
+            /*!
+             * Copy-Constructor.
+             *
+             * @param [in] other    reference to the object to copy from.
+             */
+            Server(const Server &other):
+               IServer(other._unit), _group_table(*this)
+            {}
+
             virtual ~Server()
             {}
 
