@@ -306,7 +306,7 @@ namespace
          base_tsp.destroy();
       }
 
-      void add(AbstractDeviceHelper &device, std::string id)
+      void add(HF::IDevice &device, std::string id)
       {
          HF::Devices::Node::Transport *dev_tsp = new HF::Devices::Node::Transport();
          dev_tsp->add(&device);
@@ -516,3 +516,144 @@ TEST(Concentrator, GroupAddSelf)
    LONGS_EQUAL(Result::OK, base->unit0()->group_management()->add(packet, message));
 }
 
+// =============================================================================
+// Multicasting
+// =============================================================================
+
+using namespace HF::Common;
+using namespace HF::Core::GroupManagement;
+
+TEST_GROUP(Multicasting)
+{
+   struct GroupManagementTestClient: public HF::Core::GroupManagement::Client
+   {
+      GroupManagementTestClient(HF::Core::Unit0 &unit):
+         HF::Core::GroupManagement::Client(unit) {}
+
+      void created(CreateResponse &response)
+      {
+         UNUSED(response);
+         mock("GroupManagement").actualCall(__func__);
+      }
+
+      void deleted(DeleteResponse &response)
+      {
+         UNUSED(response);
+         mock("GroupManagement").actualCall(__func__);
+      }
+
+      void added(AddResponse &response)
+      {
+         UNUSED(response);
+         mock("GroupManagement").actualCall(__func__);
+      }
+
+      void removed(RemoveResponse &response)
+      {
+         UNUSED(response);
+         mock("GroupManagement").actualCall(__func__);
+      }
+
+      void got_info(InfoResponse &response)
+      {
+         UNUSED(response);
+         mock("GroupManagement").actualCall(__func__);
+      }
+   };
+
+   using ParentTestUnit0 = HF::Devices::Node::Unit0<Core::DeviceInformation::Server,
+                                                    Core::DeviceManagement::Client,
+                                                    Core::AttributeReporting::Server,
+                                                    Core::GroupTable::DefaultServer,
+                                                    GroupManagementTestClient>;
+
+   struct TestUnit0: public ParentTestUnit0
+   {
+      TestUnit0(IDevice &device): ParentTestUnit0(device)
+      {}
+
+      GroupManagementTestClient *group_management() const
+      {
+         return ParentTestUnit0::get<GroupManagementTestClient, NEXT_ITF>();
+      }
+
+      GroupManagementTestClient *group_management()
+      {
+         return ParentTestUnit0::get<GroupManagementTestClient, NEXT_ITF>();
+      }
+   };
+
+   struct DeviceHelper: public HF::Devices::Node::Abstract<TestUnit0>
+   {
+      SimpleDetector unit;
+      SimpleDetector unit2;
+
+      DeviceHelper(): unit(1, *this), unit2(2, *this)
+      {}
+
+      virtual ~DeviceHelper()
+      {}
+   };
+
+   DeviceHelper *device1;
+   DeviceHelper *device2;
+   DeviceHelper2 *device3;
+
+   BaseHelper *base;
+
+   TransportHelper *transport;
+
+   TEST_SETUP()
+   {
+      mock().ignoreOtherCalls();
+
+      base      = new BaseHelper();
+
+      device1   = new DeviceHelper();
+      device2   = new DeviceHelper();
+      device3   = new DeviceHelper2();
+
+      transport = new TransportHelper(*base);
+      transport->add(*device1, "1");
+      device1->unit0()->device_management()->register_device();
+      // LONGS_EQUAL (1, device1->address());
+
+      transport->add(*device2, "2");
+      device2->unit0()->device_management()->register_device();
+      // LONGS_EQUAL (2, device2->address());
+
+      transport->add(*device3, "3");
+      device3->unit0()->device_management()->register_device();
+      // LONGS_EQUAL (3, device3->address());
+   }
+
+   TEST_TEARDOWN()
+   {
+      delete transport;
+
+      delete device3;
+      delete device2;
+      delete device1;
+
+      delete base;
+
+      mock().clear();
+   }
+};
+
+TEST(Multicasting, Integration)
+{
+   using namespace HF::Common;
+   using namespace HF::Core::GroupManagement;
+
+   LONGS_EQUAL(0, base->unit0()->group_management()->entries().size());
+
+   // Create a new group.
+   base->unit0()->group_management()->entries().save(0x42, "MyGroup");
+
+   mock("GroupManagement").expectOneCall("added");
+
+   device1->unit0()->group_management()->add(0x42, device2->address(), device2->unit.id());
+
+   mock("GroupManagement").checkExpectations();
+}
