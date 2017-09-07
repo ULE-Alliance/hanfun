@@ -94,6 +94,43 @@ void HF::Testing::Assert(const char *expr, const char *file, int line)
       .withParameter("line", line);
 }
 
+HF::Core::DeviceManagement::DevicePtr HF::Testing::DevMgt::create_device(Concentrator &base,
+                                                                         uint16_t _dev_addr)
+{
+   HF::Core::DeviceManagement::Device device;
+   device.address = _dev_addr;
+
+   base.unit0()->device_management()->entries().save(device);
+
+   return base.unit0()->device_management()->entries().find(_dev_addr);
+}
+
+HF::Core::DeviceManagement::UnitPtr HF::Testing::DevMgt::add_unit(
+   HF::Core::DeviceManagement::DevicePtr &device,
+   uint8_t unit_id, uint16_t profile)
+{
+   auto dev_helper = const_cast<HF::Core::DeviceManagement::Device *>(&(*(device)));
+
+   dev_helper->units.emplace_back(unit_id, profile);
+
+   return device->unit(unit_id);
+}
+
+HF::Core::DeviceManagement::UnitPtr HF::Testing::DevMgt::add_unit0(
+   HF::Core::DeviceManagement::DevicePtr &device)
+{
+   return add_unit(device, 0, 0);
+}
+
+void HF::Testing::DevMgt::fill_unit(HF::Core::DeviceManagement::UnitPtr unit,
+                                    HF::Interface::UID uid,
+                                    HF::Interface::Role role)
+{
+   auto unit_helper = const_cast<HF::Core::DeviceManagement::Unit *>(&(*unit));
+
+   unit_helper->interfaces.emplace_back(uid, role);
+}
+
 class IAttributeComparator: public MockNamedValueComparator
 {
    public:
@@ -145,7 +182,7 @@ void __assert_fail(const char *__assertion, const char *__file, unsigned int __l
 int main(int ac, char **av)
 {
    IAttributeComparator iattr_comparator;
-
    mock().installComparator("IAttribute", iattr_comparator);
+
    return CommandLineTestRunner::RunAllTests(ac, av);
 }

@@ -34,6 +34,7 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/group_management.h"
 #include "hanfun/core/group_table.h"
 #include "hanfun/core/rssi.h"
 #include "hanfun/core/suota.h"
@@ -92,6 +93,10 @@ static const Entry factories[] =
    {
       HF::Interface::TIME,
       HF::Core::Time::create_attribute,
+   },
+   {
+      HF::Interface::GROUP_MANAGEMENT,
+      HF::Core::GroupManagement::create_attribute,
    },
    {
       HF::Interface::GROUP_TABLE,

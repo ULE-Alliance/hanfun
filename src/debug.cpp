@@ -262,7 +262,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interface::UID uid)
          result = "Bind Management";
          break;
       }
-      case HF::Interface::UID::GROUP_MANGEMENT:
+      case HF::Interface::UID::GROUP_MANAGEMENT:
       {
          result = "Group Management";
          break;

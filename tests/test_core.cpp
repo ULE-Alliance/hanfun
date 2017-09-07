@@ -73,6 +73,7 @@ namespace
    using UnitImpl = HF::Unit0<HF::Core::Unit0, HF::Core::DeviceInformation::Server,
                               HF::Core::DeviceManagement::Client,
                               HF::Core::AttributeReporting::Server,
+                              HF::Core::GroupTable::DefaultServer,
                               TestInterface_1, TestInterface_2, TestInterface_3>;
 
    struct TestUnit0: public UnitImpl, public HF::IDevice::IUnit0
@@ -98,6 +99,16 @@ namespace
       AttrReporting *attribute_reporting()
       {
          return UnitImpl::attribute_reporting();
+      }
+
+      GroupTable *group_table() const
+      {
+         return UnitImpl::group_table();
+      }
+
+      GroupTable *group_table()
+      {
+         return UnitImpl::group_table();
       }
    };
 
@@ -128,7 +139,11 @@ TEST(Unit0, OptionalInterfaces)
 {
    auto itfs = device->unit0()->interfaces();
 
+#if HF_GROUP_SUPPORT
+   LONGS_EQUAL(1 + 3, itfs.size());
+#else
    LONGS_EQUAL(3, itfs.size());
+#endif
 
    CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
    {

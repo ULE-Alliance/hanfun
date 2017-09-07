@@ -7,6 +7,8 @@
 // Core Services and Interfaces
 // =============================================================================
 
+#define HF_GROUP_SUPPORT                           1
+
 // =============================================================================
 // Device Information Configuration
 // =============================================================================
@@ -88,6 +90,12 @@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD    1
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD     1
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD  1
+
+// =============================================================================
+// Group Management Configuration
+// =============================================================================
+
+#define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD           1
 
 // =============================================================================
 // Level Control Configuration

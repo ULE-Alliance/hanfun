@@ -26,7 +26,6 @@ pushd $PROJECT_DIR > format.log
 # Configuration
 # =============================================================================
 
-
 UNCRUSTIFY_CONFIG="$PROJECT_DIR/scripts/uncrustify.cfg"
 
 if [[ -e "$UNCRUSTIFY_CONFIG" && -f "$UNCRUSTIFY_CONFIG" ]]; then
@@ -35,7 +34,6 @@ else
 	echo "ERROR : Uncrustify configuration not found !"
   exit -1
 fi
-
 
 echo -n "Generating file list ... "
 git ls-files $@ | grep ".*\.\(c\(pp\)\?\|h\)$" > $FILES
@@ -70,8 +68,6 @@ if [ $? -eq 0 ]; then
 	exit
 fi
 echo "Running uncrustify ..... done !   "
-
-echo -ne "Doing some more tweaks ... \r"
 
 # Cleanup.
 rm -rf $FILES

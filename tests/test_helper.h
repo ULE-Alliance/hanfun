@@ -65,7 +65,7 @@ SimpleString StringFrom(const HF::Interfaces::ColourControl::HS_Colour &colour);
 
 SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour);
 
-template<typename _type>
+template<typename _type = uint8_t>
 void check_index(_type expected, _type actual, uint32_t index, const char *header,
                  const char *fileName,
                  int lineNumber)
@@ -83,6 +83,8 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
    }
 }
 
+#define CHECK_INDEX(_header, _index, _expected, _actual) \
+   check_index(_expected, _actual, _index, _header, __FILE__, __LINE__)
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
@@ -147,8 +149,8 @@ void check_attribute_pack(Interface &itf, const char *file, int lineno)
    CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
-
 }
+
 
 template<typename Attribute, typename Interface, typename Getter, typename Setter,
          typename = void>
@@ -195,11 +197,26 @@ void check_optional_attribute(Interface &itf, bool writable,
 
 #define CHECK_ATTRIBUTE_PACK(Interface, Type) \
    check_attribute_pack<Type>(to_ref(server), __FILE__, __LINE__)
+
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
    check_optional_attribute<Type>(to_ref(server), _writable, _first, _second,                       \
                                   (Type::value_type (Interface::*)(void) const) & Interface::_name, \
                                   (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                                   __FILE__, __LINE__)
+
+#define CHECK_ATTRIBUTE_ALLOC(_name) \
+   {                                 \
+      auto attr = new _name();       \
+      CHECK_TRUE(attr != nullptr);   \
+      delete attr;                   \
+   }
+
+#define CHECK_ALLOC(_name, ...)           \
+   {                                      \
+      auto temp = new _name(__VA_ARGS__); \
+      CHECK_TRUE(temp != nullptr);        \
+      delete temp;                        \
+   }
 
 // =============================================================================
 // Helper Test Classes
@@ -596,12 +613,13 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::Client *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::GroupTable::IServer *group_table_server;
 
          public:
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr)
+            attr_reporting(nullptr), group_table_server(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -609,6 +627,7 @@ namespace HF
             delete dev_info;
             delete dev_mgt;
             delete attr_reporting;
+            delete group_table_server;
          }
 
          void device_info(HF::Core::DeviceInformation::Server *_dev_info)
@@ -671,6 +690,21 @@ namespace HF
             return attr_reporting;
          }
 
+         void group_table(HF::Core::GroupTable::IServer *_group_table)
+         {
+            SET_SERVICE(group_table_server, _group_table);
+         }
+
+         HF::Core::GroupTable::IServer *group_table()
+         {
+            return group_table_server;
+         }
+
+         HF::Core::GroupTable::IServer *group_table() const
+         {
+            return group_table_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -696,13 +730,15 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::GroupTable::IServer *group_tbl;
+         HF::Core::GroupManagement::IServer *group_mgt;
          HF::Core::BindManagement::IServer *bind_mgt;
 
          public:
 
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr), bind_mgt(nullptr)
+            attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -710,6 +746,8 @@ namespace HF
             delete dev_info;
             delete dev_mgt;
             delete attr_reporting;
+            delete group_tbl;
+            delete group_mgt;
             delete bind_mgt;
          }
 
@@ -797,6 +835,46 @@ namespace HF
             return bind_mgt;
          }
 
+         void group_management(HF::Core::GroupManagement::IServer *_group_mgt)
+         {
+            SET_SERVICE(group_mgt, _group_mgt);
+         }
+
+         HF::Core::GroupManagement::IServer *group_management() override
+         {
+            if (group_mgt == nullptr)
+            {
+               group_management(new HF::Core::GroupManagement::DefaultServer(*this));
+            }
+
+            return group_mgt;
+         }
+
+         HF::Core::GroupManagement::IServer *group_management() const override
+         {
+            return group_mgt;
+         }
+
+         void group_table(HF::Core::GroupTable::IServer *_group_tbl)
+         {
+            SET_SERVICE(group_tbl, _group_tbl);
+         }
+
+         HF::Core::GroupTable::IServer *group_table() override
+         {
+            if (group_tbl == nullptr)
+            {
+               group_table(new HF::Core::GroupTable::DefaultServer(*this));
+            }
+
+            return group_tbl;
+         }
+
+         HF::Core::GroupTable::IServer *group_table() const override
+         {
+            return group_tbl;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -819,6 +897,10 @@ namespace HF
                {
                   return bind_management()->handle(packet, payload, offset);
                }
+               case HF::Interface::GROUP_TABLE:
+               {
+                  return group_table()->handle(packet, payload, offset);
+               }
                default:
                   return Common::Result::FAIL_UNKNOWN;
             }
@@ -837,6 +919,31 @@ namespace HF
       typedef AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>> Device;
 
       typedef AbstractDevice<HF::Devices::Concentrator::Abstract<ConcentratorUnit0>> Concentrator;
+      template<typename T>
+      T generate_random(T start = std::numeric_limits<T>::min,
+                        T end = std::numeric_limits<T>::max)
+      {
+         std::random_device rd;
+         std::mt19937 generator(rd());
+         std::uniform_int_distribution<T> distribution(start, end);
+
+         return static_cast<T>(distribution(generator));
+      }
+
+      namespace DevMgt
+      {
+         using DevicePtr = HF::Core::DeviceManagement::DevicePtr;
+         using UnitPtr   = HF::Core::DeviceManagement::UnitPtr;
+
+         DevicePtr create_device(Concentrator &base, uint16_t _dev_addr);
+
+         UnitPtr add_unit(DevicePtr &device, uint8_t unit_id, uint16_t profile);
+
+         UnitPtr add_unit0(DevicePtr &device);
+
+         void fill_unit(UnitPtr unit, Interface::UID uid, Interface::Role role);
+
+      }  // namespace DevMgt
 
    } // namespace Testing
 

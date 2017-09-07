@@ -35,10 +35,15 @@ namespace HF
       {
          struct IServer;
 
-      }  // namespace DeviceInformation
+      }  // namespace AttributeReporting
 
-   }  // namespace Devices
+      namespace GroupTable
+      {
+         struct IServer;
 
+      }  // namespace GroupTable
+
+   }  // namespace Core
 
    // Forward declaration of the units namespace.
    namespace Units
@@ -109,6 +114,22 @@ namespace HF
           * @return  pointer to unit 0 attribute reporting service.
           */
          virtual Core::AttributeReporting::IServer *attribute_reporting() = 0;
+
+#if HF_GROUP_SUPPORT
+         /*!
+          * Get the pointer to the node's Group Table service.
+          *
+          * @return pointer to the node's Group Table service.
+          */
+         virtual HF::Core::GroupTable::IServer *group_table() = 0;
+
+         /*!
+          * Get the pointer to the node's Group Table service.
+          *
+          * @return pointer to the node's Group Table service.
+          */
+         virtual HF::Core::GroupTable::IServer *group_table() const = 0;
+#endif
       };
 
       /*!

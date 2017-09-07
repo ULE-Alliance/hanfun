@@ -273,9 +273,16 @@ namespace HF
 
       public:
 
-      static constexpr uint8_t DEV_INFO = 0;    //!< Device Information service index.
-      static constexpr uint8_t DEV_MGT  = 1;    //!< Device Management service index.
-      static constexpr uint8_t ATTR_RPT = 2;    //!< Attribute Reporting service index.
+      enum Inferface: uint8_t
+      {
+         DEV_INFO    = 0,  //!< Device Information service index.
+         DEV_MGT     = 1,  //!< Device Management service index.
+         ATTR_RPT    = 2,  //!< Attribute Reporting service index.
+#if HF_GROUP_SUPPORT
+         GROUP_TABLE = 3,  //!< GroupTable service index.
+#endif
+         NEXT_ITF,
+      };
 
       typedef typename std::tuple_element<DEV_INFO, interfaces_t>::type DeviceInfo;
 
@@ -288,6 +295,13 @@ namespace HF
 
       static_assert(std::is_base_of<HF::Core::AttributeReporting::IServer, AttrReporting>::value,
                     "AttrReporting must be of type HF::Core::AttributeReporting::Server");
+
+#if HF_GROUP_SUPPORT
+      typedef typename std::tuple_element<GROUP_TABLE, interfaces_t>::type GroupTable;
+
+      static_assert(std::is_base_of<HF::Core::GroupTable::IServer, GroupTable>::value,
+                    "GroupTable must be of type HF::Core::GroupTable::IServer");
+#endif
 
       /*!
        * Constructor.
@@ -307,7 +321,7 @@ namespace HF
        */
       DeviceInfo *device_info() const
       {
-         return const_cast<DeviceInfo *>(InterfacesWrapper::template get<DEV_INFO>());
+         return get<DeviceInfo, DEV_INFO>();
       }
 
       /*!
@@ -317,7 +331,7 @@ namespace HF
        */
       DeviceInfo *device_info()
       {
-         return const_cast<DeviceInfo *>(InterfacesWrapper::template get<DEV_INFO>());
+         return get<DeviceInfo, DEV_INFO>();
       }
 
       /*!
@@ -327,7 +341,7 @@ namespace HF
        */
       DeviceMgt *device_management() const
       {
-         return const_cast<DeviceMgt *>(InterfacesWrapper::template get<DEV_MGT>());
+         return get<DeviceMgt, DEV_MGT>();
       }
 
       /*!
@@ -337,7 +351,7 @@ namespace HF
        */
       DeviceMgt *device_management()
       {
-         return const_cast<DeviceMgt *>(InterfacesWrapper::template get<DEV_MGT>());
+         return get<DeviceMgt, DEV_MGT>();
       }
 
       /*!
@@ -347,7 +361,7 @@ namespace HF
        */
       AttrReporting *attribute_reporting() const
       {
-         return const_cast<AttrReporting *>(InterfacesWrapper::template get<ATTR_RPT>());
+         return get<AttrReporting, ATTR_RPT>();
       }
 
       /*!
@@ -357,8 +371,30 @@ namespace HF
        */
       AttrReporting *attribute_reporting()
       {
-         return const_cast<AttrReporting *>(InterfacesWrapper::template get<ATTR_RPT>());
+         return get<AttrReporting, ATTR_RPT>();
       }
+
+#if HF_GROUP_SUPPORT
+      /*!
+       * Get the pointer to the node's Group Table service.
+       *
+       * @return pointer to the node's Group Table service.
+       */
+      GroupTable *group_table()
+      {
+         return get<GroupTable, GROUP_TABLE>();
+      }
+
+      /*!
+       * Get the pointer to the node's Group Table service.
+       *
+       * @return pointer to the node's Group Table service.
+       */
+      GroupTable *group_table() const
+      {
+         return get<GroupTable, GROUP_TABLE>();
+      }
+#endif
 
       // =============================================================================
       // IUnit API
@@ -368,7 +404,20 @@ namespace HF
       Common::Result handle(HF::Protocol::Packet &packet, Common::ByteArray &payload,
                             uint16_t offset)
       {
+#if HF_GROUP_SUPPORT
+         Common::Result result = Common::Result::FAIL_UNKNOWN;
+         InterfacesWrapper::for_each([&result, &packet, &payload, offset](HF::Interface &itf)
+         {
+            if(result != Common::Result::OK) // Message already handled, skip.
+            {
+               result = itf.handle(packet, payload, offset);
+            }
+         });
+
+         return result;
+#else
          return InterfacesWrapper::handle(packet, payload, offset);
+#endif
       }
 
       //! @copydoc HF::Profiles::IProfile::attributes
@@ -395,6 +444,14 @@ namespace HF
       }
 
       // =============================================================================
+
+      protected:
+
+      template<typename T, uint8_t N>
+      T *get() const
+      {
+         return const_cast<T *>(InterfacesWrapper::template get<N>());
+      }
    };
 
    /*! @} */
