@@ -93,4 +93,14 @@
 #define HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD     @HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD@
 #define HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD     @HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD@
 
+// =============================================================================
+// Colour Control Configuration
+// =============================================================================
+
+#define HF_ITF_COLOUR_CONTROL_STOP_CMD                        @HF_ITF_COLOUR_CONTROL_STOP_CMD@
+
+#define HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR         @HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR@
+#define HF_ITF_COLOUR_CONTROL_XY_ATTR                         @HF_ITF_COLOUR_CONTROL_XY_ATTR@
+#define HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR          @HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR@
+
 #endif  /* HF_CONFIG_H */

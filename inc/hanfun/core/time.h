@@ -270,8 +270,7 @@ namespace HF
             void tick(uint32_t count = 1)
             {
                HF_ASSERT(Value::INVALID - _time > count, {_time = Value::INVALID;
-                                                          return;
-                         });
+                                                          return;});
                _time += count;
             }
          };

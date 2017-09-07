@@ -54,6 +54,26 @@ SimpleString StringFrom(const HF::Common::Serializable &data)
    return result;
 }
 
+SimpleString StringFrom(const HF::Interfaces::ColourControl::HS_Colour &colour)
+{
+   SimpleString result = "";
+
+   result += StringFromFormat("%02X ", colour.hue);
+   result += StringFromFormat("%02X ", colour.saturation);
+
+   return result;
+}
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour)
+{
+   SimpleString result = "";
+
+   result += StringFromFormat("%02X ", colour.X);
+   result += StringFromFormat("%02X ", colour.Y);
+
+   return result;
+}
+
 HF::Attributes::Factory HF::Testing::FactoryGetter(HF::Common::Interface itf)
 {
    HF::Attributes::Factory result = HF::Attributes::get_factory(itf);
@@ -78,14 +98,14 @@ class IAttributeComparator: public MockNamedValueComparator
 {
    public:
 
-   bool isEqual (const void* object1, const void* object2)
+   bool isEqual(const void *object1, const void *object2)
    {
       return ((HF::Attributes::IAttribute *) object1)->compare(
-            *((HF::Attributes::IAttribute *) object2))
+         *((HF::Attributes::IAttribute *) object2))
              == 0;
    }
 
-   SimpleString valueToString (const void* object)
+   SimpleString valueToString(const void *object)
    {
       return StringFrom(*((const HF::Attributes::IAttribute *) object));
    }
@@ -126,6 +146,5 @@ int main(int ac, char **av)
 {
    IAttributeComparator iattr_comparator;
    mock().installComparator("IAttribute", iattr_comparator);
-
    return CommandLineTestRunner::RunAllTests(ac, av);
 }

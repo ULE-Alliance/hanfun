@@ -28,6 +28,7 @@
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
 #include "hanfun/interfaces/simple_light_sensor.h"
+#include "hanfun/interfaces/colour_control.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
@@ -133,8 +134,14 @@ static const Entry factories[] =
       HF::Interface::SIMPLE_AIR_PRESSURE,
       HF::Interfaces::SimpleAirPressure::create_attribute,
    },
-   {HF::Interface::SIMPLE_LIGHT_SENSOR,
-    HF::Interfaces::SimpleLightSensor::create_attribute, },
+   {
+      HF::Interface::SIMPLE_LIGHT_SENSOR,
+      HF::Interfaces::SimpleLightSensor::create_attribute, 
+   },
+   {
+      HF::Interface::COLOUR_CONTROL,
+      HF::Interfaces::ColourControl::create_attribute, 
+   },
 };
 
 // =============================================================================

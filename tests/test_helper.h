@@ -37,6 +37,8 @@
 
 #include "hanfun/units.h"
 
+#include "hanfun/interfaces/colour_control.h"
+
 using namespace HF;
 using namespace HF::Protocol;
 
@@ -59,6 +61,10 @@ SimpleString StringFrom(const HF::Common::Interface &itf);
 
 SimpleString StringFrom(const HF::Attributes::IAttribute &attr);
 
+SimpleString StringFrom(const HF::Interfaces::ColourControl::HS_Colour &colour);
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour);
+
 template<typename _type>
 void check_index(_type expected, _type actual, uint32_t index, const char *header,
                  const char *fileName,
@@ -76,7 +82,6 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
       FAIL_TEST_LOCATION(error.str().c_str(), fileName, lineNumber);
    }
 }
-
 
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
@@ -103,7 +108,7 @@ void check_attribute_common(Interface &itf, bool writable,
                             Getter getter, Setter setter,
                             const char *file, int lineno)
 {
-   mock("Interface").expectNCalls(2, "notify");
+   mock("Interface").expectNCalls(2, "notify").ignoreOtherParameters();
 
    (itf.*setter)(first);
 
@@ -142,8 +147,8 @@ void check_attribute_pack(Interface &itf, const char *file, int lineno)
    CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
-}
 
+}
 
 template<typename Attribute, typename Interface, typename Getter, typename Setter,
          typename = void>
@@ -190,9 +195,8 @@ void check_optional_attribute(Interface &itf, bool writable,
 
 #define CHECK_ATTRIBUTE_PACK(Interface, Type) \
    check_attribute_pack<Type>(to_ref(server), __FILE__, __LINE__)
-
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
-   check_optional_attribute<Type>(to_ref(server), _writable, _first, _second,                               \
+   check_optional_attribute<Type>(to_ref(server), _writable, _first, _second,                       \
                                   (Type::value_type (Interface::*)(void) const) & Interface::_name, \
                                   (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                                   __FILE__, __LINE__)
@@ -833,7 +837,6 @@ namespace HF
       typedef AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>> Device;
 
       typedef AbstractDevice<HF::Devices::Concentrator::Abstract<ConcentratorUnit0>> Concentrator;
-
 
    } // namespace Testing
 

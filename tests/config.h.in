@@ -98,6 +98,16 @@
 #define HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD     1
 
 // =============================================================================
+// Colour Control Configuration
+// =============================================================================
+
+#define HF_ITF_COLOUR_CONTROL_STOP_CMD                        1
+
+#define HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR         1
+#define HF_ITF_COLOUR_CONTROL_XY_ATTR                         1
+#define HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR          1
+
+// =============================================================================
 // Other Configuration
 // =============================================================================
 
