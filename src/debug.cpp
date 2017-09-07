@@ -979,6 +979,116 @@ std::ostream &operator<<(std::ostream &stream,
 }
 
 // =============================================================================
+// HF::Interfaces::ColourControl
+// =============================================================================
+
+#include "hanfun/interfaces/colour_control.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::ColourControl::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::ColourControl;
+
+   switch (command)
+   {
+      case MOVE_TO_HUE_CMD:
+         result = "Move To Hue";
+         break;
+      case MOVE_HUE_CMD:
+         result = "Move Hue";
+         break;
+      case STEP_HUE_CMD:
+         result = "Step Hue";
+         break;
+      case MOVE_TO_SATURATION_CMD:
+         result = "Move To Saturation";
+         break;
+      case MOVE_SATURATION_CMD:
+         result = "Move Saturation";
+         break;
+      case STEP_SATURATION_CMD:
+         result = "Step Saturation";
+         break;
+      case MOVE_TO_HUE_AND_SATURATION_CMD:
+         result = "Move To Hue And Saturation";
+         break;
+      case MOVE_TO_XY_CMD:
+         result = "Move To Xy";
+         break;
+      case MOVE_XY_CMD:
+         result = "Move Xy";
+         break;
+      case STEP_XY_CMD:
+         result = "Step Xy";
+         break;
+      case MOVE_TO_COLOUR_TEMPERATURE_CMD:
+         result = "Move To Colour Temperature";
+         break;
+      case STOP_CMD:
+         result = "Stop";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::ColourControl::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::ColourControl;
+
+   switch (attribute)
+   {
+      case SUPPORTED_ATTR:
+         result = "Supported";
+         break;
+      case MODE_ATTR:
+         result = "Mode";
+         break;
+      case HUE_AND_SATURATION_ATTR:
+         result = "Hue And Saturation";
+         break;
+      case XY_ATTR:
+         result = "XY";
+         break;
+      case COLOUR_TEMPERATURE_ATTR:
+         result = "Colour Temperature";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Core Services & Interfaces
 // =============================================================================
 
@@ -1530,6 +1640,82 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::Time::Date &date)
 }
 
 // =============================================================================
+// HF::Core::GroupTable
+// =============================================================================
+
+#include "hanfun/core/group_table.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::GroupTable;
+
+   switch (command)
+   {
+      case ADD_CMD:
+         result = "Add";
+         break;
+      case REMOVE_CMD:
+         result = "Remove";
+         break;
+      case REMOVE_ALL_CMD:
+         result = "Remove All";
+         break;
+      case READ_ENTRIES_CMD:
+         result = "Read Entries";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::GroupTable;
+
+   switch (attribute)
+   {
+      case NUMBER_OF_ENTRIES_ATTR:
+         result = "Number Of Entries";
+         break;
+      case NUMBER_OF_MAX_ENTRIES_ATTR:
+         result = "Number Of Max Entries";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1703,6 +1889,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::CMD>(message.itf.member);
                break;
+            case HF::Interface::GROUP_TABLE:
+               stream << static_cast<GroupTable::CMD>(message.itf.member);
+               break;
             case HF::Interface::SUOTA:
                stream << static_cast<SUOTA::CMD>(message.itf.member);
                break;
@@ -1725,7 +1914,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SIMPLE_VISUAL_EFFECTS:
                stream << static_cast<SimpleVisualEffects::CMD>(message.itf.member);
                break;
-
+            case HF::Interface::COLOUR_CONTROL:
+               stream << static_cast<ColourControl::CMD>(message.itf.member);
+               break;
             /* Unknown [C] */
             default:
                stream << "Unknown";
@@ -1757,6 +1948,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::DEVICE_MANAGEMENT:
                stream << static_cast<DeviceManagement::Attributes>(message.itf.member);
                break;
+            case HF::Interface::GROUP_TABLE:
+               stream << static_cast<GroupTable::Attributes>(message.itf.member);
+               break;
             case HF::Interface::RSSI:
                stream << static_cast<RSSI::Attributes>(message.itf.member);
                break;
@@ -1782,7 +1976,11 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SIMPLE_AIR_PRESSURE:
                stream << static_cast<SimpleAirPressure::Attributes>(message.itf.member);
                break;
-
+            case HF::Interface::SIMPLE_LIGHT_SENSOR:
+               stream << static_cast<SimpleLightSensor::Attributes>(message.itf.member);
+            case HF::Interface::COLOUR_CONTROL:
+               stream << static_cast<ColourControl::Attributes>(message.itf.member);
+               break;
             /* Unknown [A] */
             default:
                break;

@@ -236,9 +236,6 @@ namespace HF
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
-
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(
-               SimpleTemperature::Server *, uint8_t);
          };
 
          /*!

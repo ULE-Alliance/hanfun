@@ -78,6 +78,7 @@ namespace HF
          ALERT                 = 0x0100, //!< Alert interface UID
          ON_OFF                = 0x0200, //!< ON-OFF interface UID
          LEVEL_CONTROL         = 0x0201, //!< Level Control interface UID
+         COLOUR_CONTROL        = 0x0202, //!< Colour Control interface UID.
          SIMPLE_POWER_METER    = 0x0300, //!< Simple Power Meter interface UID
          SIMPLE_TEMPERATURE    = 0x0301, //!< Simple Temperature interface UID
          SIMPLE_HUMIDITY       = 0x0302, //!< Simple Humidity interface UID

@@ -204,9 +204,6 @@ namespace HF
                /* *INDENT-ON* */
             }
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(OnOff::Server *,
-                                                                            uint8_t);
-
             protected:
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,

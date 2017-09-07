@@ -327,7 +327,7 @@ TEST(GroupTable, GetEntriesResponse_Size)
 {
    ReadEntriesResponse params;
 
-   //              Result code     + Start Index     + Number of entries.
+   // -----------> Result code     + Start Index     + Number of entries.
    uint16_t size = sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint8_t);
 
    LONGS_EQUAL(size, params.size());

@@ -1490,17 +1490,12 @@ uint16_t Report::UpdateIntervalMessage::unpack(const Common::ByteArray &array, u
    uint16_t start = offset;
    uint16_t size;
 
-   size = report.unpack(array, offset);
-
-   /* *INDENT-OFF* */
+   size    = report.unpack(array, offset);
    HF_ASSERT(size != 0, {return 0;});
-   /* *INDENT-ON* */
-
    offset += size;
 
    size    = array.read(offset, interval);
-   HF_ASSERT(size != 0, {return 0;
-             });
+   HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
    return (offset - start);

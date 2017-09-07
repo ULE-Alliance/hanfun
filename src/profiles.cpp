@@ -156,6 +156,16 @@ static const HF::Common::Interface profiles_interfaces[] =
 
    // 40 - HF::Profiles::SIMPLE_LIGHT_SENSOR
    {HF::Interface::SIMPLE_LIGHT_SENSOR,   HF::Interface::SERVER_ROLE},
+
+   // 41 - HF::Profiles::COLOUR_BULB
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
+   {HF::Interface::COLOUR_CONTROL,        HF::Interface::SERVER_ROLE},
+
+   // 42 - HF::Profiles::DIMMABLE_COLOUR_BULB
+   {HF::Interface::ON_OFF,                HF::Interface::SERVER_ROLE},
+   {HF::Interface::COLOUR_CONTROL,        HF::Interface::SERVER_ROLE},
+   {HF::Interface::LEVEL_CONTROL,         HF::Interface::SERVER_ROLE},
+
 };
 
 /*!
@@ -199,6 +209,8 @@ static const Profile profiles[] =
    {HF::Profiles::SIMPLE_LED,                           0x0026, 1},      // 38
    {HF::Profiles::ENVIRONMENT_MONITOR,                  0x0027, 3},      // 39
    {HF::Profiles::SIMPLE_LIGHT_SENSOR,                  0x002A, 1},      // 40
+   {HF::Profiles::COLOUR_BULB,                          0x002B, 2},      // 41
+   {HF::Profiles::DIMMABLE_COLOUR_BULB,                 0x002D, 3},      // 42
    {HF::Profiles::USER_INTERFACE,                       0xFFFF, 0},      //
    {HF::Profiles::GENERIC_APPLICATION,                  0xFFFF, 0},      //
 };

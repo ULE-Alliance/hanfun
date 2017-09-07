@@ -176,6 +176,16 @@ option(HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD  "Interface - Level Control - Inc
 option(HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD  "Interface - Level Control - Decrease Level")
 
 # =============================================================================
+# Colour Control Configuration
+# =============================================================================
+
+option(HF_ITF_COLOUR_CONTROL_STOP_CMD                       "Interface - Colour Control - Stop")
+
+option(HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR        "Interface - Colour Control - Hue And Saturation")
+option(HF_ITF_COLOUR_CONTROL_XY_ATTR                        "Interface - Colour Control - XY")
+option(HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR         "Interface - Colour Control - Colour Temperature")
+
+# =============================================================================
 # Dependecies
 # =============================================================================
 

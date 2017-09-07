@@ -92,6 +92,8 @@ namespace HF
       HELPER_CLASS2(DimmableLight);
       HELPER_CLASS2(DimmerSwitch);
       HELPER_CLASS2(ControlableThermostat);
+      HELPER_CLASS2(ColourBulb);
+      HELPER_CLASS2(DimmableColourBulb);
 
    }  // namespace Testing
 
@@ -212,6 +214,14 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::Tracker();
    CHECK_EQUAL(Profiles::TRACKER, profile->uid());
+   delete profile;
+
+   profile = new Testing::ColourBulb();
+   CHECK_EQUAL(Profiles::COLOUR_BULB, profile->uid());
+   delete profile;
+
+   profile = new Testing::DimmableColourBulb();
+   CHECK_EQUAL(Profiles::DIMMABLE_COLOUR_BULB, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -362,7 +372,6 @@ TEST(Profiles, Profile2_Handle)
 TEST(Profiles, Profile2_Attributes)
 {
    TestProfile profile;
-
    Common::Interface itf(TestInterface::UID, Interface::SERVER_ROLE);
    HF::Attributes::UIDS uids;
 
@@ -590,6 +599,37 @@ TEST(Profiles, InterfaceMapping)
    itf++;
 
    LONGS_EQUAL(HF::Interface::SIMPLE_AIR_PRESSURE, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::COLOUR_BULB
+   itf = Profiles::interfaces(HF::Profiles::COLOUR_BULB, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(2, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::COLOUR_CONTROL, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::DIMMABLE_COLOUR_BULB
+   itf = Profiles::interfaces(HF::Profiles::DIMMABLE_COLOUR_BULB, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(3, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::COLOUR_CONTROL, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::LEVEL_CONTROL, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // =============================================================================

@@ -305,9 +305,6 @@ namespace HF
                return Interfaces::create_attribute(this, uid);
             }
 
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(Alert::Server *,
-                                                                            uint8_t);
-
             // ======================================================================
             // Commands
             // ======================================================================
