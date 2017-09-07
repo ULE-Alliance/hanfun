@@ -1179,6 +1179,7 @@ TEST_GROUP(GroupManagementServer)
                       const Protocol::Address &destination) override
       {
          auto res = GroupManagement::Server<TestEntries>::authorized(member, source, destination);
+
          return mock("GroupManagement::Server").actualCall("authorized")
                    .withParameter("member", member)
                    .withParameter("source", source.device)
@@ -3271,9 +3272,9 @@ TEST(GroupManagementServer, GetInfo_No_Members)
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectOneCall("authorized")
-         .withParameter("member", GET_INFO_CMD)
-         .withParameter("source", packet.source.device)
-         .withParameter("destination", packet.destination.device);
+      .withParameter("member", GET_INFO_CMD)
+      .withParameter("source", packet.source.device)
+      .withParameter("destination", packet.destination.device);
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));
@@ -3330,9 +3331,9 @@ TEST(GroupManagementServer, GetInfo_10_Members)
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectOneCall("authorized")
-         .withParameter("member", GET_INFO_CMD)
-         .withParameter("source", packet.source.device)
-         .withParameter("destination", packet.destination.device);
+      .withParameter("member", GET_INFO_CMD)
+      .withParameter("source", packet.source.device)
+      .withParameter("destination", packet.destination.device);
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK,
                         server->handle(packet, received_payload, 0));
@@ -3359,7 +3360,8 @@ TEST(GroupManagementServer, GetInfo_10_Members)
 TEST(GroupManagementServer, GetInfo_Fail_No_Group)
 {
    InfoMessage received(group_addr);
-   payload = ByteArray (received.size() + 6);
+
+   payload = ByteArray(received.size() + 6);
 
    received.pack(payload, 3);
 
@@ -3370,9 +3372,9 @@ TEST(GroupManagementServer, GetInfo_Fail_No_Group)
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectOneCall("authorized")
-         .withParameter("member", GET_INFO_CMD)
-         .withParameter("source", packet.source.device)
-         .withParameter("destination", packet.destination.device);
+      .withParameter("member", GET_INFO_CMD)
+      .withParameter("source", packet.source.device)
+      .withParameter("destination", packet.destination.device);
 
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG,
                         server->handle(packet, payload, 3));
@@ -3402,7 +3404,7 @@ TEST(GroupManagementServer, GetInfo_Fail_Auth)
    fill_groups();
 
    InfoMessage received(group_addr);
-   payload = ByteArray (received.size() + 6);
+   payload = ByteArray(received.size() + 6);
 
    received.pack(payload, 3);
 
@@ -3413,10 +3415,10 @@ TEST(GroupManagementServer, GetInfo_Fail_Auth)
    mock("AbstractDevice").expectOneCall("send");
    mock("GroupManagement::Server").expectOneCall("get_info");
    mock("GroupManagement::Server").expectOneCall("authorized")
-         .withParameter("member", GET_INFO_CMD)
-         .withParameter("source", packet.source.device)
-         .withParameter("destination", packet.destination.device)
-         .andReturnValue(false);
+      .withParameter("member", GET_INFO_CMD)
+      .withParameter("source", packet.source.device)
+      .withParameter("destination", packet.destination.device)
+      .andReturnValue(false);
 
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_AUTH,
                         server->handle(packet, payload, 3));
