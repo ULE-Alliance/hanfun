@@ -30,6 +30,7 @@
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_light_sensor.h"
+#include "hanfun/interfaces/colour_control.h"
 
 // =============================================================================
 // API
@@ -129,6 +130,9 @@ namespace HF
 
          //! Colour Bulb
          COLOUR_BULB = 0x0115,
+
+         //! Dimmable Colour Bulb
+         DIMMABLE_COLOUR_BULB = 0x0116,
 
          //! Tracker
          TRACKER = 0x0117,
@@ -856,6 +860,51 @@ namespace HF
          ColourControlServer  *colour_control()
          {
             return this->second();
+         }
+      };
+
+      /*!
+       * Dimmable Colour bulb profile implementation.
+       */
+      template<typename OnOffServer = Interfaces::OnOff::Server,
+               typename ColourControlServer = Interfaces::ColourControl::Server,
+               typename LevelControlServer = Interfaces::LevelControl::Server>
+      class DimmableColourBulb:
+            public ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer, LevelControlServer>
+      {
+         using profile_t    = ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer,
+                                       LevelControlServer>;
+
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+               "OnOffServer MUST be of type Interfaces::OnOff::Server !");
+
+         static_assert(std::is_base_of<Interfaces::ColourControl::IServer,
+                                       ColourControlServer>::value,
+               "ColourControlServer MUST be of type Interfaces::ColourControl::IServer !");
+
+         static_assert(std::is_base_of<Interfaces::LevelControl::Server,
+                                       LevelControlServer>::value,
+               "LevelControlServer MUST be of type Interfaces::LevelControl::Server !");
+
+         public:
+
+         virtual ~DimmableColourBulb ()
+         {
+         }
+
+         OnOffServer *on_off ()
+         {
+            return const_cast<OnOffServer *>(profile_t::template get<0>());
+         }
+
+         ColourControlServer *colour_control ()
+         {
+            return const_cast<ColourControlServer *>(profile_t::template get<1>());
+         }
+
+         LevelControlServer *level_control ()
+         {
+            return const_cast<LevelControlServer *>(profile_t::template get<2>());
          }
       };
 
