@@ -82,8 +82,8 @@ void Client::increase_level(Protocol::Address &addr, uint8_t increment)
 
    Protocol::Message message(level_msg.size());
 
-   message.itf.role = SERVER_ROLE;
-   message.itf.id = LevelControl::Client::uid();
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = LevelControl::Client::uid();
    message.itf.member = INCREASE_LEVEL_CMD;
 
    level_msg.pack(message.payload);
@@ -100,7 +100,7 @@ void Client::increase_level(Protocol::Address &addr, uint8_t increment)
 // =============================================================================
 void Client::increase_level(Protocol::Address &addr, float increment)
 {
-   check_and_fix (increment);
+   check_and_fix(increment);
    uint8_t value = HF::Common::from_percent<uint8_t>(increment);
    increase_level(addr, value);
 }
@@ -121,8 +121,8 @@ void Client::decrease_level(Protocol::Address &addr, uint8_t decrement)
 
    Protocol::Message message(level_msg.size());
 
-   message.itf.role = SERVER_ROLE;
-   message.itf.id = LevelControl::Client::uid();
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = LevelControl::Client::uid();
    message.itf.member = DECREASE_LEVEL_CMD;
 
    level_msg.pack(message.payload);
@@ -139,7 +139,7 @@ void Client::decrease_level(Protocol::Address &addr, uint8_t decrement)
 // =============================================================================
 void Client::decrease_level(Protocol::Address &addr, float decrement)
 {
-   check_and_fix (decrement);
+   check_and_fix(decrement);
    uint8_t value = HF::Common::from_percent<uint8_t>(decrement);
    decrease_level(addr, value);
 }

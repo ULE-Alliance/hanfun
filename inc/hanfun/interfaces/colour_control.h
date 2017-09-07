@@ -996,7 +996,7 @@ namespace HF
              * @retval 0   The transition ended.
              * @retval 1   The transition will continue.
              */
-            virtual bool next() = 0; //check if the transition continues...
+            virtual bool next() = 0; // check if the transition continues...
          };
 
 

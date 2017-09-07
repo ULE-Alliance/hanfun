@@ -141,13 +141,9 @@ uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
 // =============================================================================
 void Client::add(const Protocol::Address &addr, const Entry &entry)
 {
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   HF_ASSERT(addr.unit == 0, {return;});
 
-   Protocol::Message message;
-
-   message.payload    = Common::ByteArray(entry.size());
+   Protocol::Message message(entry.size());
 
    entry.pack(message.payload, 0);
 

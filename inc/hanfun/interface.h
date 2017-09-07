@@ -318,6 +318,7 @@ namespace HF
          uint16_t payload_size_helper() const
          {
             _Message message;
+
             return message.size();
          }
 

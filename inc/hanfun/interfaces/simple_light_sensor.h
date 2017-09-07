@@ -173,10 +173,10 @@ namespace HF
              * @param [in] maximum     Maximum measurable lux.
              * @param [in] tolerance   Tolerance.
              */
-            Server(uint32_t minimum   = std::numeric_limits<uint32_t>::min(),
-                   uint32_t maximum   = std::numeric_limits<uint32_t>::max(),
+            Server(uint32_t minimum = std::numeric_limits<uint32_t>::min(),
+                   uint32_t maximum = std::numeric_limits<uint32_t>::max(),
                    uint32_t tolerance = 0):
-               _value(0),_minimum(minimum), _maximum(maximum), _tolerance(tolerance)
+               _value(0), _minimum(minimum), _maximum(maximum), _tolerance(tolerance)
             {}
 
             //! Destructor
@@ -276,7 +276,7 @@ namespace HF
              *
              * @param [in] addr        network address to send the message to.
              */
-            void read_all (Protocol::Address &addr);
+            void read_all(Protocol::Address &addr);
 
             /*!
              * Send a @c GET_ATTR_REQ to the given address to get the current lux readings.
@@ -285,14 +285,14 @@ namespace HF
              * @param  [in] addr        network address to send the message to.
              */
             template<Attributes _Attribute>
-            void read (Protocol::Address &addr)
+            void read(Protocol::Address &addr)
             {
                Protocol::Message message;
 
-               message.itf.role = SERVER_ROLE;
-               message.itf.id = SimpleLightSensor::Client::uid();
+               message.itf.role   = SERVER_ROLE;
+               message.itf.id     = SimpleLightSensor::Client::uid();
                message.itf.member = _Attribute;
-               message.type = Protocol::Message::GET_ATTR_REQ;
+               message.type       = Protocol::Message::GET_ATTR_REQ;
 
                send(addr, message);
             }
@@ -306,8 +306,8 @@ namespace HF
             //! @name Events
             //! @{
 
-            virtual void read_resp (const Protocol::Address &addr,
-                                    const HF::Attributes::Attribute<uint32_t> &attr)
+            virtual void read_resp(const Protocol::Address &addr,
+                                   const HF::Attributes::Attribute<uint32_t> &attr)
             {
                UNUSED(addr);
                UNUSED(attr);
@@ -318,8 +318,8 @@ namespace HF
 
             protected:
 
-            Common::Result handle_attribute (Protocol::Packet &packet, Common::ByteArray &payload,
-                                             uint16_t offset);
+            Common::Result handle_attribute(Protocol::Packet &packet, Common::ByteArray &payload,
+                                            uint16_t offset);
          };
 
          /*! @} */

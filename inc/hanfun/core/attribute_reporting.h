@@ -765,7 +765,7 @@ namespace HF
             {
 
                Reference report;    //!< Identification of the rule to delete.
-               uint32_t interval;   //!< The new interval.
+               uint32_t  interval;  //!< The new interval.
 
                /*!
                 * Constructor.
@@ -775,7 +775,7 @@ namespace HF
                 * @param [in] interval       New report interval.
                 */
                UpdateIntervalMessage(Type report_type, uint8_t ID, uint32_t interval):
-                  report(report_type, ID) , interval(interval)
+                  report(report_type, ID), interval(interval)
                {}
 
                /*!
@@ -786,16 +786,16 @@ namespace HF
 
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = Reference::min_size    // Report ID.
-                                                  + sizeof(interval);      // Periodic interval
+                                                    + sizeof(interval);    // Periodic interval
 
                //! @copydoc HF::Common::Serializable::size
-               uint16_t size () const;
+               uint16_t size() const;
 
                //! @copydoc HF::Common::Serializable::pack
-               uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+               uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
                //! @copydoc HF::Common::Serializable::unpack
-               uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+               uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
             // =============================================================================
@@ -1442,7 +1442,7 @@ namespace HF
              * @param [in] address     device address that originated the event.
              * @param [in] response    result of the operation.
              */
-            virtual void updated (const Protocol::Address &address, const Response &response)
+            virtual void updated(const Protocol::Address &address, const Response &response)
             {
                UNUSED(address);
                UNUSED(response);
@@ -1767,7 +1767,7 @@ namespace HF
              * @retval Common::Result::FAIL_ARG    if the rule cannot be found.
              * @retval Common::Result::OK          if the rule was deleted.
              */
-            virtual Common::Result handle (const Report::UpdateIntervalMessage &message);
+            virtual Common::Result handle(const Report::UpdateIntervalMessage &message);
 
             using HF::Interfaces::AbstractInterface::handle;
 

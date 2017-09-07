@@ -947,13 +947,12 @@ namespace HF
        * Simple Light Sensor profile implementation.
        */
       class SimpleLightSensor: public Profile<SIMPLE_LIGHT_SENSOR,
-            Interfaces::SimpleLightSensor::Server>
+                                              Interfaces::SimpleLightSensor::Server>
       {
          public:
 
-         virtual ~SimpleLightSensor ()
-         {
-         }
+         virtual ~SimpleLightSensor()
+         {}
       };
 
 

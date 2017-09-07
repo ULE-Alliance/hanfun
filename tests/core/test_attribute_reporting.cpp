@@ -2192,8 +2192,8 @@ TEST_GROUP(AttrReport_Report_UpdateIntervalMessage)
       message  = TestMessage();
 
       expected = {0x00, 0x00, 0x00,
-                  (Type::PERIODIC <<7 | 0x5A),                   // Report type + Report identification.
-                  0x12, 0x34, 0x56, 0x78, // New time interval
+                  (Type::PERIODIC << 7 | 0x5A), // Report type + Report identification.
+                  0x12, 0x34, 0x56, 0x78,       // New time interval
                   0x00, 0x00, 0x00};
    }
 };
@@ -2207,6 +2207,7 @@ TEST(AttrReport_Report_UpdateIntervalMessage, Size)
 TEST(AttrReport_Report_UpdateIntervalMessage, Empty)
 {
    ByteArray temp(message.size());
+
    message.pack(temp);
    message.unpack(temp);
 }
@@ -2217,7 +2218,7 @@ TEST(AttrReport_Report_UpdateIntervalMessage, Pack)
    message.report.type = Type::PERIODIC;
    message.report.id   = 0x5A;
 
-   message.interval = 0x12345678;
+   message.interval    = 0x12345678;
 
    ByteArray result(expected.size());
 
@@ -2791,7 +2792,7 @@ TEST_GROUP(AttributeReporting_Client)
          UNUSED(response);
 
          mock("AttributeReporting::Client").actualCall("updated")
-                                           .withParameter("Response", response.code);
+            .withParameter("Response", response.code);
       }
    };
 
@@ -2893,7 +2894,7 @@ TEST(AttributeReporting_Client, Updated)
 
    /*Check if the callback is called and it receives the response code from the message */
    mock("AttributeReporting::Client").expectOneCall("updated")
-         .withParameter("Response", Common::Result::FAIL_UNKNOWN);
+      .withParameter("Response", Common::Result::FAIL_UNKNOWN);
 
    LONGS_EQUAL(Common::Result::OK, client.handle(packet, packet.message.payload, 0));
 
@@ -2995,10 +2996,10 @@ TEST_GROUP(AttributeReporting_Server)
       Periodic::Rule rule(interval);
       Periodic::Entry entry;
 
-      entry.itf.id = 0x5A5A;
+      entry.itf.id   = 0x5A5A;
       entry.itf.role = HF::Interface::SERVER_ROLE;
-      entry.pack_id = HF::Attributes::MANDATORY;
-      entry.unit = 1;
+      entry.pack_id  = HF::Attributes::MANDATORY;
+      entry.unit     = 1;
 
       rule.report.id = ID;
       rule.add(entry);
@@ -3256,7 +3257,7 @@ TEST(AttributeReporting_Server, Handle_Update_Periodic_Report_Interval)
 
    CHECK_TRUE(message == nullptr);
 
-   message = AttributeReporting::update(Reference(Type::PERIODIC, 0x5A),30);
+   message = AttributeReporting::update(Reference(Type::PERIODIC, 0x5A), 30);
 
    CHECK_FALSE(message == nullptr);
 
@@ -3269,7 +3270,7 @@ TEST(AttributeReporting_Server, Handle_Update_Periodic_Report_Interval)
    // Update a rule entry.
    LONGS_EQUAL(Result::OK, server->handle(packet, packet.message.payload, 0));
 
-   LONGS_EQUAL( (uint32_t) 30, server->periodic_rules.begin()->interval );
+   LONGS_EQUAL((uint32_t) 30, server->periodic_rules.begin()->interval);
 
 
    LONGS_EQUAL(1, base->packets.size());
@@ -3302,7 +3303,7 @@ TEST(AttributeReporting_Server, Handle_Update_Periodic_Report_Interval_No_Report
    // Update a rule entry.
    LONGS_EQUAL(Result::OK, server->handle(packet, packet.message.payload, 0));
 
-   LONGS_EQUAL((uint32_t ) 60, server->periodic_rules.begin()->interval);  //The interval is the original
+   LONGS_EQUAL((uint32_t) 60, server->periodic_rules.begin()->interval);   // The interval is the original
 
    LONGS_EQUAL(1, base->packets.size());
    auto resp_pkt = base->packets.back();
@@ -3314,4 +3315,3 @@ TEST(AttributeReporting_Server, Handle_Update_Periodic_Report_Interval_No_Report
    LONGS_EQUAL(AttributeReporting::PERIODIC, resp.report.type);
    LONGS_EQUAL(0x11, resp.report.id);
 }
-

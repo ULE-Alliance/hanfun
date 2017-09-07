@@ -65,6 +65,7 @@ void Client::move_to_hue(const Protocol::Address &addr, uint16_t hue,
 void Client::move_hue(const Protocol::Address &addr, Direction direction, uint16_t rate)
 {
    MoveHueMessage move_msg(direction, rate);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -87,6 +88,7 @@ void Client::step_hue(const Protocol::Address &addr, uint8_t step,
                       Direction direction, uint8_t time)
 {
    StepHueMessage move_msg(step, direction, time);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -109,6 +111,7 @@ void Client::move_to_saturation(const Protocol::Address &addr, uint8_t saturatio
                                 Direction direction, uint16_t transition)
 {
    MoveToSaturationMessage move_msg(saturation, direction, transition);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -130,6 +133,7 @@ void Client::move_to_saturation(const Protocol::Address &addr, uint8_t saturatio
 void Client::move_saturation(const Protocol::Address &addr, Direction direction, uint8_t rate)
 {
    MoveSaturationMessage move_msg(direction, rate);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -152,6 +156,7 @@ void Client::step_saturation(const Protocol::Address &addr, uint8_t step, Direct
                              uint8_t time)
 {
    StepSaturationMessage move_msg(step, direction, time);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -174,6 +179,7 @@ void Client::move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour
                                         Direction direction, uint16_t time)
 {
    MoveToHueSaturationMessage move_msg(colour, direction, time);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -195,6 +201,7 @@ void Client::move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour
 void Client::move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_t time)
 {
    MoveToXYMessage move_msg(colour, time);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -216,6 +223,7 @@ void Client::move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_
 void Client::move_xy(const Protocol::Address &addr, int16_t X_rate, int16_t Y_rate)
 {
    MoveXYMessage move_msg(X_rate, Y_rate);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -237,6 +245,7 @@ void Client::move_xy(const Protocol::Address &addr, int16_t X_rate, int16_t Y_ra
 void Client::step_xy(const Protocol::Address &addr, int16_t X_step, int16_t Y_step, uint8_t time)
 {
    StepXYMessage move_msg(X_step, Y_step, time);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);
@@ -259,6 +268,7 @@ void Client::move_to_colour_temperature(const Protocol::Address &addr,
                                         uint16_t colour, uint16_t time)
 {
    MoveToTemperatureMessage move_msg(colour, time);
+
    Protocol::Message message(move_msg.size());
 
    move_msg.pack(message.payload);

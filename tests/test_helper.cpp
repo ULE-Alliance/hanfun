@@ -145,6 +145,7 @@ void __assert_fail(const char *__assertion, const char *__file, unsigned int __l
 int main(int ac, char **av)
 {
    IAttributeComparator iattr_comparator;
+
    mock().installComparator("IAttribute", iattr_comparator);
    return CommandLineTestRunner::RunAllTests(ac, av);
 }

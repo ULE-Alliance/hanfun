@@ -524,7 +524,7 @@ Common::Result Server::handle(const Report::DeleteMessage &message)
  *
  */
 // =============================================================================
-Common::Result Server::handle (const Report::UpdateIntervalMessage &message)
+Common::Result Server::handle(const Report::UpdateIntervalMessage &message)
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
@@ -536,9 +536,9 @@ Common::Result Server::handle (const Report::UpdateIntervalMessage &message)
          {
             std::for_each(periodic_rules.begin(), periodic_rules.end(),
                           [&message](Periodic::Rule &rule)
-                          {
-                             rule.interval = message.interval;
-                          });
+            {
+               rule.interval = message.interval;
+            });
          }
          else
          {

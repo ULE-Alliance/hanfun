@@ -554,11 +554,11 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
 
    new_transition->end = message.hue;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -587,7 +587,7 @@ Common::Result Server::move_hue(const Protocol::Address &addr, const MoveHueMess
                                                                              10,    // 1 sec.
                                                                              step);
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
    add_transition(new_transition);
 
    return Common::Result::OK;
@@ -629,11 +629,11 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
 
    new_transition->end = hue_and_saturation().hue + step;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -682,11 +682,11 @@ Common::Result Server::move_to_saturation(const Protocol::Address &addr,
 
    new_transition->end = message.saturation;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -716,7 +716,7 @@ Common::Result Server::move_saturation(const Protocol::Address &addr,
                                                                                            10, // 1 sec.
                                                                                            step);
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
    add_transition(new_transition);
 
    return Common::Result::OK;
@@ -759,11 +759,11 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 
    new_transition->end = hue_and_saturation().saturation + step;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -816,11 +816,11 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
 
    new_transition->end = message.colour;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -868,11 +868,11 @@ Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYM
 
    new_transition->end = message.colour;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -899,7 +899,7 @@ Common::Result Server::move_xy(const Protocol::Address &addr, const MoveXYMessag
                                                                            message.X_rate,
                                                                            message.Y_rate);
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
    add_transition(new_transition);
 
    return Common::Result::OK;
@@ -940,11 +940,11 @@ Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessag
    new_transition->end = XY_Colour(xy().X + message.X_step,
                                    xy().Y + message.Y_step);
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -991,11 +991,11 @@ Common::Result Server::move_to_colour_temperature(const Protocol::Address &addr,
 
    new_transition->end = message.colour;
 
-   new_transition->run(0);  //Run once immediately
+   new_transition->run(0);  // Run once immediately
 
    if (new_transition->next())
    {
-      //If there are still iterations, add the transition to the list and inform the APP.
+      // If there are still iterations, add the transition to the list and inform the APP.
       add_transition(new_transition);
    }
    else
@@ -1187,7 +1187,7 @@ bool Hue_Transition::run(uint16_t time)
    {
       server.hue_and_saturation(HS_Colour(end, server.hue_and_saturation().saturation));
 
-      period = 0;   //can be deleted
+      period = 0;   // can be deleted
       return true;
    }
 }
@@ -1236,7 +1236,7 @@ bool Saturation_Transition::run(uint16_t time)
    {
       server.hue_and_saturation(HS_Colour(server.hue_and_saturation().hue, end));
 
-      period = 0;   //can be deleted
+      period = 0;   // can be deleted
       return true;
    }
 }
@@ -1286,7 +1286,7 @@ bool HS_Transition::run(uint16_t time)
    {
       server.hue_and_saturation(end);
 
-      period = 0;   //can be deleted
+      period = 0;   // can be deleted
       return true;
    }
 }
@@ -1317,7 +1317,7 @@ bool XY_Transition::run(uint16_t time)
    {
       server.xy(end);
 
-      period = 0;   //can be deleted
+      period = 0;   // can be deleted
       return true;
    }
 }
@@ -1366,7 +1366,7 @@ bool Temperature_Transition::run(uint16_t time)
    {
       server.colour_temperature(end);
 
-      period = 0;   //can be deleted
+      period = 0;   // can be deleted
       return true;
    }
 }

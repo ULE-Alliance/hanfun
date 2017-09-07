@@ -55,7 +55,9 @@ uint16_t Unit::size() const
    if (!interfaces.empty())
    {
       result += sizeof(uint8_t); // Number of optional units.
+      /* *INDENT-OFF* */
       result += (Common::Interface::min_size * interfaces.size());
+      /* *INDENT-ON* */
    }
 
    return result;

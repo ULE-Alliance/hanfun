@@ -136,11 +136,11 @@ static const Entry factories[] =
    },
    {
       HF::Interface::SIMPLE_LIGHT_SENSOR,
-      HF::Interfaces::SimpleLightSensor::create_attribute, 
+      HF::Interfaces::SimpleLightSensor::create_attribute,
    },
    {
       HF::Interface::COLOUR_CONTROL,
-      HF::Interfaces::ColourControl::create_attribute, 
+      HF::Interfaces::ColourControl::create_attribute,
    },
 };
 

@@ -309,7 +309,7 @@ uint16_t MoveHueMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 
    size      = array.read(offset, rate);
    HF_ASSERT(size != 0, {return 0;});
-   offset += size;
+   offset   += size;
 
    if (rate > RATE_MAX)
    {
@@ -360,7 +360,7 @@ uint16_t StepHueMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset, step_size);
+   size    = array.read(offset, step_size);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -372,7 +372,7 @@ uint16_t StepHueMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 
    size      = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
-   offset += size;
+   offset   += size;
 
    return (offset - start);
 }
@@ -418,7 +418,7 @@ uint16_t MoveToSaturationMessage::unpack(const Common::ByteArray &array, uint16_
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset, saturation);
+   size    = array.read(offset, saturation);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -430,7 +430,7 @@ uint16_t MoveToSaturationMessage::unpack(const Common::ByteArray &array, uint16_
 
    size      = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
-   offset += size;
+   offset   += size;
 
    return (offset - start);
 }
@@ -483,7 +483,7 @@ uint16_t MoveSaturationMessage::unpack(const Common::ByteArray &array, uint16_t 
 
    size      = array.read(offset, rate);
    HF_ASSERT(size != 0, {return 0;});
-   offset += size;
+   offset   += size;
 
    return (offset - start);
 }
@@ -529,7 +529,7 @@ uint16_t StepSaturationMessage::unpack(const Common::ByteArray &array, uint16_t 
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset, step_size);
+   size    = array.read(offset, step_size);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -541,7 +541,7 @@ uint16_t StepSaturationMessage::unpack(const Common::ByteArray &array, uint16_t 
 
    size      = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
-   offset += size;
+   offset   += size;
 
    return (offset - start);
 }
@@ -564,7 +564,7 @@ uint16_t MoveToHueSaturationMessage::pack(Common::ByteArray &array, uint16_t off
    uint16_t start = offset;
    uint16_t size;
 
-   size = colour.pack(array, offset);
+   size    = colour.pack(array, offset);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -588,7 +588,7 @@ uint16_t MoveToHueSaturationMessage::unpack(const Common::ByteArray &array, uint
    uint16_t start = offset;
    uint16_t size;
 
-   size = colour.unpack(array, offset);
+   size    = colour.unpack(array, offset);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -640,7 +640,7 @@ uint16_t MoveToXYMessage::unpack(const Common::ByteArray &array, uint16_t offset
    uint16_t start = offset;
    uint16_t size;
 
-   size = this->colour.unpack(array, offset);
+   size    = this->colour.unpack(array, offset);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -688,7 +688,7 @@ uint16_t MoveXYMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset, X_rate);
+   size    = array.read(offset, X_rate);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -737,7 +737,7 @@ uint16_t StepXYMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset, X_step);
+   size    = array.read(offset, X_step);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -789,7 +789,7 @@ uint16_t MoveToTemperatureMessage::unpack(const Common::ByteArray &array, uint16
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset, colour);
+   size    = array.read(offset, colour);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 

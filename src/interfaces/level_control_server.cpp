@@ -85,7 +85,7 @@ void Server::increase(uint8_t increment)
 
    check_and_fix(new_value);
 
-   if(new_value != level())
+   if (new_value != level())
    {
       level(static_cast<uint8_t>(new_value));
    }
@@ -108,6 +108,7 @@ void Server::decrease(uint8_t decrement)
    new_value = this->_level - decrement;
 
    check_and_fix(new_value);
+
    if (new_value != level())
    {
       level(static_cast<uint8_t>(new_value));
@@ -151,10 +152,10 @@ Common::Result Server::handle_attribute(Protocol::Packet &packet, Common::ByteAr
  *
  */
 // =============================================================================
-Common::Result Server::handle_command (Protocol::Packet &packet, Common::ByteArray &payload,
-                                       uint16_t offset)
+Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                      uint16_t offset)
 {
-   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+   CMD cmd               = static_cast<CMD>(packet.message.itf.member);
 
    Common::Result result = AbstractInterface::check_payload_size(packet.message, payload, offset);
 

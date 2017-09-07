@@ -32,6 +32,7 @@ TEST_GROUP(ColourControlMessages)
 {
    ByteArray expected;
    ByteArray payload;
+
    TEST_SETUP()
    {
       expected = ByteArray();
@@ -2617,7 +2618,7 @@ TEST(ColourControlServer, MoveToHue_Instantly)
 
    MoveToHueMessage received(150, Direction::UP, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
 
@@ -2653,7 +2654,7 @@ TEST(ColourControlServer, MoveToHue_With_Time)
 
    MoveToHueMessage received(150, Direction::UP, 5);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
 
@@ -2692,7 +2693,7 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_UP)
 
    MoveToHueMessage received(150, Direction::UP, 5);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
@@ -2714,7 +2715,7 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_Down)
 
    MoveToHueMessage received(150, Direction::DOWN, 5);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
@@ -2735,7 +2736,7 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_Shortest)
 
    MoveToHueMessage received(150, Direction::SHORTEST, 5);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
@@ -2756,7 +2757,7 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_Longest)
 
    MoveToHueMessage received(150, Direction::LONGEST, 5);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    LONGS_EQUAL(Common::Result::OK, server.handle(packet, payload, 0));
 
@@ -2772,11 +2773,11 @@ TEST(ColourControlServer, MoveToHue_No_Support)
 {
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // No HS Support
 
    MoveToHueMessage received(150, Direction::UP, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_to_hue");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -2798,11 +2799,11 @@ TEST(ColourControlServer, MoveToHue_Step_0)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // No HS Support
 
    MoveToHueMessage received(101, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("move_to_hue");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -2824,11 +2825,11 @@ TEST(ColourControlServer, MoveHue)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveHueMessage received(Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -2860,11 +2861,11 @@ TEST(ColourControlServer, MoveHue_no_support)
 {
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // No HS Support
 
    MoveHueMessage received(Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_hue");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -2885,11 +2886,11 @@ TEST(ColourControlServer, StepHue_Instantly)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    StepHueMessage received(10, Direction::UP, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -2922,11 +2923,11 @@ TEST(ColourControlServer, StepHue)
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE
                     +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    StepHueMessage received(10, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -2958,11 +2959,11 @@ TEST(ColourControlServer, StepHue_no_support)
 {
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // no HS Support
 
    StepHueMessage received(10, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("step_hue");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -2982,11 +2983,11 @@ TEST(ColourControlServer, StepHue_Step_0)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // No HS Support
 
    StepHueMessage received(4, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("step_hue");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3010,11 +3011,11 @@ TEST(ColourControlServer, MoveToSaturation_Instantly)
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE
                     +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToSaturationMessage received(10, Direction::UP, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3047,11 +3048,11 @@ TEST(ColourControlServer, MoveToSaturation_with_time)
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE
                     +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToSaturationMessage received(10, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3088,11 +3089,11 @@ TEST(ColourControlServer, MoveToSaturation_with_time_DIR_DOWN)
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE
                     +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToSaturationMessage received(10, Direction::DOWN, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3127,11 +3128,11 @@ TEST(ColourControlServer, MoveToSaturation_no_suport)
    server.hue_and_saturation(HS_Colour(100, 50));
 
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // no HS Support
 
    MoveToSaturationMessage received(10, Direction::DOWN, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_to_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3152,11 +3153,11 @@ TEST(ColourControlServer, MoveToSaturation_Step_0)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToSaturationMessage received(4, Direction::DOWN, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("move_to_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3178,11 +3179,11 @@ TEST(ColourControlServer, MoveSaturation)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveSaturationMessage received(Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3215,11 +3216,11 @@ TEST(ColourControlServer, MoveSaturation_no_suport)
 {
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //no-HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // no-HS Support
 
    MoveSaturationMessage received(Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3239,11 +3240,11 @@ TEST(ColourControlServer, StepSaturation_Instantly)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    StepSaturationMessage received(10, Direction::UP, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3275,11 +3276,11 @@ TEST(ColourControlServer, StepSaturation)
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE
                     +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    StepSaturationMessage received(10, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3311,11 +3312,11 @@ TEST(ColourControlServer, StepSaturation_no_suport)
 {
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    StepSaturationMessage received(10, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("step_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3335,11 +3336,11 @@ TEST(ColourControlServer, StepSaturation_Step_0)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    StepSaturationMessage received(4, Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("step_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3362,11 +3363,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_Instantly)
 
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToHueSaturationMessage received(HS_Colour(150, 60), Direction::UP, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3398,11 +3399,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_with_time)
 
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToHueSaturationMessage received(HS_Colour(150, 60), Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::HS_MODE, &server);
    HueAndSaturation HS_old(HS_Colour(100, 50), &server);
@@ -3437,11 +3438,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_no_support)
    server.hue_and_saturation(HS_Colour(100, 50));
 
    server.supported(ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // no HS Support
 
    MoveToHueSaturationMessage received(HS_Colour(150, 60), Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_to_hue_and_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3461,11 +3462,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_Step_0)
    server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToHueSaturationMessage received(HS_Colour(103, 54), Direction::UP, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3487,11 +3488,11 @@ TEST(ColourControlServer, MoveToXy_Instantly)
    server.xy(XY_Colour(0x1111, 0x2222));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // XY Support
 
    MoveToXYMessage received(XY_Colour(0x111B, 0x222C), 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(0x1111, 0x2222), &server);
@@ -3523,11 +3524,11 @@ TEST(ColourControlServer, MoveToXy_with_time)
    server.xy(XY_Colour(0x1111, 0x2222));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // XY Support
 
    MoveToXYMessage received(XY_Colour(0x111B, 0x222C), 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(0x1111, 0x2222), &server);
@@ -3563,11 +3564,11 @@ TEST(ColourControlServer, MoveToXy_with_time_decimal_step)
    server.xy(XY_Colour(0x1111, 0x2222));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // XY Support
 
    MoveToXYMessage received(XY_Colour(0x111A, 0x222B), 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(0x1111, 0x2222), &server);
@@ -3604,11 +3605,11 @@ TEST(ColourControlServer, MoveToXy_with_time_decimal_step_0)
    server.mode(HS_MODE);
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // XY Support
 
    MoveToXYMessage received(XY_Colour(0x111A, 0x222B), 30);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("move_to_xy");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3629,11 +3630,11 @@ TEST(ColourControlServer, MoveToXy_no_suport)
 {
    server.xy(XY_Colour(0x1111, 0x2222));
    server.supported(ColourControl::Mask::HS_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //no XY Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // no XY Support
 
    MoveToXYMessage received(XY_Colour(0x111B, 0x222C), 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_to_xy");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3653,7 +3654,7 @@ TEST(ColourControlServer, MoveXy)
    server.xy(XY_Colour(500, 1000));
    MoveXYMessage received(-10, +20);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(500, 1000), &server);
@@ -3687,7 +3688,7 @@ TEST(ColourControlServer, MoveXy_no_suport)
    server.xy(XY_Colour(500, 1000));
    MoveXYMessage received(-10, +20);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_xy");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3709,7 +3710,7 @@ TEST(ColourControlServer, StepXy_Instantly)
    server.xy(XY_Colour(500, 1000));
    StepXYMessage received(-10, +20, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(500, 1000), &server);
@@ -3740,7 +3741,7 @@ TEST(ColourControlServer, StepXy)
    server.xy(XY_Colour(500, 1000));
    StepXYMessage received(-10, +20, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::XY_MODE, &server);
    Xy XY_old(XY_Colour(500, 1000), &server);
@@ -3774,7 +3775,7 @@ TEST(ColourControlServer, StepXy_no_support)
    server.xy(XY_Colour(500, 1000));
    StepXYMessage received(-10, +20, 20);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("step_xy");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3797,11 +3798,11 @@ TEST(ColourControlServer, StepXy_step_0)
    server.mode(HS_MODE);
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // XY Support
 
    StepXYMessage received(-3, +4, 20);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("step_xy");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3823,7 +3824,7 @@ TEST(ColourControlServer, MoveToColourTemperature_Instantly)
    server.colour_temperature(6500);
    MoveToTemperatureMessage received(7000, 0);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::TEMPERATURE_MODE, &server);
    ColourTemperature Temp_old(6500, &server);
@@ -3854,7 +3855,7 @@ TEST(ColourControlServer, MoveToColourTemperature)
    server.colour_temperature(6500);
    MoveToTemperatureMessage received(7000, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    Mode mode_new(Mask::TEMPERATURE_MODE, &server);
    ColourTemperature Temp_old(6500, &server);
@@ -3887,7 +3888,7 @@ TEST(ColourControlServer, MoveToColourTemperature_no_support)
    server.colour_temperature(6500);
    MoveToTemperatureMessage received(7000, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectNoCall("move_to_colour_temperature");
    mock("ColourControl::Server").expectNoCall("changed");
@@ -3909,11 +3910,11 @@ TEST(ColourControlServer, MoveToColourTemperature_Step_0)
    server.colour_temperature(6500);
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
-                    ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
+                    ColourControl::Mask::TEMPERATURE_MODE);    // HS Support
 
    MoveToTemperatureMessage received(6504, 10);
    payload = ByteArray(received.size());
-   received.pack(payload);                         //pack it
+   received.pack(payload);                         // pack it
 
    mock("ColourControl::Server").expectOneCall("move_to_colour_temperature");
    mock("ColourControl::Server").expectNoCall("changed");
