@@ -30,6 +30,7 @@
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_light_sensor.h"
+#include "hanfun/interfaces/colour_control.h"
 
 // =============================================================================
 // API
@@ -126,6 +127,12 @@ namespace HF
 
          //! Environment Monitoring
          ENVIRONMENT_MONITOR = 0x0114,
+
+         //! Colour Bulb
+         COLOUR_BULB = 0x0115,
+
+         //! Dimmable Colour Bulb
+         DIMMABLE_COLOUR_BULB = 0x0116,
 
          //! Tracker
          TRACKER = 0x0117,
@@ -535,7 +542,7 @@ namespace HF
       /*!
        * Simple Level Controllable Switchable profile implementation.
        */
-      template<typename OnOffServer = Interfaces::OnOff::Server,
+      template<typename OnOffServer        = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class SimpleLevelControllableSwitchable:
          public Profile2<SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE, OnOffServer, LevelControlServer>
@@ -565,7 +572,7 @@ namespace HF
       /*!
        * Simple Level Control Switch profile implementation.
        */
-      template<typename OnOffClient = Interfaces::OnOff::Client,
+      template<typename OnOffClient        = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class SimpleLevelControlSwitch:
          public Profile2<SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient>
@@ -604,7 +611,7 @@ namespace HF
       /*!
        * AC Outlet profile implementation.
        */
-      template<typename OnOffServer = Interfaces::OnOff::Server,
+      template<typename OnOffServer            = Interfaces::OnOff::Server,
                typename SimplePowerMeterServer = Interfaces::SimplePowerMeter::Server>
       class AC_OutletWithPowerMetering:
          public Profile2<AC_OUTLET_WITH_POWER_METERING, OnOffServer, SimplePowerMeterServer>
@@ -644,7 +651,7 @@ namespace HF
       /*!
        * Dimmable Light profile implementation.
        */
-      template<typename OnOffServer = Interfaces::OnOff::Server,
+      template<typename OnOffServer        = Interfaces::OnOff::Server,
                typename LevelControlServer = Interfaces::LevelControl::Server>
       class DimmableLight: public Profile2<DIMMABLE_LIGHT, OnOffServer, LevelControlServer>
       {
@@ -673,7 +680,7 @@ namespace HF
       /*!
        * Dimmer Switch profile implementation.
        */
-      template<typename OnOffClient = Interfaces::OnOff::Client,
+      template<typename OnOffClient        = Interfaces::OnOff::Client,
                typename LevelControlClient = Interfaces::LevelControl::Client>
       class DimmerSwitch: public Profile2<DIMMER_SWITCH, OnOffClient, LevelControlClient>
       {
@@ -755,7 +762,7 @@ namespace HF
       /*!
        * Controllable thermostat profile implementation.
        */
-      template<typename OnOffServer = Interfaces::OnOff::Server,
+      template<typename OnOffServer            = Interfaces::OnOff::Server,
                typename SimpleThermostatServer = Interfaces::SimpleThermostat::Server>
       class ControlableThermostat: public Profile2<CONTROLABLE_THERMOSTAT, OnOffServer,
                                                    SimpleThermostatServer>
@@ -824,6 +831,81 @@ namespace HF
          public:
 
          virtual ~EnvironmentMonitor() {}
+      };
+
+      /*!
+       * Colour bulb profile implementation.
+       */
+      template<typename OnOffServer         = Interfaces::OnOff::Server,
+               typename ColourControlServer = Interfaces::ColourControl::Server>
+      class ColourBulb:
+         public Profile2<COLOUR_BULB, OnOffServer, ColourControlServer >
+      {
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+                       "OnOffServer MUST be of type Interfaces::OnOff::Server !");
+
+         static_assert(std::is_base_of<Interfaces::ColourControl::IServer,
+                                       ColourControlServer>::value,
+                       "ColourControlServer MUST be of type Interfaces::ColourControl::IServer !");
+
+         public:
+
+         virtual ~ColourBulb() {}
+
+         OnOffServer *on_off()
+         {
+            return this->first();
+         }
+
+         ColourControlServer  *colour_control()
+         {
+            return this->second();
+         }
+      };
+
+      /*!
+       * Dimmable Colour bulb profile implementation.
+       */
+      template<typename OnOffServer = Interfaces::OnOff::Server,
+               typename ColourControlServer = Interfaces::ColourControl::Server,
+               typename LevelControlServer = Interfaces::LevelControl::Server>
+      class DimmableColourBulb:
+            public ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer, LevelControlServer>
+      {
+         using profile_t    = ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer,
+                                       LevelControlServer>;
+
+         static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
+               "OnOffServer MUST be of type Interfaces::OnOff::Server !");
+
+         static_assert(std::is_base_of<Interfaces::ColourControl::IServer,
+                                       ColourControlServer>::value,
+               "ColourControlServer MUST be of type Interfaces::ColourControl::IServer !");
+
+         static_assert(std::is_base_of<Interfaces::LevelControl::Server,
+                                       LevelControlServer>::value,
+               "LevelControlServer MUST be of type Interfaces::LevelControl::Server !");
+
+         public:
+
+         virtual ~DimmableColourBulb ()
+         {
+         }
+
+         OnOffServer *on_off ()
+         {
+            return const_cast<OnOffServer *>(profile_t::template get<0>());
+         }
+
+         ColourControlServer *colour_control ()
+         {
+            return const_cast<ColourControlServer *>(profile_t::template get<1>());
+         }
+
+         LevelControlServer *level_control ()
+         {
+            return const_cast<LevelControlServer *>(profile_t::template get<2>());
+         }
       };
 
       /*!
@@ -954,7 +1036,6 @@ namespace HF
          virtual ~SimpleLightSensor()
          {}
       };
-
 
       /*!
        * Siren profile implementation.
