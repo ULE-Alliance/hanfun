@@ -541,13 +541,13 @@ void IServer::added(const Protocol::Address &addr, Common::Result result,
       goto _end;
    }
 
-   if (!group->update(request.address, request.unit))
+   if (!group->update(request.device, request.unit))
    {
       result = Common::Result::FAIL_MODIFIED;
       goto _end;
    }
 
-   added(*group, Member(request.address, request.unit));
+   added(*group, Member(request.device, request.unit));
 
    _end:
 

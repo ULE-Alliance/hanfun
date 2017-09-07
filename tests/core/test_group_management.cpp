@@ -1145,7 +1145,11 @@ TEST_GROUP(GroupManagementServer)
 
       void added(const GroupPtr &group, const Member &member) override
       {
-         mock("GroupManagement::Server").actualCall("added");
+         mock("GroupManagement::Server")
+            .actualCall("added")
+            .withParameter("group", group->address)
+            .withParameter("member.device", member.device)
+            .withParameter("member.unit", member.unit);
          GroupManagement::IServer::added(group, member);
       }
 
@@ -2593,7 +2597,10 @@ TEST(GroupManagementServer, Add_Step2)
 
    response_gt.pack(payload, 3);
 
-   mock("GroupManagement::Server").expectOneCall("added");
+   mock("GroupManagement::Server").expectOneCall("added")
+      .withParameter("group", group_addr)
+      .withParameter("member.device", dev_addr)
+      .withParameter("member.unit", dev_unit);
    mock("HF::Transport::Group").expectOneCall("add")
       .withParameter("group", group_addr)
       .withParameter("device", dev_addr)
@@ -2606,6 +2613,11 @@ TEST(GroupManagementServer, Add_Step2)
    mock("GroupManagement::Server").checkExpectations();
    mock("AbstractDevice").checkExpectations();
    mock("HF::Transport::Group").checkExpectations();
+
+   auto group = server->entry(group_addr);
+
+   CHECK_TRUE(group != nullptr);
+   CHECK_TRUE(group->exists(dev_addr, dev_unit));
 
    Protocol::Packet *_packet = base->packets.back();
 
