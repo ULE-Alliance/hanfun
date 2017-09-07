@@ -1709,8 +1709,7 @@ Report::Event::Entry *Report::Event::process(const AttributeReporting::Event::En
 
       // Find if attribute is in pack ID.
       if (std::any_of(expected_uids.begin(), expected_uids.end(),
-                      [actual_uid](uint8_t uid) {return uid == actual_uid;}
-                     ))
+                      [actual_uid](uint8_t uid) {return uid == actual_uid;}))
       {
          const AttributeReporting::Event::Field &field = *entry.fields.begin();
          fields.push_back(process_field(field, old_value, new_value));
@@ -1718,8 +1717,7 @@ Report::Event::Entry *Report::Event::process(const AttributeReporting::Event::En
    }
 
    if (std::any_of(fields.begin(), fields.end(),
-                   [](const Event::Field *field) {return field != nullptr;}
-                  ))
+                   [](const Event::Field *field) {return field != nullptr;}))
    {
       result = new Report::Event::Entry(entry.unit, entry.itf);
 
@@ -1957,7 +1955,7 @@ Protocol::Message *AttributeReporting::add(Reference report,
    });
    /* *INDENT-ON* */
 
-   Protocol::Message * message = new Protocol::Message(add_msg->size());
+   Protocol::Message *message = new Protocol::Message(add_msg->size());
    assert(message != nullptr);
 
    if (message == nullptr)

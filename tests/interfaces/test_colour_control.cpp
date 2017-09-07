@@ -30,7 +30,6 @@ using namespace HF::Interfaces::ColourControl;
 // =============================================================================
 TEST_GROUP(ColourControlMessages)
 {
-
    ByteArray expected;
    ByteArray payload;
    TEST_SETUP()
@@ -51,7 +50,7 @@ TEST_GROUP(ColourControlMessages)
 //! @test HS_Colour helper class basic test.
 TEST(ColourControlMessages, HS_Colour)
 {
-   HS_Colour colour(0,10);
+   HS_Colour colour(0, 10);
 
    expected = ByteArray(3);
 
@@ -62,23 +61,23 @@ TEST(ColourControlMessages, HS_Colour)
 //! @test HS_Colour helper class basic test with wrong array size passed.
 TEST(ColourControlMessages, HS_Colour_wrong_array_size)
 {
-   HS_Colour colour(0,10);
+   HS_Colour colour(0, 10);
 
    expected = ByteArray(2);
 
-   LONGS_EQUAL(0, colour.pack(expected,1));
+   LONGS_EQUAL(0, colour.pack(expected, 1));
    LONGS_EQUAL(0, colour.unpack(expected));
 }
 
 //! @test HS_Colour helper class size test.
 TEST(ColourControlMessages, HS_Colour_size)
 {
-   HS_Colour colour(0x1234,0x56);
+   HS_Colour colour(0x1234, 0x56);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Hue value
-                           0x56           // Saturation value
-                        });
+      0x12, 0x34,                         // Hue value
+      0x56                                // Saturation value
+   });
 
    LONGS_EQUAL(expected.size(), colour.size());
    LONGS_EQUAL(3, colour.size());
@@ -87,12 +86,12 @@ TEST(ColourControlMessages, HS_Colour_size)
 //! @test HS_Colour helper class pack test.
 TEST(ColourControlMessages, HS_Colour_pack)
 {
-   HS_Colour colour(0x0123,0x45);
+   HS_Colour colour(0x0123, 0x45);
 
    expected = ByteArray({
-                           0x01, 0x23,    // Hue value
-                           0x45           // Saturation value
-                        });
+      0x01, 0x23,                         // Hue value
+      0x45                                // Saturation value
+   });
    payload = ByteArray(colour.size());
 
    LONGS_EQUAL(expected.size(), colour.pack(payload));
@@ -105,9 +104,9 @@ TEST(ColourControlMessages, HS_Colour_unpack)
    HS_Colour colour;
 
    payload = ByteArray({
-                        0x01, 0x23,    // Hue value
-                        0x45           // Saturation value
-                        });
+      0x01, 0x23,                      // Hue value
+      0x45                             // Saturation value
+   });
 
    LONGS_EQUAL(payload.size(), colour.unpack(payload));
    LONGS_EQUAL(0x0123, colour.hue);
@@ -124,9 +123,9 @@ TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
    HS_Colour colour(0x0111, 0x22);
 
    payload = ByteArray({
-                           0x01, 0x23     // X value
+      0x01, 0x23                          // X value
                                           // Y value
-                        });
+   });
 
    LONGS_EQUAL(0, colour.unpack(payload));
    LONGS_EQUAL(0x0111, colour.hue);
@@ -138,6 +137,7 @@ TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
  */
 TEST(ColourControlMessages, HS_Colour_Hue_invert_angle)
 {
+   /* *INDENT-OFF* */
    LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(-360));
    LONGS_EQUAL( 45,  HS_Colour::invert_angle<HS_Colour::HUE>(-315));
    LONGS_EQUAL( 90,  HS_Colour::invert_angle<HS_Colour::HUE>(-270));
@@ -146,15 +146,16 @@ TEST(ColourControlMessages, HS_Colour_Hue_invert_angle)
    LONGS_EQUAL( 225, HS_Colour::invert_angle<HS_Colour::HUE>(-135));
    LONGS_EQUAL( 270, HS_Colour::invert_angle<HS_Colour::HUE>(-90));
    LONGS_EQUAL( 315, HS_Colour::invert_angle<HS_Colour::HUE>(-45));
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>( 0));
-   LONGS_EQUAL(-315, HS_Colour::invert_angle<HS_Colour::HUE>( 45));
-   LONGS_EQUAL(-270, HS_Colour::invert_angle<HS_Colour::HUE>( 90));
-   LONGS_EQUAL(-225, HS_Colour::invert_angle<HS_Colour::HUE>( 135));
-   LONGS_EQUAL(-180, HS_Colour::invert_angle<HS_Colour::HUE>( 180));
-   LONGS_EQUAL(-135, HS_Colour::invert_angle<HS_Colour::HUE>( 225));
-   LONGS_EQUAL(-90,  HS_Colour::invert_angle<HS_Colour::HUE>( 270));
-   LONGS_EQUAL(-45,  HS_Colour::invert_angle<HS_Colour::HUE>( 315));
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>( 360));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(0));
+   LONGS_EQUAL(-315, HS_Colour::invert_angle<HS_Colour::HUE>(45));
+   LONGS_EQUAL(-270, HS_Colour::invert_angle<HS_Colour::HUE>(90));
+   LONGS_EQUAL(-225, HS_Colour::invert_angle<HS_Colour::HUE>(135));
+   LONGS_EQUAL(-180, HS_Colour::invert_angle<HS_Colour::HUE>(180));
+   LONGS_EQUAL(-135, HS_Colour::invert_angle<HS_Colour::HUE>(225));
+   LONGS_EQUAL(-90,  HS_Colour::invert_angle<HS_Colour::HUE>(270));
+   LONGS_EQUAL(-45,  HS_Colour::invert_angle<HS_Colour::HUE>(315));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(360));
+   /* *INDENT-ON* */
 }
 
 /*!
@@ -162,58 +163,68 @@ TEST(ColourControlMessages, HS_Colour_Hue_invert_angle)
  */
 TEST(ColourControlMessages, HS_Colour_Sat_invert_angle)
 {
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::SATURATION>(-256));
-   LONGS_EQUAL( 46,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-210));
-   LONGS_EQUAL( 76,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-180));
-   LONGS_EQUAL( 91,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-165));
-   LONGS_EQUAL( 121, HS_Colour::invert_angle<HS_Colour::SATURATION>(-135));
-   LONGS_EQUAL( 136, HS_Colour::invert_angle<HS_Colour::SATURATION>(-120));
-   LONGS_EQUAL( 0, HS_Colour::invert_angle<HS_Colour::SATURATION>( 0));
+   /* *INDENT-OFF* */
+   LONGS_EQUAL(0,   HS_Colour::invert_angle<HS_Colour::SATURATION>(-256));
+   LONGS_EQUAL(46,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-210));
+   LONGS_EQUAL(76,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-180));
+   LONGS_EQUAL(91,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-165));
+   LONGS_EQUAL(121, HS_Colour::invert_angle<HS_Colour::SATURATION>(-135));
+   LONGS_EQUAL(136, HS_Colour::invert_angle<HS_Colour::SATURATION>(-120));
+   LONGS_EQUAL(0,   HS_Colour::invert_angle<HS_Colour::SATURATION>(0));
+   /* *INDENT-ON* */
 }
 
 
 //! @test HS_Colour get hue travel distance function.
 TEST(ColourControlMessages, HS_Colour_Get_Hue_travel_distance)
 {
+   auto get_travel_distance = HS_Colour::get_travel_distance<HS_Colour::HUE>;
+
+   /* *INDENT-OFF* */
    // Both on the same quadrant. Short distance = CW
-   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::UP,        100, 150));
-   LONGS_EQUAL(-310, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::DOWN,      100, 150));
-   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::SHORTEST,  100, 150));
-   LONGS_EQUAL(-310, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::LONGEST,   100, 150));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::UP,       100, 150));
+   LONGS_EQUAL(-310, get_travel_distance(Direction::DOWN,     100, 150));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::SHORTEST, 100, 150));
+   LONGS_EQUAL(-310, get_travel_distance(Direction::LONGEST,  100, 150));
 
    // Different quadrants. Short distance = CW
-   LONGS_EQUAL(30,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::UP,        340, 10));
-   LONGS_EQUAL(-330, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::DOWN,      340, 10));
-   LONGS_EQUAL(30,   HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::SHORTEST,  340, 10));
-   LONGS_EQUAL(-330, HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::LONGEST,   340, 10));
+   LONGS_EQUAL(30,   get_travel_distance(Direction::UP,       340, 10));
+   LONGS_EQUAL(-330, get_travel_distance(Direction::DOWN,     340, 10));
+   LONGS_EQUAL(30,   get_travel_distance(Direction::SHORTEST, 340, 10));
+   LONGS_EQUAL(-330, get_travel_distance(Direction::LONGEST,  340, 10));
 
    // Different quadrants. Short distance = CCW
-   LONGS_EQUAL(330,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::UP,        10, 340));
-   LONGS_EQUAL(-30,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::DOWN,      10, 340));
-   LONGS_EQUAL(-30,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::SHORTEST,  10, 340));
-   LONGS_EQUAL(330,  HS_Colour::get_travel_distance<HS_Colour::HUE>(Direction::LONGEST,   10, 340));
+   LONGS_EQUAL(330,  get_travel_distance(Direction::UP,       10,  340));
+   LONGS_EQUAL(-30,  get_travel_distance(Direction::DOWN,     10,  340));
+   LONGS_EQUAL(-30,  get_travel_distance(Direction::SHORTEST, 10,  340));
+   LONGS_EQUAL(330,  get_travel_distance(Direction::LONGEST,  10,  340));
+   /* *INDENT-ON* */
 }
 
 //! @test HS_Colour get Sat travel distance function.
 TEST(ColourControlMessages, HS_Colour_Get_Sat_travel_distance)
 {
+   auto get_travel_distance = HS_Colour::get_travel_distance<HS_Colour::SATURATION>;
+
+   /* *INDENT-OFF* */
    // Both on the same quadrant. Short distance = CW
-   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::UP,        100, 150));
-   LONGS_EQUAL(-206, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::DOWN,      100, 150));
-   LONGS_EQUAL(50,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::SHORTEST,  100, 150));
-   LONGS_EQUAL(-206, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::LONGEST,   100, 150));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::UP,       100, 150));
+   LONGS_EQUAL(-206, get_travel_distance(Direction::DOWN,     100, 150));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::SHORTEST, 100, 150));
+   LONGS_EQUAL(-206, get_travel_distance(Direction::LONGEST,  100, 150));
 
    // Different quadrants. Short distance = CW
-   LONGS_EQUAL(16,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::UP,        250, 10));
-   LONGS_EQUAL(-240, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::DOWN,      250, 10));
-   LONGS_EQUAL(16,   HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::SHORTEST,  250, 10));
-   LONGS_EQUAL(-240, HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::LONGEST,   250, 10));
+   LONGS_EQUAL(16,   get_travel_distance(Direction::UP,       250, 10));
+   LONGS_EQUAL(-240, get_travel_distance(Direction::DOWN,     250, 10));
+   LONGS_EQUAL(16,   get_travel_distance(Direction::SHORTEST, 250, 10));
+   LONGS_EQUAL(-240, get_travel_distance(Direction::LONGEST,  250, 10));
 
    // Different quadrants. Short distance = CCW
-   LONGS_EQUAL(240,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::UP,        10, 250));
-   LONGS_EQUAL(-16,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::DOWN,      10, 250));
-   LONGS_EQUAL(-16,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::SHORTEST,  10, 250));
-   LONGS_EQUAL(240,  HS_Colour::get_travel_distance<HS_Colour::SATURATION>(Direction::LONGEST,   10, 250));
+   LONGS_EQUAL(240,  get_travel_distance(Direction::UP,       10,  250));
+   LONGS_EQUAL(-16,  get_travel_distance(Direction::DOWN,     10,  250));
+   LONGS_EQUAL(-16,  get_travel_distance(Direction::SHORTEST, 10,  250));
+   LONGS_EQUAL(240,  get_travel_distance(Direction::LONGEST,  10,  250));
+   /* *INDENT-ON* */
 }
 
 // ---- XY colour ----
@@ -221,7 +232,7 @@ TEST(ColourControlMessages, HS_Colour_Get_Sat_travel_distance)
 //! @test XY_Colour helper class basic test.
 TEST(ColourControlMessages, XY_Colour)
 {
-   XY_Colour colour(0,10);
+   XY_Colour colour(0, 10);
 
    expected = ByteArray(4);
 
@@ -232,23 +243,23 @@ TEST(ColourControlMessages, XY_Colour)
 //! @test XY_Colour helper class basic test with wrong array size passed.
 TEST(ColourControlMessages, XY_Colour_wrong_array_size)
 {
-   XY_Colour colour(0,10);
+   XY_Colour colour(0, 10);
 
    expected = ByteArray(2);
 
-   LONGS_EQUAL(0, colour.pack(expected,1));
+   LONGS_EQUAL(0, colour.pack(expected, 1));
    LONGS_EQUAL(0, colour.unpack(expected));
 }
 
 //! @test XY_Colour helper class size test.
 TEST(ColourControlMessages, XY_Colour_size)
 {
-   XY_Colour colour(0x1234,0x5678);
+   XY_Colour colour(0x1234, 0x5678);
 
    expected = ByteArray({
-                           0x12, 0x34,    // X value
-                           0x56, 0x78     // Y value
-                        });
+      0x12, 0x34,                         // X value
+      0x56, 0x78                          // Y value
+   });
 
    LONGS_EQUAL(expected.size(), colour.size());
    LONGS_EQUAL(4, colour.size());
@@ -257,12 +268,12 @@ TEST(ColourControlMessages, XY_Colour_size)
 //! @test XY_Colour helper class pack test.
 TEST(ColourControlMessages, XY_Colour_pack)
 {
-   XY_Colour colour(0x1234,0x5678);
+   XY_Colour colour(0x1234, 0x5678);
 
    expected = ByteArray({
-                           0x12, 0x34,    // X value
-                           0x56, 0x78     // Y value
-                        });
+      0x12, 0x34,                         // X value
+      0x56, 0x78                          // Y value
+   });
    payload = ByteArray(colour.size());
 
    LONGS_EQUAL(expected.size(), colour.pack(payload));
@@ -275,9 +286,9 @@ TEST(ColourControlMessages, XY_Colour_unpack)
    XY_Colour colour;
 
    payload = ByteArray({
-                           0x12, 0x34,    // X value
-                           0x56, 0x78     // Y value
-                        });
+      0x12, 0x34,                         // X value
+      0x56, 0x78                          // Y value
+   });
 
    LONGS_EQUAL(payload.size(), colour.unpack(payload));
    LONGS_EQUAL(0x1234, colour.X);
@@ -294,9 +305,9 @@ TEST(ColourControlMessages, XY_Colour_unpack_incomplete_keep_values)
    XY_Colour colour(0x1234, 0x5678);
 
    payload = ByteArray({
-                           0x12, 0x34,    // X value
-                           0x56           // Y value
-                        });
+      0x12, 0x34,                         // X value
+      0x56                                // Y value
+   });
 
    LONGS_EQUAL(0, colour.unpack(payload));
    LONGS_EQUAL(0x1234, colour.X);
@@ -309,7 +320,7 @@ TEST(ColourControlMessages, XY_Colour_unpack_incomplete_keep_values)
 //! @test MoveToHue message basic test.
 TEST(ColourControlMessages, MoveToHue)
 {
-   MoveToHueMessage message(100,Direction::UP, 0x10);
+   MoveToHueMessage message(100, Direction::UP, 0x10);
 
    expected = ByteArray(message.size());
 
@@ -320,7 +331,7 @@ TEST(ColourControlMessages, MoveToHue)
 //! @test MoveToHue message basic test with wrong array size passed.
 TEST(ColourControlMessages, MoveToHue_wrong_array_size)
 {
-   MoveToHueMessage message(100,Direction::UP, 0x10);
+   MoveToHueMessage message(100, Direction::UP, 0x10);
 
    expected = ByteArray(2);
 
@@ -331,13 +342,13 @@ TEST(ColourControlMessages, MoveToHue_wrong_array_size)
 //! @test MoveToHue message size test.
 TEST(ColourControlMessages, MoveToHue_size)
 {
-   MoveToHueMessage message(100,Direction::UP, 0x10);
+   MoveToHueMessage message(100, Direction::UP, 0x10);
 
    expected = ByteArray({
-                           0x00, 0x64,    // Hue
-                           Direction::UP, // Direction
-                           0x00, 0x10     // Transition time
-                        });
+      0x00, 0x64,                         // Hue
+      Direction::UP,                      // Direction
+      0x00, 0x10                          // Transition time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(5, message.size());
@@ -346,13 +357,13 @@ TEST(ColourControlMessages, MoveToHue_size)
 //! @test MoveToHue message pack test.
 TEST(ColourControlMessages, MoveToHue_pack)
 {
-   MoveToHueMessage message(0x0118,Direction::UP, 0x1234);
+   MoveToHueMessage message(0x0118, Direction::UP, 0x1234);
 
    expected = ByteArray({
-                              0x01, 0x18,    // Hue
-                              Direction::UP, // Direction
-                              0x12, 0x34     // Transition time
-                        });
+      0x01, 0x18,                            // Hue
+      Direction::UP,                         // Direction
+      0x12, 0x34                             // Transition time
+   });
 
    payload = ByteArray(message.size());
 
@@ -368,13 +379,13 @@ TEST(ColourControlMessages, MoveToHue_pack_invalid_value)
 {
    // -- On the constructor --
 
-   MoveToHueMessage message(600,Direction::UP, 0x1234);
+   MoveToHueMessage message(600, Direction::UP, 0x1234);
 
    expected = ByteArray({
-                              0x01, 0x67,    // Hue
-                              Direction::UP, // Direction
-                              0x12, 0x34     // Transition time
-                        });
+      0x01, 0x67,                            // Hue
+      Direction::UP,                         // Direction
+      0x12, 0x34                             // Transition time
+   });
 
    payload = ByteArray(message.size());
 
@@ -385,7 +396,7 @@ TEST(ColourControlMessages, MoveToHue_pack_invalid_value)
 
    message.hue = 600;
 
-   payload = ByteArray(message.size());
+   payload     = ByteArray(message.size());
 
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
@@ -396,10 +407,10 @@ TEST(ColourControlMessages, MoveToHue_unpack)
    MoveToHueMessage message;
 
    payload = ByteArray({
-                                 0x01, 0x18,    // Hue
-                                 Direction::UP, // Direction
-                                 0x12, 0x34     // Transition time
-                        });
+      0x01, 0x18,                               // Hue
+      Direction::UP,                            // Direction
+      0x12, 0x34                                // Transition time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(0x0118, message.hue);
@@ -416,10 +427,10 @@ TEST(ColourControlMessages, MoveToHue_unpack_invalid_value)
    MoveToHueMessage message;
 
    payload = ByteArray({
-                                 0xFF, 0x18,    // Hue
-                                 Direction::UP, // Direction
-                                 0x12, 0x34     // Transition time
-                        });
+      0xFF, 0x18,                               // Hue
+      Direction::UP,                            // Direction
+      0x12, 0x34                                // Transition time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(359, message.hue);
@@ -435,16 +446,16 @@ TEST(ColourControlMessages, MoveToHue_unpack_incomplete)
 {
    MoveToHueMessage message;
 
-      payload = ByteArray({
-                                    0x01, 0x18,    // Hue
-                                    Direction::UP, // Direction
-                                    0x12           // Transition time (incomplete)
-                           });
+   payload = ByteArray({
+      0x01, 0x18,                                  // Hue
+      Direction::UP,                               // Direction
+      0x12                                         // Transition time (incomplete)
+   });
 
-      LONGS_EQUAL(0, message.unpack(payload));
-      LONGS_EQUAL(0, message.hue);
-      CHECK_EQUAL(Direction::SHORTEST, message.direction);
-      LONGS_EQUAL(0, message.time);
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0, message.hue);
+   CHECK_EQUAL(Direction::SHORTEST, message.direction);
+   LONGS_EQUAL(0, message.time);
 }
 
 /*! @test MoveToHue message unpack test.
@@ -454,13 +465,13 @@ TEST(ColourControlMessages, MoveToHue_unpack_incomplete)
  */
 TEST(ColourControlMessages, MoveToHue_unpack_incomplete_keep_values)
 {
-   MoveToHueMessage message(0x0118,Direction::UP, 0x1234);
+   MoveToHueMessage message(0x0118, Direction::UP, 0x1234);
 
    payload = ByteArray({
-                          0x00, 0x22,        // Hue
-                          Direction::DOWN,   // Direction
-                          0x21,              // Transition time (incomplete)
-                        });
+      0x00, 0x22,                            // Hue
+      Direction::DOWN,                       // Direction
+      0x21,                                  // Transition time (incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x0118, message.hue);
@@ -499,9 +510,9 @@ TEST(ColourControlMessages, MoveHue_size)
    MoveHueMessage message(Direction::UP, 0x10);
 
    expected = ByteArray({
-                           Direction::UP, // Direction
-                           0x00, 0x10     // Rate
-                        });
+      Direction::UP,                      // Direction
+      0x00, 0x10                          // Rate
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(3, message.size());
@@ -513,9 +524,9 @@ TEST(ColourControlMessages, MoveHue_pack)
    MoveHueMessage message(Direction::UP, 0x0118);
 
    expected = ByteArray({
-                              Direction::UP, // Direction
-                              0x01, 0x18     // Rate
-                        });
+      Direction::UP,                         // Direction
+      0x01, 0x18                             // Rate
+   });
 
    payload = ByteArray(message.size());
 
@@ -534,9 +545,9 @@ TEST(ColourControlMessages, MoveHue_pack_invalid_value)
    MoveHueMessage message(Direction::UP, 600);
 
    expected = ByteArray({
-                              Direction::UP, // Direction
-                              0x01, 0x67     // Rate (MAX_Value)
-                        });
+      Direction::UP,                         // Direction
+      0x01, 0x67                             // Rate (MAX_Value)
+   });
 
    payload = ByteArray(message.size());
 
@@ -550,7 +561,7 @@ TEST(ColourControlMessages, MoveHue_pack_invalid_value)
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 
    // -- Direct access - Direction --
-   message.rate = 300;
+   message.rate      = 300;
    message.direction = Direction::LONGEST;   // Invalid Value.
 
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
@@ -562,9 +573,9 @@ TEST(ColourControlMessages, MoveHue_unpack)
    MoveHueMessage message;
 
    payload = ByteArray({
-                                 Direction::UP, // Direction
-                                 0x01, 0x18     // Rate
-                        });
+      Direction::UP,                            // Direction
+      0x01, 0x18                                // Rate
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -580,18 +591,18 @@ TEST(ColourControlMessages, MoveHue_unpack_invalid_value)
    MoveHueMessage message;
 
    payload = ByteArray({
-                                 Direction::UP, // Direction
-                                 0xFF, 0x34     // Rate (over max)
-                        });
+      Direction::UP,                            // Direction
+      0xFF, 0x34                                // Rate (over max)
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(359, message.rate);
 
    payload = ByteArray({
-                                 Direction::SHORTEST, // Direction (Invalid Value)
-                                 0x01, 0x18           // Rate
-                        });
+      Direction::SHORTEST,                            // Direction (Invalid Value)
+      0x01, 0x18                                      // Rate
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
@@ -605,9 +616,9 @@ TEST(ColourControlMessages, MoveHue_unpack_incomplete)
    MoveHueMessage message;
 
    payload = ByteArray({
-                           Direction::UP, // Direction
-                           0x01           // Rate (incomplete)
-                        });
+      Direction::UP,                      // Direction
+      0x01                                // Rate (incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -624,9 +635,9 @@ TEST(ColourControlMessages, MoveHue_unpack_incomplete_keep_values)
    MoveHueMessage message(Direction::UP, 0x0118);
 
    payload = ByteArray({
-                          Direction::DOWN,   // Direction
-                          0x01,              // Rate (incomplete)
-                        });
+      Direction::DOWN,                       // Direction
+      0x01,                                  // Rate (incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -663,10 +674,10 @@ TEST(ColourControlMessages, StepHue_size)
    StepHueMessage message(0x5A, Direction::UP, 0xA5);
 
    expected = ByteArray({
-                           0x5A,          // Step size
-                           Direction::UP, // Direction
-                           0xA5           // time
-                        });
+      0x5A,                               // Step size
+      Direction::UP,                      // Direction
+      0xA5                                // time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(3, message.size());
@@ -678,10 +689,10 @@ TEST(ColourControlMessages, StepHue_pack)
    StepHueMessage message(0x5A, Direction::UP, 0xA5);
 
    expected = ByteArray({
-                           0x5A,          // Step size
-                           Direction::UP, // Direction
-                           0xA5           // time
-                        });
+      0x5A,                               // Step size
+      Direction::UP,                      // Direction
+      0xA5                                // time
+   });
 
    payload = ByteArray(message.size());
 
@@ -716,10 +727,10 @@ TEST(ColourControlMessages, StepHue_unpack)
    StepHueMessage message;
 
    payload = ByteArray({
-                           0x5A,          // Step size
-                           Direction::UP, // Direction
-                           0xA5           // time
-                        });
+      0x5A,                               // Step size
+      Direction::UP,                      // Direction
+      0xA5                                // time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(0x5A, message.step_size);
@@ -736,10 +747,10 @@ TEST(ColourControlMessages, StepHue_unpack_invalid_value)
    StepHueMessage message;
 
    payload = ByteArray({
-                           0x5A,                // Step size
-                           Direction::SHORTEST, // Direction (Invalid Value)
-                           0xA5                 // time
-                        });
+      0x5A,                                     // Step size
+      Direction::SHORTEST,                      // Direction (Invalid Value)
+      0xA5                                      // time
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
@@ -753,10 +764,10 @@ TEST(ColourControlMessages, StepHue_unpack_incomplete)
    StepHueMessage message;
 
    payload = ByteArray({
-                           0x5A,                // Step size
-                           Direction::SHORTEST  // Direction (Invalid Value)
+      0x5A,                                     // Step size
+      Direction::SHORTEST                       // Direction (Invalid Value)
                                                 // time (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.step_size);
@@ -774,10 +785,10 @@ TEST(ColourControlMessages, StepHue_unpack_incomplete_keep_values)
    StepHueMessage message(0x5A, Direction::UP, 0xA5);
 
    payload = ByteArray({
-                           0x2A,                // Step size
-                           Direction::DOWN      // Direction (Invalid Value)
+      0x2A,                                     // Step size
+      Direction::DOWN                           // Direction (Invalid Value)
                                                 // time (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x5A, message.step_size);
@@ -815,10 +826,10 @@ TEST(ColourControlMessages, MoveToSaturation_size)
    MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
 
    expected = ByteArray({
-                           0x5A,          // Saturation
-                           Direction::UP, // Direction
-                           0x12, 0x34     // Time
-                        });
+      0x5A,                               // Saturation
+      Direction::UP,                      // Direction
+      0x12, 0x34                          // Time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(4, message.size());
@@ -830,10 +841,10 @@ TEST(ColourControlMessages, MoveToSaturation_pack)
    MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
 
    expected = ByteArray({
-                           0x5A,          // Saturation
-                           Direction::UP, // Direction
-                           0x12, 0x34     // Time
-                        });
+      0x5A,                               // Saturation
+      Direction::UP,                      // Direction
+      0x12, 0x34                          // Time
+   });
 
    payload = ByteArray(message.size());
 
@@ -860,10 +871,10 @@ TEST(ColourControlMessages, MoveToSaturation_unpack)
    MoveToSaturationMessage message;
 
    payload = ByteArray({
-                           0x5A,          // Saturation
-                           Direction::UP, // Direction
-                           0x12, 0x34     // Time
-                        });
+      0x5A,                               // Saturation
+      Direction::UP,                      // Direction
+      0x12, 0x34                          // Time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(0x5A, message.saturation);
@@ -880,10 +891,10 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_invalid_value)
    MoveToSaturationMessage message;
 
    payload = ByteArray({
-                           0x5A,                // Saturation
-                           Direction::SHORTEST, // Direction (Invalid Value)
-                           0x12, 0x34           // Time
-                        });
+      0x5A,                                     // Saturation
+      Direction::SHORTEST,                      // Direction (Invalid Value)
+      0x12, 0x34                                // Time
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
@@ -897,10 +908,10 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete)
    MoveToSaturationMessage message;
 
    payload = ByteArray({
-                           0x5A,                // Saturation
-                           Direction::SHORTEST  // Direction (Invalid Value)
+      0x5A,                                     // Saturation
+      Direction::SHORTEST                       // Direction (Invalid Value)
                                                 // time (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.saturation);
@@ -918,10 +929,10 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete_keep_values)
    MoveToSaturationMessage message(0x5A, Direction::UP, 0x1234);
 
    payload = ByteArray({
-                           0x2A,                // Saturation
-                           Direction::DOWN      // Direction (Invalid Value)
+      0x2A,                                     // Saturation
+      Direction::DOWN                           // Direction (Invalid Value)
                                                 // time (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x5A, message.saturation);
@@ -960,9 +971,9 @@ TEST(ColourControlMessages, MoveSaturation_size)
    MoveSaturationMessage message(Direction::UP, 0x12);
 
    expected = ByteArray({
-                           Direction::UP, // Direction
-                           0x12           // Rate
-                        });
+      Direction::UP,                      // Direction
+      0x12                                // Rate
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(2, message.size());
@@ -974,9 +985,9 @@ TEST(ColourControlMessages, MoveSaturation_pack)
    MoveSaturationMessage message(Direction::UP, 0x12);
 
    expected = ByteArray({
-                           Direction::UP, // Direction
-                           0x12           // Rate
-                        });
+      Direction::UP,                      // Direction
+      0x12                                // Rate
+   });
 
    payload = ByteArray(message.size());
 
@@ -1003,9 +1014,9 @@ TEST(ColourControlMessages, MoveSaturation_unpack)
    MoveSaturationMessage message;
 
    payload = ByteArray({
-                           Direction::UP, // Direction
-                           0x12           // Rate
-                        });
+      Direction::UP,                      // Direction
+      0x12                                // Rate
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -1021,9 +1032,9 @@ TEST(ColourControlMessages, MoveSaturation_unpack_invalid_value)
    MoveSaturationMessage message;
 
    payload = ByteArray({
-                           Direction::SHORTEST, // Direction (Invalid Value)
-                           0x12                 // Rate
-                        });
+      Direction::SHORTEST,                      // Direction (Invalid Value)
+      0x12                                      // Rate
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
@@ -1037,9 +1048,9 @@ TEST(ColourControlMessages, MoveSaturation_unpack_incomplete)
    MoveSaturationMessage message;
 
    payload = ByteArray({
-                           Direction::SHORTEST  // Direction (Invalid Value)
+      Direction::SHORTEST                       // Direction (Invalid Value)
                                                 // Rate (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -1056,9 +1067,9 @@ TEST(ColourControlMessages, MoveSaturation_unpack_incomplete_keep_values)
    MoveSaturationMessage message(Direction::UP, 0x12);
 
    payload = ByteArray({
-                           Direction::DOWN      // Direction (Invalid Value)
+      Direction::DOWN                           // Direction (Invalid Value)
                                                 // time (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -1096,25 +1107,25 @@ TEST(ColourControlMessages, StepSaturation_size)
    StepSaturationMessage message(0x12, Direction::UP, 0x34);
 
    expected = ByteArray({
-                           0x12,          // Step
-                           Direction::UP, // Direction
-                           0x34           // Time
-                        });
+      0x12,                               // Step
+      Direction::UP,                      // Direction
+      0x34                                // Time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(3, message.size());
 }
 
 //! @test StepSaturation message pack test.
-TEST(ColourControlMessages,StepSaturation_pack)
+TEST(ColourControlMessages, StepSaturation_pack)
 {
    StepSaturationMessage message(0x12, Direction::UP, 0x34);
 
    expected = ByteArray({
-                           0x12,          // Step
-                           Direction::UP, // Direction
-                           0x34           // Time
-                        });
+      0x12,                               // Step
+      Direction::UP,                      // Direction
+      0x34                                // Time
+   });
 
    payload = ByteArray(message.size());
 
@@ -1141,9 +1152,9 @@ TEST(ColourControlMessages, StepSaturation_unpack)
    StepSaturationMessage message;
 
    payload = ByteArray({
-                           0x12,          // Step
-                           Direction::UP, // Direction
-                           0x34           // Time
+      0x12,                               // Step
+      Direction::UP,                      // Direction
+      0x34                                // Time
    });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
@@ -1161,10 +1172,10 @@ TEST(ColourControlMessages, StepSaturation_unpack_invalid_value)
    StepSaturationMessage message;
 
    payload = ByteArray({
-                           0x12,                // Step
-                           Direction::SHORTEST, // Direction (invalid)
-                           0x34                 // Time
-                        });
+      0x12,                                     // Step
+      Direction::SHORTEST,                      // Direction (invalid)
+      0x34                                      // Time
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
@@ -1178,10 +1189,10 @@ TEST(ColourControlMessages, StepSaturation_unpack_incomplete)
    StepSaturationMessage message;
 
    payload = ByteArray({
-                           0x12,          // Step
-                           Direction::UP  // Direction
+      0x12,                               // Step
+      Direction::UP                       // Direction
                                           // Time (missing)
-                        });
+   });
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.step_size);
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -1198,10 +1209,10 @@ TEST(ColourControlMessages, StepSaturation_unpack_incomplete_keep_values)
    StepSaturationMessage message(0x12, Direction::UP, 0x34);
 
    payload = ByteArray({
-                           0x21,                // Step
-                           Direction::DOWN      // Direction
+      0x21,                                     // Step
+      Direction::DOWN                           // Direction
                                                 // time (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x12, message.step_size);
@@ -1240,27 +1251,27 @@ TEST(ColourControlMessages, MoveToHueSaturation_size)
    MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    expected = ByteArray({
-                           0x01, 0x23,    // Hue
-                           0x45,          // Saturation
-                           Direction::UP, // Direction
-                           0x67, 0x89     // Time
-                        });
+      0x01, 0x23,                         // Hue
+      0x45,                               // Saturation
+      Direction::UP,                      // Direction
+      0x67, 0x89                          // Time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(6, message.size());
 }
 
 //! @test MoveToHueSaturation message pack test.
-TEST(ColourControlMessages,MoveToHueSaturation_pack)
+TEST(ColourControlMessages, MoveToHueSaturation_pack)
 {
    MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    expected = ByteArray({
-                           0x01, 0x23,    // Hue
-                           0x45,          // Saturation
-                           Direction::UP, // Direction
-                           0x67, 0x89     // Time
-                        });
+      0x01, 0x23,                         // Hue
+      0x45,                               // Saturation
+      Direction::UP,                      // Direction
+      0x67, 0x89                          // Time
+   });
 
    payload = ByteArray(message.size());
 
@@ -1280,11 +1291,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_pack_invalid_value)
    MoveToHueSaturationMessage message(HS_Colour(0xFF23, 0x45), Direction::UP, 0x6789); // Invalid Value (Hue).
 
    expected = ByteArray({
-                           0x01, 0x67,    // Hue
-                           0x45,          // Saturation
-                           Direction::UP, // Direction
-                           0x67, 0x89     // Transition time
-                           });
+      0x01, 0x67,                         // Hue
+      0x45,                               // Saturation
+      Direction::UP,                      // Direction
+      0x67, 0x89                          // Transition time
+   });
 
    payload = ByteArray(message.size());
 
@@ -1295,7 +1306,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_pack_invalid_value)
 
    message.colour.hue = 600;
 
-   payload = ByteArray(message.size());
+   payload            = ByteArray(message.size());
 
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
@@ -1306,11 +1317,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack)
    MoveToHueSaturationMessage message;
 
    payload = ByteArray({
-                        0x01, 0x23,    // Hue
-                        0x45,          // Saturation
-                        Direction::UP, // Direction
-                        0x67, 0x89     // Transition time
-                        });
+      0x01, 0x23,                      // Hue
+      0x45,                            // Saturation
+      Direction::UP,                   // Direction
+      0x67, 0x89                       // Transition time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(0x0123, message.colour.hue);
@@ -1328,11 +1339,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_invalid_value)
    MoveToHueSaturationMessage message;
 
    payload = ByteArray({
-                        0xFF, 0x23,    // Hue
-                        0x45,          // Saturation
-                        Direction::UP, // Direction
-                        0x67, 0x89     // Transition time
-                        });
+      0xFF, 0x23,                      // Hue
+      0x45,                            // Saturation
+      Direction::UP,                   // Direction
+      0x67, 0x89                       // Transition time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(359, message.colour.hue);
@@ -1350,11 +1361,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete)
    MoveToHueSaturationMessage message;
 
    payload = ByteArray({
-                        0x01, 0x23,    // Hue
-                        0x45,          // Saturation
-                        Direction::UP, // Direction
-                        0x67           // Transition time   (Incomplete)
-                        });
+      0x01, 0x23,                      // Hue
+      0x45,                            // Saturation
+      Direction::UP,                   // Direction
+      0x67                             // Transition time   (Incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.colour.hue);
@@ -1373,11 +1384,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete_keep_values)
    MoveToHueSaturationMessage message(HS_Colour(0x0123, 0x45), Direction::UP, 0x6789);
 
    payload = ByteArray({
-                        0x01, 0x00,    // Hue
-                        0xFF,          // Saturation
-                        Direction::UP, // Direction
-                        0x00           // Transition time   (Incomplete)
-                        });
+      0x01, 0x00,                      // Hue
+      0xFF,                            // Saturation
+      Direction::UP,                   // Direction
+      0x00                             // Transition time   (Incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x0123, message.colour.hue);
@@ -1392,7 +1403,7 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete_keep_values)
 //! @test MoveToXY message basic test.
 TEST(ColourControlMessages, MoveToXY)
 {
-   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+   MoveToXYMessage message(XY_Colour(0x1234, 0x5678), 0x9ABC);
 
    expected = ByteArray(message.size());
 
@@ -1403,7 +1414,7 @@ TEST(ColourControlMessages, MoveToXY)
 //! @test MoveToXY message basic test with wrong array size passed.
 TEST(ColourControlMessages, MoveToXY_wrong_array_size)
 {
-   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+   MoveToXYMessage message(XY_Colour(0x1234, 0x5678), 0x9ABC);
 
    expected = ByteArray(1);
 
@@ -1414,28 +1425,28 @@ TEST(ColourControlMessages, MoveToXY_wrong_array_size)
 //! @test MoveToXY message size test.
 TEST(ColourControlMessages, MoveToXY_size)
 {
-   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+   MoveToXYMessage message(XY_Colour(0x1234, 0x5678), 0x9ABC);
 
    expected = ByteArray({
-                           0x12, 0x34,    // X
-                           0x56, 0x78,    // Y
-                           0x9A, 0xBC     // Time
-                        });
+      0x12, 0x34,                         // X
+      0x56, 0x78,                         // Y
+      0x9A, 0xBC                          // Time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(6, message.size());
 }
 
 //! @test MoveToXY message pack test.
-TEST(ColourControlMessages,MoveToXY_pack)
+TEST(ColourControlMessages, MoveToXY_pack)
 {
-   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+   MoveToXYMessage message(XY_Colour(0x1234, 0x5678), 0x9ABC);
 
    expected = ByteArray({
-                           0x12, 0x34,    // X
-                           0x56, 0x78,    // Y
-                           0x9A, 0xBC     // Time
-                        });
+      0x12, 0x34,                         // X
+      0x56, 0x78,                         // Y
+      0x9A, 0xBC                          // Time
+   });
 
    payload = ByteArray(message.size());
 
@@ -1449,10 +1460,10 @@ TEST(ColourControlMessages, MoveToXY_unpack)
    MoveToXYMessage message;
 
    payload = ByteArray({
-                           0x12, 0x34,    // X
-                           0x56, 0x78,    // Y
-                           0x9A, 0xBC     // Time
-                        });
+      0x12, 0x34,                         // X
+      0x56, 0x78,                         // Y
+      0x9A, 0xBC                          // Time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(0x1234, message.colour.X);
@@ -1469,10 +1480,10 @@ TEST(ColourControlMessages, MoveToXY_unpack_incomplete)
    MoveToXYMessage message;
 
    payload = ByteArray({
-                           0x12, 0x34,    // X
-                           0x56, 0x78,    // Y
-                           0x9A           // Time (incomplete)
-                        });
+      0x12, 0x34,                         // X
+      0x56, 0x78,                         // Y
+      0x9A                                // Time (incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.colour.X);
@@ -1487,13 +1498,13 @@ TEST(ColourControlMessages, MoveToXY_unpack_incomplete)
  */
 TEST(ColourControlMessages, MoveToXY_unpack_incomplete_keep_values)
 {
-   MoveToXYMessage message(XY_Colour(0x1234,0x5678), 0x9ABC);
+   MoveToXYMessage message(XY_Colour(0x1234, 0x5678), 0x9ABC);
 
    payload = ByteArray({
-                           0xCB, 0xA9,    // X
-                           0x87, 0x65,    // Y
-                           0x43           // Time (incomplete)
-                        });
+      0xCB, 0xA9,                         // X
+      0x87, 0x65,                         // Y
+      0x43                                // Time (incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x1234, message.colour.X);
@@ -1507,7 +1518,7 @@ TEST(ColourControlMessages, MoveToXY_unpack_incomplete_keep_values)
 //! @test MoveXY message basic test.
 TEST(ColourControlMessages, MoveXY)
 {
-   MoveXYMessage message(0x1234,0x5678);
+   MoveXYMessage message(0x1234, 0x5678);
 
    expected = ByteArray(message.size());
 
@@ -1518,7 +1529,7 @@ TEST(ColourControlMessages, MoveXY)
 //! @test MoveXY message basic test with wrong array size passed.
 TEST(ColourControlMessages, MoveXY_wrong_array_size)
 {
-   MoveXYMessage message(0x1234,0x5678);
+   MoveXYMessage message(0x1234, 0x5678);
 
    expected = ByteArray(1);
 
@@ -1529,12 +1540,12 @@ TEST(ColourControlMessages, MoveXY_wrong_array_size)
 //! @test MoveXY message size test.
 TEST(ColourControlMessages, MoveXY_size)
 {
-   MoveXYMessage message(0x1234,0x5678);
+   MoveXYMessage message(0x1234, 0x5678);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Rate of X
-                           0x56, 0x78     // Rate of Y
-                        });
+      0x12, 0x34,                         // Rate of X
+      0x56, 0x78                          // Rate of Y
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(4, message.size());
@@ -1543,12 +1554,12 @@ TEST(ColourControlMessages, MoveXY_size)
 //! @test MoveXY message pack test.
 TEST(ColourControlMessages, MoveXY_pack)
 {
-   MoveXYMessage message(0x1234,0x5678);
+   MoveXYMessage message(0x1234, 0x5678);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Rate of X
-                           0x56, 0x78     // Rate of Y
-                        });
+      0x12, 0x34,                         // Rate of X
+      0x56, 0x78                          // Rate of Y
+   });
 
    payload = ByteArray(message.size());
 
@@ -1562,9 +1573,9 @@ TEST(ColourControlMessages, MoveXY_unpack)
    MoveXYMessage message;
 
    payload = ByteArray({
-                           0x12, 0x34,    // Rate of X
-                           0x56, 0x78     // Rate of Y
-                        });
+      0x12, 0x34,                         // Rate of X
+      0x56, 0x78                          // Rate of Y
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
    LONGS_EQUAL(0x1234, message.X_rate);
@@ -1580,9 +1591,9 @@ TEST(ColourControlMessages, MoveXY_unpack_incomplete)
    MoveXYMessage message;
 
    payload = ByteArray({
-                           0x12, 0x34,    // Rate of X
-                           0x56,          // Rate of Y (Incomplete)
-                        });
+      0x12, 0x34,                         // Rate of X
+      0x56,                               // Rate of Y (Incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.X_rate);
@@ -1596,12 +1607,12 @@ TEST(ColourControlMessages, MoveXY_unpack_incomplete)
  */
 TEST(ColourControlMessages, MoveXY_unpack_incomplete_keep_values)
 {
-   MoveXYMessage message(0x1234,0x5678);
+   MoveXYMessage message(0x1234, 0x5678);
 
    payload = ByteArray({
-                           0xCB, 0xA9,    // X
-                           0x87,          // Y
-                        });
+      0xCB, 0xA9,                         // X
+      0x87,                               // Y
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0x1234, message.X_rate);
@@ -1614,7 +1625,7 @@ TEST(ColourControlMessages, MoveXY_unpack_incomplete_keep_values)
 //! @test StepXY message basic test.
 TEST(ColourControlMessages, StepXY)
 {
-   StepXYMessage message(0x1234,0x5678, 0x9A);
+   StepXYMessage message(0x1234, 0x5678, 0x9A);
 
    expected = ByteArray(message.size());
 
@@ -1625,7 +1636,7 @@ TEST(ColourControlMessages, StepXY)
 //! @test StepXY message basic test with wrong array size passed.
 TEST(ColourControlMessages, StepXY_wrong_array_size)
 {
-   StepXYMessage message(0x1234,0x5678, 0x9A);
+   StepXYMessage message(0x1234, 0x5678, 0x9A);
 
    expected = ByteArray(1);
 
@@ -1636,13 +1647,13 @@ TEST(ColourControlMessages, StepXY_wrong_array_size)
 //! @test StepXY message size test.
 TEST(ColourControlMessages, StepXY_size)
 {
-   StepXYMessage message(0x1234,0x5678, 0x9A);
+   StepXYMessage message(0x1234, 0x5678, 0x9A);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Step of X
-                           0x56, 0x78,    // Step of Y
-                           0x9A           // Time
-                        });
+      0x12, 0x34,                         // Step of X
+      0x56, 0x78,                         // Step of Y
+      0x9A                                // Time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(5, message.size());
@@ -1651,13 +1662,13 @@ TEST(ColourControlMessages, StepXY_size)
 //! @test StepXY message pack test.
 TEST(ColourControlMessages, StepXY_pack)
 {
-   StepXYMessage message(0x1234,0x5678, 0x9A);
+   StepXYMessage message(0x1234, 0x5678, 0x9A);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Step of X
-                           0x56, 0x78,    // Step of Y
-                           0x9A           // Time
-                        });
+      0x12, 0x34,                         // Step of X
+      0x56, 0x78,                         // Step of Y
+      0x9A                                // Time
+   });
 
    payload = ByteArray(message.size());
 
@@ -1671,15 +1682,15 @@ TEST(ColourControlMessages, StepXY_unpack)
    StepXYMessage message;
 
    payload = ByteArray({
-                        0x12, 0x34,    // Step of X
-                        0x56, 0x78,    // Step of Y
-                        0x9A           // Time
-                        });
+      0x12, 0x34,                      // Step of X
+      0x56, 0x78,                      // Step of Y
+      0x9A                             // Time
+   });
 
    LONGS_EQUAL(payload.size(), message.unpack(payload));
-   LONGS_EQUAL(0x1234,  message.X_step);
-   LONGS_EQUAL(0x5678,  message.Y_step);
-   LONGS_EQUAL(0x9A,    message.time);
+   LONGS_EQUAL(0x1234, message.X_step);
+   LONGS_EQUAL(0x5678, message.Y_step);
+   LONGS_EQUAL(0x9A, message.time);
 }
 
 /*! @test StepXY message unpack test.
@@ -1691,15 +1702,15 @@ TEST(ColourControlMessages, StepXY_unpack_incomplete)
    StepXYMessage message;
 
    payload = ByteArray({
-                        0x12, 0x34,    // Step of X
-                        0x56, 0x78     // Step of Y
+      0x12, 0x34,                      // Step of X
+      0x56, 0x78                       // Step of Y
                                        // Time        (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
-   LONGS_EQUAL(0,  message.X_step);
-   LONGS_EQUAL(0,  message.Y_step);
-   LONGS_EQUAL(0,    message.time);
+   LONGS_EQUAL(0, message.X_step);
+   LONGS_EQUAL(0, message.Y_step);
+   LONGS_EQUAL(0, message.time);
 }
 
 /*! @test StepXY message unpack test.
@@ -1709,18 +1720,18 @@ TEST(ColourControlMessages, StepXY_unpack_incomplete)
  */
 TEST(ColourControlMessages, StepXY_unpack_incomplete_keep_values)
 {
-   StepXYMessage message(0x1234,0x5678, 0x9A);
+   StepXYMessage message(0x1234, 0x5678, 0x9A);
 
    payload = ByteArray({
-                        0x87, 0x65,    // Step of X
-                        0x43, 0x21     // Step of Y
+      0x87, 0x65,                      // Step of X
+      0x43, 0x21                       // Step of Y
                                        // Time        (Missing)
-                        });
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
-   LONGS_EQUAL(0x1234,  message.X_step);
-   LONGS_EQUAL(0x5678,  message.Y_step);
-   LONGS_EQUAL(0x9A,    message.time);
+   LONGS_EQUAL(0x1234, message.X_step);
+   LONGS_EQUAL(0x5678, message.Y_step);
+   LONGS_EQUAL(0x9A, message.time);
 }
 
 
@@ -1754,9 +1765,9 @@ TEST(ColourControlMessages, MoveToTemperature_size)
    MoveToTemperatureMessage message(0x1234, 0x5678);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Colour Temperature
-                           0x56, 0x78,    // Time
-                        });
+      0x12, 0x34,                         // Colour Temperature
+      0x56, 0x78,                         // Time
+   });
 
    LONGS_EQUAL(expected.size(), message.size());
    LONGS_EQUAL(4, message.size());
@@ -1768,9 +1779,9 @@ TEST(ColourControlMessages, MoveToTemperature_pack)
    MoveToTemperatureMessage message(0x1234, 0x5678);
 
    expected = ByteArray({
-                           0x12, 0x34,    // Colour Temperature
-                           0x56, 0x78,    // Time
-                        });
+      0x12, 0x34,                         // Colour Temperature
+      0x56, 0x78,                         // Time
+   });
 
    payload = ByteArray(message.size());
 
@@ -1784,13 +1795,13 @@ TEST(ColourControlMessages, MoveToTemperature_unpack)
    MoveToTemperatureMessage message;
 
    payload = ByteArray({
-                           0x12, 0x34,    // Colour Temperature
-                           0x56, 0x78,    // Time
-                        });
+      0x12, 0x34,                         // Colour Temperature
+      0x56, 0x78,                         // Time
+   });
 
-   LONGS_EQUAL(payload.size(),   message.unpack(payload));
-   LONGS_EQUAL(0x1234,           message.colour);
-   LONGS_EQUAL(0x5678,           message.time);
+   LONGS_EQUAL(payload.size(), message.unpack(payload));
+   LONGS_EQUAL(0x1234, message.colour);
+   LONGS_EQUAL(0x5678, message.time);
 }
 
 /*! @test MoveToTemperature message unpack test.
@@ -1802,9 +1813,9 @@ TEST(ColourControlMessages, MoveToTemperature_unpack_incomplete)
    MoveToTemperatureMessage message;
 
    payload = ByteArray({
-                           0x12, 0x34,    // Colour Temperature
-                           0x56           // Time        (Incomplete)
-                        });
+      0x12, 0x34,                         // Colour Temperature
+      0x56                                // Time        (Incomplete)
+   });
 
    LONGS_EQUAL(0, message.unpack(payload));
    LONGS_EQUAL(0, message.colour);
@@ -1821,13 +1832,13 @@ TEST(ColourControlMessages, MoveToTemperature_unpack_incomplete_keep_values)
    MoveToTemperatureMessage message(0x1234, 0x5678);
 
    payload = ByteArray({
-                           0x65, 0x43,   // Colour Temperature
-                           0x21          // Time        (Incomplete)
-                        });
+      0x65, 0x43,                        // Colour Temperature
+      0x21                               // Time        (Incomplete)
+   });
 
-   LONGS_EQUAL(0,       message.unpack(payload));
-   LONGS_EQUAL(0x1234,  message.colour);
-   LONGS_EQUAL(0x5678,  message.time);
+   LONGS_EQUAL(0, message.unpack(payload));
+   LONGS_EQUAL(0x1234, message.colour);
+   LONGS_EQUAL(0x5678, message.time);
 }
 
 // =============================================================================
@@ -1864,7 +1875,8 @@ TEST(ColourControl, UID)
 //! @test Supported support.
 TEST(ColourControl, Supported)
 {
-   HF::Attributes::IAttribute *attr = ColourControl::create_attribute(ColourControl::SUPPORTED_ATTR);
+   HF::Attributes::IAttribute *attr =
+      ColourControl::create_attribute(ColourControl::SUPPORTED_ATTR);
 
    CHECK_TRUE(attr != nullptr);
 
@@ -1990,9 +2002,9 @@ TEST(ColourControlClient, MoveToHue)
    MoveToHueMessage message;
    message.unpack(client.sendMsg.payload);
 
-   LONGS_EQUAL(100,           message.hue);
+   LONGS_EQUAL(100, message.hue);
    LONGS_EQUAL(Direction::UP, message.direction);
-   LONGS_EQUAL(10,            message.time);
+   LONGS_EQUAL(10, message.time);
 }
 
 //! @test Move Hue support.
@@ -2110,7 +2122,7 @@ TEST(ColourControlClient, MoveToHueAndSaturation)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.move_to_hue_and_saturation(addr, HS_Colour(150,50),Direction::UP, 10);
+   client.move_to_hue_and_saturation(addr, HS_Colour(150, 50), Direction::UP, 10);
 
    mock("Interface").checkExpectations();
 
@@ -2242,77 +2254,77 @@ TEST_GROUP(ColourControlServer)
    struct ColourControlServer: public InterfaceHelper<ColourControl::Server>
    {
       Common::Result move_to_hue(const Protocol::Address &addr,
-                       const MoveToHueMessage &message) override
+                                 const MoveToHueMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_hue");
          return InterfaceHelper<ColourControl::Server>::move_to_hue(addr, message);
       }
 
       Common::Result move_hue(const Protocol::Address &addr,
-                    const MoveHueMessage &message) override
+                              const MoveHueMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_hue");
          return InterfaceHelper<ColourControl::Server>::move_hue(addr, message);
       }
 
       Common::Result step_hue(const Protocol::Address &addr,
-                    const  StepHueMessage &message) override
+                              const StepHueMessage &message) override
       {
          mock("ColourControl::Server").actualCall("step_hue");
          return InterfaceHelper<ColourControl::Server>::step_hue(addr, message);
       }
 
       Common::Result move_to_saturation(const Protocol::Address &addr,
-                              const MoveToSaturationMessage &message) override
+                                        const MoveToSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_saturation");
          return InterfaceHelper<ColourControl::Server>::move_to_saturation(addr, message);
       }
 
       Common::Result move_saturation(const Protocol::Address &addr,
-                           const MoveSaturationMessage &message) override
+                                     const MoveSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_saturation");
          return InterfaceHelper<ColourControl::Server>::move_saturation(addr, message);
       }
 
       Common::Result step_saturation(const Protocol::Address &addr,
-                           const StepSaturationMessage &message) override
+                                     const StepSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("step_saturation");
          return InterfaceHelper<ColourControl::Server>::step_saturation(addr, message);
       }
 
       Common::Result move_to_hue_and_saturation(const Protocol::Address &addr,
-                                      const MoveToHueSaturationMessage &message) override
+                                                const MoveToHueSaturationMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_hue_and_saturation");
          return InterfaceHelper<ColourControl::Server>::move_to_hue_and_saturation(addr, message);
       }
 
       Common::Result move_to_xy(const Protocol::Address &addr,
-                      const MoveToXYMessage &message) override
+                                const MoveToXYMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_xy");
          return InterfaceHelper<ColourControl::Server>::move_to_xy(addr, message);
       }
 
       Common::Result move_xy(const Protocol::Address &addr,
-                   const MoveXYMessage &message) override
+                             const MoveXYMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_xy");
          return InterfaceHelper<ColourControl::Server>::move_xy(addr, message);
       }
 
       Common::Result step_xy(const Protocol::Address &addr,
-                   const StepXYMessage &message) override
+                             const StepXYMessage &message) override
       {
          mock("ColourControl::Server").actualCall("step_xy");
          return InterfaceHelper<ColourControl::Server>::step_xy(addr, message);
       }
 
       Common::Result move_to_colour_temperature(const Protocol::Address &addr,
-                                      const MoveToTemperatureMessage &message) override
+                                                const MoveToTemperatureMessage &message) override
       {
          mock("ColourControl::Server").actualCall("move_to_colour_temperature");
          return InterfaceHelper<ColourControl::Server>::move_to_colour_temperature(addr, message);
@@ -2324,12 +2336,12 @@ TEST_GROUP(ColourControlServer)
          return InterfaceHelper<ColourControl::Server>::stop(addr);
       }
 
-      void notify (const HF::Attributes::IAttribute &old_value,
-                   const HF::Attributes::IAttribute &new_value) const
+      void notify(const HF::Attributes::IAttribute &old_value,
+                  const HF::Attributes::IAttribute &new_value) const
       {
          mock("Interface").actualCall("notify")
-               .withParameterOfType("IAttribute", "old", &old_value)
-               .withParameterOfType("IAttribute", "new", &new_value);
+            .withParameterOfType("IAttribute", "old", &old_value)
+            .withParameterOfType("IAttribute", "new", &new_value);
       }
 
       void changed(void)
@@ -2356,7 +2368,7 @@ TEST_GROUP(ColourControlServer)
 
       void clear_transitions(void)
       {
-         for(ITransition *entry: Server::transitions)
+         for (ITransition *entry: Server::transitions)
          {
             delete entry;
          }
@@ -2379,8 +2391,8 @@ TEST_GROUP(ColourControlServer)
    {
       server                    = ColourControlServer();
 
-      addr = Protocol::Address(42, 0);
-      link = Testing::Link();
+      addr                      = Protocol::Address(42, 0);
+      link                      = Testing::Link();
 
       packet                    = Protocol::Packet();
       packet.source             = addr;
@@ -2388,8 +2400,8 @@ TEST_GROUP(ColourControlServer)
       packet.message.itf.id     = server.uid();
       packet.message.itf.member = 0xFF;
 
-      packet.message.type = Protocol::Message::COMMAND_REQ;
-      packet.link = &link;
+      packet.message.type       = Protocol::Message::COMMAND_REQ;
+      packet.link               = &link;
 
       mock().ignoreOtherCalls();
    }
@@ -2421,14 +2433,14 @@ TEST(ColourControlServer, HueAndSaturation)
 {
    // FIXME Generated Stub.
    CHECK_OPT_ATTRIBUTE(ColourControlServer, HueAndSaturation, false, hue_and_saturation,
-                       HS_Colour(42,42), HS_Colour(142,142));
+                       HS_Colour(42, 42), HS_Colour(142, 142));
 }
 
 //! @test XY support.
 TEST(ColourControlServer, Xy)
 {
    // FIXME Generated Stub.
-   CHECK_OPT_ATTRIBUTE(ColourControlServer, Xy, false, xy, XY_Colour(42,42), XY_Colour(142,142));
+   CHECK_OPT_ATTRIBUTE(ColourControlServer, Xy, false, xy, XY_Colour(42, 42), XY_Colour(142, 142));
 }
 
 //! @test Colour Temperature support.
@@ -2441,7 +2453,7 @@ TEST(ColourControlServer, ColourTemperature)
 //! @test Hue_transition test.
 TEST(ColourControlServer, Hue_Transition)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    Hue_Transition transition(server,
                              1,                    // Period
                              10,                   // Step
@@ -2457,10 +2469,10 @@ TEST(ColourControlServer, Hue_Transition)
 //! @test Hue_transition_Continuous test.
 TEST(ColourControlServer, Hue_Transition_Continuous)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    Hue_Transition_Continuous transition(server,
-                             10,                   // Period
-                             10);                  // Step
+                                        10,        // Period
+                                        10);       // Step
 
    CHECK_FALSE(transition.run(1));              // check if the transition didn't ran
    LONGS_EQUAL(9, transition.remaining_time);
@@ -2473,7 +2485,7 @@ TEST(ColourControlServer, Hue_Transition_Continuous)
 //! @test Saturation_transition test.
 TEST(ColourControlServer, Saturation_Transition)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    Saturation_Transition transition(server,
                                     1,                    // Period
                                     10,                   // Step
@@ -2489,7 +2501,7 @@ TEST(ColourControlServer, Saturation_Transition)
 //! @test Saturation_transition_Continuous test.
 TEST(ColourControlServer, Saturation_Transition_Continuous)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    Saturation_Transition_Continuous transition(server,
                                                10,                   // Period
                                                10);                  // Step
@@ -2505,15 +2517,15 @@ TEST(ColourControlServer, Saturation_Transition_Continuous)
 //! @test HS_transition test.
 TEST(ColourControlServer, HS_Transition)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    HS_Transition transition(server,
                             1,                     // Period
                             10,                    // Hue Step
                             5,                     // Saturation Step
                             1,                     // Number of steps
-                            HS_Colour(121,61));    // Final value
+                            HS_Colour(121, 61));   // Final value
 
-   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_TRUE(transition.run(1));  // check if the transition ran
    CHECK_TRUE(transition.next());  // it should be more transitions...
 
    LONGS_EQUAL(110, server.hue_and_saturation().hue);
@@ -2529,31 +2541,31 @@ TEST(ColourControlServer, HS_Transition)
 //! @test XY_transition test.
 TEST(ColourControlServer, XY_Transition)
 {
-   server.xy(XY_Colour(100,50));
+   server.xy(XY_Colour(100, 50));
    XY_Transition transition(server,
                             1,                     // Period
                             10,                    // X Step
-                            -5,                     // Y Step
+                            -5,                    // Y Step
                             1,                     // Number of steps
-                            XY_Colour(121,41));    // Final value
+                            XY_Colour(121, 41));   // Final value
 
-   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_TRUE(transition.run(1));  // check if the transition ran
    CHECK_TRUE(transition.next());  // it should be more transitions...
 
    LONGS_EQUAL(110, server.xy().X);
-   LONGS_EQUAL(45, server. xy().Y);
+   LONGS_EQUAL(45, server.xy().Y);
 
    CHECK_TRUE(transition.run(1));   // check if the transition ran
    CHECK_FALSE(transition.next());  // it should be no more transitions...
 
    LONGS_EQUAL(121, server.xy().X);
-   LONGS_EQUAL(41, server. xy().Y);
+   LONGS_EQUAL(41, server.xy().Y);
 }
 
 //! @test XY_transition_continuous test.
 TEST(ColourControlServer, XY_Transition_continuous)
 {
-   server.xy(XY_Colour(100,50));
+   server.xy(XY_Colour(100, 50));
    XY_Transition_Continuous transition(server,
                                        20,            // Period
                                        10,            // X Step
@@ -2561,17 +2573,17 @@ TEST(ColourControlServer, XY_Transition_continuous)
 
    CHECK_FALSE(transition.run(19)); // Don't run
 
-   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_TRUE(transition.run(1));  // check if the transition ran
    CHECK_TRUE(transition.next());  // it should be more transitions...
 
    LONGS_EQUAL(110, server.xy().X);
-   LONGS_EQUAL(45, server. xy().Y);
+   LONGS_EQUAL(45, server.xy().Y);
 
-   CHECK_TRUE(transition.run(20));   // check if the transition ran
+   CHECK_TRUE(transition.run(20)); // check if the transition ran
    CHECK_TRUE(transition.next());  // it should be no more transitions...
 
    LONGS_EQUAL(120, server.xy().X);
-   LONGS_EQUAL(40, server. xy().Y);
+   LONGS_EQUAL(40, server.xy().Y);
 }
 
 //! @test ColourTemperature_transition test.
@@ -2584,7 +2596,7 @@ TEST(ColourControlServer, Temperature_Transition)
                                      1,                   // Number of steps
                                      6521);               // Final value
 
-   CHECK_TRUE(transition.run(1));   // check if the transition ran
+   CHECK_TRUE(transition.run(1));  // check if the transition ran
    CHECK_TRUE(transition.next());  // it should be more transitions...
 
    LONGS_EQUAL(6510, server.colour_temperature());
@@ -2598,12 +2610,12 @@ TEST(ColourControlServer, Temperature_Transition)
 //! @test Move To Hue support instantaneously.
 TEST(ColourControlServer, MoveToHue_Instantly)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);
 
-   MoveToHueMessage received(150,Direction::UP,0);
+   MoveToHueMessage received(150, Direction::UP, 0);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2614,11 +2626,11 @@ TEST(ColourControlServer, MoveToHue_Instantly)
 
    mock("ColourControl::Server").expectOneCall("move_to_hue");
    mock("Interface").expectOneCall("notify")
-            .withParameterOfType("IAttribute", "new", &mode_new)
-            .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-            .withParameterOfType("IAttribute", "old", &HS_old)
-            .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
@@ -2634,29 +2646,29 @@ TEST(ColourControlServer, MoveToHue_Instantly)
 //! @test Move To Hue support with time frame.
 TEST(ColourControlServer, MoveToHue_With_Time)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);
 
-   MoveToHueMessage received(150,Direction::UP,5);
+   MoveToHueMessage received(150, Direction::UP, 5);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   Mode mode_new(Mask::HS_MODE,&server);
+   Mode mode_new(Mask::HS_MODE, &server);
 
-   HueAndSaturation HS_old(HS_Colour(100,50),&server);
-   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(110, 50), &server);
 
    mock("ColourControl::Server").expectOneCall("move_to_hue");
    mock("ColourControl::Server").expectOneCall("changed");
 
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
@@ -2671,14 +2683,14 @@ TEST(ColourControlServer, MoveToHue_With_Time)
 //! @test Move To Hue support direction UP.
 TEST(ColourControlServer, MoveToHue_Check_step_DIR_UP)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
-   MoveToHueMessage received(150,Direction::UP,5);
+   MoveToHueMessage received(150, Direction::UP, 5);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2693,14 +2705,14 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_UP)
 //! @test Move To Hue support Direction DOWN.
 TEST(ColourControlServer, MoveToHue_Check_step_DIR_Down)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
-   MoveToHueMessage received(150,Direction::DOWN,5);
+   MoveToHueMessage received(150, Direction::DOWN, 5);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2714,14 +2726,14 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_Down)
 //! @test Move To Hue support Direction SHORTEST.
 TEST(ColourControlServer, MoveToHue_Check_step_DIR_Shortest)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
-   MoveToHueMessage received(150,Direction::SHORTEST,5);
+   MoveToHueMessage received(150, Direction::SHORTEST, 5);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2735,14 +2747,14 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_Shortest)
 //! @test Move To Hue support Direction LONGEST.
 TEST(ColourControlServer, MoveToHue_Check_step_DIR_Longest)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_CMD;
 
-   MoveToHueMessage received(150,Direction::LONGEST,5);
+   MoveToHueMessage received(150, Direction::LONGEST, 5);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2758,11 +2770,11 @@ TEST(ColourControlServer, MoveToHue_Check_step_DIR_Longest)
 //! @test Move To Hue no support.
 TEST(ColourControlServer, MoveToHue_No_Support)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
 
-   MoveToHueMessage received(150,Direction::UP,0);
+   MoveToHueMessage received(150, Direction::UP, 0);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2770,7 +2782,7 @@ TEST(ColourControlServer, MoveToHue_No_Support)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -2783,12 +2795,12 @@ TEST(ColourControlServer, MoveToHue_No_Support)
 //! @test Move To Hue support - Step size == 0.
 TEST(ColourControlServer, MoveToHue_Step_0)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
 
-   MoveToHueMessage received(101,Direction::UP,10);
+   MoveToHueMessage received(101, Direction::UP, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -2809,7 +2821,7 @@ TEST(ColourControlServer, MoveToHue_Step_0)
 //! @test Move Hue support.
 TEST(ColourControlServer, MoveHue)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
@@ -2818,18 +2830,18 @@ TEST(ColourControlServer, MoveHue)
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
-   Mode mode_new(Mask::HS_MODE,&server);
-   HueAndSaturation HS_old(HS_Colour(100,50),&server);
-   HueAndSaturation HS_new(HS_Colour(110,50),&server);
+   Mode mode_new(Mask::HS_MODE, &server);
+   HueAndSaturation HS_old(HS_Colour(100, 50), &server);
+   HueAndSaturation HS_new(HS_Colour(110, 50), &server);
 
    mock("ColourControl::Server").expectOneCall("move_hue");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-            .withParameterOfType("IAttribute", "new", &mode_new)
-            .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-           .withParameterOfType("IAttribute", "old", &HS_old)
-           .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_HUE_CMD;
 
@@ -2846,7 +2858,7 @@ TEST(ColourControlServer, MoveHue)
 //! @test Move Hue no support.
 TEST(ColourControlServer, MoveHue_no_support)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
 
@@ -2858,7 +2870,7 @@ TEST(ColourControlServer, MoveHue_no_support)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
    LONGS_EQUAL(0, server.transitions().size());
@@ -2886,11 +2898,11 @@ TEST(ColourControlServer, StepHue_Instantly)
    mock("ColourControl::Server").expectOneCall("step_hue");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::STEP_HUE_CMD;
 
@@ -2923,11 +2935,11 @@ TEST(ColourControlServer, StepHue)
    mock("ColourControl::Server").expectOneCall("step_hue");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::STEP_HUE_CMD;
 
@@ -2945,7 +2957,7 @@ TEST(ColourControlServer, StepHue)
 TEST(ColourControlServer, StepHue_no_support)
 {
    server.hue_and_saturation(HS_Colour(100, 50));
-   server.supported(ColourControl::Mask::XY_MODE+
+   server.supported(ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
 
    StepHueMessage received(10, Direction::UP, 10);
@@ -2956,7 +2968,7 @@ TEST(ColourControlServer, StepHue_no_support)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -2967,7 +2979,7 @@ TEST(ColourControlServer, StepHue_no_support)
 //! @test Step Hue support - Step size == 0.
 TEST(ColourControlServer, StepHue_Step_0)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //No HS Support
@@ -3011,11 +3023,11 @@ TEST(ColourControlServer, MoveToSaturation_Instantly)
    mock("ColourControl::Server").expectOneCall("move_to_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_SATURATION_CMD;
 
@@ -3048,11 +3060,11 @@ TEST(ColourControlServer, MoveToSaturation_with_time)
    mock("ColourControl::Server").expectOneCall("move_to_saturation");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_SATURATION_CMD;
 
@@ -3089,11 +3101,11 @@ TEST(ColourControlServer, MoveToSaturation_with_time_DIR_DOWN)
    mock("ColourControl::Server").expectOneCall("move_to_saturation");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_SATURATION_CMD;
 
@@ -3125,7 +3137,7 @@ TEST(ColourControlServer, MoveToSaturation_no_suport)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3137,7 +3149,7 @@ TEST(ColourControlServer, MoveToSaturation_no_suport)
 //! @test MoveToSaturation support - Step size == 0.
 TEST(ColourControlServer, MoveToSaturation_Step_0)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
@@ -3179,11 +3191,11 @@ TEST(ColourControlServer, MoveSaturation)
    mock("ColourControl::Server").expectOneCall("move_saturation");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_SATURATION_CMD;
 
@@ -3213,7 +3225,7 @@ TEST(ColourControlServer, MoveSaturation_no_suport)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3240,11 +3252,11 @@ TEST(ColourControlServer, StepSaturation_Instantly)
    mock("ColourControl::Server").expectOneCall("step_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::STEP_SATURATION_CMD;
 
@@ -3276,11 +3288,11 @@ TEST(ColourControlServer, StepSaturation)
    mock("ColourControl::Server").expectOneCall("step_saturation");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::STEP_SATURATION_CMD;
 
@@ -3309,7 +3321,7 @@ TEST(ColourControlServer, StepSaturation_no_suport)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3320,7 +3332,7 @@ TEST(ColourControlServer, StepSaturation_no_suport)
 //! @test MoveToSaturation support - Step size == 0.
 TEST(ColourControlServer, StepSaturation_Step_0)
 {
-   server.hue_and_saturation(HS_Colour(100,50));
+   server.hue_and_saturation(HS_Colour(100, 50));
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
@@ -3352,7 +3364,7 @@ TEST(ColourControlServer, MoveToHueAndSaturation_Instantly)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
 
-   MoveToHueSaturationMessage received(HS_Colour(150,60), Direction::UP, 0);
+   MoveToHueSaturationMessage received(HS_Colour(150, 60), Direction::UP, 0);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3363,11 +3375,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_Instantly)
    mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD;
 
@@ -3388,7 +3400,7 @@ TEST(ColourControlServer, MoveToHueAndSaturation_with_time)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
 
-   MoveToHueSaturationMessage received(HS_Colour(150,60), Direction::UP, 10);
+   MoveToHueSaturationMessage received(HS_Colour(150, 60), Direction::UP, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3399,11 +3411,11 @@ TEST(ColourControlServer, MoveToHueAndSaturation_with_time)
    mock("ColourControl::Server").expectOneCall("move_to_hue_and_saturation");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &HS_old)
-         .withParameterOfType("IAttribute", "new", &HS_new);
+      .withParameterOfType("IAttribute", "old", &HS_old)
+      .withParameterOfType("IAttribute", "new", &HS_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD;
 
@@ -3427,7 +3439,7 @@ TEST(ColourControlServer, MoveToHueAndSaturation_no_support)
    server.supported(ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //no HS Support
 
-   MoveToHueSaturationMessage received(HS_Colour(150,60), Direction::UP, 10);
+   MoveToHueSaturationMessage received(HS_Colour(150, 60), Direction::UP, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3435,7 +3447,7 @@ TEST(ColourControlServer, MoveToHueAndSaturation_no_support)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    LONGS_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3451,7 +3463,7 @@ TEST(ColourControlServer, MoveToHueAndSaturation_Step_0)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
 
-   MoveToHueSaturationMessage received(HS_Colour(103,54), Direction::UP, 10);
+   MoveToHueSaturationMessage received(HS_Colour(103, 54), Direction::UP, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3477,7 +3489,7 @@ TEST(ColourControlServer, MoveToXy_Instantly)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
 
-   MoveToXYMessage received(XY_Colour(0x111B,0x222C), 0);
+   MoveToXYMessage received(XY_Colour(0x111B, 0x222C), 0);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3488,11 +3500,11 @@ TEST(ColourControlServer, MoveToXy_Instantly)
    mock("ColourControl::Server").expectOneCall("move_to_xy");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &XY_old)
-         .withParameterOfType("IAttribute", "new", &XY_new);
+      .withParameterOfType("IAttribute", "old", &XY_old)
+      .withParameterOfType("IAttribute", "new", &XY_new);
 
 
    packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
@@ -3513,7 +3525,7 @@ TEST(ColourControlServer, MoveToXy_with_time)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
 
-   MoveToXYMessage received(XY_Colour(0x111B,0x222C), 10);
+   MoveToXYMessage received(XY_Colour(0x111B, 0x222C), 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3524,11 +3536,11 @@ TEST(ColourControlServer, MoveToXy_with_time)
    mock("ColourControl::Server").expectOneCall("move_to_xy");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &XY_old)
-         .withParameterOfType("IAttribute", "new", &XY_new);
+      .withParameterOfType("IAttribute", "old", &XY_old)
+      .withParameterOfType("IAttribute", "new", &XY_new);
 
 
    packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
@@ -3553,7 +3565,7 @@ TEST(ColourControlServer, MoveToXy_with_time_decimal_step)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
 
-   MoveToXYMessage received(XY_Colour(0x111A,0x222B), 10);
+   MoveToXYMessage received(XY_Colour(0x111A, 0x222B), 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3564,11 +3576,11 @@ TEST(ColourControlServer, MoveToXy_with_time_decimal_step)
    mock("ColourControl::Server").expectOneCall("move_to_xy");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &XY_old)
-         .withParameterOfType("IAttribute", "new", &XY_new);
+      .withParameterOfType("IAttribute", "old", &XY_old)
+      .withParameterOfType("IAttribute", "new", &XY_new);
 
 
    packet.message.itf.member = ColourControl::MOVE_TO_XY_CMD;
@@ -3594,7 +3606,7 @@ TEST(ColourControlServer, MoveToXy_with_time_decimal_step_0)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
 
-   MoveToXYMessage received(XY_Colour(0x111A,0x222B), 30);
+   MoveToXYMessage received(XY_Colour(0x111A, 0x222B), 30);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3619,7 +3631,7 @@ TEST(ColourControlServer, MoveToXy_no_suport)
    server.supported(ColourControl::Mask::HS_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //no XY Support
 
-   MoveToXYMessage received(XY_Colour(0x111B,0x222C), 10);
+   MoveToXYMessage received(XY_Colour(0x111B, 0x222C), 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3627,7 +3639,7 @@ TEST(ColourControlServer, MoveToXy_no_suport)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3650,11 +3662,11 @@ TEST(ColourControlServer, MoveXy)
    mock("ColourControl::Server").expectOneCall("move_xy");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &XY_old)
-         .withParameterOfType("IAttribute", "new", &XY_new);
+      .withParameterOfType("IAttribute", "old", &XY_old)
+      .withParameterOfType("IAttribute", "new", &XY_new);
 
    packet.message.itf.member = ColourControl::MOVE_XY_CMD;
 
@@ -3681,7 +3693,7 @@ TEST(ColourControlServer, MoveXy_no_suport)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3695,7 +3707,7 @@ TEST(ColourControlServer, MoveXy_no_suport)
 TEST(ColourControlServer, StepXy_Instantly)
 {
    server.xy(XY_Colour(500, 1000));
-   StepXYMessage received(-10, +20,0);
+   StepXYMessage received(-10, +20, 0);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3706,11 +3718,11 @@ TEST(ColourControlServer, StepXy_Instantly)
    mock("ColourControl::Server").expectOneCall("step_xy");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &XY_old)
-         .withParameterOfType("IAttribute", "new", &XY_new);
+      .withParameterOfType("IAttribute", "old", &XY_old)
+      .withParameterOfType("IAttribute", "new", &XY_new);
 
    packet.message.itf.member = ColourControl::STEP_XY_CMD;
 
@@ -3726,7 +3738,7 @@ TEST(ColourControlServer, StepXy_Instantly)
 TEST(ColourControlServer, StepXy)
 {
    server.xy(XY_Colour(500, 1000));
-   StepXYMessage received(-10, +20,10);
+   StepXYMessage received(-10, +20, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3737,11 +3749,11 @@ TEST(ColourControlServer, StepXy)
    mock("ColourControl::Server").expectOneCall("step_xy");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &XY_old)
-         .withParameterOfType("IAttribute", "new", &XY_new);
+      .withParameterOfType("IAttribute", "old", &XY_old)
+      .withParameterOfType("IAttribute", "new", &XY_new);
 
    packet.message.itf.member = ColourControl::STEP_XY_CMD;
 
@@ -3760,7 +3772,7 @@ TEST(ColourControlServer, StepXy)
 TEST(ColourControlServer, StepXy_no_support)
 {
    server.xy(XY_Colour(500, 1000));
-   StepXYMessage received(-10, +20,20);
+   StepXYMessage received(-10, +20, 20);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3768,7 +3780,7 @@ TEST(ColourControlServer, StepXy_no_support)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3787,7 +3799,7 @@ TEST(ColourControlServer, StepXy_step_0)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //XY Support
 
-   StepXYMessage received(-3, +4,20);
+   StepXYMessage received(-3, +4, 20);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3809,7 +3821,7 @@ TEST(ColourControlServer, StepXy_step_0)
 TEST(ColourControlServer, MoveToColourTemperature_Instantly)
 {
    server.colour_temperature(6500);
-   MoveToTemperatureMessage received(7000,0);
+   MoveToTemperatureMessage received(7000, 0);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3820,11 +3832,11 @@ TEST(ColourControlServer, MoveToColourTemperature_Instantly)
    mock("ColourControl::Server").expectOneCall("move_to_colour_temperature");
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &Temp_old)
-         .withParameterOfType("IAttribute", "new", &Temp_new);
+      .withParameterOfType("IAttribute", "old", &Temp_old)
+      .withParameterOfType("IAttribute", "new", &Temp_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD;
 
@@ -3840,7 +3852,7 @@ TEST(ColourControlServer, MoveToColourTemperature_Instantly)
 TEST(ColourControlServer, MoveToColourTemperature)
 {
    server.colour_temperature(6500);
-   MoveToTemperatureMessage received(7000,10);
+   MoveToTemperatureMessage received(7000, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3851,11 +3863,11 @@ TEST(ColourControlServer, MoveToColourTemperature)
    mock("ColourControl::Server").expectOneCall("move_to_colour_temperature");
    mock("ColourControl::Server").expectOneCall("changed");
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "new", &mode_new)
-         .ignoreOtherParameters();
+      .withParameterOfType("IAttribute", "new", &mode_new)
+      .ignoreOtherParameters();
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &Temp_old)
-         .withParameterOfType("IAttribute", "new", &Temp_new);
+      .withParameterOfType("IAttribute", "old", &Temp_old)
+      .withParameterOfType("IAttribute", "new", &Temp_new);
 
    packet.message.itf.member = ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD;
 
@@ -3865,7 +3877,7 @@ TEST(ColourControlServer, MoveToColourTemperature)
    mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server.transitions().size());
-   LONGS_EQUAL(1, static_cast< Temperature_Transition *>(server.transitions().at(0))->period);
+   LONGS_EQUAL(1, static_cast<Temperature_Transition *>(server.transitions().at(0))->period);
    LONGS_EQUAL(50, static_cast<Temperature_Transition *>(server.transitions().at(0))->step);
 }
 
@@ -3873,7 +3885,7 @@ TEST(ColourControlServer, MoveToColourTemperature)
 TEST(ColourControlServer, MoveToColourTemperature_no_support)
 {
    server.colour_temperature(6500);
-   MoveToTemperatureMessage received(7000,10);
+   MoveToTemperatureMessage received(7000, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3881,7 +3893,7 @@ TEST(ColourControlServer, MoveToColourTemperature_no_support)
    mock("ColourControl::Server").expectNoCall("changed");
    mock("Interface").expectNoCall("notify");
 
-   packet.message.itf.member = ColourControl::__LAST_CMD__+1;
+   packet.message.itf.member = ColourControl::__LAST_CMD__ + 1;
 
    CHECK_EQUAL(Common::Result::FAIL_SUPPORT, server.handle(packet, payload, 0));
 
@@ -3899,7 +3911,7 @@ TEST(ColourControlServer, MoveToColourTemperature_Step_0)
                     ColourControl::Mask::XY_MODE +
                     ColourControl::Mask::TEMPERATURE_MODE);    //HS Support
 
-   MoveToTemperatureMessage received(6504,10);
+   MoveToTemperatureMessage received(6504, 10);
    payload = ByteArray(received.size());
    received.pack(payload);                         //pack it
 
@@ -3954,7 +3966,7 @@ TEST(ColourControlServer, Stop)
 //! @test Add_Transition support.
 TEST(ColourControlServer, Add_Transition)
 {
-   Hue_Transition_Continuous *test = new Hue_Transition_Continuous(server,10, 5);
+   Hue_Transition_Continuous *test = new Hue_Transition_Continuous(server, 10, 5);
 
    LONGS_EQUAL(0, server.transitions().size());
 
@@ -3969,7 +3981,7 @@ TEST(ColourControlServer, Add_Transition)
 //! @test Remove_Transition support.
 TEST(ColourControlServer, Remove_Transition)
 {
-   Hue_Transition_Continuous *test = new Hue_Transition_Continuous(server,10, 5);
+   Hue_Transition_Continuous *test = new Hue_Transition_Continuous(server, 10, 5);
 
 
    mock("ColourControl::Server").expectOneCall("add_transition");
@@ -3989,31 +4001,31 @@ TEST(ColourControlServer, Transition_delete)
    ColourControlServer server1;
    ColourControlServer server2;
 
-   server1.hue_and_saturation(HS_Colour(100,50));
-   server2.hue_and_saturation(HS_Colour(100,50));
+   server1.hue_and_saturation(HS_Colour(100, 50));
+   server2.hue_and_saturation(HS_Colour(100, 50));
 
-   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server1,1, 5);
-   Hue_Transition            *test2 = new Hue_Transition(server2, 1, 5, 2, 111);
+   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server1, 1, 5);
+   Hue_Transition *test2            = new Hue_Transition(server2, 1, 5, 2, 111);
 
    server1.add_transition(test1);
    server2.add_transition(test2);
 
    LONGS_EQUAL(2, server.transitions().size());
 
-   for(uint8_t i =0; i<10; ++i)
+   for (uint8_t i = 0; i < 10; ++i)
    {
       std::string loc = std::to_string(i);
       loc = "For i=" + loc;
 
       server.transition();
 
-      if(i<2)
+      if (i < 2)
       {
-         LONGS_EQUAL_TEXT(2, server.transitions().size(),loc.c_str());
+         LONGS_EQUAL_TEXT(2, server.transitions().size(), loc.c_str());
       }
       else
       {
-         LONGS_EQUAL_TEXT(1, server.transitions().size(),loc.c_str());
+         LONGS_EQUAL_TEXT(1, server.transitions().size(), loc.c_str());
       }
    }
 
@@ -4031,11 +4043,11 @@ TEST(ColourControlServer, Transition_order)
    ColourControlServer server1;
    ColourControlServer server2;
 
-   server1.hue_and_saturation(HS_Colour(100,50));
-   server2.hue_and_saturation(HS_Colour(100,50));
+   server1.hue_and_saturation(HS_Colour(100, 50));
+   server2.hue_and_saturation(HS_Colour(100, 50));
 
-   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server1,2, 5);
-   Hue_Transition_Continuous *test2 = new Hue_Transition_Continuous(server2,3, 5);
+   Hue_Transition_Continuous *test1 = new Hue_Transition_Continuous(server1, 2, 5);
+   Hue_Transition_Continuous *test2 = new Hue_Transition_Continuous(server2, 3, 5);
 
    server1.add_transition(test1);
    server2.add_transition(test2);

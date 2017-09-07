@@ -1008,7 +1008,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::ColourContr
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::ColourControl::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Interfaces::ColourControl::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');

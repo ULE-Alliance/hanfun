@@ -1102,7 +1102,7 @@ namespace HF
          };
 
       } // namespace SetAttributePack
-        /*! @} */
+      /*! @} */
 
    }  // namespace Protocol
 

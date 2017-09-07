@@ -119,8 +119,7 @@ TEST(DeviceManagement, Unit_No_Optional_Itf)
                        0x03,        // Unit entry size.
                        0x42,        // Unit ID.
                        0x5A, 0xA5,  // Unit UID.
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
    ByteArray array(size + 6);
 
    uint16_t wsize = wunit.pack(array, 3);
@@ -485,8 +484,7 @@ TEST(DeviceManagement, DeregisterMessage)
 
    ByteArray expected({0x00, 0x00, 0x00,
                        0x42, 0x43,  // Device Address.
-                       0x00, 0x00, 0x00}
-                     );
+                       0x00, 0x00, 0x00});
    ByteArray array(size + 6);
 
    uint16_t wsize = message.pack(array, 3);
@@ -676,8 +674,7 @@ TEST(DeviceManagementClient, RegisterResponse_OK)
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::OK,  // Response Code.
                       0x42, 0x43,  // Device Address.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
@@ -696,8 +693,7 @@ TEST(DeviceManagementClient, RegisterResponse_FAIL)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::FAIL_RESOURCES,  // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = DeviceManagement::REGISTER_CMD;
@@ -746,8 +742,7 @@ TEST(DeviceManagementClient, DeregisterResponse_OK)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::OK,  // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;
@@ -766,8 +761,7 @@ TEST(DeviceManagementClient, DeregisterResponse_FAIL)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::FAIL_AUTH,  // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = DeviceManagement::DEREGISTER_CMD;

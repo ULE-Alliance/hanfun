@@ -71,7 +71,7 @@ namespace HF
             MOVE_TO_XY_CMD                 = 0x08, //!< Move To Xy command UID.
             MOVE_XY_CMD                    = 0x09, //!< Move Xy command UID.
             STEP_XY_CMD                    = 0x0a, //!< Step Xy command UID.
-            MOVE_TO_COLOUR_TEMPERATURE_CMD  = 0x0b, //!< Move To Colour Temperature command UID.
+            MOVE_TO_COLOUR_TEMPERATURE_CMD = 0x0b, //!< Move To Colour Temperature command UID.
             STOP_CMD                       = 0x0c, //!< Stop command UID.
             __LAST_CMD__                   = STOP_CMD
          } CMD;
@@ -83,18 +83,18 @@ namespace HF
             MODE_ATTR               = 0x02,  //!< Mode attribute UID.
             HUE_AND_SATURATION_ATTR = 0x03,  //!< Hue And Saturation attribute UID.
             XY_ATTR                 = 0x04,  //!< XY attribute UID.
-            COLOUR_TEMPERATURE_ATTR  = 0x05, //!< Colour Temperature attribute UID.
+            COLOUR_TEMPERATURE_ATTR = 0x05,  //!< Colour Temperature attribute UID.
             __LAST_ATTR__           = COLOUR_TEMPERATURE_ATTR
          } Attributes;
 
          //! Mask elements for Colour Modes.
          typedef enum _Mask : uint8_t
          {
-            HS_MODE           = 0x01,              //!< Hue and Saturation mode.
-            XY_MODE           = 0x02,              //!< XY mode. CIE 1931 standard.
-            TEMPERATURE_MODE  = 0x04,              //!< Colour temperature mode.
-            __LAST_MODE__     = TEMPERATURE_MODE
-         }Mask;
+            HS_MODE          = 0x01,               //!< Hue and Saturation mode.
+            XY_MODE          = 0x02,               //!< XY mode. CIE 1931 standard.
+            TEMPERATURE_MODE = 0x04,               //!< Colour temperature mode.
+            __LAST_MODE__    = TEMPERATURE_MODE
+         } Mask;
 
          //! Direction of movement
          typedef enum _Direction : uint8_t
@@ -104,7 +104,7 @@ namespace HF
             SHORTEST          = 0x03,
             LONGEST           = 0x04,
             __LAST_DIRECTION_ = LONGEST
-         }Direction;
+         } Direction;
 
          /*!
           * Helper class that supports the Hue and Saturation colour mode.
@@ -115,9 +115,9 @@ namespace HF
          struct HS_Colour
          {
             uint16_t hue;
-            uint8_t saturation;
+            uint8_t  saturation;
 
-            HS_Colour () = default;
+            HS_Colour() = default;
 
             /*!
              * Constructor
@@ -125,13 +125,13 @@ namespace HF
              * @param [in] hue            hue colour value.
              * @param [in] saturation     saturation colour value.
              */
-            HS_Colour (uint16_t hue, uint8_t saturation) :
-                  saturation(saturation)
+            HS_Colour(uint16_t hue, uint8_t saturation):
+               saturation(saturation)
             {
-               this->hue = hue<=HUE_MAX ? hue : HUE_MAX;
+               this->hue = hue <= HUE_MAX ? hue : HUE_MAX;
             }
 
-            static constexpr int HUE = 360;
+            static constexpr int HUE        = 360;
             static constexpr int SATURATION = 0x100;
 
 
@@ -148,14 +148,16 @@ namespace HF
              * @param [in] angle    the angle to invert.
              * @return              the inverted angle.
              */
-            template<int max_value  = HUE>
-            static int32_t invert_angle (const int32_t angle)
+            template<int max_value = HUE>
+            static int32_t invert_angle(const int32_t angle)
             {
-               int32_t temp = (max_value - std::abs(angle))%max_value;
+               int32_t temp = (max_value - std::abs(angle)) % max_value;
+
                if (angle >= 0)
                {
                   temp *= -1;
                }
+
                return temp;
             }
 
@@ -171,20 +173,21 @@ namespace HF
              *
              * @return                    the angle between the final and initial value.
              */
-            template<int max_value  = HUE>
+            template<int max_value = HUE>
             static int32_t get_travel_distance(const Direction dir,
-                                                   const uint16_t initial_hue,
-                                                   uint16_t final_hue)
+                                               const uint16_t initial_hue,
+                                               uint16_t final_hue)
             {
                int32_t dist, result;
 
-               if (final_hue<initial_hue)
+               if (final_hue < initial_hue)
                {
                   final_hue += max_value;
                }
 
-               dist = (final_hue-initial_hue)%max_value;
-               switch(dir)
+               dist = (final_hue - initial_hue) % max_value;
+
+               switch (dir)
                {
                   case Direction::UP:
                   {
@@ -198,15 +201,16 @@ namespace HF
                   }
                   case Direction::SHORTEST:
                   {
-                     result = dist <= max_value/2 ? dist: invert_angle<max_value>(dist);
+                     result = dist <= max_value / 2 ? dist : invert_angle<max_value>(dist);
                      break;
                   }
                   case Direction::LONGEST:
-                     {
-                     result = dist > max_value/2 ? dist: invert_angle<max_value>(dist);
+                  {
+                     result = dist > max_value / 2 ? dist : invert_angle<max_value>(dist);
                      break;
                   }
                }
+
                return result;
             }
 
@@ -218,19 +222,19 @@ namespace HF
                                                  + sizeof(saturation);  // saturation
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
             //! @copydoc HF::Attributes::IAttribute::compare
-            int compare (const HS_Colour &other) const
+            int compare(const HS_Colour &other) const
             {
                if (this->hue != other.hue)
                {
@@ -250,7 +254,7 @@ namespace HF
             }
 
             //! @copydoc HF::Attributes::IAttribute::changed
-            float changed (const HS_Colour &other) const
+            float changed(const HS_Colour &other) const
             {
                if (this->hue != other.hue)
                {
@@ -270,13 +274,13 @@ namespace HF
             }
 
             //! Operator equal
-            bool operator== (const HS_Colour &other) const
+            bool operator==(const HS_Colour &other) const
             {
                return (hue == other.hue && saturation == other.saturation);
             }
 
             //! Operator not equal
-            bool operator!= (const HS_Colour &other) const
+            bool operator!=(const HS_Colour &other) const
             {
                return !operator==(other);
             }
@@ -301,31 +305,31 @@ namespace HF
              * @param [in] X     X colour value.
              * @param [in] Y     Y colour value.
              */
-            XY_Colour(uint16_t X, uint16_t Y): X(X),Y(Y)
+            XY_Colour(uint16_t X, uint16_t Y): X(X), Y(Y)
             {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(X)  // X
-                                               + sizeof(Y); // Y
+            static constexpr uint16_t min_size = sizeof(X)    // X
+                                                 + sizeof(Y); // Y
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
             //! @copydoc HF::Attributes::IAttribute::compare
-            int compare (const XY_Colour &other) const
+            int compare(const XY_Colour &other) const
             {
-               if( this->X != other.X)
+               if (this->X != other.X)
                {
-                  return (this->X-other.X);
+                  return (this->X - other.X);
                }
                else
                {
@@ -341,17 +345,17 @@ namespace HF
             }
 
             //! @copydoc HF::Attributes::IAttribute::changed
-            float changed (const XY_Colour &other) const
+            float changed(const XY_Colour &other) const
             {
                if (this->X != other.X)
                {
-                  return ( 100*(this->X - other.X)/static_cast<float>(this->X));
+                  return (100 * (this->X - other.X) / static_cast<float>(this->X));
                }
                else
                {
                   if (this->Y != other.Y)
                   {
-                     return ( 100*(this->Y - other.Y)/static_cast<float>(this->Y));
+                     return (100 * (this->Y - other.Y) / static_cast<float>(this->Y));
                   }
                   else
                   {
@@ -361,13 +365,13 @@ namespace HF
             }
 
             //! Operator equal.
-            bool operator== (const XY_Colour &other) const
+            bool operator==(const XY_Colour &other) const
             {
                return (X == other.X && Y == other.Y);
             }
 
             //! Operator not equal.
-            bool operator!= (const XY_Colour &other) const
+            bool operator!=(const XY_Colour &other) const
             {
                return !operator==(other);
             }
@@ -389,13 +393,13 @@ namespace HF
             {
                return
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
-               Mask::HS_MODE +
+                  Mask::HS_MODE +
 #endif
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
-               Mask::XY_MODE +
+                  Mask::XY_MODE +
 #endif
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
-               Mask::TEMPERATURE_MODE
+                  Mask::TEMPERATURE_MODE
 #endif
                ;
             }
@@ -426,7 +430,7 @@ namespace HF
             static constexpr uint8_t ID       = HUE_AND_SATURATION_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = false;                   //!< Attribute Read/Write
 
-            HueAndSaturation(HS_Colour value = HS_Colour(0,0), HF::Interface *owner = nullptr):
+            HueAndSaturation(HS_Colour value = HS_Colour(0, 0), HF::Interface *owner = nullptr):
                Attribute<HS_Colour>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
             {}
          };
@@ -439,7 +443,7 @@ namespace HF
             static constexpr uint8_t ID       = XY_ATTR; //!< Attribute UID.
             static constexpr bool    WRITABLE = false;   //!< Attribute Read/Write
 
-            Xy(XY_Colour value = XY_Colour(0,0), HF::Interface *owner = nullptr):
+            Xy(XY_Colour value = XY_Colour(0, 0), HF::Interface *owner = nullptr):
                Attribute<XY_Colour>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
             {}
          };
@@ -450,7 +454,7 @@ namespace HF
          struct ColourTemperature: public HF::Attributes::Attribute<uint16_t>
          {
             static constexpr uint8_t ID       = COLOUR_TEMPERATURE_ATTR; //!< Attribute UID.
-            static constexpr bool    WRITABLE = false;                  //!< Attribute Read/Write
+            static constexpr bool    WRITABLE = false;                   //!< Attribute Read/Write
 
             ColourTemperature(uint16_t value = 0, HF::Interface *owner = nullptr):
                Attribute<uint16_t>(HF::Interface::COLOUR_CONTROL, ID, owner, value, WRITABLE)
@@ -480,9 +484,9 @@ namespace HF
           */
          struct MoveToHueMessage
          {
-            uint16_t hue;           //!< The value of the new Hue.
-            Direction direction;    //!< Direction of movement.
-            uint16_t time;          //!< Time of transition in units of 100msec.
+            uint16_t                  hue;       //!< The value of the new Hue.
+            Direction                 direction; //!< Direction of movement.
+            uint16_t                  time;      //!< Time of transition in units of 100msec.
 
             static constexpr uint16_t HUE_MAX = 359;                    // Max Hue Value
 
@@ -493,31 +497,31 @@ namespace HF
              * @param [in] dir      Direction of movement
              * @param [in] time     Time for the movement
              */
-            MoveToHueMessage (uint16_t hue = 0,
-                              Direction direction = Direction::SHORTEST,
-                              uint16_t time = 0):
-                     direction(direction), time(time)
+            MoveToHueMessage(uint16_t hue = 0,
+                             Direction direction = Direction::SHORTEST,
+                             uint16_t time = 0):
+               direction(direction), time(time)
             {
-               this->hue = hue<=HUE_MAX ? hue : HUE_MAX;
+               this->hue = hue <= HUE_MAX ? hue : HUE_MAX;
             }
 
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(hue)            // Hue
-                                               + sizeof(uint8_t)        // Direction
-                                               + sizeof(time);          // time
+                                                 + sizeof(uint8_t)      // Direction
+                                                 + sizeof(time);        // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -527,11 +531,11 @@ namespace HF
           */
          struct MoveHueMessage
          {
-            Direction direction;    //!< @c Direction of movement.
-            uint16_t rate;          //!< Time of transition in units of 100msec.
+            Direction                 direction; //!< @c Direction of movement.
+            uint16_t                  rate;      //!< Time of transition in units of 100msec.
 
-            static constexpr uint16_t RATE_MAX = 359;
-            static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
+            static constexpr uint16_t RATE_MAX      = 359;
+            static constexpr uint8_t  DIRECTION_MAX = Direction::DOWN;
 
             /*!
              * Constructor
@@ -539,27 +543,27 @@ namespace HF
              * @param [in] dir      @c Direction of movement
              * @param [in] time     Time for the movement
              */
-            MoveHueMessage (Direction dir = Direction::UP, uint16_t rate = 0) :
-                  direction(dir), rate(rate)
+            MoveHueMessage(Direction dir = Direction::UP, uint16_t rate = 0):
+               direction(dir), rate(rate)
             {
-               this->rate = rate<=RATE_MAX ? rate : RATE_MAX;
+               this->rate = rate <= RATE_MAX ? rate : RATE_MAX;
             }
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t)     // Direction
-                                               + sizeof(rate);       // Rate
+                                                 + sizeof(rate);     // Rate
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -569,9 +573,9 @@ namespace HF
           */
          struct StepHueMessage
          {
-            uint8_t step_size;      //!< Step size in degrees.
-            Direction direction;    //!< @c Direction of movement.
-            uint8_t time;          //!< Time of a single step transition in units of 100msec.
+            uint8_t                  step_size; //!< Step size in degrees.
+            Direction                direction; //!< @c Direction of movement.
+            uint8_t                  time;      //!< Time of a single step transition in units of 100msec.
 
             static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
@@ -582,27 +586,26 @@ namespace HF
              * @param [in] dir         @c Direction of movement.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            StepHueMessage (uint8_t step_size = 0, Direction dir = Direction::UP, uint8_t time = 0) :
-                  step_size(step_size), direction(dir), time(time)
-            {
-            }
+            StepHueMessage(uint8_t step_size = 0, Direction dir = Direction::UP, uint8_t time = 0):
+               step_size(step_size), direction(dir), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(step_size)     // Step size
-                                               + sizeof(uint8_t)     // Direction
-                                               + sizeof(time);   // time
+            static constexpr uint16_t min_size = sizeof(step_size) // Step size
+                                                 + sizeof(uint8_t) // Direction
+                                                 + sizeof(time);   // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -612,9 +615,9 @@ namespace HF
           */
          struct MoveToSaturationMessage
          {
-            uint8_t saturation;      //!< The value of new saturation.
-            Direction direction;    //!< @c Direction of movement.
-            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+            uint8_t                  saturation; //!< The value of new saturation.
+            Direction                direction;  //!< @c Direction of movement.
+            uint16_t                 time;       //!< Time of a single step transition in units of 100msec.
 
             static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
@@ -625,29 +628,28 @@ namespace HF
              * @param [in] dir         @c Direction of movement.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            MoveToSaturationMessage (uint8_t saturation = 0,
-                                     Direction dir = Direction::UP,
-                                     uint16_t time = 0) :
-                  saturation(saturation), direction(dir), time(time)
-            {
-            }
+            MoveToSaturationMessage(uint8_t saturation = 0,
+                                    Direction dir = Direction::UP,
+                                    uint16_t time = 0):
+               saturation(saturation), direction(dir), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(saturation)      // Step size
+            static constexpr uint16_t min_size = sizeof(saturation)     // Step size
                                                  + sizeof(uint8_t)      // Direction
                                                  + sizeof(time);        // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -657,8 +659,8 @@ namespace HF
           */
          struct MoveSaturationMessage
          {
-            Direction direction;    //!< @c Direction of movement.
-            uint8_t rate;          //!< Time of transition in units of 100msec.
+            Direction                direction; //!< @c Direction of movement.
+            uint8_t                  rate;      //!< Time of transition in units of 100msec.
 
             static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
@@ -668,26 +670,25 @@ namespace HF
              * @param [in] dir      @c Direction of movement
              * @param [in] time     Time for the movement
              */
-            MoveSaturationMessage (Direction dir = Direction::UP, uint8_t rate = 0) :
-                  direction(dir), rate(rate)
-            {
-            }
+            MoveSaturationMessage(Direction dir = Direction::UP, uint8_t rate = 0):
+               direction(dir), rate(rate)
+            {}
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t)     // Direction
-                                                 + sizeof(rate);       // Rate
+                                                 + sizeof(rate);     // Rate
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -697,9 +698,9 @@ namespace HF
           */
          struct StepSaturationMessage
          {
-            uint8_t step_size;      //!< Step size in degrees.
-            Direction direction;    //!< @c Direction of movement.
-            uint8_t time;          //!< Time of a single step transition in units of 100msec.
+            uint8_t                  step_size; //!< Step size in degrees.
+            Direction                direction; //!< @c Direction of movement.
+            uint8_t                  time;      //!< Time of a single step transition in units of 100msec.
 
             static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
@@ -710,29 +711,28 @@ namespace HF
              * @param [in] dir         @c Direction of movement.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            StepSaturationMessage (uint8_t step_size = 0,
-                                   Direction dir = Direction::UP,
-                                   uint8_t time = 0) :
-                  step_size(step_size), direction(dir), time(time)
-            {
-            }
+            StepSaturationMessage(uint8_t step_size = 0,
+                                  Direction dir = Direction::UP,
+                                  uint8_t time = 0):
+               step_size(step_size), direction(dir), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(step_size)     // Step size
-                                                 + sizeof(uint8_t)     // Direction
+            static constexpr uint16_t min_size = sizeof(step_size) // Step size
+                                                 + sizeof(uint8_t) // Direction
                                                  + sizeof(time);   // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -742,9 +742,9 @@ namespace HF
           */
          struct MoveToHueSaturationMessage
          {
-            HS_Colour colour;       //!< New Hue and Saturation Colour.
-            Direction direction;    //!< @c Direction of movement.
-            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+            HS_Colour                 colour;    //!< New Hue and Saturation Colour.
+            Direction                 direction; //!< @c Direction of movement.
+            uint16_t                  time;      //!< Time of a single step transition in units of 100msec.
 
             static constexpr uint16_t HUE_MAX = 359;
 
@@ -756,28 +756,28 @@ namespace HF
              * @param [in] dir         @c Direction of movement.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            MoveToHueSaturationMessage (HS_Colour colour = HS_Colour(0,0),
-                                     Direction dir = Direction::UP,
-                                     uint16_t time = 0) :
-                  colour(colour), direction(dir), time(time)
+            MoveToHueSaturationMessage(HS_Colour colour = HS_Colour(0, 0),
+                                       Direction dir = Direction::UP,
+                                       uint16_t time = 0):
+               colour(colour), direction(dir), time(time)
             {}
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = HS_Colour::min_size    // HS colour
-                                               + sizeof(uint8_t)        // Direction
-                                               + sizeof(time);          // time
+                                                 + sizeof(uint8_t)      // Direction
+                                                 + sizeof(time);        // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -788,7 +788,7 @@ namespace HF
          struct MoveToXYMessage
          {
             XY_Colour colour;
-            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+            uint16_t  time;         //!< Time of a single step transition in units of 100msec.
 
             /*!
              * Constructor
@@ -796,27 +796,26 @@ namespace HF
              * @param [in] colour       The colour value.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            MoveToXYMessage (XY_Colour colour = XY_Colour(0,0), uint16_t time = 0) :
-                  colour(colour), time(time)
-            {
-            }
+            MoveToXYMessage(XY_Colour colour = XY_Colour(0, 0), uint16_t time = 0):
+               colour(colour), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(XY_Colour::X)    // X
-                                               + sizeof(XY_Colour::Y)    // Y
-                                               + sizeof(time);          // time
+            static constexpr uint16_t min_size = sizeof(XY_Colour::X)   // X
+                                                 + sizeof(XY_Colour::Y) // Y
+                                                 + sizeof(time);        // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -835,26 +834,25 @@ namespace HF
              * @param [in] X_rate       The rate of change in units per seconds
              * @param [in] Y_step       The rate of change in units per seconds
              */
-            MoveXYMessage (int16_t X_rate = 0, int16_t Y_rate = 0) :
+            MoveXYMessage(int16_t X_rate = 0, int16_t Y_rate = 0):
                X_rate(X_rate), Y_rate(Y_rate)
-            {
-            }
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(X_rate)  // X_rate
-                                               + sizeof(Y_rate); // Y_rate
+            static constexpr uint16_t min_size = sizeof(X_rate)    // X_rate
+                                                 + sizeof(Y_rate); // Y_rate
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -875,27 +873,26 @@ namespace HF
              * @param [in] Y_step       The rate of change in units per seconds
              * @param [in] time         Time of a single step transition in units of 100msec.
              */
-            StepXYMessage (int16_t X_step = 0, int16_t Y_step = 0, uint8_t time = 0) :
-                  X_step(X_step), Y_step(Y_step), time(time)
-            {
-            }
+            StepXYMessage(int16_t X_step = 0, int16_t Y_step = 0, uint8_t time = 0):
+               X_step(X_step), Y_step(Y_step), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(X_step)  // X_step
-                                               + sizeof(Y_step)  // Y_step
-                                               + sizeof(time);   // Time
+            static constexpr uint16_t min_size = sizeof(X_step)   // X_step
+                                                 + sizeof(Y_step) // Y_step
+                                                 + sizeof(time);  // Time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -914,26 +911,25 @@ namespace HF
              * @param [in] colour       The colour value.
              * @param [in] time        Time of a single step transition in units of 100msec.
              */
-            MoveToTemperatureMessage (uint16_t colour = 0, uint16_t time = 0) :
-                  colour(colour), time(time)
-            {
-            }
+            MoveToTemperatureMessage(uint16_t colour = 0, uint16_t time = 0):
+               colour(colour), time(time)
+            {}
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(colour)   // temperature
-                                               + sizeof(time);   // time
+            static constexpr uint16_t min_size = sizeof(colour)  // temperature
+                                                 + sizeof(time); // time
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const
+            uint16_t size() const
             {
                return min_size;
             }
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          /*!
@@ -952,9 +948,9 @@ namespace HF
          //! Interface for the Transitions
          struct ITransition
          {
-            IServer &server;           //!< The server instance
+            IServer  &server;          //!< The server instance
 
-            uint16_t period;             //!< Time period for the transition (in 100 msec units).
+            uint16_t period;           //!< Time period for the transition (in 100 msec units).
             uint16_t remaining_time;   //!< Remaining time until the transition is ran.
 
 
@@ -965,7 +961,7 @@ namespace HF
              * @param [in] period      The Transition period
              */
             ITransition(IServer &_server, uint16_t period):
-               server (_server), period(period), remaining_time(period)
+               server(_server), period(period), remaining_time(period)
             {}
 
             virtual ~ITransition()
@@ -984,11 +980,13 @@ namespace HF
             virtual bool run(uint16_t time)
             {
                remaining_time -= time;
+
                if (remaining_time == 0)
                {
                   remaining_time = this->period;
                   return true;
                }
+
                return false;
             }
 
@@ -998,14 +996,14 @@ namespace HF
              * @retval 0   The transition ended.
              * @retval 1   The transition will continue.
              */
-            virtual bool next() =0; //check if the transition continues...
+            virtual bool next() = 0; //check if the transition continues...
          };
 
 
          //! Hue Transition
-         struct Hue_Transition : public ITransition
+         struct Hue_Transition: public ITransition
          {
-            int32_t step;     //!< Hue or Saturation step
+            int32_t  step;    //!< Hue or Saturation step
             uint16_t n_steps; //!< Counter for the steps needed.
             uint16_t end;     //!< End value to stop the iteration.
 
@@ -1028,7 +1026,7 @@ namespace HF
 
             //! Empty destructor.
             ~Hue_Transition()
-            {};
+            {}
 
             /*!
              * Run the transition.
@@ -1042,11 +1040,11 @@ namespace HF
             //! @copydoc ITransition::next()
             bool next()
             {
-               return( period != 0? true : false );
+               return (period != 0 ? true : false);
             }
          };
 
-         struct Hue_Transition_Continuous : public ITransition
+         struct Hue_Transition_Continuous: public ITransition
          {
             int32_t step;     //!< Hue or Saturation step
 
@@ -1057,8 +1055,8 @@ namespace HF
              * @param [in] period      the Transition period. In units of 100msec.
              * @param [in] step        the step size for each transition iteration.
              */
-            Hue_Transition_Continuous(IServer &_server, uint16_t period, int32_t step = 0)
-               :ITransition(_server, period), step(step)
+            Hue_Transition_Continuous(IServer &_server, uint16_t period, int32_t step = 0):
+               ITransition(_server, period), step(step)
             {}
 
             //! Default constructor.
@@ -1066,7 +1064,7 @@ namespace HF
 
             //! Empty destructor.
             ~Hue_Transition_Continuous()
-            {};
+            {}
 
             //! @copydoc ColourControl::Hue_Transition::run()
             bool run(uint16_t time);
@@ -1074,14 +1072,14 @@ namespace HF
             //! @copydoc ITransition::next()
             bool next()
             {
-               return( period != 0? true : false );
+               return (period != 0 ? true : false);
             }
          };
 
          //! Saturation Transition
          struct Saturation_Transition: public ITransition
          {
-            int32_t step;     //!< Hue or Saturation step
+            int32_t  step;    //!< Hue or Saturation step
             uint16_t n_steps; //!< Counter for the steps needed.
             uint16_t end;     //!< End value to stop the iteration.
 
@@ -1094,21 +1092,18 @@ namespace HF
              * @param [in] n_steps     number of steps.
              * @param [in] end         end value for the transition.
              */
-            Saturation_Transition (IServer &_server, uint16_t period, int32_t step = 0,
-                                   uint16_t n_steps = 0,
-                                   uint16_t end = 0) :
-                  ITransition(_server, period), step(step), n_steps(n_steps), end(end)
-            {
-            }
+            Saturation_Transition(IServer &_server, uint16_t period, int32_t step = 0,
+                                  uint16_t n_steps = 0,
+                                  uint16_t end = 0):
+               ITransition(_server, period), step(step), n_steps(n_steps), end(end)
+            {}
 
             //! Default constructor.
-            Saturation_Transition () = default;
+            Saturation_Transition() = default;
 
             //! Empty destructor.
-            ~Saturation_Transition ()
-            {
-            }
-            ;
+            ~Saturation_Transition()
+            {}
 
             /*!
              * Run the transition.
@@ -1117,10 +1112,10 @@ namespace HF
              * @retval 0   The transition didn't ran. Only the remaining time was updated.
              * @retval 1   The transition ran.
              */
-            bool run (uint16_t time);
+            bool run(uint16_t time);
 
             //! @copydoc ITransition::next()
-            bool next ()
+            bool next()
             {
                return (period != 0 ? true : false);
             }
@@ -1137,26 +1132,22 @@ namespace HF
              * @param [in] period      the Transition period. In units of 100msec.
              * @param [in] step        the step size for each transition iteration.
              */
-            Saturation_Transition_Continuous (IServer &_server, uint16_t period, int32_t step = 0)
-            :
-                  ITransition(_server, period), step(step)
-            {
-            }
+            Saturation_Transition_Continuous(IServer &_server, uint16_t period, int32_t step = 0):
+               ITransition(_server, period), step(step)
+            {}
 
             //! Default constructor.
-            Saturation_Transition_Continuous () = default;
+            Saturation_Transition_Continuous() = default;
 
             //! Empty destructor.
-            ~Saturation_Transition_Continuous ()
-            {
-            }
-            ;
+            ~Saturation_Transition_Continuous()
+            {}
 
             //! @copydoc ColourControl::Hue_Transition::run()
-            bool run (uint16_t time);
+            bool run(uint16_t time);
 
             //! @copydoc ITransition::next()
-            bool next ()
+            bool next()
             {
                return (period != 0 ? true : false);
             }
@@ -1165,10 +1156,10 @@ namespace HF
          //! Hue and Saturation Transition
          struct HS_Transition: public ITransition
          {
-            int32_t hue_step;     //!< Hue step
-            int32_t sat_step;     //!< Saturation step
-            uint16_t n_steps; //!< Counter for the steps needed.
-            HS_Colour end;     //!< End value to stop the iteration.
+            int32_t   hue_step; //!< Hue step
+            int32_t   sat_step; //!< Saturation step
+            uint16_t  n_steps;  //!< Counter for the steps needed.
+            HS_Colour end;      //!< End value to stop the iteration.
 
             /*!
              * Constructor.
@@ -1180,19 +1171,18 @@ namespace HF
              * @param [in] n_steps     number of steps.
              * @param [in] end         end value for the transition.
              */
-            HS_Transition (IServer &_server, uint16_t period,
-                           int32_t hue_step = 0, int32_t sat_step = 0,
-                           uint16_t n_steps = 0, HS_Colour end = HS_Colour(0,0)) :
-                  ITransition(_server, period), hue_step(hue_step),
-                  sat_step(sat_step), n_steps(n_steps), end(end)
-            {
-            }
+            HS_Transition(IServer &_server, uint16_t period,
+                          int32_t hue_step = 0, int32_t sat_step = 0,
+                          uint16_t n_steps = 0, HS_Colour end = HS_Colour(0, 0)):
+               ITransition(_server, period), hue_step(hue_step),
+               sat_step(sat_step), n_steps(n_steps), end(end)
+            {}
 
             //! Default constructor.
-            HS_Transition () = default;
+            HS_Transition() = default;
 
             //! Empty destructor.
-            ~HS_Transition ()
+            ~HS_Transition()
             {}
 
             /*!
@@ -1202,10 +1192,10 @@ namespace HF
              * @retval 0   The transition didn't ran. Only the remaining time was updated.
              * @retval 1   The transition ran.
              */
-            bool run (uint16_t time);
+            bool run(uint16_t time);
 
             //! @copydoc ITransition::next()
-            bool next ()
+            bool next()
             {
                return (period != 0 ? true : false);
             }
@@ -1214,9 +1204,9 @@ namespace HF
          //! XY Transition
          struct XY_Transition: public ITransition
          {
-            int32_t X_step;   //!< X step
-            int32_t Y_step;   //!< Y step
-            uint16_t n_steps; //!< Counter for the steps needed.
+            int32_t   X_step;  //!< X step
+            int32_t   Y_step;  //!< Y step
+            uint16_t  n_steps; //!< Counter for the steps needed.
             XY_Colour end;     //!< End value to stop the iteration.
 
             /*!
@@ -1229,20 +1219,19 @@ namespace HF
              * @param [in] n_steps     number of steps.
              * @param [in] end         end value for the transition.
              */
-            XY_Transition (IServer &_server, uint16_t period,
-                           int32_t X_step = 0, int32_t Y_step = 0,
-                            uint16_t n_steps = 0,
-                            XY_Colour end = XY_Colour(0,0)) :
-                  ITransition(_server, period), X_step(X_step), Y_step(Y_step),
-                  n_steps(n_steps), end(end)
-            {
-            }
+            XY_Transition(IServer &_server, uint16_t period,
+                          int32_t X_step = 0, int32_t Y_step = 0,
+                          uint16_t n_steps = 0,
+                          XY_Colour end = XY_Colour(0, 0)):
+               ITransition(_server, period), X_step(X_step), Y_step(Y_step),
+               n_steps(n_steps), end(end)
+            {}
 
             //! Default constructor.
-            XY_Transition () = default;
+            XY_Transition() = default;
 
             //! Empty destructor.
-            ~XY_Transition ()
+            ~XY_Transition()
             {}
 
             /*!
@@ -1252,10 +1241,10 @@ namespace HF
              * @retval 0   The transition didn't ran. Only the remaining time was updated.
              * @retval 1   The transition ran.
              */
-            bool run (uint16_t time);
+            bool run(uint16_t time);
 
             //! @copydoc ITransition::next()
-            bool next ()
+            bool next()
             {
                return (period != 0 ? true : false);
             }
@@ -1275,16 +1264,16 @@ namespace HF
              * @param [in] X_step      the X step size for each transition iteration.
              * @param [in] Y_step      the Y step size for each transition iteration.
              */
-            XY_Transition_Continuous (IServer &_server, uint16_t period,
-                           int16_t X_step = 0, int16_t Y_step = 0) :
-                  ITransition(_server, period), X_step(X_step), Y_step(Y_step)
+            XY_Transition_Continuous(IServer &_server, uint16_t period,
+                                     int16_t X_step = 0, int16_t Y_step = 0):
+               ITransition(_server, period), X_step(X_step), Y_step(Y_step)
             {}
 
             //! Default constructor.
-            XY_Transition_Continuous () = default;
+            XY_Transition_Continuous() = default;
 
             //! Empty destructor.
-            ~XY_Transition_Continuous ()
+            ~XY_Transition_Continuous()
             {}
 
             /*!
@@ -1294,10 +1283,10 @@ namespace HF
              * @retval 0   The transition didn't ran. Only the remaining time was updated.
              * @retval 1   The transition ran.
              */
-            bool run (uint16_t time);
+            bool run(uint16_t time);
 
             //! @copydoc ITransition::next()
-            bool next ()
+            bool next()
             {
                return (period != 0 ? true : false);
             }
@@ -1306,7 +1295,7 @@ namespace HF
          //! ColourTemperature Transition
          struct Temperature_Transition: public ITransition
          {
-            int32_t step;   //!< temperature step
+            int32_t  step;    //!< temperature step
             uint16_t n_steps; //!< Counter for the steps needed.
             uint16_t end;     //!< End value to stop the iteration.
 
@@ -1320,19 +1309,19 @@ namespace HF
              * @param [in] n_steps     number of steps.
              * @param [in] end         end value for the transition.
              */
-            Temperature_Transition (IServer &_server, uint16_t period,
-                           int32_t step = 0,
-                           uint16_t n_steps = 0,
-                           uint16_t end = 0):
-                  ITransition(_server, period), step(step),
-                  n_steps(n_steps), end(end)
+            Temperature_Transition(IServer &_server, uint16_t period,
+                                   int32_t step = 0,
+                                   uint16_t n_steps = 0,
+                                   uint16_t end = 0):
+               ITransition(_server, period), step(step),
+               n_steps(n_steps), end(end)
             {}
 
             //! Default constructor.
-            Temperature_Transition () = default;
+            Temperature_Transition() = default;
 
             //! Empty destructor.
-            ~Temperature_Transition ()
+            ~Temperature_Transition()
             {}
 
             /*!
@@ -1342,10 +1331,10 @@ namespace HF
              * @retval 0   The transition didn't ran. Only the remaining time was updated.
              * @retval 1   The transition ran.
              */
-            bool run (uint16_t time);
+            bool run(uint16_t time);
 
             //! @copydoc ITransition::next()
-            bool next ()
+            bool next()
             {
                return (period != 0 ? true : false);
             }
@@ -1423,7 +1412,7 @@ namespace HF
              * @param [in] message     the @c StepHueMessage received.
              */
             virtual Common::Result step_hue(const Protocol::Address &addr,
-                                            const  StepHueMessage &message);
+                                            const StepHueMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
@@ -1472,8 +1461,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveToXYMessage received.
              */
-            virtual Common::Result move_to_xy (const Protocol::Address &addr,
-                                               const MoveToXYMessage &message);
+            virtual Common::Result move_to_xy(const Protocol::Address &addr,
+                                              const MoveToXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
@@ -1482,8 +1471,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveXYMessage received.
              */
-            virtual Common::Result move_xy (const Protocol::Address &addr,
-                                            const MoveXYMessage &message);
+            virtual Common::Result move_xy(const Protocol::Address &addr,
+                                           const MoveXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_XY_CMD,
@@ -1492,8 +1481,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c StepXYMessage received.
              */
-            virtual Common::Result step_xy (const Protocol::Address &addr,
-                                            const StepXYMessage &message);
+            virtual Common::Result step_xy(const Protocol::Address &addr,
+                                           const StepXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
@@ -1629,7 +1618,7 @@ namespace HF
          struct Server: public IServer
          {
             //! Container for the transitions.
-            using Container = typename std::vector<ITransition*>;
+            using Container = typename std::vector<ITransition *>;
 
             public:
 
@@ -1646,7 +1635,7 @@ namespace HF
              *
              * @return The time left for the next transition, or 0 if there are no transitions.
              */
-            static uint16_t has_transitions ()
+            static uint16_t has_transitions()
             {
                return transitions.empty() ? 0 : transitions.front()->remaining_time;
             }
@@ -1662,7 +1651,7 @@ namespace HF
              *
              * @return  period (in units of 100msec) until the next transition.
              */
-            static uint16_t transition (void);
+            static uint16_t transition(void);
 
             // ======================================================================
             // Events
@@ -1673,7 +1662,7 @@ namespace HF
             /*!
              * Inform the APP that a new transition was added.
              */
-            virtual void changed (void) =0;
+            virtual void changed(void) = 0;
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
@@ -1682,8 +1671,8 @@ namespace HF
              * @param [in] addr        the network address to send the message to.
              * @param [in] message     the @c MoveToHueMessage received.
              */
-            Common::Result move_to_hue (const Protocol::Address &addr,
-                                                const MoveToHueMessage &message);
+            Common::Result move_to_hue(const Protocol::Address &addr,
+                                       const MoveToHueMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_HUE_CMD,
@@ -1692,8 +1681,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message    the @c MoveHueMessage received.
              */
-            Common::Result move_hue (const Protocol::Address &addr,
-                                             const MoveHueMessage &message);
+            Common::Result move_hue(const Protocol::Address &addr,
+                                    const MoveHueMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_HUE_CMD,
@@ -1702,8 +1691,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c StepHueMessage received.
              */
-            Common::Result step_hue (const Protocol::Address &addr,
-                                             const StepHueMessage &message);
+            Common::Result step_hue(const Protocol::Address &addr,
+                                    const StepHueMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
@@ -1712,8 +1701,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveToSaturationMessage received.
              */
-            Common::Result move_to_saturation (const Protocol::Address &addr,
-                                                       const MoveToSaturationMessage &message);
+            Common::Result move_to_saturation(const Protocol::Address &addr,
+                                              const MoveToSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_SATURATION_CMD,
@@ -1722,8 +1711,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveSaturationMessage received.
              */
-            Common::Result move_saturation (const Protocol::Address &addr,
-                                                    const MoveSaturationMessage &message);
+            Common::Result move_saturation(const Protocol::Address &addr,
+                                           const MoveSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_SATURATION_CMD,
@@ -1732,8 +1721,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c StepSaturationMessage received.
              */
-            Common::Result step_saturation (const Protocol::Address &addr,
-                                                    const StepSaturationMessage &message);
+            Common::Result step_saturation(const Protocol::Address &addr,
+                                           const StepSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
@@ -1742,9 +1731,9 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveToHueSaturationMessage received.
              */
-            Common::Result move_to_hue_and_saturation (
-                  const Protocol::Address &addr,
-                  const MoveToHueSaturationMessage &message);
+            Common::Result move_to_hue_and_saturation(
+               const Protocol::Address &addr,
+               const MoveToHueSaturationMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_XY_CMD,
@@ -1753,8 +1742,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveToXYMessage received.
              */
-            Common::Result move_to_xy (const Protocol::Address &addr,
-                                               const MoveToXYMessage &message);
+            Common::Result move_to_xy(const Protocol::Address &addr,
+                                      const MoveToXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
@@ -1763,8 +1752,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveXYMessage received.
              */
-            Common::Result move_xy (const Protocol::Address &addr,
-                                            const MoveXYMessage &message);
+            Common::Result move_xy(const Protocol::Address &addr,
+                                   const MoveXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::STEP_XY_CMD,
@@ -1773,8 +1762,8 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c StepXYMessage received.
              */
-            Common::Result step_xy (const Protocol::Address &addr,
-                                            const StepXYMessage &message);
+            Common::Result step_xy(const Protocol::Address &addr,
+                                   const StepXYMessage &message);
 
             /*!
              * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
@@ -1783,9 +1772,9 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] message     the @c MoveToTemperatureMessage received.
              */
-            Common::Result move_to_colour_temperature (
-                  const Protocol::Address &addr,
-                  const MoveToTemperatureMessage &message);
+            Common::Result move_to_colour_temperature(
+               const Protocol::Address &addr,
+               const MoveToTemperatureMessage &message);
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
 
@@ -1795,7 +1784,7 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            Common::Result stop (const Protocol::Address &addr);
+            Common::Result stop(const Protocol::Address &addr);
 
 #endif
 
@@ -1810,7 +1799,7 @@ namespace HF
              * Add a transition to the list.
              * @param [in] t     The transition to be added.
              */
-            void add_transition (ITransition *t)
+            void add_transition(ITransition *t)
             {
                transitions.push_back(t);
                changed();
@@ -1821,17 +1810,18 @@ namespace HF
              * Remove a transition from the list.
              * @param [in] itf      The server reference to search for a transition.
              */
-            void remove (IServer const &itf)
+            void remove(IServer const &itf)
             {
                auto compare = [&itf](ITransition *entry)
-               {
-                  if(&(entry->server) == &(itf))
-                  {
-                     delete entry;
-                     return true;
-                  }
-                  return false;
-               };
+                              {
+                                 if (&(entry->server) == &(itf))
+                                 {
+                                    delete entry;
+                                    return true;
+                                 }
+
+                                 return false;
+                              };
 
                transitions.erase(std::remove_if(transitions.begin(), transitions.end(),
                                                 compare), transitions.end());

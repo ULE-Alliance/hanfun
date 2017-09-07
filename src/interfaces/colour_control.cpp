@@ -105,16 +105,16 @@ HF::Attributes::IAttribute *ColourControl::create_attribute(uint8_t uid)
  *
  */
 // =============================================================================
-uint16_t HS_Colour::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t HS_Colour::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   HF_ASSERT(hue<=HUE_MAX, {return 0;});
+   HF_ASSERT(hue <= HUE_MAX, {return 0;});
 
-   offset += array.write(offset,hue);
-   offset += array.write(offset,saturation);
+   offset += array.write(offset, hue);
+   offset += array.write(offset, saturation);
 
    return (offset - start);
 }
@@ -126,14 +126,14 @@ uint16_t HS_Colour::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t HS_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t HS_Colour::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset,hue);
+   size    = array.read(offset, hue);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -142,7 +142,7 @@ uint16_t HS_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
       hue = HUE_MAX;
    }
 
-   size = array.read(offset,saturation);
+   size    = array.read(offset, saturation);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -161,14 +161,14 @@ uint16_t HS_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t XY_Colour::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t XY_Colour::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   offset += array.write(offset,X);
-   offset += array.write(offset,Y);
+   offset += array.write(offset, X);
+   offset += array.write(offset, Y);
 
    return (offset - start);
 }
@@ -180,18 +180,18 @@ uint16_t XY_Colour::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t XY_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t XY_Colour::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset,X);
+   size    = array.read(offset, X);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,Y);
+   size    = array.read(offset, Y);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -209,7 +209,7 @@ uint16_t XY_Colour::unpack (const Common::ByteArray& array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t MoveToHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveToHueMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -231,14 +231,14 @@ uint16_t MoveToHueMessage::pack (Common::ByteArray& array, uint16_t offset) cons
  *
  */
 // =============================================================================
-uint16_t MoveToHueMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveToHueMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset,hue);
+   size    = array.read(offset, hue);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -247,11 +247,11 @@ uint16_t MoveToHueMessage::unpack (const Common::ByteArray& array, uint16_t offs
       hue = HUE_MAX;
    }
 
-   size = array.read(offset, direction);
+   size    = array.read(offset, direction);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,time);
+   size    = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -269,12 +269,12 @@ uint16_t MoveToHueMessage::unpack (const Common::ByteArray& array, uint16_t offs
  *
  */
 // =============================================================================
-uint16_t MoveHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveHueMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    HF_ASSERT(rate <= RATE_MAX, {return 0;});
-   HF_ASSERT(direction<=DIRECTION_MAX, {return 0;});
+   HF_ASSERT(direction <= DIRECTION_MAX, {return 0;});
 
    uint16_t start = offset;
 
@@ -293,7 +293,7 @@ uint16_t MoveHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t MoveHueMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveHueMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -301,13 +301,13 @@ uint16_t MoveHueMessage::unpack (const Common::ByteArray& array, uint16_t offset
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset,temp_dir);
+   size = array.read(offset, temp_dir);
    HF_ASSERT(size != 0, {return 0;});
-   HF_ASSERT(temp_dir<= DIRECTION_MAX, {return 0;});
+   HF_ASSERT(temp_dir <= DIRECTION_MAX, {return 0;});
    direction = static_cast<Direction>(temp_dir);
-   offset += size;
+   offset   += size;
 
-   size = array.read(offset,rate);
+   size      = array.read(offset, rate);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -330,7 +330,7 @@ uint16_t MoveHueMessage::unpack (const Common::ByteArray& array, uint16_t offset
  *
  */
 // =============================================================================
-uint16_t StepHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t StepHueMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -352,7 +352,7 @@ uint16_t StepHueMessage::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t StepHueMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t StepHueMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -360,17 +360,17 @@ uint16_t StepHueMessage::unpack (const Common::ByteArray& array, uint16_t offset
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset,step_size);
+   size = array.read(offset, step_size);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,temp_dir);
+   size    = array.read(offset, temp_dir);
    HF_ASSERT(size != 0, {return 0;});
    HF_ASSERT(temp_dir <= DIRECTION_MAX, {return 0;});
    direction = static_cast<Direction>(temp_dir);
-   offset += size;
+   offset   += size;
 
-   size = array.read(offset,time);
+   size      = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -388,7 +388,7 @@ uint16_t StepHueMessage::unpack (const Common::ByteArray& array, uint16_t offset
  *
  */
 // =============================================================================
-uint16_t MoveToSaturationMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveToSaturationMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -410,7 +410,7 @@ uint16_t MoveToSaturationMessage::pack (Common::ByteArray& array, uint16_t offse
  *
  */
 // =============================================================================
-uint16_t MoveToSaturationMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveToSaturationMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -418,17 +418,17 @@ uint16_t MoveToSaturationMessage::unpack (const Common::ByteArray& array, uint16
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset,saturation);
+   size = array.read(offset, saturation);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,temp_dir);
+   size    = array.read(offset, temp_dir);
    HF_ASSERT(size != 0, {return 0;});
    HF_ASSERT(temp_dir <= DIRECTION_MAX, {return 0;});
    direction = static_cast<Direction>(temp_dir);
-   offset += size;
+   offset   += size;
 
-   size = array.read(offset,time);
+   size      = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -446,7 +446,7 @@ uint16_t MoveToSaturationMessage::unpack (const Common::ByteArray& array, uint16
  *
  */
 // =============================================================================
-uint16_t MoveSaturationMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveSaturationMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -467,7 +467,7 @@ uint16_t MoveSaturationMessage::pack (Common::ByteArray& array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t MoveSaturationMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveSaturationMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -475,13 +475,13 @@ uint16_t MoveSaturationMessage::unpack (const Common::ByteArray& array, uint16_t
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset,temp_dir);
+   size = array.read(offset, temp_dir);
    HF_ASSERT(size != 0, {return 0;});
    HF_ASSERT(temp_dir <= DIRECTION_MAX, {return 0;});
    direction = static_cast<Direction>(temp_dir);
-   offset += size;
+   offset   += size;
 
-   size = array.read(offset,rate);
+   size      = array.read(offset, rate);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -499,7 +499,7 @@ uint16_t MoveSaturationMessage::unpack (const Common::ByteArray& array, uint16_t
  *
  */
 // =============================================================================
-uint16_t StepSaturationMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t StepSaturationMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -521,7 +521,7 @@ uint16_t StepSaturationMessage::pack (Common::ByteArray& array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t StepSaturationMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t StepSaturationMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -529,17 +529,17 @@ uint16_t StepSaturationMessage::unpack (const Common::ByteArray& array, uint16_t
    uint16_t size;
    uint8_t temp_dir;
 
-   size = array.read(offset,step_size);
+   size = array.read(offset, step_size);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,temp_dir);
+   size    = array.read(offset, temp_dir);
    HF_ASSERT(size != 0, {return 0;});
    HF_ASSERT(temp_dir <= DIRECTION_MAX, {return 0;});
    direction = static_cast<Direction>(temp_dir);
-   offset += size;
+   offset   += size;
 
-   size = array.read(offset,time);
+   size      = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -557,7 +557,7 @@ uint16_t StepSaturationMessage::unpack (const Common::ByteArray& array, uint16_t
  *
  */
 // =============================================================================
-uint16_t MoveToHueSaturationMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveToHueSaturationMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -581,7 +581,7 @@ uint16_t MoveToHueSaturationMessage::pack (Common::ByteArray& array, uint16_t of
  *
  */
 // =============================================================================
-uint16_t MoveToHueSaturationMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveToHueSaturationMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -592,11 +592,11 @@ uint16_t MoveToHueSaturationMessage::unpack (const Common::ByteArray& array, uin
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,direction);
+   size    = array.read(offset, direction);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,time);
+   size    = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -614,13 +614,13 @@ uint16_t MoveToHueSaturationMessage::unpack (const Common::ByteArray& array, uin
  *
  */
 // =============================================================================
-uint16_t MoveToXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveToXYMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
 
-   offset += this->colour.pack(array,offset);
+   offset += this->colour.pack(array, offset);
    offset += array.write(offset, time);
 
    return (offset - start);
@@ -633,7 +633,7 @@ uint16_t MoveToXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t MoveToXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveToXYMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -644,7 +644,7 @@ uint16_t MoveToXYMessage::unpack (const Common::ByteArray& array, uint16_t offse
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,time);
+   size    = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -662,7 +662,7 @@ uint16_t MoveToXYMessage::unpack (const Common::ByteArray& array, uint16_t offse
  *
  */
 // =============================================================================
-uint16_t MoveXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveXYMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -681,18 +681,18 @@ uint16_t MoveXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t MoveXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveXYMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset,X_rate);
+   size = array.read(offset, X_rate);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,Y_rate);
+   size    = array.read(offset, Y_rate);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -710,7 +710,7 @@ uint16_t MoveXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t StepXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t StepXYMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -730,22 +730,22 @@ uint16_t StepXYMessage::pack (Common::ByteArray& array, uint16_t offset) const
  *
  */
 // =============================================================================
-uint16_t StepXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t StepXYMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
    uint16_t size;
 
-   size = array.read(offset,X_step);
+   size = array.read(offset, X_step);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,Y_step);
+   size    = array.read(offset, Y_step);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,time);
+   size    = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
@@ -763,7 +763,7 @@ uint16_t StepXYMessage::unpack (const Common::ByteArray& array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t MoveToTemperatureMessage::pack (Common::ByteArray& array, uint16_t offset) const
+uint16_t MoveToTemperatureMessage::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -782,7 +782,7 @@ uint16_t MoveToTemperatureMessage::pack (Common::ByteArray& array, uint16_t offs
  *
  */
 // =============================================================================
-uint16_t MoveToTemperatureMessage::unpack (const Common::ByteArray& array, uint16_t offset)
+uint16_t MoveToTemperatureMessage::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -793,7 +793,7 @@ uint16_t MoveToTemperatureMessage::unpack (const Common::ByteArray& array, uint1
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
-   size = array.read(offset,time);
+   size    = array.read(offset, time);
    HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
