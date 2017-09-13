@@ -959,10 +959,15 @@ namespace HF
             for (S i = 0; i < size; ++i)
             {
                SerializableHelper<value_type> h;
+               uint16_t temp = 0;
 
                HF_SERIALIZABLE_CHECK(array, offset, h.size());
 
-               offset += h.unpack(array, offset);
+               temp = h.unpack(array, offset);
+               /* *INDENT-OFF* */
+               HF_ASSERT(temp > 0, return 0;);
+               offset += temp;
+               /* *INDENT-ON* */
 
                it      = h.data;
             }
