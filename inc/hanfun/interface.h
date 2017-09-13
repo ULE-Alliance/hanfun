@@ -63,7 +63,7 @@ namespace HF
          IDENTIFY                = 0x0004, //!< Identify interface %UID. __Not implemented__
          DEVICE_INFORMATION      = 0x0005, //!< %Device information interface UID.
          ATTRIBUTE_REPORTING     = 0x0006, //!< %Attribute Reporting interface UID.
-         BATCH_PROGRAM_MANGEMENT = 0x0007, //!< Batch Program Management interface UID. __Not implemented__
+         BATCH_PROGRAM_MANAGEMENT= 0x0007, //!< Batch Program Management interface UID.
          EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
          WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
          GROUP_TABLE             = 0x000A, //!< Group Table interface UID.

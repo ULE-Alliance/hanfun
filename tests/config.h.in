@@ -116,6 +116,13 @@
 #define HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR          1
 
 // =============================================================================
+// Batch Program Management Interface Configuration
+// =============================================================================
+
+#define HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD         1
+
+
+// =============================================================================
 // Other Configuration
 // =============================================================================
 
