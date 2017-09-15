@@ -20,6 +20,10 @@
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
 
+#include <string>
+#include <map>
+#include <forward_list>
+
 namespace HF
 {
    namespace Core
@@ -118,21 +122,7 @@ namespace HF
             // =================================================================
             // Serializable API
             // =================================================================
-#if 0
-            //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size =   sizeof(uint8_t)   // UID
-                                                 + sizeof(uint8_t)   // Message type
-                                                 + sizeof(uint8_t)   // Interface type
-                                                 + sizeof(uint16_t)  // Interface UID
-                                                 + sizeof(uint8_t)   // Interface member
-                                                 + sizeof(uint8_t);  // Payload size
 
-            //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
-
-            //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
-#endif
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
 
@@ -162,10 +152,13 @@ namespace HF
              */
             Entry(void) = default;
 
+            static constexpr uint16_t START_PID = 0x00;
+            static constexpr uint16_t MAX_PID = 0xFE;
+            static constexpr uint16_t AVAILABLE_PID = 0xFF;
+
             // =================================================================
             // Serializable API
             // =================================================================
-#if 1
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size =   sizeof(uint8_t)   // Program ID
                                                  + sizeof(uint8_t)   // Name Length
@@ -179,8 +172,9 @@ namespace HF
 
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
-#endif
          };
+
+         typedef Common::Pointer<Entry> EntryPtr;
 
          // =============================================================================
          // Messages
@@ -255,7 +249,7 @@ namespace HF
          typedef InvokeProgram           DeleteProgram;
          typedef InvokeProgramResponse  DeleteProgramResponse;
 
-         typedef Protocol::Response       DeleteAllPrograms;
+         typedef Protocol::Response       DeleteAllProgramsResponse;
 
          typedef InvokeProgram           GetProgramActions;
 
@@ -338,7 +332,154 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+
+         /*!
+          * Batch Program Management - Persistent Storage API.
+          */
+         struct IEntries: public Common::IEntries<Entry>
+         {
+            /*!
+             * Store the given @c entry to persistent storage.
+             *
+             * @param [in] PID      Program ID for the new entry.
+             * @param [in] name     name for the new batch program.
+             * @param [in] actions  Action list for the batch program.
+             *
+             * @retval  Common::Result::OK if the entry was saved,
+             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
+             */
+            virtual Common::Result save (const uint8_t PID, const std::string &name,
+                                         std::vector<Action>& actions) = 0;
+
+            /*!
+             * Find the group with the given group @c address.
+             *
+             * @param [in] address  HF address to search for.
+             *
+             * @returns  pointer to the group with the given @c address,
+             *           @c nullptr otherwise.
+             */
+            virtual EntryPtr find (uint8_t PID) const = 0;
+
+            /*!
+             * Find the group with the given @c name.
+             *
+             * @param [in] name  group name to search for.
+             *
+             * @returns  pointer to the group with the given @c name,
+             *           @c nullptr otherwise.
+             */
+            virtual EntryPtr find (const std::string &name) const = 0;
+
+            /*!
+             * Return next available PID for the program.
+             *
+             * @return  the PID to use in the program entry, or
+             *          @c Entry::AVAILABLE_PID if no PID is available.
+             */
+            virtual uint8_t next_PID () const = 0;
+         };
+
+         /*!
+          * Default implementation of the persistence API.
+          */
+         struct Entries: public IEntries
+         {
+            typedef std::map<uint8_t, Entry> Container;
+            typedef Container::iterator iterator;
+            typedef Container::const_iterator const_iterator;
+            typedef Container::value_type value_type;
+
+            virtual ~Entries () = default;
+
+            uint16_t size () const;
+
+            Common::Result save (const Entry &entry);
+
+            Common::Result save (const uint8_t PID, const std::string &name,
+                                 std::vector<Action>& actions);
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @param [in] address     The Program ID to destroy
+             * @return
+             */
+            Common::Result destroy (const uint8_t &PID);
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             *
+             */
+            Common::Result destroy (const Entry &entry);
+
+            /*!
+             * @copydoc IEntries::find(uint16_t)
+             */
+            EntryPtr find (uint8_t PID) const;
+
+            /*!
+             * @copydoc IEntries::find(const std::string &)
+             */
+            EntryPtr find (const std::string &name) const;
+
+            /*!
+             * @copydoc IEntries::next_address
+             */
+            uint8_t next_PID () const;
+
+            /*!
+             * Get an iterator to the start of the entries in this container.
+             *
+             * @return  iterator to the start of the entries present in this container.
+             */
+            iterator begin ()
+            {
+               return db.begin();
+            }
+
+            /*!
+             * Get an iterator to the end of the entries in this container.
+             *
+             * @return  iterator to the end of the entries present in this container.
+             */
+            iterator end ()
+            {
+               return db.end();
+            }
+
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
+            const_iterator begin () const
+            {
+               return db.cbegin();
+            }
+
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
+            const_iterator end () const
+            {
+               return db.cend();
+            }
+
+            protected:
+
+            //! Actual container for the entries.
+            Container db;
+         };
+
+
+
 
          /*!
           * Batch Program Management  %Interfaces::Interface : Parent.
@@ -365,6 +506,8 @@ namespace HF
 
             uint8_t _maximum_number_of_entries; //!< Maximum Number Of Entries
             uint8_t _number_of_entries;         //!< Number Of Entries
+
+            Entries _entries;
 
             public:
 
@@ -412,9 +555,11 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet      the network packet to send the message to.
+             * @param [in] msg         the DefineProgram message received.
              */
-            virtual void define_program(const Protocol::Address &addr);
+            virtual Common::Result define_program(const Protocol::Packet &packet,
+                                                  DefineProgram &msg);
 
             /*!
              * Callback that is called when a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
@@ -442,6 +587,56 @@ namespace HF
 
             //! @}
             // ======================================================================
+
+
+            // =============================================================================
+            // API
+            // =============================================================================
+
+            /*!
+             * Get a reference to the current object implementing the persistence API,
+             * for the device information.
+             *
+             * @return  reference to the current object for the persistence API.
+             */
+            Entries &entries () const
+            {
+               return const_cast<Entries &>(_entries);
+            }
+
+            /*!
+             * Get the program entry given by @c PID.
+             *
+             * @param [in] PID  Program ID for the program to retrieve.
+             *
+             * @return  a pointer to the program entry if it exists,
+             *          @c nullptr otherwise.
+             */
+            EntryPtr entry (const uint8_t PID) const
+                            {
+               return entries().find(PID);
+            }
+
+            /*!
+             * Get the program entry given by @c name.
+             *
+             * @param [in] name  program name of the program to retrieve.
+             *
+             * @return  a pointer to the program entry if it exists,
+             *          @c nullptr otherwise.
+             */
+            EntryPtr entry (const std::string &name) const
+                            {
+               return entries().find(name);
+            }
+
+            /*!
+             * @copydoc IEntries::next_address
+             */
+            uint8_t next_PID () const
+            {
+               return entries().next_PID();
+            }
 
             // =============================================================================
             // Get/Set API.
@@ -516,16 +711,42 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            void define_program(const Protocol::Address &addr);
+            void define_program(const Protocol::Address &addr,
+                                const uint8_t _ID, const std::string _name,
+                                std::vector<Action>& _actions)
+            {
+               DefineProgram request(_ID, _name, _actions);
+               define_program(addr, request);
+            }
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            void define_program()
+            void define_program(const uint8_t _ID, const std::string _name,
+                                 std::vector<Action>& _actions)
             {
                Protocol::Address addr;
-               define_program(addr);
+               define_program(addr, _ID, _name, _actions);
+            }
+
+            /*!
+             * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             */
+            void define_program (const Protocol::Address &addr,
+                                 DefineProgram &program);
+
+            /*!
+             * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
+             * to the broadcast network address.
+             */
+            void define_program (DefineProgram &program)
+            {
+               Protocol::Address addr;
+               define_program(addr, program);
             }
 
             /*!
@@ -606,6 +827,8 @@ namespace HF
             // =============================================================================
 
             protected:
+
+            uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);

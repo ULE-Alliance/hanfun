@@ -28,6 +28,37 @@ using namespace HF::Core::BatchProgramManagement;
 // Batch Program Management : Client Role
 // =============================================================================
 
+
+// =============================================================================
+// Client::payload_size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Client::payload_size(Protocol::Message::Interface &itf) const
+{
+   switch (itf.member)
+   {
+      case DEFINE_PROGRAM_CMD:
+         return payload_size_helper<DefineProgramResponse>();
+
+      case INVOKE_PROGRAM_CMD:
+         return payload_size_helper<InvokeProgramResponse>();
+
+      case DELETE_PROGRAM_CMD:
+         return payload_size_helper<DeleteProgramResponse>();
+
+      case DELETE_ALL_PROGRAMS_CMD:
+         return payload_size_helper<DeleteAllProgramsResponse>();
+
+      case GET_PROGRAM_ACTIONS_CMD:
+         return payload_size_helper<GetProgramActionsResponse>();
+
+      default:
+         return 0;
+   }
+}
 // =============================================================================
 // Client::handle_command
 // =============================================================================
@@ -38,16 +69,47 @@ using namespace HF::Core::BatchProgramManagement;
 Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
+   assert(packet.link != nullptr);
 
-   CMD cmd = static_cast<CMD>(packet.message.itf.member);
-
-   switch (cmd)
+   switch (packet.message.itf.member)
    {
+      case DEFINE_PROGRAM_CMD:
+         {
+         DefineProgramResponse response;
+         response.unpack(payload, offset);
+//         created(response);
+         break;
+      }
+
       case INVOKE_PROGRAM_CMD:
       {
-         invoke_program(packet.source);
+         InvokeProgramResponse response;
+         response.unpack(payload, offset);
+//         invoked(response);
+         break;
+      }
+
+      case DELETE_PROGRAM_CMD:
+      {
+         DeleteProgramResponse response;
+         response.unpack(payload, offset);
+         //deleted(response);
+         break;
+      }
+
+      case DELETE_ALL_PROGRAMS_CMD:
+      {
+         DeleteAllProgramsResponse response;
+         response.unpack(payload, offset);
+         //deleted(response);
+         break;
+      }
+
+      case GET_PROGRAM_ACTIONS_CMD:
+      {
+         GetProgramActionsResponse response;
+         response.unpack(payload, offset);
+         //got_actions(response);
          break;
       }
 
@@ -69,13 +131,14 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Client::define_program(const Protocol::Address &addr)
+void Client::define_program (const Protocol::Address &addr,
+                               DefineProgram &program)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   Protocol::Message message(program.size());
+   program.pack(message.payload);
 
-   message.itf.role   = SERVER_ROLE;
-   message.itf.id     = Interface::BATCH_PROGRAM_MANAGEMENT;
+   message.itf.role = SERVER_ROLE;
+   message.itf.id = Interface::BATCH_PROGRAM_MANAGEMENT;
    message.itf.member = DEFINE_PROGRAM_CMD;
 
    send(addr, message);
@@ -91,7 +154,13 @@ void Client::define_program(const Protocol::Address &addr)
 void Client::invoke_program(const Protocol::Address &addr)
 {
    // FIXME Generated Stub.
-   UNUSED(addr);
+   Protocol::Message message;
+
+   message.itf.role = SERVER_ROLE;
+   message.itf.id = Interface::BATCH_PROGRAM_MANAGEMENT;
+   message.itf.member = INVOKE_PROGRAM_CMD;
+
+   send(addr, message);
 }
 
 // =============================================================================

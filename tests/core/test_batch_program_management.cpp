@@ -16,12 +16,209 @@
 #include "../../inc/hanfun/core/batch_program_management.h"
 #include "test_helper.h"
 
+#include <random>
+
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Common;
 using namespace HF::Testing;
 
 using namespace HF::Core::BatchProgramManagement;
+
+
+// =============================================================================
+// Batch Program Management - Entries
+// =============================================================================
+
+//! Test Group for BatchProgram service parent class.
+TEST_GROUP(BatchProgramEntries)
+{
+   struct TestEntries: public Entries
+   {
+      Entries::Container &data()
+      {
+         return db;
+      }
+   };
+
+   TestEntries entries;
+
+   TEST_SETUP()
+   {
+      entries = TestEntries();
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+};
+
+//! @test Entries next PID
+TEST(BatchProgramEntries, Next_PID)
+{
+   LONGS_EQUAL(BatchProgramManagement::Entry::START_PID, entries.next_PID());   // 1st address
+
+   auto &data = entries.data();
+
+   Entry entry;
+
+   for (uint16_t PID = BatchProgramManagement::Entry::START_PID;
+         PID <= BatchProgramManagement::Entry::MAX_PID; ++PID)
+   {
+      entry.name    = "P";
+      entry.ID = PID;
+      data.emplace(PID, entry);
+   }
+
+   LONGS_EQUAL(BatchProgramManagement::Entry::AVAILABLE_PID, entries.next_PID());
+
+   data.erase(2);                          // erase program 2
+   LONGS_EQUAL(2, entries.next_PID()); // check if the next available PID is 2
+   data.emplace(2, entry);                // restore it
+
+   LONGS_EQUAL(BatchProgramManagement::Entry::AVAILABLE_PID, entries.next_PID());
+}
+//! @test Entries find by PID
+TEST(BatchProgramEntries, Find_by_PID)
+{
+   auto &data = entries.data();
+   Entry entry;
+
+   // Create 10 Programs
+   for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
+   {
+      entry.name=std::string("P") + std::to_string(i);
+      entry.ID = i;
+      data.emplace(i, entry);
+   }
+
+   data.erase(2);                                    // erase program 2
+   POINTERS_EQUAL(nullptr, entries.find("P2").operator->());   // Try to find prog 2 (should fail)
+
+   entry.name=std::string("P2");
+   entry.ID = 2;
+   data.emplace(2, entry);                                     // restore it
+
+   CHECK(nullptr != entries.find("P2").operator->());          // Try to find prog 2 (OK)
+   CHECK_EQUAL(std::string("P2"), entries.find("P2")->name);   // Confirm by name.
+   UNSIGNED_LONGS_EQUAL(2, entries.find("P2")->ID);            // Confirm by PID.
+}
+
+
+//! @test Entries find by Program name
+TEST(BatchProgramEntries, Find_by_name)
+{
+   auto &data = entries.data();
+   Entry entry;
+
+   // Create 10 Programs
+   for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
+   {
+      entry.name = std::string("P") + std::to_string(i);
+      entry.ID = i;
+      data.emplace(i, entry);
+   }
+
+   data.erase(2);                                              // erase program 2
+   POINTERS_EQUAL(nullptr, entries.find(2).operator->());      // Try to find prog 2 (should fail)
+
+   entry.name = std::string("P2");
+   entry.ID = 2;
+   data.emplace(2, entry);                                     // restore it
+
+   CHECK(nullptr != entries.find(2).operator->());             // Try to find prog 2 (OK)
+   CHECK_EQUAL(std::string("P2"), entries.find(2)->name);      // Confirm by name.
+   UNSIGNED_LONGS_EQUAL(2, entries.find(2)->ID);               // Confirm by PID.
+}
+
+//! @test Entries size
+TEST(BatchProgramEntries, Size)
+{
+   LONGS_EQUAL(0, entries.size());
+
+   Entry entry;
+
+   // Create 10 Programs
+   for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
+   {
+      entry.name = std::string("P") + std::to_string(i);
+      entry.ID = i;
+      entries.data().emplace(i, entry);
+   }
+
+   LONGS_EQUAL(10, entries.size());
+}
+
+//! @test Entries destroy by PID
+TEST(BatchProgramEntries, Destroy_by_PID)
+{
+   auto &data = entries.data();
+   Entry entry;
+
+   // Create 10 Programs
+   for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
+   {
+      entry.name = std::string("P") + std::to_string(i);
+      entry.ID = i;
+      data.emplace(i, entry);
+   }
+
+   LONGS_EQUAL(10, entries.size());
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(10));    // Try to destroy prog 10 (NOK)
+   CHECK_EQUAL(Common::Result::OK, entries.destroy(9));           // Try to destroy prog 9 (OK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(9));     // Try to destroy prog 9 again (NOK)
+
+   LONGS_EQUAL(9, entries.size());
+}
+
+//! @test Entries destroy by Program
+TEST(BatchProgramEntries, Destroy_by_program)
+{
+   auto &data = entries.data();
+   Entry entry;
+
+   // Create 10 Programs
+   for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
+   {
+      entry.name = std::string("P") + std::to_string(i);
+      entry.ID = i;
+      data.emplace(i, entry);
+   }
+
+   LONGS_EQUAL(10, entries.size());
+
+   // Try to destroy prog 10 (NOK)
+   entry.name = std::string("P10");
+   entry.ID = 10;
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(entry));
+
+   // Try to destroy prog 9 (OK)
+   entry.name = std::string("P9");
+   entry.ID = 9;
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, entries.destroy(entry));
+
+   // Try to destroy prog 9 again (NOK)
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(entry));
+
+   LONGS_EQUAL(9, entries.size());
+}
+
+//! @test Entries save new
+TEST(BatchProgramEntries, Save)
+{
+   LONGS_EQUAL(0, entries.size());
+
+   Entry entry;
+   entry.name = std::string("P0");
+   entry.ID = 0;
+   entries.save(entry);
+
+   UNSIGNED_LONGS_EQUAL(1, entries.size());
+   CHECK_EQUAL(std::string("P0"), entries.data()[0].name);
+}
 
 // =============================================================================
 // Batch Program Management
@@ -610,6 +807,8 @@ TEST_GROUP(BatchProgramManagementClient)
    Protocol::Packet packet;
    Testing::Link link;
 
+   std::vector<Action> actions;
+
    TEST_SETUP()
    {
       device = new Testing::Device();
@@ -636,15 +835,65 @@ TEST_GROUP(BatchProgramManagementClient)
 
       mock().clear();
    }
+
+   ByteArray GenerateRandomPayload ( uint8_t size)
+   {
+      ByteArray _payload(size);
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<> dis(0x00, 0xFF);
+
+      for (int n = 0; n < size; ++n)
+         _payload[n]=dis(gen);
+
+      return _payload;
+   }
+
+   Action GenerateAction ( uint8_t _UID, HF::Protocol::Message::Type _msg_type,
+                           uint8_t _itf_type, uint16_t _itf_UID, uint8_t _itf_member,
+                           uint8_t payload_size)
+   {
+      ByteArray _payload = GenerateRandomPayload(payload_size);
+      return Action(_UID, _msg_type, _itf_type, _itf_UID, _itf_member, _payload);
+   }
+
+   void DoActionTests(Entry expected, DefineProgram actual)
+   {
+      UNSIGNED_LONGS_EQUAL(expected.ID, actual.ID);
+      CHECK_EQUAL(expected.name, actual.name);
+
+      for(uint8_t i=0; i< expected.actions.size(); ++i)
+      {
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].reference,         actual.actions[0].reference);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].type,              actual.actions[0].type);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].itf.role,          actual.actions[0].itf.role);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].itf.id,            actual.actions[0].itf.id);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].itf.member,        actual.actions[0].itf.member);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].payload.size(),    actual.actions[0].payload.size());
+         CHECK_EQUAL(expected.actions[i].payload,                    actual.actions[0].payload);
+      }
+   }
+
 };
 
 //! @test Define Program support.
 TEST(BatchProgramManagementClient, DefineProgram)
 {
-   // FIXME Generated Stub.
+    //FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.define_program(addr);
+   auto msg_type = HF::Protocol::Message::Type::COMMAND_REQ;
+
+   actions.push_back(GenerateAction(0x11,                                     // UID
+                                    msg_type,                                 // Msg type
+                                    0x00,                                     // Itf type
+                                    0x2233,                                   // Itf UID
+                                    0x44,                                     // Itf Member
+                                    10));                                     // Payload size
+
+   Entry test(0x12, std::string("TEST"), actions);
+
+   client->define_program(addr,test);
 
    mock("Interface").checkExpectations();
 
@@ -652,6 +901,12 @@ TEST(BatchProgramManagementClient, DefineProgram)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(BatchProgramManagement::DEFINE_PROGRAM_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   DefineProgram message;
+
+   message.unpack(client->sendMsg.payload);
+
+   DoActionTests(test,message);
 }
 
 //! @test Invoke Program support.
@@ -730,10 +985,13 @@ TEST_GROUP(BatchProgramManagementServer)
    struct BatchProgramManagementServer: public InterfaceHelper<
          BatchProgramManagement::Server>
    {
-      void define_program(const Protocol::Address &addr) override
+      BatchProgramManagementServer(HF::Core::Unit0 &unit):
+         InterfaceHelper<BatchProgramManagement::Server>(unit){}
+
+      Common::Result define_program(const Protocol::Packet &packet, DefineProgram &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("define_program");
-         InterfaceHelper<BatchProgramManagement::Server>::define_program(addr);
+         return InterfaceHelper<BatchProgramManagement::Server>::define_program(packet, msg);
       }
 
       void delete_program(const Protocol::Address &addr) override
@@ -794,6 +1052,46 @@ TEST_GROUP(BatchProgramManagementServer)
 
       mock().clear();
    }
+
+   ByteArray GenerateRandomPayload (uint8_t size)
+   {
+      ByteArray _payload(size);
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<> dis(0x00, 0xFF);
+
+      for (int n = 0; n < size; ++n)
+         _payload[n] = dis(gen);
+
+      return _payload;
+   }
+
+   Action GenerateAction (uint8_t _UID, HF::Protocol::Message::Type _msg_type,
+                          uint8_t _itf_type,
+                          uint16_t _itf_UID, uint8_t _itf_member,
+                          uint8_t payload_size)
+   {
+      ByteArray _payload = GenerateRandomPayload(payload_size);
+      return Action(_UID, _msg_type, _itf_type, _itf_UID, _itf_member, _payload);
+   }
+
+   void DoActionTests (Entry expected, DefineProgram actual)
+   {
+      UNSIGNED_LONGS_EQUAL(expected.ID, actual.ID);
+      CHECK_EQUAL(expected.name, actual.name);
+
+      for (uint8_t i = 0; i < expected.actions.size(); ++i)
+      {
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].reference, actual.actions[0].reference);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].type, actual.actions[0].type);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].itf.role, actual.actions[0].itf.role);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].itf.id, actual.actions[0].itf.id);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].itf.member, actual.actions[0].itf.member);
+         UNSIGNED_LONGS_EQUAL(expected.actions[i].payload.size(), actual.actions[0].payload.size());
+         CHECK_EQUAL(expected.actions[i].payload, actual.actions[0].payload);
+      }
+   }
+
 };
 
 //! @test Maximum Number Of Entries support.
@@ -815,7 +1113,27 @@ TEST(BatchProgramManagementServer, NumberOfEntries)
 //! @test Define Program support.
 TEST(BatchProgramManagementServer, DefineProgram)
 {
-   // FIXME Generated Stub.
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x11,                // UID
+               HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+               0x00,                                     // Itf type
+               0x2233,                                   // Itf UID
+               0x44,                                     // Itf Member
+               10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   DefineProgram received(_received);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+
+
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
@@ -823,6 +1141,152 @@ TEST(BatchProgramManagementServer, DefineProgram)
    CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+
+   LONGS_EQUAL(1, server->entries().size());    // Check if the new program is on the DB.
+   CHECK_TRUE( server->entry(0x12) != nullptr);
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   CHECK_EQUAL(std::string("TEST"), server->entries().begin()->second.name);
+
+   // ----- Check the response message -----
+
+   DefineProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   LONGS_EQUAL(0x12, resp.ID);
+}
+
+//! @test Define Program support. Search for next available PID
+TEST(BatchProgramManagementServer, DefineProgram_next_available)
+{
+   Entry entry;
+
+   entry.name = std::string("P18");
+   entry.ID = 0x12;
+   server->entries().save(entry);
+
+
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x11,                // UID
+               HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+               0x00,                                     // Itf type
+               0x2233,                                   // Itf UID
+               0x44,                                     // Itf Member
+               10));                                     // Payload size
+
+   Entry _received(Entry::AVAILABLE_PID, std::string("TEST"), actions);
+
+   DefineProgram received(_received);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+
+
+   mock("BatchProgramManagement::Server").expectOneCall("define_program");
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+
+   LONGS_EQUAL(2, server->entries().size());    // Check if the new program is on the DB.
+   CHECK_TRUE( server->entry(Entry::START_PID) != nullptr);
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   CHECK_EQUAL(std::string("TEST"), server->entries().begin()++->second.name); // Check the 2nd entry
+
+   // ----- Check the response message -----
+
+   DefineProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   LONGS_EQUAL(Entry::START_PID, resp.ID);
+}
+
+//! @test Define Program support. Fail because the PID is in use.
+TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
+{
+   Entry entry;
+
+   entry.name=std::string("P18");
+   entry.ID=0x12;
+   server->entries().save(entry);
+
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x11,                // UID
+               HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+               0x00,                                     // Itf type
+               0x2233,                                   // Itf UID
+               0x44,                                     // Itf Member
+               10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   DefineProgram received(_received);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+
+
+   mock("BatchProgramManagement::Server").expectOneCall("define_program");
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+
+   LONGS_EQUAL(1, server->entries().size());    // Check if we only have 1 program on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   CHECK_EQUAL(std::string("P18"), server->entries().begin()->second.name);
+
+   // ----- Check the response message -----
+
+   DefineProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
 //! @test Invoke Program support.

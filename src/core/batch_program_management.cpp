@@ -374,3 +374,98 @@ uint16_t GetProgramActionsResponse::unpack (
    _end:
    return offset - start;
 }
+
+uint16_t Entries::size () const
+{
+   return db.size();
+}
+
+Common::Result Entries::save (const Entry& entry)
+{
+   db.insert(db.end(), std::pair<uint8_t, Entry>(entry.ID, entry));
+
+   return Common::Result::OK;
+}
+
+Common::Result Entries::save (const uint8_t PID,
+                              const std::string& name,
+                              std::vector<Action>& actions)
+{
+   db.insert(db.end(), std::pair<uint8_t, Entry>(PID, Entry(PID, name, actions)));
+
+   return Common::Result::OK;
+}
+
+Common::Result Entries::destroy (const uint8_t& PID)
+{
+   auto count = db.erase(PID);
+
+      if (count != 1)
+      {
+         return Common::Result::FAIL_ARG;
+      }
+      else
+      {
+         return Common::Result::OK;
+      }
+}
+
+Common::Result Entries::destroy (const Entry& entry)
+{
+   return destroy(entry.ID);
+}
+
+EntryPtr Entries::find (uint8_t PID) const
+{
+   auto it = db.find(PID);
+
+   if (it == db.end())
+   {
+      return EntryPtr();
+   }
+   else
+   {
+      return EntryPtr(const_cast<Entry *>(&(*it).second));
+   }
+}
+
+EntryPtr Entries::find (const std::string& name) const
+{
+   /* *INDENT-OFF* */
+   auto it = std::find_if(db.begin(), db.end(), [&name](const std::pair< const uint8_t, Entry> &prog)
+   {
+      return prog.second.name == name;
+   });
+   /* *INDENT-ON* */
+
+   if (it == db.end())
+   {
+      return EntryPtr();
+   }
+   else
+   {
+      return EntryPtr(const_cast<Entry *>(&((it->second))));
+   }
+
+   return EntryPtr();
+}
+
+uint8_t Entries::next_PID () const
+{
+   uint8_t PID = 0;
+
+   if (db.size() > Entry::MAX_PID)
+   {
+      return Entry::AVAILABLE_PID;
+   }
+
+   for (PID = Entry::START_PID; PID <= Entry::MAX_PID; ++PID)
+   {
+      if (db.find(PID) == db.end())
+      {
+         return PID;
+      }
+   }
+
+   return Entry::AVAILABLE_PID;
+}

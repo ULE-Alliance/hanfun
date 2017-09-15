@@ -96,17 +96,15 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
 Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
-   UNUSED(payload);
-   UNUSED(offset);
-
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
       case DEFINE_PROGRAM_CMD:
       {
-         define_program(packet.source);
-         break;
+         DefineProgram msg;
+         msg.unpack(payload, offset);
+         return define_program(packet, msg);
       }
 
       case DELETE_PROGRAM_CMD:
@@ -145,10 +143,57 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Server::define_program(const Protocol::Address &addr)
+Common::Result Server::define_program(const Protocol::Packet &packet, DefineProgram &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result= Common::Result::OK;
+
+   uint8_t PID = Entry::AVAILABLE_PID;
+
+   if( msg.ID == Entry::AVAILABLE_PID)
+   {
+      PID = next_PID();
+      if (PID == Entry::AVAILABLE_PID)
+      {
+         result = Common::Result::FAIL_RESOURCES;
+         goto _end;
+      }
+      msg.ID=PID;
+   }
+   else
+   {
+      if (entry(msg.ID) != nullptr)
+      {
+         result = Common::Result::FAIL_ARG;
+         goto _end;
+      }
+   }
+
+   if (entry(msg.name) != nullptr)
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+
+   result = entries().save(static_cast<Entry>(msg));
+
+   if (result != Common::Result::OK)
+   {
+      result = Common::Result::FAIL_UNKNOWN;
+      goto _end;
+   }
+
+   _end:
+
+   DefineProgramResponse response(result, msg.ID);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
 }
 
 // =============================================================================
