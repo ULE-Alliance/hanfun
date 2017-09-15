@@ -32,19 +32,27 @@ TEST_GROUP(BatchProgramManagement)
 {
    struct BatchProgramManagementBase: public InterfaceParentHelper<
          BatchProgramManagement::Base>
-   {};
+   {
+      BatchProgramManagementBase(HF::Core::Unit0 &unit):
+         InterfaceParentHelper<BatchProgramManagement::Base>(unit) {}
+   };
 
-   BatchProgramManagementBase interface;
+   Testing::Device *device;
+   BatchProgramManagementBase *service;
 
    TEST_SETUP()
    {
-      interface = BatchProgramManagementBase();
+      device = new Testing::Device();
+      service = new BatchProgramManagementBase(*(device->unit0()));
 
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      delete service;
+      delete device;
+
       mock().clear();
    }
 };
@@ -52,7 +60,7 @@ TEST_GROUP(BatchProgramManagement)
 //! @test BatchProgramManagement::uid should return @c HF::Interface::BATCH_PROGRAM_MANAGEMENT.
 TEST(BatchProgramManagement, UID)
 {
-   LONGS_EQUAL(HF::Interface::BATCH_PROGRAM_MANAGEMENT, interface.uid());
+   LONGS_EQUAL(HF::Interface::BATCH_PROGRAM_MANAGEMENT, service->uid());
 }
 
 //! @test Maximum Number Of Entries support.
@@ -591,37 +599,41 @@ TEST_GROUP(BatchProgramManagementClient)
    struct BatchProgramManagementClient: public InterfaceHelper<
          BatchProgramManagement::Client>
    {
-      void invoke_program(const Protocol::Address &addr) override
-      {
-         mock("BatchProgramManagement::Client").actualCall("invoke_program");
-         InterfaceHelper<BatchProgramManagement::Client>::invoke_program(addr);
-      }
-
+      BatchProgramManagementClient(HF::Core::Unit0 &unit):
+         InterfaceHelper<BatchProgramManagement::Client>(unit){}
    };
 
-   BatchProgramManagementClient client;
+   Testing::Device *device;
+   BatchProgramManagementClient *client;
 
    Protocol::Address addr;
-
    Protocol::Packet packet;
-   Common::ByteArray payload;
+   Testing::Link link;
 
    TEST_SETUP()
    {
-      client                    = BatchProgramManagementClient();
+      device = new Testing::Device();
+      client = new BatchProgramManagementClient(*(device->unit0()));
 
-      addr                      = Protocol::Address(42);
+      addr = Protocol::Address(42, 0);
 
-      packet                    = Protocol::Packet();
-      packet.message.itf.role   = HF::Interface::CLIENT_ROLE;
-      packet.message.itf.id     = client.uid();
-      packet.message.itf.member = 0xFF;
+      link = Testing::Link();
+      packet = Protocol::Packet();
+      packet.message.type = Protocol::Message::COMMAND_RES;
+      packet.message.itf.role = HF::Interface::CLIENT_ROLE;
+      packet.message.itf.id = HF::Interface::BATCH_PROGRAM_MANAGEMENT;
+      packet.link = &link;
 
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      delete client;
+      delete device;
+
+      actions.clear();
+
       mock().clear();
    }
 };
@@ -636,23 +648,27 @@ TEST(BatchProgramManagementClient, DefineProgram)
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(BatchProgramManagement::DEFINE_PROGRAM_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
+   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
+   LONGS_EQUAL(BatchProgramManagement::DEFINE_PROGRAM_CMD, client->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 }
 
 //! @test Invoke Program support.
 TEST(BatchProgramManagementClient, InvokeProgram)
 {
    // FIXME Generated Stub.
-   mock("BatchProgramManagement::Client").expectOneCall("invoke_program");
+   mock("Interface").expectOneCall("send");
 
-   packet.message.itf.member = BatchProgramManagement::INVOKE_PROGRAM_CMD;
+   client->invoke_program(addr);
 
-   CHECK_EQUAL(Common::Result::OK, client.handle(packet, payload, 3));
+   mock("Interface").checkExpectations();
 
-   mock("BatchProgramManagement::Client").checkExpectations();
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
+   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
+   LONGS_EQUAL(BatchProgramManagement::INVOKE_PROGRAM_CMD, client->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
 }
 
 //! @test Delete Program support.
@@ -661,14 +677,14 @@ TEST(BatchProgramManagementClient, DeleteProgram)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.delete_program(addr);
+   client->delete_program(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(BatchProgramManagement::DELETE_PROGRAM_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
+   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
+   LONGS_EQUAL(BatchProgramManagement::DELETE_PROGRAM_CMD, client->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 }
 
 //! @test Delete All Programs support.
@@ -677,14 +693,14 @@ TEST(BatchProgramManagementClient, DeleteAllPrograms)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.delete_all_programs(addr);
+   client->delete_all_programs(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
+   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
+   LONGS_EQUAL(BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD, client->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 }
 
 //! @test Get Program Actions support.
@@ -693,14 +709,14 @@ TEST(BatchProgramManagementClient, GetProgramActions)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client.get_program_actions(addr);
+   client->get_program_actions(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
-   LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD, client.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
+   LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
+   LONGS_EQUAL(BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD, client->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 }
 
 // =============================================================================
@@ -740,29 +756,42 @@ TEST_GROUP(BatchProgramManagementServer)
 
    };
 
-   BatchProgramManagementServer server;
-
-   Protocol::Address addr;
+   Testing::Concentrator *base;
+   BatchProgramManagementServer *server;
 
    Protocol::Packet packet;
    Common::ByteArray payload;
 
+   Protocol::Address addr;
+   Testing::Link link;
+
+
    TEST_SETUP()
    {
-      server                    = BatchProgramManagementServer();
+      base = new Testing::Concentrator();
+      server = new BatchProgramManagementServer(*(base->unit0()));
 
-      addr                      = Protocol::Address(42);
+      addr = Protocol::Address(42, 0);
+      link = Testing::Link();
 
-      packet                    = Protocol::Packet();
-      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
-      packet.message.itf.id     = server.uid();
+      packet = Protocol::Packet();
+      packet.source = addr;
+      packet.destination = Protocol::Address(0, 0);
+      packet.message.itf.role = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id = server->uid();
       packet.message.itf.member = 0xFF;
+
+      packet.message.type = Protocol::Message::COMMAND_REQ;
+      packet.link = &link;
 
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      delete server;
+      delete base;
+
       mock().clear();
    }
 };
@@ -791,7 +820,7 @@ TEST(BatchProgramManagementServer, DefineProgram)
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 }
@@ -802,14 +831,14 @@ TEST(BatchProgramManagementServer, InvokeProgram)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   server.invoke_program(addr);
+   server->invoke_program(addr);
 
    mock("Interface").checkExpectations();
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role);
-   LONGS_EQUAL(server.uid(), server.sendMsg.itf.id);
-   LONGS_EQUAL(BatchProgramManagement::INVOKE_PROGRAM_CMD, server.sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server.sendMsg.type);
+   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
+   LONGS_EQUAL(server->uid(), server->sendMsg.itf.id);
+   LONGS_EQUAL(BatchProgramManagement::INVOKE_PROGRAM_CMD, server->sendMsg.itf.member);
+   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server->sendMsg.type);
 }
 
 //! @test Delete Program support.
@@ -820,7 +849,7 @@ TEST(BatchProgramManagementServer, DeleteProgram)
 
    packet.message.itf.member = BatchProgramManagement::DELETE_PROGRAM_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 }
@@ -833,7 +862,7 @@ TEST(BatchProgramManagementServer, DeleteAllPrograms)
 
    packet.message.itf.member = BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 }
@@ -846,7 +875,7 @@ TEST(BatchProgramManagementServer, GetProgramActions)
 
    packet.message.itf.member = BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server.handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 }

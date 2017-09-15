@@ -345,12 +345,12 @@ namespace HF
           *
           * This is the parent class for the Batch Program Management interface implementation.
           */
-         struct Base: public Interfaces::Interface<HF::Interface::BATCH_PROGRAM_MANAGEMENT>
+         struct Base: public Service<HF::Interface::BATCH_PROGRAM_MANAGEMENT>
          {
             protected:
 
             //! Constructor
-            Base(): Interfaces::Interface<HF::Interface::BATCH_PROGRAM_MANAGEMENT>() {}
+            Base(Unit0 &unit): Service<HF::Interface::BATCH_PROGRAM_MANAGEMENT>(unit) {}
          };
 
          /*!
@@ -358,7 +358,7 @@ namespace HF
           *
           * This class provides the server side of the Batch Program Management interface.
           */
-         class Server: public Interfaces::InterfaceRole<BatchProgramManagement::Base,
+         class Server: public ServiceRole<BatchProgramManagement::Base,
                                                         HF::Interface::SERVER_ROLE>
          {
             protected:
@@ -369,8 +369,8 @@ namespace HF
             public:
 
             //! Constructor
-            Server(): Interfaces::InterfaceRole<BatchProgramManagement::Base,
-                                                HF::Interface::SERVER_ROLE>() {}
+            Server(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
+                                    HF::Interface::SERVER_ROLE>(unit) {}
 
             //! Destructor
             virtual ~Server() {}
@@ -488,6 +488,7 @@ namespace HF
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
+
          };
 
          /*!
@@ -495,11 +496,11 @@ namespace HF
           *
           * This class provides the client side of the Batch Program Management interface.
           */
-         struct Client: public Interfaces::InterfaceRole<BatchProgramManagement::Base,
+         struct Client: public ServiceRole<BatchProgramManagement::Base,
                                                          HF::Interface::CLIENT_ROLE>
          {
-            Client(): Interfaces::InterfaceRole<BatchProgramManagement::Base,
-                                                HF::Interface::CLIENT_ROLE>() {}
+            Client(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
+                                                HF::Interface::CLIENT_ROLE>(unit) {}
 
             virtual ~Client() {}
 
