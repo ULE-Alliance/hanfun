@@ -116,8 +116,9 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 
       case DELETE_PROGRAM_CMD:
       {
-         delete_program(packet.source);
-         break;
+         DeleteProgram msg;
+         msg.unpack(payload, offset);
+         return delete_program(packet, msg);
       }
 
       case DELETE_ALL_PROGRAMS_CMD:
@@ -277,10 +278,29 @@ Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProg
  *
  */
 // =============================================================================
-void Server::delete_program(const Protocol::Address &addr)
+Common::Result Server::delete_program(const Protocol::Packet &packet, DeleteProgram &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::OK;
+
+   if (entry(msg.ID) == nullptr)
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   result = entries().destroy(msg.ID);
+
+   _end:
+
+   DeleteProgramResponse response(result, msg.ID);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
 }
 
 // =============================================================================

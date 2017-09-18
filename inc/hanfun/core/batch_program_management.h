@@ -549,9 +549,10 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr       the network packet to send the message to.
+             * @param [in] msg         the DeleteProgram message received.
              */
-            virtual void delete_program(const Protocol::Address &addr);
+            virtual Common::Result delete_program(const Protocol::Packet &packet, DeleteProgram &msg);
 
             /*!
              * Callback that is called when a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD,
@@ -758,17 +759,19 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] msg         the DeleteProgram message to send.
              */
-            void delete_program(const Protocol::Address &addr);
+            void delete_program(const Protocol::Address &addr,
+                                DeleteProgram &msg);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            void delete_program()
+            void delete_program(DeleteProgram &msg)
             {
                Protocol::Address addr;
-               delete_program(addr);
+               delete_program(addr, msg);
             }
 
             /*!

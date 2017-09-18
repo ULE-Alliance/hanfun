@@ -933,10 +933,10 @@ TEST(BatchProgramManagementClient, InvokeProgram)
 //! @test Delete Program support.
 TEST(BatchProgramManagementClient, DeleteProgram)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->delete_program(addr);
+   DeleteProgram msg(0x01);
+   client->delete_program(addr, msg);
 
    mock("Interface").checkExpectations();
 
@@ -944,6 +944,11 @@ TEST(BatchProgramManagementClient, DeleteProgram)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(BatchProgramManagement::DELETE_PROGRAM_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   DeleteProgram actual;
+   actual.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
 }
 
 //! @test Delete All Programs support.
@@ -1004,10 +1009,10 @@ TEST_GROUP(BatchProgramManagementServer)
          return InterfaceHelper<BatchProgramManagement::Server>::invoke_program(packet, msg);
       }
 
-      void delete_program(const Protocol::Address &addr) override
+      Common::Result delete_program(const Protocol::Packet &packet, InvokeProgram &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("delete_program");
-         InterfaceHelper<BatchProgramManagement::Server>::delete_program(addr);
+         return InterfaceHelper<BatchProgramManagement::Server>::delete_program(packet, msg);
       }
 
       void delete_all_programs(const Protocol::Address &addr) override
@@ -1565,14 +1570,105 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
 //! @test Delete Program support.
 TEST(BatchProgramManagementServer, DeleteProgram)
 {
-   // FIXME Generated Stub.
-   mock("BatchProgramManagement::Server").expectOneCall("delete_program");
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   DeleteProgram received(0x12);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
 
    packet.message.itf.member = BatchProgramManagement::DELETE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   mock("BatchProgramManagement::Server").expectOneCall("delete_program");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(0, server->entries().size());
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   DeleteProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   UNSIGNED_LONGS_EQUAL(0x12, resp.ID);
+}
+
+/**! @test Delete Program support.
+ *
+ *Fail because Program ID doesn't exist
+ */
+TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
+{
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   DeleteProgram received(0x10);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::DELETE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+   mock("BatchProgramManagement::Server").expectOneCall("delete_program");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   DeleteProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
 //! @test Delete All Programs support.
