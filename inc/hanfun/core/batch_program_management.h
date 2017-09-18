@@ -418,6 +418,11 @@ namespace HF
             Common::Result destroy (const Entry &entry);
 
             /*!
+             * Erase all the DB entries.
+             */
+            void clear (void);
+
+            /*!
              * @copydoc IEntries::find(uint16_t)
              */
             EntryPtr find (uint8_t PID) const;
@@ -560,7 +565,7 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void delete_all_programs(const Protocol::Address &addr);
+            virtual Common::Result delete_all_programs(const Protocol::Packet &packet);
 
             /*!
              * Callback that is called when a @c BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD,

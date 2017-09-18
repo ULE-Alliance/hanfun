@@ -193,7 +193,6 @@ void Client::delete_program(const Protocol::Address &addr,
 // =============================================================================
 void Client::delete_all_programs(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;

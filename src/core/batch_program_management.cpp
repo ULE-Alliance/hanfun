@@ -415,6 +415,11 @@ Common::Result Entries::destroy (const Entry& entry)
    return destroy(entry.ID);
 }
 
+void Entries::clear()
+{
+   db.clear();
+}
+
 EntryPtr Entries::find (uint8_t PID) const
 {
    auto it = db.find(PID);

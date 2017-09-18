@@ -1015,10 +1015,10 @@ TEST_GROUP(BatchProgramManagementServer)
          return InterfaceHelper<BatchProgramManagement::Server>::delete_program(packet, msg);
       }
 
-      void delete_all_programs(const Protocol::Address &addr) override
+      Common::Result delete_all_programs(const Protocol::Packet &packet) override
       {
          mock("BatchProgramManagement::Server").actualCall("delete_all_programs");
-         InterfaceHelper<BatchProgramManagement::Server>::delete_all_programs(addr);
+         return InterfaceHelper<BatchProgramManagement::Server>::delete_all_programs(packet);
       }
 
       void get_program_actions(const Protocol::Address &addr) override
@@ -1674,14 +1674,47 @@ TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
 //! @test Delete All Programs support.
 TEST(BatchProgramManagementServer, DeleteAllPrograms)
 {
-   // FIXME Generated Stub.
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
+
    mock("BatchProgramManagement::Server").expectOneCall("delete_all_programs");
 
    packet.message.itf.member = BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(0, server->entries().size());
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   DeleteAllProgramsResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+
 }
 
 //! @test Get Program Actions support.
