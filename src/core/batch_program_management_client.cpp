@@ -151,10 +151,11 @@ void Client::define_program (const Protocol::Address &addr,
  *
  */
 // =============================================================================
-void Client::invoke_program(const Protocol::Address &addr)
+void Client::invoke_program(const Protocol::Address &addr,
+                            InvokeProgram &msg)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   Protocol::Message message(msg.size());
+   msg.pack(message.payload);
 
    message.itf.role = SERVER_ROLE;
    message.itf.id = Interface::BATCH_PROGRAM_MANAGEMENT;

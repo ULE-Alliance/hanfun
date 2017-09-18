@@ -107,6 +107,13 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
          return define_program(packet, msg);
       }
 
+      case INVOKE_PROGRAM_CMD:
+      {
+         InvokeProgram msg;
+         msg.unpack(payload, offset);
+         return invoke_program(packet, msg);
+      }
+
       case DELETE_PROGRAM_CMD:
       {
          delete_program(packet.source);
@@ -219,16 +226,48 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
  *
  */
 // =============================================================================
-void Server::invoke_program(const Protocol::Address &addr)
+Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProgram &msg)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
 
-   message.itf.role   = CLIENT_ROLE;
-   message.itf.id     = Interface::BATCH_PROGRAM_MANAGEMENT;
-   message.itf.member = INVOKE_PROGRAM_CMD;
+   Common::Result result= Common::Result::OK;
+   Protocol::Address localhost= packet.destination;
 
-   send(addr, message);
+   auto prog = entry(msg.ID);
+   if(prog == nullptr)           // Check if the program ID exists
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+
+   std::all_of(prog->actions.begin(), prog->actions.end(), [&localhost, &result, this](Action &a){
+      localhost.unit = a.reference;
+      Protocol::Packet _packet(localhost, localhost, a);
+      auto dest_unit= unit().device().unit(a.reference);
+      if(dest_unit == nullptr)
+      {
+         result = Common::Result::FAIL_ARG;
+         return false;     //goto not allowed where! A simple return will do in this case.
+      }
+      result = dest_unit->handle(_packet, a.payload, 0);
+      if( result != Common::Result::OK)
+      {
+        return false;      //goto not allowed where! A simple return will do in this case.
+      }
+      return true;
+   });
+
+   _end:
+
+   InvokeProgramResponse response(result, msg.ID);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
 }
 
 // =============================================================================

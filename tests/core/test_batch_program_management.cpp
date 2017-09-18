@@ -911,10 +911,11 @@ TEST(BatchProgramManagementClient, DefineProgram)
 //! @test Invoke Program support.
 TEST(BatchProgramManagementClient, InvokeProgram)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->invoke_program(addr);
+   InvokeProgram msg(0x01);
+
+   client->invoke_program(addr, msg);
 
    mock("Interface").checkExpectations();
 
@@ -923,6 +924,10 @@ TEST(BatchProgramManagementClient, InvokeProgram)
    LONGS_EQUAL(BatchProgramManagement::INVOKE_PROGRAM_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 
+   InvokeProgram actual;
+   actual.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
 }
 
 //! @test Delete Program support.
@@ -991,6 +996,12 @@ TEST_GROUP(BatchProgramManagementServer)
       {
          mock("BatchProgramManagement::Server").actualCall("define_program");
          return InterfaceHelper<BatchProgramManagement::Server>::define_program(packet, msg);
+      }
+
+      Common::Result invoke_program(const Protocol::Packet &packet, InvokeProgram &msg) override
+      {
+         mock("BatchProgramManagement::Server").actualCall("invoke_program");
+         return InterfaceHelper<BatchProgramManagement::Server>::invoke_program(packet, msg);
       }
 
       void delete_program(const Protocol::Address &addr) override
@@ -1391,17 +1402,164 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
 //! @test Invoke Program support.
 TEST(BatchProgramManagementServer, InvokeProgram)
 {
-   // FIXME Generated Stub.
-   mock("Interface").expectOneCall("send");
 
-   server->invoke_program(addr);
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
 
-   mock("Interface").checkExpectations();
+   Entry _received(0x12, std::string("TEST"), actions);
 
-   LONGS_EQUAL(HF::Interface::CLIENT_ROLE, server->sendMsg.itf.role);
-   LONGS_EQUAL(server->uid(), server->sendMsg.itf.id);
-   LONGS_EQUAL(BatchProgramManagement::INVOKE_PROGRAM_CMD, server->sendMsg.itf.member);
-   LONGS_EQUAL(Protocol::Message::COMMAND_REQ, server->sendMsg.type);
+   server->entries().save(_received);
+
+   InvokeProgram received(0x12);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::INVOKE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+   mock("TestUnit").expectOneCall("id").andReturnValue(1);
+   mock("TestUnit").expectOneCall("handle");
+   mock("BatchProgramManagement::Server").expectOneCall("invoke_program");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+   mock("TestUnit").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   InvokeProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   LONGS_EQUAL(0x12, resp.ID);
+}
+
+/** @test Invoke Program support.
+ *
+ * Should fail because the device doesn't have the specified UID.
+ */
+TEST(BatchProgramManagementServer, InvokeProgram_fail_no_UID)
+{
+
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x11,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   InvokeProgram received(0x12);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::INVOKE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+   mock("TestUnit").expectOneCall("id");
+   mock("TestUnit").expectNoCall("handle");
+   mock("BatchProgramManagement::Server").expectOneCall("invoke_program");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+   mock("TestUnit").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   InvokeProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+}
+
+/** @test Invoke Program support.
+ *
+ * Should fail because the unit handler sent an error.
+ */
+TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
+{
+
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   InvokeProgram received(0x12);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::INVOKE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+   mock("TestUnit").expectOneCall("id");
+   mock("TestUnit").expectOneCall("handle").andReturnValue((int)Common::Result::FAIL_ARG);
+   mock("BatchProgramManagement::Server").expectOneCall("invoke_program");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+   mock("TestUnit").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   InvokeProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
 //! @test Delete Program support.

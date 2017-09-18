@@ -537,6 +537,15 @@ namespace HF
                                                   DefineProgram &msg);
 
             /*!
+             * Callback that is called when a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
+             * is received.
+             *
+             * @param [in] packet      the network packet to send the message to.
+             * @param [in] msg         the InvokeProgram message received.
+             */
+            virtual Common::Result invoke_program(const Protocol::Packet &packet,
+                                                  InvokeProgram &msg);
+            /*!
              * Callback that is called when a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
              * is received.
              *
@@ -725,6 +734,26 @@ namespace HF
             }
 
             /*!
+             * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD, to the given
+             * network address.
+             *
+             * @param [in] addr       the network address to send the message to.
+             * @param [in] msg         the InvokeProgram message to send.
+             */
+            void invoke_program(const Protocol::Address &addr,
+                                InvokeProgram &msg);
+
+            /*!
+             * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
+             * to the broadcast network address.
+             */
+            void invoke_program(InvokeProgram &msg)
+            {
+               Protocol::Address addr;
+               invoke_program(addr, msg);
+            }
+
+            /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_PROGRAM_CMD, to the given
              * network address.
              *
@@ -779,24 +808,6 @@ namespace HF
                get_program_actions(addr);
             }
 #endif
-
-            //! @}
-            // ======================================================================
-
-            // ======================================================================
-            // Events
-            // ======================================================================
-            //! @name Events
-            //! @{
-            //!
-
-            /*!
-             * Callback that is called when a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            virtual void invoke_program(const Protocol::Address &addr);
 
             //! @}
             // =============================================================================
