@@ -879,7 +879,6 @@ TEST_GROUP(BatchProgramManagementClient)
 //! @test Define Program support.
 TEST(BatchProgramManagementClient, DefineProgram)
 {
-    //FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    auto msg_type = HF::Protocol::Message::Type::COMMAND_REQ;
@@ -1011,11 +1010,56 @@ TEST_GROUP(BatchProgramManagementServer)
          mock("BatchProgramManagement::Server").actualCall("get_program_actions");
          InterfaceHelper<BatchProgramManagement::Server>::get_program_actions(addr);
       }
+   };
+
+
+   class TestUnit: public Unit::AbstractUnit
+   {
+
+      public:
+      TestUnit (IDevice &device) :
+            Unit::AbstractUnit(device)
+      {
+      }
+
+      Common::Result handle (Protocol::Packet &packet, Common::ByteArray &payload,
+                             uint16_t offset)
+      {
+         UNUSED(packet);
+         UNUSED(payload);
+         UNUSED(offset);
+         mock("TestUnit").actualCall("handle");
+         return static_cast<Common::Result>(mock("TestUnit").returnIntValueOrDefault(
+               static_cast<int>(Common::Result::OK)));
+      }
+
+      uint8_t id () const
+      {
+         return mock("TestUnit").actualCall("id").returnIntValueOrDefault(0x01);
+      }
+
+      uint16_t uid () const
+      {
+         return mock("TestUnit").actualCall("uid").returnIntValueOrDefault(0x01);
+      }
+
+      HF::Attributes::List attributes (Common::Interface itf, uint8_t pack_id,
+                                       const HF::Attributes::UIDS &uids) const
+                                       {
+         UNUSED(itf);
+         UNUSED(pack_id);
+         UNUSED(uids);
+
+         return HF::Attributes::List();
+      }
 
    };
 
+
    Testing::Concentrator *base;
    BatchProgramManagementServer *server;
+   TestUnit *unit;
+
 
    Protocol::Packet packet;
    Common::ByteArray payload;
@@ -1027,6 +1071,8 @@ TEST_GROUP(BatchProgramManagementServer)
    TEST_SETUP()
    {
       base = new Testing::Concentrator();
+      unit = new TestUnit(*base);
+
       server = new BatchProgramManagementServer(*(base->unit0()));
 
       addr = Protocol::Address(42, 0);
@@ -1048,6 +1094,7 @@ TEST_GROUP(BatchProgramManagementServer)
    TEST_TEARDOWN()
    {
       delete server;
+      delete unit;
       delete base;
 
       mock().clear();
@@ -1114,7 +1161,7 @@ TEST(BatchProgramManagementServer, NumberOfEntries)
 TEST(BatchProgramManagementServer, DefineProgram)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                // UID
+   actions.push_back(GenerateAction(0x01,                // UID
                HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
                0x00,                                     // Itf type
                0x2233,                                   // Itf UID
@@ -1138,7 +1185,7 @@ TEST(BatchProgramManagementServer, DefineProgram)
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 
@@ -1177,7 +1224,7 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
 
 
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                // UID
+   actions.push_back(GenerateAction(0x01,                // UID
                HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
                0x00,                                     // Itf type
                0x2233,                                   // Itf UID
@@ -1201,7 +1248,7 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 
@@ -1229,17 +1276,11 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
    LONGS_EQUAL(Entry::START_PID, resp.ID);
 }
 
-//! @test Define Program support. Fail because the PID is in use.
-TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
+//! @test Define Program support.
+TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
 {
-   Entry entry;
-
-   entry.name=std::string("P18");
-   entry.ID=0x12;
-   server->entries().save(entry);
-
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                // UID
+   actions.push_back(GenerateAction(0x11,                // UID (Different from the UID in the dev)
                HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
                0x00,                                     // Itf type
                0x2233,                                   // Itf UID
@@ -1263,7 +1304,65 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
 
-   CHECK_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+
+   LONGS_EQUAL(0, server->entries().size());    // Check if the new program is on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   DefineProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+}
+
+//! @test Define Program support. Fail because the PID is in use.
+TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
+{
+   Entry entry;
+
+   entry.name=std::string("P18");
+   entry.ID=0x12;
+   server->entries().save(entry);
+
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+               HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+               0x00,                                     // Itf type
+               0x2233,                                   // Itf UID
+               0x44,                                     // Itf Member
+               10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   DefineProgram received(_received);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+
+
+   mock("BatchProgramManagement::Server").expectOneCall("define_program");
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
 

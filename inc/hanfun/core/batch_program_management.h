@@ -519,31 +519,6 @@ namespace HF
             virtual ~Server() {}
 
             // ======================================================================
-            // Commands
-            // ======================================================================
-            //! @name Commands
-            //! @{
-
-            /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD, to the given
-             * network address.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            void invoke_program(const Protocol::Address &addr);
-
-            /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
-             * to the broadcast network address.
-             */
-            void invoke_program()
-            {
-               Protocol::Address addr;
-               invoke_program(addr);
-            }
-
-            //! @}
-            // ======================================================================
 
             // ======================================================================
             // Events
