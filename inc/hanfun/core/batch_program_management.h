@@ -573,7 +573,8 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void get_program_actions(const Protocol::Address &addr);
+            virtual Common::Result get_program_actions(const Protocol::Packet &packet,
+                                                       GetProgramActions &msg);
 
             //! @}
             // ======================================================================
@@ -803,17 +804,20 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] pid        the program ID to get the information.
              */
-            void get_program_actions(const Protocol::Address &addr);
+            void get_program_actions(const Protocol::Address &addr, uint8_t pid);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD,
              * to the broadcast network address.
+             *
+             * * @param [in] pid        the program ID to get the information.
              */
-            void get_program_actions()
+            void get_program_actions( uint8_t pid)
             {
                Protocol::Address addr;
-               get_program_actions(addr);
+               get_program_actions(addr,pid);
             }
 #endif
 

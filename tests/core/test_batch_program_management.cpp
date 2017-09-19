@@ -954,7 +954,6 @@ TEST(BatchProgramManagementClient, DeleteProgram)
 //! @test Delete All Programs support.
 TEST(BatchProgramManagementClient, DeleteAllPrograms)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->delete_all_programs(addr);
@@ -970,10 +969,9 @@ TEST(BatchProgramManagementClient, DeleteAllPrograms)
 //! @test Get Program Actions support.
 TEST(BatchProgramManagementClient, GetProgramActions)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->get_program_actions(addr);
+   client->get_program_actions(addr, 0x01);
 
    mock("Interface").checkExpectations();
 
@@ -981,6 +979,10 @@ TEST(BatchProgramManagementClient, GetProgramActions)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   GetProgramActions actual;
+   actual.unpack(client->sendMsg.payload);
+   UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
 }
 
 // =============================================================================
@@ -1021,10 +1023,11 @@ TEST_GROUP(BatchProgramManagementServer)
          return InterfaceHelper<BatchProgramManagement::Server>::delete_all_programs(packet);
       }
 
-      void get_program_actions(const Protocol::Address &addr) override
+      Common::Result get_program_actions(const Protocol::Packet &packet,
+                               GetProgramActions &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("get_program_actions");
-         InterfaceHelper<BatchProgramManagement::Server>::get_program_actions(addr);
+         return InterfaceHelper<BatchProgramManagement::Server>::get_program_actions(packet, msg);
       }
    };
 
@@ -1720,12 +1723,103 @@ TEST(BatchProgramManagementServer, DeleteAllPrograms)
 //! @test Get Program Actions support.
 TEST(BatchProgramManagementServer, GetProgramActions)
 {
-   // FIXME Generated Stub.
-   mock("BatchProgramManagement::Server").expectOneCall("get_program_actions");
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x10, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   GetProgramActions received(0x10);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
 
    packet.message.itf.member = BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   mock("BatchProgramManagement::Server").expectOneCall("get_program_actions");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   GetProgramActionsResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   DoActionTests(_received, resp.program);
+}
+
+/**! @test Get Program Actions support.
+ *
+ * Fail because the device don't have the required program.
+ */
+TEST(BatchProgramManagementServer, GetProgramActions_fail_no_program)
+{
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                // UID
+         HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
+         0x00,                                     // Itf type
+         0x2233,                                   // Itf UID
+         0x44,                                     // Itf Member
+         10));                                     // Payload size
+
+   Entry _received(0x10, std::string("TEST"), actions);
+
+   server->entries().save(_received);
+
+   GetProgramActions received(0x22);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+   mock("BatchProgramManagement::Server").expectOneCall("get_program_actions");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   GetProgramActionsResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }

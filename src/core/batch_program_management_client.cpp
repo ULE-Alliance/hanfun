@@ -210,10 +210,12 @@ void Client::delete_all_programs(const Protocol::Address &addr)
  *
  */
 // =============================================================================
-void Client::get_program_actions(const Protocol::Address &addr)
+void Client::get_program_actions(const Protocol::Address &addr, uint8_t pid)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   GetProgramActions msg(pid);
+
+   Protocol::Message message(msg.size());
+   msg.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::BATCH_PROGRAM_MANAGEMENT;

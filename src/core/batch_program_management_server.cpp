@@ -128,8 +128,9 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 
       case GET_PROGRAM_ACTIONS_CMD:
       {
-         get_program_actions(packet.source);
-         break;
+         GetProgramActions msg;
+         msg.unpack(payload,offset);
+         return get_program_actions(packet, msg);
       }
 
       default:
@@ -331,10 +332,31 @@ Common::Result Server::delete_all_programs(const Protocol::Packet &packet)
  *
  */
 // =============================================================================
-void Server::get_program_actions(const Protocol::Address &addr)
+Common::Result Server::get_program_actions(const Protocol::Packet &packet,
+                                           GetProgramActions &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::OK;
+   GetProgramActionsResponse response;
+
+   auto prog = entry(msg.ID);
+   if ( prog == nullptr)
+   {
+      result = Common::Result::FAIL_ARG;
+      response = GetProgramActionsResponse(result);
+      goto _end;
+   }
+
+   response = GetProgramActionsResponse(result, prog.operator *());
+
+   _end:
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
 }
 
 
