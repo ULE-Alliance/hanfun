@@ -913,9 +913,7 @@ TEST(BatchProgramManagementClient, InvokeProgram)
 {
    mock("Interface").expectOneCall("send");
 
-   InvokeProgram msg(0x01);
-
-   client->invoke_program(addr, msg);
+   client->invoke_program(addr, 0x01);
 
    mock("Interface").checkExpectations();
 
@@ -935,8 +933,7 @@ TEST(BatchProgramManagementClient, DeleteProgram)
 {
    mock("Interface").expectOneCall("send");
 
-   DeleteProgram msg(0x01);
-   client->delete_program(addr, msg);
+   client->delete_program(addr, 0x01);
 
    mock("Interface").checkExpectations();
 

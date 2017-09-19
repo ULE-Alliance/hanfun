@@ -132,7 +132,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
  */
 // =============================================================================
 void Client::define_program (const Protocol::Address &addr,
-                               DefineProgram &program)
+                               Entry &program)
 {
    Protocol::Message message(program.size());
    program.pack(message.payload);
@@ -152,8 +152,9 @@ void Client::define_program (const Protocol::Address &addr,
  */
 // =============================================================================
 void Client::invoke_program(const Protocol::Address &addr,
-                            InvokeProgram &msg)
+                            uint8_t pid)
 {
+   InvokeProgram msg(pid);
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
@@ -172,8 +173,9 @@ void Client::invoke_program(const Protocol::Address &addr,
  */
 // =============================================================================
 void Client::delete_program(const Protocol::Address &addr,
-                            DeleteProgram &msg)
+                            uint8_t pid)
 {
+   DeleteProgram msg(pid);
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 

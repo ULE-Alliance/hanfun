@@ -604,7 +604,7 @@ namespace HF
              *          @c nullptr otherwise.
              */
             EntryPtr entry (const uint8_t PID) const
-                            {
+            {
                return entries().find(PID);
             }
 
@@ -617,7 +617,7 @@ namespace HF
              *          @c nullptr otherwise.
              */
             EntryPtr entry (const std::string &name) const
-                            {
+            {
                return entries().find(name);
             }
 
@@ -701,24 +701,31 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] pid        the program ID.
+             * @param [in] name       the name for the program.
+             * @param [in] actions    the list of actions that makes the program.
              */
             void define_program(const Protocol::Address &addr,
-                                const uint8_t _ID, const std::string _name,
-                                std::vector<Action>& _actions)
+                                const uint8_t pid, const std::string name,
+                                std::vector<Action>& actions)
             {
-               DefineProgram request(_ID, _name, _actions);
+               DefineProgram request(pid, name, actions);
                define_program(addr, request);
             }
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * to the broadcast network address.
+             *
+             * @param [in] pid        the program ID.
+             * @param [in] name       the name for the program.
+             * @param [in] actions    the list of actions that makes the program.
              */
-            void define_program(const uint8_t _ID, const std::string _name,
-                                 std::vector<Action>& _actions)
+            void define_program(const uint8_t pid, const std::string name,
+                                 std::vector<Action>& actions)
             {
                Protocol::Address addr;
-               define_program(addr, _ID, _name, _actions);
+               define_program(addr, pid, name, actions);
             }
 
             /*!
@@ -726,15 +733,16 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] program     the program to send to the device.
              */
             void define_program (const Protocol::Address &addr,
-                                 DefineProgram &program);
+                                 Entry &program);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            void define_program (DefineProgram &program)
+            void define_program (Entry &program)
             {
                Protocol::Address addr;
                define_program(addr, program);
@@ -745,19 +753,19 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
-             * @param [in] msg         the InvokeProgram message to send.
+             * @param [in] pid        the ID of the program to run.
              */
             void invoke_program(const Protocol::Address &addr,
-                                InvokeProgram &msg);
+                                uint8_t pid);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            void invoke_program(InvokeProgram &msg)
+            void invoke_program(uint8_t pid)
             {
                Protocol::Address addr;
-               invoke_program(addr, msg);
+               invoke_program(addr, pid);
             }
 
             /*!
@@ -765,19 +773,19 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
-             * @param [in] msg         the DeleteProgram message to send.
+             * @param [in] pid        the ID of the program to delete.
              */
             void delete_program(const Protocol::Address &addr,
-                                DeleteProgram &msg);
+                                uint8_t pid);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            void delete_program(DeleteProgram &msg)
+            void delete_program(uint8_t pid)
             {
                Protocol::Address addr;
-               delete_program(addr, msg);
+               delete_program(addr, pid);
             }
 
             /*!
