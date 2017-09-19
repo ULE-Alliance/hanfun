@@ -832,6 +832,49 @@ namespace HF
             //! @}
             // =============================================================================
 
+            // ======================================================================
+            // Events
+            // ======================================================================
+            //! @name Events
+            //! @{
+
+            /*!
+             * This method is called when a response to a create program
+             * is received.
+             *
+             * @param [in] response    the create program response that was received.
+             */
+            virtual void defined (DefineProgramResponse &response) = 0;
+
+            /*!
+             * This method is called when a response to a delete program
+             * is received.
+             *
+             * @param [in] response    the deleted response that was received.
+             */
+            virtual void deleted (DeleteProgramResponse &response) = 0;
+
+            virtual void deleted (DeleteAllProgramsResponse &response) = 0;
+
+            /*!
+             * This method is called when a response to a invoke program message
+             * is received.
+             *
+             * @param [in] response    the invoke program response that was received.
+             */
+            virtual void invoked (InvokeProgramResponse &response) = 0;
+
+            /*!
+             * This method is called when a response to a get info message
+             * is received.
+             *
+             * @param [in] response    the get program actions response that was received.
+             */
+            virtual void got_actions (GetProgramActionsResponse &response) = 0;
+
+            //! @}
+            // ======================================================================
+
             protected:
 
             uint16_t payload_size(Protocol::Message::Interface &itf) const;

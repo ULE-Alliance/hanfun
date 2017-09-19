@@ -77,7 +77,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
          {
          DefineProgramResponse response;
          response.unpack(payload, offset);
-//         created(response);
+         defined(response);
          break;
       }
 
@@ -85,7 +85,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
       {
          InvokeProgramResponse response;
          response.unpack(payload, offset);
-//         invoked(response);
+         invoked(response);
          break;
       }
 
@@ -93,7 +93,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
       {
          DeleteProgramResponse response;
          response.unpack(payload, offset);
-         //deleted(response);
+         deleted(response);
          break;
       }
 
@@ -101,7 +101,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
       {
          DeleteAllProgramsResponse response;
          response.unpack(payload, offset);
-         //deleted(response);
+         deleted(response);
          break;
       }
 
@@ -109,7 +109,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
       {
          GetProgramActionsResponse response;
          response.unpack(payload, offset);
-         //got_actions(response);
+         got_actions(response);
          break;
       }
 

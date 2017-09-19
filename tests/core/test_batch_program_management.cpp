@@ -798,6 +798,36 @@ TEST_GROUP(BatchProgramManagementClient)
    {
       BatchProgramManagementClient(HF::Core::Unit0 &unit):
          InterfaceHelper<BatchProgramManagement::Client>(unit){}
+
+      void defined (DefineProgramResponse &response)
+      {
+         UNUSED(response);
+         mock("BatchProgramManagement::Client").actualCall("defined");
+      }
+
+      void deleted (DeleteProgramResponse &response)
+      {
+         UNUSED(response);
+         mock("BatchProgramManagement::Client").actualCall("deleted");
+      }
+
+      void deleted (DeleteAllProgramsResponse &response)
+      {
+         UNUSED(response);
+         mock("BatchProgramManagement::Client").actualCall("deleted");
+      }
+
+      void invoked (InvokeProgramResponse &response)
+      {
+         UNUSED(response);
+         mock("BatchProgramManagement::Client").actualCall("invoked");
+      }
+
+      void got_actions (GetProgramActionsResponse &response)
+      {
+         UNUSED(response);
+         mock("BatchProgramManagement::Client").actualCall("got_actions");
+      }
    };
 
    Testing::Device *device;
@@ -819,7 +849,7 @@ TEST_GROUP(BatchProgramManagementClient)
       link = Testing::Link();
       packet = Protocol::Packet();
       packet.message.type = Protocol::Message::COMMAND_RES;
-      packet.message.itf.role = HF::Interface::CLIENT_ROLE;
+      packet.message.itf.role = HF::Interface::SERVER_ROLE;
       packet.message.itf.id = HF::Interface::BATCH_PROGRAM_MANAGEMENT;
       packet.link = &link;
 
@@ -908,6 +938,26 @@ TEST(BatchProgramManagementClient, DefineProgram)
    DoActionTests(test,message);
 }
 
+//! @test Defined support.
+TEST(BatchProgramManagementClient, Defined_OK)
+{
+   Common::ByteArray payload =
+   {
+      Common::Result::OK,
+      0x12,
+   };
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+
+   mock("BatchProgramManagement::Client").expectOneCall("defined");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Client").checkExpectations();
+}
+
 //! @test Invoke Program support.
 TEST(BatchProgramManagementClient, InvokeProgram)
 {
@@ -926,6 +976,26 @@ TEST(BatchProgramManagementClient, InvokeProgram)
    actual.unpack(client->sendMsg.payload);
 
    UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
+}
+
+//! @test invoked support.
+TEST(BatchProgramManagementClient, Invoked_OK)
+{
+   Common::ByteArray payload =
+   {
+      Common::Result::OK,
+      0x12,
+   };
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = BatchProgramManagement::INVOKE_PROGRAM_CMD;
+
+   mock("BatchProgramManagement::Client").expectOneCall("invoked");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Client").checkExpectations();
 }
 
 //! @test Delete Program support.
@@ -948,6 +1018,26 @@ TEST(BatchProgramManagementClient, DeleteProgram)
    UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
 }
 
+//! @test Deleted support.
+TEST(BatchProgramManagementClient, Deleted_OK_one)
+{
+   Common::ByteArray payload =
+   {
+      Common::Result::OK,
+      0x12,
+   };
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = BatchProgramManagement::DELETE_PROGRAM_CMD;
+
+   mock("BatchProgramManagement::Client").expectOneCall("deleted");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Client").checkExpectations();
+}
+
 //! @test Delete All Programs support.
 TEST(BatchProgramManagementClient, DeleteAllPrograms)
 {
@@ -961,6 +1051,25 @@ TEST(BatchProgramManagementClient, DeleteAllPrograms)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+}
+
+//! @test Deleted support.
+TEST(BatchProgramManagementClient, Deleted_OK_all)
+{
+   Common::ByteArray payload =
+   {
+      Common::Result::OK,
+   };
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD;
+
+   mock("BatchProgramManagement::Client").expectOneCall("deleted");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Client").checkExpectations();
 }
 
 //! @test Get Program Actions support.
@@ -980,6 +1089,33 @@ TEST(BatchProgramManagementClient, GetProgramActions)
    GetProgramActions actual;
    actual.unpack(client->sendMsg.payload);
    UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
+}
+
+//! @test Got actions support.
+TEST(BatchProgramManagementClient, Got_actions)
+{
+   actions.push_back(GenerateAction(0x11,                         // UID
+               HF::Protocol::Message::Type::COMMAND_REQ,          // Msg type
+               0x00,                                              // Itf type
+               0x2233,                                            // Itf UID
+               0x44,                                              // Itf Member
+               10));                                              // Payload size
+
+   Entry test(0x12, std::string("TEST"), actions);
+
+
+   Common::ByteArray payload (test.size());
+   test.pack(payload);
+
+   packet.message.length     = payload.size();
+   packet.message.itf.member = BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD;
+
+   mock("BatchProgramManagement::Client").expectOneCall("got_actions");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
+                        client->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Client").checkExpectations();
 }
 
 // =============================================================================
