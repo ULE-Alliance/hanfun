@@ -83,6 +83,23 @@ HF::Attributes::IAttribute *BatchProgramManagement::create_attribute(uint8_t uid
 // =============================================================================
 
 // =============================================================================
+// Action::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Action::pack (Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, size());
+
+   HF_ASSERT(type == Protocol::Message::Type::COMMAND_REQ ||
+             type == Protocol::Message::Type::SET_ATTR_REQ , return 0;)
+
+   return Protocol::Message::pack(array, offset);
+}
+
+// =============================================================================
 // action::unpack
 // =============================================================================
 /*!
@@ -150,7 +167,10 @@ uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
 
    HF::Common::SerializableHelperVector<std::vector<Action>, uint8_t> helper(
          const_cast<std::vector<Action> &>(actions));
-   offset += helper.pack(array, offset);
+
+   size = helper.pack(array, offset);
+   HF_ASSERT(size > 0, return 0;);
+   offset += size;
 
    return offset - start;
 }
@@ -216,8 +236,12 @@ uint16_t DefineProgramResponse::pack (Common::ByteArray& array,
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
+   uint16_t size;
 
-   offset += Response::pack(array, offset);
+   size = Response::pack(array, offset);
+   HF_ASSERT(size > 0, return 0;);
+   offset += size;
+
    if (this->code != Common::Result::OK)
    {
       return min_size;
@@ -327,15 +351,20 @@ uint16_t GetProgramActionsResponse::pack (
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
+   uint16_t size;
    uint16_t start = offset;
 
-   offset += Response::pack(array, offset);
+   size = Response::pack(array, offset);
+   HF_ASSERT(size > 0, return 0;);
+   offset += size;
    if (this->code != Common::Result::OK)
    {
       return min_size;
    }
 
-   offset += program.pack(array, offset);
+   size = program.pack(array, offset);
+   HF_ASSERT(size > 0, return 0;);
+   offset += size;
 
    return (offset - start);
 }

@@ -217,7 +217,34 @@ TEST(BatchProgramEntries, Save)
    entries.save(entry);
 
    UNSIGNED_LONGS_EQUAL(1, entries.size());
-   CHECK_EQUAL(std::string("P0"), entries.data()[0].name);
+   CHECK_EQUAL(std::string("P0"), entries.data().begin()->second.name);
+}
+
+//! @test Entries save new
+TEST(BatchProgramEntries, Save_using_primitive_variables)
+{
+   LONGS_EQUAL(0, entries.size());
+
+   ByteArray program1 = ByteArray { 0x12,
+                                    0x34,
+                                    0x56 };
+
+   std::vector<Action> actions;
+
+   Action action1 = Action(0x98,
+                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           0x00,
+                           0x0134,
+                           0x56,
+                           program1);
+
+   entries.save(0x12,
+                std::string("P0"),
+                actions);
+
+
+   UNSIGNED_LONGS_EQUAL(1, entries.size());
+   CHECK_EQUAL(std::string("P0"), entries.data().begin()->second.name);
 }
 
 // =============================================================================
@@ -392,6 +419,35 @@ TEST(BatchProgramManagementMessages, DefineProgram_pack)
                          0x56};
 
    CHECK_EQUAL(expected, payload);
+}
+
+//! @test Check the DefineProgram message pack
+TEST(BatchProgramManagementMessages, DefineProgram_pack_fail_wrong_msg_type)
+{
+   ByteArray program1 = ByteArray { 0x12,
+                                   0x34,
+                                   0x56 };
+
+   std::vector<Action> actions;
+
+   Action action1 = Action(0x98,
+                           HF::Protocol::Message::Type::GET_ATTR_REQ, //wrong message type
+                           0x00,
+                           0x0134,
+                           0x56,
+                           program1);
+
+   actions.push_back(action1);
+
+   DefineProgram message(0x12,
+                         "TEST",
+                         actions);
+
+   payload = ByteArray(message.size());
+   uint16_t size = message.pack(payload,0);
+
+   UNSIGNED_LONGS_EQUAL(payload.size(), message.size());
+   UNSIGNED_LONGS_EQUAL(0, size);
 }
 
 //! @test Check the DefineProgram message unpack
@@ -938,6 +994,27 @@ TEST(BatchProgramManagementClient, DefineProgram)
    DoActionTests(test,message);
 }
 
+//! @test Define Program support.
+TEST(BatchProgramManagementClient, DefineProgram_fail)
+{
+   mock("Interface").expectNoCall("send");
+
+   auto msg_type = HF::Protocol::Message::Type::GET_ATTR_REQ;                 //wrong type
+
+   actions.push_back(GenerateAction(0x11,                                     // UID
+                                    msg_type,                                 // Msg type
+                                    0x00,                                     // Itf type
+                                    0x2233,                                   // Itf UID
+                                    0x44,                                     // Itf Member
+                                    10));                                     // Payload size
+
+   Entry test(0x12, std::string("TEST"), actions);
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, client->define_program(addr,test));
+
+   mock("Interface").checkExpectations();
+}
+
 //! @test Defined support.
 TEST(BatchProgramManagementClient, Defined_OK)
 {
@@ -1438,6 +1515,58 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
                0x2233,                                   // Itf UID
                0x44,                                     // Itf Member
                10));                                     // Payload size
+
+   Entry _received(0x12, std::string("TEST"), actions);
+
+   DefineProgram received(_received);
+   payload = ByteArray(received.size());
+
+   received.pack(payload);
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+
+
+   mock("BatchProgramManagement::Server").expectOneCall("define_program");
+
+   packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("BatchProgramManagement::Server").checkExpectations();
+
+   LONGS_EQUAL(0, server->entries().size());    // Check if the new program is on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, base->packets.size());
+
+   Protocol::Packet *response = base->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   DefineProgramResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+}
+
+//! @test Define Program support.
+TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
+{
+   std::vector<Action> actions;
+   actions.push_back(GenerateAction(0x01,                   // UID
+               HF::Protocol::Message::Type::GET_ATTR_REQ,   // Msg type (wrong)
+               0x00,                                        // Itf type
+               0x2233,                                      // Itf UID
+               0x44,                                        // Itf Member
+               10));                                        // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 

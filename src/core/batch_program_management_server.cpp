@@ -182,9 +182,12 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
       goto _end;
    }
 
-   // Check if all the units exists in the device.
+   // Check if all the units exists in the device,
+   // and if the message type is the right one.
    std::all_of(msg.actions.begin(), msg.actions.end(), [&result, this](Action &a){
-      if(unit().device().unit(a.reference) == nullptr)
+      if(unit().device().unit(a.reference) == nullptr || (
+            a.type != Protocol::Message::Type::COMMAND_REQ &&
+            a.type != Protocol::Message::Type::SET_ATTR_REQ))
       {
          result = Common::Result::FAIL_ARG; //goto not allowed where! A simple return will do in this case.
          return false;

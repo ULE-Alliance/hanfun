@@ -104,6 +104,7 @@ namespace HF
                     uint8_t _itf_type, uint16_t _itf_UID, uint8_t _itf_member,
                     Common::ByteArray& _payload)
             {
+
                reference = _UID;
                type = _msg_type;
                itf.role = _itf_type;
@@ -123,6 +124,8 @@ namespace HF
             // Serializable API
             // =================================================================
 
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
             //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
 
@@ -705,12 +708,12 @@ namespace HF
              * @param [in] name       the name for the program.
              * @param [in] actions    the list of actions that makes the program.
              */
-            void define_program(const Protocol::Address &addr,
+            Common::Result define_program(const Protocol::Address &addr,
                                 const uint8_t pid, const std::string name,
                                 std::vector<Action>& actions)
             {
                DefineProgram request(pid, name, actions);
-               define_program(addr, request);
+               return define_program(addr, request);
             }
 
             /*!
@@ -721,11 +724,11 @@ namespace HF
              * @param [in] name       the name for the program.
              * @param [in] actions    the list of actions that makes the program.
              */
-            void define_program(const uint8_t pid, const std::string name,
+            Common::Result define_program(const uint8_t pid, const std::string name,
                                  std::vector<Action>& actions)
             {
                Protocol::Address addr;
-               define_program(addr, pid, name, actions);
+               return define_program(addr, pid, name, actions);
             }
 
             /*!
@@ -735,17 +738,17 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] program     the program to send to the device.
              */
-            void define_program (const Protocol::Address &addr,
+            Common::Result define_program (const Protocol::Address &addr,
                                  Entry &program);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            void define_program (Entry &program)
+            Common::Result define_program (Entry &program)
             {
                Protocol::Address addr;
-               define_program(addr, program);
+               return define_program(addr, program);
             }
 
             /*!
