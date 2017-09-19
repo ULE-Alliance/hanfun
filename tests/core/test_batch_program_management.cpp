@@ -56,32 +56,32 @@ TEST_GROUP(BatchProgramEntries)
 };
 
 //! @test Entries next PID
-TEST(BatchProgramEntries, Next_PID)
+TEST(BatchProgramEntries, Next_pid)
 {
-   LONGS_EQUAL(BatchProgramManagement::Entry::START_PID, entries.next_PID());   // 1st address
+   LONGS_EQUAL(BatchProgramManagement::Entry::START_PID, entries.next_pid());   // 1st address
 
    auto &data = entries.data();
 
    Entry entry;
 
-   for (uint16_t PID = BatchProgramManagement::Entry::START_PID;
-         PID <= BatchProgramManagement::Entry::MAX_PID; ++PID)
+   for (uint16_t pid = BatchProgramManagement::Entry::START_PID;
+         pid <= BatchProgramManagement::Entry::MAX_PID; ++pid)
    {
       entry.name    = "P";
-      entry.ID = PID;
-      data.emplace(PID, entry);
+      entry.pid = pid;
+      data.emplace(pid, entry);
    }
 
-   LONGS_EQUAL(BatchProgramManagement::Entry::AVAILABLE_PID, entries.next_PID());
+   LONGS_EQUAL(BatchProgramManagement::Entry::AVAILABLE_PID, entries.next_pid());
 
    data.erase(2);                          // erase program 2
-   LONGS_EQUAL(2, entries.next_PID()); // check if the next available PID is 2
+   LONGS_EQUAL(2, entries.next_pid()); // check if the next available PID is 2
    data.emplace(2, entry);                // restore it
 
-   LONGS_EQUAL(BatchProgramManagement::Entry::AVAILABLE_PID, entries.next_PID());
+   LONGS_EQUAL(BatchProgramManagement::Entry::AVAILABLE_PID, entries.next_pid());
 }
 //! @test Entries find by PID
-TEST(BatchProgramEntries, Find_by_PID)
+TEST(BatchProgramEntries, Find_by_pid)
 {
    auto &data = entries.data();
    Entry entry;
@@ -90,7 +90,7 @@ TEST(BatchProgramEntries, Find_by_PID)
    for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
    {
       entry.name=std::string("P") + std::to_string(i);
-      entry.ID = i;
+      entry.pid = i;
       data.emplace(i, entry);
    }
 
@@ -98,12 +98,12 @@ TEST(BatchProgramEntries, Find_by_PID)
    POINTERS_EQUAL(nullptr, entries.find("P2").operator->());   // Try to find prog 2 (should fail)
 
    entry.name=std::string("P2");
-   entry.ID = 2;
+   entry.pid = 2;
    data.emplace(2, entry);                                     // restore it
 
    CHECK(nullptr != entries.find("P2").operator->());          // Try to find prog 2 (OK)
    CHECK_EQUAL(std::string("P2"), entries.find("P2")->name);   // Confirm by name.
-   UNSIGNED_LONGS_EQUAL(2, entries.find("P2")->ID);            // Confirm by PID.
+   UNSIGNED_LONGS_EQUAL(2, entries.find("P2")->pid);            // Confirm by PID.
 }
 
 
@@ -117,7 +117,7 @@ TEST(BatchProgramEntries, Find_by_name)
    for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
    {
       entry.name = std::string("P") + std::to_string(i);
-      entry.ID = i;
+      entry.pid = i;
       data.emplace(i, entry);
    }
 
@@ -125,12 +125,12 @@ TEST(BatchProgramEntries, Find_by_name)
    POINTERS_EQUAL(nullptr, entries.find(2).operator->());      // Try to find prog 2 (should fail)
 
    entry.name = std::string("P2");
-   entry.ID = 2;
+   entry.pid = 2;
    data.emplace(2, entry);                                     // restore it
 
    CHECK(nullptr != entries.find(2).operator->());             // Try to find prog 2 (OK)
    CHECK_EQUAL(std::string("P2"), entries.find(2)->name);      // Confirm by name.
-   UNSIGNED_LONGS_EQUAL(2, entries.find(2)->ID);               // Confirm by PID.
+   UNSIGNED_LONGS_EQUAL(2, entries.find(2)->pid);               // Confirm by PID.
 }
 
 //! @test Entries size
@@ -144,7 +144,7 @@ TEST(BatchProgramEntries, Size)
    for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
    {
       entry.name = std::string("P") + std::to_string(i);
-      entry.ID = i;
+      entry.pid = i;
       entries.data().emplace(i, entry);
    }
 
@@ -161,7 +161,7 @@ TEST(BatchProgramEntries, Destroy_by_PID)
    for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
    {
       entry.name = std::string("P") + std::to_string(i);
-      entry.ID = i;
+      entry.pid = i;
       data.emplace(i, entry);
    }
 
@@ -184,7 +184,7 @@ TEST(BatchProgramEntries, Destroy_by_program)
    for (uint16_t i = BatchProgramManagement::Entry::START_PID; i < 10; ++i)
    {
       entry.name = std::string("P") + std::to_string(i);
-      entry.ID = i;
+      entry.pid = i;
       data.emplace(i, entry);
    }
 
@@ -192,12 +192,12 @@ TEST(BatchProgramEntries, Destroy_by_program)
 
    // Try to destroy prog 10 (NOK)
    entry.name = std::string("P10");
-   entry.ID = 10;
+   entry.pid = 10;
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(entry));
 
    // Try to destroy prog 9 (OK)
    entry.name = std::string("P9");
-   entry.ID = 9;
+   entry.pid = 9;
    UNSIGNED_LONGS_EQUAL(Common::Result::OK, entries.destroy(entry));
 
    // Try to destroy prog 9 again (NOK)
@@ -213,7 +213,7 @@ TEST(BatchProgramEntries, Save)
 
    Entry entry;
    entry.name = std::string("P0");
-   entry.ID = 0;
+   entry.pid = 0;
    entries.save(entry);
 
    UNSIGNED_LONGS_EQUAL(1, entries.size());
@@ -420,7 +420,7 @@ TEST(BatchProgramManagementMessages, DefineProgram_unpack)
    DefineProgram Message;
    size = Message.unpack(payload, 0);
    UNSIGNED_LONGS_EQUAL(payload.size(),size);
-   UNSIGNED_LONGS_EQUAL(0x12,       Message.ID);
+   UNSIGNED_LONGS_EQUAL(0x12,       Message.pid);
    UNSIGNED_LONGS_EQUAL(0x4,        Message.name.size());
    CHECK_EQUAL(std::string("TEST"), Message.name);
    UNSIGNED_LONGS_EQUAL(0x1,        Message.actions.size());
@@ -532,7 +532,7 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_unpack)
    response.unpack(payload,0);
 
    UNSIGNED_LONGS_EQUAL(static_cast<Common::Result>(Common::Result::OK) ,response.code);
-   UNSIGNED_LONGS_EQUAL(0x12, response.ID);
+   UNSIGNED_LONGS_EQUAL(0x12, response.pid);
 
    payload = ByteArray { static_cast<uint8_t>(Common::Result::FAIL_AUTH)};
 
@@ -592,7 +592,7 @@ TEST(BatchProgramManagementMessages, InvokeProgram_unpack)
    payload = ByteArray{0x01};
 
    message.unpack(payload,0);
-   CHECK_EQUAL(0x01, message.ID);
+   CHECK_EQUAL(0x01, message.pid);
 }
 
 //! @test Check the InvokeProgram message pack failure
@@ -889,7 +889,7 @@ TEST_GROUP(BatchProgramManagementClient)
 
    void DoActionTests(Entry expected, DefineProgram actual)
    {
-      UNSIGNED_LONGS_EQUAL(expected.ID, actual.ID);
+      UNSIGNED_LONGS_EQUAL(expected.pid, actual.pid);
       CHECK_EQUAL(expected.name, actual.name);
 
       for(uint8_t i=0; i< expected.actions.size(); ++i)
@@ -975,7 +975,7 @@ TEST(BatchProgramManagementClient, InvokeProgram)
    InvokeProgram actual;
    actual.unpack(client->sendMsg.payload);
 
-   UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
+   UNSIGNED_LONGS_EQUAL(0x01, actual.pid);
 }
 
 //! @test invoked support.
@@ -1015,7 +1015,7 @@ TEST(BatchProgramManagementClient, DeleteProgram)
    DeleteProgram actual;
    actual.unpack(client->sendMsg.payload);
 
-   UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
+   UNSIGNED_LONGS_EQUAL(0x01, actual.pid);
 }
 
 //! @test Deleted support.
@@ -1088,7 +1088,7 @@ TEST(BatchProgramManagementClient, GetProgramActions)
 
    GetProgramActions actual;
    actual.unpack(client->sendMsg.payload);
-   UNSIGNED_LONGS_EQUAL(0x01, actual.ID);
+   UNSIGNED_LONGS_EQUAL(0x01, actual.pid);
 }
 
 //! @test Got actions support.
@@ -1276,7 +1276,7 @@ TEST_GROUP(BatchProgramManagementServer)
 
    void DoActionTests (Entry expected, DefineProgram actual)
    {
-      UNSIGNED_LONGS_EQUAL(expected.ID, actual.ID);
+      UNSIGNED_LONGS_EQUAL(expected.pid, actual.pid);
       CHECK_EQUAL(expected.name, actual.name);
 
       for (uint8_t i = 0; i < expected.actions.size(); ++i)
@@ -1362,7 +1362,7 @@ TEST(BatchProgramManagementServer, DefineProgram)
    DefineProgramResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   LONGS_EQUAL(0x12, resp.ID);
+   LONGS_EQUAL(0x12, resp.pid);
 }
 
 //! @test Define Program support. Search for next available PID
@@ -1371,7 +1371,7 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
    Entry entry;
 
    entry.name = std::string("P18");
-   entry.ID = 0x12;
+   entry.pid = 0x12;
    server->entries().save(entry);
 
 
@@ -1425,7 +1425,7 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
    DefineProgramResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   LONGS_EQUAL(Entry::START_PID, resp.ID);
+   LONGS_EQUAL(Entry::START_PID, resp.pid);
 }
 
 //! @test Define Program support.
@@ -1486,7 +1486,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
    Entry entry;
 
    entry.name=std::string("P18");
-   entry.ID=0x12;
+   entry.pid=0x12;
    server->entries().save(entry);
 
    std::vector<Action> actions;
@@ -1590,7 +1590,7 @@ TEST(BatchProgramManagementServer, InvokeProgram)
    InvokeProgramResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   LONGS_EQUAL(0x12, resp.ID);
+   LONGS_EQUAL(0x12, resp.pid);
 }
 
 /** @test Invoke Program support.
@@ -1751,7 +1751,7 @@ TEST(BatchProgramManagementServer, DeleteProgram)
    DeleteProgramResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   UNSIGNED_LONGS_EQUAL(0x12, resp.ID);
+   UNSIGNED_LONGS_EQUAL(0x12, resp.pid);
 }
 
 /**! @test Delete Program support.

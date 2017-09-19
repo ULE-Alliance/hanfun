@@ -130,19 +130,19 @@ namespace HF
 
          struct Entry
          {
-            uint8_t ID;                   //!< Program ID, unique per device
+            uint8_t pid;                   //!< Program ID, unique per device
             std::string name;             //!< Program Name
             std::vector<Action> actions;  //!< Actions list
 
             /**
              * Constructor
              *
-             * @param [in] _ID        Program ID, unique per device
+             * @param [in] _pid       Program ID, unique per device
              * @param [in] _name      Program Name
              * @param [in] _actions   Actions list
              */
-            Entry(uint8_t _ID, std::string _name, std::vector<Action>& _actions):
-               ID(_ID), name(_name), actions(_actions)
+            Entry(uint8_t _pid, std::string _name, std::vector<Action>& _actions):
+               pid(_pid), name(_name), actions(_actions)
             {}
 
             /**
@@ -184,17 +184,17 @@ namespace HF
 
          struct DefineProgramResponse : public Protocol::Response
          {
-            uint8_t ID; //!< Program ID, unique per device
+            uint8_t pid; //!< Program ID, unique per device
 
             /**
              * Constructor
              *
              * @param [in] _code    the response code for the response.
-             * @param [in] _ID      The Program ID of the response.
+             * @param [in] _pid      The Program ID of the response.
              */
             DefineProgramResponse(Common::Result _code = Common::Result::OK,
-                                    uint8_t _ID = 0):
-                                       Protocol::Response(_code), ID(_ID)
+                                    uint8_t _pid = 0):
+                                       Protocol::Response(_code), pid(_pid)
             {}
 
             // =================================================================
@@ -216,15 +216,15 @@ namespace HF
 
          struct InvokeProgram
          {
-            uint8_t ID;    //!< Program ID, unique per device
+            uint8_t pid;    //!< Program ID, unique per device
 
             /**
              * Constructor
              *
-             * @param [in] _ID   Program ID, unique per device
+             * @param [in] _pid   Program ID, unique per device
              */
-            InvokeProgram(uint8_t _ID = 0):
-               ID(_ID)
+            InvokeProgram(uint8_t _pid = 0):
+               pid(_pid)
             {}
 
             // =================================================================
@@ -342,14 +342,14 @@ namespace HF
             /*!
              * Store the given @c entry to persistent storage.
              *
-             * @param [in] PID      Program ID for the new entry.
+             * @param [in] pid      Program ID for the new entry.
              * @param [in] name     name for the new batch program.
              * @param [in] actions  Action list for the batch program.
              *
              * @retval  Common::Result::OK if the entry was saved,
              * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
-            virtual Common::Result save (const uint8_t PID, const std::string &name,
+            virtual Common::Result save (const uint8_t pid, const std::string &name,
                                          std::vector<Action>& actions) = 0;
 
             /*!
@@ -360,7 +360,7 @@ namespace HF
              * @returns  pointer to the group with the given @c address,
              *           @c nullptr otherwise.
              */
-            virtual EntryPtr find (uint8_t PID) const = 0;
+            virtual EntryPtr find (uint8_t pid) const = 0;
 
             /*!
              * Find the group with the given @c name.
@@ -378,7 +378,7 @@ namespace HF
              * @return  the PID to use in the program entry, or
              *          @c Entry::AVAILABLE_PID if no PID is available.
              */
-            virtual uint8_t next_PID () const = 0;
+            virtual uint8_t next_pid () const = 0;
          };
 
          /*!
@@ -397,7 +397,7 @@ namespace HF
 
             Common::Result save (const Entry &entry);
 
-            Common::Result save (const uint8_t PID, const std::string &name,
+            Common::Result save (const uint8_t pid, const std::string &name,
                                  std::vector<Action>& actions);
 
             /*!
@@ -406,7 +406,7 @@ namespace HF
              * @param [in] address     The Program ID to destroy
              * @return
              */
-            Common::Result destroy (const uint8_t &PID);
+            Common::Result destroy (const uint8_t &pid);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -425,7 +425,7 @@ namespace HF
             /*!
              * @copydoc IEntries::find(uint16_t)
              */
-            EntryPtr find (uint8_t PID) const;
+            EntryPtr find (uint8_t pid) const;
 
             /*!
              * @copydoc IEntries::find(const std::string &)
@@ -435,7 +435,7 @@ namespace HF
             /*!
              * @copydoc IEntries::next_address
              */
-            uint8_t next_PID () const;
+            uint8_t next_pid () const;
 
             /*!
              * Get an iterator to the start of the entries in this container.
@@ -596,16 +596,16 @@ namespace HF
             }
 
             /*!
-             * Get the program entry given by @c PID.
+             * Get the program entry given by @c pid.
              *
              * @param [in] PID  Program ID for the program to retrieve.
              *
              * @return  a pointer to the program entry if it exists,
              *          @c nullptr otherwise.
              */
-            EntryPtr entry (const uint8_t PID) const
+            EntryPtr entry (const uint8_t pid) const
             {
-               return entries().find(PID);
+               return entries().find(pid);
             }
 
             /*!
@@ -624,9 +624,9 @@ namespace HF
             /*!
              * @copydoc IEntries::next_address
              */
-            uint8_t next_PID () const
+            uint8_t next_pid () const
             {
-               return entries().next_PID();
+               return entries().next_pid();
             }
 
             // =============================================================================

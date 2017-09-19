@@ -155,21 +155,21 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
 {
    Common::Result result= Common::Result::OK;
 
-   uint8_t PID = Entry::AVAILABLE_PID;
+   uint8_t pid = Entry::AVAILABLE_PID;
 
-   if( msg.ID == Entry::AVAILABLE_PID)
+   if( msg.pid == Entry::AVAILABLE_PID)
    {
-      PID = next_PID();
-      if (PID == Entry::AVAILABLE_PID)
+      pid = next_pid();
+      if (pid == Entry::AVAILABLE_PID)
       {
          result = Common::Result::FAIL_RESOURCES;
          goto _end;
       }
-      msg.ID=PID;
+      msg.pid=pid;
    }
    else
    {
-      if (entry(msg.ID) != nullptr)
+      if (entry(msg.pid) != nullptr)
       {
          result = Common::Result::FAIL_ARG;
          goto _end;
@@ -209,7 +209,7 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
 
    _end:
 
-   DefineProgramResponse response(result, msg.ID);
+   DefineProgramResponse response(result, msg.pid);
 
    Protocol::Message message(packet.message, response.size());
 
@@ -233,7 +233,7 @@ Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProg
    Common::Result result= Common::Result::OK;
    Protocol::Address localhost= packet.destination;
 
-   auto prog = entry(msg.ID);
+   auto prog = entry(msg.pid);
    if(prog == nullptr)           // Check if the program ID exists
    {
       result = Common::Result::FAIL_ARG;
@@ -260,7 +260,7 @@ Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProg
 
    _end:
 
-   InvokeProgramResponse response(result, msg.ID);
+   InvokeProgramResponse response(result, msg.pid);
 
    Protocol::Message message(packet.message, response.size());
 
@@ -282,17 +282,17 @@ Common::Result Server::delete_program(const Protocol::Packet &packet, DeleteProg
 {
    Common::Result result = Common::Result::OK;
 
-   if (entry(msg.ID) == nullptr)
+   if (entry(msg.pid) == nullptr)
    {
       result = Common::Result::FAIL_ARG;
       goto _end;
    }
 
-   result = entries().destroy(msg.ID);
+   result = entries().destroy(msg.pid);
 
    _end:
 
-   DeleteProgramResponse response(result, msg.ID);
+   DeleteProgramResponse response(result, msg.pid);
 
    Protocol::Message message(packet.message, response.size());
 
@@ -338,7 +338,7 @@ Common::Result Server::get_program_actions(const Protocol::Packet &packet,
    Common::Result result = Common::Result::OK;
    GetProgramActionsResponse response;
 
-   auto prog = entry(msg.ID);
+   auto prog = entry(msg.pid);
    if ( prog == nullptr)
    {
       result = Common::Result::FAIL_ARG;

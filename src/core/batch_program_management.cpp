@@ -142,7 +142,7 @@ uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
    uint16_t start = offset;
    uint16_t size;
 
-   offset += array.write(offset, ID);
+   offset += array.write(offset, pid);
 
    size = HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
    HF_ASSERT(size > 0, return 0;);
@@ -169,7 +169,7 @@ uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
    uint16_t start = offset;
    uint16_t size;
 
-   offset += array.read(offset, ID);
+   offset += array.read(offset, pid);
 
    size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
    /* *INDENT-OFF* */
@@ -222,7 +222,7 @@ uint16_t DefineProgramResponse::pack (Common::ByteArray& array,
    {
       return min_size;
    }
-   offset += array.write(offset, ID);
+   offset += array.write(offset, pid);
    return (offset - start);
 }
 
@@ -243,7 +243,7 @@ uint16_t DefineProgramResponse::unpack (
 
    offset += Response::unpack(array, offset);
 
-   this->ID = 0x00;
+   this->pid = 0x00;
 
    if (this->code != Common::Result::OK)
    {
@@ -252,7 +252,7 @@ uint16_t DefineProgramResponse::unpack (
 
    HF_SERIALIZABLE_CHECK(array, offset, sizeof(uint8_t));
 
-   offset += array.read(offset, ID);
+   offset += array.read(offset, pid);
 
    _end:
    return offset - start;
@@ -282,7 +282,7 @@ uint16_t InvokeProgram::pack (Common::ByteArray& array,
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
-   return (array.write(offset, ID));
+   return (array.write(offset, pid));
 }
 
 // =============================================================================
@@ -296,7 +296,7 @@ uint16_t InvokeProgram::unpack (const Common::ByteArray& array,
                                 uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
-   return (array.read(offset, ID));
+   return (array.read(offset, pid));
 }
 
 // =============================================================================
@@ -382,23 +382,23 @@ uint16_t Entries::size () const
 
 Common::Result Entries::save (const Entry& entry)
 {
-   db.insert(db.end(), std::pair<uint8_t, Entry>(entry.ID, entry));
+   db.insert(db.end(), std::pair<uint8_t, Entry>(entry.pid, entry));
 
    return Common::Result::OK;
 }
 
-Common::Result Entries::save (const uint8_t PID,
+Common::Result Entries::save (const uint8_t pid,
                               const std::string& name,
                               std::vector<Action>& actions)
 {
-   db.insert(db.end(), std::pair<uint8_t, Entry>(PID, Entry(PID, name, actions)));
+   db.insert(db.end(), std::pair<uint8_t, Entry>(pid, Entry(pid, name, actions)));
 
    return Common::Result::OK;
 }
 
-Common::Result Entries::destroy (const uint8_t& PID)
+Common::Result Entries::destroy (const uint8_t& pid)
 {
-   auto count = db.erase(PID);
+   auto count = db.erase(pid);
 
       if (count != 1)
       {
@@ -412,7 +412,7 @@ Common::Result Entries::destroy (const uint8_t& PID)
 
 Common::Result Entries::destroy (const Entry& entry)
 {
-   return destroy(entry.ID);
+   return destroy(entry.pid);
 }
 
 void Entries::clear()
@@ -420,9 +420,9 @@ void Entries::clear()
    db.clear();
 }
 
-EntryPtr Entries::find (uint8_t PID) const
+EntryPtr Entries::find (uint8_t pid) const
 {
-   auto it = db.find(PID);
+   auto it = db.find(pid);
 
    if (it == db.end())
    {
@@ -455,20 +455,20 @@ EntryPtr Entries::find (const std::string& name) const
    return EntryPtr();
 }
 
-uint8_t Entries::next_PID () const
+uint8_t Entries::next_pid () const
 {
-   uint8_t PID = 0;
+   uint8_t pid = 0;
 
    if (db.size() > Entry::MAX_PID)
    {
       return Entry::AVAILABLE_PID;
    }
 
-   for (PID = Entry::START_PID; PID <= Entry::MAX_PID; ++PID)
+   for (pid = Entry::START_PID; pid <= Entry::MAX_PID; ++pid)
    {
-      if (db.find(PID) == db.end())
+      if (db.find(pid) == db.end())
       {
-         return PID;
+         return pid;
       }
    }
 
