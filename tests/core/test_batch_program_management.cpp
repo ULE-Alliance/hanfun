@@ -13,7 +13,7 @@
  */
 // =============================================================================
 
-#include "../../inc/hanfun/core/batch_program_management.h"
+#include "hanfun/core/batch_program_management.h"
 #include "test_helper.h"
 
 #include <random>
