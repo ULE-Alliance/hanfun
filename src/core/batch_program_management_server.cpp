@@ -157,6 +157,12 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
 
    uint8_t pid           = Entry::AVAILABLE_PID;
 
+   if (entries().size() == maximum_number_of_entries())
+   {
+      result = Common::Result::FAIL_RESOURCES;
+      goto _end;
+   }
+
    if (msg.pid == Entry::AVAILABLE_PID)
    {
       pid = next_pid();
@@ -203,8 +209,6 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
    {
       goto _end;
    }
-
-
 
    result = entries().save(static_cast<Entry>(msg));
 
