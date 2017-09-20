@@ -57,22 +57,22 @@ namespace HF
       typedef enum _UID
       {
          /* Core Services */
-         DEVICE_MANAGEMENT       = 0x0001, //!< %Device Management interface %UID.
-         BIND_MANAGEMENT         = 0x0002, //!< Bind Management interface %UID.
-         GROUP_MANAGEMENT        = 0x0003, //!< Group Management interface %UID.
-         IDENTIFY                = 0x0004, //!< Identify interface %UID. __Not implemented__
-         DEVICE_INFORMATION      = 0x0005, //!< %Device information interface UID.
-         ATTRIBUTE_REPORTING     = 0x0006, //!< %Attribute Reporting interface UID.
-         BATCH_PROGRAM_MANAGEMENT= 0x0007, //!< Batch Program Management interface UID.
-         EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
-         WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
-         GROUP_TABLE             = 0x000A, //!< Group Table interface UID.
-         TAMPER_ALERT            = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
-         TIME                    = 0x0102, //!< %Time interface UID. __Not implemented__
-         POWER                   = 0x0110, //!< Power interface UID. __Not implemented__
-         KEEP_ALIVE              = 0x0115, //!< Keep Alive interface UID. __Not implemented__
-         RSSI                    = 0x0111, //!< %RSSI interface UID.
-         SUOTA                   = 0x0400, //!< %SUOTA interface UID.
+         DEVICE_MANAGEMENT        = 0x0001, //!< %Device Management interface %UID.
+         BIND_MANAGEMENT          = 0x0002, //!< Bind Management interface %UID.
+         GROUP_MANAGEMENT         = 0x0003, //!< Group Management interface %UID.
+         IDENTIFY                 = 0x0004, //!< Identify interface %UID. __Not implemented__
+         DEVICE_INFORMATION       = 0x0005, //!< %Device information interface UID.
+         ATTRIBUTE_REPORTING      = 0x0006, //!< %Attribute Reporting interface UID.
+         BATCH_PROGRAM_MANAGEMENT = 0x0007, //!< Batch Program Management interface UID.
+         EVENT_SCHEDULING         = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
+         WEEKLY_SCHEDULING        = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
+         GROUP_TABLE              = 0x000A, //!< Group Table interface UID.
+         TAMPER_ALERT             = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
+         TIME                     = 0x0102, //!< %Time interface UID. __Not implemented__
+         POWER                    = 0x0110, //!< Power interface UID. __Not implemented__
+         KEEP_ALIVE               = 0x0115, //!< Keep Alive interface UID. __Not implemented__
+         RSSI                     = 0x0111, //!< %RSSI interface UID.
+         SUOTA                    = 0x0400, //!< %SUOTA interface UID.
 
          /* Functional Interfaces. */
          ALERT                 = 0x0100, //!< Alert interface UID

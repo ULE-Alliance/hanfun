@@ -66,7 +66,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
 
          auto getter = (uint8_t (Server::*)(void) const) & Server::maximum_number_of_entries;
-         auto setter = (void (Server::*)(uint8_t)) & Server::maximum_number_of_entries;
+         auto setter = (void (Server::*) (uint8_t)) & Server::maximum_number_of_entries;
 
          return new Attribute(*this, attr, getter, setter, MaximumNumberOfEntries::WRITABLE);
       }
@@ -76,7 +76,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
 
          auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_entries;
-         auto setter = (void (Server::*)(uint8_t)) & Server::number_of_entries;
+         auto setter = (void (Server::*) (uint8_t)) & Server::number_of_entries;
 
          return new Attribute(*this, attr, getter, setter, NumberOfEntries::WRITABLE);
       }
@@ -129,7 +129,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
       case GET_PROGRAM_ACTIONS_CMD:
       {
          GetProgramActions msg;
-         msg.unpack(payload,offset);
+         msg.unpack(payload, offset);
          return get_program_actions(packet, msg);
       }
 
@@ -153,19 +153,21 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 // =============================================================================
 Common::Result Server::define_program(const Protocol::Packet &packet, DefineProgram &msg)
 {
-   Common::Result result= Common::Result::OK;
+   Common::Result result = Common::Result::OK;
 
-   uint8_t pid = Entry::AVAILABLE_PID;
+   uint8_t pid           = Entry::AVAILABLE_PID;
 
-   if( msg.pid == Entry::AVAILABLE_PID)
+   if (msg.pid == Entry::AVAILABLE_PID)
    {
       pid = next_pid();
+
       if (pid == Entry::AVAILABLE_PID)
       {
          result = Common::Result::FAIL_RESOURCES;
          goto _end;
       }
-      msg.pid=pid;
+
+      msg.pid = pid;
    }
    else
    {
@@ -184,18 +186,20 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
 
    // Check if all the units exists in the device,
    // and if the message type is the right one.
-   std::all_of(msg.actions.begin(), msg.actions.end(), [&result, this](Action &a){
-      if(unit().device().unit(a.reference) == nullptr || (
-            a.type != Protocol::Message::Type::COMMAND_REQ &&
-            a.type != Protocol::Message::Type::SET_ATTR_REQ))
+   std::all_of(msg.actions.begin(), msg.actions.end(), [&result, this](Action &a)
+   {
+      if (unit().device().unit(a.reference) == nullptr || (
+             a.type != Protocol::Message::Type::COMMAND_REQ &&
+             a.type != Protocol::Message::Type::SET_ATTR_REQ))
       {
-         result = Common::Result::FAIL_ARG; //goto not allowed where! A simple return will do in this case.
+         result = Common::Result::FAIL_ARG; // goto not allowed where! A simple return will do in this case.
          return false;
       }
+
       return true;
    });
 
-   if(result != Common::Result::OK)       // test for the lambda function return value
+   if (result != Common::Result::OK)       // test for the lambda function return value
    {
       goto _end;
    }
@@ -232,32 +236,38 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
 // =============================================================================
 Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProgram &msg)
 {
+   Common::Result result       = Common::Result::OK;
+   Protocol::Address localhost = packet.destination;
 
-   Common::Result result= Common::Result::OK;
-   Protocol::Address localhost= packet.destination;
+   auto prog                   = entry(msg.pid);
 
-   auto prog = entry(msg.pid);
-   if(prog == nullptr)           // Check if the program ID exists
+   if (prog == nullptr)           // Check if the program ID exists
    {
       result = Common::Result::FAIL_ARG;
       goto _end;
    }
 
 
-   std::all_of(prog->actions.begin(), prog->actions.end(), [&localhost, &result, this](Action &a){
+   std::all_of(prog->actions.begin(), prog->actions.end(),
+               [&localhost, &result, this](Action &a)
+   {
       localhost.unit = a.reference;
       Protocol::Packet _packet(localhost, localhost, a);
-      auto dest_unit= unit().device().unit(a.reference);
-      if(dest_unit == nullptr)
+      auto dest_unit = unit().device().unit(a.reference);
+
+      if (dest_unit == nullptr)
       {
          result = Common::Result::FAIL_ARG;
-         return false;     //goto not allowed where! A simple return will do in this case.
+         return false;     // goto not allowed where! A simple return will do in this case.
       }
+
       result = dest_unit->handle(_packet, a.payload, 0);
-      if( result != Common::Result::OK)
+
+      if (result != Common::Result::OK)
       {
-        return false;      //goto not allowed where! A simple return will do in this case.
+         return false;     // goto not allowed where! A simple return will do in this case.
       }
+
       return true;
    });
 
@@ -342,14 +352,15 @@ Common::Result Server::get_program_actions(const Protocol::Packet &packet,
    GetProgramActionsResponse response;
 
    auto prog = entry(msg.pid);
-   if ( prog == nullptr)
+
+   if (prog == nullptr)
    {
-      result = Common::Result::FAIL_ARG;
+      result   = Common::Result::FAIL_ARG;
       response = GetProgramActionsResponse(result);
       goto _end;
    }
 
-   response = GetProgramActionsResponse(result, prog.operator *());
+   response = GetProgramActionsResponse(result, prog.operator*());
 
    _end:
 

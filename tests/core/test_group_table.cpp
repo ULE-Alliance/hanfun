@@ -1803,10 +1803,10 @@ TEST_GROUP(GroupTableEntries)
          uint16_t group = g_group();
 
          if (std::any_of(result.begin(), result.end(),
-                      [group, &i](const GroupTable::Entry &e)
-                      {
-                         return e.group == group;
-                      }))
+                         [group, &i](const GroupTable::Entry &e)
+         {
+            return e.group == group;
+         }))
          {
             --i;
             continue;
@@ -1814,13 +1814,13 @@ TEST_GROUP(GroupTableEntries)
 
          for (int j = 0; j < units; ++j)
          {
-            uint8_t unit   = g_unit();
+            uint8_t unit = g_unit();
 
             if (std::any_of(result.begin(), result.end(),
-                         [group, unit, &j](const GroupTable::Entry & e)
-                         {
-                            return e.group == group && e.unit == unit;
-                         }))
+                            [group, unit, &j](const GroupTable::Entry &e)
+            {
+               return e.group == group && e.unit == unit;
+            }))
             {
                --j;
                continue;

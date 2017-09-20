@@ -89,12 +89,12 @@ HF::Attributes::IAttribute *BatchProgramManagement::create_attribute(uint8_t uid
  *
  */
 // =============================================================================
-uint16_t Action::pack (Common::ByteArray &array, uint16_t offset) const
+uint16_t Action::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    HF_ASSERT(type == Protocol::Message::Type::COMMAND_REQ ||
-             type == Protocol::Message::Type::SET_ATTR_REQ , return 0;)
+             type == Protocol::Message::Type::SET_ATTR_REQ, {return 0;})
 
    return Protocol::Message::pack(array, offset);
 }
@@ -111,12 +111,10 @@ uint16_t Action::unpack(const Common::ByteArray &array, uint16_t offset)
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
-   uint16_t size = 0;
+   uint16_t size  = 0;
 
-   size = Protocol::Message::unpack(array, offset);
-   /* *INDENT-OFF* */
-   HF_ASSERT(size > 0, return 0;);
-   /* *INDENT-ON* */
+   size    = Protocol::Message::unpack(array, offset);
+   HF_ASSERT(size > 0, {return 0;});
    offset += size;
    payload = Common::ByteArray(this->length);
 
@@ -138,11 +136,11 @@ uint16_t Action::unpack(const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Entry::size() const
 {
-    Common::SerializableHelperVector<std::vector<Action> , uint8_t>
-       helper (const_cast<std::vector<Action> &>(actions));
+   using SerializableHelper = Common::SerializableHelperVector<std::vector<Action>, uint8_t>;
+   SerializableHelper helper(const_cast<std::vector<Action> &>(actions));
 
-   return (min_size + name.length() + helper.size() -1); //-1 because the helper counts with the
-                                                         //   number of entries already.
+   return (min_size + name.length() + helper.size() - 1);   // -1 because the helper counts with the
+                                                            // number of entries already.
 }
 
 // =============================================================================
@@ -161,15 +159,15 @@ uint16_t Entry::pack(Common::ByteArray &array, uint16_t offset) const
 
    offset += array.write(offset, pid);
 
-   size = HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   size    = HF::Common::SerializableHelper<std::string>::pack(name, array, offset);
+   HF_ASSERT(size > 0, {return 0;});
    offset += size;
 
    HF::Common::SerializableHelperVector<std::vector<Action>, uint8_t> helper(
-         const_cast<std::vector<Action> &>(actions));
+      const_cast<std::vector<Action> &>(actions));
 
-   size = helper.pack(array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   size    = helper.pack(array, offset);
+   HF_ASSERT(size > 0, {return 0;});
    offset += size;
 
    return offset - start;
@@ -191,17 +189,15 @@ uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
 
    offset += array.read(offset, pid);
 
-   size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
-   /* *INDENT-OFF* */
-   HF_ASSERT(size != 0, return 0;);
-   /* *INDENT-ON* */
+   size    = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
+   HF_ASSERT(size != 0, {return 0;});
    offset += size;
 
    HF::Common::SerializableHelperVector<std::vector<Action>, uint8_t> helper(
-         const_cast<std::vector<Action> &>(actions));
+      const_cast<std::vector<Action> &>(actions));
    size = helper.unpack(array, offset);
    /* *INDENT-OFF* */
-   HF_ASSERT(size != 0, return 0;);
+   HF_ASSERT(size != 0, {return 0;});
    /* *INDENT-ON* */
    offset += size;
 
@@ -215,12 +211,16 @@ uint16_t Entry::unpack(const Common::ByteArray &array, uint16_t offset)
  *
  */
 // =============================================================================
-uint16_t DefineProgramResponse::size () const
+uint16_t DefineProgramResponse::size() const
 {
-   if(code != Common::Result::OK)
+   if (code != Common::Result::OK)
+   {
       return (min_size);
+   }
    else
+   {
       return (min_size + sizeof(uint8_t));
+   }
 }
 
 // =============================================================================
@@ -230,22 +230,23 @@ uint16_t DefineProgramResponse::size () const
  *
  */
 // =============================================================================
-uint16_t DefineProgramResponse::pack (Common::ByteArray& array,
-                                      uint16_t offset) const
+uint16_t DefineProgramResponse::pack(Common::ByteArray &array,
+                                     uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t start = offset;
    uint16_t size;
 
-   size = Response::pack(array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   size    = Response::pack(array, offset);
+   HF_ASSERT(size > 0, {return 0;});
    offset += size;
 
    if (this->code != Common::Result::OK)
    {
       return min_size;
    }
+
    offset += array.write(offset, pid);
    return (offset - start);
 }
@@ -257,15 +258,15 @@ uint16_t DefineProgramResponse::pack (Common::ByteArray& array,
  *
  */
 // =============================================================================
-uint16_t DefineProgramResponse::unpack (
-                                        const Common::ByteArray& array,
-                                        uint16_t offset)
+uint16_t DefineProgramResponse::unpack(
+   const Common::ByteArray &array,
+   uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
 
-   offset += Response::unpack(array, offset);
+   offset   += Response::unpack(array, offset);
 
    this->pid = 0x00;
 
@@ -289,9 +290,9 @@ uint16_t DefineProgramResponse::unpack (
  *
  */
 // =============================================================================
-uint16_t InvokeProgram::size () const
+uint16_t InvokeProgram::size() const
 {
-   return(min_size);
+   return (min_size);
 }
 
 // =============================================================================
@@ -301,8 +302,8 @@ uint16_t InvokeProgram::size () const
  *
  */
 // =============================================================================
-uint16_t InvokeProgram::pack (Common::ByteArray& array,
-                              uint16_t offset) const
+uint16_t InvokeProgram::pack(Common::ByteArray &array,
+                             uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -316,8 +317,8 @@ uint16_t InvokeProgram::pack (Common::ByteArray& array,
  *
  */
 // =============================================================================
-uint16_t InvokeProgram::unpack (const Common::ByteArray& array,
-                                uint16_t offset)
+uint16_t InvokeProgram::unpack(const Common::ByteArray &array,
+                               uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
    return (array.read(offset, pid));
@@ -330,12 +331,16 @@ uint16_t InvokeProgram::unpack (const Common::ByteArray& array,
  *
  */
 // =============================================================================
-uint16_t GetProgramActionsResponse::size () const
+uint16_t GetProgramActionsResponse::size() const
 {
    if (code != Common::Result::OK)
+   {
       return (min_size);
+   }
    else
+   {
       return (min_size + program.size());
+   }
 }
 
 // =============================================================================
@@ -345,25 +350,26 @@ uint16_t GetProgramActionsResponse::size () const
  *
  */
 // =============================================================================
-uint16_t GetProgramActionsResponse::pack (
-                                          Common::ByteArray& array,
-                                          uint16_t offset) const
+uint16_t GetProgramActionsResponse::pack(
+   Common::ByteArray &array,
+   uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
    uint16_t size;
    uint16_t start = offset;
 
-   size = Response::pack(array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   size    = Response::pack(array, offset);
+   HF_ASSERT(size > 0, {return 0;});
    offset += size;
+
    if (this->code != Common::Result::OK)
    {
       return min_size;
    }
 
-   size = program.pack(array, offset);
-   HF_ASSERT(size > 0, return 0;);
+   size    = program.pack(array, offset);
+   HF_ASSERT(size > 0, {return 0;});
    offset += size;
 
    return (offset - start);
@@ -376,14 +382,12 @@ uint16_t GetProgramActionsResponse::pack (
  *
  */
 // =============================================================================
-uint16_t GetProgramActionsResponse::unpack (
-                                            const Common::ByteArray& array,
-                                            uint16_t offset)
+uint16_t GetProgramActionsResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
    uint16_t start = offset;
-   uint16_t size;
+   uint16_t size  = 0;
 
    offset += Response::unpack(array, offset);
 
@@ -394,7 +398,7 @@ uint16_t GetProgramActionsResponse::unpack (
 
    HF_SERIALIZABLE_CHECK(array, offset, Entry::min_size);
 
-   size += program.unpack(array, offset);
+   size = program.unpack(array, offset);
    /* *INDENT-OFF* */
    HF_ASSERT(size != 0, {return 0;});
    /* *INDENT-ON* */
@@ -404,42 +408,42 @@ uint16_t GetProgramActionsResponse::unpack (
    return offset - start;
 }
 
-uint16_t Entries::size () const
+uint16_t Entries::size() const
 {
    return db.size();
 }
 
-Common::Result Entries::save (const Entry& entry)
+Common::Result Entries::save(const Entry &entry)
 {
    db.insert(db.end(), std::pair<uint8_t, Entry>(entry.pid, entry));
 
    return Common::Result::OK;
 }
 
-Common::Result Entries::save (const uint8_t pid,
-                              const std::string& name,
-                              std::vector<Action>& actions)
+Common::Result Entries::save(const uint8_t pid,
+                             const std::string &name,
+                             std::vector<Action> &actions)
 {
    db.insert(db.end(), std::pair<uint8_t, Entry>(pid, Entry(pid, name, actions)));
 
    return Common::Result::OK;
 }
 
-Common::Result Entries::destroy (const uint8_t& pid)
+Common::Result Entries::destroy(const uint8_t &pid)
 {
    auto count = db.erase(pid);
 
-      if (count != 1)
-      {
-         return Common::Result::FAIL_ARG;
-      }
-      else
-      {
-         return Common::Result::OK;
-      }
+   if (count != 1)
+   {
+      return Common::Result::FAIL_ARG;
+   }
+   else
+   {
+      return Common::Result::OK;
+   }
 }
 
-Common::Result Entries::destroy (const Entry& entry)
+Common::Result Entries::destroy(const Entry &entry)
 {
    return destroy(entry.pid);
 }
@@ -449,7 +453,7 @@ void Entries::clear()
    db.clear();
 }
 
-EntryPtr Entries::find (uint8_t pid) const
+EntryPtr Entries::find(uint8_t pid) const
 {
    auto it = db.find(pid);
 
@@ -463,7 +467,7 @@ EntryPtr Entries::find (uint8_t pid) const
    }
 }
 
-EntryPtr Entries::find (const std::string& name) const
+EntryPtr Entries::find(const std::string &name) const
 {
    /* *INDENT-OFF* */
    auto it = std::find_if(db.begin(), db.end(), [&name](const std::pair< const uint8_t, Entry> &prog)
@@ -484,7 +488,7 @@ EntryPtr Entries::find (const std::string& name) const
    return EntryPtr();
 }
 
-uint8_t Entries::next_pid () const
+uint8_t Entries::next_pid() const
 {
    uint8_t pid = 0;
 

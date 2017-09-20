@@ -838,24 +838,28 @@ namespace HF
             HF_ASSERT(data.size() > std::numeric_limits<S>::max(), {return 0;});
 
             uint16_t start = offset;
-            int size = 0;
+            int size       = 0;
 
             offset += array.write(offset, (S) data_size());
 
             SerializableHelper<value_type> h;
-            std::all_of(data.cbegin(), data.cend(), [&h, &offset, &size, &array](const value_type e)
+            std::all_of(data.cbegin(), data.cend(),
+                        [&h, &offset, &size, &array](const value_type e)
             {
                h.data = e;
                size = h.pack(array, offset);
-               if(size == 0)
+
+               if (size == 0)
                {
                   size = -1;
                   return false;
                }
+
                return true;
             });
 
-            HF_ASSERT(size != -1, return 0;);
+            HF_ASSERT(size != -1, {return 0;});
+
             offset += size;
             return offset - start;
          }
@@ -937,27 +941,31 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
 
-            HF_ASSERT(data.size() < std::numeric_limits<S>::max(), {return 0;});
+            HF_ASSERT(data.size() < std::numeric_limits<S>::max(),
+                      {return 0;});
 
             uint16_t start = offset;
-            int size = 0;
+            int size       = 0;
 
             offset += array.write(offset, (S) data_size());
 
             SerializableHelper<value_type *> h;
-            std::all_of(data.cbegin(), data.cend(), [&h, &offset, &size, &array](const value_type &e)
+            std::all_of(data.cbegin(), data.cend(),
+                        [&h, &offset, &size, &array](const value_type &e)
             {
                h.data = const_cast<value_type *>(&e);
                size = h.pack(array, offset);
-               if(size == 0)
-                  {
-                     size = -1;
-                     return false;
-                  }
+
+               if (size == 0)
+               {
+                  size = -1;
+                  return false;
+               }
+
                return true;
             });
 
-            HF_ASSERT(size != -1, return 0;);
+            HF_ASSERT(size != -1, {return 0;});
             offset += size;
 
             return offset - start;
@@ -984,11 +992,11 @@ namespace HF
 
                temp = h.unpack(array, offset);
                /* *INDENT-OFF* */
-               HF_ASSERT(temp > 0, return 0;);
+               HF_ASSERT(temp > 0, {return 0;});
                offset += temp;
                /* *INDENT-ON* */
 
-               it      = h.data;
+               it = h.data;
             }
 
             return offset - start;

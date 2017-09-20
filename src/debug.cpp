@@ -1769,7 +1769,8 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::BatchProgramManag
  *
  */
 // =============================================================================
-std::ostream &operator<<(std::ostream &stream, const HF::Core::BatchProgramManagement::Attributes attribute)
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::BatchProgramManagement::Attributes attribute)
 {
    std::ios_base::fmtflags ff = stream.flags();
    char f                     = stream.fill(' ');

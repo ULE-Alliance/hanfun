@@ -86,9 +86,8 @@ namespace HF
          // Basic memory struct
          // =============================================================================
 
-         struct Action : public Protocol::Message
+         struct Action: public Protocol::Message
          {
-
             /**
              * Constructor
              *
@@ -100,17 +99,16 @@ namespace HF
              * @param [in] _payload     Content of the attribute or of the payload of the command.
              *
              */
-            Action (uint8_t _UID, HF::Protocol::Message::Type _msg_type,
-                    uint8_t _itf_type, uint16_t _itf_UID, uint8_t _itf_member,
-                    Common::ByteArray& _payload)
+            Action(uint8_t _UID, HF::Protocol::Message::Type _msg_type,
+                   uint8_t _itf_type, uint16_t _itf_UID, uint8_t _itf_member,
+                   Common::ByteArray &_payload)
             {
-
-               reference = _UID;
-               type = _msg_type;
-               itf.role = _itf_type;
-               itf.id = _itf_UID;
+               reference  = _UID;
+               type       = _msg_type;
+               itf.role   = _itf_type;
+               itf.id     = _itf_UID;
                itf.member = _itf_member;
-               payload = _payload;
+               payload    = _payload;
             }
 
             /**
@@ -118,23 +116,23 @@ namespace HF
              *
              * Mainly for using with the unpack method.
              */
-            Action (void) = default;
+            Action(void) = default;
 
             // =================================================================
             // Serializable API
             // =================================================================
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
 
          };
 
          struct Entry
          {
-            uint8_t pid;                   //!< Program ID, unique per device
-            std::string name;             //!< Program Name
+            uint8_t             pid;      //!< Program ID, unique per device
+            std::string         name;     //!< Program Name
             std::vector<Action> actions;  //!< Actions list
 
             /**
@@ -144,7 +142,7 @@ namespace HF
              * @param [in] _name      Program Name
              * @param [in] _actions   Actions list
              */
-            Entry(uint8_t _pid, std::string _name, std::vector<Action>& _actions):
+            Entry(uint8_t _pid, std::string _name, std::vector<Action> &_actions):
                pid(_pid), name(_name), actions(_actions)
             {}
 
@@ -155,26 +153,26 @@ namespace HF
              */
             Entry(void) = default;
 
-            static constexpr uint16_t START_PID = 0x00;
-            static constexpr uint16_t MAX_PID = 0xFE;
+            static constexpr uint16_t START_PID     = 0x00;
+            static constexpr uint16_t MAX_PID       = 0xFE;
             static constexpr uint16_t AVAILABLE_PID = 0xFF;
 
             // =================================================================
             // Serializable API
             // =================================================================
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size =   sizeof(uint8_t)   // Program ID
+            static constexpr uint16_t min_size = sizeof(uint8_t)     // Program ID
                                                  + sizeof(uint8_t)   // Name Length
                                                  + sizeof(uint8_t);  // Number of actions
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          typedef Common::Pointer<Entry> EntryPtr;
@@ -185,7 +183,7 @@ namespace HF
 
          typedef Entry DefineProgram;
 
-         struct DefineProgramResponse : public Protocol::Response
+         struct DefineProgramResponse: public Protocol::Response
          {
             uint8_t pid; //!< Program ID, unique per device
 
@@ -196,8 +194,8 @@ namespace HF
              * @param [in] _pid      The Program ID of the response.
              */
             DefineProgramResponse(Common::Result _code = Common::Result::OK,
-                                    uint8_t _pid = 0):
-                                       Protocol::Response(_code), pid(_pid)
+                                  uint8_t _pid = 0):
+               Protocol::Response(_code), pid(_pid)
             {}
 
             // =================================================================
@@ -208,13 +206,13 @@ namespace HF
             static constexpr uint16_t min_size = Protocol::Response::min_size;     // Response Code
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          struct InvokeProgram
@@ -238,25 +236,25 @@ namespace HF
             static constexpr uint16_t min_size = sizeof(uint8_t);     // Program ID
 
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         typedef DefineProgramResponse  InvokeProgramResponse;
+         typedef DefineProgramResponse InvokeProgramResponse;
 
-         typedef InvokeProgram           DeleteProgram;
-         typedef InvokeProgramResponse  DeleteProgramResponse;
+         typedef InvokeProgram DeleteProgram;
+         typedef InvokeProgramResponse DeleteProgramResponse;
 
-         typedef Protocol::Response       DeleteAllProgramsResponse;
+         typedef Protocol::Response DeleteAllProgramsResponse;
 
-         typedef InvokeProgram           GetProgramActions;
+         typedef InvokeProgram GetProgramActions;
 
-         struct GetProgramActionsResponse : public Protocol::Response
+         struct GetProgramActionsResponse: public Protocol::Response
          {
             Entry program;    //!< The program entry data
 
@@ -267,11 +265,11 @@ namespace HF
              * @param [in] _program The program entry data.
              */
             GetProgramActionsResponse(Common::Result _code,
-                                         Entry& _program) :
-                                   Protocol::Response(_code), program(_program)
+                                      Entry &_program):
+               Protocol::Response(_code), program(_program)
             {}
 
-            GetProgramActionsResponse(Common::Result _code  = Common::Result::OK) :
+            GetProgramActionsResponse(Common::Result _code = Common::Result::OK):
                Protocol::Response(_code)
             {}
 
@@ -279,18 +277,14 @@ namespace HF
             // Serializable API
             // =================================================================
 
-            //! Minimum pack/unpack required data size.
-//            static constexpr uint16_t min_size = Protocol::Response::min_size
-//                                                 + Entry::min_size;
-
             //! @copydoc HF::Common::Serializable::size
-            uint16_t size () const;
+            uint16_t size() const;
 
             //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack (Common::ByteArray &array, uint16_t offset = 0) const;
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
             //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack (const Common::ByteArray &array, uint16_t offset = 0);
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
          // =============================================================================
@@ -335,7 +329,7 @@ namespace HF
           * @retval  pointer to an attribute object
           * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
           */
-         HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+         HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
          /*!
           * Batch Program Management - Persistent Storage API.
@@ -352,8 +346,8 @@ namespace HF
              * @retval  Common::Result::OK if the entry was saved,
              * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
-            virtual Common::Result save (const uint8_t pid, const std::string &name,
-                                         std::vector<Action>& actions) = 0;
+            virtual Common::Result save(const uint8_t pid, const std::string &name,
+                                        std::vector<Action> &actions) = 0;
 
             /*!
              * Find the group with the given group @c address.
@@ -363,7 +357,7 @@ namespace HF
              * @returns  pointer to the group with the given @c address,
              *           @c nullptr otherwise.
              */
-            virtual EntryPtr find (uint8_t pid) const = 0;
+            virtual EntryPtr find(uint8_t pid) const = 0;
 
             /*!
              * Find the group with the given @c name.
@@ -373,7 +367,7 @@ namespace HF
              * @returns  pointer to the group with the given @c name,
              *           @c nullptr otherwise.
              */
-            virtual EntryPtr find (const std::string &name) const = 0;
+            virtual EntryPtr find(const std::string &name) const = 0;
 
             /*!
              * Return next available PID for the program.
@@ -381,7 +375,7 @@ namespace HF
              * @return  the PID to use in the program entry, or
              *          @c Entry::AVAILABLE_PID if no PID is available.
              */
-            virtual uint8_t next_pid () const = 0;
+            virtual uint8_t next_pid() const = 0;
          };
 
          /*!
@@ -394,14 +388,14 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            virtual ~Entries () = default;
+            virtual ~Entries() = default;
 
-            uint16_t size () const;
+            uint16_t size() const;
 
-            Common::Result save (const Entry &entry);
+            Common::Result save(const Entry &entry);
 
-            Common::Result save (const uint8_t pid, const std::string &name,
-                                 std::vector<Action>& actions);
+            Common::Result save(const uint8_t pid, const std::string &name,
+                                std::vector<Action> &actions);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -409,7 +403,7 @@ namespace HF
              * @param [in] address     The Program ID to destroy
              * @return
              */
-            Common::Result destroy (const uint8_t &pid);
+            Common::Result destroy(const uint8_t &pid);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
@@ -418,34 +412,34 @@ namespace HF
              *          valid if it was obtained by calling the find method.
              *
              */
-            Common::Result destroy (const Entry &entry);
+            Common::Result destroy(const Entry &entry);
 
             /*!
              * Erase all the DB entries.
              */
-            void clear (void);
+            void clear(void);
 
             /*!
              * @copydoc IEntries::find(uint16_t)
              */
-            EntryPtr find (uint8_t pid) const;
+            EntryPtr find(uint8_t pid) const;
 
             /*!
              * @copydoc IEntries::find(const std::string &)
              */
-            EntryPtr find (const std::string &name) const;
+            EntryPtr find(const std::string &name) const;
 
             /*!
              * @copydoc IEntries::next_address
              */
-            uint8_t next_pid () const;
+            uint8_t next_pid() const;
 
             /*!
              * Get an iterator to the start of the entries in this container.
              *
              * @return  iterator to the start of the entries present in this container.
              */
-            iterator begin ()
+            iterator begin()
             {
                return db.begin();
             }
@@ -455,7 +449,7 @@ namespace HF
              *
              * @return  iterator to the end of the entries present in this container.
              */
-            iterator end ()
+            iterator end()
             {
                return db.end();
             }
@@ -465,7 +459,7 @@ namespace HF
              *
              * @return  constant iterator to the start of the entries present in this container.
              */
-            const_iterator begin () const
+            const_iterator begin() const
             {
                return db.cbegin();
             }
@@ -475,7 +469,7 @@ namespace HF
              *
              * @return  constant iterator to the start of the entries present in this container.
              */
-            const_iterator end () const
+            const_iterator end() const
             {
                return db.cend();
             }
@@ -485,9 +479,6 @@ namespace HF
             //! Actual container for the entries.
             Container db;
          };
-
-
-
 
          /*!
           * Batch Program Management  %Interfaces::Interface : Parent.
@@ -508,7 +499,7 @@ namespace HF
           * This class provides the server side of the Batch Program Management interface.
           */
          class Server: public ServiceRole<BatchProgramManagement::Base,
-                                                        HF::Interface::SERVER_ROLE>
+                                          HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -521,7 +512,7 @@ namespace HF
 
             //! Constructor
             Server(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
-                                    HF::Interface::SERVER_ROLE>(unit) {}
+                                             HF::Interface::SERVER_ROLE>(unit) {}
 
             //! Destructor
             virtual ~Server() {}
@@ -560,7 +551,8 @@ namespace HF
              * @param [in] addr       the network packet to send the message to.
              * @param [in] msg         the DeleteProgram message received.
              */
-            virtual Common::Result delete_program(const Protocol::Packet &packet, DeleteProgram &msg);
+            virtual Common::Result delete_program(const Protocol::Packet &packet,
+                                                  DeleteProgram &msg);
 
             /*!
              * Callback that is called when a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD,
@@ -593,7 +585,7 @@ namespace HF
              *
              * @return  reference to the current object for the persistence API.
              */
-            Entries &entries () const
+            Entries &entries() const
             {
                return const_cast<Entries &>(_entries);
             }
@@ -606,7 +598,7 @@ namespace HF
              * @return  a pointer to the program entry if it exists,
              *          @c nullptr otherwise.
              */
-            EntryPtr entry (const uint8_t pid) const
+            EntryPtr entry(const uint8_t pid) const
             {
                return entries().find(pid);
             }
@@ -619,7 +611,7 @@ namespace HF
              * @return  a pointer to the program entry if it exists,
              *          @c nullptr otherwise.
              */
-            EntryPtr entry (const std::string &name) const
+            EntryPtr entry(const std::string &name) const
             {
                return entries().find(name);
             }
@@ -627,7 +619,7 @@ namespace HF
             /*!
              * @copydoc IEntries::next_address
              */
-            uint8_t next_pid () const
+            uint8_t next_pid() const
             {
                return entries().next_pid();
             }
@@ -686,10 +678,10 @@ namespace HF
           * This class provides the client side of the Batch Program Management interface.
           */
          struct Client: public ServiceRole<BatchProgramManagement::Base,
-                                                         HF::Interface::CLIENT_ROLE>
+                                           HF::Interface::CLIENT_ROLE>
          {
             Client(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
-                                                HF::Interface::CLIENT_ROLE>(unit) {}
+                                             HF::Interface::CLIENT_ROLE>(unit) {}
 
             virtual ~Client() {}
 
@@ -709,10 +701,11 @@ namespace HF
              * @param [in] actions    the list of actions that makes the program.
              */
             Common::Result define_program(const Protocol::Address &addr,
-                                const uint8_t pid, const std::string name,
-                                std::vector<Action>& actions)
+                                          const uint8_t pid, const std::string name,
+                                          std::vector<Action> &actions)
             {
                DefineProgram request(pid, name, actions);
+
                return define_program(addr, request);
             }
 
@@ -725,7 +718,7 @@ namespace HF
              * @param [in] actions    the list of actions that makes the program.
              */
             Common::Result define_program(const uint8_t pid, const std::string name,
-                                 std::vector<Action>& actions)
+                                          std::vector<Action> &actions)
             {
                Protocol::Address addr;
                return define_program(addr, pid, name, actions);
@@ -738,14 +731,14 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] program     the program to send to the device.
              */
-            Common::Result define_program (const Protocol::Address &addr,
-                                 Entry &program);
+            Common::Result define_program(const Protocol::Address &addr,
+                                          Entry &program);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * to the broadcast network address.
              */
-            Common::Result define_program (Entry &program)
+            Common::Result define_program(Entry &program)
             {
                Protocol::Address addr;
                return define_program(addr, program);
@@ -825,10 +818,10 @@ namespace HF
              *
              * * @param [in] pid        the program ID to get the information.
              */
-            void get_program_actions( uint8_t pid)
+            void get_program_actions(uint8_t pid)
             {
                Protocol::Address addr;
-               get_program_actions(addr,pid);
+               get_program_actions(addr, pid);
             }
 #endif
 
@@ -847,7 +840,7 @@ namespace HF
              *
              * @param [in] response    the create program response that was received.
              */
-            virtual void defined (DefineProgramResponse &response) = 0;
+            virtual void defined(DefineProgramResponse &response) = 0;
 
             /*!
              * This method is called when a response to a delete program
@@ -855,9 +848,15 @@ namespace HF
              *
              * @param [in] response    the deleted response that was received.
              */
-            virtual void deleted (DeleteProgramResponse &response) = 0;
+            virtual void deleted(DeleteProgramResponse &response) = 0;
 
-            virtual void deleted (DeleteAllProgramsResponse &response) = 0;
+            /*!
+             * This method is called when a response to a delete all programs
+             * is received.
+             *
+             * @param [in] response    the deleted all response that was received.
+             */
+            virtual void deleted(DeleteAllProgramsResponse &response) = 0;
 
             /*!
              * This method is called when a response to a invoke program message
@@ -865,7 +864,7 @@ namespace HF
              *
              * @param [in] response    the invoke program response that was received.
              */
-            virtual void invoked (InvokeProgramResponse &response) = 0;
+            virtual void invoked(InvokeProgramResponse &response) = 0;
 
             /*!
              * This method is called when a response to a get info message
@@ -873,7 +872,7 @@ namespace HF
              *
              * @param [in] response    the get program actions response that was received.
              */
-            virtual void got_actions (GetProgramActionsResponse &response) = 0;
+            virtual void got_actions(GetProgramActionsResponse &response) = 0;
 
             //! @}
             // ======================================================================

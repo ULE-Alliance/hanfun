@@ -2079,7 +2079,7 @@ TEST_GROUP(AttrReport_Report_AddEntryMessage)
    struct TestMessage: public Report::AddEntryMessage
    {
       std::array<uint8_t, 4> entries;
-      uint8_t _count = 0;
+      uint8_t                _count = 0;
 
       virtual ~TestMessage()
       {}

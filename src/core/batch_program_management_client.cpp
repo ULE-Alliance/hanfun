@@ -74,7 +74,7 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
    switch (packet.message.itf.member)
    {
       case DEFINE_PROGRAM_CMD:
-         {
+      {
          DefineProgramResponse response;
          response.unpack(payload, offset);
          defined(response);
@@ -131,14 +131,15 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-Common::Result Client::define_program (const Protocol::Address &addr,
-                               Entry &program)
+Common::Result Client::define_program(const Protocol::Address &addr, Entry &program)
 {
    Protocol::Message message(program.size());
-   HF_ASSERT(program.pack(message.payload) != 0, return Common::Result::FAIL_ARG;);
+   HF_ASSERT(program.pack(message.payload) != 0, return Common::Result::FAIL_ARG;
 
-   message.itf.role = SERVER_ROLE;
-   message.itf.id = Interface::BATCH_PROGRAM_MANAGEMENT;
+            );
+
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = Interface::BATCH_PROGRAM_MANAGEMENT;
    message.itf.member = DEFINE_PROGRAM_CMD;
 
    send(addr, message);
@@ -152,15 +153,15 @@ Common::Result Client::define_program (const Protocol::Address &addr,
  *
  */
 // =============================================================================
-void Client::invoke_program(const Protocol::Address &addr,
-                            uint8_t pid)
+void Client::invoke_program(const Protocol::Address &addr, uint8_t pid)
 {
    InvokeProgram msg(pid);
+
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   message.itf.role = SERVER_ROLE;
-   message.itf.id = Interface::BATCH_PROGRAM_MANAGEMENT;
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = Interface::BATCH_PROGRAM_MANAGEMENT;
    message.itf.member = INVOKE_PROGRAM_CMD;
 
    send(addr, message);
@@ -173,10 +174,10 @@ void Client::invoke_program(const Protocol::Address &addr,
  *
  */
 // =============================================================================
-void Client::delete_program(const Protocol::Address &addr,
-                            uint8_t pid)
+void Client::delete_program(const Protocol::Address &addr, uint8_t pid)
 {
    DeleteProgram msg(pid);
+
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
