@@ -232,7 +232,7 @@ TEST(BatchProgramEntries, Save_using_primitive_variables)
    std::vector<Action> actions;
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           Message::Type::COMMAND_REQ,
                            0x00,
                            0x0134,
                            0x56,
@@ -361,7 +361,7 @@ TEST(BatchProgramManagementMessages, DefineProgram_size)
    std::vector<Action> actions;
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           Message::Type::COMMAND_REQ,
                            0x00,
                            0x0134,
                            0x56,
@@ -386,7 +386,7 @@ TEST(BatchProgramManagementMessages, DefineProgram_pack)
    std::vector<Action> actions;
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           Message::Type::COMMAND_REQ,
                            0x00,
                            0x0134,
                            0x56,
@@ -431,7 +431,7 @@ TEST(BatchProgramManagementMessages, DefineProgram_pack_fail_wrong_msg_type)
    std::vector<Action> actions;
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::GET_ATTR_REQ, // wrong message type
+                           Message::Type::GET_ATTR_REQ, // wrong message type
                            0x00,
                            0x0134,
                            0x56,
@@ -499,7 +499,7 @@ TEST(BatchProgramManagementMessages, DefineProgram_pack_fail)
    std::vector<Action> actions;
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           Message::Type::COMMAND_REQ,
                            0x00,
                            0x0134,
                            0x56,
@@ -694,7 +694,7 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_size)
    std::vector<Action> actions;
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           Message::Type::COMMAND_REQ,
                            0x00,
                            0x0134,
                            0x56,
@@ -731,7 +731,7 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_pack)
                                     0x56};
 
    Action action1 = Action(0x98,
-                           HF::Protocol::Message::Type::COMMAND_REQ,
+                           Message::Type::COMMAND_REQ,
                            0x00,
                            0x0134,
                            0x56,
@@ -949,7 +949,7 @@ TEST_GROUP(BatchProgramManagementClient)
       return _payload;
    }
 
-   Action GenerateAction(uint8_t _UID, HF::Protocol::Message::Type _msg_type,
+   Action GenerateAction(uint8_t _UID, Message::Type _msg_type,
                          uint8_t _itf_type, uint16_t _itf_UID, uint8_t _itf_member,
                          uint8_t payload_size)
    {
@@ -983,7 +983,7 @@ TEST(BatchProgramManagementClient, DefineProgram)
 {
    mock("Interface").expectOneCall("send");
 
-   auto msg_type = HF::Protocol::Message::Type::COMMAND_REQ;
+   auto msg_type = Message::Type::COMMAND_REQ;
 
    actions.push_back(GenerateAction(0x11,                                     // UID
                                     msg_type,                                 // Msg type
@@ -1015,7 +1015,7 @@ TEST(BatchProgramManagementClient, DefineProgram_fail)
 {
    mock("Interface").expectNoCall("send");
 
-   auto msg_type = HF::Protocol::Message::Type::GET_ATTR_REQ;                 // wrong type
+   auto msg_type = Message::Type::GET_ATTR_REQ;                 // wrong type
 
    actions.push_back(GenerateAction(0x11,                                     // UID
                                     msg_type,                                 // Msg type
@@ -1187,12 +1187,12 @@ TEST(BatchProgramManagementClient, GetProgramActions)
 //! @test Got actions support.
 TEST(BatchProgramManagementClient, Got_actions)
 {
-   actions.push_back(GenerateAction(0x11,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x11,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry test(0x12, std::string("TEST"), actions);
 
@@ -1359,7 +1359,7 @@ TEST_GROUP(BatchProgramManagementServer)
       return _payload;
    }
 
-   Action GenerateAction(uint8_t _UID, HF::Protocol::Message::Type _msg_type,
+   Action GenerateAction(uint8_t _UID, Message::Type _msg_type,
                          uint8_t _itf_type,
                          uint16_t _itf_UID, uint8_t _itf_member,
                          uint8_t payload_size)
@@ -1409,12 +1409,12 @@ TEST(BatchProgramManagementServer, NumberOfEntries)
 TEST(BatchProgramManagementServer, DefineProgram)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1472,12 +1472,12 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
 
 
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(Entry::AVAILABLE_PID, std::string("TEST"), actions);
 
@@ -1528,12 +1528,12 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
 TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                                     // UID (Different from the UID in the dev)
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x11,                       // UID (Different from the UID in the dev)
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1545,8 +1545,6 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
-
-
 
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
@@ -1580,12 +1578,12 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
 TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                      // UID
-                                    HF::Protocol::Message::Type::GET_ATTR_REQ, // Msg type (wrong)
-                                    0x00,                                      // Itf type
-                                    0x2233,                                    // Itf UID
-                                    0x44,                                      // Itf Member
-                                    10));                                      // Payload size
+   actions.push_back(GenerateAction(0x01,                        // UID
+                                    Message::Type::GET_ATTR_REQ, // Msg type (wrong)
+                                    0x00,                        // Itf type
+                                    0x2233,                      // Itf UID
+                                    0x44,                        // Itf Member
+                                    10));                        // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1638,12 +1636,12 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
    server->entries().save(entry);
 
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1747,12 +1745,12 @@ TEST(BatchProgramManagementServer, InvokeProgram)
 TEST(BatchProgramManagementServer, InvokeProgram_fail_no_UID)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x11,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1801,12 +1799,12 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_no_UID)
 TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1852,12 +1850,12 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
 TEST(BatchProgramManagementServer, DeleteProgram)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1906,12 +1904,12 @@ TEST(BatchProgramManagementServer, DeleteProgram)
 TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -1956,12 +1954,12 @@ TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
 TEST(BatchProgramManagementServer, DeleteAllPrograms)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x12, std::string("TEST"), actions);
 
@@ -2002,12 +2000,12 @@ TEST(BatchProgramManagementServer, DeleteAllPrograms)
 TEST(BatchProgramManagementServer, GetProgramActions)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x10, std::string("TEST"), actions);
 
@@ -2056,12 +2054,12 @@ TEST(BatchProgramManagementServer, GetProgramActions)
 TEST(BatchProgramManagementServer, GetProgramActions_fail_no_program)
 {
    std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                                     // UID
-                                    HF::Protocol::Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x01,                       // UID
+                                    Message::Type::COMMAND_REQ, // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry _received(0x10, std::string("TEST"), actions);
 
