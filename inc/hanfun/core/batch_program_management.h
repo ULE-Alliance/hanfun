@@ -292,7 +292,8 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Helper class to handle the Maximum Number Of Entries attribute for the Batch Program Management interface.
+          * Helper class to handle the Maximum Number Of Entries attribute for the
+          * Batch Program Management interface.
           */
          struct MaximumNumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
@@ -336,6 +337,8 @@ namespace HF
           */
          struct IEntries: public Common::IEntries<Entry>
          {
+            using Common::IEntries<Entry>::save;
+
             /*!
              * Store the given @c entry to persistent storage.
              *
