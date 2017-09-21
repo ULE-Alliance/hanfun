@@ -1421,7 +1421,8 @@ TEST_GROUP(BatchProgramManagementServer)
 //! @test Maximum Number Of Entries support.
 TEST(BatchProgramManagementServer, MaximumNumberOfEntries)
 {
-   // FIXME Generated Stub.
+   LONGS_EQUAL(std::numeric_limits<uint8_t>::max(), server->maximum_number_of_entries());
+
    CHECK_ATTRIBUTE(BatchProgramManagementServer, MaximumNumberOfEntries, false,
                    maximum_number_of_entries, 42, 142);
 }
@@ -1429,9 +1430,39 @@ TEST(BatchProgramManagementServer, MaximumNumberOfEntries)
 //! @test Number Of Entries support.
 TEST(BatchProgramManagementServer, NumberOfEntries)
 {
-   // FIXME Generated Stub.
-   CHECK_ATTRIBUTE(BatchProgramManagementServer, NumberOfEntries, false, number_of_entries,
-                   42, 142);
+   auto attr = server->attribute(NUMBER_OF_ENTRIES_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfEntries::ID, attr->uid());
+   CHECK_EQUAL(NumberOfEntries::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::BATCH_PROGRAM_MANAGEMENT, attr->interface());
+
+   POINTERS_EQUAL(server, attr->owner());
+
+   delete attr;
+
+   attr = Core::create_attribute(server, NUMBER_OF_ENTRIES_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfEntries::ID, attr->uid());
+   CHECK_EQUAL(NumberOfEntries::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::BATCH_PROGRAM_MANAGEMENT, attr->interface());
+
+   POINTERS_EQUAL(server, attr->owner());
+
+   delete attr;
+
+   SeedEntries(5);
+
+   LONGS_EQUAL(5, server->number_of_entries());
+
+   server->entries().clear();
+
+   SeedEntries(15);
+
+   LONGS_EQUAL(15, server->number_of_entries());
 }
 
 //! @test Define Program support.

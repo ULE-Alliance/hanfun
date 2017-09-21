@@ -76,7 +76,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
 
          auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_entries;
-         auto setter = (void (Server::*) (uint8_t)) & Server::number_of_entries;
+         auto setter = (void (Server::*) (uint8_t)) nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfEntries::WRITABLE);
       }
@@ -415,17 +415,5 @@ void Server::maximum_number_of_entries(uint8_t __value)
 // =============================================================================
 uint8_t Server::number_of_entries() const
 {
-   return _number_of_entries;
-}
-
-// =============================================================================
-// Server::number_of_entries
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void Server::number_of_entries(uint8_t __value)
-{
-   HF_SETTER_HELPER(NumberOfEntries, _number_of_entries, __value);
+   return entries().size();
 }

@@ -507,7 +507,6 @@ namespace HF
             protected:
 
             uint8_t _maximum_number_of_entries; //!< Maximum Number Of Entries
-            uint8_t _number_of_entries;         //!< Number Of Entries
 
             Entries _entries;
 
@@ -515,7 +514,9 @@ namespace HF
 
             //! Constructor
             Server(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
-                                             HF::Interface::SERVER_ROLE>(unit) {}
+                                             HF::Interface::SERVER_ROLE>(unit),
+               _maximum_number_of_entries(std::numeric_limits<uint8_t>::max())
+            {}
 
             //! Destructor
             virtual ~Server() {}
@@ -651,13 +652,6 @@ namespace HF
              * @return  the current Number Of Entries.
              */
             uint8_t number_of_entries() const;
-
-            /*!
-             * Set the Number Of Entries for the Batch Program Management server.
-             *
-             * @param [in] __value the  Number Of Entries value to set the server to.
-             */
-            void number_of_entries(uint8_t __value);
 
             // =============================================================================
             // Attribute API.
