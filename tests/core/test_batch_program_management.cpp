@@ -1359,14 +1359,43 @@ TEST_GROUP(BatchProgramManagementServer)
       return _payload;
    }
 
-   Action GenerateAction(uint8_t _UID, Message::Type _msg_type,
-                         uint8_t _itf_type,
-                         uint16_t _itf_UID, uint8_t _itf_member,
-                         uint8_t payload_size)
+   Action GenerateAction(uint8_t _UID = 0x01,
+                         Message::Type _msg_type = Message::Type::COMMAND_REQ,
+                         uint8_t _itf_type = 0x00,
+                         uint16_t _itf_UID = 0x2233,
+                         uint8_t _itf_member = 0x44,
+                         uint8_t payload_size = 10)
    {
       ByteArray _payload = GenerateRandomPayload(payload_size);
 
       return Action(_UID, _msg_type, _itf_type, _itf_UID, _itf_member, _payload);
+   }
+
+   Entry GenerateEntry(uint8_t eid = 0x12, const std::string &name = std::string("TEST"),
+                       std::vector<Action> actions = std::vector<Action>())
+   {
+      if(actions.empty())
+      {
+         actions.push_back(GenerateAction());
+      }
+
+      return Entry(eid, name, actions);
+   }
+
+   Entry GenerateEntry2(uint8_t eid = 0x12, const std::string &name = std::string("TEST"),
+                       std::initializer_list<Action> actions_init = {})
+   {
+      std::vector<Action> actions(actions_init);
+      return Entry(eid, name, actions);
+   }
+
+   void SeedEntries(uint8_t count = 10)
+   {
+      for (uint8_t i = 0; i < count; ++i)
+      {
+         std::string name = "TEST" + std::to_string(i);
+         server->entries().save(GenerateEntry(i, name));
+      }
    }
 
    void DoActionTests(Entry expected, DefineProgram actual)
@@ -1408,15 +1437,7 @@ TEST(BatchProgramManagementServer, NumberOfEntries)
 //! @test Define Program support.
 TEST(BatchProgramManagementServer, DefineProgram)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
-
-   Entry _received(0x12, std::string("TEST"), actions);
+   Entry _received = GenerateEntry();
 
    DefineProgram received(_received);
    payload = ByteArray(received.size());
@@ -1426,8 +1447,6 @@ TEST(BatchProgramManagementServer, DefineProgram)
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
-
-
 
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
@@ -1464,22 +1483,13 @@ TEST(BatchProgramManagementServer, DefineProgram)
 //! @test Define Program support. Search for next available PID
 TEST(BatchProgramManagementServer, DefineProgram_next_available)
 {
-   Entry entry;
+   SeedEntries(5);
 
-   entry.name = std::string("P18");
-   entry.pid  = 0x12;
-   server->entries().save(entry);
+   uint8_t expected_pid = 2;
 
+   server->entries().destroy(expected_pid);
 
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
-
-   Entry _received(Entry::AVAILABLE_PID, std::string("TEST"), actions);
+   Entry _received = GenerateEntry(Entry::AVAILABLE_PID);
 
    DefineProgram received(_received);
    payload = ByteArray(received.size());
@@ -1490,8 +1500,6 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
-
-
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
@@ -1500,8 +1508,9 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
 
    mock("BatchProgramManagement::Server").checkExpectations();
 
-   LONGS_EQUAL(2, server->entries().size());       // Check if the new program is on the DB.
-   CHECK_TRUE(server->entry(Entry::START_PID) != nullptr);
+   LONGS_EQUAL(5, server->entries().size());       // Check if the new program is on the DB.
+   CHECK_TRUE(server->entry(expected_pid) != nullptr);
+   CHECK_TRUE(server->entry(5) == nullptr);
 
    // Check response packet destination address.
    LONGS_EQUAL(1, base->packets.size());
@@ -1514,28 +1523,24 @@ TEST(BatchProgramManagementServer, DefineProgram_next_available)
    LONGS_EQUAL(0, response->destination.unit);
    LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
 
-   CHECK_EQUAL(std::string("TEST"), server->entries().begin()++->second.name);     // Check the 2nd entry
-
    // ----- Check the response message -----
 
    DefineProgramResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   LONGS_EQUAL(Entry::START_PID, resp.pid);
+   LONGS_EQUAL(expected_pid, resp.pid);
+
+   auto prev = "TEST" + std::to_string(expected_pid - 1);
+   auto next = "TEST" + std::to_string(expected_pid + 1);
+
+   STRCMP_EQUAL(prev.c_str(), server->entry(expected_pid - 1)->name.c_str());
+   STRCMP_EQUAL(next.c_str(), server->entry(expected_pid + 1)->name.c_str());
 }
 
 //! @test Define Program support.
 TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                       // UID (Different from the UID in the dev)
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
-
-   Entry _received(0x12, std::string("TEST"), actions);
+   Entry _received = GenerateEntry(0x12, "TEST", {GenerateAction(0x11)});
 
    DefineProgram received(_received);
    payload = ByteArray(received.size());
@@ -1577,16 +1582,8 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
 //! @test Define Program support.
 TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                        // UID
-                                    Message::Type::GET_ATTR_REQ, // Msg type (wrong)
-                                    0x00,                        // Itf type
-                                    0x2233,                      // Itf UID
-                                    0x44,                        // Itf Member
-                                    10));                        // Payload size
-
-   Entry _received(0x12, std::string("TEST"), actions);
-
+   Entry _received = GenerateEntry2(0x12, std::string("TEST"),
+                                    {GenerateAction(0x01, Message::Type::GET_ATTR_REQ)});
    DefineProgram received(_received);
    payload = ByteArray(received.size());
 
@@ -1595,8 +1592,6 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
-
-
 
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
@@ -1629,21 +1624,9 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
 //! @test Define Program support. Fail because the PID is in use.
 TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
 {
-   Entry entry;
+   server->entries().save(GenerateEntry(0x12, "P18"));
 
-   entry.name = std::string("P18");
-   entry.pid  = 0x12;
-   server->entries().save(entry);
-
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
-
-   Entry _received(0x12, std::string("TEST"), actions);
+   Entry _received = GenerateEntry(0x12);
 
    DefineProgram received(_received);
    payload = ByteArray(received.size());
@@ -1653,8 +1636,6 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
-
-
 
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
@@ -1686,29 +1667,14 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
    LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
-//! @test Define Program support. Fail because the PID is in use.
+//! @test Define Program support. Fail because the maximum number of entries has been reached.
 TEST(BatchProgramManagementServer, DefineProgram_Max_Entries)
 {
-   Entry entry;
-
-   entry.name = std::string("P18");
-   entry.pid  = 0x12;
-
-   LONGS_EQUAL(0, server->entries().size());
-
-   server->entries().save(entry);
+   SeedEntries(1);
 
    server->maximum_number_of_entries(1);
 
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x02,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
-
-   Entry _received(0x12, std::string("TEST"), actions);
+   Entry _received = GenerateEntry();
 
    DefineProgram received(_received);
    payload = ByteArray(received.size());
@@ -1750,19 +1716,11 @@ TEST(BatchProgramManagementServer, DefineProgram_Max_Entries)
 //! @test Invoke Program support.
 TEST(BatchProgramManagementServer, InvokeProgram)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   SeedEntries();
 
-   Entry _received(0x12, std::string("TEST"), actions);
+   const uint8_t pid = 0x02;
 
-   server->entries().save(_received);
-
-   InvokeProgram received(0x12);
+   InvokeProgram received(pid);
    payload = ByteArray(received.size());
 
    received.pack(payload);
@@ -1796,26 +1754,18 @@ TEST(BatchProgramManagementServer, InvokeProgram)
    InvokeProgramResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   LONGS_EQUAL(0x12, resp.pid);
+   LONGS_EQUAL(pid, resp.pid);
 }
 
-/** @test Invoke Program support.
+/*! @test Invoke Program support.
  *
  * Should fail because the device doesn't have the specified UID.
  */
 TEST(BatchProgramManagementServer, InvokeProgram_fail_no_UID)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x11,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   SeedEntries();
 
-   Entry _received(0x12, std::string("TEST"), actions);
-
-   server->entries().save(_received);
+   server->entries().save(GenerateEntry2(0x12, "TEST", { GenerateAction(0x11) }));
 
    InvokeProgram received(0x12);
    payload = ByteArray(received.size());
@@ -1853,23 +1803,15 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_no_UID)
    LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
-/** @test Invoke Program support.
+/*! @test Invoke Program support.
  *
  * Should fail because the unit handler sent an error.
  */
 TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   SeedEntries();
 
-   Entry _received(0x12, std::string("TEST"), actions);
-
-   server->entries().save(_received);
+   server->entries().save(GenerateEntry2(0x12, "TEST", { GenerateAction() }));
 
    InvokeProgram received(0x12);
    payload = ByteArray(received.size());
@@ -1910,17 +1852,9 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
 //! @test Delete Program support.
 TEST(BatchProgramManagementServer, DeleteProgram)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   SeedEntries(5);
 
-   Entry _received(0x12, std::string("TEST"), actions);
-
-   server->entries().save(_received);
+   server->entries().save(GenerateEntry2(0x12, "TEST", { GenerateAction(0x11) }));
 
    DeleteProgram received(0x12);
    payload = ByteArray(received.size());
@@ -1937,7 +1871,7 @@ TEST(BatchProgramManagementServer, DeleteProgram)
 
    mock("BatchProgramManagement::Server").checkExpectations();
 
-   UNSIGNED_LONGS_EQUAL(0, server->entries().size());
+   UNSIGNED_LONGS_EQUAL(5, server->entries().size());
 
    // Check response packet destination address.
    LONGS_EQUAL(1, base->packets.size());
@@ -1964,17 +1898,9 @@ TEST(BatchProgramManagementServer, DeleteProgram)
  */
 TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   SeedEntries();
 
-   Entry _received(0x12, std::string("TEST"), actions);
-
-   server->entries().save(_received);
+   uint8_t size = server->entries().size();
 
    DeleteProgram received(0x10);
    payload = ByteArray(received.size());
@@ -1991,7 +1917,7 @@ TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
 
    mock("BatchProgramManagement::Server").checkExpectations();
 
-   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
+   UNSIGNED_LONGS_EQUAL(size, server->entries().size());
 
    // Check response packet destination address.
    LONGS_EQUAL(1, base->packets.size());
@@ -2014,19 +1940,9 @@ TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
 //! @test Delete All Programs support.
 TEST(BatchProgramManagementServer, DeleteAllPrograms)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   SeedEntries();
 
-   Entry _received(0x12, std::string("TEST"), actions);
-
-   server->entries().save(_received);
-
-   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
+   UNSIGNED_LONGS_EQUAL(10, server->entries().size());
 
    mock("BatchProgramManagement::Server").expectOneCall("delete_all_programs");
 
@@ -2054,25 +1970,16 @@ TEST(BatchProgramManagementServer, DeleteAllPrograms)
    DeleteAllProgramsResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-
 }
 
 //! @test Get Program Actions support.
 TEST(BatchProgramManagementServer, GetProgramActions)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
+   const uint8_t pid = 0x02;
 
-   Entry _received(0x10, std::string("TEST"), actions);
+   SeedEntries();
 
-   server->entries().save(_received);
-
-   GetProgramActions received(0x10);
+   GetProgramActions received(pid);
    payload = ByteArray(received.size());
 
    received.pack(payload);
@@ -2086,8 +1993,6 @@ TEST(BatchProgramManagementServer, GetProgramActions)
    UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
-
-   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
 
    // Check response packet destination address.
    LONGS_EQUAL(1, base->packets.size());
@@ -2105,7 +2010,7 @@ TEST(BatchProgramManagementServer, GetProgramActions)
    GetProgramActionsResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
-   DoActionTests(_received, resp.program);
+   DoActionTests(*(server->entry(pid)), resp.program);
 }
 
 /**! @test Get Program Actions support.
@@ -2114,17 +2019,7 @@ TEST(BatchProgramManagementServer, GetProgramActions)
  */
 TEST(BatchProgramManagementServer, GetProgramActions_fail_no_program)
 {
-   std::vector<Action> actions;
-   actions.push_back(GenerateAction(0x01,                       // UID
-                                    Message::Type::COMMAND_REQ, // Msg type
-                                    0x00,                       // Itf type
-                                    0x2233,                     // Itf UID
-                                    0x44,                       // Itf Member
-                                    10));                       // Payload size
-
-   Entry _received(0x10, std::string("TEST"), actions);
-
-   server->entries().save(_received);
+   SeedEntries();
 
    GetProgramActions received(0x22);
    payload = ByteArray(received.size());
@@ -2140,8 +2035,6 @@ TEST(BatchProgramManagementServer, GetProgramActions_fail_no_program)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
-
-   UNSIGNED_LONGS_EQUAL(1, server->entries().size());
 
    // Check response packet destination address.
    LONGS_EQUAL(1, base->packets.size());
