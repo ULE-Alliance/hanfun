@@ -152,10 +152,12 @@ namespace HF
             static int32_t invert_angle(const int32_t angle)
             {
                int32_t temp = (max_value - std::abs(angle)) % max_value;
+
                if (angle >= 0)
                {
                   temp *= -1;
                }
+
                return temp;
             }
 
@@ -208,6 +210,7 @@ namespace HF
                      break;
                   }
                }
+
                return result;
             }
 
@@ -977,11 +980,13 @@ namespace HF
             virtual bool run(uint16_t time)
             {
                remaining_time -= time;
+
                if (remaining_time == 0)
                {
                   remaining_time = this->period;
                   return true;
                }
+
                return false;
             }
 

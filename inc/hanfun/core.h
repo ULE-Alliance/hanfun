@@ -408,15 +408,17 @@ namespace HF
          Common::Result result = Common::Result::FAIL_UNKNOWN;
          InterfacesWrapper::for_each([&result, &packet, &payload, offset](HF::Interface &itf)
          {
-            if(result != Common::Result::OK) // Message already handled, skip.
+            if (result != Common::Result::OK) // Message already handled, skip.
             {
                result = itf.handle(packet, payload, offset);
             }
          });
 
          return result;
+
 #else
          return InterfacesWrapper::handle(packet, payload, offset);
+
 #endif
       }
 

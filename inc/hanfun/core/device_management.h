@@ -228,7 +228,8 @@ namespace HF
 
             UnitPtr unit(uint16_t id) const
             {
-               auto it = std::find_if(units.begin(), units.end(), [id](const Unit &unit){
+               auto it = std::find_if(units.begin(), units.end(), [id](const Unit &unit)
+               {
                   return unit.id == id;
                });
 

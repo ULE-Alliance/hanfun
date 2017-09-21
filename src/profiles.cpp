@@ -228,6 +228,7 @@ static const Profile profiles[] =
 HF::Common::Interface const *HF::Profiles::interfaces(uint16_t profile, uint16_t &count)
 {
    uint32_t entry = 0;
+
    for (uint32_t index = 0; index < (sizeof(profiles) / sizeof(*profiles)); ++index)
    {
       if (profiles[index].uid == profile)
@@ -243,6 +244,7 @@ HF::Common::Interface const *HF::Profiles::interfaces(uint16_t profile, uint16_t
             return &(profiles_interfaces[entry]);
          }
       }
+
       entry += profiles[index].count;
    }
 

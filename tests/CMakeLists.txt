@@ -100,6 +100,7 @@ if(HF_CORE_SUOTA_SUPPORT)
     add_core("suota")
 endif()
 add_core_tests("time")
+add_core_tests("batch_program_management")
 
 ## Transport Layer ##
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")

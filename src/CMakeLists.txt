@@ -81,6 +81,7 @@ if(HF_CORE_SUOTA_SUPPORT)
     add_core("suota")
 endif()
 add_core("time")
+add_core("batch_program_management")
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)

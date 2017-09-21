@@ -1716,6 +1716,86 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::Attri
 }
 
 // =============================================================================
+// HF::Core::BatchProgramManagement
+// =============================================================================
+
+#include "hanfun/core/batch_program_management.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::BatchProgramManagement::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::BatchProgramManagement;
+
+   switch (command)
+   {
+      case DEFINE_PROGRAM_CMD:
+         result = "Define Program";
+         break;
+      case INVOKE_PROGRAM_CMD:
+         result = "Invoke Program";
+         break;
+      case DELETE_PROGRAM_CMD:
+         result = "Delete Program";
+         break;
+      case DELETE_ALL_PROGRAMS_CMD:
+         result = "Delete All Programs";
+         break;
+      case GET_PROGRAM_ACTIONS_CMD:
+         result = "Get Program Actions";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream,
+                         const HF::Core::BatchProgramManagement::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::BatchProgramManagement;
+
+   switch (attribute)
+   {
+      case MAXIMUM_NUMBER_OF_ENTRIES_ATTR:
+         result = "Maximum Number Of Entries";
+         break;
+      case NUMBER_OF_ENTRIES_ATTR:
+         result = "Number Of Entries";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1895,7 +1975,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SUOTA:
                stream << static_cast<SUOTA::CMD>(message.itf.member);
                break;
-            /* Interfaces [C] */
+            case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
+               stream << static_cast<BatchProgramManagement::CMD>(message.itf.member);
+               break;            /* Interfaces [C] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::CMD>(message.itf.member);
                break;
@@ -1957,7 +2039,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::TIME:
                stream << static_cast<Time::Attributes>(message.itf.member);
                break;
-            /* Interfaces [A] */
+            case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
+               stream << static_cast<BatchProgramManagement::Attributes>(message.itf.member);
+               break;            /* Interfaces [A] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::Attributes>(message.itf.member);
                break;

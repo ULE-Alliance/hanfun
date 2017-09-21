@@ -36,6 +36,12 @@
 #define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD   @HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD@
 
 // =============================================================================
+// Batch Program Management Interface Configuration
+// =============================================================================
+
+#define HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD         @HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD@
+
+// =============================================================================
 // Interfaces
 // =============================================================================
 

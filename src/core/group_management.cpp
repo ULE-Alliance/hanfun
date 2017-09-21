@@ -178,7 +178,7 @@ bool Group::update(const Member &member)
 {
    auto it = find_member(Protocol::BROADCAST_ADDR, Protocol::BROADCAST_UNIT);
 
-   if(it == _members.end())
+   if (it == _members.end())
    {
       return false;
    }
@@ -581,7 +581,7 @@ Common::Result Entries::save(const Group &entry)
 // =============================================================================
 Common::Result Entries::save(uint16_t address, const std::string &name)
 {
-   db.insert(db.end(), std::pair<uint16_t, Group>(address, Group(address,name)));
+   db.insert(db.end(), std::pair<uint16_t, Group>(address, Group(address, name)));
 
    return Common::Result::OK;
 }
@@ -679,7 +679,7 @@ uint16_t Entries::next_address() const
 {
    uint16_t address = 0;
 
-   if(db.size() >= Group::MAX_MEMBERS)
+   if (db.size() >= Group::MAX_MEMBERS)
    {
       return GroupAddress::NO_ADDR;
    }

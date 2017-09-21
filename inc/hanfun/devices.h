@@ -325,7 +325,7 @@ namespace HF
                        Core::DeviceManagement::Client,
                        Core::AttributeReporting::Server
 #if HF_GROUP_SUPPORT
-                       ,Core::GroupTable::DefaultServer
+                       , Core::GroupTable::DefaultServer
 #endif
                       > DefaultUnit0;
 
