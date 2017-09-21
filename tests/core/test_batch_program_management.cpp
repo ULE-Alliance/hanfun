@@ -1475,6 +1475,7 @@ TEST(BatchProgramManagementServer, DefineProgram)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
+   mock("Interface").expectOneCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
@@ -1482,6 +1483,7 @@ TEST(BatchProgramManagementServer, DefineProgram)
    UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server->entries().size());       // Check if the new program is on the DB.
    CHECK_TRUE(server->entry(0x12) != nullptr);
@@ -1620,6 +1622,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
+   mock("Interface").expectNoCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
@@ -1627,6 +1630,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    LONGS_EQUAL(0, server->entries().size());       // Check if the new program is on the DB.
 
@@ -1664,6 +1668,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
+   mock("Interface").expectNoCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
@@ -1671,6 +1676,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_same_ID)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server->entries().size());       // Check if we only have 1 program on the DB.
 
@@ -1712,6 +1718,7 @@ TEST(BatchProgramManagementServer, DefineProgram_Max_Entries)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
+   mock("Interface").expectNoCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("define_program");
 
    packet.message.itf.member = BatchProgramManagement::DEFINE_PROGRAM_CMD;
@@ -1719,6 +1726,7 @@ TEST(BatchProgramManagementServer, DefineProgram_Max_Entries)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_RESOURCES, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    LONGS_EQUAL(1, server->entries().size());       // Check if we only have 1 program on the DB.
 
@@ -1892,11 +1900,13 @@ TEST(BatchProgramManagementServer, DeleteProgram)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
+   mock("Interface").expectOneCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("delete_program");
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    UNSIGNED_LONGS_EQUAL(5, server->entries().size());
 
@@ -1938,11 +1948,13 @@ TEST(BatchProgramManagementServer, DeleteProgram_fail_no_program)
    packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
+   mock("Interface").expectNoCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("delete_program");
 
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    UNSIGNED_LONGS_EQUAL(size, server->entries().size());
 
@@ -1971,6 +1983,7 @@ TEST(BatchProgramManagementServer, DeleteAllPrograms)
 
    UNSIGNED_LONGS_EQUAL(10, server->entries().size());
 
+   mock("Interface").expectOneCall("notify");
    mock("BatchProgramManagement::Server").expectOneCall("delete_all_programs");
 
    packet.message.itf.member = BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD;
@@ -1978,6 +1991,7 @@ TEST(BatchProgramManagementServer, DeleteAllPrograms)
    CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("BatchProgramManagement::Server").checkExpectations();
+   mock("Interface").checkExpectations();
 
    UNSIGNED_LONGS_EQUAL(0, server->entries().size());
 

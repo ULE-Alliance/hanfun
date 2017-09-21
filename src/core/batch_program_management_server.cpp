@@ -157,7 +157,9 @@ Common::Result IServer::define_program(const Protocol::Packet &packet, DefinePro
 
    uint8_t pid           = Entry::AVAILABLE_PID;
 
-   if (entries().size() == maximum_number_of_entries())
+   uint8_t size          = entries().size();
+
+   if (size == maximum_number_of_entries())
    {
       result = Common::Result::FAIL_RESOURCES;
       goto _end;
@@ -219,6 +221,11 @@ Common::Result IServer::define_program(const Protocol::Packet &packet, DefinePro
    }
 
    _end:
+
+   if(size != entries().size())
+   {
+      HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
+   }
 
    DefineProgramResponse response(result, msg.pid);
 
@@ -298,6 +305,7 @@ Common::Result IServer::invoke_program(const Protocol::Packet &packet, InvokePro
 Common::Result IServer::delete_program(const Protocol::Packet &packet, DeleteProgram &msg)
 {
    Common::Result result = Common::Result::OK;
+   uint8_t size          = entries().size();
 
    if (entry(msg.pid) == nullptr)
    {
@@ -308,6 +316,11 @@ Common::Result IServer::delete_program(const Protocol::Packet &packet, DeletePro
    result = entries().destroy(msg.pid);
 
    _end:
+
+   if(size != entries().size())
+   {
+      HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
+   }
 
    DeleteProgramResponse response(result, msg.pid);
 
@@ -329,7 +342,14 @@ Common::Result IServer::delete_program(const Protocol::Packet &packet, DeletePro
 // =============================================================================
 Common::Result IServer::delete_all_programs(const Protocol::Packet &packet)
 {
+   uint8_t size = entries().size();
+
    entries().clear();
+
+   if(size != entries().size())
+   {
+      HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
+   }
 
    DeleteAllProgramsResponse response(Common::Result::OK);
 

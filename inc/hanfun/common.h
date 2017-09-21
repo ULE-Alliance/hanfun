@@ -79,22 +79,36 @@
 /*!
  * @ingroup common
  *
+ * Helper macro to implement attribute notifications.
+ *
+ * @param [in] _Type       helper class that wraps the attribute.
+ * @param [in] _old_value  the previous value of the attribute.
+ * @param [in] _new_value  the current value of the attribute.
+ */
+#define HF_NOTIFY_HELPER(_Type, _old_value, _new_value) \
+   {                                                    \
+      _Type old_attr(_old_value, this);                 \
+      _Type new_attr(_new_value, this);                 \
+                                                        \
+      notify(old_attr, new_attr);                       \
+   }
+
+/*!
+ * @ingroup common
+ *
  * Helper macro to implement attribute setters.
  *
  * @param [in] _Type    helper class that wraps the attribute.
  * @param [in] _name    name of the attribute to generate the setter for.
  * @param [in] _value   name of the variable containing the new value.
  */
-#define HF_SETTER_HELPER(_Type, _name, _value) \
-   {                                           \
-      _Type::value_type old = this->_name;     \
-                                               \
-      this->_name = _value;                    \
-                                               \
-      _Type old_attr(old, this);               \
-      _Type new_attr(this->_name, this);       \
-                                               \
-      notify(old_attr, new_attr);              \
+#define HF_SETTER_HELPER(_Type, _name, _value)  \
+   {                                            \
+      _Type::value_type old = this->_name;      \
+                                                \
+      this->_name = _value;                     \
+                                                \
+      HF_NOTIFY_HELPER(_Type, old, this->_name) \
    }
 
 #ifndef HF_ASSERT // Allow macro to be replaced for testing.
