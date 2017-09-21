@@ -1218,42 +1218,41 @@ TEST(BatchProgramManagementClient, Got_actions)
 //! Test Group for Batch Program Management Server interface class.
 TEST_GROUP(BatchProgramManagementServer)
 {
-   // TODO Add required unit tests.
-   struct BatchProgramManagementServer: public InterfaceHelper<
-         BatchProgramManagement::Server>
+   struct BatchProgramManagementServer: public HF::Testing::InterfaceHelper<DefaultServer>
    {
-      BatchProgramManagementServer(HF::Core::Unit0 &unit):
-         InterfaceHelper<BatchProgramManagement::Server>(unit) {}
+      using Parent = HF::Testing::InterfaceHelper<DefaultServer>;
+
+      BatchProgramManagementServer(HF::Core::Unit0 &unit): Parent(unit) {}
 
       Common::Result define_program(const Protocol::Packet &packet, DefineProgram &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("define_program");
-         return InterfaceHelper<BatchProgramManagement::Server>::define_program(packet, msg);
+         return Parent::define_program(packet, msg);
       }
 
       Common::Result invoke_program(const Protocol::Packet &packet, InvokeProgram &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("invoke_program");
-         return InterfaceHelper<BatchProgramManagement::Server>::invoke_program(packet, msg);
+         return Parent::invoke_program(packet, msg);
       }
 
       Common::Result delete_program(const Protocol::Packet &packet, InvokeProgram &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("delete_program");
-         return InterfaceHelper<BatchProgramManagement::Server>::delete_program(packet, msg);
+         return Parent::delete_program(packet, msg);
       }
 
       Common::Result delete_all_programs(const Protocol::Packet &packet) override
       {
          mock("BatchProgramManagement::Server").actualCall("delete_all_programs");
-         return InterfaceHelper<BatchProgramManagement::Server>::delete_all_programs(packet);
+         return Parent::delete_all_programs(packet);
       }
 
       Common::Result get_program_actions(const Protocol::Packet &packet,
                                          GetProgramActions &msg) override
       {
          mock("BatchProgramManagement::Server").actualCall("get_program_actions");
-         return InterfaceHelper<BatchProgramManagement::Server>::get_program_actions(packet, msg);
+         return Parent::get_program_actions(packet, msg);
       }
    };
 
@@ -1298,18 +1297,15 @@ TEST_GROUP(BatchProgramManagementServer)
 
    };
 
-
    Testing::Concentrator *base;
    BatchProgramManagementServer *server;
    TestUnit *unit;
-
 
    Protocol::Packet packet;
    Common::ByteArray payload;
 
    Protocol::Address addr;
    Testing::Link link;
-
 
    TEST_SETUP()
    {

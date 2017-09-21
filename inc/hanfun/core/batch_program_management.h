@@ -31,7 +31,7 @@ namespace HF
       // Forward declaration.
       namespace BatchProgramManagement
       {
-         class Server;
+         class IServer;
       }
 
       /*!
@@ -48,7 +48,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(BatchProgramManagement::Server *server,
+      HF::Attributes::IAttribute *create_attribute(BatchProgramManagement::IServer *server,
                                                    uint8_t uid);
 
       /*!
@@ -362,6 +362,21 @@ namespace HF
             virtual Common::Result save(const uint8_t pid, const std::string &name,
                                         std::vector<Action> &actions) = 0;
 
+            using Common::IEntries<Entry>::destroy;
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @param [in] address     The Program ID to destroy
+             * @return
+             */
+            virtual Common::Result destroy(const uint8_t &pid) = 0;
+
+            /*!
+             * Erase all the DB entries.
+             */
+            virtual void clear(void) = 0;
+
             /*!
              * Find the group with the given group @c address.
              *
@@ -511,25 +526,23 @@ namespace HF
           *
           * This class provides the server side of the Batch Program Management interface.
           */
-         class Server: public ServiceRole<BatchProgramManagement::Base,
+         class IServer: public ServiceRole<BatchProgramManagement::Base,
                                           HF::Interface::SERVER_ROLE>
          {
             protected:
 
             uint8_t _maximum_number_of_entries; //!< Maximum Number Of Entries
 
-            Entries _entries;
-
             public:
 
             //! Constructor
-            Server(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
+            IServer(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
                                              HF::Interface::SERVER_ROLE>(unit),
                _maximum_number_of_entries(std::numeric_limits<uint8_t>::max())
             {}
 
             //! Destructor
-            virtual ~Server() {}
+            virtual ~IServer() {}
 
             // ======================================================================
 
@@ -599,10 +612,7 @@ namespace HF
              *
              * @return  reference to the current object for the persistence API.
              */
-            Entries &entries() const
-            {
-               return const_cast<Entries &>(_entries);
-            }
+            virtual IEntries &entries() const = 0;
 
             /*!
              * Get the program entry given by @c pid.
@@ -678,6 +688,32 @@ namespace HF
                                           uint16_t offset);
 
          };
+
+         /*!
+          * Helper template to declare a Batch Program server with custom
+          * entries backend.
+          */
+         template<typename _Entries = Entries>
+         class Server: public IServer
+         {
+            public:
+
+            Server(Unit0 &unit): IServer(unit) {}
+
+            virtual ~Server() = default;
+
+            _Entries &entries() const
+            {
+               return const_cast<_Entries &>(_entries);
+            }
+
+            protected:
+
+            _Entries _entries;
+         };
+
+         //! Helper typedef.
+         typedef Server<> DefaultServer;
 
          /*!
           * Batch Program Management %Interfaces::Interface : %Client side implementation.

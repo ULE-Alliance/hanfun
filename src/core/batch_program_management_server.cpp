@@ -35,7 +35,7 @@ using namespace HF::Core::BatchProgramManagement;
  *
  */
 // =============================================================================
-HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
+HF::Attributes::UIDS IServer::attributes(uint8_t pack_id) const
 {
    HF::Attributes::UIDS result({MAXIMUM_NUMBER_OF_ENTRIES_ATTR, NUMBER_OF_ENTRIES_ATTR});
 
@@ -52,7 +52,7 @@ HF::Attributes::UIDS Server::attributes(uint8_t pack_id) const
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
+HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
 {
    using namespace HF::Core::BatchProgramManagement;
 
@@ -63,20 +63,20 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
    {
       case MAXIMUM_NUMBER_OF_ENTRIES_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::maximum_number_of_entries;
-         auto setter = (void (Server::*) (uint8_t)) & Server::maximum_number_of_entries;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::maximum_number_of_entries;
+         auto setter = (void (IServer::*) (uint8_t)) & IServer::maximum_number_of_entries;
 
          return new Attribute(*this, attr, getter, setter, MaximumNumberOfEntries::WRITABLE);
       }
 
       case NUMBER_OF_ENTRIES_ATTR:
       {
-         typedef HF::Attributes::Attribute<uint8_t, Server> Attribute;
+         typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (Server::*)(void) const) & Server::number_of_entries;
-         auto setter = (void (Server::*) (uint8_t)) nullptr;
+         auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_entries;
+         auto setter = (void (IServer::*) (uint8_t)) nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfEntries::WRITABLE);
       }
@@ -93,7 +93,7 @@ HF::Attributes::IAttribute *Server::attribute(uint8_t uid)
  *
  */
 // =============================================================================
-Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                       uint16_t offset)
 {
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
@@ -151,7 +151,7 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-Common::Result Server::define_program(const Protocol::Packet &packet, DefineProgram &msg)
+Common::Result IServer::define_program(const Protocol::Packet &packet, DefineProgram &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -238,7 +238,7 @@ Common::Result Server::define_program(const Protocol::Packet &packet, DefineProg
  *
  */
 // =============================================================================
-Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProgram &msg)
+Common::Result IServer::invoke_program(const Protocol::Packet &packet, InvokeProgram &msg)
 {
    Common::Result result       = Common::Result::OK;
    Protocol::Address localhost = packet.destination;
@@ -295,7 +295,7 @@ Common::Result Server::invoke_program(const Protocol::Packet &packet, InvokeProg
  *
  */
 // =============================================================================
-Common::Result Server::delete_program(const Protocol::Packet &packet, DeleteProgram &msg)
+Common::Result IServer::delete_program(const Protocol::Packet &packet, DeleteProgram &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -327,7 +327,7 @@ Common::Result Server::delete_program(const Protocol::Packet &packet, DeleteProg
  *
  */
 // =============================================================================
-Common::Result Server::delete_all_programs(const Protocol::Packet &packet)
+Common::Result IServer::delete_all_programs(const Protocol::Packet &packet)
 {
    entries().clear();
 
@@ -349,7 +349,7 @@ Common::Result Server::delete_all_programs(const Protocol::Packet &packet)
  *
  */
 // =============================================================================
-Common::Result Server::get_program_actions(const Protocol::Packet &packet,
+Common::Result IServer::get_program_actions(const Protocol::Packet &packet,
                                            GetProgramActions &msg)
 {
    Common::Result result = Common::Result::OK;
@@ -389,7 +389,7 @@ Common::Result Server::get_program_actions(const Protocol::Packet &packet,
  *
  */
 // =============================================================================
-uint8_t Server::maximum_number_of_entries() const
+uint8_t IServer::maximum_number_of_entries() const
 {
    return _maximum_number_of_entries;
 }
@@ -401,7 +401,7 @@ uint8_t Server::maximum_number_of_entries() const
  *
  */
 // =============================================================================
-void Server::maximum_number_of_entries(uint8_t __value)
+void IServer::maximum_number_of_entries(uint8_t __value)
 {
    HF_SETTER_HELPER(MaximumNumberOfEntries, _maximum_number_of_entries, __value);
 }
@@ -413,7 +413,7 @@ void Server::maximum_number_of_entries(uint8_t __value)
  *
  */
 // =============================================================================
-uint8_t Server::number_of_entries() const
+uint8_t IServer::number_of_entries() const
 {
    return entries().size();
 }
