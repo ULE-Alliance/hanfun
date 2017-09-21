@@ -140,6 +140,16 @@ namespace HF
              *
              * @param [in] _pid       Program ID, unique per device
              * @param [in] _name      Program Name
+             */
+            Entry(uint8_t _pid, std::string _name):
+               pid(_pid), name(_name)
+            {}
+
+            /**
+             * Constructor
+             *
+             * @param [in] _pid       Program ID, unique per device
+             * @param [in] _name      Program Name
              * @param [in] _actions   Actions list
              */
             Entry(uint8_t _pid, std::string _name, std::vector<Action> &_actions):
