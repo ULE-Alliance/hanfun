@@ -463,7 +463,8 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void activate_scheduler(const Protocol::Address &addr);
+            virtual Common::Result activate_scheduler(const Protocol::Packet &packet,
+                                                      ActivateScheduler &msg);
 
             /*!
              * Callback that is called when a @c Scheduling::DEFINE_EVENT_CMD,
@@ -567,6 +568,12 @@ namespace HF
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
+
+            virtual void notify(const HF::Attributes::IAttribute &old_value,
+                                const HF::Attributes::IAttribute &new_value) const = 0;
+
+            virtual void send(const Protocol::Address &addr, Protocol::Message &message,
+                              Transport::Link *link) = 0;
          };
 
          /*!
@@ -591,16 +598,17 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void activate_scheduler(Interface::UID itf_uid, const Protocol::Address &addr);
+            virtual void activate_scheduler(Interface::UID itf_uid, const Protocol::Address &addr,
+                                            uint8_t _status);
 
             /*!
              * Send a HAN-FUN message containing a @c Scheduling::ACTIVATE_SCHEDULER_CMD,
              * to the D:0/U:0 network address.
              */
-            void activate_scheduler(Interface::UID itf_uid)
+            void activate_scheduler(Interface::UID itf_uid, uint8_t _status)
             {
                Protocol::Address addr(0, 0);
-               activate_scheduler(itf_uid, addr);
+               activate_scheduler(itf_uid, addr, _status);
             }
 
             /*!

@@ -162,15 +162,15 @@ namespace HF
                static constexpr HF::Interface::UID ITF = HF::Interface::EVENT_SCHEDULING;
 
                //! @copydoc HF::Core::Scheduling::activate_scheduler(Protocol::Address).
-               virtual void activate_scheduler(const Protocol::Address &addr)
+               virtual void activate_scheduler(const Protocol::Address &addr, uint8_t _status)
                {
-                  Scheduling::IClient::activate_scheduler(ITF, addr);
+                  Scheduling::IClient::activate_scheduler(ITF, addr, _status);
                }
 
                //! @copydoc HF::Core::Scheduling::activate_scheduler().
-               void activate_scheduler()
+               void activate_scheduler(uint8_t _status)
                {
-                  Scheduling::IClient::activate_scheduler(ITF);
+                  Scheduling::IClient::activate_scheduler(ITF, _status);
                }
 
                //! @copydoc HF::Core::Scheduling::define_event(Protocol::Address).
@@ -300,6 +300,12 @@ namespace HF
                                                          uint16_t offset)
                {
                   return Scheduling::IServer::handle_command(packet, payload, offset);
+               }
+
+               void send(const Protocol::Address &addr, Protocol::Message &message,
+                                  Transport::Link *link)
+               {
+                  Base::send(addr, message,link);
                }
             };
 

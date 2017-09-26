@@ -19,6 +19,8 @@
 using namespace HF;
 using namespace HF::Core;
 
+using namespace HF::Common;
+
 using namespace HF::Testing;
 
 using namespace HF::Core::Scheduling::Event;
@@ -352,7 +354,7 @@ TEST(EventSchedulingClient, ActivateScheduler)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->activate_scheduler(addr);
+   client->activate_scheduler(addr, 0x01);
 
    mock("Interface").checkExpectations();
 
@@ -360,6 +362,12 @@ TEST(EventSchedulingClient, ActivateScheduler)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(Scheduling::ACTIVATE_SCHEDULER_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   Scheduling::ActivateScheduler message;
+
+   message.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x01, message.status);
 }
 
 //! @test Define Event support.
@@ -456,10 +464,11 @@ TEST_GROUP(EventSchedulingServer)
       EventSchedulingServer(HF::Core::Unit0 &unit): InterfaceHelper<Scheduling::Event::Server>(unit)
       {}
 
-      void activate_scheduler(const Protocol::Address &addr) override
+      Common::Result activate_scheduler(const Protocol::Packet &packet,
+                                        Scheduling::ActivateScheduler &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("activate_scheduler");
-         InterfaceHelper<Scheduling::Event::Server>::activate_scheduler(addr);
+         return InterfaceHelper<Scheduling::Event::Server>::activate_scheduler(packet, msg);
       }
 
       void define_event(const Protocol::Address &addr) override
@@ -492,6 +501,14 @@ TEST_GROUP(EventSchedulingServer)
          InterfaceHelper<Scheduling::Event::Server>::delete_all_events(addr);
       }
 
+      void notify (const HF::Attributes::IAttribute &old_value,
+                   const HF::Attributes::IAttribute &new_value) const override
+      {
+         mock("Interface").actualCall("notify")
+               .withParameterOfType("IAttribute", "old", &old_value)
+               .withParameterOfType("IAttribute", "new", &new_value);
+      }
+
    };
 
    Testing::Device *device;
@@ -501,15 +518,26 @@ TEST_GROUP(EventSchedulingServer)
    Protocol::Packet packet;
    Common::ByteArray payload;
 
+   Protocol::Address addr;
+   Testing::Link link;
+
    TEST_SETUP()
    {
       device                    = new Testing::Device();
       server                    = new EventSchedulingServer(*(device->unit0()));
 
-      packet                    = Protocol::Packet();
-      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
-      packet.message.itf.id     = server->uid();
+      addr = Protocol::Address(42, 0);
+      link = Testing::Link();
+
+      packet = Protocol::Packet();
+      packet.source = addr;
+      packet.destination = Protocol::Address(0, 0);
+      packet.message.itf.role = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id = server->uid();
       packet.message.itf.member = 0xFF;
+
+      packet.message.type = Protocol::Message::COMMAND_REQ;
+      packet.link = &link;
 
       mock().ignoreOtherCalls();
    }
@@ -547,14 +575,53 @@ TEST(EventSchedulingServer, Status)
 //! @test Activate Scheduler support.
 TEST(EventSchedulingServer, ActivateScheduler)
 {
-   // FIXME Generated Stub.
+   server->status(0x00);      // set the initial status of the scheduler.
+
+
+   Scheduling::ActivateScheduler received(0x01);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+
+   packet.message.itf.member = Scheduling::ACTIVATE_SCHEDULER_CMD;
+   packet.message.type = Protocol::Message::COMMAND_REQ;
+   packet.message.length = payload.size();
+
+   Status old_value(0, server);
+   Status new_value(1, server);
+
+   mock("Interface").expectOneCall("notify")
+         .withParameterOfType("IAttribute", "old", &old_value)
+         .withParameterOfType("IAttribute", "new", &new_value);
+
    mock("Scheduling::Event::Server").expectOneCall("activate_scheduler");
+   mock("AbstractDevice").expectOneCall("send");
 
    packet.message.itf.member = Scheduling::ACTIVATE_SCHEDULER_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::ActivateSchedulerResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
 }
 
 //! @test Define Event support.

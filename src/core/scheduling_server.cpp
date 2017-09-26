@@ -117,8 +117,9 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
    {
       case ACTIVATE_SCHEDULER_CMD:
       {
-         activate_scheduler(packet.source);
-         break;
+         ActivateScheduler msg;
+         msg.unpack(payload, offset);
+         return activate_scheduler(packet, msg);
       }
 
       case DEFINE_CMD:
@@ -169,10 +170,23 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-void IServer::activate_scheduler(const Protocol::Address &addr)
+Common::Result IServer::activate_scheduler(const Protocol::Packet &packet, ActivateScheduler &msg)
 {
-   // FIXME Generated Stub.
-   UNUSED(addr);
+   Common::Result result = Common::Result::OK;
+
+   HF_ASSERT(msg.status <= 0x01, {result = Common::Result::FAIL_ARG; goto _end;})
+   this->status(msg.status);
+
+   _end:
+   ActivateSchedulerResponse response(result);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
 }
 
 // =============================================================================
