@@ -49,8 +49,8 @@ void Client::create(std::string name)
 
    request.pack(message.payload);
 
-   message.itf.role = SERVER_ROLE;
-   message.itf.id = Interface::GROUP_MANAGEMENT;
+   message.itf.role   = SERVER_ROLE;
+   message.itf.id     = Interface::GROUP_MANAGEMENT;
    message.itf.member = CREATE_CMD;
 
    send(addr, message);

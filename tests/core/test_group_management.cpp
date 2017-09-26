@@ -344,8 +344,8 @@ TEST(GroupManagement, CreateGroup_Pack)
    std::string group_name("TestGroup");
 
    CreateMessage message(group_name);
-   ByteArray expected = ByteArray { (uint8_t) group_name.length(),
-                                    'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
+   ByteArray expected = ByteArray {(uint8_t) group_name.length(),
+                                   'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
    ByteArray got      = ByteArray(message.size());
 
    message.pack(got);
@@ -360,8 +360,8 @@ TEST(GroupManagement, CreateGroup_Unpack)
 
    CreateMessage message(group_name);
 
-   ByteArray input = ByteArray { (uint8_t) group_name.length(),
-                                 'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
+   ByteArray input = ByteArray {(uint8_t) group_name.length(),
+                                'T', 'e', 's', 't', 'G', 'r', 'o', 'u', 'p'};
 
    message.unpack(input);
 
@@ -399,8 +399,8 @@ TEST(GroupManagement, CreateGroupResponse_Pack)
 
    CreateResponse message(0x5A55);
 
-   ByteArray expected = ByteArray{ Common::Result::OK,  // Response code : OK
-                                   0x5A, 0x55};         // Group Address
+   ByteArray expected = ByteArray{Common::Result::OK,   // Response code : OK
+                                  0x5A, 0x55};          // Group Address
    ByteArray got      = ByteArray(1 + 1 + 1);
 
    UNSIGNED_LONGS_EQUAL(message.size(), message.pack(got));
@@ -432,8 +432,8 @@ TEST(GroupManagement, CreateGroupResponse_UnPack)
 
    CreateResponse message(0x5A55);
 
-   ByteArray input = ByteArray{ Common::Result::OK,   // Response code
-                                0x5A, 0x55};          // Group address
+   ByteArray input = ByteArray{Common::Result::OK,    // Response code
+                               0x5A, 0x55};           // Group address
 
    message.unpack(input);
 
@@ -444,8 +444,8 @@ TEST(GroupManagement, CreateGroupResponse_UnPack)
 
    message = CreateResponse(0x5A55);
 
-   input   = ByteArray { Common::Result::FAIL_AUTH,   // Response code
-                         0x5A, 0x55};                 // Group address
+   input   = ByteArray {Common::Result::FAIL_AUTH,    // Response code
+                        0x5A, 0x55};                  // Group address
 
    UNSIGNED_LONGS_EQUAL(CreateResponse::min_size, message.unpack(input));
 
@@ -587,7 +587,7 @@ TEST(GroupManagement, InfoResponse_Pack)
 
    message  = InfoResponse(Common::Result::FAIL_AUTH, name, members);
 
-   expected = ByteArray { (uint8_t) Common::Result::FAIL_AUTH};
+   expected = ByteArray {(uint8_t) Common::Result::FAIL_AUTH};
 
    LONGS_EQUAL(expected.size(), message.size());
 
@@ -623,12 +623,12 @@ TEST(GroupManagement, InfoResponse_UnPack)
 
    message = InfoResponse();
 
-   input   = ByteArray { (uint8_t) Common::Result::OK,
-                         (uint8_t) name.length(),
-                         'G', 'r', 'o', 'u', 'p',
-                         0x00, 0x01,               // # of groups
-                         0x00, 0x01,               // dev addr
-                         0x12};                    // Unit addr
+   input   = ByteArray {(uint8_t) Common::Result::OK,
+                        (uint8_t) name.length(),
+                        'G', 'r', 'o', 'u', 'p',
+                        0x00, 0x01,                // # of groups
+                        0x00, 0x01,                // dev addr
+                        0x12};                     // Unit addr
 
    UNSIGNED_LONGS_EQUAL(message.size(), message.unpack(input));
 
