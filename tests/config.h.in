@@ -116,6 +116,14 @@
 #define HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR          1
 
 // =============================================================================
+// Event Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD         1
+#define HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD             1
+#define HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD           1
+
+// =============================================================================
 // Other Configuration
 // =============================================================================
 

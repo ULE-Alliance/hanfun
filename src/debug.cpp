@@ -1716,6 +1716,91 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::Attri
 }
 
 // =============================================================================
+// HF::Core::EventScheduling
+// =============================================================================
+
+#include "hanfun/core/event_scheduling.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::Scheduling::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::Scheduling;
+
+   switch (command)
+   {
+      case ACTIVATE_SCHEDULER_CMD:
+         result = "Activate Scheduler";
+         break;
+      case DEFINE_CMD:
+         result = "Define Event";
+         break;
+      case UPDATE_STATUS_CMD:
+         result = "Update Event Status";
+         break;
+      case GET_ENTRY_CMD:
+         result = "Get Event Entry";
+         break;
+      case DELETE_CMD:
+         result = "Delete Event";
+         break;
+      case DELETE_ALL_CMD:
+         result = "Delete All Events";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Core::Scheduling::Attributes attribute)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Core::Scheduling;
+
+   switch (attribute)
+   {
+      case MAXIMUM_NUMBER_OF_ENTRIES_ATTR:
+         result = "Maximum Number Of Entries";
+         break;
+      case NUMBER_OF_ENTRIES_ATTR:
+         result = "Number Of Entries";
+         break;
+      case STATUS_ATTR:
+         result = "Status";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -1895,7 +1980,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::SUOTA:
                stream << static_cast<SUOTA::CMD>(message.itf.member);
                break;
-            /* Interfaces [C] */
+            case HF::Interface::EVENT_SCHEDULING:
+               stream << static_cast<Scheduling::CMD>(message.itf.member);
+               break;            /* Interfaces [C] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::CMD>(message.itf.member);
                break;
@@ -1957,7 +2044,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::TIME:
                stream << static_cast<Time::Attributes>(message.itf.member);
                break;
-            /* Interfaces [A] */
+            case HF::Interface::EVENT_SCHEDULING:
+               stream << static_cast<Scheduling::Attributes>(message.itf.member);
+               break;            /* Interfaces [A] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::Attributes>(message.itf.member);
                break;

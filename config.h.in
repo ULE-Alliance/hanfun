@@ -36,6 +36,14 @@
 #define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD   @HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD@
 
 // =============================================================================
+// Event Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD         @HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD@
+#define HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD             @HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD@
+#define HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD@
+
+// =============================================================================
 // Interfaces
 // =============================================================================
 
