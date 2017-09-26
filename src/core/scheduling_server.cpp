@@ -265,7 +265,7 @@ uint8_t IServer::maximum_number_of_entries() const
 // =============================================================================
 void IServer::maximum_number_of_entries(uint8_t __value)
 {
-   // FIXME HF_SETTER_HELPER(MaximumNumberOfEntries, _maximum_number_of_entries, __value);
+   HF_SCHEDULING_SETTER_HELPER(MaximumNumberOfEntries, _maximum_number_of_entries, __value);
 }
 
 // =============================================================================
@@ -289,7 +289,7 @@ uint8_t IServer::number_of_entries() const
 // =============================================================================
 void IServer::number_of_entries(uint8_t __value)
 {
-   // FIXME HF_SETTER_HELPER(NumberOfEntries, _number_of_entries, __value);
+   HF_SCHEDULING_SETTER_HELPER(NumberOfEntries, _number_of_entries, __value);
 }
 
 // =============================================================================
@@ -313,5 +313,5 @@ uint8_t IServer::status() const
 // =============================================================================
 void IServer::status(uint8_t __value)
 {
-   // FIXME HF_SETTER_HELPER(Status, _status, __value);
+   HF_SCHEDULING_SETTER_HELPER(Status, _status, __value);
 }

@@ -19,6 +19,29 @@
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
 
+
+/*!
+ * @ingroup Scheduling
+ *
+ * Helper macro to implement attribute setters for the Scheduling case.
+ *
+ * @param [in] _Type    helper class that wraps the attribute.
+ * @param [in] _name    name of the attribute to generate the setter for.
+ * @param [in] _value   name of the variable containing the new value.
+ */
+#define HF_SCHEDULING_SETTER_HELPER(_Type, _name, _value)                                 \
+   {                                                                                      \
+      _Type::value_type old = this->_name;                                                \
+                                                                                          \
+      this->_name = _value;                                                               \
+                                                                                          \
+      _Type old_attr(static_cast<HF::Interface::UID>(this->uid()),old, this);             \
+      _Type new_attr(static_cast<HF::Interface::UID>(this->uid()),this->_name, this);     \
+                                                                                          \
+      notify(old_attr, new_attr);                                                         \
+   }
+
+
 namespace HF
 {
    namespace Core
