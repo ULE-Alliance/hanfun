@@ -118,6 +118,157 @@ TEST(Scheduling_Event, InvalidAttribute)
    CHECK_TRUE(attr == nullptr);
 }
 
+// =============================================================================
+// Event Scheduling - Entries
+// =============================================================================
+
+//! Test Group for GroupManagement service parent class.
+TEST_GROUP(EventSchedulingEntries)
+{
+   using Entries = Scheduling::Entries<Interval>;
+
+   struct TestEntries: public Entries
+   {
+      Entries::Container &data()
+      {
+         return db;
+      }
+   };
+
+   TestEntries entries;
+   Entries::Container &data = entries.data();
+
+   TEST_SETUP()
+   {
+      entries = TestEntries();
+      mock().ignoreOtherCalls();
+   }
+
+   TEST_TEARDOWN()
+   {
+      mock().clear();
+   }
+
+   void IssueEvents(uint8_t number)
+   {
+      Entry event;
+
+      for (uint8_t id = Entry::START_ID; id < number - Entry::START_ID;
+            ++id)
+      {
+         event.id = id;
+         event.status = 0x01;
+         event.pid = id;
+         data.emplace(id, event);
+      }
+   }
+};
+
+//! @test Entries next address
+TEST(EventSchedulingEntries, Next_id)
+{
+   LONGS_EQUAL(Entry::START_ID, entries.next_id());   // 1st address
+
+
+   IssueEvents(Entry::MAX_ID +1 );
+
+
+   LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
+
+   data.erase(2);                            // erase group 2
+   LONGS_EQUAL(2, entries.next_id());        // check if the next available address is 2
+
+   Entry event;
+   event.id = 2;                             // restore it
+   data.emplace(2, event);
+
+   LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
+}
+
+//! @test Entries find by address
+TEST(EventSchedulingEntries, Find_by_id)
+{
+   // Create 10 Events
+   IssueEvents(10);
+
+   Entry event;
+   event.id = 2;
+   event.pid = 0x22;
+
+   data.erase(2);                                    // erase group 2
+   POINTERS_EQUAL(nullptr, entries.find(2).operator->());      // Try to find group 2 (should fail)
+   data[2] = event;                                  // restore it
+
+   CHECK(nullptr != entries.find(2).operator->());             // Try to find group 2 (OK)
+   UNSIGNED_LONGS_EQUAL(0x22, entries.find(2)->pid);
+}
+
+//! @test Entries size
+TEST(EventSchedulingEntries, Size)
+{
+   LONGS_EQUAL(0, entries.size());
+
+   // Create 10 events
+   IssueEvents(10);
+
+   LONGS_EQUAL(10, entries.size());
+}
+
+//! @test Entries destroy by id
+TEST(EventSchedulingEntries, Destroy_by_address)
+{
+   // Create 10 Events
+   IssueEvents(10);
+
+   LONGS_EQUAL(10, entries.size());
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(10));   // Try to destroy Event 10 (NOK)
+   CHECK_EQUAL(Common::Result::OK, entries.destroy(9));          // Try to destroy Event 9 (OK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(9));    // Try to destroy Event 9 again (NOK)
+
+   LONGS_EQUAL(9, entries.size());
+}
+
+//! @test Entries destroy by @c Event
+TEST(EventSchedulingEntries, Destroy_by_group)
+{
+   // Create 10 Events
+   IssueEvents(10);
+
+   Entry event;
+
+
+
+   LONGS_EQUAL(10, entries.size());
+
+   // Try to destroy event 10 (NOK)
+   event.id=10;
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(event));
+
+   // Try to destroy event 9 (OK)
+   event.id=9;
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, entries.destroy(event));
+
+   // Try to destroy event 9  again (NOK)
+   event.id=9;
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(event));
+
+   LONGS_EQUAL(9, entries.size());
+}
+
+//! @test Entries save new
+TEST(EventSchedulingEntries, Save)
+{
+   LONGS_EQUAL(0, entries.size());
+
+   Entry event;
+   event.id =1;
+   event.pid = 11;
+   entries.save(event);
+
+   UNSIGNED_LONGS_EQUAL(1, entries.size());
+   UNSIGNED_LONGS_EQUAL(11, data.begin()->second.pid);
+}
 
 // =============================================================================
 // Event Scheduling messages

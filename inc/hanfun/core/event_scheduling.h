@@ -138,7 +138,8 @@ namespace HF
              * @retval  pointer to an attribute object
              * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
              */
-            HF::Attributes::IAttribute *create_attribute(uint8_t uid);
+            HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+
 
             typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING> Base;
 
@@ -294,6 +295,43 @@ namespace HF
                //! Destructor
                virtual ~IServer() = default;
 
+               // =============================================================================
+               // Entries API
+               // =============================================================================
+
+               /*!
+                * Get a reference to the current object implementing the persistence API,
+                * for the device information.
+                *
+                * @return  reference to the current object for the persistence API.
+                */
+               virtual IEntries<Interval> &entries () const = 0;
+
+               /*!
+                * Get the Event Scheduling entry given by @c id.
+                *
+                * @param [in] id  event id of the event to retrieve.
+                *
+                * @return  a pointer to the event entry if it exists,
+                *          @c nullptr otherwise.
+                */
+               Common::Pointer<Entry> entry (const uint8_t id) const
+               {
+                  return entries().find(id);
+               }
+
+               /*!
+                * @copydoc IEntries::next_id
+                */
+               uint8_t next_id () const
+               {
+                  return entries().next_id();
+               }
+
+               // =============================================================================
+               // Protected types and methods
+               // =============================================================================
+
                protected:
 
                Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
@@ -316,6 +354,12 @@ namespace HF
              */
             struct Server: public IServer
             {
+               protected:
+
+               Entries<Interval> _entries;
+
+               public:
+
                /*!
                 * Constructor.
                 *
@@ -326,6 +370,12 @@ namespace HF
 
                virtual ~Server()
                {}
+
+               //! @copydoc IServer::entries
+               Entries<Interval> &entries () const
+               {
+                  return const_cast<Entries<Interval> &>(_entries);
+               }
             };
 
 

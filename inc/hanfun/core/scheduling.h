@@ -19,6 +19,10 @@
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
 
+#include <string>
+#include <map>
+#include <forward_list>
+
 
 /*!
  * @ingroup Scheduling
@@ -162,17 +166,20 @@ namespace HF
          template<typename _Type>
          struct Entry
          {
-
             uint8_t id;          //!< Event ID. (Unique per device)
             uint8_t status;      //!< Event Status.
             _Type   time;        //!< Scheduler configuration.
             uint8_t pid;         //!< Program ID to be invoked.
 
             Entry(uint8_t _event_id, uint8_t _status, _Type _t, uint8_t _pid):
-               id(_event_id), status(_status), time(_t), pid(_pid)
+               id(_event_id), status(_status), time  (_t), pid(_pid)
             {}
 
             Entry() = default;
+
+            static constexpr uint16_t START_ID = 0x00;
+            static constexpr uint16_t MAX_ID = 0xFE;
+            static constexpr uint16_t AVAILABLE_ID = 0xFF;
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t)     // Event ID
@@ -414,6 +421,196 @@ namespace HF
 
          //! Response Message payload for a @c HF::Scheduling::DELETE_ALL_CMD request.
          typedef HF::Protocol::Response DeleteAllResponse;
+
+
+         /*!
+          * Scheduling - Persistent Storage API.
+          */
+         template<typename _Type>
+         struct IEntries: public Common::IEntries<Entry<_Type> >
+         {
+            /*!
+             * Store the given @c entry to persistent storage.
+             *
+             * @param [in] entry    the entry itself for this event.
+             *
+             * @retval  Common::Result::OK if the entry was saved,
+             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
+             */
+            virtual Common::Result save (const Entry<_Type> &entry) = 0;
+
+            /*!
+             * Find the Event with the given id.
+             *
+             * @param [in] id  Event ID to search for.
+             *
+             * @returns  pointer to the entry with the given @c id,
+             *           @c nullptr otherwise.
+             */
+            virtual Common::Pointer<Entry<_Type> > find (uint8_t id) const = 0;
+
+            /*!
+             * Return next available id for event.
+             *
+             * @return  the id to use in the next event, or
+             *          @c Scheduler::Entry::AVAILABLE_ID if no id is available.
+             */
+            virtual uint8_t next_id () const = 0;
+         };
+
+         /*!
+          * Default implementation of the persistence API.
+          */
+         template<typename _Type>
+         struct Entries: public IEntries<_Type>
+         {
+            typedef Entry<_Type> EntryType;
+
+            typedef typename std::map<uint8_t, EntryType> Container;
+            typedef typename Container::iterator iterator;
+            typedef typename Container::const_iterator const_iterator;
+            typedef typename Container::value_type value_type;
+
+
+            virtual ~Entries () = default;
+
+            uint16_t size () const
+            {
+               return db.size();
+            }
+
+            Common::Result save (const EntryType &entry)
+            {
+               db.insert(db.end(), std::pair<uint8_t, EntryType>(entry.id, entry));
+
+               return Common::Result::OK;
+            }
+
+            Common::Result save (uint8_t _id, uint8_t _status, _Type &_time, uint8_t _pid)
+            {
+               db.insert(db.end(),
+                         std::pair<uint8_t, EntryType>(_id, EntryType(_id, _status, _time, _pid)));
+
+               return Common::Result::OK;
+            }
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @param [in] id     The @c Event id to destroy
+             * @return
+             */
+            Common::Result destroy (const uint8_t &id)
+            {
+               auto count = db.erase(id);
+
+               if (count != 1)
+               {
+                  return Common::Result::FAIL_ARG;
+               }
+               else
+               {
+                  return Common::Result::OK;
+               }
+            }
+
+            /*!
+             * @copydoc HF::Common::IEntries::destroy
+             *
+             * @warning the reference passed into this method SHOULD NOT be considered
+             *          valid if it was obtained by calling the find method.
+             *
+             */
+            Common::Result destroy (const EntryType &entry)
+            {
+               return destroy(entry.id);
+            }
+
+            /*!
+             * @copydoc IEntries::find(uint16_t)
+             */
+            Common::Pointer<Entry<_Type> > find (uint8_t id) const
+            {
+               auto it = db.find(id);
+
+               if (it == db.end())
+               {
+                  return Common::Pointer<Entry<_Type> >();
+               }
+               else
+               {
+                  return Common::Pointer<Entry<_Type> >(const_cast<EntryType *>(&(*it).second));
+               }
+            }
+
+            /*!
+             * @copydoc IEntries::next_id
+             */
+            uint8_t next_id () const
+            {
+               uint8_t address = 0;
+
+               if (db.size() > EntryType::MAX_ID)
+               {
+                  return EntryType::AVAILABLE_ID;;
+               }
+
+               for (address = EntryType::START_ID; address <= EntryType::MAX_ID; ++address)
+               {
+                  if (db.find(address) == db.end())
+                  {
+                     return address;
+                  }
+               }
+
+               return EntryType::AVAILABLE_ID;
+            }
+
+            /*!
+             * Get an iterator to the start of the entries in this container.
+             *
+             * @return  iterator to the start of the entries present in this container.
+             */
+            iterator begin ()
+            {
+               return db.begin();
+            }
+
+            /*!
+             * Get an iterator to the end of the entries in this container.
+             *
+             * @return  iterator to the end of the entries present in this container.
+             */
+            iterator end ()
+            {
+               return db.end();
+            }
+
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
+            const_iterator begin () const
+            {
+               return db.cbegin();
+            }
+
+            /*!
+             * Get a constant iterator to the start of the entries in this container.
+             *
+             * @return  constant iterator to the start of the entries present in this container.
+             */
+            const_iterator end () const
+            {
+               return db.cend();
+            }
+
+            protected:
+
+            //! Actual container for the entries.
+            Container db;
+         };
 
 
          /*!

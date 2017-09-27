@@ -27,7 +27,6 @@ using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::Scheduling;
 
-#if 1
 // =============================================================================
 // Core::create_attribute
 // =============================================================================
@@ -76,8 +75,6 @@ HF::Attributes::IAttribute *Scheduling::create_attribute(Interface::UID itf_uid,
          return nullptr;
    }
 }
-
-#endif
 
 uint16_t ActivateScheduler::pack(Common::ByteArray &array, uint16_t offset) const
 {
