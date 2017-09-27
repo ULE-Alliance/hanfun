@@ -43,9 +43,9 @@ using namespace HF::Core::Scheduling;
 void IClient::activate_scheduler(Interface::UID itf_uid, const Protocol::Address &addr,
                                  uint8_t _status)
 {
-  ActivateScheduler msg(_status);
+   ActivateScheduler msg(_status);
 
-  Protocol::Message message(msg.size());
+   Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
    /* *INDENT-OFF* */

@@ -154,11 +154,11 @@ TEST_GROUP(EventSchedulingEntries)
       Entry event;
 
       for (uint8_t id = Entry::START_ID; id < number - Entry::START_ID;
-            ++id)
+           ++id)
       {
-         event.id = id;
+         event.id     = id;
          event.status = 0x01;
-         event.pid = id;
+         event.pid    = id;
          data.emplace(id, event);
       }
    }
@@ -170,7 +170,7 @@ TEST(EventSchedulingEntries, Next_id)
    LONGS_EQUAL(Entry::START_ID, entries.next_id());   // 1st address
 
 
-   IssueEvents(Entry::MAX_ID +1 );
+   IssueEvents(Entry::MAX_ID + 1);
 
 
    LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
@@ -192,12 +192,12 @@ TEST(EventSchedulingEntries, Find_by_id)
    IssueEvents(10);
 
    Entry event;
-   event.id = 2;
+   event.id  = 2;
    event.pid = 0x22;
 
-   data.erase(2);                                    // erase group 2
-   POINTERS_EQUAL(nullptr, entries.find(2).operator->());      // Try to find group 2 (should fail)
-   data[2] = event;                                  // restore it
+   data.erase(2);                                         // erase group 2
+   POINTERS_EQUAL(nullptr, entries.find(2).operator->()); // Try to find group 2 (should fail)
+   data[2] = event;                                       // restore it
 
    CHECK(nullptr != entries.find(2).operator->());             // Try to find group 2 (OK)
    UNSIGNED_LONGS_EQUAL(0x22, entries.find(2)->pid);
@@ -242,15 +242,15 @@ TEST(EventSchedulingEntries, Destroy_by_group)
    LONGS_EQUAL(10, entries.size());
 
    // Try to destroy event 10 (NOK)
-   event.id=10;
+   event.id = 10;
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(event));
 
    // Try to destroy event 9 (OK)
-   event.id=9;
+   event.id = 9;
    UNSIGNED_LONGS_EQUAL(Common::Result::OK, entries.destroy(event));
 
    // Try to destroy event 9  again (NOK)
-   event.id=9;
+   event.id = 9;
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, entries.destroy(event));
 
    LONGS_EQUAL(9, entries.size());
@@ -262,7 +262,7 @@ TEST(EventSchedulingEntries, Save)
    LONGS_EQUAL(0, entries.size());
 
    Entry event;
-   event.id =1;
+   event.id  = 1;
    event.pid = 11;
    entries.save(event);
 
@@ -652,12 +652,12 @@ TEST_GROUP(EventSchedulingServer)
          InterfaceHelper<Scheduling::Event::Server>::delete_all_events(addr);
       }
 
-      void notify (const HF::Attributes::IAttribute &old_value,
-                   const HF::Attributes::IAttribute &new_value) const override
+      void notify(const HF::Attributes::IAttribute &old_value,
+                  const HF::Attributes::IAttribute &new_value) const override
       {
          mock("Interface").actualCall("notify")
-               .withParameterOfType("IAttribute", "old", &old_value)
-               .withParameterOfType("IAttribute", "new", &new_value);
+            .withParameterOfType("IAttribute", "old", &old_value)
+            .withParameterOfType("IAttribute", "new", &new_value);
       }
 
    };
@@ -677,18 +677,18 @@ TEST_GROUP(EventSchedulingServer)
       device                    = new Testing::Device();
       server                    = new EventSchedulingServer(*(device->unit0()));
 
-      addr = Protocol::Address(42, 0);
-      link = Testing::Link();
+      addr                      = Protocol::Address(42, 0);
+      link                      = Testing::Link();
 
-      packet = Protocol::Packet();
-      packet.source = addr;
-      packet.destination = Protocol::Address(0, 0);
-      packet.message.itf.role = HF::Interface::SERVER_ROLE;
-      packet.message.itf.id = server->uid();
+      packet                    = Protocol::Packet();
+      packet.source             = addr;
+      packet.destination        = Protocol::Address(0, 0);
+      packet.message.itf.role   = HF::Interface::SERVER_ROLE;
+      packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
-      packet.message.type = Protocol::Message::COMMAND_REQ;
-      packet.link = &link;
+      packet.message.type       = Protocol::Message::COMMAND_REQ;
+      packet.link               = &link;
 
       mock().ignoreOtherCalls();
    }
@@ -736,15 +736,15 @@ TEST(EventSchedulingServer, ActivateScheduler)
    received.pack(payload);    // pack it
 
    packet.message.itf.member = Scheduling::ACTIVATE_SCHEDULER_CMD;
-   packet.message.type = Protocol::Message::COMMAND_REQ;
-   packet.message.length = payload.size();
+   packet.message.type       = Protocol::Message::COMMAND_REQ;
+   packet.message.length     = payload.size();
 
    Status old_value(0, server);
    Status new_value(1, server);
 
    mock("Interface").expectOneCall("notify")
-         .withParameterOfType("IAttribute", "old", &old_value)
-         .withParameterOfType("IAttribute", "new", &new_value);
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
 
    mock("Scheduling::Event::Server").expectOneCall("activate_scheduler");
    mock("AbstractDevice").expectOneCall("send");

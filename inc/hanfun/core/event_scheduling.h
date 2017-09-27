@@ -138,7 +138,7 @@ namespace HF
              * @retval  pointer to an attribute object
              * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
              */
-            HF::Attributes::IAttribute *create_attribute (uint8_t uid);
+            HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
 
             typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING> Base;
@@ -305,7 +305,7 @@ namespace HF
                 *
                 * @return  reference to the current object for the persistence API.
                 */
-               virtual IEntries<Interval> &entries () const = 0;
+               virtual IEntries<Interval> &entries() const = 0;
 
                /*!
                 * Get the Event Scheduling entry given by @c id.
@@ -315,7 +315,7 @@ namespace HF
                 * @return  a pointer to the event entry if it exists,
                 *          @c nullptr otherwise.
                 */
-               Common::Pointer<Entry> entry (const uint8_t id) const
+               Common::Pointer<Entry> entry(const uint8_t id) const
                {
                   return entries().find(id);
                }
@@ -323,7 +323,7 @@ namespace HF
                /*!
                 * @copydoc IEntries::next_id
                 */
-               uint8_t next_id () const
+               uint8_t next_id() const
                {
                   return entries().next_id();
                }
@@ -335,15 +335,15 @@ namespace HF
                protected:
 
                Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
-                                                         uint16_t offset)
+                                             uint16_t offset)
                {
                   return Scheduling::IServer::handle_command(packet, payload, offset);
                }
 
                void send(const Protocol::Address &addr, Protocol::Message &message,
-                                  Transport::Link *link)
+                         Transport::Link *link)
                {
-                  Base::send(addr, message,link);
+                  Base::send(addr, message, link);
                }
             };
 
@@ -372,7 +372,7 @@ namespace HF
                {}
 
                //! @copydoc IServer::entries
-               Entries<Interval> &entries () const
+               Entries<Interval> &entries() const
                {
                   return const_cast<Entries<Interval> &>(_entries);
                }

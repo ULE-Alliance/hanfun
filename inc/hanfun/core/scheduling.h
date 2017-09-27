@@ -33,16 +33,16 @@
  * @param [in] _name    name of the attribute to generate the setter for.
  * @param [in] _value   name of the variable containing the new value.
  */
-#define HF_SCHEDULING_SETTER_HELPER(_Type, _name, _value)                                 \
-   {                                                                                      \
-      _Type::value_type old = this->_name;                                                \
-                                                                                          \
-      this->_name = _value;                                                               \
-                                                                                          \
-      _Type old_attr(static_cast<HF::Interface::UID>(this->uid()),old, this);             \
-      _Type new_attr(static_cast<HF::Interface::UID>(this->uid()),this->_name, this);     \
-                                                                                          \
-      notify(old_attr, new_attr);                                                         \
+#define HF_SCHEDULING_SETTER_HELPER(_Type, _name, _value)                              \
+   {                                                                                   \
+      _Type::value_type old = this->_name;                                             \
+                                                                                       \
+      this->_name = _value;                                                            \
+                                                                                       \
+      _Type old_attr(static_cast<HF::Interface::UID>(this->uid()), old, this);         \
+      _Type new_attr(static_cast<HF::Interface::UID>(this->uid()), this->_name, this); \
+                                                                                       \
+      notify(old_attr, new_attr);                                                      \
    }
 
 
@@ -172,13 +172,13 @@ namespace HF
             uint8_t pid;         //!< Program ID to be invoked.
 
             Entry(uint8_t _event_id, uint8_t _status, _Type _t, uint8_t _pid):
-               id(_event_id), status(_status), time  (_t), pid(_pid)
+               id(_event_id), status(_status), time(_t), pid(_pid)
             {}
 
             Entry() = default;
 
-            static constexpr uint16_t START_ID = 0x00;
-            static constexpr uint16_t MAX_ID = 0xFE;
+            static constexpr uint16_t START_ID     = 0x00;
+            static constexpr uint16_t MAX_ID       = 0xFE;
             static constexpr uint16_t AVAILABLE_ID = 0xFF;
 
             //! Minimum pack/unpack required data size.
@@ -427,7 +427,7 @@ namespace HF
           * Scheduling - Persistent Storage API.
           */
          template<typename _Type>
-         struct IEntries: public Common::IEntries<Entry<_Type> >
+         struct IEntries: public Common::IEntries<Entry<_Type>>
          {
             /*!
              * Store the given @c entry to persistent storage.
@@ -437,7 +437,7 @@ namespace HF
              * @retval  Common::Result::OK if the entry was saved,
              * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
-            virtual Common::Result save (const Entry<_Type> &entry) = 0;
+            virtual Common::Result save(const Entry<_Type> &entry) = 0;
 
             /*!
              * Find the Event with the given id.
@@ -447,7 +447,7 @@ namespace HF
              * @returns  pointer to the entry with the given @c id,
              *           @c nullptr otherwise.
              */
-            virtual Common::Pointer<Entry<_Type> > find (uint8_t id) const = 0;
+            virtual Common::Pointer<Entry<_Type>> find(uint8_t id) const = 0;
 
             /*!
              * Return next available id for event.
@@ -455,7 +455,7 @@ namespace HF
              * @return  the id to use in the next event, or
              *          @c Scheduler::Entry::AVAILABLE_ID if no id is available.
              */
-            virtual uint8_t next_id () const = 0;
+            virtual uint8_t next_id() const = 0;
          };
 
          /*!
@@ -472,21 +472,21 @@ namespace HF
             typedef typename Container::value_type value_type;
 
 
-            virtual ~Entries () = default;
+            virtual ~Entries() = default;
 
-            uint16_t size () const
+            uint16_t size() const
             {
                return db.size();
             }
 
-            Common::Result save (const EntryType &entry)
+            Common::Result save(const EntryType &entry)
             {
                db.insert(db.end(), std::pair<uint8_t, EntryType>(entry.id, entry));
 
                return Common::Result::OK;
             }
 
-            Common::Result save (uint8_t _id, uint8_t _status, _Type &_time, uint8_t _pid)
+            Common::Result save(uint8_t _id, uint8_t _status, _Type &_time, uint8_t _pid)
             {
                db.insert(db.end(),
                          std::pair<uint8_t, EntryType>(_id, EntryType(_id, _status, _time, _pid)));
@@ -500,7 +500,7 @@ namespace HF
              * @param [in] id     The @c Event id to destroy
              * @return
              */
-            Common::Result destroy (const uint8_t &id)
+            Common::Result destroy(const uint8_t &id)
             {
                auto count = db.erase(id);
 
@@ -521,7 +521,7 @@ namespace HF
              *          valid if it was obtained by calling the find method.
              *
              */
-            Common::Result destroy (const EntryType &entry)
+            Common::Result destroy(const EntryType &entry)
             {
                return destroy(entry.id);
             }
@@ -529,30 +529,30 @@ namespace HF
             /*!
              * @copydoc IEntries::find(uint16_t)
              */
-            Common::Pointer<Entry<_Type> > find (uint8_t id) const
+            Common::Pointer<Entry<_Type>> find(uint8_t id) const
             {
                auto it = db.find(id);
 
                if (it == db.end())
                {
-                  return Common::Pointer<Entry<_Type> >();
+                  return Common::Pointer<Entry<_Type>>();
                }
                else
                {
-                  return Common::Pointer<Entry<_Type> >(const_cast<EntryType *>(&(*it).second));
+                  return Common::Pointer<Entry<_Type>>(const_cast<EntryType *>(&(*it).second));
                }
             }
 
             /*!
              * @copydoc IEntries::next_id
              */
-            uint8_t next_id () const
+            uint8_t next_id() const
             {
                uint8_t address = 0;
 
                if (db.size() > EntryType::MAX_ID)
                {
-                  return EntryType::AVAILABLE_ID;;
+                  return EntryType::AVAILABLE_ID;
                }
 
                for (address = EntryType::START_ID; address <= EntryType::MAX_ID; ++address)
@@ -571,7 +571,7 @@ namespace HF
              *
              * @return  iterator to the start of the entries present in this container.
              */
-            iterator begin ()
+            iterator begin()
             {
                return db.begin();
             }
@@ -581,7 +581,7 @@ namespace HF
              *
              * @return  iterator to the end of the entries present in this container.
              */
-            iterator end ()
+            iterator end()
             {
                return db.end();
             }
@@ -591,7 +591,7 @@ namespace HF
              *
              * @return  constant iterator to the start of the entries present in this container.
              */
-            const_iterator begin () const
+            const_iterator begin() const
             {
                return db.cbegin();
             }
@@ -601,7 +601,7 @@ namespace HF
              *
              * @return  constant iterator to the start of the entries present in this container.
              */
-            const_iterator end () const
+            const_iterator end() const
             {
                return db.cend();
             }
