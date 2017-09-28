@@ -59,29 +59,6 @@ void IClient::activate_scheduler(Interface::UID itf_uid, const Protocol::Address
    send(addr, message);
 }
 
-// =============================================================================
-// Client::define_event
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void IClient::define_event(Interface::UID itf_uid, const Protocol::Address &addr)
-{
-   // FIXME Generated Stub.
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
-
-   Protocol::Message message;
-
-   message.itf.role   = HF::Interface::SERVER_ROLE;
-   message.itf.id     = itf_uid;
-   message.itf.member = DEFINE_CMD;
-
-   send(addr, message);
-}
-
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
 // =============================================================================
 // Client::update_event_status

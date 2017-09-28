@@ -83,6 +83,101 @@ TEST(Scheduling_Messages, ActivateScheduler_unpack)
    UNSIGNED_LONGS_EQUAL(0x11, message.status)
 }
 
+// ========== Define Event Response ==========
+
+//! @test  DefineEventResponse message size.
+TEST(Scheduling_Messages, DefineEventResponse_size)
+{
+   DefineEventResponse message(Common::Result::FAIL_ARG);
+
+   UNSIGNED_LONGS_EQUAL(message.min_size, message.size());
+   UNSIGNED_LONGS_EQUAL(1, message.size());
+
+   message = DefineEventResponse();
+   UNSIGNED_LONGS_EQUAL(2, message.size());
+}
+
+//! @test  DefineEventResponse message pack.
+TEST(Scheduling_Messages, DefineEventResponse_pack)
+{
+   DefineEventResponse message(Common::Result::OK, 0x11);
+
+   payload  = Common::ByteArray(message.size());
+
+   size     = message.pack(payload);
+
+   expected = Common::ByteArray{Common::Result::OK, 0x11};
+
+   UNSIGNED_LONGS_EQUAL(2, size);
+   CHECK_EQUAL(expected, payload);
+
+   // ============
+
+   message  = DefineEventResponse(Common::Result::FAIL_ARG);
+   payload  = Common::ByteArray(message.size());
+
+   size     = message.pack(payload);
+
+   expected = Common::ByteArray {Common::Result::FAIL_ARG};
+
+   UNSIGNED_LONGS_EQUAL(1, size);
+   CHECK_EQUAL(expected, payload);
+}
+
+/*!
+ * @test  DefineEventResponse message pack.
+ * Fail because of insufficient space on the payload container.
+ */
+TEST(Scheduling_Messages, DefineEventResponse_pack_fail_no_space)
+{
+   DefineEventResponse message(Common::Result::OK, 0x11);
+
+   payload = Common::ByteArray(message.size() - 1);
+
+   size    = message.pack(payload);
+
+   UNSIGNED_LONGS_EQUAL(0, size);
+}
+
+//! @test  DefineEventResponse message unpack.
+TEST(Scheduling_Messages, DefineEventResponse_unpack)
+{
+   DefineEventResponse message;
+
+   payload = Common::ByteArray{Common::Result::OK, 0x11};
+
+   size    = message.unpack(payload);
+
+   UNSIGNED_LONGS_EQUAL(2, size);
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, message.code);
+   UNSIGNED_LONGS_EQUAL(0x11, message.event_id);
+
+   // ============
+
+   message = DefineEventResponse(Common::Result::FAIL_ARG);
+   payload = Common::ByteArray {Common::Result::FAIL_ARG};
+
+   size    = message.pack(payload);
+
+   UNSIGNED_LONGS_EQUAL(1, size);
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, message.code);
+}
+
+/*!
+ * @test  DefineEventResponse message unpack.
+ * Fail because of an incomplete message being received.
+ */
+TEST(Scheduling_Messages, DefineEventResponse_unpack_fail)
+{
+   DefineEventResponse message;
+
+   payload = Common::ByteArray{Common::Result::OK};
+
+   size    = message.unpack(payload);
+
+   UNSIGNED_LONGS_EQUAL(0, size);
+}
+
 // ========== Update Status ==========
 
 //! @test  UpdateStatus message size
@@ -147,101 +242,6 @@ TEST(Scheduling_Messages, UpdateStatus_unpack_fail)
    UpdateStatus message;
 
    payload = Common::ByteArray{0x11};
-
-   size    = message.unpack(payload);
-
-   UNSIGNED_LONGS_EQUAL(0, size);
-}
-
-// ========== Update Status Response ==========
-
-//! @test  UpdateStatusResponse message size.
-TEST(Scheduling_Messages, UpdateStatusResponse_size)
-{
-   UpdateStatusResponse message(Common::Result::FAIL_ARG);
-
-   UNSIGNED_LONGS_EQUAL(message.min_size, message.size());
-   UNSIGNED_LONGS_EQUAL(1, message.size());
-
-   message = UpdateStatusResponse();
-   UNSIGNED_LONGS_EQUAL(2, message.size());
-}
-
-//! @test  UpdateStatusResponse message pack.
-TEST(Scheduling_Messages, UpdateStatusResponse_pack)
-{
-   UpdateStatusResponse message(Common::Result::OK, 0x11);
-
-   payload  = Common::ByteArray(message.size());
-
-   size     = message.pack(payload);
-
-   expected = Common::ByteArray{Common::Result::OK, 0x11};
-
-   UNSIGNED_LONGS_EQUAL(2, size);
-   CHECK_EQUAL(expected, payload);
-
-   // ============
-
-   message  = UpdateStatusResponse(Common::Result::FAIL_ARG);
-   payload  = Common::ByteArray(message.size());
-
-   size     = message.pack(payload);
-
-   expected = Common::ByteArray {Common::Result::FAIL_ARG};
-
-   UNSIGNED_LONGS_EQUAL(1, size);
-   CHECK_EQUAL(expected, payload);
-}
-
-/*!
- * @test  UpdateStatusResponse message pack.
- * Fail because of insufficient space on the payload container.
- */
-TEST(Scheduling_Messages, UpdateStatusResponse_pack_fail_no_space)
-{
-   UpdateStatusResponse message(Common::Result::OK, 0x11);
-
-   payload = Common::ByteArray(message.size() - 1);
-
-   size    = message.pack(payload);
-
-   UNSIGNED_LONGS_EQUAL(0, size);
-}
-
-//! @test  UpdateStatusResponse message unpack.
-TEST(Scheduling_Messages, UpdateStatusResponse_unpack)
-{
-   UpdateStatusResponse message;
-
-   payload = Common::ByteArray{Common::Result::OK, 0x11};
-
-   size    = message.unpack(payload);
-
-   UNSIGNED_LONGS_EQUAL(2, size);
-   UNSIGNED_LONGS_EQUAL(Common::Result::OK, message.code);
-   UNSIGNED_LONGS_EQUAL(0x11, message.event_id);
-
-   // ============
-
-   message = UpdateStatusResponse(Common::Result::FAIL_ARG);
-   payload = Common::ByteArray {Common::Result::FAIL_ARG};
-
-   size    = message.pack(payload);
-
-   UNSIGNED_LONGS_EQUAL(1, size);
-   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, message.code);
-}
-
-/*!
- * @test  UpdateStatusResponse message unpack.
- * Fail because of an incomplete message being received.
- */
-TEST(Scheduling_Messages, UpdateStatusResponse_unpack_fail)
-{
-   UpdateStatusResponse message;
-
-   payload = Common::ByteArray{Common::Result::OK};
 
    size    = message.unpack(payload);
 

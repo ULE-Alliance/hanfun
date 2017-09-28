@@ -35,7 +35,8 @@ TEST_GROUP(Scheduling_Event)
    struct EventSchedulingBase: public InterfaceParentHelper<Scheduling::Event::Base>
    {
       EventSchedulingBase(HF::Core::Unit0 &unit):
-         InterfaceParentHelper<Scheduling::Event::Base>(unit) {}
+         InterfaceParentHelper<Scheduling::Event::Base>(unit)
+      {}
    };
 
    Testing::Device *device;
@@ -169,9 +170,7 @@ TEST(EventSchedulingEntries, Next_id)
 {
    LONGS_EQUAL(Entry::START_ID, entries.next_id());   // 1st address
 
-
    IssueEvents(Entry::MAX_ID + 1);
-
 
    LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
 
@@ -222,9 +221,9 @@ TEST(EventSchedulingEntries, Destroy_by_address)
 
    LONGS_EQUAL(10, entries.size());
 
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(10));   // Try to destroy Event 10 (NOK)
-   CHECK_EQUAL(Common::Result::OK, entries.destroy(9));          // Try to destroy Event 9 (OK)
-   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(9));    // Try to destroy Event 9 again (NOK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(10)); // Try to destroy Event 10 (NOK)
+   CHECK_EQUAL(Common::Result::OK, entries.destroy(9));        // Try to destroy Event 9 (OK)
+   CHECK_EQUAL(Common::Result::FAIL_ARG, entries.destroy(9));  // Try to destroy Event 9 again (NOK)
 
    LONGS_EQUAL(9, entries.size());
 }
@@ -236,8 +235,6 @@ TEST(EventSchedulingEntries, Destroy_by_group)
    IssueEvents(10);
 
    Entry event;
-
-
 
    LONGS_EQUAL(10, entries.size());
 
@@ -296,12 +293,12 @@ TEST_GROUP(EventScheduling_Messages)
    {
       size               = 0;
       Test_entry         = Entry(0x11, 0x01, Interval(0x11111111, 0x22222222, 0x33333333), 0x12);
-      Test_Entry_payload = Common::ByteArray {0x11,                        // Event ID
-                                              0x80,                        // Status 0x01 << 7
-                                              0x11, 0x11, 0x11, 0x11,      // Start Date
-                                              0x22, 0x22, 0x22, 0x22,      // End Date
-                                              0x33, 0x33, 0x33, 0x33,      // Interval
-                                              0x12                         // Program ID.
+      Test_Entry_payload = Common::ByteArray {0x11,                   // Event ID
+                                              0x80,                   // Status 0x01 << 7
+                                              0x11, 0x11, 0x11, 0x11, // Start Date
+                                              0x22, 0x22, 0x22, 0x22, // End Date
+                                              0x33, 0x33, 0x33, 0x33, // Interval
+                                              0x12                    // Program ID.
       };
       mock().ignoreOtherCalls();
    }
@@ -362,12 +359,12 @@ TEST(EventScheduling_Messages, Entry_unpack_fail)
 {
    Entry message;
 
-   payload = Common::ByteArray{0x11,                   // Event ID
-                               0x80,                   // Status 0x01 << 7
-                               0x11, 0x11, 0x11, 0x11, // Start Date
-                               0x22, 0x22, 0x22, 0x22, // End Date
-                               0x33, 0x33, 0x33, 0x33, // Interval
-                                                       // Program ID.   (missing)
+   payload = Common::ByteArray {0x11,                   // Event ID
+                                0x80,                   // Status 0x01 << 7
+                                0x11, 0x11, 0x11, 0x11, // Start Date
+                                0x22, 0x22, 0x22, 0x22, // End Date
+                                0x33, 0x33, 0x33, 0x33, // Interval
+                                                        // Program ID.   (missing)
    };
 
    size = message.unpack(payload);
@@ -409,7 +406,7 @@ TEST(EventScheduling_Messages, GetEntryResponse_pack)
 
    payload  = Common::ByteArray(message.size());
 
-   expected = Common::ByteArray{Common::Result::FAIL_ARG};
+   expected = Common::ByteArray {Common::Result::FAIL_ARG};
 
    size     = message.pack(payload);
 
@@ -455,9 +452,6 @@ TEST(EventScheduling_Messages, GetEntryResponse_unpack_fail)
    UNSIGNED_LONGS_EQUAL(0, size);
 }
 
-
-
-
 // =============================================================================
 // Event Scheduling Client
 // =============================================================================
@@ -468,7 +462,8 @@ TEST_GROUP(EventSchedulingClient)
    // TODO Add required unit tests.
    struct EventSchedulingClient: public InterfaceHelper<Scheduling::Event::Client>
    {
-      EventSchedulingClient(HF::Core::Unit0 &unit): InterfaceHelper<Scheduling::Event::Client>(unit)
+      EventSchedulingClient(HF::Core::Unit0 &unit):
+         InterfaceHelper<Scheduling::Event::Client>(unit)
       {}
 
    };
@@ -477,7 +472,6 @@ TEST_GROUP(EventSchedulingClient)
    EventSchedulingClient *client;
 
    Protocol::Address addr;
-
 
    TEST_SETUP()
    {
@@ -497,7 +491,6 @@ TEST_GROUP(EventSchedulingClient)
       mock().clear();
    }
 };
-
 
 //! @test Activate Scheduler support.
 TEST(EventSchedulingClient, ActivateScheduler)
@@ -526,8 +519,13 @@ TEST(EventSchedulingClient, DefineEvent)
 {
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
+   Interval it(0x1, 0xFFFFFFFF, 0x1111);
 
-   client->define_event(addr);
+   client->define_event(addr,
+                        0x12,
+                        0x01,
+                        it,
+                        0x21);
 
    mock("Interface").checkExpectations();
 
@@ -535,6 +533,17 @@ TEST(EventSchedulingClient, DefineEvent)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(Scheduling::DEFINE_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   Scheduling::DefineEvent<Interval> message;
+
+   message.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x12, message.id);
+   UNSIGNED_LONGS_EQUAL(0x01, message.status);
+   UNSIGNED_LONGS_EQUAL(0x01, message.time.start);
+   UNSIGNED_LONGS_EQUAL(0xFFFFFFFF, message.time.end);
+   UNSIGNED_LONGS_EQUAL(0x1111, message.time.repeat);
+   UNSIGNED_LONGS_EQUAL(0x21, message.pid);
 }
 
 //! @test Update Event Status support.
@@ -601,7 +610,6 @@ TEST(EventSchedulingClient, DeleteAllEvents)
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 }
 
-
 // =============================================================================
 // Event Scheduling Server
 // =============================================================================
@@ -612,7 +620,8 @@ TEST_GROUP(EventSchedulingServer)
    // TODO Add required unit tests.
    struct EventSchedulingServer: public InterfaceHelper<Scheduling::Event::Server>
    {
-      EventSchedulingServer(HF::Core::Unit0 &unit): InterfaceHelper<Scheduling::Event::Server>(unit)
+      EventSchedulingServer(HF::Core::Unit0 &unit):
+         InterfaceHelper<Scheduling::Event::Server>(unit)
       {}
 
       Common::Result activate_scheduler(const Protocol::Packet &packet,
@@ -622,10 +631,11 @@ TEST_GROUP(EventSchedulingServer)
          return InterfaceHelper<Scheduling::Event::Server>::activate_scheduler(packet, msg);
       }
 
-      void define_event(const Protocol::Address &addr) override
+      Common::Result define_event(const Protocol::Packet &packet,
+                                  Scheduling::DefineEvent<Interval> &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("define_event");
-         InterfaceHelper<Scheduling::Event::Server>::define_event(addr);
+         return InterfaceHelper<Scheduling::Event::Server>::define_event(packet, msg);
       }
 
       void update_event_status(const Protocol::Address &addr) override
@@ -665,7 +675,6 @@ TEST_GROUP(EventSchedulingServer)
    Testing::Device *device;
    EventSchedulingServer *server;
 
-
    Protocol::Packet packet;
    Common::ByteArray payload;
 
@@ -700,6 +709,23 @@ TEST_GROUP(EventSchedulingServer)
 
       mock().clear();
    }
+
+   Entry GenerateEntry(uint8_t _eid = 0x12,
+                       uint8_t _st = 0x01,
+                       Interval _it = Interval(0x1, 0xFFFFFFFF, 0x1111),
+                       uint8_t _pid = 0x21)
+   {
+
+      return Entry(_eid, _st, _it, _pid);
+   }
+
+   void SeedEntries(uint8_t count = 10)
+   {
+      for (uint8_t i = 0; i < count; ++i)
+      {
+         server->entries().save(GenerateEntry(i));
+      }
+   }
 };
 
 //! @test Maximum Number Of Entries support.
@@ -728,7 +754,6 @@ TEST(EventSchedulingServer, ActivateScheduler)
 {
    server->status(0x00);      // set the initial status of the scheduler.
 
-
    Scheduling::ActivateScheduler received(0x01);
 
    payload = ByteArray(received.size());
@@ -736,7 +761,6 @@ TEST(EventSchedulingServer, ActivateScheduler)
    received.pack(payload);    // pack it
 
    packet.message.itf.member = Scheduling::ACTIVATE_SCHEDULER_CMD;
-   packet.message.type       = Protocol::Message::COMMAND_REQ;
    packet.message.length     = payload.size();
 
    Status old_value(0, server);
@@ -778,16 +802,150 @@ TEST(EventSchedulingServer, ActivateScheduler)
 //! @test Define Event support.
 TEST(EventSchedulingServer, DefineEvent)
 {
-   // FIXME Generated Stub.
-   mock("Scheduling::Event::Server").expectOneCall("define_event");
+   Scheduling::DefineEvent<Interval> received = GenerateEntry();
+   payload = ByteArray(received.size());
 
+   received.pack(payload);    // pack it
    packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.length     = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   mock("Scheduling::Event::Server").expectOneCall("define_event");
+   mock("AbstractDevice").expectOneCall("send");
+
+   NumberOfEntries old_value(0, server);
+   NumberOfEntries new_value(1, server);
+
+   mock("Interface").expectOneCall("notify")
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server->entries().size());       // Check if the new scheduling is on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DefineEventResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   UNSIGNED_LONGS_EQUAL(0x12, resp.event_id);
 }
 
+//! @test Define Event support.
+TEST(EventSchedulingServer, DefineEvent_next_available)
+{
+   SeedEntries(5);
+
+   uint8_t expected_id = 2;
+
+   server->entries().destroy(expected_id);
+
+   Scheduling::DefineEvent<Interval> received = GenerateEntry(Entry::AVAILABLE_ID);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.length     = payload.size();
+
+   mock("Scheduling::Event::Server").expectOneCall("define_event");
+   mock("AbstractDevice").expectOneCall("send");
+
+   NumberOfEntries old_value(server->entries().size(), server);
+   NumberOfEntries new_value(server->entries().size() + 1, server);
+
+   mock("Interface").expectOneCall("notify")
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
+
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(5, server->entries().size());       // Check if the new scheduling is on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DefineEventResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   UNSIGNED_LONGS_EQUAL(expected_id, resp.event_id);
+}
+
+//! @test Define Event support.
+TEST(EventSchedulingServer, DefineEvent_fail_event_id_in_use)
+{
+   server->entries().save(GenerateEntry(0x12));
+
+   Scheduling::DefineEvent<Interval> received = GenerateEntry(0x12);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.length     = payload.size();
+
+   mock("Scheduling::Event::Server").expectOneCall("define_event");
+   mock("AbstractDevice").expectOneCall("send");
+
+   NumberOfEntries old_value(server->entries().size(), server);
+   NumberOfEntries new_value(server->entries().size() + 1, server);
+
+   mock("Interface").expectNoCall("notify");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(1, server->entries().size());       // Check if we still have 1 scheduling on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DefineEventResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+}
 //! @test Update Event Status support.
 TEST(EventSchedulingServer, UpdateEventStatus)
 {

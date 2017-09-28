@@ -23,3 +23,24 @@
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::Scheduling::Event;
+
+void Scheduling::Event::IClient::define_event(const Protocol::Address &addr,
+                                              uint8_t id,
+                                              uint8_t status,
+                                              Interval &time,
+                                              uint8_t pid)
+{
+   DefineEvent<Interval> msg(id, status, time, pid);
+   Protocol::Message message(msg.size());
+   msg.pack(message.payload);
+
+   /* *INDENT-OFF* */
+   HF_ASSERT(addr.unit == 0, { return; });
+   /* *INDENT-ON* */
+
+   message.itf.role   = HF::Interface::SERVER_ROLE;
+   message.itf.id     = ITF;
+   message.itf.member = DEFINE_CMD;
+
+   send(addr, message);
+}

@@ -62,3 +62,39 @@ uint16_t Interval::unpack(const Common::ByteArray &array, uint16_t offset)
    offset += array.read(offset, repeat);
    return min_size;
 }
+
+
+Common::Result Scheduling::Event::IServer::handle_command(
+   Protocol::Packet &packet,
+   Common::ByteArray &payload,
+   uint16_t offset)
+{
+   CMD cmd = static_cast<CMD>(packet.message.itf.member);
+
+   switch (cmd)
+   {
+      case DEFINE_CMD:
+      {
+         DefineEvent<Interval> msg;
+         msg.unpack(payload, offset);
+         return define_event(packet, msg);
+      }
+
+      case UPDATE_STATUS_CMD:
+      {
+         update_event_status(packet.source);
+         break;
+      }
+
+      case GET_ENTRY_CMD:
+      {
+         get_event_entry(packet.source);
+         break;
+      }
+
+      default:
+         return Scheduling::IServer::handle_command(packet, payload, offset);
+   }
+
+   return Common::Result::OK;
+}

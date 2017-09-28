@@ -258,6 +258,40 @@ namespace HF
          //! Response message payload for a @c HF::Scheduling::ACTIVATE_SCHEDULER_CMD request.
          typedef Protocol::Response ActivateSchedulerResponse;
 
+         template<class _Type>
+         using DefineEvent = Entry<_Type>;
+
+         //! Response message payload for a @c HF::Scheduling::UPDATE_STATUS_CMD request.
+         struct DefineEventResponse: public HF::Protocol::Response
+         {
+            uint8_t event_id; //!< Event ID.
+
+            DefineEventResponse(Common::Result _code = Common::Result::OK,
+                                uint8_t _event_id = 0x00):
+               HF::Protocol::Response(_code), event_id(_event_id)
+            {}
+
+            //! Minimum pack/unpack required data size.
+            static constexpr uint16_t min_size = sizeof(uint8_t);        // Response Code
+
+            //! @copydoc HF::Common::Serializable::size
+            uint16_t size() const
+            {
+               if (code != Common::Result::OK)
+               {
+                  return min_size;
+               }
+
+               return min_size + sizeof(uint8_t);
+            }
+
+            //! @copydoc HF::Common::Serializable::pack
+            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
+
+            //! @copydoc HF::Common::Serializable::unpack
+            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
+         };
+
          //! Message payload for a @c HF::Scheduling::UPDATE_STATUS_CMD request.
          struct UpdateStatus
          {
@@ -285,36 +319,7 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         //! Response message payload for a @c HF::Scheduling::UPDATE_STATUS_CMD request.
-         struct UpdateStatusResponse: public HF::Protocol::Response
-         {
-            uint8_t event_id; //!< Event ID.
-
-            UpdateStatusResponse(Common::Result _code = Common::Result::OK,
-                                 uint8_t _event_id = 0x00):
-               HF::Protocol::Response(_code), event_id(_event_id)
-            {}
-
-            //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint8_t);        // Response Code
-
-            //! @copydoc HF::Common::Serializable::size
-            uint16_t size() const
-            {
-               if (code != Common::Result::OK)
-               {
-                  return min_size;
-               }
-
-               return min_size + sizeof(uint8_t);
-            }
-
-            //! @copydoc HF::Common::Serializable::pack
-            uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
-
-            //! @copydoc HF::Common::Serializable::unpack
-            uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
-         };
+         typedef DefineEventResponse UpdateStatusResponse;
 
          //! Message payload for a @c HF::Scheduling::GET_ENTRY_CMD request.
          struct GetEntry
@@ -417,7 +422,7 @@ namespace HF
          typedef GetEntry DeleteEvent;
 
          //! Response message payload for a @c HF::Scheduling::DELETE_CMD request.
-         typedef UpdateStatusResponse DeleteEventResponse;
+         typedef DefineEventResponse DeleteEventResponse;
 
          //! Response Message payload for a @c HF::Scheduling::DELETE_ALL_CMD request.
          typedef HF::Protocol::Response DeleteAllResponse;
@@ -669,7 +674,7 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void define_event(const Protocol::Address &addr);
+            // virtual void define_event(const Protocol::Packet &packet)=0;
 
             /*!
              * Callback that is called when a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
@@ -807,25 +812,6 @@ namespace HF
                Protocol::Address addr(0, 0);
                activate_scheduler(itf_uid, addr, _status);
             }
-
-            /*!
-             * Send a HAN-FUN message containing a @c Scheduling::DEFINE_EVENT_CMD, to the given
-             * network address.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            virtual void define_event(Interface::UID itf_uid, const Protocol::Address &addr);
-
-            /*!
-             * Send a HAN-FUN message containing a @c Scheduling::DEFINE_EVENT_CMD,
-             * to the D:0/U:0 network address.
-             */
-            void define_event(Interface::UID itf_uid)
-            {
-               Protocol::Address addr(0, 0);
-               define_event(itf_uid, addr);
-            }
-
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
             /*!
              * Send a HAN-FUN message containing a @c Scheduling::UPDATE_EVENT_STATUS_CMD, to the given

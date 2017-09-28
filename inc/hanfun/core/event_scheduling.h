@@ -175,15 +175,21 @@ namespace HF
                }
 
                //! @copydoc HF::Core::Scheduling::define_event(Protocol::Address).
-               virtual void define_event(const Protocol::Address &addr)
-               {
-                  Scheduling::IClient::define_event(ITF, addr);
-               }
+               virtual void define_event(const Protocol::Address &addr,
+                                         uint8_t id,
+                                         uint8_t status,
+                                         Interval &time,
+                                         uint8_t pid);
+
 
                //! @copydoc HF::Core::Scheduling::define_event().
-               void define_event()
+               void define_event(uint8_t id,
+                                 uint8_t status,
+                                 Interval &time,
+                                 uint8_t pid)
                {
-                  Scheduling::IClient::define_event(ITF);
+                  Protocol::Address addr(0, 0);
+                  define_event(addr, id, status, time, pid);
                }
 
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
@@ -239,9 +245,9 @@ namespace HF
                {
                   Scheduling::IClient::delete_all_events(ITF);
                }
-
 #endif
 
+               using Client::send;
             };
 
             /*!
@@ -288,6 +294,10 @@ namespace HF
                   return Scheduling::IServer::attribute(uid);
                }
 
+               virtual Common::Result define_event(const Protocol::Packet &packet,
+                                                   Scheduling::DefineEvent<Interval> &msg);
+
+
                //! Constructor
                IServer(Unit0 &unit): Scheduling::IServer(), Server(unit)
                {}
@@ -328,6 +338,8 @@ namespace HF
                   return entries().next_id();
                }
 
+               using Server::notify;
+
                // =============================================================================
                // Protected types and methods
                // =============================================================================
@@ -335,10 +347,8 @@ namespace HF
                protected:
 
                Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
-                                             uint16_t offset)
-               {
-                  return Scheduling::IServer::handle_command(packet, payload, offset);
-               }
+                                             uint16_t offset);
+
 
                void send(const Protocol::Address &addr, Protocol::Message &message,
                          Transport::Link *link)

@@ -124,8 +124,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case DEFINE_CMD:
       {
-         define_event(packet.source);
-         break;
+         return Common::Result::FAIL_SUPPORT;
       }
 
       case UPDATE_STATUS_CMD:
@@ -187,19 +186,6 @@ Common::Result IServer::activate_scheduler(const Protocol::Packet &packet, Activ
    send(packet.source, message, packet.link);
 
    return result;
-}
-
-// =============================================================================
-// Server::define_event
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void IServer::define_event(const Protocol::Address &addr)
-{
-   // FIXME Generated Stub.
-   UNUSED(addr);
 }
 
 // =============================================================================
