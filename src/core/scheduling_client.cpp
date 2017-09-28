@@ -67,14 +67,17 @@ void IClient::activate_scheduler(Interface::UID itf_uid, const Protocol::Address
  *
  */
 // =============================================================================
-void IClient::update_event_status(Interface::UID itf_uid, const Protocol::Address &addr)
+void IClient::update_event_status(Interface::UID itf_uid, const Protocol::Address &addr,
+                                  uint8_t id, uint8_t status)
 {
-   // FIXME Generated Stub.
+   UpdateStatus msg(id, status);
+
+   Protocol::Message message(msg.size());
+   msg.pack(message.payload);
+
    /* *INDENT-OFF* */
   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
-
-   Protocol::Message message;
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = itf_uid;

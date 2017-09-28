@@ -129,8 +129,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case UPDATE_STATUS_CMD:
       {
-         update_event_status(packet.source);
-         break;
+         return Common::Result::FAIL_SUPPORT;
       }
 
       case GET_ENTRY_CMD:
@@ -186,19 +185,6 @@ Common::Result IServer::activate_scheduler(const Protocol::Packet &packet, Activ
    send(packet.source, message, packet.link);
 
    return result;
-}
-
-// =============================================================================
-// Server::update_event_status
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void IServer::update_event_status(const Protocol::Address &addr)
-{
-   // FIXME Generated Stub.
-   UNUSED(addr);
 }
 
 // =============================================================================

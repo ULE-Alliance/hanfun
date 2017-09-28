@@ -195,15 +195,16 @@ namespace HF
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
 
                //! @copydoc HF::Core::Scheduling::update_event_status(Protocol::Address).
-               virtual void update_event_status(const Protocol::Address &addr)
+               virtual void update_event_status(const Protocol::Address &addr,
+                                                uint8_t id, uint8_t status)
                {
-                  Scheduling::IClient::update_event_status(ITF, addr);
+                  Scheduling::IClient::update_event_status(ITF, addr, id, status);
                }
 
                //! @copydoc HF::Core::Scheduling::update_event_status().
-               void update_event_status()
+               void update_event_status(uint8_t id, uint8_t status)
                {
-                  Scheduling::IClient::update_event_status(ITF);
+                  Scheduling::IClient::update_event_status(ITF, id, status);
                }
 #endif
 
@@ -294,9 +295,23 @@ namespace HF
                   return Scheduling::IServer::attribute(uid);
                }
 
+               /*!
+                * Callback that is called when a @c Scheduling::DEFINE_EVENT_CMD,
+                * is received.
+                *
+                * @param [in] addr       the network address to send the message to.
+                */
                virtual Common::Result define_event(const Protocol::Packet &packet,
                                                    Scheduling::DefineEvent<Interval> &msg);
 
+               /*!
+                * Callback that is called when a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
+                * is received.
+                *
+                * @param [in] addr       the network address to send the message to.
+                */
+               virtual Common::Result update_event_status(const Protocol::Packet &packet,
+                                                          UpdateStatus &msg);
 
                //! Constructor
                IServer(Unit0 &unit): Scheduling::IServer(), Server(unit)

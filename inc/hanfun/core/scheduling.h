@@ -669,22 +669,6 @@ namespace HF
                                                       ActivateScheduler &msg);
 
             /*!
-             * Callback that is called when a @c Scheduling::DEFINE_EVENT_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            // virtual void define_event(const Protocol::Packet &packet)=0;
-
-            /*!
-             * Callback that is called when a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            virtual void update_event_status(const Protocol::Address &addr);
-
-            /*!
              * Callback that is called when a @c Scheduling::GET_EVENT_ENTRY_CMD,
              * is received.
              *
@@ -819,16 +803,17 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void update_event_status(Interface::UID itf_uid, const Protocol::Address &addr);
+            virtual void update_event_status(Interface::UID itf_uid, const Protocol::Address &addr,
+                                             uint8_t id, uint8_t status);
 
             /*!
              * Send a HAN-FUN message containing a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
              * to the D:0/U:0 network address.
              */
-            void update_event_status(Interface::UID itf_uid)
+            void update_event_status(Interface::UID itf_uid, uint8_t id, uint8_t status)
             {
                Protocol::Address addr(0, 0);
-               update_event_status(itf_uid, addr);
+               update_event_status(itf_uid, addr, id, status);
             }
 #endif
 

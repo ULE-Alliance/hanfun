@@ -552,7 +552,7 @@ TEST(EventSchedulingClient, UpdateEventStatus)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->update_event_status(addr);
+   client->update_event_status(addr, 0x12, 0x00);
 
    mock("Interface").checkExpectations();
 
@@ -560,6 +560,12 @@ TEST(EventSchedulingClient, UpdateEventStatus)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(Scheduling::UPDATE_STATUS_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   Scheduling::UpdateStatus message;
+   message.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x12, message.event_id);
+   UNSIGNED_LONGS_EQUAL(0x00, message.status);
 }
 
 //! @test Get Event Entry support.
@@ -638,10 +644,11 @@ TEST_GROUP(EventSchedulingServer)
          return InterfaceHelper<Scheduling::Event::Server>::define_event(packet, msg);
       }
 
-      void update_event_status(const Protocol::Address &addr) override
+      Common::Result update_event_status(const Protocol::Packet &packet,
+                                         Scheduling::UpdateStatus &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("update_event_status");
-         InterfaceHelper<Scheduling::Event::Server>::update_event_status(addr);
+         return InterfaceHelper<Scheduling::Event::Server>::update_event_status(packet, msg);
       }
 
       void get_event_entry(const Protocol::Address &addr) override
@@ -946,17 +953,90 @@ TEST(EventSchedulingServer, DefineEvent_fail_event_id_in_use)
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
+
 //! @test Update Event Status support.
 TEST(EventSchedulingServer, UpdateEventStatus)
 {
-   // FIXME Generated Stub.
-   mock("Scheduling::Event::Server").expectOneCall("update_event_status");
+   SeedEntries();
 
+   UNSIGNED_LONGS_EQUAL(0x01, server->entries().find(0x03)->status);
+
+   Scheduling::UpdateStatus received(0x03, 0x00);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
    packet.message.itf.member = Scheduling::UPDATE_STATUS_CMD;
+   packet.message.length     = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   mock("Scheduling::Event::Server").expectOneCall("update_event_status");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(0x00, server->entries().find(0x03)->status);
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::UpdateStatusResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   UNSIGNED_LONGS_EQUAL(0x03, resp.event_id);
+}
+
+//! @test Update Event Status support.
+TEST(EventSchedulingServer, UpdateEventStatus_fail_no_event_id)
+{
+   SeedEntries();
+
+   server->entries().destroy(0x03);
+
+   Scheduling::UpdateStatus received(0x03, 0x00);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+   packet.message.itf.member = Scheduling::UPDATE_STATUS_CMD;
+   packet.message.length     = payload.size();
+
+   mock("Scheduling::Event::Server").expectOneCall("update_event_status");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::UpdateStatusResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
 //! @test Get Event Entry support.

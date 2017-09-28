@@ -82,8 +82,9 @@ Common::Result Scheduling::Event::IServer::handle_command(
 
       case UPDATE_STATUS_CMD:
       {
-         update_event_status(packet.source);
-         break;
+         UpdateStatus msg;
+         msg.unpack(payload, offset);
+         return update_event_status(packet, msg);
       }
 
       case GET_ENTRY_CMD:

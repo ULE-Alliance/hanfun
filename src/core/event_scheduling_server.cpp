@@ -92,3 +92,38 @@ Common::Result Scheduling::Event::IServer::define_event(const Protocol::Packet &
 
    return result;
 }
+
+// =============================================================================
+// Server::update_event_status
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Scheduling::Event::IServer::update_event_status(const Protocol::Packet &packet,
+                                                               UpdateStatus &msg)
+{
+   Common::Result result = Common::Result::OK;
+
+   auto eventPtr         = entry(msg.event_id);
+
+   if (eventPtr == nullptr)
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   eventPtr->status = msg.status;
+
+   _end:
+
+   UpdateStatusResponse response(result, msg.event_id);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
+}
