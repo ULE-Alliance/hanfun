@@ -113,7 +113,7 @@ uint16_t UpdateStatus::unpack(const Common::ByteArray &array, uint16_t offset)
    return min_size;
 }
 
-uint16_t UpdateStatusResponse::pack(Common::ByteArray &array, uint16_t offset) const
+uint16_t DefineEventResponse::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
 
@@ -132,7 +132,7 @@ uint16_t UpdateStatusResponse::pack(Common::ByteArray &array, uint16_t offset) c
    return offset - start;
 }
 
-uint16_t UpdateStatusResponse::unpack(const Common::ByteArray &array, uint16_t offset)
+uint16_t DefineEventResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
 

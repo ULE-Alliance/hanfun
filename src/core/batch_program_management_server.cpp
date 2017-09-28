@@ -76,7 +76,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
          auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_entries;
-         auto setter = (void (IServer::*) (uint8_t)) nullptr;
+         auto setter = (void (IServer::*) (uint8_t))nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfEntries::WRITABLE);
       }
@@ -94,7 +94,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
  */
 // =============================================================================
 Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
-                                      uint16_t offset)
+                                       uint16_t offset)
 {
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
@@ -222,7 +222,7 @@ Common::Result IServer::define_program(const Protocol::Packet &packet, DefinePro
 
    _end:
 
-   if(size != entries().size())
+   if (size != entries().size())
    {
       HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
    }
@@ -317,7 +317,7 @@ Common::Result IServer::delete_program(const Protocol::Packet &packet, DeletePro
 
    _end:
 
-   if(size != entries().size())
+   if (size != entries().size())
    {
       HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
    }
@@ -346,7 +346,7 @@ Common::Result IServer::delete_all_programs(const Protocol::Packet &packet)
 
    entries().clear();
 
-   if(size != entries().size())
+   if (size != entries().size())
    {
       HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
    }
@@ -370,7 +370,7 @@ Common::Result IServer::delete_all_programs(const Protocol::Packet &packet)
  */
 // =============================================================================
 Common::Result IServer::get_program_actions(const Protocol::Packet &packet,
-                                           GetProgramActions &msg)
+                                            GetProgramActions &msg)
 {
    Common::Result result = Common::Result::OK;
    GetProgramActionsResponse response;

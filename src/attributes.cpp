@@ -105,8 +105,8 @@ static const Entry factories[] =
       HF::Core::GroupTable::create_attribute,
    },
    {
-	  HF::Interface::BATCH_PROGRAM_MANAGEMENT,
-      HF::Core::BatchProgramManagement::create_attribute, 
+      HF::Interface::BATCH_PROGRAM_MANAGEMENT,
+      HF::Core::BatchProgramManagement::create_attribute,
    },
    {
       HF::Interface::EVENT_SCHEDULING,

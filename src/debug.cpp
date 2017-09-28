@@ -2062,11 +2062,11 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
                stream << static_cast<BatchProgramManagement::CMD>(message.itf.member);
-               break;            
-			case HF::Interface::EVENT_SCHEDULING:
+               break;
+            case HF::Interface::EVENT_SCHEDULING:
                stream << static_cast<Scheduling::CMD>(message.itf.member);
                break;
-/* Interfaces [C] */
+            /* Interfaces [C] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::CMD>(message.itf.member);
                break;
@@ -2130,11 +2130,11 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
                stream << static_cast<BatchProgramManagement::Attributes>(message.itf.member);
-               break;            
-			case HF::Interface::EVENT_SCHEDULING:
+               break;
+            case HF::Interface::EVENT_SCHEDULING:
                stream << static_cast<Scheduling::Attributes>(message.itf.member);
                break;
-/* Interfaces [A] */
+            /* Interfaces [A] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::Attributes>(message.itf.member);
                break;
