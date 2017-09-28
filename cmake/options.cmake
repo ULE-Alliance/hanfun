@@ -103,6 +103,12 @@ cmake_dependent_option(HF_CORE_SUOTA_CHECK_VERSION_CMD "Service - SUOTA - Check 
 option(HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD          "Service - Group Management - Get Info")
 
 # =============================================================================
+# Batch Program Management Interface Configuration
+# =============================================================================
+
+option(HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD        "Interface - Batch Program Management Interface - Get Program Actions")
+
+# =============================================================================
 # Event Scheduling Configuration
 # =============================================================================
 

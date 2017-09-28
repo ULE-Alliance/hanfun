@@ -2079,6 +2079,10 @@ TEST_GROUP(AttrReport_Report_AddEntryMessage)
    struct TestMessage: public Report::AddEntryMessage
    {
       std::array<uint8_t, 4> entries;
+      uint8_t                _count = 0;
+
+      virtual ~TestMessage()
+      {}
 
       uint8_t count() const
       {
@@ -2108,10 +2112,9 @@ TEST_GROUP(AttrReport_Report_AddEntryMessage)
 
       uint16_t unpack_entry(const Common::ByteArray &array, uint16_t offset = 0)
       {
-         static uint8_t count = 0;
-         uint16_t start       = offset;
+         uint16_t start = offset;
 
-         offset += array.read(offset, entries[count++]);
+         offset += array.read(offset, entries[_count++]);
 
          return offset - start;
       }

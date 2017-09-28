@@ -760,7 +760,7 @@ namespace HF
             SET_SERVICE(dev_info, _dev_info);
          }
 
-         HF::Core::DeviceInformation::Server *device_info() const
+         HF::Core::DeviceInformation::Server *device_info() const override
          {
             return dev_info;
          }
@@ -780,7 +780,7 @@ namespace HF
             SET_SERVICE(dev_mgt, _dev_mgt);
          }
 
-         HF::Core::DeviceManagement::IServer *device_management()
+         HF::Core::DeviceManagement::IServer *device_management() override
          {
             if (dev_mgt == nullptr)
             {
@@ -790,7 +790,7 @@ namespace HF
             return dev_mgt;
          }
 
-         HF::Core::DeviceManagement::IServer *device_management() const
+         HF::Core::DeviceManagement::IServer *device_management() const override
          {
             return dev_mgt;
          }
@@ -800,12 +800,12 @@ namespace HF
             SET_SERVICE(attr_reporting, _attr_reporting);
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting() const
+         HF::Core::AttributeReporting::Server *attribute_reporting() const override
          {
             return attr_reporting;
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting()
+         HF::Core::AttributeReporting::Server *attribute_reporting() override
          {
             if (attr_reporting == nullptr)
             {
@@ -820,7 +820,7 @@ namespace HF
             SET_SERVICE(bind_mgt, _bind_mgt);
          }
 
-         HF::Core::BindManagement::IServer *bind_management()
+         HF::Core::BindManagement::IServer *bind_management() override
          {
             if (bind_mgt == nullptr)
             {
@@ -830,7 +830,7 @@ namespace HF
             return bind_mgt;
          }
 
-         HF::Core::BindManagement::IServer *bind_management() const
+         HF::Core::BindManagement::IServer *bind_management() const override
          {
             return bind_mgt;
          }
@@ -877,7 +877,7 @@ namespace HF
 
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
-                               uint16_t offset)
+                               uint16_t offset) override
          {
             switch (packet.message.itf.id)
             {
@@ -907,7 +907,7 @@ namespace HF
          }
 
          HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
-                                         const HF::Attributes::UIDS &uids) const
+                                         const HF::Attributes::UIDS &uids) const override
          {
             UNUSED(itf);
             UNUSED(pack_id);

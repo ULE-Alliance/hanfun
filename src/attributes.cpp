@@ -39,6 +39,7 @@
 #include "hanfun/core/rssi.h"
 #include "hanfun/core/suota.h"
 #include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
 #include "hanfun/core/event_scheduling.h"
 
 using namespace HF;
@@ -102,6 +103,10 @@ static const Entry factories[] =
    {
       HF::Interface::GROUP_TABLE,
       HF::Core::GroupTable::create_attribute,
+   },
+   {
+	  HF::Interface::BATCH_PROGRAM_MANAGEMENT,
+      HF::Core::BatchProgramManagement::create_attribute, 
    },
    {
       HF::Interface::EVENT_SCHEDULING,

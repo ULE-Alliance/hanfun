@@ -13,6 +13,7 @@
  */
 // =============================================================================
 
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 
@@ -1799,10 +1800,32 @@ TEST_GROUP(GroupTableEntries)
 
       for (int i = 0; i < groups; ++i)
       {
+         uint16_t group = g_group();
+
+         if (std::any_of(result.begin(), result.end(),
+                         [group, &i](const GroupTable::Entry &e)
+         {
+            return e.group == group;
+         }))
+         {
+            --i;
+            continue;
+         }
+
          for (int j = 0; j < units; ++j)
          {
-            uint16_t group = g_group();
-            uint8_t unit   = g_unit();
+            uint8_t unit = g_unit();
+
+            if (std::any_of(result.begin(), result.end(),
+                            [group, unit, &j](const GroupTable::Entry &e)
+            {
+               return e.group == group && e.unit == unit;
+            }))
+            {
+               --j;
+               continue;
+            }
+
             entries.data().emplace_back(group, unit);
             result.emplace_back(group, unit);
          }

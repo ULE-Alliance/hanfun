@@ -81,6 +81,7 @@ if(HF_CORE_SUOTA_SUPPORT)
     add_core("suota")
 endif()
 add_core("time")
+add_core("batch_program_management")
 add_core("scheduling")
 add_core("event_scheduling")
 
