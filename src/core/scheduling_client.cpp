@@ -122,14 +122,18 @@ void IClient::get_event_entry(Interface::UID itf_uid, const Protocol::Address &a
  *
  */
 // =============================================================================
-void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr)
+void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr,
+                           uint8_t id)
 {
-   // FIXME Generated Stub.
+   DeleteEvent msg(id);
+
+   Protocol::Message message(msg.size());
+   msg.pack(message.payload);
+
    /* *INDENT-OFF* */
   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
 
-   Protocol::Message message;
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = itf_uid;

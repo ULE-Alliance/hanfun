@@ -139,14 +139,12 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case DELETE_CMD:
       {
-         delete_event(packet.source);
-         break;
+         return Common::Result::FAIL_SUPPORT;
       }
 
       case DELETE_ALL_CMD:
       {
-         delete_all_events(packet.source);
-         break;
+         return Common::Result::FAIL_SUPPORT;
       }
 
       default:
@@ -184,19 +182,6 @@ Common::Result IServer::activate_scheduler(const Protocol::Packet &packet, Activ
    send(packet.source, message, packet.link);
 
    return result;
-}
-
-// =============================================================================
-// Server::delete_event
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void IServer::delete_event(const Protocol::Address &addr)
-{
-   // FIXME Generated Stub.
-   UNUSED(addr);
 }
 
 // =============================================================================

@@ -595,7 +595,7 @@ TEST(EventSchedulingClient, DeleteEvent)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->delete_event(addr);
+   client->delete_event(addr, 0x12);
 
    mock("Interface").checkExpectations();
 
@@ -603,6 +603,11 @@ TEST(EventSchedulingClient, DeleteEvent)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(Scheduling::DELETE_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   Scheduling::DeleteEvent message;
+   message.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x12, message.event_id);
 }
 
 //! @test Delete All Events support.
@@ -663,10 +668,11 @@ TEST_GROUP(EventSchedulingServer)
          return InterfaceHelper<Scheduling::Event::Server>::get_event_entry(packet, msg);
       }
 
-      void delete_event(const Protocol::Address &addr) override
+      Common::Result delete_event(const Protocol::Packet &packet,
+                                  Scheduling::DeleteEvent &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("delete_event");
-         InterfaceHelper<Scheduling::Event::Server>::delete_event(addr);
+         return InterfaceHelper<Scheduling::Event::Server>::delete_event(packet, msg);
       }
 
       void delete_all_events(const Protocol::Address &addr) override
@@ -1138,14 +1144,90 @@ TEST(EventSchedulingServer, GetEventEntry_fail_no_event_id)
 //! @test Delete Event support.
 TEST(EventSchedulingServer, DeleteEvent)
 {
-   // FIXME Generated Stub.
-   mock("Scheduling::Event::Server").expectOneCall("delete_event");
+   SeedEntries();
 
+   Scheduling::DeleteEvent received(0x5);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
    packet.message.itf.member = Scheduling::DELETE_CMD;
+   packet.message.length     = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   mock("Scheduling::Event::Server").expectOneCall("delete_event");
+   mock("AbstractDevice").expectOneCall("send");
+
+   NumberOfEntries old_value(server->entries().size(), server);
+   NumberOfEntries new_value(server->entries().size() - 1, server);
+
+   mock("Interface").expectOneCall("notify")
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
+
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DeleteEventResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
+   UNSIGNED_LONGS_EQUAL(0x5, resp.event_id);
+}
+
+//! @test Delete Event support.
+TEST(EventSchedulingServer, DeleteEvent_fail_no_event_id)
+{
+   SeedEntries();
+
+   Scheduling::DeleteEvent received(0x12);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+   packet.message.itf.member = Scheduling::DELETE_CMD;
+   packet.message.length     = payload.size();
+
+   mock("Scheduling::Event::Server").expectOneCall("delete_event");
+   mock("AbstractDevice").expectOneCall("send");
+   mock("Interface").expectNoCall("notify");
+
+   CHECK_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DeleteEventResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
 //! @test Delete All Events support.

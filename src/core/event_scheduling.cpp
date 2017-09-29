@@ -93,6 +93,17 @@ Common::Result Scheduling::Event::IServer::handle_command(
          msg.unpack(payload, offset);
          return get_event_entry(packet, msg);
       }
+
+      case DELETE_CMD:
+      {
+         DeleteEvent msg;
+         msg.unpack(payload, offset);
+         return delete_event(packet, msg);
+      }
+
+      case DELETE_ALL_CMD:
+      {
+         delete_all_events(packet.source);
          break;
       }
 

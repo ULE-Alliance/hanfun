@@ -669,17 +669,6 @@ namespace HF
                                                       ActivateScheduler &msg);
 
             /*!
-             */
-
-            /*!
-             * Callback that is called when a @c Scheduling::DELETE_EVENT_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            virtual void delete_event(const Protocol::Address &addr);
-
-            /*!
              * Callback that is called when a @c Scheduling::DELETE_ALL_EVENTS_CMD,
              * is received.
              *
@@ -839,16 +828,18 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void delete_event(Interface::UID itf_uid, const Protocol::Address &addr);
+            virtual void delete_event(Interface::UID itf_uid, const Protocol::Address &addr,
+                                      uint8_t id);
 
             /*!
              * Send a HAN-FUN message containing a @c Scheduling::DELETE_EVENT_CMD,
              * to the D:0/U:0 network address.
              */
-            void delete_event(Interface::UID itf_uid)
+            void delete_event(Interface::UID itf_uid,
+                              uint8_t id)
             {
                Protocol::Address addr(0, 0);
-               delete_event(itf_uid, addr);
+               delete_event(itf_uid, addr, id);
             }
 
 #ifdef HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD

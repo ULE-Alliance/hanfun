@@ -163,3 +163,42 @@ Common::Result Scheduling::Event::IServer::get_event_entry(const Protocol::Packe
    return result;
 }
 
+// =============================================================================
+// Server::delete_event
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Scheduling::Event::IServer::delete_event(const Protocol::Packet &packet,
+                                                        DeleteEvent &msg)
+{
+   uint8_t size = entries().size();
+   DeleteEventResponse response;
+
+   auto eventPtr = entry(msg.event_id);
+
+   if (eventPtr == nullptr)
+   {
+      response.code = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   response.code = entries().destroy(*eventPtr);
+
+   if (response.code == Common::Result::OK)
+   {
+      response.event_id = msg.event_id;
+      HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
+   }
+
+   _end:
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return response.code;
+}

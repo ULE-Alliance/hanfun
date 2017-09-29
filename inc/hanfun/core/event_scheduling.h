@@ -223,15 +223,15 @@ namespace HF
 #endif
 
                //! @copydoc HF::Core::Scheduling::delete_event(Protocol::Address).
-               virtual void delete_event(const Protocol::Address &addr)
+               virtual void delete_event(const Protocol::Address &addr, uint8_t id)
                {
-                  Scheduling::IClient::delete_event(ITF, addr);
+                  Scheduling::IClient::delete_event(ITF, addr, id);
                }
 
                //! @copydoc HF::Core::Scheduling::delete_event().
-               void delete_event()
+               void delete_event(uint8_t id)
                {
-                  Scheduling::IClient::delete_event(ITF);
+                  Scheduling::IClient::delete_event(ITF, id);
                }
 
 #ifdef HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD
@@ -321,6 +321,15 @@ namespace HF
                 */
                virtual Common::Result get_event_entry(const Protocol::Packet &packet,
                                                       GetEntry &msg);
+
+               /*!
+                * Callback that is called when a @c Scheduling::DELETE_EVENT_CMD,
+                * is received.
+                *
+                * @param [in] addr       the network address to send the message to.
+                */
+               virtual Common::Result delete_event(const Protocol::Packet &packet,
+                                                   DeleteEvent &msg);
                //! Constructor
                IServer(Unit0 &unit): Scheduling::IServer(), Server(unit)
                {}
