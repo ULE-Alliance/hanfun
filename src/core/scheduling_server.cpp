@@ -134,8 +134,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case GET_ENTRY_CMD:
       {
-         get_event_entry(packet.source);
-         break;
+         return Common::Result::FAIL_SUPPORT;
       }
 
       case DELETE_CMD:
@@ -185,19 +184,6 @@ Common::Result IServer::activate_scheduler(const Protocol::Packet &packet, Activ
    send(packet.source, message, packet.link);
 
    return result;
-}
-
-// =============================================================================
-// Server::get_event_entry
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void IServer::get_event_entry(const Protocol::Address &addr)
-{
-   // FIXME Generated Stub.
-   UNUSED(addr);
 }
 
 // =============================================================================

@@ -574,7 +574,7 @@ TEST(EventSchedulingClient, GetEventEntry)
    // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
-   client->get_event_entry(addr);
+   client->get_event_entry(addr, 0x12);
 
    mock("Interface").checkExpectations();
 
@@ -582,6 +582,11 @@ TEST(EventSchedulingClient, GetEventEntry)
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
    LONGS_EQUAL(Scheduling::GET_ENTRY_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
+
+   Scheduling::GetEntry message;
+   message.unpack(client->sendMsg.payload);
+
+   UNSIGNED_LONGS_EQUAL(0x12, message.event_id);
 }
 
 //! @test Delete Event support.
@@ -651,10 +656,11 @@ TEST_GROUP(EventSchedulingServer)
          return InterfaceHelper<Scheduling::Event::Server>::update_event_status(packet, msg);
       }
 
-      void get_event_entry(const Protocol::Address &addr) override
+      Common::Result get_event_entry(const Protocol::Packet &packet,
+                                     Scheduling::GetEntry &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("get_event_entry");
-         InterfaceHelper<Scheduling::Event::Server>::get_event_entry(addr);
+         return InterfaceHelper<Scheduling::Event::Server>::get_event_entry(packet, msg);
       }
 
       void delete_event(const Protocol::Address &addr) override
@@ -1042,14 +1048,91 @@ TEST(EventSchedulingServer, UpdateEventStatus_fail_no_event_id)
 //! @test Get Event Entry support.
 TEST(EventSchedulingServer, GetEventEntry)
 {
-   // FIXME Generated Stub.
-   mock("Scheduling::Event::Server").expectOneCall("get_event_entry");
+   SeedEntries(5);
+   Entry TestEntry = GenerateEntry(0x12, 0x00, Interval(0x1, 0xFF, 0x01), 0x55);
+   server->entries().save(TestEntry);
 
+   Scheduling::GetEntry received(0x12);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
    packet.message.itf.member = Scheduling::GET_ENTRY_CMD;
+   packet.message.length     = payload.size();
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+
+   mock("Scheduling::Event::Server").expectOneCall("get_event_entry");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::GetEntryResponse<Interval> resp;
+   resp.unpack(response->message.payload);
+
+   /* *INDENT-OFF* */
+   LONGS_EQUAL(Common::Result::OK,              resp.code);
+   UNSIGNED_LONGS_EQUAL(TestEntry.id,           resp.entry.id);
+   UNSIGNED_LONGS_EQUAL(TestEntry.status,       resp.entry.status);
+   UNSIGNED_LONGS_EQUAL(TestEntry.time.start,   resp.entry.time.start);
+   UNSIGNED_LONGS_EQUAL(TestEntry.time.end,     resp.entry.time.end);
+   UNSIGNED_LONGS_EQUAL(TestEntry.time.repeat,  resp.entry.time.repeat);
+   UNSIGNED_LONGS_EQUAL(TestEntry.pid,          resp.entry.pid);
+   /* *INDENT-ON* */
+}
+
+//! @test Get Event Entry support.
+TEST(EventSchedulingServer, GetEventEntry_fail_no_event_id)
+{
+   SeedEntries(5);
+   Scheduling::GetEntry received(0x12);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+   packet.message.itf.member = Scheduling::GET_ENTRY_CMD;
+   packet.message.length     = payload.size();
+
+
+   mock("Scheduling::Event::Server").expectOneCall("get_event_entry");
+   mock("AbstractDevice").expectOneCall("send");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, 0));
+
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::GetEntryResponse<Interval> resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
 //! @test Delete Event support.

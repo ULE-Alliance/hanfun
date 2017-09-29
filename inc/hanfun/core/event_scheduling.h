@@ -210,15 +210,15 @@ namespace HF
 
 #ifdef HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD
                //! @copydoc HF::Core::Scheduling::get_event_entry(Protocol::Address).
-               virtual void get_event_entry(const Protocol::Address &addr)
+               virtual void get_event_entry(const Protocol::Address &addr, uint8_t id)
                {
-                  Scheduling::IClient::get_event_entry(ITF, addr);
+                  Scheduling::IClient::get_event_entry(ITF, addr, id);
                }
 
                //! @copydoc HF::Core::Scheduling::get_event_entry().
-               void get_event_entry()
+               void get_event_entry(uint8_t id)
                {
-                  Scheduling::IClient::get_event_entry(ITF);
+                  Scheduling::IClient::get_event_entry(ITF, id);
                }
 #endif
 
@@ -313,6 +313,14 @@ namespace HF
                virtual Common::Result update_event_status(const Protocol::Packet &packet,
                                                           UpdateStatus &msg);
 
+               /*!
+                * Callback that is called when a @c Scheduling::GET_EVENT_ENTRY_CMD,
+                * is received.
+                *
+                * @param [in] addr       the network address to send the message to.
+                */
+               virtual Common::Result get_event_entry(const Protocol::Packet &packet,
+                                                      GetEntry &msg);
                //! Constructor
                IServer(Unit0 &unit): Scheduling::IServer(), Server(unit)
                {}

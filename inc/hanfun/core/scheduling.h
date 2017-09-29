@@ -669,12 +669,7 @@ namespace HF
                                                       ActivateScheduler &msg);
 
             /*!
-             * Callback that is called when a @c Scheduling::GET_EVENT_ENTRY_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
              */
-            virtual void get_event_entry(const Protocol::Address &addr);
 
             /*!
              * Callback that is called when a @c Scheduling::DELETE_EVENT_CMD,
@@ -824,16 +819,17 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void get_event_entry(Interface::UID itf_uid, const Protocol::Address &addr);
+            virtual void get_event_entry(Interface::UID itf_uid, const Protocol::Address &addr,
+                                         uint8_t id);
 
             /*!
              * Send a HAN-FUN message containing a @c Scheduling::GET_EVENT_ENTRY_CMD,
              * to the D:0/U:0 network address.
              */
-            void get_event_entry(Interface::UID itf_uid)
+            void get_event_entry(Interface::UID itf_uid, uint8_t id)
             {
                Protocol::Address addr(0, 0);
-               get_event_entry(itf_uid, addr);
+               get_event_entry(itf_uid, addr, id);
             }
 #endif
 

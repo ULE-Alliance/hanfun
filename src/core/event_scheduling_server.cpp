@@ -127,3 +127,39 @@ Common::Result Scheduling::Event::IServer::update_event_status(const Protocol::P
 
    return result;
 }
+
+// =============================================================================
+// Server::get_event_entry
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Scheduling::Event::IServer::get_event_entry(const Protocol::Packet &packet,
+                                                           GetEntry &msg)
+{
+   Common::Result result = Common::Result::OK;
+   GetEntryResponse response;
+
+   auto eventPtr = entry(msg.event_id);
+
+   if (eventPtr == nullptr)
+   {
+      result = Common::Result::FAIL_ARG;
+      goto _end;
+   }
+
+   response.entry = eventPtr.operator*();
+
+   _end:
+
+   response.code = result;
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return result;
+}
+

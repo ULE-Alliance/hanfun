@@ -89,7 +89,10 @@ Common::Result Scheduling::Event::IServer::handle_command(
 
       case GET_ENTRY_CMD:
       {
-         get_event_entry(packet.source);
+         GetEntry msg;
+         msg.unpack(payload, offset);
+         return get_event_entry(packet, msg);
+      }
          break;
       }
 
