@@ -675,10 +675,10 @@ TEST_GROUP(EventSchedulingServer)
          return InterfaceHelper<Scheduling::Event::Server>::delete_event(packet, msg);
       }
 
-      void delete_all_events(const Protocol::Address &addr) override
+      Common::Result delete_all_events(const Protocol::Packet &packet) override
       {
          mock("Scheduling::Event::Server").actualCall("delete_all_events");
-         InterfaceHelper<Scheduling::Event::Server>::delete_all_events(addr);
+         return InterfaceHelper<Scheduling::Event::Server>::delete_all_events(packet);
       }
 
       void notify(const HF::Attributes::IAttribute &old_value,
@@ -1233,12 +1233,43 @@ TEST(EventSchedulingServer, DeleteEvent_fail_no_event_id)
 //! @test Delete All Events support.
 TEST(EventSchedulingServer, DeleteAllEvents)
 {
-   // FIXME Generated Stub.
+   SeedEntries();
+
    mock("Scheduling::Event::Server").expectOneCall("delete_all_events");
 
    packet.message.itf.member = Scheduling::DELETE_ALL_CMD;
 
-   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
+   mock("AbstractDevice").expectOneCall("send");
+
+   NumberOfEntries old_value(server->entries().size(), server);
+   NumberOfEntries new_value(0, server);
+
+   mock("Interface").expectOneCall("notify")
+      .withParameterOfType("IAttribute", "old", &old_value)
+      .withParameterOfType("IAttribute", "new", &new_value);
+
+   CHECK_EQUAL(Common::Result::OK, server->handle(packet, payload, 0));
 
    mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   UNSIGNED_LONGS_EQUAL(0, server->entries().size());
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DeleteAllResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::OK, resp.code);
 }

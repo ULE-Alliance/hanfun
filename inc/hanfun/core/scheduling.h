@@ -445,6 +445,11 @@ namespace HF
             virtual Common::Result save(const Entry<_Type> &entry) = 0;
 
             /*!
+             * Erase all the DB entries.
+             */
+            virtual void clear(void) = 0;
+
+            /*!
              * Find the Event with the given id.
              *
              * @param [in] id  Event ID to search for.
@@ -497,6 +502,14 @@ namespace HF
                          std::pair<uint8_t, EntryType>(_id, EntryType(_id, _status, _time, _pid)));
 
                return Common::Result::OK;
+            }
+
+            /*!
+             * Erase all the DB entries.
+             */
+            void clear(void)
+            {
+               db.clear();
             }
 
             /*!
@@ -668,13 +681,6 @@ namespace HF
             virtual Common::Result activate_scheduler(const Protocol::Packet &packet,
                                                       ActivateScheduler &msg);
 
-            /*!
-             * Callback that is called when a @c Scheduling::DELETE_ALL_EVENTS_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            virtual void delete_all_events(const Protocol::Address &addr);
 
             //! @}
             // ======================================================================

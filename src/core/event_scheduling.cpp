@@ -103,8 +103,7 @@ Common::Result Scheduling::Event::IServer::handle_command(
 
       case DELETE_ALL_CMD:
       {
-         delete_all_events(packet.source);
-         break;
+         return delete_all_events(packet);
       }
 
       default:

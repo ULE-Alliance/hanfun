@@ -202,3 +202,30 @@ Common::Result Scheduling::Event::IServer::delete_event(const Protocol::Packet &
 
    return response.code;
 }
+
+// =============================================================================
+// Server::delete_all_events
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Scheduling::Event::IServer::delete_all_events(const Protocol::Packet &packet)
+{
+   const static Common::Result result = Common::Result::OK;
+   uint8_t size                       = entries().size();
+
+   entries().clear();
+
+   HF_NOTIFY_HELPER(NumberOfEntries, size, entries().size());
+
+   DeleteAllResponse response(result);
+
+   Protocol::Message message(packet.message, response.size());
+
+   response.pack(message.payload);
+
+   send(packet.source, message, packet.link);
+
+   return response.code;
+}

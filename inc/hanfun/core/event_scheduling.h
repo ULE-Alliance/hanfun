@@ -330,6 +330,15 @@ namespace HF
                 */
                virtual Common::Result delete_event(const Protocol::Packet &packet,
                                                    DeleteEvent &msg);
+
+               /*!
+                * Callback that is called when a @c Scheduling::DELETE_ALL_EVENTS_CMD,
+                * is received.
+                *
+                * @param [in] addr       the network address to send the message to.
+                */
+               virtual Common::Result delete_all_events(const Protocol::Packet &packet);
+
                //! Constructor
                IServer(Unit0 &unit): Scheduling::IServer(), Server(unit)
                {}
