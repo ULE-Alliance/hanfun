@@ -363,8 +363,8 @@ namespace HF
        *
        * @tparam _uid   interface UID to be used by the interface.
        */
-      template<uint16_t _uid>
-      struct Interface: public AbstractInterface
+      template<uint16_t _uid, typename Parent = AbstractInterface>
+      struct Interface: public Parent
       {
          //! @copydoc HF::Interface::uid
          uint16_t uid() const

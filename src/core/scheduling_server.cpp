@@ -69,7 +69,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
          auto getter = (uint8_t (IServer::*)(void) const) & IServer::maximum_number_of_entries;
          auto setter = (void (IServer::*)(uint8_t)) & IServer::maximum_number_of_entries;
 
-         return new Attribute(*this, attr, getter, setter, MaximumNumberOfEntries::WRITABLE);
+         return new Attribute(this, attr, getter, setter, MaximumNumberOfEntries::WRITABLE);
       }
 
       case NUMBER_OF_ENTRIES_ATTR:
@@ -77,9 +77,9 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
          auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_entries;
-         auto setter = (void (IServer::*)(uint8_t)) & IServer::number_of_entries;
+         auto setter = (void (IServer::*)(uint8_t))nullptr;
 
-         return new Attribute(*this, attr, getter, setter, NumberOfEntries::WRITABLE);
+         return new Attribute(this, attr, getter, setter, NumberOfEntries::WRITABLE);
       }
 
       case STATUS_ATTR:
@@ -89,7 +89,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
          auto getter = (uint8_t (IServer::*)(void) const) & IServer::status;
          auto setter = (void (IServer::*)(uint8_t)) & IServer::status;
 
-         return new Attribute(*this, attr, getter, setter, Status::WRITABLE);
+         return new Attribute(this, attr, getter, setter, Status::WRITABLE);
       }
 
       default:
@@ -210,30 +210,6 @@ uint8_t IServer::maximum_number_of_entries() const
 void IServer::maximum_number_of_entries(uint8_t __value)
 {
    HF_SCHEDULING_SETTER_HELPER(MaximumNumberOfEntries, _maximum_number_of_entries, __value);
-}
-
-// =============================================================================
-// Server::number_of_entries
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-uint8_t IServer::number_of_entries() const
-{
-   return _number_of_entries;
-}
-
-// =============================================================================
-// Server::number_of_entries
-// =============================================================================
-/*!
- *
- */
-// =============================================================================
-void IServer::number_of_entries(uint8_t __value)
-{
-   HF_SCHEDULING_SETTER_HELPER(NumberOfEntries, _number_of_entries, __value);
 }
 
 // =============================================================================

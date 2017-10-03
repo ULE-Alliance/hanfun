@@ -32,11 +32,23 @@ using namespace HF::Core::Scheduling::Event;
 //! Test Group for Scheduling::Event service parent class.
 TEST_GROUP(Scheduling_Event)
 {
-   struct EventSchedulingBase: public InterfaceParentHelper<Scheduling::Event::Base>
+   struct EventSchedulingBase: public InterfaceHelper<Scheduling::Event::IServerBase>
    {
       EventSchedulingBase(HF::Core::Unit0 &unit):
-         InterfaceParentHelper<Scheduling::Event::Base>(unit)
+         InterfaceHelper<Scheduling::Event::IServerBase>(unit)
       {}
+
+      uint8_t number_of_entries() const override
+      {
+         return mock("EventSchedulingBase").actualCall("number_of_entries").returnIntValueOrDefault(
+            0);
+      }
+
+      void send(const HF::Protocol::Address &, HF::Protocol::Message &,
+                HF::Transport::Link *) override
+      {
+         mock("EventSchedulingBase").actualCall("send");
+      }
    };
 
    Testing::Device *device;
@@ -462,21 +474,18 @@ TEST_GROUP(EventSchedulingClient)
    // TODO Add required unit tests.
    struct EventSchedulingClient: public InterfaceHelper<Scheduling::Event::Client>
    {
-      EventSchedulingClient(HF::Core::Unit0 &unit):
-         InterfaceHelper<Scheduling::Event::Client>(unit)
+      EventSchedulingClient():
+         InterfaceHelper<Scheduling::Event::Client>()
       {}
-
    };
 
-   Testing::Device *device;
    EventSchedulingClient *client;
 
    Protocol::Address addr;
 
    TEST_SETUP()
    {
-      device = new Testing::Device();
-      client = new EventSchedulingClient(*(device->unit0()));
+      client = new EventSchedulingClient();
 
       addr   = Protocol::Address(42, 0);
 
@@ -486,7 +495,6 @@ TEST_GROUP(EventSchedulingClient)
    TEST_TEARDOWN()
    {
       delete client;
-      delete device;
 
       mock().clear();
    }
@@ -640,6 +648,14 @@ TEST_GROUP(EventSchedulingServer)
          InterfaceHelper<Scheduling::Event::Server>(unit)
       {}
 
+      using InterfaceHelper<Scheduling::Event::Server>::send;
+
+      void send(const HF::Protocol::Address &addr, HF::Protocol::Message &message,
+                HF::Transport::Link *link) override
+      {
+         unit().send(addr, message, link);
+      }
+
       Common::Result activate_scheduler(const Protocol::Packet &packet,
                                         Scheduling::ActivateScheduler &msg) override
       {
@@ -750,22 +766,54 @@ TEST_GROUP(EventSchedulingServer)
 //! @test Maximum Number Of Entries support.
 TEST(EventSchedulingServer, MaximumNumberOfEntries)
 {
-   // FIXME Generated Stub.
-   // FIXME CHECK_ATTRIBUTE(EventSchedulingServer, MaximumNumberOfEntries, false, maximum_number_of_entries, 42, 142);
+   LONGS_EQUAL(std::numeric_limits<uint8_t>::max(), server->maximum_number_of_entries());
+   CHECK_ATTRIBUTE(EventSchedulingServer, MaximumNumberOfEntries, false,
+                   maximum_number_of_entries, 42, 142);
 }
 
 //! @test Number Of Entries support.
 TEST(EventSchedulingServer, NumberOfEntries)
 {
-   // FIXME Generated Stub.
-   // FIXME CHECK_ATTRIBUTE(EventSchedulingServer, NumberOfEntries, false, number_of_entries, 42, 142);
+   auto attr = server->attribute(Scheduling::NUMBER_OF_ENTRIES_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfEntries::ID, attr->uid());
+   CHECK_EQUAL(NumberOfEntries::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::EVENT_SCHEDULING, attr->interface());
+
+   POINTERS_EQUAL(server, attr->owner());
+
+   delete attr;
+
+   attr = Core::create_attribute(server, Scheduling::NUMBER_OF_ENTRIES_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfEntries::ID, attr->uid());
+   CHECK_EQUAL(NumberOfEntries::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::EVENT_SCHEDULING, attr->interface());
+
+   POINTERS_EQUAL(server, attr->owner());
+
+   delete attr;
+
+   SeedEntries(5);
+
+   LONGS_EQUAL(5, server->number_of_entries());
+
+   server->entries().clear();
+
+   SeedEntries(15);
+
+   LONGS_EQUAL(15, server->number_of_entries());
 }
 
 //! @test Status support.
 TEST(EventSchedulingServer, Status)
 {
-   // FIXME Generated Stub.
-   // FIXME CHECK_ATTRIBUTE(EventSchedulingServer, Status, false, status, 42, 142);
+   UNSIGNED_LONGS_EQUAL(0, server->status());
+   CHECK_ATTRIBUTE(EventSchedulingServer, Status, false, status, 42, 142);
 }
 
 //! @test Activate Scheduler support.
@@ -964,6 +1012,51 @@ TEST(EventSchedulingServer, DefineEvent_fail_event_id_in_use)
    Scheduling::DefineEventResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
+}
+
+//! @test Define Event support.
+TEST(EventSchedulingServer, DefineEvent_fail_limited_by_atr)
+{
+   server->maximum_number_of_entries(10);
+   SeedEntries(10);
+
+   Scheduling::DefineEvent<Interval> received = GenerateEntry(0x12);
+
+   payload = ByteArray(received.size());
+
+   received.pack(payload);    // pack it
+   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.length     = payload.size();
+
+   mock("Scheduling::Event::Server").expectOneCall("define_event");
+   mock("AbstractDevice").expectOneCall("send");
+
+   mock("Interface").expectNoCall("notify");
+
+   UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_RESOURCES, server->handle(packet, payload, 0));
+
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("AbstractDevice").checkExpectations();
+   mock("Interface").checkExpectations();
+
+   LONGS_EQUAL(10, server->entries().size());       // Check if we still have 10 scheduling on the DB.
+
+   // Check response packet destination address.
+   LONGS_EQUAL(1, device->packets.size());
+
+   Protocol::Packet *response = device->packets.back();
+
+   CHECK_TRUE(response != nullptr);
+
+   LONGS_EQUAL(42, response->destination.device);
+   LONGS_EQUAL(0, response->destination.unit);
+   LONGS_EQUAL(Protocol::Address::DEVICE, response->destination.mod);
+
+   // ----- Check the response message -----
+
+   Scheduling::DefineEventResponse resp;
+   resp.unpack(response->message.payload);
+   LONGS_EQUAL(Common::Result::FAIL_RESOURCES, resp.code);
 }
 
 //! @test Update Event Status support.

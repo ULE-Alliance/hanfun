@@ -186,8 +186,8 @@ namespace HF
       /*!
        * Class template for all core services implementations.
        */
-      template<Interface::UID _uid>
-      struct Service: public AbstractService
+      template<Interface::UID _uid, typename Parent = AbstractService>
+      struct Service: public Parent
       {
          //! @copydoc HF::Interface::uid
          uint16_t uid() const
@@ -203,7 +203,7 @@ namespace HF
           * @param [in] unit  reference to the unit that holds this service.
           */
          Service(Unit0 &unit):
-            AbstractService(unit)
+            Parent(unit)
          {}
 
          /*!

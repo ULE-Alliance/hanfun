@@ -140,21 +140,27 @@ namespace HF
              */
             HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
+            using IServerBase = Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
+                                                 Scheduling::IServer>;
 
-            typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING> Base;
+            using IClientBase = Interfaces::Interface<HF::Interface::EVENT_SCHEDULING,
+                                                      Scheduling::IClient>;
 
+            // using IClientBase = Sch eduling::Base<HF::Interface::EVENT_SCHEDULING,
+            // Scheduling::IClient>;
+
+            // typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
+            // Scheduling::IServer> Base;
+            //
             /*!
              * Event Scheduling %Service : %Client side implementation.
              *
              * This class provides the client side of the Event Scheduling interface.
              */
-            struct IClient: public Scheduling::IClient, ServiceRole<Base,
-                                                                    HF::Interface::CLIENT_ROLE>
+            struct IClient: public IClientBase
             {
-               using Client = ServiceRole<Base, HF::Interface::CLIENT_ROLE>;
-
                //! Constructor
-               IClient(Unit0 &unit): Scheduling::IClient(), Client(unit)
+               IClient(): IClientBase()
                {}
 
                //! Destructor
@@ -248,7 +254,7 @@ namespace HF
                }
 #endif
 
-               using Client::send;
+               using IClientBase::send;
             };
 
             /*!
@@ -263,7 +269,7 @@ namespace HF
                 *
                 * @param [in] unit  reference to the unit containing this service.
                 */
-               Client(Unit0 &unit): IClient(unit)
+               Client(): IClient()
                {}
 
                virtual ~Client()
@@ -275,14 +281,11 @@ namespace HF
              *
              * This class provides the server side of the Scheduling interface.
              */
-            struct IServer: public virtual Scheduling::IServer,
-               public ServiceRole<Base, HF::Interface::SERVER_ROLE>
+            struct IServer: public IServerBase
             {
-               using Server = ServiceRole<Base, HF::Interface::SERVER_ROLE>;
-
                uint16_t uid() const
                {
-                  return Server::uid();
+                  return IServerBase::uid();
                }
 
                HF::Attributes::UIDS attributes(uint8_t uid = HF::Attributes::Pack::MANDATORY) const
@@ -290,10 +293,7 @@ namespace HF
                   return Scheduling::IServer::attributes(uid);
                }
 
-               HF::Attributes::IAttribute *attribute(uint8_t uid)
-               {
-                  return Scheduling::IServer::attribute(uid);
-               }
+               uint8_t number_of_entries() const;
 
                /*!
                 * Callback that is called when a @c Scheduling::DEFINE_EVENT_CMD,
@@ -340,7 +340,7 @@ namespace HF
                virtual Common::Result delete_all_events(const Protocol::Packet &packet);
 
                //! Constructor
-               IServer(Unit0 &unit): Scheduling::IServer(), Server(unit)
+               IServer(Unit0 &unit): IServerBase(unit)
                {}
 
                //! Destructor
@@ -379,7 +379,7 @@ namespace HF
                   return entries().next_id();
                }
 
-               using Server::notify;
+               using IServerBase::notify;
 
                // =============================================================================
                // Protected types and methods
@@ -390,12 +390,6 @@ namespace HF
                Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                              uint16_t offset);
 
-
-               void send(const Protocol::Address &addr, Protocol::Message &message,
-                         Transport::Link *link)
-               {
-                  Base::send(addr, message, link);
-               }
             };
 
             /*!

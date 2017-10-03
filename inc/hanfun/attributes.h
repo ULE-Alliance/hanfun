@@ -538,7 +538,7 @@ namespace HF
           */
          Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, setter_t _setter,
                    bool writable = false):
-            AbstractAttribute(__owner.uid(), uid, writable), _owner(__owner), getter(_getter),
+            AbstractAttribute(__owner.uid(), uid, writable), _owner(&__owner), getter(_getter),
             setter(_setter)
          {}
 
@@ -551,8 +551,41 @@ namespace HF
           * @param [in] writable  attribute's writable information.
           */
          Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, bool writable = false):
-            AbstractAttribute(__owner.uid(), uid, writable), _owner(__owner), getter(_getter)
+            AbstractAttribute(__owner.uid(), uid, writable), _owner(&__owner), getter(_getter)
          {}
+
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] __owner   reference to attribute's interface owner object.
+          * @param [in] uid       attribute's UID.
+          * @param [in] _getter   owner's member function to get the value of the attribute.
+          * @param [in] _setter   owner's member function to set the value of the attribute.
+          * @param [in] writable  attribute's writable information.
+          */
+         Attribute(_Owner *__owner, const uint8_t uid, getter_t _getter, setter_t _setter,
+                   bool writable = false):
+            AbstractAttribute(__owner->uid(), uid, writable), _owner(__owner), getter(_getter),
+            setter(_setter)
+         {
+            assert(__owner != nullptr);
+         }
+         __attribute__((nonnull(1)))
+
+         /*!
+          * Attribute template constructor.
+          *
+          * @param [in] __owner   reference to attribute's interface owner object.
+          * @param [in] uid       attribute's UID.
+          * @param [in] _getter   owner's member function to get the value of the attribute.
+          * @param [in] writable  attribute's writable information.
+          */
+         Attribute(_Owner *__owner, const uint8_t uid, getter_t _getter, bool writable = false):
+            AbstractAttribute(__owner->uid(), uid, writable), _owner(__owner), getter(_getter)
+         {
+            assert(__owner != nullptr);
+         }
+         __attribute__((nonnull(1)))
 
          // =============================================================================
          // API
@@ -570,20 +603,20 @@ namespace HF
 
          value_type value() const
          {
-            return getter(_owner);
+            return getter(*_owner);
          }
 
          void value(value_type __value)
          {
             if (setter)
             {
-               setter(_owner, __value);
+               setter(*_owner, __value);
             }
          }
 
          HF::Interface const *owner() const
          {
-            return &_owner;
+            return _owner;
          }
 
          uint16_t size(bool with_uid) const
@@ -607,7 +640,7 @@ namespace HF
                offset += array.write(offset, uid());
             }
 
-            const_cast<decltype(helper) &>(helper).data = getter(_owner);
+            const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
             offset                                     += helper.pack(array, offset);
 
@@ -616,7 +649,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            const_cast<decltype(helper) &>(helper).data = getter(_owner);
+            const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
             return helper.pack(array, offset);
          }
@@ -640,7 +673,7 @@ namespace HF
 
             offset += helper.unpack(array, offset);
 
-            setter(_owner, helper.data);
+            setter(*_owner, helper.data);
 
             _end:
             return offset - start;
@@ -650,7 +683,7 @@ namespace HF
          {
             uint16_t result = helper.unpack(array, offset);
 
-            setter(_owner, helper.data);
+            setter(*_owner, helper.data);
             return result;
          }
 
@@ -667,7 +700,7 @@ namespace HF
 
             if (res == 0)
             {
-               const_cast<decltype(helper) &>(helper).data = getter(_owner);
+               const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
                Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
                res = helper.compare(temp->helper);
@@ -682,7 +715,7 @@ namespace HF
 
             if (res == 0)
             {
-               const_cast<decltype(helper) &>(helper).data = getter(_owner);
+               const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
                Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
                return helper.changed(temp->helper);
@@ -693,7 +726,7 @@ namespace HF
 
          protected:
 
-         _Owner                                 &_owner;
+         _Owner                                 *_owner;
          getter_t                               getter;
          setter_t                               setter;
 

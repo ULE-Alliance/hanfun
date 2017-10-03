@@ -636,14 +636,14 @@ namespace HF
           *
           * This is the parent class for the Scheduling service implementation.
           */
-         template<Interface::UID _Itf_Type>
-         struct Base: public Service<_Itf_Type>
+         template<Interface::UID _Itf_Type, typename Parent>
+         struct Base: public Service<_Itf_Type, Parent>
          {
             protected:
 
             //! Constructor
             Base(Unit0 &unit):
-               Service<_Itf_Type>(unit)
+               Service<_Itf_Type, Parent>(unit)
             {}
          };
 
@@ -652,13 +652,19 @@ namespace HF
           *
           * This class provides the server side of the Scheduling interface.
           */
-         class IServer: virtual public HF::Interface
+         class IServer: public ServiceRole<AbstractService, HF::Interface::SERVER_ROLE>
          {
             protected:
 
             uint8_t _maximum_number_of_entries; //!< Maximum Number Of Entries
-            uint8_t _number_of_entries;         //!< Number Of Entries
             uint8_t _status;                    //!< Status
+
+            //! Constructor
+            IServer(Unit0 &unit):
+               ServiceRole<AbstractService, HF::Interface::SERVER_ROLE>(unit),
+               _maximum_number_of_entries(std::numeric_limits<uint8_t>::max()),
+               _status(0)
+            {}
 
             public:
 
@@ -708,7 +714,7 @@ namespace HF
              *
              * @return  the current Number Of Entries.
              */
-            uint8_t number_of_entries() const;
+            virtual uint8_t number_of_entries() const = 0;
 
             /*!
              * Set the Number Of Entries for the Scheduling server.
@@ -757,8 +763,11 @@ namespace HF
           *
           * This class provides the client side of the Scheduling interface.
           */
-         struct IClient
+         class IClient: public Interfaces::InterfaceRole<Interfaces::AbstractInterface,
+                                                         HF::Interface::CLIENT_ROLE>
          {
+            public:
+
             virtual ~IClient()
             {}
 
