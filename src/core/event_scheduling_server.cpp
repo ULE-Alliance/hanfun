@@ -16,6 +16,8 @@
 
 #include "hanfun/core/event_scheduling.h"
 
+#include <algorithm>
+
 // =============================================================================
 // API
 // =============================================================================
@@ -241,4 +243,12 @@ Common::Result Scheduling::Event::IServer::delete_all_events(const Protocol::Pac
    send(packet.source, message, packet.link);
 
    return response.code;
+}
+
+void Scheduling::Event::IServer::periodic(uint32_t time)
+{
+   UNUSED(time);
+   auto local_time = unit().device().unit0()->time();
+
+   std::for_each(entries().begin(), entries().end(), [] () {});
 }

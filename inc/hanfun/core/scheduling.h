@@ -171,6 +171,12 @@ namespace HF
             _Type   time;        //!< Scheduler configuration.
             uint8_t pid;         //!< Program ID to be invoked.
 
+            protected:        // Helper attribute - Not included on the message entry!
+            uint32_t next_run;   //!< Next run timestamp.
+
+
+            public:
+
             Entry(uint8_t _event_id, uint8_t _status, _Type _t, uint8_t _pid):
                id(_event_id), status(_status), time(_t), pid(_pid)
             {}

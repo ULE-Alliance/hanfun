@@ -338,6 +338,8 @@ namespace HF
                 */
                virtual Common::Result delete_all_events(const Protocol::Packet &packet);
 
+               void periodic(uint32_t time);
+
                //! Constructor
                IServer(Unit0 &unit): IServerBase(unit)
                {}
