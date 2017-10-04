@@ -564,6 +564,8 @@ TEST_GROUP(Multicasting)
    using ParentTestUnit0 = HF::Devices::Node::Unit0<Core::DeviceInformation::Server,
                                                     Core::DeviceManagement::Client,
                                                     Core::AttributeReporting::Server,
+                                                    Core::Time::Server,
+                                                    Core::Scheduling::Event::DefaultServer,
                                                     Core::GroupTable::DefaultServer,
                                                     GroupManagementTestClient>;
 
@@ -574,12 +576,12 @@ TEST_GROUP(Multicasting)
 
       GroupManagementTestClient *group_management() const
       {
-         return ParentTestUnit0::get<GroupManagementTestClient, NEXT_ITF>();
+         return ParentTestUnit0::get<GroupManagementTestClient, GROUP_MGT>();
       }
 
       GroupManagementTestClient *group_management()
       {
-         return ParentTestUnit0::get<GroupManagementTestClient, NEXT_ITF>();
+         return ParentTestUnit0::get<GroupManagementTestClient, GROUP_MGT>();
       }
    };
 

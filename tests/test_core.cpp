@@ -73,6 +73,8 @@ namespace
    using UnitImpl = HF::Unit0<HF::Core::Unit0, HF::Core::DeviceInformation::Server,
                               HF::Core::DeviceManagement::Client,
                               HF::Core::AttributeReporting::Server,
+                              HF::Core::Time::Server,
+                              HF::Core::Scheduling::Event::DefaultServer,
                               HF::Core::GroupTable::DefaultServer,
                               TestInterface_1, TestInterface_2, TestInterface_3>;
 
@@ -110,6 +112,26 @@ namespace
       {
          return UnitImpl::group_table();
       }
+
+      Time *time()
+      {
+         return UnitImpl::time();
+      }
+
+      Time *time() const
+      {
+         return UnitImpl::time();
+      }
+
+      EventScheduling *event_scheduling()
+      {
+         return UnitImpl::event_scheduling();
+      }
+
+      EventScheduling *event_scheduling() const
+      {
+         return UnitImpl::event_scheduling();
+      }
    };
 
    typedef HF::Testing::AbstractDevice<HF::Devices::Node::Abstract<TestUnit0>> TestDevice;
@@ -137,13 +159,23 @@ TEST_GROUP(Unit0)
 
 TEST(Unit0, OptionalInterfaces)
 {
-   auto itfs = device->unit0()->interfaces();
+   auto itfs             = device->unit0()->interfaces();
+
+   auto initial_itf_size = 3;
 
 #if HF_GROUP_SUPPORT
-   LONGS_EQUAL(1 + 3, itfs.size());
-#else
-   LONGS_EQUAL(3, itfs.size());
+   initial_itf_size++;
 #endif
+
+#if HF_TIME_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+   initial_itf_size++;
+#endif
+
+   LONGS_EQUAL(initial_itf_size, itfs.size());
 
    CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
    {

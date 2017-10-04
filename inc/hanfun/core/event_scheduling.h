@@ -30,10 +30,9 @@ namespace HF
          // Forward declaration
          namespace Event
          {
-            struct Server;
+            struct IServer;
          }
       }
-
 
       /*!
        * @ingroup event_scheduling_itf
@@ -49,7 +48,7 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(Scheduling::Event::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(Scheduling::Event::IServer *server, uint8_t uid);
 
       namespace Scheduling
       {
@@ -146,7 +145,7 @@ namespace HF
             using IClientBase = Interfaces::Interface<HF::Interface::EVENT_SCHEDULING,
                                                       Scheduling::IClient>;
 
-            // using IClientBase = Sch eduling::Base<HF::Interface::EVENT_SCHEDULING,
+            // using IClientBase = Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
             // Scheduling::IClient>;
 
             // typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
@@ -397,11 +396,16 @@ namespace HF
              *
              * This class provides the server side of the Scheduling interface.
              */
+            template<typename _Entries>
             struct Server: public IServer
             {
+               static_assert(std::is_base_of<HF::Core::Scheduling::IEntries<Interval>,
+                                             _Entries>::value,
+                             "_Entries must be of type HF::Core::Scheduling::IEntries<Interval>");
+
                protected:
 
-               Entries<Interval> _entries;
+               _Entries _entries;
 
                public:
 
@@ -417,12 +421,13 @@ namespace HF
                {}
 
                //! @copydoc IServer::entries
-               Entries<Interval> &entries() const
+               _Entries &entries() const
                {
-                  return const_cast<Entries<Interval> &>(_entries);
+                  return const_cast<_Entries &>(_entries);
                }
             };
 
+            typedef Server<Entries<Interval>> DefaultServer;
 
          } // namespace Event
       }    // namespace Scheduling

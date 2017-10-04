@@ -26,9 +26,18 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
+
 #if HF_GROUP_SUPPORT
    #include "hanfun/core/group_table.h"
    #include "hanfun/core/group_management.h"
+#endif
+
+#if HF_TIME_SUPPORT
+   #include "hanfun/core/time.h"
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+   #include "hanfun/core/event_scheduling.h"
 #endif
 
 #include "hanfun/transport.h"
@@ -226,6 +235,13 @@ namespace HF
 #if HF_GROUP_SUPPORT
             typedef typename _Parent::GroupTable GroupTable;
 #endif
+#if HF_TIME_SUPPORT
+            typedef typename _Parent::Time Time;
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+            typedef typename _Parent::EventScheduling EventScheduling;
+#endif
+
             /*!
              * Constructor
              *
@@ -316,6 +332,29 @@ namespace HF
                return _Parent::group_table();
             }
 #endif
+#if HF_TIME_SUPPORT
+            Time *time()
+            {
+               return _Parent::time();
+            }
+
+            Time *time() const
+            {
+               return _Parent::time();
+            }
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+            EventScheduling *event_scheduling()
+            {
+               return _Parent::event_scheduling();
+            }
+
+            EventScheduling *event_scheduling() const
+            {
+               return _Parent::event_scheduling();
+            }
+#endif
          };
 
          /*!
@@ -323,7 +362,13 @@ namespace HF
           */
          typedef Unit0<Core::DeviceInformation::Server,
                        Core::DeviceManagement::Client,
-                       Core::AttributeReporting::Server
+                       Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                       HF::Core::Time::Server,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                       HF::Core::Scheduling::Event::DefaultServer
+#endif
 #if HF_GROUP_SUPPORT
                        , Core::GroupTable::DefaultServer
 #endif
@@ -593,19 +638,21 @@ namespace HF
             typedef typename _Parent::GroupTable GroupTable;
 
             //! Group Management service index.
-            static constexpr uint8_t GROUP_MGT = _Parent::NEXT_ITF;
+            static constexpr uint8_t GROUP_MGT = _Parent::GROUP_MGT;
 
             typedef typename std::tuple_element<GROUP_MGT, interfaces_t>::type GroupMgt;
 
             static_assert(std::is_base_of<HF::Core::GroupManagement::IServer, GroupMgt>::value,
                           "GroupMgt must be of type HF::Core::GroupManagement::IServer");
-
-            //! Bind Management service index.
-            static constexpr uint8_t BIND_MGT = GROUP_MGT + 1;
-#else
-            //! Bind Management service index.
-            static constexpr uint8_t BIND_MGT = _Parent::NEXT_ITF;
 #endif
+#if HF_TIME_SUPPORT
+            typedef typename _Parent::Time Time;
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+            typedef typename _Parent::EventScheduling EventScheduling;
+#endif
+            //! Group Management service index.
+            static constexpr uint8_t BIND_MGT = _Parent::BIND_MGT;
 
             typedef typename std::tuple_element<BIND_MGT, interfaces_t>::type BindMgt;
 
@@ -672,6 +719,30 @@ namespace HF
                return _Parent::group_table();
             }
 #endif
+
+#if HF_TIME_SUPPORT
+            Time *time()
+            {
+               return _Parent::time();
+            }
+
+            Time *time() const
+            {
+               return _Parent::time();
+            }
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+            EventScheduling *event_scheduling()
+            {
+               return _Parent::event_scheduling();
+            }
+
+            EventScheduling *event_scheduling() const
+            {
+               return _Parent::event_scheduling();
+            }
+#endif
+
          };
 
          /*!
@@ -680,6 +751,12 @@ namespace HF
          typedef Unit0<Core::DeviceInformation::Server,
                        Core::DeviceManagement::DefaultServer,
                        Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                       Core::Time::Server,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                       Core::Scheduling::Event::DefaultServer,
+#endif
 #if HF_GROUP_SUPPORT
                        Core::GroupTable::DefaultServer,
                        Core::GroupManagement::DefaultServer,

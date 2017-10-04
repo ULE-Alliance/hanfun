@@ -34,7 +34,7 @@ using namespace HF::Core::Scheduling::Event;
  *
  */
 // =============================================================================
-HF::Attributes::IAttribute *Core::create_attribute(Server *server, uint8_t uid)
+HF::Attributes::IAttribute *Core::create_attribute(Event::IServer *server, uint8_t uid)
 {
    return create_attribute(static_cast<Scheduling::IServer *>(server),
                            HF::Interface::EVENT_SCHEDULING, uid);

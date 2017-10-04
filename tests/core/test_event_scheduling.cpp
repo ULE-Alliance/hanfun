@@ -40,14 +40,8 @@ TEST_GROUP(Scheduling_Event)
 
       uint8_t number_of_entries() const override
       {
-         return mock("EventSchedulingBase").actualCall("number_of_entries").returnIntValueOrDefault(
-            0);
-      }
-
-      void send(const HF::Protocol::Address &, HF::Protocol::Message &,
-                HF::Transport::Link *) override
-      {
-         mock("EventSchedulingBase").actualCall("send");
+         return mock("EventSchedulingBase").actualCall("number_of_entries")
+                   .returnIntValueOrDefault(0);
       }
    };
 
@@ -642,59 +636,53 @@ TEST(EventSchedulingClient, DeleteAllEvents)
 TEST_GROUP(EventSchedulingServer)
 {
    // TODO Add required unit tests.
-   struct EventSchedulingServer: public InterfaceHelper<Scheduling::Event::Server>
+   struct EventSchedulingServer: public Scheduling::Event::DefaultServer
    {
+      using Parent = Scheduling::Event::DefaultServer;
+
       EventSchedulingServer(HF::Core::Unit0 &unit):
-         InterfaceHelper<Scheduling::Event::Server>(unit)
+         Scheduling::Event::DefaultServer(unit)
       {}
-
-      using InterfaceHelper<Scheduling::Event::Server>::send;
-
-      void send(const HF::Protocol::Address &addr, HF::Protocol::Message &message,
-                HF::Transport::Link *link) override
-      {
-         unit().send(addr, message, link);
-      }
 
       Common::Result activate_scheduler(const Protocol::Packet &packet,
                                         Scheduling::ActivateScheduler &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("activate_scheduler");
-         return InterfaceHelper<Scheduling::Event::Server>::activate_scheduler(packet, msg);
+         return Parent::activate_scheduler(packet, msg);
       }
 
       Common::Result define_event(const Protocol::Packet &packet,
                                   Scheduling::DefineEvent<Interval> &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("define_event");
-         return InterfaceHelper<Scheduling::Event::Server>::define_event(packet, msg);
+         return Parent::define_event(packet, msg);
       }
 
       Common::Result update_event_status(const Protocol::Packet &packet,
                                          Scheduling::UpdateStatus &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("update_event_status");
-         return InterfaceHelper<Scheduling::Event::Server>::update_event_status(packet, msg);
+         return Parent::update_event_status(packet, msg);
       }
 
       Common::Result get_event_entry(const Protocol::Packet &packet,
                                      Scheduling::GetEntry &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("get_event_entry");
-         return InterfaceHelper<Scheduling::Event::Server>::get_event_entry(packet, msg);
+         return Parent::get_event_entry(packet, msg);
       }
 
       Common::Result delete_event(const Protocol::Packet &packet,
                                   Scheduling::DeleteEvent &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("delete_event");
-         return InterfaceHelper<Scheduling::Event::Server>::delete_event(packet, msg);
+         return Parent::delete_event(packet, msg);
       }
 
       Common::Result delete_all_events(const Protocol::Packet &packet) override
       {
          mock("Scheduling::Event::Server").actualCall("delete_all_events");
-         return InterfaceHelper<Scheduling::Event::Server>::delete_all_events(packet);
+         return Parent::delete_all_events(packet);
       }
 
       void notify(const HF::Attributes::IAttribute &old_value,
@@ -704,7 +692,6 @@ TEST_GROUP(EventSchedulingServer)
             .withParameterOfType("IAttribute", "old", &old_value)
             .withParameterOfType("IAttribute", "new", &new_value);
       }
-
    };
 
    Testing::Device *device;

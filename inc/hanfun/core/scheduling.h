@@ -750,12 +750,6 @@ namespace HF
 
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
-
-            virtual void notify(const HF::Attributes::IAttribute &old_value,
-                                const HF::Attributes::IAttribute &new_value) const = 0;
-
-            virtual void send(const Protocol::Address &addr, Protocol::Message &message,
-                              Transport::Link *link) = 0;
          };
 
          /*!

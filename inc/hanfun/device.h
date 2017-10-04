@@ -43,6 +43,21 @@ namespace HF
 
       }  // namespace GroupTable
 
+      namespace Time
+      {
+         struct Server;
+
+      }  // namespace Time
+
+      namespace Scheduling
+      {
+         namespace Event
+         {
+            struct IServer;
+
+         } // namespace Event
+      }    // namespace Scheduling
+
    }  // namespace Core
 
    // Forward declaration of the units namespace.
@@ -130,6 +145,39 @@ namespace HF
           */
          virtual HF::Core::GroupTable::IServer *group_table() const = 0;
 #endif
+
+#if HF_TIME_SUPPORT
+         /*!
+          * Get the pointer to the node's Time service.
+          *
+          * @return pointer to the node's Time service.
+          */
+         virtual HF::Core::Time::Server *time() = 0;
+
+         /*!
+          * Get the pointer to the node's Time service.
+          *
+          * @return pointer to the node's Time service.
+          */
+         virtual HF::Core::Time::Server *time() const = 0;
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+         /*!
+          * Get the pointer to the node's Event Scheduling service.
+          *
+          * @return pointer to the node's Event Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Event::IServer *event_scheduling() = 0;
+
+         /*!
+          * Get the pointer to the node's Event Scheduling service.
+          *
+          * @return pointer to the node's Event Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Event::IServer *event_scheduling() const = 0;
+#endif
+
       };
 
       /*!
