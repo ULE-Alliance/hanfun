@@ -281,6 +281,9 @@ typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
 #if HF_TIME_SUPPORT
                                          HF::Core::Time::Server,
 #endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                         HF::Core::BatchProgramManagement::DefaultServer,
+#endif
 #if HF_EVENT_SCHEDULING_SUPPORT
                                          HF::Core::Scheduling::Event::DefaultServer,
 #endif

@@ -565,6 +565,7 @@ TEST_GROUP(Multicasting)
                                                     Core::DeviceManagement::Client,
                                                     Core::AttributeReporting::Server,
                                                     Core::Time::Server,
+                                                    Core::BatchProgramManagement::DefaultServer,
                                                     Core::Scheduling::Event::DefaultServer,
                                                     Core::GroupTable::DefaultServer,
                                                     GroupManagementTestClient>;

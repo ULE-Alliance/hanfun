@@ -49,6 +49,11 @@ namespace HF
 
       }  // namespace Time
 
+      namespace BatchProgramManagement
+      {
+         struct IServer;
+      }  // namespace BatchProgramManagement
+
       namespace Scheduling
       {
          namespace Event
@@ -160,6 +165,22 @@ namespace HF
           * @return pointer to the node's Time service.
           */
          virtual HF::Core::Time::Server *time() const = 0;
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+         /*!
+          * Get the pointer to the node's Batch Program service.
+          *
+          * @return pointer to the node's Batch Program service.
+          */
+         virtual HF::Core::BatchProgramManagement::IServer *batch_program() = 0;
+
+         /*!
+          * Get the pointer to the node's Batch Program service.
+          *
+          * @return pointer to the node's Batch Program service.
+          */
+         virtual HF::Core::BatchProgramManagement::IServer *batch_program() const = 0;
 #endif
 
 #if HF_EVENT_SCHEDULING_SUPPORT

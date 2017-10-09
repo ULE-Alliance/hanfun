@@ -42,7 +42,6 @@ namespace HF
     *
     * @todo Add support for Group Management service.
     * @todo Add support for Identify interface.
-    * @todo Add support for Batch Program Management service.
     * @todo Add support for Weekly Scheduling service.
     * @todo Add support for Tamper %Alert interface.
     * @todo Add support for Power service.
@@ -279,6 +278,9 @@ namespace HF
 #if HF_TIME_SUPPORT
          TIME,             //!< Time service index.
 #endif
+#if HF_BATCH_PROGRAM_SUPPORT
+         BATCH_PROGRAM,
+#endif
 #if HF_EVENT_SCHEDULING_SUPPORT
          EVENT_SCH,
 #endif
@@ -313,6 +315,13 @@ namespace HF
 
       static_assert(std::is_base_of<HF::Core::Time::Server, Time>::value,
                     "Time must be of type HF::Core::Time::Server");
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+      typedef typename std::tuple_element<BATCH_PROGRAM, interfaces_t>::type BatchProgram;
+
+      static_assert(std::is_base_of<HF::Core::BatchProgramManagement::IServer, BatchProgram>::value,
+                    "BatchProgram must be of type HF::Core::BatchProgramManagement::IServer");
 #endif
 
 #if HF_EVENT_SCHEDULING_SUPPORT
@@ -434,6 +443,28 @@ namespace HF
       Time *time() const
       {
          return get<Time, TIME>();
+      }
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+      /*!
+       * Get the pointer to the node's Batch Program management service.
+       *
+       * @return pointer to the node's Batch Program management service.
+       */
+      BatchProgram *batch_program()
+      {
+         return get<BatchProgram, BATCH_PROGRAM>();
+      }
+
+      /*!
+       * Get the pointer to the node's Batch Program management service.
+       *
+       * @return pointer to the node's Batch Program management service.
+       */
+      BatchProgram *batch_program () const
+      {
+         return get<BatchProgram, BATCH_PROGRAM>();
       }
 #endif
 

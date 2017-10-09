@@ -35,6 +35,7 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
 #include "hanfun/core/event_scheduling.h"
 
 #include "hanfun/units.h"
@@ -617,6 +618,7 @@ namespace HF
          HF::Core::AttributeReporting::Server *attr_reporting;
          HF::Core::GroupTable::IServer *group_table_server;
          HF::Core::Time::Server *time_srv;
+         HF::Core::BatchProgramManagement::IServer *batch_program_server;
          HF::Core::Scheduling::Event::IServer *event_scheduling_server;
 
          public:
@@ -624,7 +626,7 @@ namespace HF
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
             attr_reporting(nullptr), group_table_server(nullptr), time_srv(nullptr),
-            event_scheduling_server(nullptr)
+            batch_program_server(nullptr), event_scheduling_server(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -634,6 +636,7 @@ namespace HF
             delete attr_reporting;
             delete group_table_server;
             delete time_srv;
+            delete batch_program_server;
             delete event_scheduling_server;
          }
 
@@ -722,6 +725,16 @@ namespace HF
             return time_srv;
          }
 
+         HF::Core::BatchProgramManagement::IServer *batch_program ()
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program () const
+         {
+            return batch_program_server;
+         }
+
          HF::Core::Scheduling::Event::IServer *event_scheduling()
          {
             return event_scheduling_server;
@@ -761,6 +774,7 @@ namespace HF
          HF::Core::GroupManagement::IServer *group_mgt;
          HF::Core::BindManagement::IServer *bind_mgt;
          HF::Core::Time::Server *time_srv;
+         HF::Core::BatchProgramManagement::IServer *batch_program_server;
          HF::Core::Scheduling::Event::IServer *event_scheduling_server;
 
          public:
@@ -768,7 +782,7 @@ namespace HF
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
             attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr),
-            time_srv(nullptr), event_scheduling_server(nullptr)
+            time_srv(nullptr), batch_program_server(nullptr), event_scheduling_server(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -780,6 +794,7 @@ namespace HF
             delete group_mgt;
             delete bind_mgt;
             delete time_srv;
+            delete batch_program_server;
             delete event_scheduling_server;
          }
 
@@ -917,6 +932,16 @@ namespace HF
             return time_srv;
          }
 
+         HF::Core::BatchProgramManagement::IServer *batch_program () override
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program () const override
+         {
+            return batch_program_server;
+         }
+
          HF::Core::Scheduling::Event::IServer *event_scheduling() override
          {
             return event_scheduling_server;
@@ -956,6 +981,10 @@ namespace HF
                case HF::Interface::TIME:
                {
                   return time()->handle(packet, payload, offset);
+               }
+               case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
+               {
+                  return batch_program()->handle(packet, payload, offset);
                }
                case HF::Interface::EVENT_SCHEDULING:
                {

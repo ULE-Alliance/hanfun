@@ -74,6 +74,7 @@ namespace
                               HF::Core::DeviceManagement::Client,
                               HF::Core::AttributeReporting::Server,
                               HF::Core::Time::Server,
+                              HF::Core::BatchProgramManagement::DefaultServer,
                               HF::Core::Scheduling::Event::DefaultServer,
                               HF::Core::GroupTable::DefaultServer,
                               TestInterface_1, TestInterface_2, TestInterface_3>;
@@ -123,6 +124,16 @@ namespace
          return UnitImpl::time();
       }
 
+      BatchProgram *batch_program ()
+      {
+         return UnitImpl::batch_program();
+      }
+
+      BatchProgram *batch_program () const
+      {
+         return UnitImpl::batch_program();
+      }
+
       EventScheduling *event_scheduling()
       {
          return UnitImpl::event_scheduling();
@@ -168,6 +179,10 @@ TEST(Unit0, OptionalInterfaces)
 #endif
 
 #if HF_TIME_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
    initial_itf_size++;
 #endif
 

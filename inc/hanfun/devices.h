@@ -36,6 +36,10 @@
    #include "hanfun/core/time.h"
 #endif
 
+#if HF_BATCH_PROGRAM_SUPPORT
+   #include "hanfun/core/batch_program_management.h"
+#endif
+
 #if HF_EVENT_SCHEDULING_SUPPORT
    #include "hanfun/core/event_scheduling.h"
 #endif
@@ -238,6 +242,9 @@ namespace HF
 #if HF_TIME_SUPPORT
             typedef typename _Parent::Time Time;
 #endif
+#if HF_BATCH_PROGRAM_SUPPORT
+            typedef typename _Parent::BatchProgram BatchProgram;
+#endif
 #if HF_EVENT_SCHEDULING_SUPPORT
             typedef typename _Parent::EventScheduling EventScheduling;
 #endif
@@ -344,6 +351,18 @@ namespace HF
             }
 #endif
 
+#if HF_BATCH_PROGRAM_SUPPORT
+            BatchProgram *batch_program()
+            {
+               return _Parent::batch_program();
+            }
+
+            BatchProgram *batch_program() const
+            {
+               return _Parent::batch_program();
+            }
+#endif
+
 #if HF_EVENT_SCHEDULING_SUPPORT
             EventScheduling *event_scheduling()
             {
@@ -365,6 +384,9 @@ namespace HF
                        Core::AttributeReporting::Server,
 #if HF_TIME_SUPPORT
                        HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                       HF::Core::BatchProgramManagement::DefaultServer,
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
                        HF::Core::Scheduling::Event::DefaultServer
@@ -648,6 +670,9 @@ namespace HF
 #if HF_TIME_SUPPORT
             typedef typename _Parent::Time Time;
 #endif
+#if HF_BATCH_PROGRAM_SUPPORT
+            typedef typename _Parent::BatchProgram BatchProgram;
+#endif
 #if HF_EVENT_SCHEDULING_SUPPORT
             typedef typename _Parent::EventScheduling EventScheduling;
 #endif
@@ -731,6 +756,17 @@ namespace HF
                return _Parent::time();
             }
 #endif
+#if HF_BATCH_PROGRAM_SUPPORT
+            BatchProgram *batch_program()
+            {
+               return _Parent::batch_program();
+            }
+
+            BatchProgram *batch_program() const
+            {
+               return _Parent::batch_program();
+            }
+#endif
 #if HF_EVENT_SCHEDULING_SUPPORT
             EventScheduling *event_scheduling()
             {
@@ -753,6 +789,9 @@ namespace HF
                        Core::AttributeReporting::Server,
 #if HF_TIME_SUPPORT
                        Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                       Core::BatchProgramManagement::DefaultServer,
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
                        Core::Scheduling::Event::DefaultServer,
