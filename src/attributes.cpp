@@ -41,6 +41,7 @@
 #include "hanfun/core/time.h"
 #include "hanfun/core/batch_program_management.h"
 #include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -111,6 +112,10 @@ static const Entry factories[] =
    {
       HF::Interface::EVENT_SCHEDULING,
       HF::Core::Scheduling::Event::create_attribute,
+   },
+   {
+      HF::Interface::WEEKLY_SCHEDULING,
+      HF::Core::Scheduling::Weekly::create_attribute,
    },
    /* Functional Interfaces. */
    {

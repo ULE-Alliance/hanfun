@@ -1881,6 +1881,13 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::Scheduling::Attri
 }
 
 // =============================================================================
+// HF::Core::WeeklyScheduling
+// =============================================================================
+
+#include "hanfun/core/weekly_scheduling.h"
+
+
+// =============================================================================
 // Protocol
 // =============================================================================
 
@@ -2066,6 +2073,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
             case HF::Interface::EVENT_SCHEDULING:
                stream << static_cast<Scheduling::CMD>(message.itf.member);
                break;
+            case HF::Interface::WEEKLY_SCHEDULING:
+               stream << static_cast<Scheduling::CMD>(message.itf.member);
+               break;
             /* Interfaces [C] */
             case HF::Interface::ALERT:
                stream << static_cast<Alert::CMD>(message.itf.member);
@@ -2132,6 +2142,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                stream << static_cast<BatchProgramManagement::Attributes>(message.itf.member);
                break;
             case HF::Interface::EVENT_SCHEDULING:
+               stream << static_cast<Scheduling::Attributes>(message.itf.member);
+               break;
+            case HF::Interface::WEEKLY_SCHEDULING:
                stream << static_cast<Scheduling::Attributes>(message.itf.member);
                break;
             /* Interfaces [A] */

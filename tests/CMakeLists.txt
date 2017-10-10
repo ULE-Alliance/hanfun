@@ -103,6 +103,7 @@ add_core_tests("time")
 add_core_tests("batch_program_management")
 add_core_tests("scheduling")
 add_core_tests("event_scheduling")
+add_core_tests("weekly_scheduling")
 
 ## Transport Layer ##
 set(TESTS_TRANSPORT_SRCS "test_transport.cpp")

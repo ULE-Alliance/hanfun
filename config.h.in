@@ -50,6 +50,14 @@
 #define HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD@
 
 // =============================================================================
+// Weekly Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD         @HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD@
+#define HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD             @HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD@
+#define HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD@
+
+// =============================================================================
 // Interfaces
 // =============================================================================
 
