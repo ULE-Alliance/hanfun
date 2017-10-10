@@ -462,7 +462,7 @@ namespace HF
        *
        * @return pointer to the node's Batch Program management service.
        */
-      BatchProgram *batch_program () const
+      BatchProgram *batch_program() const
       {
          return get<BatchProgram, BATCH_PROGRAM>();
       }

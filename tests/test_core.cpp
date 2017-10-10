@@ -124,12 +124,12 @@ namespace
          return UnitImpl::time();
       }
 
-      BatchProgram *batch_program ()
+      BatchProgram *batch_program()
       {
          return UnitImpl::batch_program();
       }
 
-      BatchProgram *batch_program () const
+      BatchProgram *batch_program() const
       {
          return UnitImpl::batch_program();
       }

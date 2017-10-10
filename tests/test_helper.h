@@ -725,12 +725,12 @@ namespace HF
             return time_srv;
          }
 
-         HF::Core::BatchProgramManagement::IServer *batch_program ()
+         HF::Core::BatchProgramManagement::IServer *batch_program()
          {
             return batch_program_server;
          }
 
-         HF::Core::BatchProgramManagement::IServer *batch_program () const
+         HF::Core::BatchProgramManagement::IServer *batch_program() const
          {
             return batch_program_server;
          }
@@ -932,12 +932,12 @@ namespace HF
             return time_srv;
          }
 
-         HF::Core::BatchProgramManagement::IServer *batch_program () override
+         HF::Core::BatchProgramManagement::IServer *batch_program() override
          {
             return batch_program_server;
          }
 
-         HF::Core::BatchProgramManagement::IServer *batch_program () const override
+         HF::Core::BatchProgramManagement::IServer *batch_program() const override
          {
             return batch_program_server;
          }
