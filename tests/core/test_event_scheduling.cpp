@@ -13,6 +13,7 @@
  */
 // =============================================================================
 #include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/batch_program_management.h"
 
 #include "test_helper.h"
 
@@ -188,6 +189,75 @@ TEST(EventSchedulingEntries, Next_id)
    data.emplace(2, event);
 
    LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
+}
+
+//! @test Entries find by address
+TEST(EventSchedulingEntries, Find_id_generic_function)
+{
+   // Create 10 Events
+   IssueEvents(10);
+
+   Entry event;
+   event.id  = 2;
+   event.pid = 0x22;
+
+   auto search_func = [](Entry e)
+                      {
+                         if (e.id == 2)
+                         {
+                            return true;
+                         }
+
+                         return false;
+                      };
+
+   std::vector<Common::Pointer<Entry>> vec = entries.find_if(search_func);
+
+   UNSIGNED_LONGS_EQUAL(1, vec.size());
+   UNSIGNED_LONGS_EQUAL(2, vec[0]->id);
+
+   data.erase(2);                                         // erase group 2
+   // Try to find group 2 (should fail)
+   vec     = entries.find_if(search_func);
+   UNSIGNED_LONGS_EQUAL(0, vec.size());
+   data[2] = event;                                       // restore it
+
+   // Try to find group 2 again (OK)
+   vec = entries.find_if(search_func);
+
+   UNSIGNED_LONGS_EQUAL(1, vec.size());
+   UNSIGNED_LONGS_EQUAL(2, vec[0]->id);
+}
+
+//! @test Entries find by address
+TEST(EventSchedulingEntries, Find_enable)
+{
+   // Create 10 Events
+   IssueEvents(10);
+
+   Entry event;
+   event.id     = 11;
+   event.status = 0x00;
+   event.pid    = 0x22;
+
+   data.emplace(10, event);
+
+   LONGS_EQUAL(11, entries.size());             // 11 entries on the DB
+
+   auto search_func = [](Entry e)
+                      {
+                         if (e.status == 0x01)
+                         {
+                            return true;
+                         }
+
+                         return false;
+                      };
+
+   std::vector<Common::Pointer<Entry>> vec = entries.find_if(search_func);
+
+   UNSIGNED_LONGS_EQUAL(10, vec.size());        // but only 10 enabled!
+   UNSIGNED_LONGS_EQUAL(0x01, vec[0]->status);
 }
 
 //! @test Entries find by address
@@ -685,6 +755,11 @@ TEST_GROUP(EventSchedulingServer)
          return Parent::delete_all_events(packet);
       }
 
+      void periodic(uint32_t time) override
+      {
+         mock("Scheduling::Event::Server").actualCall("periodic");
+         Parent::periodic(time);
+      }
       void notify(const HF::Attributes::IAttribute &old_value,
                   const HF::Attributes::IAttribute &new_value) const override
       {
@@ -692,6 +767,48 @@ TEST_GROUP(EventSchedulingServer)
             .withParameterOfType("IAttribute", "old", &old_value)
             .withParameterOfType("IAttribute", "new", &new_value);
       }
+   };
+
+   struct BatchProgramServer: public BatchProgramManagement::DefaultServer
+   {
+      using Parent = BatchProgramManagement::DefaultServer;
+
+      BatchProgramServer(HF::Core::Unit0 &unit):
+         Parent(unit)
+      {}
+
+      Common::Result invoke_program(const Protocol::Packet &packet,
+                                    BatchProgramManagement::InvokeProgram &msg) override
+      {
+         mock("BatchProgram::Server").actualCall("invoke_program")
+            .withParameter("pid", msg.pid)
+            .withParameterOfType("Address", "source", &packet.source)
+            .withParameterOfType("Address", "dest", &packet.destination);
+
+         return Common::Result::OK;
+      }
+
+   };
+
+   struct TimeServer: public Core::Time::Server
+   {
+      using Parent = Core::Time::Server;
+
+      TimeServer(HF::Core::Unit0 &unit):
+         Parent(unit)
+      {}
+
+      uint32_t time() const
+      {
+         mock("Time::Server").actualCall("time");
+         return Parent::time();
+      }
+
+      void time(uint32_t __value)
+      {
+         Parent::time(__value);
+      }
+
    };
 
    Testing::Device *device;
@@ -1352,4 +1469,206 @@ TEST(EventSchedulingServer, DeleteAllEvents)
    Scheduling::DeleteAllResponse resp;
    resp.unpack(response->message.payload);
    LONGS_EQUAL(Common::Result::OK, resp.code);
+}
+
+//! @test Periodic single entry.
+TEST(EventSchedulingServer, Periodic_Single_Entry)
+{
+   BatchProgramServer *batch_server;
+   TimeServer *time_server;
+
+   batch_server = new BatchProgramServer(*(device->unit0()));
+   time_server  = new TimeServer(*(device->unit0()));
+
+   device->unit0()->batch_program(batch_server);
+   device->unit0()->time(time_server);
+
+   time_server->time(0);       // set the system timer to 0.
+
+   server->entries().save(Entry(0x1, 0x01, Interval(0x11, 0xFF, 0x11), 0x01));
+
+   for (uint8_t i = 1; i < 0x0F; ++i)
+   {
+      mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
+      mock("Scheduling::Event::Server").expectOneCall("periodic");
+      mock("Time::Server").expectOneCall("time");
+
+      mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x01)
+         .withParameterOfType("Address", "source", &addr)
+         .withParameterOfType("Address", "dest", &addr);
+
+      time_server->tick(0x11);
+      server->periodic(0x11);
+   }
+
+   mock("AbstractDevice").checkExpectations();
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("BatchProgram::Server").checkExpectations();
+   mock("Time::Server").checkExpectations();
+}
+
+//! @test Periodic two entries - no overlap.
+TEST(EventSchedulingServer, Periodic_two_Entries_no_overlap)
+{
+   BatchProgramServer *batch_server;
+   TimeServer *time_server;
+
+   batch_server = new BatchProgramServer(*(device->unit0()));
+   time_server  = new TimeServer(*(device->unit0()));
+
+   device->unit0()->batch_program(batch_server);
+   device->unit0()->time(time_server);
+
+   time_server->time(0);       // set the system timer to 0.
+
+   server->entries().save(Entry(0x1, 0x01, Interval(0x11, 0xFF, 0x11), 0x01));
+   server->entries().save(Entry(0x2, 0x01, Interval(0x110, 0x01FF, 0x11), 0x02));
+
+   for (uint16_t i = 0x11; i <= 0x1FF; i += 0x11)
+   {
+      if (i <= 0xFF)                      // 1st entry
+      {
+         mock("Scheduling::Event::Server").expectOneCall("periodic");
+         mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
+         mock("Time::Server").expectOneCall("time");
+
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x01)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+      else if (0xFF < i && i < 0x110)     // GAP between entries
+      {
+         mock("Scheduling::Event::Server").expectOneCall("periodic");
+         mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
+         mock("Time::Server").expectOneCall("time");
+
+         mock("BatchProgram::Server").expectNoCall("invoke_program");
+      }
+      else                                // 2nd entry
+      {
+         mock("Scheduling::Event::Server").expectOneCall("periodic");
+         mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
+         mock("Time::Server").expectOneCall("time");
+
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+
+
+      time_server->tick(0x11);
+      server->periodic(0x11);
+   }
+
+   mock("AbstractDevice").checkExpectations();
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("BatchProgram::Server").checkExpectations();
+   mock("Time::Server").checkExpectations();
+}
+
+//! @test Periodic two entries - single entry overlap.
+TEST(EventSchedulingServer, Periodic_two_Entries_single_overlap)
+{
+   BatchProgramServer *batch_server;
+   TimeServer *time_server;
+
+   batch_server = new BatchProgramServer(*(device->unit0()));
+   time_server  = new TimeServer(*(device->unit0()));
+
+   device->unit0()->batch_program(batch_server);
+   device->unit0()->time(time_server);
+
+   time_server->time(0);       // set the system timer to 0.
+
+   server->entries().save(Entry(0x1, 0x01, Interval(0x11, 0xFF, 0x11), 0x01));
+   server->entries().save(Entry(0x2, 0x01, Interval(0xFF, 0x01FF, 0x11), 0x02));
+
+   for (uint16_t i = 0x11; i <= 0x01FF; i += 0x11)
+   {
+      mock("Scheduling::Event::Server").expectOneCall("periodic");
+      mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
+      mock("Time::Server").expectOneCall("time");
+
+      if (i < 0xFF)                       // 1st entry
+      {
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x01)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+
+      if (i == 0xFF)                      // overlap entries
+      {
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x01)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+
+      if (i > 0xFF)                       // 2nd entry
+      {
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+
+
+      time_server->tick(0x11);
+      server->periodic(0x11);
+   }
+
+   mock("AbstractDevice").checkExpectations();
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("BatchProgram::Server").checkExpectations();
+   mock("Time::Server").checkExpectations();
+}
+
+//! @test Periodic two entries - multiple entries overlap.
+TEST(EventSchedulingServer, Periodic_two_Entries_multiple_overlap)
+{
+   BatchProgramServer *batch_server;
+   TimeServer *time_server;
+
+   batch_server = new BatchProgramServer(*(device->unit0()));
+   time_server  = new TimeServer(*(device->unit0()));
+
+   device->unit0()->batch_program(batch_server);
+   device->unit0()->time(time_server);
+
+   time_server->time(0);       // set the system timer to 0.
+
+   server->entries().save(Entry(0x1, 0x01, Interval(0x11, 0xFF, 0x11), 0x01));
+   server->entries().save(Entry(0x2, 0x01, Interval(0xAA, 0x01FF, 0x11), 0x02));
+
+   for (uint16_t i = 0x11; i <= 0x01FF; i += 0x11)
+   {
+      mock("Scheduling::Event::Server").expectOneCall("periodic");
+      mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
+      mock("Time::Server").expectOneCall("time");
+
+      if (i <= 0xFF)                       // 1st entry
+      {
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x01)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+
+      if (0xAA <= i && i <= 0x01FF)       // 2nd entry
+      {
+         mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
+            .withParameterOfType("Address", "source", &addr)
+            .withParameterOfType("Address", "dest", &addr);
+      }
+
+
+      time_server->tick(0x11);
+      server->periodic(0x11);
+   }
+
+   mock("AbstractDevice").checkExpectations();
+   mock("Scheduling::Event::Server").checkExpectations();
+   mock("BatchProgram::Server").checkExpectations();
+   mock("Time::Server").checkExpectations();
 }

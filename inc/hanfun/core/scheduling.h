@@ -22,6 +22,7 @@
 #include <string>
 #include <map>
 #include <forward_list>
+#include <algorithm>
 
 
 /*!
@@ -171,14 +172,11 @@ namespace HF
             _Type   time;        //!< Scheduler configuration.
             uint8_t pid;         //!< Program ID to be invoked.
 
-            protected:        // Helper attribute - Not included on the message entry!
+            // Helper attribute - Not included on the message entry!
             uint32_t next_run;   //!< Next run timestamp.
 
-
-            public:
-
             Entry(uint8_t _event_id, uint8_t _status, _Type _t, uint8_t _pid):
-               id(_event_id), status(_status), time(_t), pid(_pid)
+               id(_event_id), status(_status), time(_t), pid(_pid), next_run(time.first())
             {}
 
             Entry() = default;
@@ -186,6 +184,29 @@ namespace HF
             static constexpr uint16_t START_ID     = 0x00;
             static constexpr uint16_t MAX_ID       = 0xFE;
             static constexpr uint16_t AVAILABLE_ID = 0xFF;
+
+            /*!
+             * Check if the current entry is runnable at _time.
+             *
+             * @param [in] _time    the system time.
+             *
+             * @retval false     if the entry can't run.
+             * @retval true      if the entry can run.
+             */
+            bool active(uint32_t _time) const
+            {
+               return (status == 0x01 &&
+                       time.active(_time) &&
+                       _time >= next_run);
+            }
+
+            /*!
+             * Increment the next_run attribute.
+             */
+            void step(void)
+            {
+               next_run += time.step();
+            }
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint8_t)     // Event ID
@@ -472,6 +493,18 @@ namespace HF
              *          @c Scheduler::Entry::AVAILABLE_ID if no id is available.
              */
             virtual uint8_t next_id() const = 0;
+
+            /*!
+             * Find a list of Entries accordingly to the suplied used function.
+             *
+             * @param [in] func The search function that should return true for each entry where
+             *                   the search conditions are true.
+             * @return  A std::vector of Common::Pointer.
+             */
+            virtual std::vector<Common::Pointer<Entry<_Type>>> find_if(
+               std::function<bool(Entry<_Type> e)> func) = 0;
+
+            virtual void for_each(std::function<void(Entry<_Type>&e)> func) = 0;
          };
 
          /*!
@@ -483,6 +516,7 @@ namespace HF
             typedef Entry<_Type> EntryType;
 
             typedef typename std::map<uint8_t, EntryType> Container;
+            typedef typename std::pair<uint8_t, EntryType> container_entry;
             typedef typename Container::iterator iterator;
             typedef typename Container::const_iterator const_iterator;
             typedef typename Container::value_type value_type;
@@ -564,6 +598,34 @@ namespace HF
                else
                {
                   return Common::Pointer<Entry<_Type>>(const_cast<EntryType *>(&(*it).second));
+               }
+            }
+
+            /*!
+             * @copydoc IEntries::find(std::function<bool>)
+             */
+            std::vector<Common::Pointer<Entry<_Type>>> find_if(
+               std::function<bool(Entry<_Type> e)> func)
+            {
+               std::vector<Common::Pointer<Entry<_Type>>> entry_list;
+
+               for (iterator it = db.begin(); it != db.end(); ++it)
+               {
+                  if (func(static_cast<EntryType>(it->second)))
+                  {
+                     entry_list.push_back(
+                        Common::Pointer<Entry<_Type>>(const_cast<EntryType *>(&(*it).second)));
+                  }
+               }
+
+               return entry_list;
+            }
+
+            void for_each(std::function<void(Entry<_Type>&e)> func)
+            {
+               for (iterator it = db.begin(); it != db.end(); ++it)
+               {
+                  func(const_cast<EntryType &>(it->second));
                }
             }
 

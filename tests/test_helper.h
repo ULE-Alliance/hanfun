@@ -542,14 +542,11 @@ namespace HF
       template<class Parent>
       struct AbstractDevice: public Parent
       {
-         uint16_t                        _address;
-
          std::vector<Protocol::Packet *> packets;
 
          Link                            link;
 
-         AbstractDevice():
-            _address(Protocol::BROADCAST_ADDR)
+         AbstractDevice()
          {
             link.address(42);
          }
@@ -598,6 +595,20 @@ namespace HF
          {
             mock("AbstractDevice").actualCall("receive");
             Parent::receive(packet, payload, offset);
+         }
+
+         uint16_t address() const
+         {
+            auto &call = mock("AbstractDevice").actualCall("address");
+
+            if (call.hasReturnValue())
+            {
+               return call.returnUnsignedIntValue();
+            }
+            else
+            {
+               return Parent::address();
+            }
          }
       };
 
@@ -725,6 +736,11 @@ namespace HF
             return time_srv;
          }
 
+         void time(HF::Core::Time::Server *server)
+         {
+            time_srv = server;
+         }
+
          HF::Core::BatchProgramManagement::IServer *batch_program()
          {
             return batch_program_server;
@@ -733,6 +749,11 @@ namespace HF
          HF::Core::BatchProgramManagement::IServer *batch_program() const
          {
             return batch_program_server;
+         }
+
+         void batch_program(HF::Core::BatchProgramManagement::IServer *server)
+         {
+            batch_program_server = server;
          }
 
          HF::Core::Scheduling::Event::IServer *event_scheduling()

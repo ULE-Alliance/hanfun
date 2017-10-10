@@ -71,6 +71,30 @@ namespace HF
 
                Interval() = default;
 
+               /*!
+                * Get the initial value for the next_run entry attribute.
+                *
+                * @return  the timestamp for the first run.
+                */
+               uint32_t first() const
+               {
+                  return start;
+               }
+
+               /*!
+                * get the step between executions.
+                * @return  the step time.
+                */
+               uint32_t step() const
+               {
+                  return repeat;
+               }
+
+               bool active(uint32_t _time) const
+               {
+                  return (start <= _time && _time <= end);
+               }
+
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = sizeof(uint32_t)     // Start Date.
                                                     + sizeof(uint32_t)   // End Date.

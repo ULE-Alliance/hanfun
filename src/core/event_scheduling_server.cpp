@@ -15,6 +15,8 @@
 // =============================================================================
 
 #include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
 
 #include <algorithm>
 
@@ -248,7 +250,24 @@ Common::Result Scheduling::Event::IServer::delete_all_events(const Protocol::Pac
 void Scheduling::Event::IServer::periodic(uint32_t time)
 {
    UNUSED(time);
-   auto local_time = unit().device().unit0()->time();
 
-   std::for_each(entries().begin(), entries().end(), [] () {});
+   uint32_t local_time = unit().device().unit0()->time()->time();
+
+   Protocol::Packet packet;
+   packet.source = packet.destination = Protocol::Address(unit().device().address(), 0);
+
+   auto search_func = [&local_time, this, packet](Entry &e)
+                      {
+                         if (e.active(local_time))
+                         {
+                            BatchProgramManagement::InvokeProgram msg(e.pid);
+                            unit().device().unit0()->batch_program()->invoke_program(packet, msg);
+
+                            // set the next time.
+                            e.step();
+                         }
+                      };
+
+   entries().for_each(search_func);
+
 }
