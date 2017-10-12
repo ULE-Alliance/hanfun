@@ -535,7 +535,6 @@ TEST(EventScheduling_Messages, GetEntryResponse_unpack_fail)
 //! Test Group for Event Scheduling Client interface class.
 TEST_GROUP(EventSchedulingClient)
 {
-   // TODO Add required unit tests.
    struct EventSchedulingClient: public InterfaceHelper<Scheduling::Event::Client>
    {
       EventSchedulingClient():
@@ -567,7 +566,6 @@ TEST_GROUP(EventSchedulingClient)
 //! @test Activate Scheduler support.
 TEST(EventSchedulingClient, ActivateScheduler)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->activate_scheduler(addr, 0x01);
@@ -589,7 +587,6 @@ TEST(EventSchedulingClient, ActivateScheduler)
 //! @test Define Event support.
 TEST(EventSchedulingClient, DefineEvent)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
    Interval it(0x1, 0xFFFFFFFF, 0x1111);
 
@@ -621,7 +618,6 @@ TEST(EventSchedulingClient, DefineEvent)
 //! @test Update Event Status support.
 TEST(EventSchedulingClient, UpdateEventStatus)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->update_event_status(addr, 0x12, 0x00);
@@ -643,7 +639,6 @@ TEST(EventSchedulingClient, UpdateEventStatus)
 //! @test Get Event Entry support.
 TEST(EventSchedulingClient, GetEventEntry)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->get_event_entry(addr, 0x12);
@@ -664,7 +659,6 @@ TEST(EventSchedulingClient, GetEventEntry)
 //! @test Delete Event support.
 TEST(EventSchedulingClient, DeleteEvent)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->delete_event(addr, 0x12);
@@ -685,7 +679,6 @@ TEST(EventSchedulingClient, DeleteEvent)
 //! @test Delete All Events support.
 TEST(EventSchedulingClient, DeleteAllEvents)
 {
-   // FIXME Generated Stub.
    mock("Interface").expectOneCall("send");
 
    client->delete_all_events(addr);
@@ -705,7 +698,6 @@ TEST(EventSchedulingClient, DeleteAllEvents)
 //! Test Group for Event Scheduling Server interface class.
 TEST_GROUP(EventSchedulingServer)
 {
-   // TODO Add required unit tests.
    struct EventSchedulingServer: public Scheduling::Event::DefaultServer
    {
       using Parent = Scheduling::Event::DefaultServer;

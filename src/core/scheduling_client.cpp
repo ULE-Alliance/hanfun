@@ -152,7 +152,6 @@ void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr
 // =============================================================================
 void IClient::delete_all_events(Interface::UID itf_uid, const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    /* *INDENT-OFF* */
   HF_ASSERT(addr.unit == 0, { return; });
    /* *INDENT-ON* */
