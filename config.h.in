@@ -13,6 +13,16 @@
 // =============================================================================
 
 #define HF_GROUP_SUPPORT                           @HF_GROUP_SUPPORT@
+#define HF_TIME_SUPPORT                            @HF_TIME_SUPPORT@
+#define HF_BATCH_PROGRAM_SUPPORT                   @HF_BATCH_PROGRAM_SUPPORT@
+#define HF_EVENT_SCHEDULING_SUPPORT                @HF_EVENT_SCHEDULING_SUPPORT@
+#define HF_WEEKLY_SCHEDULING_SUPPORT               @HF_WEEKLY_SCHEDULING_SUPPORT@
+
+#if HF_EVENT_SCHEDULING_SUPPORT == 1 || HF_WEEKLY_SCHEDULING_SUPPORT == 1
+    #define HF_TIME_SUPPORT             1
+    #define HF_BATCH_PROGRAM_SUPPORT    1
+#endif
+
 
 // =============================================================================
 // Device Information

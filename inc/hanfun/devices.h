@@ -44,6 +44,10 @@
    #include "hanfun/core/event_scheduling.h"
 #endif
 
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+   #include "hanfun/core/weekly_scheduling.h"
+#endif
+
 #include "hanfun/transport.h"
 
 namespace HF
@@ -248,6 +252,9 @@ namespace HF
 #if HF_EVENT_SCHEDULING_SUPPORT
             typedef typename _Parent::EventScheduling EventScheduling;
 #endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            typedef typename _Parent::WeeklyScheduling WeeklyScheduling;
+#endif
 
             /*!
              * Constructor
@@ -374,6 +381,18 @@ namespace HF
                return _Parent::event_scheduling();
             }
 #endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            WeeklyScheduling *weekly_scheduling()
+            {
+               return _Parent::weekly_scheduling();
+            }
+
+            WeeklyScheduling *weekly_scheduling() const
+            {
+               return _Parent::weekly_scheduling();
+            }
+#endif
          };
 
          /*!
@@ -389,7 +408,10 @@ namespace HF
                        HF::Core::BatchProgramManagement::DefaultServer,
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
-                       HF::Core::Scheduling::Event::DefaultServer
+                       HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                       HF::Core::Scheduling::Weekly::DefaultServer
 #endif
 #if HF_GROUP_SUPPORT
                        , Core::GroupTable::DefaultServer
@@ -676,6 +698,9 @@ namespace HF
 #if HF_EVENT_SCHEDULING_SUPPORT
             typedef typename _Parent::EventScheduling EventScheduling;
 #endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            typedef typename _Parent::WeeklyScheduling WeeklyScheduling;
+#endif
             //! Group Management service index.
             static constexpr uint8_t BIND_MGT = _Parent::BIND_MGT;
 
@@ -778,6 +803,17 @@ namespace HF
                return _Parent::event_scheduling();
             }
 #endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            WeeklyScheduling *weekly_scheduling()
+            {
+               return _Parent::weekly_scheduling();
+            }
+
+            WeeklyScheduling *weekly_scheduling() const
+            {
+               return _Parent::weekly_scheduling();
+            }
+#endif
 
          };
 
@@ -795,6 +831,9 @@ namespace HF
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
                        Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                       Core::Scheduling::Weekly::DefaultServer,
 #endif
 #if HF_GROUP_SUPPORT
                        Core::GroupTable::DefaultServer,

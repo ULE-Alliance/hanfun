@@ -37,6 +37,7 @@
 #include "hanfun/core/time.h"
 #include "hanfun/core/batch_program_management.h"
 #include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 #include "hanfun/units.h"
 
@@ -631,13 +632,15 @@ namespace HF
          HF::Core::Time::Server *time_srv;
          HF::Core::BatchProgramManagement::IServer *batch_program_server;
          HF::Core::Scheduling::Event::IServer *event_scheduling_server;
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling_server;
 
          public:
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
             attr_reporting(nullptr), group_table_server(nullptr), time_srv(nullptr),
-            batch_program_server(nullptr), event_scheduling_server(nullptr)
+            batch_program_server(nullptr), event_scheduling_server(nullptr),
+            weekly_scheduling_server(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -649,6 +652,7 @@ namespace HF
             delete time_srv;
             delete batch_program_server;
             delete event_scheduling_server;
+            delete weekly_scheduling_server;
          }
 
          void device_info(HF::Core::DeviceInformation::Server *_dev_info)
@@ -766,6 +770,16 @@ namespace HF
             return event_scheduling_server;
          }
 
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling()
+         {
+            return weekly_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const
+         {
+            return weekly_scheduling_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -797,13 +811,15 @@ namespace HF
          HF::Core::Time::Server *time_srv;
          HF::Core::BatchProgramManagement::IServer *batch_program_server;
          HF::Core::Scheduling::Event::IServer *event_scheduling_server;
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling_server;
 
          public:
 
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
             attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr),
-            time_srv(nullptr), batch_program_server(nullptr), event_scheduling_server(nullptr)
+            time_srv(nullptr), batch_program_server(nullptr), event_scheduling_server(nullptr),
+            weekly_scheduling_server(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -817,6 +833,7 @@ namespace HF
             delete time_srv;
             delete batch_program_server;
             delete event_scheduling_server;
+            delete weekly_scheduling_server;
          }
 
          // =============================================================================
@@ -973,6 +990,16 @@ namespace HF
             return event_scheduling_server;
          }
 
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() override
+         {
+            return weekly_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const override
+         {
+            return weekly_scheduling_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset) override
@@ -1010,6 +1037,10 @@ namespace HF
                case HF::Interface::EVENT_SCHEDULING:
                {
                   return event_scheduling()->handle(packet, payload, offset);
+               }
+               case HF::Interface::WEEKLY_SCHEDULING:
+               {
+                  return weekly_scheduling()->handle(packet, payload, offset);
                }
                default:
                   return Common::Result::FAIL_UNKNOWN;

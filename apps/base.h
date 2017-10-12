@@ -287,6 +287,9 @@ typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
 #if HF_EVENT_SCHEDULING_SUPPORT
                                          HF::Core::Scheduling::Event::DefaultServer,
 #endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                         HF::Core::Scheduling::Weekly::DefaultServer,
+#endif
 #if HF_GROUP_SUPPORT
                                          HF::Core::GroupTable::DefaultServer,
                                          HF::Core::GroupManagement::DefaultServer,

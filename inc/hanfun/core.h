@@ -42,7 +42,6 @@ namespace HF
     *
     * @todo Add support for Group Management service.
     * @todo Add support for Identify interface.
-    * @todo Add support for Weekly Scheduling service.
     * @todo Add support for Tamper %Alert interface.
     * @todo Add support for Power service.
     * @todo Add support for Keep Alive service.
@@ -284,6 +283,9 @@ namespace HF
 #if HF_EVENT_SCHEDULING_SUPPORT
          EVENT_SCH,
 #endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+         WEEKLY_SCH,
+#endif
 #if HF_GROUP_SUPPORT
          GROUP_TABLE,      //!< GroupTable service index.
          GROUP_MGT,
@@ -329,6 +331,13 @@ namespace HF
 
       static_assert(std::is_base_of<HF::Core::Scheduling::Event::IServer, EventScheduling>::value,
                     "EventSch must be of type HF::Core::Scheduling::Event::IServer");
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+      typedef typename std::tuple_element<WEEKLY_SCH, interfaces_t>::type WeeklyScheduling;
+
+      static_assert(std::is_base_of<HF::Core::Scheduling::Weekly::IServer, WeeklyScheduling>::value,
+                    "WeeklyScheduling must be of type HF::Core::Scheduling::Weekly::IServer");
 #endif
 
       /*!
@@ -487,6 +496,28 @@ namespace HF
       EventScheduling *event_scheduling() const
       {
          return get<EventScheduling, EVENT_SCH>();
+      }
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+      /*!
+       * Get the pointer to the node's Weekly Scheduling service.
+       *
+       * @return pointer to the node's Weekly Scheduling service.
+       */
+      WeeklyScheduling *weekly_scheduling()
+      {
+         return get<WeeklyScheduling, WEEKLY_SCH>();
+      }
+
+      /*!
+       * Get the pointer to the node's Weekly Scheduling service.
+       *
+       * @return pointer to the node's Weekly Scheduling service.
+       */
+      WeeklyScheduling *weekly_scheduling() const
+      {
+         return get<WeeklyScheduling, WEEKLY_SCH>();
       }
 #endif
 

@@ -73,7 +73,10 @@ namespace
                                     HF::Core::BatchProgramManagement::DefaultServer,
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
-                                    HF::Core::Scheduling::Event::DefaultServer
+                                    HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Weekly::DefaultServer
 #endif
 #if HF_GROUP_SUPPORT
                                     , HF::Core::GroupTable::DefaultServer

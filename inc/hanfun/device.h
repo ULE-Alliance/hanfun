@@ -61,7 +61,14 @@ namespace HF
             struct IServer;
 
          } // namespace Event
-      }    // namespace Scheduling
+
+         namespace Weekly
+         {
+            struct IServer;
+
+         } // namespace Weekly
+
+      }  // namespace Scheduling
 
    }  // namespace Core
 
@@ -197,6 +204,22 @@ namespace HF
           * @return pointer to the node's Event Scheduling service.
           */
          virtual HF::Core::Scheduling::Event::IServer *event_scheduling() const = 0;
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+         /*!
+          * Get the pointer to the node's Weekly Scheduling service.
+          *
+          * @return pointer to the node's Weekly Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() = 0;
+
+         /*!
+          * Get the pointer to the node's Weekly Scheduling service.
+          *
+          * @return pointer to the node's Weekly Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const = 0;
 #endif
 
       };

@@ -7,7 +7,11 @@
 // Core Services and Interfaces
 // =============================================================================
 
-#define HF_GROUP_SUPPORT                           1
+#define HF_GROUP_SUPPORT                            1
+#define HF_TIME_SUPPORT                             1
+#define HF_BATCH_PROGRAM_SUPPORT                    1
+#define HF_EVENT_SCHEDULING_SUPPORT                 1
+#define HF_WEEKLY_SCHEDULING_SUPPORT                1
 
 // =============================================================================
 // Device Information Configuration

@@ -567,6 +567,7 @@ TEST_GROUP(Multicasting)
                                                     Core::Time::Server,
                                                     Core::BatchProgramManagement::DefaultServer,
                                                     Core::Scheduling::Event::DefaultServer,
+                                                    Core::Scheduling::Weekly::DefaultServer,
                                                     Core::GroupTable::DefaultServer,
                                                     GroupManagementTestClient>;
 

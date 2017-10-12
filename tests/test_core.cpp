@@ -76,6 +76,7 @@ namespace
                               HF::Core::Time::Server,
                               HF::Core::BatchProgramManagement::DefaultServer,
                               HF::Core::Scheduling::Event::DefaultServer,
+                              HF::Core::Scheduling::Weekly::DefaultServer,
                               HF::Core::GroupTable::DefaultServer,
                               TestInterface_1, TestInterface_2, TestInterface_3>;
 
@@ -143,6 +144,16 @@ namespace
       {
          return UnitImpl::event_scheduling();
       }
+
+      WeeklyScheduling *weekly_scheduling()
+      {
+         return UnitImpl::weekly_scheduling();
+      }
+
+      WeeklyScheduling *weekly_scheduling() const
+      {
+         return UnitImpl::weekly_scheduling();
+      }
    };
 
    typedef HF::Testing::AbstractDevice<HF::Devices::Node::Abstract<TestUnit0>> TestDevice;
@@ -187,6 +198,10 @@ TEST(Unit0, OptionalInterfaces)
 #endif
 
 #if HF_EVENT_SCHEDULING_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
    initial_itf_size++;
 #endif
 
