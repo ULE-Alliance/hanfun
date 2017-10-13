@@ -39,10 +39,13 @@ using namespace HF::Interfaces::SimpleKeypad;
  *
  */
 // =============================================================================
-void Client::keypressed(const Protocol::Address &addr)
+void Client::keypressed(const Protocol::Address &addr, uint32_t key_id)
 {
-   // FIXME Generated Stub.
-   Protocol::Message message;
+   KeyPressed key(key_id);
+
+   Protocol::Message message(key.size());
+
+   key.pack(message.payload);
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::SIMPLE_KEYPAD;

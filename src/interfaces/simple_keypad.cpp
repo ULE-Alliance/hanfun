@@ -56,3 +56,35 @@ HF::Attributes::IAttribute *SimpleKeypad::create_attribute(uint8_t uid)
    UNUSED(uid);
    return nullptr;
 }
+
+// =============================================================================
+// KeyPressed::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t KeyPressed::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   array.write(offset, key_id);
+
+   return min_size;
+}
+
+// =============================================================================
+// KeyPressed::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t KeyPressed::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   array.read(offset, key_id);
+
+   return min_size;
+}

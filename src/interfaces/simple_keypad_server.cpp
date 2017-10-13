@@ -47,7 +47,9 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
    {
       case KEYPRESSED_CMD:
       {
-         keypressed(packet.source);
+         KeyPressed msg;
+         msg.unpack(payload, offset);
+         keypressed(packet.source, msg);
          break;
       }
 
@@ -69,8 +71,11 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
  *
  */
 // =============================================================================
-void Server::keypressed(const Protocol::Address &addr)
+void Server::keypressed(const Protocol::Address &addr, KeyPressed &msg)
 {
-   // FIXME Generated Stub.
    UNUSED(addr);
+
+   KeyReceived(msg.key_id);
+
+   return;
 }
