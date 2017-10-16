@@ -66,6 +66,8 @@ namespace HF
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
 
+      HELPER_CLASS(SimpleKeypad);
+
       HELPER_CLASS(SimpleDetector);
       HELPER_CLASS(DoorOpenCloseDetector);
       HELPER_CLASS(WindowOpenCloseDetector);
@@ -222,6 +224,10 @@ TEST(Profiles, UIDs)
 
    profile = new Testing::DimmableColourBulb();
    CHECK_EQUAL(Profiles::DIMMABLE_COLOUR_BULB, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleKeypad();
+   CHECK_EQUAL(Profiles::SIMPLE_KEYPAD, profile->uid());
    delete profile;
 
    // =============================================================================
@@ -631,6 +637,14 @@ TEST(Profiles, InterfaceMapping)
    itf++;
 
    LONGS_EQUAL(HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_KEYPAD
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_KEYPAD, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_KEYPAD, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // =============================================================================

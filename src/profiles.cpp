@@ -165,6 +165,9 @@ static const HF::Common::Interface profiles_interfaces[] =
    {HF::Interface::COLOUR_CONTROL,        HF::Interface::SERVER_ROLE},
    {HF::Interface::LEVEL_CONTROL,         HF::Interface::SERVER_ROLE},
 
+   // 43 - HF::Profiles::SIMPLE_KEYPAD
+   {HF::Interface::SIMPLE_KEYPAD,         HF::Interface::SERVER_ROLE},
+
 };
 
 /*!
@@ -210,6 +213,7 @@ static const Profile profiles[] =
    {HF::Profiles::SIMPLE_LIGHT_SENSOR,                  1},      // 40
    {HF::Profiles::COLOUR_BULB,                          2},      // 41
    {HF::Profiles::DIMMABLE_COLOUR_BULB,                 3},      // 42
+   {HF::Profiles::SIMPLE_KEYPAD,                        1},      // 43
    {HF::Profiles::USER_INTERFACE,                       0},      //
    {HF::Profiles::GENERIC_APPLICATION,                  0},      //
 };
