@@ -48,9 +48,7 @@ void IClient::activate_scheduler(Interface::UID itf_uid, const Protocol::Address
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   HF_ASSERT(addr.unit == 0, { return; });
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = itf_uid;
@@ -75,9 +73,7 @@ void IClient::update_event_status(Interface::UID itf_uid, const Protocol::Addres
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   HF_ASSERT(addr.unit == 0, { return; });
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = itf_uid;
@@ -103,9 +99,7 @@ void IClient::get_event_entry(Interface::UID itf_uid, const Protocol::Address &a
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   HF_ASSERT(addr.unit == 0, { return; });
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = itf_uid;
@@ -130,10 +124,7 @@ void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
-
+   HF_ASSERT(addr.unit == 0, { return; });
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = itf_uid;
@@ -152,9 +143,7 @@ void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr
 // =============================================================================
 void IClient::delete_all_events(Interface::UID itf_uid, const Protocol::Address &addr)
 {
-   /* *INDENT-OFF* */
-  HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
+   HF_ASSERT(addr.unit == 0, { return; });
 
    Protocol::Message message;
 

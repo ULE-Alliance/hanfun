@@ -2,7 +2,7 @@
 /*!
  * @file       inc/hanfun/core/scheduling.h
  *
- * This file contains the implementation of ...
+ * This file contains the common definitions for the scheduling services.
  *
  * @version    x.x.x
  *
@@ -13,8 +13,9 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-#ifndef HF_CORE_SCHEDULING_H_
-#define HF_CORE_SCHEDULING_H_
+
+#ifndef HF_CORE_SCHEDULING_H
+#define HF_CORE_SCHEDULING_H
 
 #include "hanfun/protocol.h"
 #include "hanfun/core.h"
@@ -23,7 +24,6 @@
 #include <map>
 #include <forward_list>
 #include <algorithm>
-
 
 /*!
  * @ingroup Scheduling
@@ -45,7 +45,6 @@
                                                                                        \
       notify(old_attr, new_attr);                                                      \
    }
-
 
 namespace HF
 {
@@ -80,10 +79,10 @@ namespace HF
       namespace Scheduling
       {
          /*!
-          * @addtogroup event_scheduling_itf  Event Scheduling service
+          * @addtogroup scheduling_itf  Event Scheduling service
           * @ingroup interfaces
           *
-          * This module contains the classes that define and implement the Event Scheduling service API.
+          * This module contains the common classes for the scheduling services API.
           * @{
           */
          //! Command IDs.
@@ -112,9 +111,9 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Helper class to handle the Maximum Number Of Entries attribute for the Event Scheduling service.
+          * Helper class to handle the Maximum Number Of Entries attribute for the
+          * scheduling services.
           */
-         // template <Interface::UID _Itf_Type>
          struct MaximumNumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
             static constexpr uint8_t ID       = MAXIMUM_NUMBER_OF_ENTRIES_ATTR; //!< Attribute UID.
@@ -127,7 +126,7 @@ namespace HF
          };
 
          /*!
-          * Helper class to handle the Number Of Entries attribute for the Event Scheduling service.
+          * Helper class to handle the Number Of Entries attribute for the scheduling services.
           */
          struct NumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
@@ -140,7 +139,7 @@ namespace HF
          };
 
          /*!
-          * Helper class to handle the Status attribute for the Event Scheduling service.
+          * Helper class to handle the Status attribute for the scheduling services.
           */
          struct Status: public HF::Attributes::Attribute<uint8_t>
          {
@@ -153,9 +152,9 @@ namespace HF
          };
 
          /*!
-          * @copybrief HF::Core::create_attribute (HF::Interfaces::EventScheduling::Server *,uint8_t)
+          * @copybrief HF::Core::create_attribute (HF::Core::Scheduling::Server *,uint8_t)
           *
-          * @see HF::Core::create_attribute (HF::Core::EventScheduling::Server *,uint8_t)
+          * @see HF::Core::create_attribute (HF::Core::Scheduling::Server *,uint8_t)
           *
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
@@ -454,7 +453,6 @@ namespace HF
          //! Response Message payload for a @c HF::Scheduling::DELETE_ALL_CMD request.
          typedef HF::Protocol::Response DeleteAllResponse;
 
-
          /*!
           * Scheduling - Persistent Storage API.
           */
@@ -536,7 +534,18 @@ namespace HF
                return Common::Result::OK;
             }
 
-            Common::Result save(uint8_t _id, uint8_t _status, _Type &_time, uint8_t _pid)
+            /*!
+             * Store the given @c entry to persistent storage.
+             *
+             * @param [in] id       entry's ID.
+             * @param [in] status   entry's status.
+             * @param [in] time     entry's time.
+             * @param [in] pid      entry's PID.
+             *
+             * @retval  Common::Result::OK if the entry was saved,
+             * @retval  Common::Result::FAIL_UNKNOWN otherwise.
+             */
+            Common::Result save(uint8_t id, uint8_t status, _Type &time, uint8_t pid)
             {
                db.insert(db.end(),
                          std::pair<uint8_t, EntryType>(_id, EntryType(_id, _status, _time, _pid)));
@@ -577,7 +586,6 @@ namespace HF
              *
              * @warning the reference passed into this method SHOULD NOT be considered
              *          valid if it was obtained by calling the find method.
-             *
              */
             Common::Result destroy(const EntryType &entry)
             {
@@ -759,9 +767,9 @@ namespace HF
             //! @}
             // ======================================================================
 
-            // =============================================================================
+            // ======================================================================
             // Get/Set API.
-            // =============================================================================
+            // ======================================================================
 
             /*!
              * Get the Maximum Number Of Entries for the Scheduling server.
@@ -805,9 +813,9 @@ namespace HF
              */
             void status(uint8_t __value);
 
-            // =============================================================================
+            // ======================================================================
             // Attribute API.
-            // =============================================================================
+            // ======================================================================
 
             HF::Attributes::IAttribute *attribute(uint8_t uid);
 

@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * @file       /HANFUN/src/core/scheduling.cpp
+ * @file       src/core/scheduling.cpp
  *
  * This file contains the implementation of the common functionality for the
  * Scheduling service.
@@ -14,8 +14,6 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-
-
 
 #include "hanfun/core/scheduling.h"
 
@@ -47,6 +45,13 @@ HF::Attributes::IAttribute *Core::create_attribute(IServer *server, Interface::U
    }
 }
 
+// =============================================================================
+// Scheduling::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 HF::Attributes::IAttribute *Scheduling::create_attribute(Interface::UID itf_uid, uint8_t uid)
 {
    using namespace HF::Core::Scheduling;
@@ -76,6 +81,17 @@ HF::Attributes::IAttribute *Scheduling::create_attribute(Interface::UID itf_uid,
    }
 }
 
+// =============================================================================
+// ActivateScheduler Message
+// =============================================================================
+
+// =============================================================================
+// ActivateScheduler::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t ActivateScheduler::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -85,6 +101,13 @@ uint16_t ActivateScheduler::pack(Common::ByteArray &array, uint16_t offset) cons
    return min_size;
 }
 
+// =============================================================================
+// ActivateScheduler::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t ActivateScheduler::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -94,14 +117,34 @@ uint16_t ActivateScheduler::unpack(const Common::ByteArray &array, uint16_t offs
    return min_size;
 }
 
+// =============================================================================
+// UpdateStatus Message
+// =============================================================================
+
+// =============================================================================
+// UpdateStatus::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t UpdateStatus::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
+
    offset += array.write(offset, event_id);
    offset += array.write(offset, static_cast<uint8_t>((status << 7) & 0x80));
+
    return min_size;
 }
 
+// =============================================================================
+// UpdateStatus::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t UpdateStatus::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -113,6 +156,17 @@ uint16_t UpdateStatus::unpack(const Common::ByteArray &array, uint16_t offset)
    return min_size;
 }
 
+// =============================================================================
+// DefineEventResponse Message
+// =============================================================================
+
+// =============================================================================
+// DefineEventResponse::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t DefineEventResponse::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -132,6 +186,13 @@ uint16_t DefineEventResponse::pack(Common::ByteArray &array, uint16_t offset) co
    return offset - start;
 }
 
+// =============================================================================
+// DefineEventResponse::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t DefineEventResponse::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);
@@ -153,6 +214,17 @@ uint16_t DefineEventResponse::unpack(const Common::ByteArray &array, uint16_t of
    return offset - start;
 }
 
+// =============================================================================
+// GetEntry Message
+// =============================================================================
+
+// =============================================================================
+// GetEntry::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t GetEntry::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -162,6 +234,13 @@ uint16_t GetEntry::pack(Common::ByteArray &array, uint16_t offset) const
    return min_size;
 }
 
+// =============================================================================
+// GetEntry::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 uint16_t GetEntry::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, min_size);

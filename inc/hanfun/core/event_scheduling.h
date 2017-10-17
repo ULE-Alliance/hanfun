@@ -169,12 +169,6 @@ namespace HF
             using IClientBase = Interfaces::Interface<HF::Interface::EVENT_SCHEDULING,
                                                       Scheduling::IClient>;
 
-            // using IClientBase = Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
-            // Scheduling::IClient>;
-
-            // typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
-            // Scheduling::IServer> Base;
-            //
             /*!
              * Event Scheduling %Service : %Client side implementation.
              *

@@ -473,8 +473,7 @@ namespace HF
             template<typename _Entries>
             struct Server: public IServer
             {
-               static_assert(std::is_base_of<HF::Core::Scheduling::IEntries<Day>,
-                                             _Entries>::value,
+               static_assert(std::is_base_of<HF::Core::Scheduling::IEntries<Day>, _Entries>::value,
                              "_Entries must be of type HF::Core::Scheduling::IEntries<Day>");
 
                protected:
