@@ -493,16 +493,11 @@ namespace HF
             virtual uint8_t next_id() const = 0;
 
             /*!
-             * Find a list of Entries accordingly to the suplied used function.
+             * Call the given function with each entry in the DB as argument.
              *
-             * @param [in] func The search function that should return true for each entry where
-             *                   the search conditions are true.
-             * @return  A std::vector of Common::Pointer.
+             * @param [in] func function to apply to all entries in the store.
              */
-            virtual std::vector<Common::Pointer<Entry<_Type>>> find_if(
-               std::function<bool(Entry<_Type> e)> func) = 0;
-
-            virtual void for_each(std::function<void(Entry<_Type>&e)> func) = 0;
+            virtual void for_each(std::function<void(EntryType &e)> func) = 0;
          };
 
          /*!
@@ -610,25 +605,8 @@ namespace HF
             }
 
             /*!
-             * @copydoc IEntries::find(std::function<bool>)
+             * @copydoc IEntries::for_each
              */
-            std::vector<Common::Pointer<Entry<_Type>>> find_if(
-               std::function<bool(Entry<_Type> e)> func)
-            {
-               std::vector<Common::Pointer<Entry<_Type>>> entry_list;
-
-               for (iterator it = db.begin(); it != db.end(); ++it)
-               {
-                  if (func(static_cast<EntryType>(it->second)))
-                  {
-                     entry_list.push_back(
-                        Common::Pointer<Entry<_Type>>(const_cast<EntryType *>(&(*it).second)));
-                  }
-               }
-
-               return entry_list;
-            }
-
             void for_each(std::function<void(Entry<_Type>&e)> func)
             {
                for (iterator it = db.begin(); it != db.end(); ++it)
