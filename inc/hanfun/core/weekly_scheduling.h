@@ -242,46 +242,19 @@ namespace HF
                //! @copydoc HF::Core::Scheduling::activate_scheduler(Protocol::Address).
                virtual void activate_scheduler(const Protocol::Address &addr, uint8_t _status)
                {
-                  Scheduling::IClient::activate_scheduler(ITF, addr, _status);
-               }
-
-               //! @copydoc HF::Core::Scheduling::activate_scheduler().
-               void activate_scheduler(uint8_t _status)
-               {
-                  Scheduling::IClient::activate_scheduler(ITF, _status);
+                  Scheduling::IClient::activate_scheduler(addr, ITF, _status);
                }
 
                //! @copydoc HF::Core::Scheduling::define_event(Protocol::Address).
-               virtual void define_event(const Protocol::Address &addr,
-                                         uint8_t id,
-                                         uint8_t status,
-                                         Day &time,
-                                         uint8_t pid);
-
-
-               //! @copydoc HF::Core::Scheduling::define_event().
-               void define_event(uint8_t id,
-                                 uint8_t status,
-                                 Day &time,
-                                 uint8_t pid)
-               {
-                  Protocol::Address addr(0, 0);
-                  define_event(addr, id, status, time, pid);
-               }
+               virtual void define_event(const Protocol::Address &addr, uint8_t id, uint8_t status,
+                                         Day &time, uint8_t pid);
 
 #ifdef HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD
-
                //! @copydoc HF::Core::Scheduling::update_event_status(Protocol::Address).
                virtual void update_event_status(const Protocol::Address &addr,
                                                 uint8_t id, uint8_t status)
                {
-                  Scheduling::IClient::update_event_status(ITF, addr, id, status);
-               }
-
-               //! @copydoc HF::Core::Scheduling::update_event_status().
-               void update_event_status(uint8_t id, uint8_t status)
-               {
-                  Scheduling::IClient::update_event_status(ITF, id, status);
+                  Scheduling::IClient::update_event_status(addr, ITF, id, status);
                }
 #endif
 
@@ -289,39 +262,21 @@ namespace HF
                //! @copydoc HF::Core::Scheduling::get_event_entry(Protocol::Address).
                virtual void get_event_entry(const Protocol::Address &addr, uint8_t id)
                {
-                  Scheduling::IClient::get_event_entry(ITF, addr, id);
-               }
-
-               //! @copydoc HF::Core::Scheduling::get_event_entry().
-               void get_event_entry(uint8_t id)
-               {
-                  Scheduling::IClient::get_event_entry(ITF, id);
+                  Scheduling::IClient::get_event_entry(addr, ITF, id);
                }
 #endif
 
                //! @copydoc HF::Core::Scheduling::delete_event(Protocol::Address).
                virtual void delete_event(const Protocol::Address &addr, uint8_t id)
                {
-                  Scheduling::IClient::delete_event(ITF, addr, id);
-               }
-
-               //! @copydoc HF::Core::Scheduling::delete_event().
-               void delete_event(uint8_t id)
-               {
-                  Scheduling::IClient::delete_event(ITF, id);
+                  Scheduling::IClient::delete_event(addr, ITF, id);
                }
 
 #ifdef HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD
                //! @copydoc HF::Core::Scheduling::delete_all_events(Protocol::Address).
                virtual void delete_all_events(const Protocol::Address &addr)
                {
-                  Scheduling::IClient::delete_all_events(ITF, addr);
-               }
-
-               //! @copydoc HF::Core::Scheduling::delete_all_events().
-               void delete_all_events()
-               {
-                  Scheduling::IClient::delete_all_events(ITF);
+                  Scheduling::IClient::delete_all_events(addr, ITF);
                }
 #endif
 

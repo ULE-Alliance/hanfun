@@ -40,8 +40,8 @@ using namespace HF::Core::Scheduling;
  *
  */
 // =============================================================================
-void IClient::activate_scheduler(Interface::UID itf_uid, const Protocol::Address &addr,
-                                 uint8_t _status)
+void IClient::activate_scheduler(const Protocol::Address &addr, const Interface::UID itf_uid,
+                                 bool enabled)
 {
    ActivateScheduler msg(_status);
 
@@ -65,8 +65,8 @@ void IClient::activate_scheduler(Interface::UID itf_uid, const Protocol::Address
  *
  */
 // =============================================================================
-void IClient::update_event_status(Interface::UID itf_uid, const Protocol::Address &addr,
-                                  uint8_t id, uint8_t status)
+void IClient::update_event_status(const Protocol::Address &addr, const Interface::UID itf_uid,
+                                  uint8_t id, bool enabled)
 {
    UpdateStatus msg(id, status);
 
@@ -91,7 +91,7 @@ void IClient::update_event_status(Interface::UID itf_uid, const Protocol::Addres
  *
  */
 // =============================================================================
-void IClient::get_event_entry(Interface::UID itf_uid, const Protocol::Address &addr,
+void IClient::get_event_entry(const Protocol::Address &addr, const Interface::UID itf_uid,
                               uint8_t id)
 {
    GetEntry msg(id);
@@ -116,7 +116,7 @@ void IClient::get_event_entry(Interface::UID itf_uid, const Protocol::Address &a
  *
  */
 // =============================================================================
-void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr,
+void IClient::delete_event(const Protocol::Address &addr, const Interface::UID itf_uid,
                            uint8_t id)
 {
    DeleteEvent msg(id);
@@ -141,7 +141,7 @@ void IClient::delete_event(Interface::UID itf_uid, const Protocol::Address &addr
  *
  */
 // =============================================================================
-void IClient::delete_all_events(Interface::UID itf_uid, const Protocol::Address &addr)
+void IClient::delete_all_events(const Protocol::Address &addr, const Interface::UID itf_uid)
 {
    HF_ASSERT(addr.unit == 0, { return; });
 

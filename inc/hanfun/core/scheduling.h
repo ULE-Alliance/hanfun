@@ -459,6 +459,9 @@ namespace HF
          template<typename _Type>
          struct IEntries: public Common::IEntries<Entry<_Type>>
          {
+            typedef Entry<_Type> EntryType;
+            typedef Common::Pointer<EntryType> EntryPointer;
+
             /*!
              * Store the given @c entry to persistent storage.
              *
@@ -467,7 +470,7 @@ namespace HF
              * @retval  Common::Result::OK if the entry was saved,
              * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
-            virtual Common::Result save(const Entry<_Type> &entry) = 0;
+            virtual Common::Result save(const EntryType &entry) = 0;
 
             /*!
              * Erase all the DB entries.
@@ -482,7 +485,7 @@ namespace HF
              * @returns  pointer to the entry with the given @c id,
              *           @c nullptr otherwise.
              */
-            virtual Common::Pointer<Entry<_Type>> find(uint8_t id) const = 0;
+            virtual EntryPointer find(uint8_t id) const = 0;
 
             /*!
              * Return next available id for event.
@@ -507,6 +510,7 @@ namespace HF
          struct Entries: public IEntries<_Type>
          {
             typedef Entry<_Type> EntryType;
+            typedef Common::Pointer<EntryType> EntryPointer;
 
             typedef typename std::map<uint8_t, EntryType> Container;
             typedef typename std::pair<uint8_t, EntryType> container_entry;
@@ -514,14 +518,15 @@ namespace HF
             typedef typename Container::const_iterator const_iterator;
             typedef typename Container::value_type value_type;
 
-
             virtual ~Entries() = default;
 
+            //! @copydoc HF::Common::IEntries::size
             uint16_t size() const
             {
                return db.size();
             }
 
+            //! @copydoc HF::Common::IEntries::save
             Common::Result save(const EntryType &entry)
             {
                db.insert(db.end(), std::pair<uint8_t, EntryType>(entry.id, entry));
@@ -542,10 +547,8 @@ namespace HF
              */
             Common::Result save(uint8_t id, uint8_t status, _Type &time, uint8_t pid)
             {
-               db.insert(db.end(),
-                         std::pair<uint8_t, EntryType>(_id, EntryType(_id, _status, _time, _pid)));
-
-               return Common::Result::OK;
+               EntryType entry(id, status, time, pid);
+               return save(entry);
             }
 
             /*!
@@ -590,17 +593,17 @@ namespace HF
             /*!
              * @copydoc IEntries::find(uint16_t)
              */
-            Common::Pointer<Entry<_Type>> find(uint8_t id) const
+            EntryPointer find(uint8_t id) const
             {
                auto it = db.find(id);
 
                if (it == db.end())
                {
-                  return Common::Pointer<Entry<_Type>>();
+                  return EntryPointer();
                }
                else
                {
-                  return Common::Pointer<Entry<_Type>>(const_cast<EntryType *>(&(*it).second));
+                  return EntryPointer(const_cast<EntryType *>(&(*it).second));
                }
             }
 
@@ -826,42 +829,29 @@ namespace HF
             //! @{
 
             /*!
-             * Send a HAN-FUN message containing a @c Scheduling::ACTIVATE_SCHEDULER_CMD, to the given
-             * network address.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
-            virtual void activate_scheduler(Interface::UID itf_uid, const Protocol::Address &addr,
-                                            uint8_t _status);
-
-            /*!
              * Send a HAN-FUN message containing a @c Scheduling::ACTIVATE_SCHEDULER_CMD,
-             * to the D:0/U:0 network address.
+             * to the given network address.
+             *
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] itf_uid  interface UID to use in the message.
+             * @param [in] enabled  enable/disable scheduler.
              */
-            void activate_scheduler(Interface::UID itf_uid, uint8_t _status)
-            {
-               Protocol::Address addr(0, 0);
-               activate_scheduler(itf_uid, addr, _status);
-            }
+            virtual void activate_scheduler(const Protocol::Address &addr,
+                                            const Interface::UID itf_uid, bool enabled = true);
+
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
             /*!
              * Send a HAN-FUN message containing a @c Scheduling::UPDATE_EVENT_STATUS_CMD, to the given
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] itf_uid    interface UID to use in the message.
+             * @param [in] id         entry ID to delete.
+             * @param [in] enabled    enable/disable entry.
              */
-            virtual void update_event_status(Interface::UID itf_uid, const Protocol::Address &addr,
-                                             uint8_t id, uint8_t status);
-
-            /*!
-             * Send a HAN-FUN message containing a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
-             * to the D:0/U:0 network address.
-             */
-            void update_event_status(Interface::UID itf_uid, uint8_t id, uint8_t status)
-            {
-               Protocol::Address addr(0, 0);
-               update_event_status(itf_uid, addr, id, status);
-            }
+            virtual void update_event_status(const Protocol::Address &addr,
+                                             const Interface::UID itf_uid,
+                                             uint8_t id, bool enabled);
 #endif
 
 #ifdef HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD
@@ -870,19 +860,11 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] itf_uid    interface UID to use in the message.
+             * @param [in] id         entry ID to delete.
              */
-            virtual void get_event_entry(Interface::UID itf_uid, const Protocol::Address &addr,
-                                         uint8_t id);
-
-            /*!
-             * Send a HAN-FUN message containing a @c Scheduling::GET_EVENT_ENTRY_CMD,
-             * to the D:0/U:0 network address.
-             */
-            void get_event_entry(Interface::UID itf_uid, uint8_t id)
-            {
-               Protocol::Address addr(0, 0);
-               get_event_entry(itf_uid, addr, id);
-            }
+            virtual void get_event_entry(const Protocol::Address &addr,
+                                         const Interface::UID itf_uid, uint8_t id);
 #endif
 
             /*!
@@ -890,20 +872,11 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] itf_uid    interface UID to use in the message.
+             * @param [in] id         entry ID to delete.
              */
-            virtual void delete_event(Interface::UID itf_uid, const Protocol::Address &addr,
-                                      uint8_t id);
-
-            /*!
-             * Send a HAN-FUN message containing a @c Scheduling::DELETE_EVENT_CMD,
-             * to the D:0/U:0 network address.
-             */
-            void delete_event(Interface::UID itf_uid,
-                              uint8_t id)
-            {
-               Protocol::Address addr(0, 0);
-               delete_event(itf_uid, addr, id);
-            }
+            virtual void delete_event(const Protocol::Address &addr,
+                                      const Interface::UID itf_uid, uint8_t id);
 
 #ifdef HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD
             /*!
@@ -911,18 +884,10 @@ namespace HF
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
+             * @param [in] itf_uid    interface UID to use in the message.
              */
-            virtual void delete_all_events(Interface::UID itf_uid, const Protocol::Address &addr);
-
-            /*!
-             * Send a HAN-FUN message containing a @c EventScheduling::DELETE_ALL_EVENTS_CMD,
-             * to the D:0/U:0 network address.
-             */
-            void delete_all_events(Interface::UID itf_uid)
-            {
-               Protocol::Address addr(0, 0);
-               delete_all_events(itf_uid, addr);
-            }
+            virtual void delete_all_events(const Protocol::Address &addr,
+                                           const Interface::UID itf_uid);
 #endif
 
             virtual void send(const Protocol::Address &addr, Protocol::Message &message) = 0;
