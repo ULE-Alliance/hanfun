@@ -296,9 +296,6 @@ namespace HF
                HF::Protocol::Response(_code), event_id(_event_id)
             {}
 
-            //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint8_t);        // Response Code
-
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
@@ -385,10 +382,6 @@ namespace HF
             GetEntryResponse(Common::Result _code = Common::Result::FAIL_UNKNOWN):
                HF::Protocol::Response(_code)
             {}
-
-
-            //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint8_t);     // Respose code
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
@@ -771,13 +764,6 @@ namespace HF
              * @return  the current Number Of Entries.
              */
             virtual uint8_t number_of_entries() const = 0;
-
-            /*!
-             * Set the Number Of Entries for the Scheduling server.
-             *
-             * @param [in] __value the  Number Of Entries value to set the server to.
-             */
-            void number_of_entries(uint8_t __value);
 
             /*!
              * Get the Status for the Scheduling server.
