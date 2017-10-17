@@ -57,7 +57,7 @@ namespace HF
       }
 
       /*!
-       * @ingroup scheduling_itf
+       * @ingroup scheduling_common
        *
        * Create an attribute object that can hold the attribute with the given @c uid.
        *
@@ -79,10 +79,11 @@ namespace HF
       namespace Scheduling
       {
          /*!
-          * @addtogroup scheduling_itf  Event Scheduling service
-          * @ingroup interfaces
+          * @addtogroup scheduling_common Scheduling Services (Common)
+          * @ingroup core
           *
           * This module contains the common classes for the scheduling services API.
+          *
           * @{
           */
          //! Command IDs.
@@ -889,7 +890,7 @@ namespace HF
 }   // namespace HF
 
 /*!
- * @addtogroup scheduling_itf
+ * @addtogroup scheduling_common
  * @{
  */
 

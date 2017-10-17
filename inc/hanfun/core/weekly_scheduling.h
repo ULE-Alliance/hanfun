@@ -37,7 +37,7 @@ namespace HF
       }
 
       /*!
-       * @ingroup weekly_scheduling_itf
+       * @ingroup weekly_scheduling
        *
        * Create an attribute object that can hold the attribute with the given @c uid.
        *
@@ -59,6 +59,16 @@ namespace HF
           */
          namespace Weekly
          {
+            /*!
+             * @addtogroup weekly_scheduling  Weekly Scheduling Service
+             * @ingroup core
+             *
+             * This module contains the classes that implement the Weekly Scheduling service.
+             *
+             * @{
+             */
+
+            //! Day of the Week enumeration.
             typedef enum _Day_of_the_week
             {
                MONDAY = 0x00,
@@ -69,6 +79,7 @@ namespace HF
                SATURDAY,
                SUNDAY
             } Day_of_the_week;
+
             //! Specific part for the Weekly Scheduler of the @c HF::Scheduling::Entry.
             struct Day
             {
@@ -88,7 +99,8 @@ namespace HF
                static constexpr int DAY = 24*HOUR;
                static constexpr uint32_t WEEK = 7*DAY;
 
-               static constexpr uint8_t DAY_OF_WEEK_BASE = SATURDAY; // Jan, 1st 2000 was on a Saturday (UTC)
+               // Jan, 1st 2000 was on a Saturday (UTC)
+               static constexpr uint8_t DAY_OF_WEEK_BASE = SATURDAY;
 
                static Day convert (const uint32_t &timestamp)
                {
@@ -456,6 +468,8 @@ namespace HF
             };
 
             typedef Server<Entries<Day>> DefaultServer;
+
+            /*! @} */
 
          } // namespace Weekly
       }    // namespace Scheduling

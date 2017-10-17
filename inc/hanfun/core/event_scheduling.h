@@ -35,7 +35,7 @@ namespace HF
       }
 
       /*!
-       * @ingroup event_scheduling_itf
+       * @ingroup event_scheduling
        *
        * Create an attribute object that can hold the attribute with the given @c uid.
        *
@@ -57,6 +57,15 @@ namespace HF
           */
          namespace Event
          {
+            /*!
+             * @addtogroup event_scheduling  Event Scheduling Service
+             * @ingroup core
+             *
+             * This module contains the classes that implement the Event Scheduling service.
+             *
+             * @{
+             */
+
             //! Specific part for the Event Scheduler of the @c HF::Scheduling::Entry.
             struct Interval
             {
@@ -113,13 +122,15 @@ namespace HF
                uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
+            //! Specific part for the Event Scheduler of the @c HF::Scheduling::Entry.
             typedef Scheduling::Entry<Interval> Entry;
 
-            //! Specific part for the Event Scheduler of the @c HF::Scheduling::GetEntryResonse.
+            //! Specific part for the Event Scheduler of the @c HF::Scheduling::GetEntryResponse.
             typedef Scheduling::GetEntryResponse<Interval> GetEntryResponse;
 
             /*!
-             * Helper class to handle the Maximum Number Of Entries attribute for the Event Scheduling service.
+             * Helper class to handle the Maximum Number Of Entries attribute for the
+             * Event Scheduling service.
              */
             struct MaximumNumberOfEntries: public Scheduling::MaximumNumberOfEntries
             {
@@ -130,13 +141,13 @@ namespace HF
             };
 
             /*!
-             * Helper class to handle the Number Of Entries attribute for the Event Scheduling service.
+             * Helper class to handle the Number Of Entries attribute for the
+             * Event Scheduling service.
              */
             struct NumberOfEntries: public Scheduling::NumberOfEntries
             {
                NumberOfEntries(uint8_t value = 0, HF::Interface *owner = nullptr):
-                  Scheduling::NumberOfEntries(HF::Interface::EVENT_SCHEDULING,
-                                              value, owner)
+                  Scheduling::NumberOfEntries(HF::Interface::EVENT_SCHEDULING, value, owner)
                {}
             };
 
@@ -146,8 +157,7 @@ namespace HF
             struct Status: public Scheduling::Status
             {
                Status(uint8_t value = 0, HF::Interface *owner = nullptr):
-                  Scheduling::Status(HF::Interface::EVENT_SCHEDULING,
-                                     value, owner)
+                  Scheduling::Status(HF::Interface::EVENT_SCHEDULING, value, owner)
                {}
             };
 
@@ -404,6 +414,8 @@ namespace HF
             };
 
             typedef Server<Entries<Interval>> DefaultServer;
+
+            /*! @} */
 
          } // namespace Event
       }    // namespace Scheduling
