@@ -64,7 +64,7 @@ TEST(Scheduling_Messages, ActivateScheduler_pack)
 
    size     = message.pack(payload);
 
-   expected = Common::ByteArray{0x11};
+   expected = Common::ByteArray{0x01};
 
    UNSIGNED_LONGS_EQUAL(1, size);
    CHECK_EQUAL(expected, payload);
@@ -80,7 +80,7 @@ TEST(Scheduling_Messages, ActivateScheduler_unpack)
    size    = message.unpack(payload);
 
    UNSIGNED_LONGS_EQUAL(1, size);
-   UNSIGNED_LONGS_EQUAL(0x11, message.status)
+   CHECK_TRUE(message.status);
 }
 
 // ========== Define Event Response ==========
@@ -224,13 +224,13 @@ TEST(Scheduling_Messages, UpdateStatus_unpack)
 {
    UpdateStatus message;
 
-   payload = Common::ByteArray{0x11, 0x80};
+   payload = Common::ByteArray{0x11, 0x81};
 
    size    = message.unpack(payload);
 
    UNSIGNED_LONGS_EQUAL(2, size);
-   UNSIGNED_LONGS_EQUAL(0x11, message.event_id)
-   UNSIGNED_LONGS_EQUAL(0x01, message.status);
+   UNSIGNED_LONGS_EQUAL(0x11, message.event_id);
+   CHECK_TRUE(message.status);
 }
 
 /*!

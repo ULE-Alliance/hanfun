@@ -259,10 +259,9 @@ namespace HF
          //! Message payload for a @c HF::Scheduling::ACTIVATE_SCHEDULER_CMD request.
          struct ActivateScheduler
          {
-            uint8_t status;   //!< Scheduler status
+            bool status;   //!< Scheduler status
 
-
-            ActivateScheduler(uint8_t _status = 0x00): status(_status)
+            ActivateScheduler(bool _status = false): status(_status)
             {}
 
             //! Minimum pack/unpack required data size.
@@ -322,9 +321,9 @@ namespace HF
          struct UpdateStatus
          {
             uint8_t event_id; //!< Event ID.
-            uint8_t status;   //!< Scheduler status
+            bool status;      //!< Scheduler status
 
-            UpdateStatus(uint8_t _event_id = 0x00, uint8_t _status = 0x00):
+            UpdateStatus(uint8_t _event_id = 0x00, bool _status = false):
                event_id(_event_id), status(_status)
             {}
 

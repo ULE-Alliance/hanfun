@@ -43,7 +43,7 @@ using namespace HF::Core::Scheduling;
 void IClient::activate_scheduler(const Protocol::Address &addr, const Interface::UID itf_uid,
                                  bool enabled)
 {
-   ActivateScheduler msg(_status);
+   ActivateScheduler msg(enabled);
 
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
@@ -68,7 +68,7 @@ void IClient::activate_scheduler(const Protocol::Address &addr, const Interface:
 void IClient::update_event_status(const Protocol::Address &addr, const Interface::UID itf_uid,
                                   uint8_t id, bool enabled)
 {
-   UpdateStatus msg(id, status);
+   UpdateStatus msg(id, enabled);
 
    Protocol::Message message(msg.size());
    msg.pack(message.payload);

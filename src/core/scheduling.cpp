@@ -151,7 +151,6 @@ uint16_t UpdateStatus::unpack(const Common::ByteArray &array, uint16_t offset)
 
    offset += array.read(offset, event_id);
    offset += array.read(offset, status);
-   status  = (status >> 7) & 0x01;
 
    return min_size;
 }
