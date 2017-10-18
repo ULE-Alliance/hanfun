@@ -74,6 +74,17 @@ SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour)
    return result;
 }
 
+SimpleString StringFrom(const HF::Protocol::Address &address)
+{
+   SimpleString result = "";
+
+   result += StringFromFormat("M:%01X ", address.mod);
+   result += StringFromFormat("D:%04X ", address.device);
+   result += StringFromFormat("U:%02X ", address.unit);
+
+   return result;
+}
+
 HF::Attributes::Factory HF::Testing::FactoryGetter(HF::Common::Interface itf)
 {
    HF::Attributes::Factory result = HF::Attributes::get_factory(itf);
@@ -148,6 +159,23 @@ class IAttributeComparator: public MockNamedValueComparator
    }
 };
 
+class AddressComparator: public MockNamedValueComparator
+{
+   public:
+
+   bool isEqual(const void *object1, const void *object2)
+   {
+      return ((HF::Protocol::Address *) object1)->compare(
+         *((HF::Protocol::Address *) object2))
+             == 0;
+   }
+
+   SimpleString valueToString(const void *object)
+   {
+      return StringFrom(*((const HF::Protocol::Address *) object));
+   }
+};
+
 // =============================================================================
 // Library Overrides
 // =============================================================================
@@ -182,8 +210,10 @@ void __assert_fail(const char *__assertion, const char *__file, unsigned int __l
 int main(int ac, char **av)
 {
    IAttributeComparator iattr_comparator;
+   AddressComparator addr_comparator;
 
    mock().installComparator("IAttribute", iattr_comparator);
+   mock().installComparator("Address", addr_comparator);
 
    return CommandLineTestRunner::RunAllTests(ac, av);
 }

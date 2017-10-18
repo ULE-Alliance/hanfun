@@ -68,6 +68,8 @@
 #include "hanfun/core/suota.h"
 #include "hanfun/core/time.h"
 #include "hanfun/core/batch_program_management.h"
+#include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 // =============================================================================
 // Profiles

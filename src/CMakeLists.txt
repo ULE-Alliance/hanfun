@@ -82,6 +82,9 @@ if(HF_CORE_SUOTA_SUPPORT)
 endif()
 add_core("time")
 add_core("batch_program_management")
+add_core("scheduling")
+add_core("event_scheduling")
+add_core("weekly_scheduling")
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)

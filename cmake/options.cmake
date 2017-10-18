@@ -109,6 +109,22 @@ option(HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD          "Service - Group Managemen
 option(HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD        "Interface - Batch Program Management Interface - Get Program Actions")
 
 # =============================================================================
+# Event Scheduling Configuration
+# =============================================================================
+
+option(HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD        "Service - Event Scheduling - Update Event Status")
+option(HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD            "Service - Event Scheduling - Get Event Entry")
+option(HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD          "Service - Event Scheduling - Delete All Events")
+
+# =============================================================================
+# Weekly Scheduling Configuration
+# =============================================================================
+
+option(HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD        "Service - Weekly Scheduling - Update Event Status")
+option(HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD            "Service - Weekly Scheduling - Get Event Entry")
+option(HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD          "Service - Weekly Scheduling - Delete All Events")
+
+# =============================================================================
 # Interfaces Configuration
 # =============================================================================
 

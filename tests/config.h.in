@@ -7,7 +7,11 @@
 // Core Services and Interfaces
 // =============================================================================
 
-#define HF_GROUP_SUPPORT                           1
+#define HF_GROUP_SUPPORT                            1
+#define HF_TIME_SUPPORT                             1
+#define HF_BATCH_PROGRAM_SUPPORT                    1
+#define HF_EVENT_SCHEDULING_SUPPORT                 1
+#define HF_WEEKLY_SCHEDULING_SUPPORT                1
 
 // =============================================================================
 // Device Information Configuration
@@ -121,6 +125,21 @@
 
 #define HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD         1
 
+// =============================================================================
+// Event Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD         1
+#define HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD             1
+#define HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD           1
+
+// =============================================================================
+// Weekly Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD         1
+#define HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD             1
+#define HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD           1
 
 // =============================================================================
 // Other Configuration

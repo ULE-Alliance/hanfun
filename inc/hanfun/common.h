@@ -302,7 +302,7 @@ namespace HF
          //! @copydoc ByteArray::write (uint16_t, uint8_t)
          uint16_t write(uint16_t offset, bool data)
          {
-            return write(offset, static_cast<uint8_t>(data));
+            return write(offset, static_cast<uint8_t>(data ? 0x01 : 0x00));
          }
 
          //! @copydoc ByteArray::write (uint16_t, uint8_t)

@@ -34,6 +34,10 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
+#include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 #include "hanfun/units.h"
 
@@ -539,14 +543,11 @@ namespace HF
       template<class Parent>
       struct AbstractDevice: public Parent
       {
-         uint16_t                        _address;
-
          std::vector<Protocol::Packet *> packets;
 
          Link                            link;
 
-         AbstractDevice():
-            _address(Protocol::BROADCAST_ADDR)
+         AbstractDevice()
          {
             link.address(42);
          }
@@ -596,6 +597,20 @@ namespace HF
             mock("AbstractDevice").actualCall("receive");
             Parent::receive(packet, payload, offset);
          }
+
+         uint16_t address() const
+         {
+            auto &call = mock("AbstractDevice").actualCall("address");
+
+            if (call.hasReturnValue())
+            {
+               return call.returnUnsignedIntValue();
+            }
+            else
+            {
+               return Parent::address();
+            }
+         }
       };
 
 #define SET_SERVICE(_X, _Y) \
@@ -614,12 +629,18 @@ namespace HF
          HF::Core::DeviceManagement::Client *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
          HF::Core::GroupTable::IServer *group_table_server;
+         HF::Core::Time::Server *time_srv;
+         HF::Core::BatchProgramManagement::IServer *batch_program_server;
+         HF::Core::Scheduling::Event::IServer *event_scheduling_server;
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling_server;
 
          public:
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr), group_table_server(nullptr)
+            attr_reporting(nullptr), group_table_server(nullptr), time_srv(nullptr),
+            batch_program_server(nullptr), event_scheduling_server(nullptr),
+            weekly_scheduling_server(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -628,6 +649,10 @@ namespace HF
             delete dev_mgt;
             delete attr_reporting;
             delete group_table_server;
+            delete time_srv;
+            delete batch_program_server;
+            delete event_scheduling_server;
+            delete weekly_scheduling_server;
          }
 
          void device_info(HF::Core::DeviceInformation::Server *_dev_info)
@@ -705,6 +730,56 @@ namespace HF
             return group_table_server;
          }
 
+         HF::Core::Time::Server *time()
+         {
+            return time_srv;
+         }
+
+         HF::Core::Time::Server *time() const
+         {
+            return time_srv;
+         }
+
+         void time(HF::Core::Time::Server *server)
+         {
+            time_srv = server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program()
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program() const
+         {
+            return batch_program_server;
+         }
+
+         void batch_program(HF::Core::BatchProgramManagement::IServer *server)
+         {
+            batch_program_server = server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling()
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling() const
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling()
+         {
+            return weekly_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const
+         {
+            return weekly_scheduling_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -733,12 +808,18 @@ namespace HF
          HF::Core::GroupTable::IServer *group_tbl;
          HF::Core::GroupManagement::IServer *group_mgt;
          HF::Core::BindManagement::IServer *bind_mgt;
+         HF::Core::Time::Server *time_srv;
+         HF::Core::BatchProgramManagement::IServer *batch_program_server;
+         HF::Core::Scheduling::Event::IServer *event_scheduling_server;
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling_server;
 
          public:
 
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr)
+            attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr),
+            time_srv(nullptr), batch_program_server(nullptr), event_scheduling_server(nullptr),
+            weekly_scheduling_server(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -749,6 +830,10 @@ namespace HF
             delete group_tbl;
             delete group_mgt;
             delete bind_mgt;
+            delete time_srv;
+            delete batch_program_server;
+            delete event_scheduling_server;
+            delete weekly_scheduling_server;
          }
 
          // =============================================================================
@@ -875,6 +960,46 @@ namespace HF
             return group_tbl;
          }
 
+         HF::Core::Time::Server *time() override
+         {
+            return time_srv;
+         }
+
+         HF::Core::Time::Server *time() const override
+         {
+            return time_srv;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program() override
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program() const override
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling() override
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling() const override
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() override
+         {
+            return weekly_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const override
+         {
+            return weekly_scheduling_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset) override
@@ -900,6 +1025,22 @@ namespace HF
                case HF::Interface::GROUP_TABLE:
                {
                   return group_table()->handle(packet, payload, offset);
+               }
+               case HF::Interface::TIME:
+               {
+                  return time()->handle(packet, payload, offset);
+               }
+               case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
+               {
+                  return batch_program()->handle(packet, payload, offset);
+               }
+               case HF::Interface::EVENT_SCHEDULING:
+               {
+                  return event_scheduling()->handle(packet, payload, offset);
+               }
+               case HF::Interface::WEEKLY_SCHEDULING:
+               {
+                  return weekly_scheduling()->handle(packet, payload, offset);
                }
                default:
                   return Common::Result::FAIL_UNKNOWN;

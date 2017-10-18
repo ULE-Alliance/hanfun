@@ -264,6 +264,32 @@ namespace HF
          {
             return this->device == address;
          }
+
+         /*!
+          * Compare this address with the given address in @c other.
+          *
+          * This method should return < 0 if this address is less that,
+          * 0 if it is equal and > 0 if greater that the @c other address.
+          *
+          * @param [in] other address to compare to.
+          *
+          * @retval  <0 if address less than @c other;
+          * @retval  0  if address equal to @c other;
+          * @retval  >0 if address greater than @c other.
+          */
+         int compare(const Address &other) const
+         {
+            auto serialize = [this](const Address &a)
+                             {
+                                return (((a.mod & 0x01) << 15) | (a.device & BROADCAST_ADDR)) |
+                                       a.unit;
+                             };
+
+            uint32_t t = serialize(*this);
+            uint32_t o = serialize(other);
+
+            return t - o;
+         }
       };
 
       /*!

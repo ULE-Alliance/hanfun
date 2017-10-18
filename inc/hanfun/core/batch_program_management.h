@@ -527,7 +527,7 @@ namespace HF
           * This class provides the server side of the Batch Program Management interface.
           */
          class IServer: public ServiceRole<BatchProgramManagement::Base,
-                                          HF::Interface::SERVER_ROLE>
+                                           HF::Interface::SERVER_ROLE>
          {
             protected:
 
@@ -537,7 +537,7 @@ namespace HF
 
             //! Constructor
             IServer(Unit0 &unit): ServiceRole<BatchProgramManagement::Base,
-                                             HF::Interface::SERVER_ROLE>(unit),
+                                              HF::Interface::SERVER_ROLE>(unit),
                _maximum_number_of_entries(std::numeric_limits<uint8_t>::max())
             {}
 

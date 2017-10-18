@@ -43,6 +43,33 @@ namespace HF
 
       }  // namespace GroupTable
 
+      namespace Time
+      {
+         struct Server;
+
+      }  // namespace Time
+
+      namespace BatchProgramManagement
+      {
+         struct IServer;
+      }  // namespace BatchProgramManagement
+
+      namespace Scheduling
+      {
+         namespace Event
+         {
+            struct IServer;
+
+         } // namespace Event
+
+         namespace Weekly
+         {
+            struct IServer;
+
+         } // namespace Weekly
+
+      }  // namespace Scheduling
+
    }  // namespace Core
 
    // Forward declaration of the units namespace.
@@ -130,6 +157,71 @@ namespace HF
           */
          virtual HF::Core::GroupTable::IServer *group_table() const = 0;
 #endif
+
+#if HF_TIME_SUPPORT
+         /*!
+          * Get the pointer to the node's Time service.
+          *
+          * @return pointer to the node's Time service.
+          */
+         virtual HF::Core::Time::Server *time() = 0;
+
+         /*!
+          * Get the pointer to the node's Time service.
+          *
+          * @return pointer to the node's Time service.
+          */
+         virtual HF::Core::Time::Server *time() const = 0;
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+         /*!
+          * Get the pointer to the node's Batch Program service.
+          *
+          * @return pointer to the node's Batch Program service.
+          */
+         virtual HF::Core::BatchProgramManagement::IServer *batch_program() = 0;
+
+         /*!
+          * Get the pointer to the node's Batch Program service.
+          *
+          * @return pointer to the node's Batch Program service.
+          */
+         virtual HF::Core::BatchProgramManagement::IServer *batch_program() const = 0;
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+         /*!
+          * Get the pointer to the node's Event Scheduling service.
+          *
+          * @return pointer to the node's Event Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Event::IServer *event_scheduling() = 0;
+
+         /*!
+          * Get the pointer to the node's Event Scheduling service.
+          *
+          * @return pointer to the node's Event Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Event::IServer *event_scheduling() const = 0;
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+         /*!
+          * Get the pointer to the node's Weekly Scheduling service.
+          *
+          * @return pointer to the node's Weekly Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() = 0;
+
+         /*!
+          * Get the pointer to the node's Weekly Scheduling service.
+          *
+          * @return pointer to the node's Weekly Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const = 0;
+#endif
+
       };
 
       /*!

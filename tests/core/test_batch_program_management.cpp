@@ -225,9 +225,9 @@ TEST(BatchProgramEntries, Save_using_primitive_variables)
 {
    LONGS_EQUAL(0, entries.size());
 
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    std::vector<Action> actions;
 
@@ -354,9 +354,9 @@ TEST(BatchProgramManagementMessages, DefineProgram_size)
    UNSIGNED_LONGS_EQUAL(message.min_size, message.size());
 
 
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    std::vector<Action> actions;
 
@@ -379,9 +379,9 @@ TEST(BatchProgramManagementMessages, DefineProgram_size)
 //! @test Check the DefineProgram message pack
 TEST(BatchProgramManagementMessages, DefineProgram_pack)
 {
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    std::vector<Action> actions;
 
@@ -424,9 +424,9 @@ TEST(BatchProgramManagementMessages, DefineProgram_pack)
 //! @test Check the DefineProgram message pack
 TEST(BatchProgramManagementMessages, DefineProgram_pack_fail_wrong_msg_type)
 {
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    std::vector<Action> actions;
 
@@ -469,9 +469,9 @@ TEST(BatchProgramManagementMessages, DefineProgram_unpack)
                         0x34,
                         0x56};
 
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    DefineProgram Message;
    size = Message.unpack(payload, 0);
@@ -492,9 +492,9 @@ TEST(BatchProgramManagementMessages, DefineProgram_unpack)
 //! @test Check the DefineProgram message pack failure
 TEST(BatchProgramManagementMessages, DefineProgram_pack_fail)
 {
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    std::vector<Action> actions;
 
@@ -565,8 +565,8 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_pack)
    payload = ByteArray(response.size());
    response.pack(payload, 0);
 
-   expected = ByteArray {  0x00,    // Response code
-                           0x12};   // Program ID
+   expected = ByteArray {0x00,      // Response code
+                         0x12};     // Program ID
 
    CHECK_EQUAL(expected, payload);
 
@@ -574,7 +574,7 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_pack)
    payload  = ByteArray(response.size());
    response.pack(payload, 0);
 
-   expected = ByteArray { 0x01};    // Response code
+   expected = ByteArray {0x01};     // Response code
 
    CHECK_EQUAL(expected, payload);
 }
@@ -584,15 +584,15 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_unpack)
 {
    DefineProgramResponse response;
 
-   payload = ByteArray  {  static_cast<uint8_t>(Common::Result::OK),    // Response code
-                           0x12};                                       // Program ID
+   payload = ByteArray  {static_cast<uint8_t>(Common::Result::OK),      // Response code
+                         0x12};                                         // Program ID
 
    response.unpack(payload, 0);
 
    UNSIGNED_LONGS_EQUAL(static_cast<Common::Result>(Common::Result::OK), response.code);
    UNSIGNED_LONGS_EQUAL(0x12, response.pid);
 
-   payload = ByteArray { static_cast<uint8_t>(Common::Result::FAIL_AUTH)};
+   payload = ByteArray {static_cast<uint8_t>(Common::Result::FAIL_AUTH)};
 
    UNSIGNED_LONGS_EQUAL(1, response.unpack(payload, 0));
    UNSIGNED_LONGS_EQUAL(static_cast<Common::Result>(Common::Result::FAIL_AUTH), response.code);
@@ -612,7 +612,7 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_unpack_fail)
 {
    DefineProgramResponse response;
 
-   payload = ByteArray  {  static_cast<uint8_t>(Common::Result::OK)    // Response code
+   payload = ByteArray  {static_cast<uint8_t>(Common::Result::OK)      // Response code
    };                                                                  // Missing Program ID
 
    UNSIGNED_LONGS_EQUAL(0, response.unpack(payload, 0));
@@ -687,9 +687,9 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_size)
    UNSIGNED_LONGS_EQUAL(1, response.size());
    UNSIGNED_LONGS_EQUAL(response.min_size, response.size());
 
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    std::vector<Action> actions;
 
@@ -726,9 +726,9 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_pack)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_AUTH, payload[0]);
 
    std::vector<Action> actions;
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
    Action action1 = Action(0x98,
                            Message::Type::COMMAND_REQ,
@@ -748,20 +748,20 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_pack)
    size     = response.pack(payload, 0);
    UNSIGNED_LONGS_EQUAL(response.size(), size);
 
-   expected = ByteArray {  static_cast<uint8_t>(Common::Result::OK),
-                           0x12,                         // Program ID
-                           0x04,                         // Program Name length
-                           'T', 'E', 'S', 'T',           // Program Name
-                           0x01,                         // n actions
-                           0x98,                         // UID
-                           0x01,                         // Message type
-                           (0x00 & 0x01) << 8 | 0x01,    // Interface Type + Itf ID (MSB)
-                           0x34,                         // Itf (LSB)
-                           0x56,                         // Itf member
-                           0x00, 0x03,                   // Payload size
-                           0x12,
-                           0x34,
-                           0x56};
+   expected = ByteArray {static_cast<uint8_t>(Common::Result::OK),
+                         0x12,                           // Program ID
+                         0x04,                           // Program Name length
+                         'T', 'E', 'S', 'T',             // Program Name
+                         0x01,                           // n actions
+                         0x98,                           // UID
+                         0x01,                           // Message type
+                         (0x00 & 0x01) << 8 | 0x01,      // Interface Type + Itf ID (MSB)
+                         0x34,                           // Itf (LSB)
+                         0x56,                           // Itf member
+                         0x00, 0x03,                     // Payload size
+                         0x12,
+                         0x34,
+                         0x56};
 
    CHECK_EQUAL(expected, payload);
 }
@@ -779,25 +779,25 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_unpack)
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
 
 
-   ByteArray program1 = ByteArray { 0x12,
-                                    0x34,
-                                    0x56};
+   ByteArray program1 = ByteArray {0x12,
+                                   0x34,
+                                   0x56};
 
 
-   payload = ByteArray {  static_cast<uint8_t>(Common::Result::OK),
-                          0x12,                          // Program ID
-                          0x04,                          // Program Name length
-                          'T', 'E', 'S', 'T',            // Program Name
-                          0x01,                          // n actions
-                          0x98,                          // UID
-                          0x01,                          // Message type
-                          (0x00 & 0x01) << 8 | 0x01,     // Interface Type + Itf ID (MSB)
-                          0x34,                          // Itf (LSB)
-                          0x56,                          // Itf member
-                          0x00, 0x03,                    // Payload size
-                          0x12,
-                          0x34,
-                          0x56};
+   payload = ByteArray {static_cast<uint8_t>(Common::Result::OK),
+                        0x12,                            // Program ID
+                        0x04,                            // Program Name length
+                        'T', 'E', 'S', 'T',              // Program Name
+                        0x01,                            // n actions
+                        0x98,                            // UID
+                        0x01,                            // Message type
+                        (0x00 & 0x01) << 8 | 0x01,       // Interface Type + Itf ID (MSB)
+                        0x34,                            // Itf (LSB)
+                        0x56,                            // Itf member
+                        0x00, 0x03,                      // Payload size
+                        0x12,
+                        0x34,
+                        0x56};
 
    size = response.unpack(payload, 0);
    UNSIGNED_LONGS_EQUAL(payload.size(), size);
@@ -831,20 +831,20 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_unpack_fail)
 {
    uint16_t size = 0;
 
-   payload = ByteArray {   static_cast<uint8_t>(Common::Result::OK),
-                           0x12,
-                           0x04,                      // Program ID
-                           'T', 'E', 'S', 'T',        // Program Name
-                           0x01,                      // n actions
-                           0x98,                      // UID
-                           0x01,                      // Message type
-                           (0x00 & 0x01) << 8 | 0x01, // Interface Type + Itf ID (MSB)
-                           0x34,                      // Itf (LSB)
-                           0x56,                      // Itf member
-                           0x00, 0x03,                // Payload size
-                           0x12,
-                           // Missing packet
-                           0x56};
+   payload = ByteArray {static_cast<uint8_t>(Common::Result::OK),
+                        0x12,
+                        0x04,                         // Program ID
+                        'T', 'E', 'S', 'T',           // Program Name
+                        0x01,                         // n actions
+                        0x98,                         // UID
+                        0x01,                         // Message type
+                        (0x00 & 0x01) << 8 | 0x01,    // Interface Type + Itf ID (MSB)
+                        0x34,                         // Itf (LSB)
+                        0x56,                         // Itf member
+                        0x00, 0x03,                   // Payload size
+                        0x12,
+                        // Missing packet
+                        0x56};
 
    GetProgramActionsResponse response;
 
@@ -1370,7 +1370,7 @@ TEST_GROUP(BatchProgramManagementServer)
    Entry GenerateEntry(uint8_t eid = 0x12, const std::string &name = std::string("TEST"),
                        std::vector<Action> actions = std::vector<Action>())
    {
-      if(actions.empty())
+      if (actions.empty())
       {
          actions.push_back(GenerateAction());
       }
@@ -1379,7 +1379,7 @@ TEST_GROUP(BatchProgramManagementServer)
    }
 
    Entry GenerateEntry2(uint8_t eid = 0x12, const std::string &name = std::string("TEST"),
-                       std::initializer_list<Action> actions_init = {})
+                        std::initializer_list<Action> actions_init = {})
    {
       std::vector<Action> actions(actions_init);
       return Entry(eid, name, actions);
@@ -1467,6 +1467,7 @@ TEST(BatchProgramManagementServer, DefineProgram)
    Entry _received = GenerateEntry();
 
    DefineProgram received(_received);
+
    payload = ByteArray(received.size());
 
    received.pack(payload);
@@ -1572,6 +1573,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_no_UID_in_device)
    Entry _received = GenerateEntry(0x12, "TEST", {GenerateAction(0x11)});
 
    DefineProgram received(_received);
+
    payload = ByteArray(received.size());
 
    received.pack(payload);
@@ -1614,6 +1616,7 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
    Entry _received = GenerateEntry2(0x12, std::string("TEST"),
                                     {GenerateAction(0x01, Message::Type::GET_ATTR_REQ)});
    DefineProgram received(_received);
+
    payload = ByteArray(received.size());
 
    received.pack(payload);
@@ -1800,7 +1803,7 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_no_UID)
 {
    SeedEntries();
 
-   server->entries().save(GenerateEntry2(0x12, "TEST", { GenerateAction(0x11) }));
+   server->entries().save(GenerateEntry2(0x12, "TEST", {GenerateAction(0x11)}));
 
    InvokeProgram received(0x12);
    payload = ByteArray(received.size());
@@ -1846,7 +1849,7 @@ TEST(BatchProgramManagementServer, InvokeProgram_fail_program_error)
 {
    SeedEntries();
 
-   server->entries().save(GenerateEntry2(0x12, "TEST", { GenerateAction() }));
+   server->entries().save(GenerateEntry2(0x12, "TEST", {GenerateAction()}));
 
    InvokeProgram received(0x12);
    payload = ByteArray(received.size());
@@ -1889,7 +1892,7 @@ TEST(BatchProgramManagementServer, DeleteProgram)
 {
    SeedEntries(5);
 
-   server->entries().save(GenerateEntry2(0x12, "TEST", { GenerateAction(0x11) }));
+   server->entries().save(GenerateEntry2(0x12, "TEST", {GenerateAction(0x11)}));
 
    DeleteProgram received(0x12);
    payload = ByteArray(received.size());

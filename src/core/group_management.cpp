@@ -268,7 +268,10 @@ uint16_t CreateMessage::unpack(const Common::ByteArray &array, uint16_t offset)
    size = HF::Common::SerializableHelper<std::string>::unpack(name, array, offset);
 
    /* *INDENT-OFF* */
-   HF_ASSERT(size != 0, {return 0;});
+   HF_ASSERT(size != 0,
+             {
+                return 0;
+             });
    /* *INDENT-ON* */
 
    offset += size;

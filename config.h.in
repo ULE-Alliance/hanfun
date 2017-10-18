@@ -13,6 +13,16 @@
 // =============================================================================
 
 #define HF_GROUP_SUPPORT                           @HF_GROUP_SUPPORT@
+#define HF_TIME_SUPPORT                            @HF_TIME_SUPPORT@
+#define HF_BATCH_PROGRAM_SUPPORT                   @HF_BATCH_PROGRAM_SUPPORT@
+#define HF_EVENT_SCHEDULING_SUPPORT                @HF_EVENT_SCHEDULING_SUPPORT@
+#define HF_WEEKLY_SCHEDULING_SUPPORT               @HF_WEEKLY_SCHEDULING_SUPPORT@
+
+#if HF_EVENT_SCHEDULING_SUPPORT == 1 || HF_WEEKLY_SCHEDULING_SUPPORT == 1
+    #define HF_TIME_SUPPORT             1
+    #define HF_BATCH_PROGRAM_SUPPORT    1
+#endif
+
 
 // =============================================================================
 // Device Information
@@ -40,6 +50,22 @@
 // =============================================================================
 
 #define HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD         @HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD@
+
+// =============================================================================
+// Event Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD         @HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD@
+#define HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD             @HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD@
+#define HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD@
+
+// =============================================================================
+// Weekly Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD         @HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD@
+#define HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD             @HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD@
+#define HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD@
 
 // =============================================================================
 // Interfaces

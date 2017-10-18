@@ -240,7 +240,7 @@ namespace HF
              *
              * @return  the current Time.
              */
-            uint32_t time() const;
+            virtual uint32_t time() const;
 
             /*!
              * Set the Time for the Time server.

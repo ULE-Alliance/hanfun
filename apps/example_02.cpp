@@ -55,7 +55,19 @@ namespace
     */
    typedef HF::Devices::Node::Unit0<HF::Core::DeviceInformation::Server,
                                     DeviceManagementClient,
-                                    HF::Core::AttributeReporting::Server
+                                    HF::Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                                    HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                    HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Weekly::DefaultServer
+#endif
 #if HF_GROUP_SUPPORT
                                     , HF::Core::GroupTable::DefaultServer
 #endif
@@ -95,6 +107,18 @@ namespace
    typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
                                             DeviceManagementServer,
                                             HF::Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                                            HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                            HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                                            HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                            HF::Core::Scheduling::Weekly::DefaultServer,
+#endif
 #if HF_GROUP_SUPPORT
                                             HF::Core::GroupTable::DefaultServer,
                                             HF::Core::GroupManagement::DefaultServer,
