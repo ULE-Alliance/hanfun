@@ -41,7 +41,7 @@ namespace HF
        * @param [in] server   pointer to the object to read the current value from.
        * @param [in] uid      attribute's UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(SimpleKeypad::Server *server, uint8_t uid);
@@ -78,16 +78,16 @@ namespace HF
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(uint32_t);
 
-            //! \see HF::Serializable::size.
+            //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
             {
                return min_size;
             }
 
-            //! \see HF::Serializable::pack.
+            //! @copydoc HF::Common::Serializable::pack
             uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const;
 
-            //! \see HF::Serializable::unpack.
+            //! @copydoc HF::Common::Serializable::unpack
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
@@ -98,8 +98,8 @@ namespace HF
           *
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
-          * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
+          *          exist.
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
@@ -123,7 +123,6 @@ namespace HF
           */
          class Server: public InterfaceRole<SimpleKeypad::Base, HF::Interface::SERVER_ROLE>
          {
-
             public:
 
             //! Constructor
@@ -142,7 +141,8 @@ namespace HF
              * Callback that is called when a @c SimpleKeypad::KEYPRESSED_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr  the network address to send the message to.
+             * @param [in] msg   the key pressed message received.
              */
             virtual void key_pressed(const Protocol::Address &addr, KeyPressed &msg);
 
@@ -151,7 +151,7 @@ namespace HF
              *
              * @param[in] key_id    the id of the key pressed.
              *
-             * @note this funtion must be implemented on the user application when defining
+             * @note this function must be implemented on the user application when defining
              *       the server.
              */
             virtual void key_received(const uint32_t key_id)
