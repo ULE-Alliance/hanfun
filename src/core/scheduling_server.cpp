@@ -86,8 +86,8 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
       {
          typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
-         auto getter = (uint8_t (IServer::*)(void) const) & IServer::status;
-         auto setter = (void (IServer::*)(uint8_t)) & IServer::status;
+         auto getter = (bool (IServer::*)(void) const) & IServer::status;
+         auto setter = (void (IServer::*)(bool)) & IServer::status;
 
          return new Attribute(this, attr, getter, setter, Status::WRITABLE);
       }
@@ -220,7 +220,7 @@ void IServer::maximum_number_of_entries(uint8_t __value)
  *
  */
 // =============================================================================
-uint8_t IServer::status() const
+bool IServer::status() const
 {
    return _status;
 }
@@ -232,7 +232,7 @@ uint8_t IServer::status() const
  *
  */
 // =============================================================================
-void IServer::status(uint8_t __value)
+void IServer::status(bool __value)
 {
    HF_SCHEDULING_SETTER_HELPER(Status, _status, __value);
 }

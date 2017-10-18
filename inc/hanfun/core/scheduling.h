@@ -143,13 +143,13 @@ namespace HF
          /*!
           * Helper class to handle the %Status attribute for the scheduling services.
           */
-         struct Status: public HF::Attributes::Attribute<uint8_t>
+         struct Status: public HF::Attributes::Attribute<bool>
          {
             static constexpr uint8_t ID       = STATUS_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;       //!< Attribute Read/Write
 
-            Status(Interface::UID itf, uint8_t value = 0, HF::Interface *owner = nullptr):
-               Attribute<uint8_t>(itf, ID, owner, value, WRITABLE)
+            Status(Interface::UID itf, bool value = false, HF::Interface *owner = nullptr):
+               Attribute<bool>(itf, ID, owner, value, WRITABLE)
             {}
          };
 
@@ -735,13 +735,13 @@ namespace HF
             protected:
 
             uint8_t _maximum_number_of_entries; //!< Maximum Number Of %Entries
-            uint8_t _status;                    //!< %Status
+            bool _status;                       //!< %Server %Status
 
             //! Constructor
             IServer(Unit0 &unit):
                ServiceRole<AbstractService, HF::Interface::SERVER_ROLE>(unit),
                _maximum_number_of_entries(std::numeric_limits<uint8_t>::max()),
-               _status(0)
+               _status(true)
             {}
 
             public:
@@ -800,16 +800,38 @@ namespace HF
             /*!
              * Get the %Status for the %Scheduling server.
              *
-             * @return  the current Status.
+             * @retval true   if the scheduler is enabled,
+             * @retval false  otherwise.
              */
-            uint8_t status() const;
+            bool status() const;
+
+            /*!
+             * Check if scheduler is enabled.
+             *
+             * @retval true   if the scheduler is enabled,
+             * @retval false  otherwise.
+             */
+            bool enabled() const
+            {
+               return status();
+            }
 
             /*!
              * Set the %Status for the %Scheduling server.
              *
              * @param [in] __value the  %Status value to set the server to.
              */
-            void status(uint8_t __value);
+            void status(bool __value);
+
+            /*!
+             * Enable/Disable scheduler.
+             *
+             * @param [in] __value  @c true / @c false --> enable/disable scheduler.
+             */
+            void enable(bool __value)
+            {
+               status(__value);
+            }
 
             // ======================================================================
             // Attribute API.

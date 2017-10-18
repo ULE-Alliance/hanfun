@@ -839,14 +839,14 @@ TEST(EventSchedulingServer, NumberOfEntries)
 //! @test Status support.
 TEST(EventSchedulingServer, Status)
 {
-   UNSIGNED_LONGS_EQUAL(0, server->status());
-   CHECK_ATTRIBUTE(EventSchedulingServer, Status, false, status, 42, 142);
+   CHECK_TRUE(server->status());
+   CHECK_ATTRIBUTE(EventSchedulingServer, Status, false, status, false, true);
 }
 
 //! @test Activate Scheduler support.
 TEST(EventSchedulingServer, ActivateScheduler)
 {
-   server->status(0x00);      // set the initial status of the scheduler.
+   server->status(false);      // set the initial status of the scheduler.
 
    Scheduling::ActivateScheduler received(0x01);
 

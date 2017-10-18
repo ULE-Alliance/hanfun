@@ -220,7 +220,7 @@ namespace HF
              */
             struct Status: public Scheduling::Status
             {
-               Status(uint8_t value = 0, HF::Interface *owner = nullptr):
+               Status(bool value = false, HF::Interface *owner = nullptr):
                   Scheduling::Status(HF::Interface::WEEKLY_SCHEDULING,
                                      value, owner)
                {}

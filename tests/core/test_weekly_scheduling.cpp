@@ -984,14 +984,14 @@ TEST(WeeklySchedulingServer, NumberOfEntries)
 //! @test Status support.
 TEST(WeeklySchedulingServer, Status)
 {
-   UNSIGNED_LONGS_EQUAL(0, server->status());
-   CHECK_ATTRIBUTE(WeeklySchedulingServer, Status, false, status, 42, 142);
+   CHECK_TRUE(server->status());
+   CHECK_ATTRIBUTE(WeeklySchedulingServer, Status, false, status, false, true);
 }
 
 //! @test Activate Scheduler support.
 TEST(WeeklySchedulingServer, ActivateScheduler)
 {
-   server->status(0x00);      // set the initial status of the scheduler.
+   server->status(false);      // set the initial status of the scheduler.
 
    Scheduling::ActivateScheduler received(0x01);
 
