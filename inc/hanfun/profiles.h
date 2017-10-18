@@ -31,6 +31,7 @@
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_light_sensor.h"
 #include "hanfun/interfaces/colour_control.h"
+#include "hanfun/interfaces/simple_keypad.h"
 
 // =============================================================================
 // API
@@ -136,6 +137,9 @@ namespace HF
 
          //! Tracker
          TRACKER = 0x0117,
+
+         //! Simple Keypad
+         SIMPLE_KEYPAD = 0x0118,
 
          // =============================================================================
          // Security Unit Types
@@ -920,6 +924,19 @@ namespace HF
          virtual void periodic(uint32_t time)
          {
             UNUSED(time);
+         }
+      };
+
+      /*!
+       * Simple Keypad profile implementation.
+       */
+      class SimpleKeypad: public Profile<SIMPLE_KEYPAD,
+            Interfaces::SimpleKeypad::Server>
+      {
+         public:
+
+         virtual ~SimpleKeypad ()
+         {
          }
       };
 

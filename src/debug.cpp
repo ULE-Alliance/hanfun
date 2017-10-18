@@ -1089,6 +1089,41 @@ std::ostream &operator<<(std::ostream &stream,
 }
 
 // =============================================================================
+// HF::Interfaces::SimpleKeypad
+// =============================================================================
+
+#include "hanfun/interfaces/simple_keypad.h"
+
+// =============================================================================
+// operator <<
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+std::ostream &operator<<(std::ostream &stream, const HF::Interfaces::SimpleKeypad::CMD command)
+{
+   std::ios_base::fmtflags ff = stream.flags();
+   char f                     = stream.fill(' ');
+
+   std::string result         = "Unknown";
+
+   using namespace HF::Interfaces::SimpleKeypad;
+
+   switch (command)
+   {
+      case KEYPRESSED_CMD:
+         result = "Keypressed";
+         break;
+      default:
+         break;
+   }
+
+   stream << result << std::setfill(f) << std::setiosflags(ff);
+   return stream;
+}
+
+// =============================================================================
 // Core Services & Interfaces
 // =============================================================================
 
@@ -2097,6 +2132,9 @@ std::ostream &operator<<(std::ostream &stream, const HF::Protocol::Message &mess
                break;
             case HF::Interface::COLOUR_CONTROL:
                stream << static_cast<ColourControl::CMD>(message.itf.member);
+               break;
+            case HF::Interface::SIMPLE_KEYPAD:
+               stream << static_cast<SimpleKeypad::CMD>(message.itf.member);
                break;
             /* Unknown [C] */
             default:

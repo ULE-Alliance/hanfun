@@ -74,6 +74,7 @@ add_interface_tests("simple_visual_effects")
 add_interface_tests("simple_air_pressure")
 add_interface_tests("simple_light_sensor")
 add_interface_tests("colour_control")
+add_interface_tests("simple_keypad")
 
 ## Profiles ##
 set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
