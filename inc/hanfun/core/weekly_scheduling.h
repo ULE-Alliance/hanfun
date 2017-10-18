@@ -67,7 +67,7 @@ namespace HF
              */
 
             //! %Day of the Week enumeration.
-            typedef enum _Day_of_the_week
+            typedef enum _Days
             {
                MONDAY = 0x00,
                TUESDAY,
@@ -76,7 +76,7 @@ namespace HF
                FRIDAY,
                SATURDAY,
                SUNDAY
-            } Day_of_the_week;
+            } Days;
 
             //! Specific part for the %Weekly Scheduler of the @c HF::Scheduling::Entry.
             struct Day
