@@ -257,6 +257,11 @@ void Event::IServer::periodic(uint32_t time)
 {
    UNUSED(time);
 
+   if(!enabled())
+   {
+      return;
+   }
+
    uint32_t local_time = unit().device().unit0()->time()->time();
 
    Protocol::Packet packet;
