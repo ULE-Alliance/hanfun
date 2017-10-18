@@ -175,7 +175,7 @@ namespace HF
          struct Entry
          {
             uint8_t id;          //!< %Event ID. (Unique per device)
-            uint8_t status;      //!< %Event %Status.
+            bool status;         //!< %Event %Status.
             _Type   time;        //!< Scheduler configuration.
             uint8_t pid;         //!< Program ID to be invoked.
 
@@ -256,13 +256,14 @@ namespace HF
                HF_SERIALIZABLE_CHECK(array, offset, min_size);
 
                uint16_t start = offset;
-               uint16_t size;
 
                offset += array.read(offset, id);
-               offset += array.read(offset, status);
-               status  = (status >> 7) & 0x01;
 
-               size    = time.unpack(array, offset);
+               uint8_t flags = 0;
+               offset += array.read(offset, flags);
+               status  = (flags >> 7) & 0x01;
+
+               uint16_t size = time.unpack(array, offset);
                HF_ASSERT(size != 0, {return 0;});
                offset += size;
 
