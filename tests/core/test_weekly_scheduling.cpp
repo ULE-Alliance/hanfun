@@ -162,13 +162,12 @@ TEST_GROUP(WeeklySchedulingEntries)
    {
       Entry event;
 
-      for (uint8_t id = Entry::START_ID; id < number - Entry::START_ID;
-           ++id)
+      for (uint8_t id = Entry::START_ID; id < number - Entry::START_ID; ++id)
       {
          event.id     = id;
          event.status = 0x01;
          event.pid    = id;
-         data.emplace(id, event);
+         data.push_front(event);
       }
    }
 };
@@ -182,12 +181,16 @@ TEST(WeeklySchedulingEntries, Next_id)
 
    LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
 
-   data.erase(2);                            // erase group 2
-   LONGS_EQUAL(2, entries.next_id());        // check if the next available address is 2
+   // erase entry 2
+   UNSIGNED_LONGS_EQUAL(Result::OK, entries.destroy(2));
 
+   // check if the next available address is 2
+   LONGS_EQUAL(2, entries.next_id());
+
+   // restore it
    Entry event;
-   event.id = 2;                             // restore it
-   data.emplace(2, event);
+   event.id = 2;
+   data.push_front(event);
 
    LONGS_EQUAL(Entry::AVAILABLE_ID, entries.next_id());
 }
@@ -202,11 +205,17 @@ TEST(WeeklySchedulingEntries, Find_by_id)
    event.id  = 2;
    event.pid = 0x22;
 
-   data.erase(2);                                         // erase group 2
-   POINTERS_EQUAL(nullptr, entries.find(2).operator->()); // Try to find group 2 (should fail)
-   data[2] = event;                                       // restore it
+   // erase entry 2
+   UNSIGNED_LONGS_EQUAL(Result::OK, entries.destroy(2));
 
-   CHECK(nullptr != entries.find(2).operator->());             // Try to find group 2 (OK)
+   // Try to find group 2 (should fail)
+   POINTERS_EQUAL(nullptr, entries.find(2).operator->());
+
+   // restore it
+   data.push_front(event);
+
+   // Try to find group 2 (OK)
+   CHECK_TRUE(nullptr != entries.find(2).operator->());
    UNSIGNED_LONGS_EQUAL(0x22, entries.find(2)->pid);
 }
 
@@ -262,17 +271,29 @@ TEST(WeeklySchedulingEntries, Destroy_by_group)
 }
 
 //! @test Entries save new
-TEST(WeeklySchedulingEntries, Save)
+TEST(WeeklySchedulingEntries, Save_OK)
 {
    LONGS_EQUAL(0, entries.size());
 
    Entry event;
    event.id  = 1;
    event.pid = 11;
-   entries.save(event);
+   UNSIGNED_LONGS_EQUAL(Common::OK, entries.save(event));
 
    UNSIGNED_LONGS_EQUAL(1, entries.size());
-   UNSIGNED_LONGS_EQUAL(11, data.begin()->second.pid);
+   UNSIGNED_LONGS_EQUAL(11, data.begin()->pid);
+}
+
+TEST(WeeklySchedulingEntries, Save_Duplicate)
+{
+   LONGS_EQUAL(0, entries.size());
+
+   Entry event;
+   event.id  = 1;
+   event.pid = 11;
+   UNSIGNED_LONGS_EQUAL(Result::OK, entries.save(event));
+
+   UNSIGNED_LONGS_EQUAL(Result::FAIL_ARG, entries.save(event));
 }
 
 // =============================================================================

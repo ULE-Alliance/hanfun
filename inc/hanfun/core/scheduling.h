@@ -486,9 +486,10 @@ namespace HF
             /*!
              * Store the given @c entry to persistent storage.
              *
-             * @param [in] entry    the entry itself for this event.
+             * @param [in] entry    the entry to save.
              *
              * @retval  Common::Result::OK if the entry was saved,
+             * @retval  Common::Result::FAIL_ARG if an entry already exists with the same ID,
              * @retval  Common::Result::FAIL_UNKNOWN otherwise.
              */
             virtual Common::Result save(const EntryType &entry) = 0;
@@ -535,8 +536,7 @@ namespace HF
             typedef Entry<_Type> EntryType;
             typedef Common::Pointer<EntryType> EntryPointer;
 
-            typedef typename std::map<uint8_t, EntryType> Container;
-            typedef typename std::pair<uint8_t, EntryType> container_entry;
+            typedef typename Common::SimpleList<EntryType> Container;
             typedef typename Container::iterator iterator;
             typedef typename Container::const_iterator const_iterator;
             typedef typename Container::value_type value_type;
@@ -546,15 +546,21 @@ namespace HF
             //! @copydoc HF::Common::IEntries::size
             uint16_t size() const
             {
-               return db.size();
+               return std::distance(db.begin(), db.end());
             }
 
             //! @copydoc HF::Common::IEntries::save
             Common::Result save(const EntryType &entry)
             {
-               db.insert(db.end(), std::pair<uint8_t, EntryType>(entry.id, entry));
-
-               return Common::Result::OK;
+               if(exists(entry.id))
+               {
+                  return Common::Result::FAIL_ARG;
+               }
+               else
+               {
+                  db.push_front(entry);
+                  return Common::Result::OK;
+               }
             }
 
             /*!
@@ -590,17 +596,16 @@ namespace HF
              * @retval  Common::Result::OK, if the entry was destroyed.
              * @retval  Common::Result::FAIL_ARG otherwise.
              */
-            Common::Result destroy(const uint8_t &id)
+            Common::Result destroy(const uint8_t id)
             {
-               auto count = db.erase(id);
-
-               if (count != 1)
+               if(exists(id))
                {
-                  return Common::Result::FAIL_ARG;
+                  db.remove_if([id](const EntryType &e) { return e.id == id; });
+                  return Common::Result::OK;
                }
                else
                {
-                  return Common::Result::OK;
+                  return Common::Result::FAIL_ARG;
                }
             }
 
@@ -618,42 +623,38 @@ namespace HF
             //! @copydoc IEntries::find
             EntryPointer find(uint8_t id) const
             {
-               auto it = db.find(id);
-
+               auto it = std::find_if(db.begin(), db.end(),
+                                      [id](const EntryType &e)
+                                      { return e.id == id; } );
                if (it == db.end())
                {
                   return EntryPointer();
                }
                else
                {
-                  return EntryPointer(const_cast<EntryType *>(&(*it).second));
+                  return EntryPointer(const_cast<EntryType *>(&(*it)));
                }
             }
 
             //! @copydoc IEntries::for_each
-            void for_each(std::function<void(Entry<_Type>&e)> func)
+            void for_each(std::function<void(Entry<_Type>&)> func)
             {
-               for (iterator it = db.begin(); it != db.end(); ++it)
-               {
-                  func(const_cast<EntryType &>(it->second));
-               }
+               std::for_each(db.begin(), db.end(), func);
             }
 
             //! @copydoc IEntries::next_id
             uint8_t next_id() const
             {
-               uint8_t address = 0;
-
-               if (db.size() > EntryType::MAX_ID)
+               if (std::distance(db.begin(), db.end()) > EntryType::MAX_ID)
                {
                   return EntryType::AVAILABLE_ID;
                }
 
-               for (address = EntryType::START_ID; address <= EntryType::MAX_ID; ++address)
+               for (uint8_t id = EntryType::START_ID; id <= EntryType::MAX_ID; ++id)
                {
-                  if (db.find(address) == db.end())
+                  if (!exists(id))
                   {
-                     return address;
+                     return id;
                   }
                }
 
@@ -701,6 +702,21 @@ namespace HF
             }
 
             protected:
+
+            /*!
+             * Check if entry with given @c id exists.
+             *
+             * @param [in] id    the entry ID to search for.
+             *
+             * @retval true   if the entry already exists,
+             * @retval false  otherwise.
+             */
+            bool exists(const uint8_t id) const
+            {
+               return std::any_of(db.begin(), db.end(), [id](const EntryType &e){
+                  return e.id == id;
+               });
+            }
 
             //! Actual container for the entries.
             Container db;
