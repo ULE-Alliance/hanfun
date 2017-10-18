@@ -174,7 +174,7 @@ TEST(SimpleKeypadClient, Keypressed)
 {
    mock("Interface").expectOneCall("send");
 
-   client.keypressed(addr, 0x00001111);
+   client.key_pressed(addr, 0x00001111);
 
    mock("Interface").checkExpectations();
 
@@ -197,17 +197,18 @@ TEST_GROUP(SimpleKeypadServer)
 {
    struct SimpleKeypadServer: public InterfaceHelper<SimpleKeypad::Server>
    {
-      void keypressed(const Protocol::Address &addr, KeyPressed &msg) override
+      void key_pressed(const Protocol::Address &addr, KeyPressed &msg) override
       {
-         mock("SimpleKeypad::Server").actualCall("keypressed");
-         InterfaceHelper<SimpleKeypad::Server>::keypressed(addr, msg);
+         mock("SimpleKeypad::Server").actualCall("key_pressed");
+         InterfaceHelper<SimpleKeypad::Server>::key_pressed(addr, msg);
       }
 
-      void KeyReceived(const uint32_t key_id) override
+      void key_received(const uint32_t key_id) override
       {
-         mock("SimpleKeypad::Server").actualCall("keyreceived").withParameter("key_id", key_id);
+         mock("SimpleKeypad::Server")
+            .actualCall("key_received")
+            .withParameter("key_id", key_id);
       }
-
    };
 
    SimpleKeypadServer server;
@@ -242,8 +243,9 @@ TEST(SimpleKeypadServer, Keypressed)
    payload = Common::ByteArray(received.size());
    received.pack(payload);
 
-   mock("SimpleKeypad::Server").expectOneCall("keypressed");
-   mock("SimpleKeypad::Server").expectOneCall("keyreceived").withParameter("key_id", 0x00001111);
+   mock("SimpleKeypad::Server").expectOneCall("key_pressed");
+   mock("SimpleKeypad::Server").expectOneCall("key_received")
+         .withParameter("key_id", 0x00001111);
 
    packet.message.itf.member = SimpleKeypad::KEYPRESSED_CMD;
 

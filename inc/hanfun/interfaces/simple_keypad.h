@@ -144,7 +144,7 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              */
-            virtual void keypressed(const Protocol::Address &addr, KeyPressed &msg);
+            virtual void key_pressed(const Protocol::Address &addr, KeyPressed &msg);
 
             /*!
              * Callback that informs the app that a key was pressed on the client.
@@ -154,7 +154,7 @@ namespace HF
              * @note this funtion must be implemented on the user application when defining
              *       the server.
              */
-            virtual void KeyReceived(const uint32_t key_id)
+            virtual void key_received(const uint32_t key_id)
             {
                UNUSED(key_id);
             }
@@ -191,19 +191,7 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] key_id     the id of the key pressed.
              */
-            void keypressed(const Protocol::Address &addr, uint32_t key_id);
-
-            /*!
-             * Send a HAN-FUN message containing a @c SimpleKeypad::KEYPRESSED_CMD,
-             * to the broadcast network address.
-             *
-             * @param [in] key_id     the id of the key pressed.
-             */
-            void keypressed(uint32_t key_id)
-            {
-               Protocol::Address addr;
-               keypressed(addr, key_id);
-            }
+            void key_pressed(const Protocol::Address &addr, uint32_t key_id);
 
             //! @}
             // ======================================================================

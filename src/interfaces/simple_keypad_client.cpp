@@ -39,7 +39,7 @@ using namespace HF::Interfaces::SimpleKeypad;
  *
  */
 // =============================================================================
-void Client::keypressed(const Protocol::Address &addr, uint32_t key_id)
+void Client::key_pressed(const Protocol::Address &addr, uint32_t key_id)
 {
    KeyPressed key(key_id);
 
