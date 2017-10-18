@@ -25,7 +25,6 @@
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::Scheduling;
-using namespace HF::Core::Scheduling::Event;
 
 // =============================================================================
 // Core::create_attribute
@@ -40,12 +39,30 @@ HF::Attributes::IAttribute *Core::create_attribute(Event::IServer *server, uint8
                            HF::Interface::EVENT_SCHEDULING, uid);
 }
 
+// =============================================================================
+// Event::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 HF::Attributes::IAttribute *Event::create_attribute(uint8_t uid)
 {
    return Scheduling::create_attribute(HF::Interface::EVENT_SCHEDULING, uid);
 }
 
-uint16_t Interval::pack(Common::ByteArray &array, uint16_t offset) const
+// =============================================================================
+// Event::Interval
+// =============================================================================
+
+// =============================================================================
+// Event::Interval::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Event::Interval::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
    offset += array.write(offset, start);
@@ -54,7 +71,14 @@ uint16_t Interval::pack(Common::ByteArray &array, uint16_t offset) const
    return min_size;
 }
 
-uint16_t Interval::unpack(const Common::ByteArray &array, uint16_t offset)
+// =============================================================================
+// Event::Interval::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Event::Interval::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
    offset += array.read(offset, start);
@@ -63,17 +87,21 @@ uint16_t Interval::unpack(const Common::ByteArray &array, uint16_t offset)
    return min_size;
 }
 
-
-Common::Result Scheduling::Event::IServer::handle_command(
-   Protocol::Packet &packet,
-   Common::ByteArray &payload,
-   uint16_t offset)
+// =============================================================================
+// Event::IServer::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Event::IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                              uint16_t offset)
 {
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
-      case DEFINE_CMD:
+      case DEFINE_EVENT_CMD:
       {
          DefineEvent<Interval> msg;
          msg.unpack(payload, offset);

@@ -26,30 +26,29 @@
 
 using namespace HF;
 using namespace HF::Core;
-using namespace HF::Core::Scheduling::Event;
-
+using namespace HF::Core::Scheduling;
 
 // =============================================================================
-// Server::number_of_entries
+// Event::IServer::number_of_entries
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint8_t Scheduling::Event::IServer::number_of_entries() const
+uint8_t Event::IServer::number_of_entries() const
 {
    return entries().size();
 }
 
 // =============================================================================
-// IServer::define_event
+// Event::IServer::define_event
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Event::IServer::define_event(const Protocol::Packet &packet,
-                                                        Scheduling::DefineEvent<Interval> &msg)
+Common::Result Event::IServer::define_event(const Protocol::Packet &packet,
+                                            Scheduling::DefineEvent<Interval> &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -111,14 +110,14 @@ Common::Result Scheduling::Event::IServer::define_event(const Protocol::Packet &
 }
 
 // =============================================================================
-// Server::update_event_status
+// Event::IServer::update_event_status
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Event::IServer::update_event_status(const Protocol::Packet &packet,
-                                                               UpdateStatus &msg)
+Common::Result Event::IServer::update_event_status(const Protocol::Packet &packet,
+                                                   const UpdateStatus &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -146,14 +145,14 @@ Common::Result Scheduling::Event::IServer::update_event_status(const Protocol::P
 }
 
 // =============================================================================
-// Server::get_event_entry
+// Event::IServer::get_event_entry
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Event::IServer::get_event_entry(const Protocol::Packet &packet,
-                                                           GetEntry &msg)
+Common::Result Event::IServer::get_event_entry(const Protocol::Packet &packet,
+                                               const GetEntry &msg)
 {
    Common::Result result = Common::Result::OK;
    GetEntryResponse response;
@@ -181,14 +180,14 @@ Common::Result Scheduling::Event::IServer::get_event_entry(const Protocol::Packe
 }
 
 // =============================================================================
-// Server::delete_event
+// Event::IServer::delete_event
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Event::IServer::delete_event(const Protocol::Packet &packet,
-                                                        DeleteEvent &msg)
+Common::Result Event::IServer::delete_event(const Protocol::Packet &packet,
+                                            const DeleteEvent &msg)
 {
    uint8_t size = entries().size();
    DeleteEventResponse response;
@@ -221,13 +220,13 @@ Common::Result Scheduling::Event::IServer::delete_event(const Protocol::Packet &
 }
 
 // =============================================================================
-// Server::delete_all_events
+// Event::IServer::delete_all_events
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Event::IServer::delete_all_events(const Protocol::Packet &packet)
+Common::Result Event::IServer::delete_all_events(const Protocol::Packet &packet)
 {
    const static Common::Result result = Common::Result::OK;
    uint8_t size                       = entries().size();
@@ -247,7 +246,14 @@ Common::Result Scheduling::Event::IServer::delete_all_events(const Protocol::Pac
    return response.code;
 }
 
-void Scheduling::Event::IServer::periodic(uint32_t time)
+// =============================================================================
+// Event::IServer::periodic
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Event::IServer::periodic(uint32_t time)
 {
    UNUSED(time);
 
@@ -269,5 +275,4 @@ void Scheduling::Event::IServer::periodic(uint32_t time)
                       };
 
    entries().for_each(search_func);
-
 }

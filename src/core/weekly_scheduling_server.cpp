@@ -26,30 +26,29 @@
 
 using namespace HF;
 using namespace HF::Core;
-using namespace HF::Core::Scheduling::Weekly;
-
+using namespace HF::Core::Scheduling;
 
 // =============================================================================
-// Server::number_of_entries
+// Weekly::IServer::number_of_entries
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-uint8_t Scheduling::Weekly::IServer::number_of_entries() const
+uint8_t Weekly::IServer::number_of_entries() const
 {
    return entries().size();
 }
 
 // =============================================================================
-// IServer::define_event
+// Weekly::IServer::define_event
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Weekly::IServer::define_event(const Protocol::Packet &packet,
-                                                        Scheduling::DefineEvent<Day> &msg)
+Common::Result Weekly::IServer::define_event(const Protocol::Packet &packet,
+                                             Scheduling::DefineEvent<Day> &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -113,14 +112,14 @@ Common::Result Scheduling::Weekly::IServer::define_event(const Protocol::Packet 
 }
 
 // =============================================================================
-// Server::update_event_status
+// Weekly::IServer::update_event_status
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Weekly::IServer::update_event_status(const Protocol::Packet &packet,
-                                                               UpdateStatus &msg)
+Common::Result Weekly::IServer::update_event_status(const Protocol::Packet &packet,
+                                                    const UpdateStatus &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -148,14 +147,14 @@ Common::Result Scheduling::Weekly::IServer::update_event_status(const Protocol::
 }
 
 // =============================================================================
-// Server::get_event_entry
+// Weekly::IServer::get_event_entry
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Weekly::IServer::get_event_entry(const Protocol::Packet &packet,
-                                                           GetEntry &msg)
+Common::Result Weekly::IServer::get_event_entry(const Protocol::Packet &packet,
+                                                const GetEntry &msg)
 {
    Common::Result result = Common::Result::OK;
    GetEntryResponse response;
@@ -168,7 +167,8 @@ Common::Result Scheduling::Weekly::IServer::get_event_entry(const Protocol::Pack
       goto _end;
    }
 
-   response.entry = eventPtr.operator*();
+   // response.entry = eventPtr.operator*();
+   response.entry = *eventPtr;
 
    _end:
 
@@ -183,14 +183,14 @@ Common::Result Scheduling::Weekly::IServer::get_event_entry(const Protocol::Pack
 }
 
 // =============================================================================
-// Server::delete_event
+// Weekly::IServer::delete_event
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Weekly::IServer::delete_event(const Protocol::Packet &packet,
-                                                        DeleteEvent &msg)
+Common::Result Weekly::IServer::delete_event(const Protocol::Packet &packet,
+                                             const DeleteEvent &msg)
 {
    uint8_t size = entries().size();
    DeleteEventResponse response;
@@ -223,13 +223,13 @@ Common::Result Scheduling::Weekly::IServer::delete_event(const Protocol::Packet 
 }
 
 // =============================================================================
-// Server::delete_all_events
+// Weekly::IServer::delete_all_events
 // =============================================================================
 /*!
  *
  */
 // =============================================================================
-Common::Result Scheduling::Weekly::IServer::delete_all_events(const Protocol::Packet &packet)
+Common::Result Weekly::IServer::delete_all_events(const Protocol::Packet &packet)
 {
    const static Common::Result result = Common::Result::OK;
    uint8_t size                       = entries().size();
@@ -249,7 +249,14 @@ Common::Result Scheduling::Weekly::IServer::delete_all_events(const Protocol::Pa
    return response.code;
 }
 
-void Scheduling::Weekly::IServer::periodic(uint32_t time)
+// =============================================================================
+// Weekly::IServer::periodic
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Weekly::IServer::periodic(uint32_t time)
 {
    UNUSED(time);
 
@@ -271,5 +278,4 @@ void Scheduling::Weekly::IServer::periodic(uint32_t time)
                       };
 
    entries().for_each(search_func);
-
 }

@@ -65,16 +65,17 @@ namespace HF
        * value.
        *
        * @param [in] server   pointer to the object to read the current value from.
-       * @param [in] uid      attribute's UID to create the attribute object for.
+       * @param [in] itf_uid  interface's %UID to create the attribute object for.
+       * @param [in] uid      attribute's %UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(Scheduling::IServer *server,
                                                    Interface::UID itf_uid, uint8_t uid);
 
       /*!
-       * This namespace contains the implementation of the Scheduling service.
+       * This namespace contains the implementation of the %Scheduling service.
        */
       namespace Scheduling
       {
@@ -89,21 +90,21 @@ namespace HF
          //! Command IDs.
          typedef enum _CMD
          {
-            ACTIVATE_SCHEDULER_CMD = 0x01,   //!< Activate Scheduler command UID.
-            DEFINE_CMD             = 0x02,   //!< Define Event command UID.
-            UPDATE_STATUS_CMD      = 0x03,   //!< Update Event Status command UID.
-            GET_ENTRY_CMD          = 0x04,   //!< Get Event Entry command UID.
-            DELETE_CMD             = 0x05,   //!< Delete Event command UID.
-            DELETE_ALL_CMD         = 0x06,   //!< Delete All Events command UID.
+            ACTIVATE_SCHEDULER_CMD = 0x01,   //!< Activate Scheduler command %UID.
+            DEFINE_EVENT_CMD       = 0x02,   //!< Define %Event command %UID.
+            UPDATE_STATUS_CMD      = 0x03,   //!< Update %Event %Status command %UID.
+            GET_ENTRY_CMD          = 0x04,   //!< Get %Event %Entry command %UID.
+            DELETE_CMD             = 0x05,   //!< Delete %Event command %UID.
+            DELETE_ALL_CMD         = 0x06,   //!< Delete All Events command %UID.
             __LAST_CMD__           = DELETE_ALL_CMD
          } CMD;
 
          //! Attributes
          typedef enum _Attributes
          {
-            MAXIMUM_NUMBER_OF_ENTRIES_ATTR = 0x01, //!< Maximum Number Of Entries attribute UID.
-            NUMBER_OF_ENTRIES_ATTR         = 0x02, //!< Number Of Entries attribute UID.
-            STATUS_ATTR                    = 0x03, //!< Status attribute UID.
+            MAXIMUM_NUMBER_OF_ENTRIES_ATTR = 0x01, //!< Maximum Number Of %Entries attribute %UID.
+            NUMBER_OF_ENTRIES_ATTR         = 0x02, //!< Number Of %Entries attribute %UID.
+            STATUS_ATTR                    = 0x03, //!< %Status attribute %UID.
             __LAST_ATTR__                  = STATUS_ATTR
          } Attributes;
 
@@ -112,12 +113,12 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Helper class to handle the Maximum Number Of Entries attribute for the
+          * Helper class to handle the Maximum Number Of %Entries attribute for the
           * scheduling services.
           */
          struct MaximumNumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = MAXIMUM_NUMBER_OF_ENTRIES_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = MAXIMUM_NUMBER_OF_ENTRIES_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                          //!< Attribute Read/Write
 
             MaximumNumberOfEntries(Interface::UID itf, uint8_t value = 0,
@@ -127,11 +128,11 @@ namespace HF
          };
 
          /*!
-          * Helper class to handle the Number Of Entries attribute for the scheduling services.
+          * Helper class to handle the Number Of %Entries attribute for the scheduling services.
           */
          struct NumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = NUMBER_OF_ENTRIES_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = NUMBER_OF_ENTRIES_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                  //!< Attribute Read/Write
 
             NumberOfEntries(Interface::UID itf, uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -140,11 +141,11 @@ namespace HF
          };
 
          /*!
-          * Helper class to handle the Status attribute for the scheduling services.
+          * Helper class to handle the %Status attribute for the scheduling services.
           */
          struct Status: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = STATUS_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = STATUS_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;       //!< Attribute Read/Write
 
             Status(Interface::UID itf, uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -153,37 +154,51 @@ namespace HF
          };
 
          /*!
-          * @copybrief HF::Core::create_attribute (HF::Core::Scheduling::Server *,uint8_t)
+          * @copybrief HF::Core::create_attribute (HF::Core::Scheduling::IServer *,uint8_t)
           *
-          * @see HF::Core::create_attribute (HF::Core::Scheduling::Server *,uint8_t)
+          * @see HF::Core::create_attribute (HF::Core::Scheduling::IServer *,uint8_t)
           *
-          * @param [in] uid   attribute %UID to create the attribute object for.
+          * @param [in] itf_uid  interface %UID to create the attribute object for.
+          * @param [in] uid      attribute %UID to create the attribute object for.
           *
           * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @retval  <tt>nullptr</tt> if the attribute %UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute(HF::Interface::UID itf_uid, uint8_t uid);
 
+         /*!
+          * %Base class for scheduling services entries.
+          *
+          * @tparam _Type the specific data for scheduling service entry.
+          */
          template<typename _Type>
          struct Entry
          {
-            uint8_t id;          //!< Event ID. (Unique per device)
-            uint8_t status;      //!< Event Status.
+            uint8_t id;          //!< %Event ID. (Unique per device)
+            uint8_t status;      //!< %Event %Status.
             _Type   time;        //!< Scheduler configuration.
             uint8_t pid;         //!< Program ID to be invoked.
 
             // Helper attribute - Not included on the message entry!
             uint32_t next_run;   //!< Next run timestamp.
 
-            Entry(uint8_t _event_id, uint8_t _status, _Type _t, uint8_t _pid):
-               id(_event_id), status(_status), time(_t), pid(_pid), next_run(time.first())
+            /*!
+             * Constructor
+             *
+             * @param [in] _id      the entry ID.
+             * @param [in] _status  the entry status.
+             * @param [in] _t       the specific data for the scheduling service.
+             * @param [in] _pid     the batch program ID to be run.
+             */
+            Entry(uint8_t _id, uint8_t _status, _Type _t, uint8_t _pid):
+               id(_id), status(_status), time(_t), pid(_pid), next_run(time.first())
             {}
 
             Entry() = default;
 
-            static constexpr uint16_t START_ID     = 0x00;
-            static constexpr uint16_t MAX_ID       = 0xFE;
-            static constexpr uint16_t AVAILABLE_ID = 0xFF;
+            static constexpr uint16_t START_ID     = 0x00;  //!< Lower bound for the entries ID.
+            static constexpr uint16_t MAX_ID       = 0xFE;  //!< Upper bound for the entries ID.
+            static constexpr uint16_t AVAILABLE_ID = 0xFF;  //!< Special ID for system allocated ID.
 
             /*!
              * Check if the current entry is runnable at _time.
@@ -209,10 +224,10 @@ namespace HF
             }
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint8_t)     // Event ID
-                                                 + sizeof(uint8_t)   // Event Status
-                                                 + _Type::min_size   // _Type min size
-                                                 + sizeof(uint8_t);  // Program ID
+            static constexpr uint16_t min_size = sizeof(uint8_t)   // Event ID
+                                               + sizeof(uint8_t)   // Event Status
+                                               + _Type::min_size   // _Type min size
+                                               + sizeof(uint8_t);  // Program ID
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
@@ -257,7 +272,7 @@ namespace HF
             }
          };
 
-         //! Message payload for a @c HF::Scheduling::ACTIVATE_SCHEDULER_CMD request.
+         //! Message payload for a @c Scheduling::ACTIVATE_SCHEDULER_CMD request.
          struct ActivateScheduler
          {
             bool status;   //!< Scheduler status
@@ -281,16 +296,21 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         //! Response message payload for a @c HF::Scheduling::ACTIVATE_SCHEDULER_CMD request.
+         //! Response message payload for a @c Scheduling::ACTIVATE_SCHEDULER_CMD request.
          typedef Protocol::Response ActivateSchedulerResponse;
 
+         /*!
+          * Message payload for a @c Scheduling::DEFINE_EVENT_CMD request.
+          *
+          * @tparam _Type the specific data for scheduling service entry.
+          */
          template<class _Type>
          using DefineEvent = Entry<_Type>;
 
-         //! Response message payload for a @c HF::Scheduling::UPDATE_STATUS_CMD request.
+         //! Response message payload for a @c Scheduling::DEFINE_EVENT_CMD request.
          struct DefineEventResponse: public HF::Protocol::Response
          {
-            uint8_t event_id; //!< Event ID.
+            uint8_t event_id; //!< %Event ID.
 
             DefineEventResponse(Common::Result _code = Common::Result::OK,
                                 uint8_t _event_id = 0x00):
@@ -315,10 +335,10 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         //! Message payload for a @c HF::Scheduling::UPDATE_STATUS_CMD request.
+         //! Message payload for a @c Scheduling::UPDATE_STATUS_CMD request.
          struct UpdateStatus
          {
-            uint8_t event_id; //!< Event ID.
+            uint8_t event_id; //!< %Event ID.
             bool status;      //!< Scheduler status
 
             UpdateStatus(uint8_t _event_id = 0x00, bool _status = false):
@@ -342,12 +362,13 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
+         //! Response message payload for a @c Scheduling::UPDATE_STATUS_CMD request.
          typedef DefineEventResponse UpdateStatusResponse;
 
-         //! Message payload for a @c HF::Scheduling::GET_ENTRY_CMD request.
+         //! Message payload for a @c Scheduling::GET_ENTRY_CMD request.
          struct GetEntry
          {
-            uint8_t event_id; //!< Event ID.
+            uint8_t event_id; //!< %Event ID.
 
             GetEntry(uint8_t _event_id = 0x00):
                event_id(_event_id)
@@ -369,11 +390,15 @@ namespace HF
             uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
          };
 
-         //! Response message payload for a @c HF::Scheduling::GET_ENTRY_CMD request.
+         /*!
+          * Response message payload for a @c Scheduling::GET_ENTRY_CMD request.
+          *
+          * @tparam _Type the specific data for scheduling service entry.
+          */
          template<typename _Type>
          struct GetEntryResponse: public HF::Protocol::Response
          {
-            Entry<_Type> entry;   //!< Entry
+            Entry<_Type> entry;   //!< &Entry data to return to client.
 
             GetEntryResponse(Common::Result _code,
                              Entry<_Type> _entry):
@@ -437,23 +462,25 @@ namespace HF
             }
          };
 
-         //! Message payload for a @c HF::Scheduling::DELETE_CMD request.
+         //! Message payload for a @c Scheduling::DELETE_CMD request.
          typedef GetEntry DeleteEvent;
 
-         //! Response message payload for a @c HF::Scheduling::DELETE_CMD request.
+         //! Response message payload for a @c Scheduling::DELETE_CMD request.
          typedef DefineEventResponse DeleteEventResponse;
 
-         //! Response Message payload for a @c HF::Scheduling::DELETE_ALL_CMD request.
+         //! Response Message payload for a @c Scheduling::DELETE_ALL_CMD request.
          typedef HF::Protocol::Response DeleteAllResponse;
 
          /*!
-          * Scheduling - Persistent Storage API.
+          * %Scheduling - Persistent Storage API.
+          *
+          * @tparam _Type the specific type of the scheduling entry.
           */
          template<typename _Type>
          struct IEntries: public Common::IEntries<Entry<_Type>>
          {
-            typedef Entry<_Type> EntryType;
-            typedef Common::Pointer<EntryType> EntryPointer;
+            typedef Entry<_Type> EntryType;                    //!< %Entry helper type.
+            typedef Common::Pointer<EntryType> EntryPointer;   //!< %Entry pointer helper.
 
             /*!
              * Store the given @c entry to persistent storage.
@@ -471,9 +498,9 @@ namespace HF
             virtual void clear(void) = 0;
 
             /*!
-             * Find the Event with the given id.
+             * Find the %Event with the given id.
              *
-             * @param [in] id  Event ID to search for.
+             * @param [in] id  %Event ID to search for.
              *
              * @returns  pointer to the entry with the given @c id,
              *           @c nullptr otherwise.
@@ -498,6 +525,8 @@ namespace HF
 
          /*!
           * Default implementation of the persistence API.
+          *
+          * @tparam _Type the specific type of the scheduling entry.
           */
          template<typename _Type>
          struct Entries: public IEntries<_Type>
@@ -553,10 +582,12 @@ namespace HF
             }
 
             /*!
-             * @copydoc HF::Common::IEntries::destroy
+             * @copybrief HF::Common::IEntries::destroy
              *
-             * @param [in] id     The @c Event id to destroy
-             * @return
+             * @param [in] id the @c %Event ID to destroy
+             *
+             * @retval  Common::Result::OK, if the entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG otherwise.
              */
             Common::Result destroy(const uint8_t &id)
             {
@@ -583,9 +614,7 @@ namespace HF
                return destroy(entry.id);
             }
 
-            /*!
-             * @copydoc IEntries::find(uint16_t)
-             */
+            //! @copydoc IEntries::find
             EntryPointer find(uint8_t id) const
             {
                auto it = db.find(id);
@@ -600,9 +629,7 @@ namespace HF
                }
             }
 
-            /*!
-             * @copydoc IEntries::for_each
-             */
+            //! @copydoc IEntries::for_each
             void for_each(std::function<void(Entry<_Type>&e)> func)
             {
                for (iterator it = db.begin(); it != db.end(); ++it)
@@ -611,9 +638,7 @@ namespace HF
                }
             }
 
-            /*!
-             * @copydoc IEntries::next_id
-             */
+            //! @copydoc IEntries::next_id
             uint8_t next_id() const
             {
                uint8_t address = 0;
@@ -682,32 +707,35 @@ namespace HF
 
 
          /*!
-          * Scheduling %Service : Parent.
+          * %Scheduling %Service : Parent.
           *
-          * This is the parent class for the Scheduling service implementation.
+          * This is the parent class for the %Scheduling service implementation.
+          *
+          * @tparam _ITF      interface %UID for the service.
+          * @tparam _Parent   parent class for the service.
           */
-         template<Interface::UID _Itf_Type, typename Parent>
-         struct Base: public Service<_Itf_Type, Parent>
+         template<Interface::UID _ITF, typename _Parent>
+         struct Base: public Service<_ITF, _Parent>
          {
             protected:
 
             //! Constructor
             Base(Unit0 &unit):
-               Service<_Itf_Type, Parent>(unit)
+               Service<_ITF, _Parent>(unit)
             {}
          };
 
          /*!
-          * Scheduling %Service : %Server side implementation.
+          * %Scheduling %Service : %Server side implementation.
           *
-          * This class provides the server side of the Scheduling interface.
+          * This class provides the server side of the %Scheduling interface.
           */
          class IServer: public ServiceRole<AbstractService, HF::Interface::SERVER_ROLE>
          {
             protected:
 
-            uint8_t _maximum_number_of_entries; //!< Maximum Number Of Entries
-            uint8_t _status;                    //!< Status
+            uint8_t _maximum_number_of_entries; //!< Maximum Number Of %Entries
+            uint8_t _status;                    //!< %Status
 
             //! Constructor
             IServer(Unit0 &unit):
@@ -732,11 +760,14 @@ namespace HF
              * Callback that is called when a @c Scheduling::ACTIVATE_SCHEDULER_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet   the packet received.
+             * @param [in] msg      the activate scheduler message received.
+             *
+             * @retval  Common::Result::OK, if the scheduler was enabled/disabled.
+             * @retval  Common::Result::FAIL_ARG otherwise.
              */
             virtual Common::Result activate_scheduler(const Protocol::Packet &packet,
-                                                      ActivateScheduler &msg);
-
+                                                      const ActivateScheduler &msg);
 
             //! @}
             // ======================================================================
@@ -746,37 +777,37 @@ namespace HF
             // ======================================================================
 
             /*!
-             * Get the Maximum Number Of Entries for the Scheduling server.
+             * Get the Maximum Number Of %Entries for the %Scheduling server.
              *
-             * @return  the current Maximum Number Of Entries.
+             * @return  the current Maximum Number Of %Entries.
              */
             uint8_t maximum_number_of_entries() const;
 
             /*!
-             * Set the Maximum Number Of Entries for the Scheduling server.
+             * Set the Maximum Number Of %Entries for the %Scheduling server.
              *
-             * @param [in] __value the  Maximum Number Of Entries value to set the server to.
+             * @param [in] __value the  Maximum Number Of %Entries value to set the server to.
              */
             void maximum_number_of_entries(uint8_t __value);
 
             /*!
-             * Get the Number Of Entries for the Scheduling server.
+             * Get the Number Of %Entries for the %Scheduling server.
              *
-             * @return  the current Number Of Entries.
+             * @return  the current Number Of %Entries.
              */
             virtual uint8_t number_of_entries() const = 0;
 
             /*!
-             * Get the Status for the Scheduling server.
+             * Get the %Status for the %Scheduling server.
              *
              * @return  the current Status.
              */
             uint8_t status() const;
 
             /*!
-             * Set the Status for the Scheduling server.
+             * Set the %Status for the %Scheduling server.
              *
-             * @param [in] __value the  Status value to set the server to.
+             * @param [in] __value the  %Status value to set the server to.
              */
             void status(uint8_t __value);
 
@@ -787,7 +818,7 @@ namespace HF
             HF::Attributes::IAttribute *attribute(uint8_t uid);
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
-                                               HF::Attributes::Pack::MANDATORY) const;
+                                            HF::Attributes::Pack::MANDATORY) const;
 
             protected:
 
@@ -796,9 +827,9 @@ namespace HF
          };
 
          /*!
-          * Scheduling %Service : %Client side implementation.
+          * %Scheduling %Service : %Client side implementation.
           *
-          * This class provides the client side of the Scheduling interface.
+          * This class provides the client side of the %Scheduling interface.
           */
          class IClient: public Interfaces::InterfaceRole<Interfaces::AbstractInterface,
                                                          HF::Interface::CLIENT_ROLE>
@@ -854,7 +885,7 @@ namespace HF
 #endif
 
             /*!
-             * Send a HAN-FUN message containing a @c Scheduling::DELETE_EVENT_CMD, to the given
+             * Send a HAN-FUN message containing a @c Scheduling::DELETE_CMD, to the given
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
@@ -866,7 +897,7 @@ namespace HF
 
 #ifdef HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD
             /*!
-             * Send a HAN-FUN message containing a @c Scheduling::DELETE_ALL_EVENTS_CMD, to the given
+             * Send a HAN-FUN message containing a @c Scheduling::DELETE_ALL_CMD, to the given
              * network address.
              *
              * @param [in] addr       the network address to send the message to.

@@ -1822,7 +1822,7 @@ std::ostream &operator<<(std::ostream &stream, const HF::Core::Scheduling::CMD c
       case ACTIVATE_SCHEDULER_CMD:
          result = "Activate Scheduler";
          break;
-      case DEFINE_CMD:
+      case DEFINE_EVENT_CMD:
          result = "Define Event";
          break;
       case UPDATE_STATUS_CMD:

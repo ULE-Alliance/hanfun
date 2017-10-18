@@ -2,7 +2,7 @@
 /*!
  * @file       inc/hanfun/core/weekly_scheduling.h
  *
- * This file contains the definitions for the Weekly Scheduling service.
+ * This file contains the definitions for the %Weekly %Scheduling service.
  *
  * @version    x.x.x
  *
@@ -45,30 +45,28 @@ namespace HF
        * value.
        *
        * @param [in] server   pointer to the object to read the current value from.
-       * @param [in] uid      attribute's UID to create the attribute object for.
+       * @param [in] uid      attribute's %UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(Scheduling::Weekly::IServer *server, uint8_t uid);
 
       namespace Scheduling
       {
-         /*!
-          * This namespace contains the implementation of the Weekly Scheduling service.
-          */
+         //! This namespace contains the implementation of the %Weekly %Scheduling service.
          namespace Weekly
          {
             /*!
              * @addtogroup weekly_scheduling  Weekly Scheduling Service
              * @ingroup core
              *
-             * This module contains the classes that implement the Weekly Scheduling service.
+             * This module contains the classes that implement the %Weekly %Scheduling service.
              *
              * @{
              */
 
-            //! Day of the Week enumeration.
+            //! %Day of the Week enumeration.
             typedef enum _Day_of_the_week
             {
                MONDAY = 0x00,
@@ -80,12 +78,11 @@ namespace HF
                SUNDAY
             } Day_of_the_week;
 
-            //! Specific part for the Weekly Scheduler of the @c HF::Scheduling::Entry.
+            //! Specific part for the %Weekly Scheduler of the @c HF::Scheduling::Entry.
             struct Day
             {
-
-               uint8_t day;            //!< Day of Week.
-               uint8_t hour;           //!< Hour of Day.
+               uint8_t day;            //!< %Day of Week.
+               uint8_t hour;           //!< Hour of %Day.
                uint8_t minute;         //!< Minute of Hour.
 
                Day(uint8_t _day, uint8_t _hour, uint8_t _minute):
@@ -125,6 +122,8 @@ namespace HF
                /*!
                 * Get the initial value for the next_run entry attribute.
                 *
+                * @param [in] timestamp   the current system time.
+                *
                 * @return  the timestamp for the first run.
                 */
                uint32_t first(uint32_t timestamp = 0) const
@@ -147,7 +146,8 @@ namespace HF
                }
 
                /*!
-                * get the step between executions.
+                * Get the step between executions.
+                *
                 * @return  the step time.
                 */
                uint32_t step() const
@@ -155,6 +155,11 @@ namespace HF
                   return WEEK;
                }
 
+               /*!
+                *
+                * @param _time
+                * @return
+                */
                bool active(uint32_t _time) const
                {
                   UNUSED(_time);
@@ -179,13 +184,15 @@ namespace HF
                uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
+            //! Specific part for the %Weekly Scheduler of the @c HF::Scheduling::Entry.
             typedef Scheduling::Entry<Day> Entry;
 
-            //! Specific part for the Weekly Scheduler of the @c HF::Scheduling::GetEntryResonse.
+            //! Specific part for the %Weekly Scheduler of the @c HF::Scheduling::GetEntryResonse.
             typedef Scheduling::GetEntryResponse<Day> GetEntryResponse;
 
             /*!
-             * Helper class to handle the Maximum Number Of Entries attribute for the Weekly Scheduling service.
+             * Helper class to handle the Maximum Number Of %Entries attribute
+             * for the %Weekly %Scheduling service.
              */
             struct MaximumNumberOfEntries: public Scheduling::MaximumNumberOfEntries
             {
@@ -196,7 +203,8 @@ namespace HF
             };
 
             /*!
-             * Helper class to handle the Number Of Entries attribute for the Weekly Scheduling service.
+             * Helper class to handle the Number Of %Entries attribute
+             * for the %Weekly %Scheduling service.
              */
             struct NumberOfEntries: public Scheduling::NumberOfEntries
             {
@@ -207,7 +215,8 @@ namespace HF
             };
 
             /*!
-             * Helper class to handle the Status attribute for the Weekly Scheduling service.
+             * Helper class to handle the %Status attribute
+             * for the %Weekly %Scheduling service.
              */
             struct Status: public Scheduling::Status
             {
@@ -218,14 +227,14 @@ namespace HF
             };
 
             /*!
-             * @copybrief HF::Core::create_attribute (HF::Interfaces::Scheduling::Weekly::Server *,uint8_t)
+             * @copybrief HF::Core::create_attribute (HF::Core::Scheduling::Weekly::IServer *,uint8_t)
              *
-             * @see HF::Core::create_attribute (HF::Core::Scheduling::Weekly::Server *,uint8_t)
+             * @see HF::Core::create_attribute (HF::Core::Scheduling::Weekly::IServer *,uint8_t)
              *
              * @param [in] uid   attribute %UID to create the attribute object for.
              *
-             * @retval  pointer to an attribute object
-             * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+             * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
+             *          exist.
              */
             HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
@@ -236,9 +245,9 @@ namespace HF
                                                       Scheduling::IClient>;
 
             /*!
-             * Weekly Scheduling %Service : %Client side implementation.
+             * %Weekly %Scheduling %Service : %Client side implementation.
              *
-             * This class provides the client side of the Weekly Scheduling interface.
+             * This class provides the client side of the %Weekly %Scheduling interface.
              */
             struct IClient: public IClientBase
             {
@@ -251,41 +260,74 @@ namespace HF
 
                static constexpr HF::Interface::UID ITF = HF::Interface::WEEKLY_SCHEDULING;
 
-               //! @copydoc HF::Core::Scheduling::activate_scheduler(Protocol::Address).
-               virtual void activate_scheduler(const Protocol::Address &addr, uint8_t _status)
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::activate_scheduler
+                *
+                * @param [in] addr     the network address to send the message to.
+                * @param [in] enabled  enable/disable scheduler.
+                */
+               virtual void activate_scheduler(const Protocol::Address &addr, bool enabled)
                {
-                  Scheduling::IClient::activate_scheduler(addr, ITF, _status);
+                  Scheduling::IClient::activate_scheduler(addr, ITF, enabled);
                }
 
-               //! @copydoc HF::Core::Scheduling::define_event(Protocol::Address).
+               /*!
+                * Send a HAN-FUN message containing a @c Scheduling::DEFINE_CMD,
+                * to the given network address.
+                *
+                * @param [in] addr     the network address to send the message to.
+                * @param [in] id       the ID for the event entry.
+                * @param [in] status   the event entry status.
+                * @param [in] time     the time to set the event entry to.
+                * @param [in] pid      the batch program to call on event.
+                */
                virtual void define_event(const Protocol::Address &addr, uint8_t id, uint8_t status,
                                          Day &time, uint8_t pid);
 
 #ifdef HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD
-               //! @copydoc HF::Core::Scheduling::update_event_status(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::update_event_status
+                *
+                * @param [in] addr     the network address to send the message to.
+                * @param [in] id       entry ID to delete.
+                * @param [in] enabled  enable/disable entry.
+                */
                virtual void update_event_status(const Protocol::Address &addr,
-                                                uint8_t id, uint8_t status)
+                                                uint8_t id, bool enabled)
                {
-                  Scheduling::IClient::update_event_status(addr, ITF, id, status);
+                  Scheduling::IClient::update_event_status(addr, ITF, id, enabled);
                }
 #endif
 
 #ifdef HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD
-               //! @copydoc HF::Core::Scheduling::get_event_entry(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::get_event_entry
+                *
+                * @param [in] addr  the network address to send the message to.
+                * @param [in] id    entry ID to delete.
+                */
                virtual void get_event_entry(const Protocol::Address &addr, uint8_t id)
                {
                   Scheduling::IClient::get_event_entry(addr, ITF, id);
                }
 #endif
-
-               //! @copydoc HF::Core::Scheduling::delete_event(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::delete_event
+                *
+                * @param [in] addr  the network address to send the message to.
+                * @param [in] id    entry ID to delete.
+                */
                virtual void delete_event(const Protocol::Address &addr, uint8_t id)
                {
                   Scheduling::IClient::delete_event(addr, ITF, id);
                }
 
 #ifdef HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD
-               //! @copydoc HF::Core::Scheduling::delete_all_events(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::delete_all_events
+                *
+                * @param [in] addr  the network address to send the message to.
+                */
                virtual void delete_all_events(const Protocol::Address &addr)
                {
                   Scheduling::IClient::delete_all_events(addr, ITF);
@@ -296,16 +338,14 @@ namespace HF
             };
 
             /*!
-             * Scheduling %Service : %Client side implementation.
+             * %Scheduling %Service : %Client side implementation.
              *
-             * This class provides the client side of the Scheduling interface.
+             * This class provides the client side of the %Scheduling interface.
              */
             struct Client: public IClient
             {
                /*!
                 * Constructor.
-                *
-                * @param [in] unit  reference to the unit containing this service.
                 */
                Client(): IClient()
                {}
@@ -315,7 +355,7 @@ namespace HF
             };
 
             /*!
-             * Scheduling %Service : %Server side implementation.
+             * %Scheduling %Service : %Server side implementation.
              *
              * This class provides the server side of the Scheduling interface.
              */
@@ -337,43 +377,63 @@ namespace HF
                 * Callback that is called when a @c Scheduling::DEFINE_EVENT_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the define event message received.
+                *
+                * @retval  Common::Result::OK               if the entry was created;
+                * @retval  Common::Result::FAIL_ARG         if the entry ID already exists;
+                * @retval  Common::Result::FAIL_RESOURCES   if the entry could not be created;
+                * @retval  Common::Result::FAIL_UNKNOWN     otherwise.
                 */
                virtual Common::Result define_event(const Protocol::Packet &packet,
-                                                   Scheduling::DefineEvent<Day> &msg);
+                                                   DefineEvent<Day> &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
+                * Callback that is called when a @c Scheduling::UPDATE_STATUS_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the update event status message received.
+                *
+                * @retval  Common::Result::OK         if the entry was updated;
+                * @retval  Common::Result::FAIL_ARG   if the entry does not exists;
                 */
                virtual Common::Result update_event_status(const Protocol::Packet &packet,
-                                                          UpdateStatus &msg);
+                                                          const UpdateStatus &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::GET_EVENT_ENTRY_CMD,
+                * Callback that is called when a @c Scheduling::GET_ENTRY_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the get event message received.
+                *
+                * @retval  Common::Result::OK         if the entry exists,
+                * @retval  Common::Result::FAIL_ARG   otherwise.
                 */
                virtual Common::Result get_event_entry(const Protocol::Packet &packet,
-                                                      GetEntry &msg);
+                                                      const GetEntry &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::DELETE_EVENT_CMD,
+                * Callback that is called when a @c Scheduling::DELETE_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the delete event message received.
+                *
+                * @retval  Common::Result::OK         if the entry was deleted,
+                * @retval  Common::Result::FAIL_ARG   otherwise.
                 */
                virtual Common::Result delete_event(const Protocol::Packet &packet,
-                                                   DeleteEvent &msg);
+                                                   const DeleteEvent &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::DELETE_ALL_EVENTS_CMD,
+                * Callback that is called when a @c Scheduling::DELETE_ALL_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                *
+                * @retval Common::Result::OK
                 */
                virtual Common::Result delete_all_events(const Protocol::Packet &packet);
 
@@ -399,12 +459,12 @@ namespace HF
                virtual IEntries<Day> &entries() const = 0;
 
                /*!
-                * Get the Weekly Scheduling entry given by @c id.
+                * Get the %Weekly %Scheduling entry given by @c id.
                 *
                 * @param [in] id  event id of the event to retrieve.
                 *
-                * @return  a pointer to the event entry if it exists,
-                *          @c nullptr otherwise.
+                * @retval pointer   to the event entry if it exists,
+                * @retval nullptr   otherwise.
                 */
                Common::Pointer<Entry> entry(const uint8_t id) const
                {
@@ -433,9 +493,9 @@ namespace HF
             };
 
             /*!
-             * Scheduling %Service : %Server side implementation.
+             * %Scheduling %Service : %Server side implementation.
              *
-             * This class provides the server side of the Scheduling interface.
+             * This class provides the server side of the %Scheduling interface.
              */
             template<typename _Entries>
             struct Server: public IServer
@@ -467,13 +527,17 @@ namespace HF
                }
             };
 
+            /*!
+             * %Weekly %Scheduling %Service : %Server side with
+             * default persistence implementation.
+             */
             typedef Server<Entries<Day>> DefaultServer;
 
             /*! @} */
 
          } // namespace Weekly
-      }    // namespace Scheduling
-   }       // namespace Core
-}          // namespace HF
+      } // namespace Scheduling
+   } // namespace Core
+} // namespace HF
 
 #endif /* HF_CORE_WEEKLY_SCHEDULING_H */

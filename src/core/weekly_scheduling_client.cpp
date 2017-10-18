@@ -22,25 +22,27 @@
 
 using namespace HF;
 using namespace HF::Core;
-using namespace HF::Core::Scheduling::Weekly;
+using namespace HF::Core::Scheduling;
 
-void Scheduling::Weekly::IClient::define_event(const Protocol::Address &addr,
-                                              uint8_t id,
-                                              uint8_t status,
-                                              Day &time,
-                                              uint8_t pid)
+// =============================================================================
+// Weekly::IClient::define_event
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+void Weekly::IClient::define_event(const Protocol::Address &addr, uint8_t id, uint8_t status,
+                                   Day &time, uint8_t pid)
 {
    DefineEvent<Day> msg(id, status, time, pid);
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   /* *INDENT-OFF* */
    HF_ASSERT(addr.unit == 0, { return; });
-   /* *INDENT-ON* */
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = ITF;
-   message.itf.member = DEFINE_CMD;
+   message.itf.member = DEFINE_EVENT_CMD;
 
    send(addr, message);
 }

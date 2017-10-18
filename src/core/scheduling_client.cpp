@@ -2,7 +2,7 @@
 /*!
  * @file       src/core/scheduling_client.cpp
  *
- * This file contains the implementation of the Client functionality for the
+ * This file contains the implementation of the common Client functionality for the
  * Scheduling service.
  *
  * @version    x.x.x

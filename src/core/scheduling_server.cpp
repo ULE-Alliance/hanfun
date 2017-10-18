@@ -2,7 +2,7 @@
 /*!
  * @file       src/core/scheduling_server.cpp
  *
- * This file contains the implementation of the Server functionality for the
+ * This file contains the implementation of the common Server functionality for the
  * Scheduling service.
  *
  * @version    x.x.x
@@ -121,7 +121,7 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
          return activate_scheduler(packet, msg);
       }
 
-      case DEFINE_CMD:
+      case DEFINE_EVENT_CMD:
       {
          return Common::Result::FAIL_SUPPORT;
       }
@@ -164,11 +164,13 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
  *
  */
 // =============================================================================
-Common::Result IServer::activate_scheduler(const Protocol::Packet &packet, ActivateScheduler &msg)
+Common::Result IServer::activate_scheduler(const Protocol::Packet &packet,
+                                           const ActivateScheduler &msg)
 {
    Common::Result result = Common::Result::OK;
 
-   HF_ASSERT(msg.status <= 0x01, {result = Common::Result::FAIL_ARG;goto _end;})
+   HF_ASSERT(msg.status <= 0x01, { result = Common::Result::FAIL_ARG;goto _end; })
+
    this->status(msg.status);
 
    _end:

@@ -25,7 +25,6 @@
 using namespace HF;
 using namespace HF::Core;
 using namespace HF::Core::Scheduling;
-using namespace HF::Core::Scheduling::Weekly;
 
 // =============================================================================
 // Core::create_attribute
@@ -40,12 +39,30 @@ HF::Attributes::IAttribute *Core::create_attribute(Weekly::IServer *server, uint
                            HF::Interface::WEEKLY_SCHEDULING, uid);
 }
 
+// =============================================================================
+// Weekly::create_attribute
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
 HF::Attributes::IAttribute *Weekly::create_attribute(uint8_t uid)
 {
    return Scheduling::create_attribute(HF::Interface::WEEKLY_SCHEDULING, uid);
 }
 
-uint16_t Day::pack(Common::ByteArray &array, uint16_t offset) const
+// =============================================================================
+// Weekly::Day
+// =============================================================================
+
+// =============================================================================
+// Weekly::Day::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Weekly::Day::pack(Common::ByteArray &array, uint16_t offset) const
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
    offset += array.write(offset, day);
@@ -54,7 +71,14 @@ uint16_t Day::pack(Common::ByteArray &array, uint16_t offset) const
    return min_size;
 }
 
-uint16_t Day::unpack(const Common::ByteArray &array, uint16_t offset)
+// =============================================================================
+// Weekly::Day::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Weekly::Day::unpack(const Common::ByteArray &array, uint16_t offset)
 {
    HF_SERIALIZABLE_CHECK(array, offset, size());
    offset += array.read(offset, day);
@@ -63,17 +87,21 @@ uint16_t Day::unpack(const Common::ByteArray &array, uint16_t offset)
    return min_size;
 }
 
-
-Common::Result Scheduling::Weekly::IServer::handle_command(
-   Protocol::Packet &packet,
-   Common::ByteArray &payload,
-   uint16_t offset)
+// =============================================================================
+// Weekly::IServer::handle_command
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+Common::Result Weekly::IServer::handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
+                                               uint16_t offset)
 {
    CMD cmd = static_cast<CMD>(packet.message.itf.member);
 
    switch (cmd)
    {
-      case DEFINE_CMD:
+      case DEFINE_EVENT_CMD:
       {
          DefineEvent<Day> msg;
          msg.unpack(payload, offset);

@@ -2,7 +2,7 @@
 /*!
  * @file       inc/hanfun/core/event_scheduling.h
  *
- * This file contains the definitions for the Event Scheduling service.
+ * This file contains the definitions for the %Event %Scheduling service.
  *
  * @version    x.x.x
  *
@@ -43,7 +43,7 @@ namespace HF
        * value.
        *
        * @param [in] server   pointer to the object to read the current value from.
-       * @param [in] uid      attribute's UID to create the attribute object for.
+       * @param [in] uid      attribute's %UID to create the attribute object for.
        *
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
@@ -53,7 +53,7 @@ namespace HF
       namespace Scheduling
       {
          /*!
-          * This namespace contains the implementation of the Event Scheduling service.
+          * This namespace contains the implementation of the %Event %Scheduling service.
           */
          namespace Event
          {
@@ -61,19 +61,26 @@ namespace HF
              * @addtogroup event_scheduling  Event Scheduling Service
              * @ingroup core
              *
-             * This module contains the classes that implement the Event Scheduling service.
+             * This module contains the classes that implement the %Event %Scheduling service.
              *
              * @{
              */
 
-            //! Specific part for the Event Scheduler of the @c HF::Scheduling::Entry.
+            //! %Event %Scheduler specific part for the @c HF::Scheduling::Entry.
             struct Interval
             {
 
                uint32_t start;          //!< Start Date.
                uint32_t end;            //!< End Date.
-               uint32_t repeat;         //!< Repeat interval. (in seconds)
+               uint32_t repeat;         //!< Repeat interval (in seconds).
 
+               /*!
+                * Constructor
+                *
+                * @param [in] _start   timestamp for the start of the event in seconds.
+                * @param [in] _end     timestamp for the end of the event in seconds..
+                * @param [in] _repeat  repetition interval in seconds.
+                */
                Interval(uint32_t _start, uint32_t _end, uint32_t _repeat):
                   start(_start), end(_end), repeat(_repeat)
                {}
@@ -91,7 +98,8 @@ namespace HF
                }
 
                /*!
-                * get the step between executions.
+                * Get the step between executions.
+                *
                 * @return  the step time.
                 */
                uint32_t step() const
@@ -99,15 +107,23 @@ namespace HF
                   return repeat;
                }
 
+               /*!
+                * Check if entry is active.
+                *
+                * @param [in] _time    current time.
+                *
+                * @retval true   if the entry is active.
+                * @retval false  otherwise.
+                */
                bool active(uint32_t _time) const
                {
                   return (start <= _time && _time <= end);
                }
 
                //! Minimum pack/unpack required data size.
-               static constexpr uint16_t min_size = sizeof(uint32_t)     // Start Date.
-                                                    + sizeof(uint32_t)   // End Date.
-                                                    + sizeof(uint32_t);  // Repeat interval.
+               static constexpr uint16_t min_size = sizeof(uint32_t)   // Start Date.
+                                                  + sizeof(uint32_t)   // End Date.
+                                                  + sizeof(uint32_t);  // Repeat interval.
 
                //! @copydoc HF::Common::Serializable::size
                uint16_t size() const
@@ -122,15 +138,15 @@ namespace HF
                uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0);
             };
 
-            //! Specific part for the Event Scheduler of the @c HF::Scheduling::Entry.
+            //! Specific part for the %Event Scheduler of the @c HF::Scheduling::Entry.
             typedef Scheduling::Entry<Interval> Entry;
 
-            //! Specific part for the Event Scheduler of the @c HF::Scheduling::GetEntryResponse.
+            //! Specific part for the %Event Scheduler of the @c HF::Scheduling::GetEntryResponse.
             typedef Scheduling::GetEntryResponse<Interval> GetEntryResponse;
 
             /*!
-             * Helper class to handle the Maximum Number Of Entries attribute for the
-             * Event Scheduling service.
+             * Helper class to handle the Maximum Number Of %Entries attribute for the
+             * %Event %Scheduling service.
              */
             struct MaximumNumberOfEntries: public Scheduling::MaximumNumberOfEntries
             {
@@ -141,8 +157,8 @@ namespace HF
             };
 
             /*!
-             * Helper class to handle the Number Of Entries attribute for the
-             * Event Scheduling service.
+             * Helper class to handle the Number Of %Entries attribute for the
+             * %Event %Scheduling service.
              */
             struct NumberOfEntries: public Scheduling::NumberOfEntries
             {
@@ -152,7 +168,7 @@ namespace HF
             };
 
             /*!
-             * Helper class to handle the Status attribute for the Event Scheduling service.
+             * Helper class to handle the %Status attribute for the %Event %Scheduling service.
              */
             struct Status: public Scheduling::Status
             {
@@ -162,9 +178,9 @@ namespace HF
             };
 
             /*!
-             * @copybrief HF::Core::create_attribute (HF::Interfaces::Scheduling::Event::Server *,uint8_t)
+             * @copybrief HF::Core::create_attribute (HF::Core::Scheduling::Event::IServer *,uint8_t)
              *
-             * @see HF::Core::create_attribute (HF::Core::Scheduling::Event::Server *,uint8_t)
+             * @see HF::Core::create_attribute (HF::Core::Scheduling::Event::IServer *,uint8_t)
              *
              * @param [in] uid   attribute %UID to create the attribute object for.
              *
@@ -180,9 +196,9 @@ namespace HF
                                                       Scheduling::IClient>;
 
             /*!
-             * Event Scheduling %Service : %Client side implementation.
+             * %Event %Scheduling %Service : %Client side implementation.
              *
-             * This class provides the client side of the Event Scheduling interface.
+             * This class provides the client side of the %Event %Scheduling interface.
              */
             struct IClient: public IClientBase
             {
@@ -195,42 +211,76 @@ namespace HF
 
                static constexpr HF::Interface::UID ITF = HF::Interface::EVENT_SCHEDULING;
 
-               //! @copydoc HF::Core::Scheduling::activate_scheduler.
-               virtual void activate_scheduler(const Protocol::Address &addr, bool _status)
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::activate_scheduler
+                *
+                * @param [in] addr     the network address to send the message to.
+                * @param [in] enabled  enable/disable scheduler.
+                */
+               virtual void activate_scheduler(const Protocol::Address &addr, bool enabled)
                {
-                  Scheduling::IClient::activate_scheduler(addr, ITF, _status);
+                  Scheduling::IClient::activate_scheduler(addr, ITF, enabled);
                }
 
-               //! @copydoc HF::Core::Scheduling::define_event(Protocol::Address).
+               /*!
+                * Send a HAN-FUN message containing a @c Scheduling::DEFINE_EVENT_CMD,
+                * to the given network address.
+                *
+                * @param [in] addr     the network address to send the message to.
+                * @param [in] id       the ID for the event entry.
+                * @param [in] status   the event entry status.
+                * @param [in] time     the interval to set the event entry to.
+                * @param [in] pid      the batch program to call on event.
+                */
                virtual void define_event(const Protocol::Address &addr, uint8_t id,
                                          uint8_t status, Interval &time, uint8_t pid);
 
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
 
-               //! @copydoc HF::Core::Scheduling::update_event_status(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::update_event_status
+                *
+                * @param [in] addr     the network address to send the message to.
+                * @param [in] id       entry ID to delete.
+                * @param [in] enabled  enable/disable entry.
+                */
                virtual void update_event_status(const Protocol::Address &addr,
-                                                uint8_t id, uint8_t status)
+                                                uint8_t id, bool enabled)
                {
-                  Scheduling::IClient::update_event_status(addr, ITF, id, status);
+                  Scheduling::IClient::update_event_status(addr, ITF, id, enabled);
                }
 #endif
 
 #ifdef HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD
-               //! @copydoc HF::Core::Scheduling::get_event_entry(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::get_event_entry
+                *
+                * @param [in] addr  the network address to send the message to.
+                * @param [in] id    entry ID to delete.
+                */
                virtual void get_event_entry(const Protocol::Address &addr, uint8_t id)
                {
                   Scheduling::IClient::get_event_entry(addr, ITF, id);
                }
 #endif
 
-               //! @copydoc HF::Core::Scheduling::delete_event(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::delete_event
+                *
+                * @param [in] addr  the network address to send the message to.
+                * @param [in] id    entry ID to delete.
+                */
                virtual void delete_event(const Protocol::Address &addr, uint8_t id)
                {
                   Scheduling::IClient::delete_event(addr, ITF, id);
                }
 
 #ifdef HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD
-               //! @copydoc HF::Core::Scheduling::delete_all_events(Protocol::Address).
+               /*!
+                * @copybrief HF::Core::Scheduling::IClient::delete_all_events
+                *
+                * @param [in] addr  the network address to send the message to.
+                */
                virtual void delete_all_events(const Protocol::Address &addr)
                {
                   Scheduling::IClient::delete_all_events(addr, ITF);
@@ -241,16 +291,14 @@ namespace HF
             };
 
             /*!
-             * Scheduling %Service : %Client side implementation.
+             * %Scheduling %Service : %Client side implementation.
              *
-             * This class provides the client side of the Scheduling interface.
+             * This class provides the client side of the %Scheduling interface.
              */
             struct Client: public IClient
             {
                /*!
                 * Constructor.
-                *
-                * @param [in] unit  reference to the unit containing this service.
                 */
                Client(): IClient()
                {}
@@ -278,49 +326,78 @@ namespace HF
 
                uint8_t number_of_entries() const;
 
+               // ======================================================================
+               // Events
+               // ======================================================================
+               //! @name Events
+               //! @{
+
                /*!
                 * Callback that is called when a @c Scheduling::DEFINE_EVENT_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the define event message received.
+                *
+                * @retval  Common::Result::OK               if the entry was created;
+                * @retval  Common::Result::FAIL_ARG         if the entry ID already exists;
+                * @retval  Common::Result::FAIL_RESOURCES   if the entry could not be created;
+                * @retval  Common::Result::FAIL_UNKNOWN     otherwise.
                 */
                virtual Common::Result define_event(const Protocol::Packet &packet,
                                                    Scheduling::DefineEvent<Interval> &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::UPDATE_EVENT_STATUS_CMD,
+                * Callback that is called when a @c Scheduling::UPDATE_STATUS_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the update event status message received.
+                *
+                * @retval  Common::Result::OK         if the entry was updated;
+                * @retval  Common::Result::FAIL_ARG   if the entry does not exists.
                 */
                virtual Common::Result update_event_status(const Protocol::Packet &packet,
-                                                          UpdateStatus &msg);
+                                                          const UpdateStatus &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::GET_EVENT_ENTRY_CMD,
+                * Callback that is called when a @c Scheduling::GET_ENTRY_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the get event message received.
+                *
+                * @retval  Common::Result::OK         if the entry exists,
+                * @retval  Common::Result::FAIL_ARG   otherwise.
                 */
                virtual Common::Result get_event_entry(const Protocol::Packet &packet,
-                                                      GetEntry &msg);
+                                                      const GetEntry &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::DELETE_EVENT_CMD,
+                * Callback that is called when a @c Scheduling::DELETE_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                * @param [in] msg      the delete event message received.
+                *
+                * @retval  Common::Result::OK         if the entry was deleted,
+                * @retval  Common::Result::FAIL_ARG   otherwise.
                 */
                virtual Common::Result delete_event(const Protocol::Packet &packet,
-                                                   DeleteEvent &msg);
+                                                   const DeleteEvent &msg);
 
                /*!
-                * Callback that is called when a @c Scheduling::DELETE_ALL_EVENTS_CMD,
+                * Callback that is called when a @c Scheduling::DELETE_ALL_CMD,
                 * is received.
                 *
-                * @param [in] addr       the network address to send the message to.
+                * @param [in] packet   the packet received.
+                *
+                * @retval Common::Result::OK
                 */
                virtual Common::Result delete_all_events(const Protocol::Packet &packet);
+
+               //! @}
+               // ======================================================================
 
                void periodic(uint32_t time);
 
@@ -344,7 +421,7 @@ namespace HF
                virtual IEntries<Interval> &entries() const = 0;
 
                /*!
-                * Get the Event Scheduling entry given by @c id.
+                * Get the %Event %Scheduling entry given by @c id.
                 *
                 * @param [in] id  event id of the event to retrieve.
                 *
@@ -378,9 +455,9 @@ namespace HF
             };
 
             /*!
-             * Scheduling %Service : %Server side implementation.
+             * %Event %Scheduling %Service : %Server side implementation.
              *
-             * This class provides the server side of the Scheduling interface.
+             * This class provides the server side of the %Scheduling interface.
              */
             template<typename _Entries>
             struct Server: public IServer
@@ -413,14 +490,17 @@ namespace HF
                }
             };
 
+            /*!
+             * %Event %Scheduling %Service : %Server side with
+             * default persistence implementation.
+             */
             typedef Server<Entries<Interval>> DefaultServer;
 
             /*! @} */
 
          } // namespace Event
-      }    // namespace Scheduling
-   }       // namespace Core
-}          // namespace HF
-
+      } // namespace Scheduling
+   } // namespace Core
+} // namespace HF
 
 #endif /* HF_CORE_EVENT_SCHEDULING_H */

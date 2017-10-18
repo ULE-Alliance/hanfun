@@ -663,7 +663,7 @@ TEST(WeeklySchedulingClient, DefineEvent)
 
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, client->sendMsg.itf.role);
    LONGS_EQUAL(client->uid(), client->sendMsg.itf.id);
-   LONGS_EQUAL(Scheduling::DEFINE_CMD, client->sendMsg.itf.member);
+   LONGS_EQUAL(Scheduling::DEFINE_EVENT_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 
    Scheduling::DefineEvent<Day> message;
@@ -770,7 +770,7 @@ TEST_GROUP(WeeklySchedulingServer)
       {}
 
       Common::Result activate_scheduler(const Protocol::Packet &packet,
-                                        Scheduling::ActivateScheduler &msg) override
+                                        const Scheduling::ActivateScheduler &msg) override
       {
          mock("Scheduling::Weekly::Server").actualCall("activate_scheduler");
          return Parent::activate_scheduler(packet, msg);
@@ -784,21 +784,21 @@ TEST_GROUP(WeeklySchedulingServer)
       }
 
       Common::Result update_event_status(const Protocol::Packet &packet,
-                                         Scheduling::UpdateStatus &msg) override
+                                         const Scheduling::UpdateStatus &msg) override
       {
          mock("Scheduling::Weekly::Server").actualCall("update_event_status");
          return Parent::update_event_status(packet, msg);
       }
 
       Common::Result get_event_entry(const Protocol::Packet &packet,
-                                     Scheduling::GetEntry &msg) override
+                                     const Scheduling::GetEntry &msg) override
       {
          mock("Scheduling::Weekly::Server").actualCall("get_event_entry");
          return Parent::get_event_entry(packet, msg);
       }
 
       Common::Result delete_event(const Protocol::Packet &packet,
-                                  Scheduling::DeleteEvent &msg) override
+                                  const Scheduling::DeleteEvent &msg) override
       {
          mock("Scheduling::Weekly::Server").actualCall("delete_event");
          return Parent::delete_event(packet, msg);
@@ -1045,7 +1045,7 @@ TEST(WeeklySchedulingServer, DefineEvent)
    payload = ByteArray(received.size());
 
    received.pack(payload);    // pack it
-   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.itf.member = Scheduling::DEFINE_EVENT_CMD;
    packet.message.length     = payload.size();
 
    mock("Scheduling::Weekly::Server").expectOneCall("define_event");
@@ -1099,7 +1099,7 @@ TEST(WeeklySchedulingServer, DefineEvent_next_available)
    payload = ByteArray(received.size());
 
    received.pack(payload);    // pack it
-   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.itf.member = Scheduling::DEFINE_EVENT_CMD;
    packet.message.length     = payload.size();
 
    mock("Scheduling::Weekly::Server").expectOneCall("define_event");
@@ -1149,7 +1149,7 @@ TEST(WeeklySchedulingServer, DefineEvent_fail_event_id_in_use)
    payload = ByteArray(received.size());
 
    received.pack(payload);    // pack it
-   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.itf.member = Scheduling::DEFINE_EVENT_CMD;
    packet.message.length     = payload.size();
 
    mock("Scheduling::Weekly::Server").expectOneCall("define_event");
@@ -1197,7 +1197,7 @@ TEST(WeeklySchedulingServer, DefineEvent_fail_limited_by_atr)
    payload = ByteArray(received.size());
 
    received.pack(payload);    // pack it
-   packet.message.itf.member = Scheduling::DEFINE_CMD;
+   packet.message.itf.member = Scheduling::DEFINE_EVENT_CMD;
    packet.message.length     = payload.size();
 
    mock("Scheduling::Weekly::Server").expectOneCall("define_event");
