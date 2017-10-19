@@ -40,9 +40,9 @@ static const Common::ByteArray g_version_payload({
 
 static void check_version(const Version &version, const char *file, int line)
 {
-   STRCMP_EQUAL_LOCATION("v1.2.3", version.sw_version.c_str(), file, line);
-   STRCMP_EQUAL_LOCATION("revA", version.hw_version.c_str(), file, line);
-   STRCMP_EQUAL_LOCATION("https", version.url.c_str(), file, line);
+   STRCMP_EQUAL_LOCATION("v1.2.3", version.sw_version.c_str(), NULL, file, line);
+   STRCMP_EQUAL_LOCATION("revA", version.hw_version.c_str(), NULL, file, line);
+   STRCMP_EQUAL_LOCATION("https", version.url.c_str(), file, NULL, line);
 }
 
 static void check_version(const HF::Common::ByteArray &payload, const char *file, int line,
@@ -50,7 +50,7 @@ static void check_version(const HF::Common::ByteArray &payload, const char *file
 {
    Version version;
 
-   LONGS_EQUAL_LOCATION(18, version.unpack(payload, offset), file, line);
+   LONGS_EQUAL_LOCATION(18, version.unpack(payload, offset), NULL, file, line);
 
    check_version(version, file, line);
 }
