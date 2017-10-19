@@ -194,8 +194,10 @@ module Hanfun
         add_import(file, @generator[:attributes][:insert_at][:include])
 
         # Factory definition.
-        content = %({HF::Interface::#{@interface.to_uid},
-                    HF::#{@namespace.name}::#{@interface.to_class}::create_attribute,},
+        content = %({
+                       HF::Interface::#{@interface.to_uid},
+                       HF::#{@namespace.name}::#{@interface.to_class}::create_attribute,
+                    },
                   ).gsub(/^\s*/, '').gsub(/\A/, ' ' * 3)
         content = format_code(content, true)
         inject_into_file(file, content, before: @generator[:attributes][:insert_at][:factory])
@@ -220,7 +222,8 @@ module Hanfun
           content = %{
         case HF::Interface::#{@interface.to_uid}:
           stream << static_cast<#{@interface.to_class}::CMD>(message.itf.member);
-          break;}.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
+          break;
+          }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
           content = format_code(content, true)
           inject_into_file(file, content, before: pattern.call(type))
         end
@@ -231,7 +234,8 @@ module Hanfun
           content = %{
         case HF::Interface::#{@interface.to_uid}:
           stream << static_cast<#{@interface.to_class}::Attributes>(message.itf.member);
-          break;}.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
+          break;
+          }.gsub(/^\s*/, '').gsub(/\A/, ' ' * find_indent(file, pattern.call(type)))
           content = format_code(content, true)
           inject_into_file(file, content, before: pattern.call(type))
         end
