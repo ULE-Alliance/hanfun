@@ -49,91 +49,99 @@ enable_testing()
 # Tests Build
 # ==============================================================================
 
+# Add existing tests executable to test list.
+foreach(_test ${HF_TESTS})
+   add_test (NAME "${_test}" COMMAND ${_test})
+ endforeach()
+
+macro(_add_test _name)
+   string (TOLOWER "${_name}" __name)
+
+   # Construct source file.
+   if(__name MATCHES "^(.+/)(.+)")
+     set(_target_srcs "${CMAKE_MATCH_1}test_${CMAKE_MATCH_2}.cpp")
+   else()
+     set(_target_srcs "test_${__name}.cpp")
+   endif()
+
+   # Executable name.
+   string (REGEX REPLACE "/" "_" _target ${__name})
+   set(_target "test_${_target}")
+
+   add_executable (${_target} ${_target_srcs} $<TARGET_OBJECTS:tests_common>)
+   target_link_libraries(${_target} hanfun ${CppUTest_LIBRARIES})
+   if (Backtrace_FOUND)
+     target_link_libraries(${_target} ${Backtrace_LIBRARIES} )
+   endif()
+
+   add_test (NAME "${_name}" COMMAND ${_target})
+   list(APPEND HF_TESTS ${_target})
+
+   # Cleanup
+   unset(_name)
+   unset(_target)
+   unset(_target_srcs)
+   unset(__name)
+endmacro()
+
 ## Common ##
 set(TESTS_HELPER_SRCS test_helper.cpp)
+add_library(tests_common OBJECT ${TESTS_HELPER_SRCS})
 
-set(TESTS_COMMON_SRCS test_common.cpp)
-set(TESTS_PROTOCOL_SRCS test_protocol.cpp)
+_add_test("Common")
+_add_test("Protocol")
 
 ## Interfaces ##
-set(TESTS_INTERFACES_SRCS "test_interfaces.cpp")
-
-macro(add_interface_tests __name)
-   list(APPEND TESTS_INTERFACES_SRCS "interfaces/test_${__name}.cpp")
-endmacro()
-
-add_interface_tests("alert")
-add_interface_tests("on_off")
-add_interface_tests("level_control")
-add_interface_tests("simple_power_meter")
-add_interface_tests("simple_temperature")
-add_interface_tests("simple_humidity")
-add_interface_tests("simple_thermostat")
-add_interface_tests("simple_button")
-add_interface_tests("simple_visual_effects")
-add_interface_tests("simple_air_pressure")
-add_interface_tests("simple_light_sensor")
-add_interface_tests("colour_control")
-add_interface_tests("simple_keypad")
+_add_test("Interfaces")
+_add_test("Interfaces/Alert")
+_add_test("Interfaces/Colour_Control")
+_add_test("Interfaces/Level_Control")
+_add_test("Interfaces/On_Off")
+_add_test("Interfaces/Simple_Air_Pressure")
+_add_test("Interfaces/Simple_Button")
+_add_test("Interfaces/Simple_Humidity")
+_add_test("Interfaces/Simple_Keypad")
+_add_test("Interfaces/Simple_Light_Sensor")
+_add_test("Interfaces/Simple_Power_meter")
+_add_test("Interfaces/Simple_Temperature")
+_add_test("Interfaces/Simple_Thermostat")
+_add_test("Interfaces/Simple_Visual_Effects")
 
 ## Profiles ##
-set(TESTS_PROFILES_SRCS  "test_profiles.cpp")
+_add_test("Profiles")
 
 ## Devices ##
-set(TESTS_DEVICES_SRCS   "test_devices.cpp")
+_add_test("Devices")
 
 ## Core Services & Interfaces ##
-set(TESTS_CORE_SRCS "test_core.cpp")
-
-macro(add_core_tests __name)
-   list(APPEND TESTS_CORE_SRCS "core/test_${__name}.cpp")
-endmacro()
-
-add_core_tests("device_management")
-add_core_tests("bind_management")
-add_core_tests("device_information")
-add_core_tests("attribute_reporting")
-add_core_tests("group_table")
-add_core_tests("session_management")
-add_core_tests("group_management")
-add_core_tests("rssi")
-if(HF_CORE_SUOTA_SUPPORT)
-    add_core("suota")
-endif()
-add_core_tests("time")
-add_core_tests("batch_program_management")
-add_core_tests("scheduling")
-add_core_tests("event_scheduling")
-add_core_tests("weekly_scheduling")
+_add_test("Core")
+_add_test("Core/Attribute_Reporting")
+_add_test("Core/Batch_Program_Management")
+_add_test("Core/Bind_Management")
+_add_test("Core/Device_Information")
+_add_test("Core/Device_Management")
+_add_test("Core/Event_Scheduling")
+_add_test("Core/Group_Management")
+_add_test("Core/Group_Table")
+_add_test("Core/RSSI")
+_add_test("Core/SUOTA")
+_add_test("Core/Scheduling")
+_add_test("Core/Session_Management")
+_add_test("Core/Time")
+_add_test("Core/Weekly_Scheduling")
 
 ## Transport Layer ##
-set(TESTS_TRANSPORT_SRCS "test_transport.cpp")
+_add_test("Transport")
 
 ## Unit ##
-set(TESTS_UNITS_SRCS     "test_units.cpp")
+_add_test("Units")
 
-## Test Executable ##
-add_executable( test_hanfun ${TESTS_HELPER_SRCS} ${TESTS_COMMON_SRCS}
-                            ${TESTS_PROTOCOL_SRCS}
-                            ${TESTS_INTERFACES_SRCS}
-                            ${TESTS_PROFILES_SRCS}
-                            ${TESTS_DEVICES_SRCS}
-                            ${TESTS_CORE_SRCS}
-                            ${TESTS_TRANSPORT_SRCS}
-                            ${TESTS_UNITS_SRCS} )
-
-target_link_libraries( test_hanfun hanfun ${CppUTest_LIBRARIES} )
-if (Backtrace_FOUND)
-  target_link_libraries( test_hanfun ${Backtrace_LIBRARIES} )
-endif()
-set (HF_TESTS test_hanfun ${HF_TESTS})
-
-foreach(_test ${HF_TESTS})
-    add_test (NAME "${_test}" COMMAND ${_test})
-endforeach()
+# =======================
+# Check & Coverage Target
+# =======================
 
 if(NOT CMAKE_CROSSCOMPILING)
-  set (ARGS --output-on-failure "\$(CTEST_ARGS)")
+  set (ARGS --output-on-failure -j "\$(CTEST_ARGS)")
 
   add_custom_target (check ALL COMMAND ${CMAKE_CTEST_COMMAND} ${ARGS}
                                DEPENDS ${HF_TESTS} VERBATIM)
@@ -141,5 +149,4 @@ if(NOT CMAKE_CROSSCOMPILING)
   if (HF_CODE_COVERAGE)
     generate_code_coverage_report(${HF_TESTS})
   endif()
-
 endif()

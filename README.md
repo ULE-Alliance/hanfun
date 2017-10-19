@@ -69,6 +69,10 @@ To re-run the tests, issue:
 
     $ make check
 
+To run only a particular test, issue:
+
+    $ make check CTEST_ARGS="-N -R <name of the test>"
+
 ## Examples
 
 The folder _apps/_ contains two example applications, one for the concentrator (base) side and one
@@ -156,4 +160,3 @@ This library is released under dual-license, [GPLv2](http://www.gnu.org/licenses
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
 Please see the file 'LICENSE' in the root folder for further information.
-
