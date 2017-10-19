@@ -154,39 +154,6 @@ namespace HF
 
 } // namespace Testing
 
-Common::Result HF::Transport::Group::create(HF::Transport::Endpoint &ep, uint16_t group)
-{
-   return static_cast<Common::Result>(mock("HF::Transport::Group").actualCall("create")
-                                         .withParameter("ep", &ep)
-                                         .withParameter("group", group)
-                                         .returnIntValueOrDefault(Common::Result::FAIL_UNKNOWN));
-}
-
-Common::Result HF::Transport::Group::add(HF::Transport::Endpoint &ep, uint16_t group,
-                                         uint16_t device)
-{
-   return static_cast<Common::Result>(mock("HF::Transport::Group").actualCall("add")
-                                         .withParameter("ep", &ep)
-                                         .withParameter("group", group)
-                                         .withParameter("device", device)
-                                         .returnIntValueOrDefault(Common::Result::FAIL_UNKNOWN));
-}
-
-void HF::Transport::Group::remove(HF::Transport::Endpoint &ep, uint16_t group,
-                                  uint16_t device)
-{
-   mock("HF::Transport::Group").actualCall("remove")
-      .withParameter("ep", &ep)
-      .withParameter("group", group)
-      .withParameter("device", device);
-}
-
-void HF::Transport::Group::remove(HF::Transport::Endpoint &ep, uint16_t group)
-{
-   mock("HF::Transport::Group").actualCall("remove")
-      .withParameter("ep", &ep)
-      .withParameter("group", group);
-}
 
 // =============================================================================
 // Transport API Tests.
