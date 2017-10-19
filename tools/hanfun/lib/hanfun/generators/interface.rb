@@ -39,7 +39,7 @@ module Hanfun
         }
 
         @generator[:config] = {
-          insert_config_at: /\s#endif/,
+          insert_config_at: %r{\s#endif\s+/\* HF_CONFIG_H \*/},
           insert_cmake_at:  /^\s+#\s+=+\n#\s+Dependecies/
         }
 
