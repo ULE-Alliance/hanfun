@@ -143,8 +143,9 @@ module Hanfun
         end
 
         # Add options for options attributes to cmake/options.cmake
-        inject_into_file(cmake_path('options.cmake'), before: @generator[:config][:insert_cmake_at]) do
-          header.gsub(/^\/\//, '#') + code_opts.join("\n") + "\n"
+        inject_into_file(cmake_path('options.cmake'),
+                         before: @generator[:config][:insert_cmake_at]) do
+          header.gsub(%r{^//}, '#') + code_opts.join("\n") + "\n"
         end
 
         # Add optional attributes to config.h.in
@@ -251,8 +252,10 @@ module Hanfun
         end
 
         # Add test code to file.
-        code = "#{@generator[:build][:macro]}_tests(\"#{@interface.path}\")\n"
-        inject_into_file test_path('CMakeLists.txt', false), code, before: @generator[:tests][:insert_cmake_at]
+        test_name = @interface.to_doc.tr(' ', '_')
+        code = "_add_test(\"#{@namespace.name}/#{test_name}\")\n"
+        inject_into_file test_path('CMakeLists.txt', false), code,
+                         before: @generator[:tests][:insert_cmake_at]
 
         return unless @has_opt_cmds || @has_opt_attr
 
@@ -272,7 +275,8 @@ module Hanfun
           code << "#define #{prefix}_#{@interface.short}_#{attr.to_uid.ljust(@uid_align)}  1"
         end
 
-        inject_into_file test_path('config.h.in', false), before: @generator[:tests][:insert_config_at] do
+        inject_into_file test_path('config.h.in', false),
+                         before: @generator[:tests][:insert_config_at] do
           "\n" + header + code.join("\n")
         end
       end
