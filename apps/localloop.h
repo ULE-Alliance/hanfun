@@ -5,7 +5,7 @@
  * This file contains an implementation of a HAN-FUN transport layer to be used
  * in the example applications.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

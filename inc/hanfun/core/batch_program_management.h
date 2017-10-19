@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Batch Program Management interface.
  *
- * @version    x.x.x
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

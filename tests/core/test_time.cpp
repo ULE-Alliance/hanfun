@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Time service implementation.
  *
- * @version    x.x.x
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2016 ULE Alliance
  *

@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

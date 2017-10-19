@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -148,7 +148,7 @@ namespace HF
     * @{
     */
 
-   constexpr uint8_t CORE_VERSION       = 1; //!< %Core %Service & %Interfaces major version supported.
+   constexpr uint8_t CORE_VERSION       = 2; //!< %Core %Service & %Interfaces major version supported.
    constexpr uint8_t PROFILES_VERSION   = 1; //!< %Profiles major version supported.
    constexpr uint8_t INTERFACES_VERSION = 1; //!< %Interfaces major version supported.
 

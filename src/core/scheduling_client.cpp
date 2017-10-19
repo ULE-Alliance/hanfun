@@ -5,7 +5,7 @@
  * This file contains the implementation of the common Client functionality for the
  * Scheduling service.
  *
- * @version    x.x.x
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

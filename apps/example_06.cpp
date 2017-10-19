@@ -5,7 +5,7 @@
  * This file contains an example demonstrating how to read a custom attribute from
  * the device information service.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

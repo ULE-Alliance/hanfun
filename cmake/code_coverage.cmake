@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library code coverage compiler and enviroment checks and configuration.
 #
-#   @version    x.x.x
+#   @version    1.5.0
 #
 #   @copyright  Copyright (c) 2016  ULE Alliance
 #

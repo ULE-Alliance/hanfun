@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Event Scheduling service
  * implementation.
  *
- * @version    x.x.x
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
