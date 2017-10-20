@@ -302,7 +302,6 @@ TEST(WeeklySchedulingEntries, Save_Duplicate)
 
 TEST_GROUP(WeeklyScheduling_Messages)
 {
-
    Common::ByteArray payload, expected, Test_Entry_payload;
    uint16_t size;
 
@@ -327,7 +326,7 @@ TEST_GROUP(WeeklyScheduling_Messages)
                                               static_cast<uint8_t>(SATURDAY), // Day of week
                                               14,                             // Hour
                                               50,                             // Minute
-                                              0x12                    // Program ID.
+                                              0x12                            // Program ID.
       };
       mock().ignoreOtherCalls();
    }
@@ -388,12 +387,12 @@ TEST(WeeklyScheduling_Messages, Entry_unpack_fail)
 {
    Entry message;
 
-   payload = Common::ByteArray {0x11,                   // Event ID
-                                0x80,                   // Status 0x01 << 7
+   payload = Common::ByteArray {0x11,                           // Event ID
+                                0x80,                           // Status 0x01 << 7
                                 static_cast<uint8_t>(SATURDAY), // Day of week
                                 14,                             // Hour
                                 50,                             // Minute
-                                                        // Program ID.   (missing)
+                                                                // Program ID.   (missing)
    };
 
    size = message.unpack(payload);
@@ -404,7 +403,7 @@ TEST(WeeklyScheduling_Messages, Entry_unpack_fail)
 TEST(WeeklyScheduling_Messages, Convert)
 {
    // ========== 2000-JAN-01 00:00:00 - Sa ==========
-   Core::Time::Date test_date((uint32_t)0);
+   Core::Time::Date test_date((uint32_t) 0);
    Day result = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(SATURDAY, result.day);
@@ -413,7 +412,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2000-JAN-02 14:50:30 - Su ==========
    test_date = Core::Time::Date(0, 1, 2, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(SUNDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -421,7 +420,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2001-MAY-28 14:50:30 - Mo ==========
    test_date = Core::Time::Date(1, 5, 28, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(MONDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -429,7 +428,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2004-FEB-29 14:50:30 - Su ==========    (Leap year)
    test_date = Core::Time::Date(4, 2, 29, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(SUNDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -437,7 +436,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2005-MAY-03 14:50:30 - Tu ==========
    test_date = Core::Time::Date(5, 5, 3, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(TUESDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -445,7 +444,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2017-JUL-5 14:50:30 - We ==========
    test_date = Core::Time::Date(17, 7, 5, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(WEDNESDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -453,7 +452,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2020-OCT-01 14:50:30 - Th ==========
    test_date = Core::Time::Date(20, 10, 1, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(THURSDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -461,7 +460,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2023-SEP-01 14:50:30 - Fr ==========
    test_date = Core::Time::Date(23, 9, 1, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(FRIDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -469,7 +468,7 @@ TEST(WeeklyScheduling_Messages, Convert)
 
    // ========== 2023-APR-01 14:50:30 - Sa ==========
    test_date = Core::Time::Date(23, 4, 1, 14, 50, 30);
-   result = Day::convert(Core::Time::convert(test_date));
+   result    = Day::convert(Core::Time::convert(test_date));
 
    UNSIGNED_LONGS_EQUAL(SATURDAY, result.day);
    UNSIGNED_LONGS_EQUAL(14, result.hour);
@@ -480,32 +479,32 @@ TEST(WeeklyScheduling_Messages, Convert)
 TEST(WeeklyScheduling_Messages, first)
 {
    // ========== 2000-JAN-01 00:00:00 - Sa ==========
-   Core::Time::Date test_date((uint32_t)0);
-   Day result(SATURDAY,00,01);
+   Core::Time::Date test_date((uint32_t) 0);
+   Day result(SATURDAY, 00, 01);
 
    UNSIGNED_LONGS_EQUAL(Day::MINUTE, result.first(Core::Time::convert(test_date))); // 1 min after
 
 
    // ========== 2000-JAN-02 14:50:30 - Su ==========
    test_date = Core::Time::Date(0, 1, 2, 14, 50, 30);
-   result = Day(SATURDAY,14,50);
+   result    = Day(SATURDAY, 14, 50);
 
-   UNSIGNED_LONGS_EQUAL(6*Day::DAY,  result.first(Core::Time::convert(test_date))   // 6 days after
+   UNSIGNED_LONGS_EQUAL(6 * Day::DAY, result.first(Core::Time::convert(test_date))   // 6 days after
                                      - Core::Time::convert(test_date));
 
    // ========== 2001-MAY-28 14:50:30 - Mo ==========
    test_date = Core::Time::Date(1, 5, 28, 14, 50, 30);
-   result = Day(TUESDAY,14,50);
+   result    = Day(TUESDAY, 14, 50);
 
    UNSIGNED_LONGS_EQUAL(1 * Day::DAY, result.first(Core::Time::convert(test_date)) // 1 day after
                                           - Core::Time::convert(test_date));
 
    // ========== 2004-FEB-29 14:50:30 - Su ==========    (Leap year)
    test_date = Core::Time::Date(4, 2, 29, 14, 50, 30);
-   result = Day(SUNDAY,14,45);
+   result    = Day(SUNDAY, 14, 45);
 
    UNSIGNED_LONGS_EQUAL(Day::WEEK - 5 * Day::MINUTE, result.first(Core::Time::convert(test_date))
-                                            - Core::Time::convert(test_date));      //next week
+                                            - Core::Time::convert(test_date));      // next week
 
 }
 
@@ -519,12 +518,13 @@ TEST(WeeklyScheduling_Messages, first_sequential_test)
    for (int d = 0; d < 7; d++)
    {
       dow = (WEDNESDAY + d) % 7;
+
       for (int h = 0; h < 24; h++)
       {
          for (int m = 0; m < 60; m++)
          {
             result = Day(dow, h, m);
-            UNSIGNED_LONGS_EQUAL(d * Day::DAY + h * Day::HOUR + m * Day::MINUTE ,
+            UNSIGNED_LONGS_EQUAL(d * Day::DAY + h * Day::HOUR + m * Day::MINUTE,
                                  result.first(Core::Time::convert(test_date))
                                                - Core::Time::convert(test_date));
          }
@@ -901,11 +901,11 @@ TEST_GROUP(WeeklySchedulingServer)
 
    TEST_SETUP()
    {
-      device                    = new Testing::Device();
-      server                    = new WeeklySchedulingServer(*(device->unit0()));
+      device       = new Testing::Device();
+      server       = new WeeklySchedulingServer(*(device->unit0()));
 
       batch_server = new BatchProgramServer(*(device->unit0()));
-      time_server = new TimeServer(*(device->unit0()));
+      time_server  = new TimeServer(*(device->unit0()));
 
       device->unit0()->batch_program(batch_server);
       device->unit0()->time(time_server);
@@ -933,17 +933,16 @@ TEST_GROUP(WeeklySchedulingServer)
       delete server;
       delete device;
 
-      //NOTE: The batch_server & time_server are deleted by the "delete device"
+      // NOTE: The batch_server & time_server are deleted by the "delete device"
 
       mock().clear();
    }
 
    Entry GenerateEntry(uint8_t _eid = 0x12,
                        uint8_t _st = 0x01,
-                       Day _it = Day(SATURDAY,14,50),
+                       Day _it = Day(SATURDAY, 14, 50),
                        uint8_t _pid = 0x21)
    {
-
       return Entry(_eid, _st, _it, _pid);
    }
 
@@ -1341,7 +1340,7 @@ TEST(WeeklySchedulingServer, UpdateEventStatus_fail_no_event_id)
 TEST(WeeklySchedulingServer, GetEventEntry)
 {
    SeedEntries(5);
-   Entry TestEntry = GenerateEntry(0x12, 0x00, Day(SATURDAY, 14,50), 0x55);
+   Entry TestEntry = GenerateEntry(0x12, 0x00, Day(SATURDAY, 14, 50), 0x55);
    server->entries().save(TestEntry);
 
    Scheduling::GetEntry received(0x12);
@@ -1563,7 +1562,7 @@ TEST(WeeklySchedulingServer, DeleteAllEvents)
 ////! @test Periodic single entry.
 TEST(WeeklySchedulingServer, Periodic_Single_Entry)
 {
-   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14,50), 0x01));
+   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14, 50), 0x01));
 
    mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
    mock("Scheduling::Weekly::Server").expectOneCall("periodic");
@@ -1578,7 +1577,7 @@ TEST(WeeklySchedulingServer, Periodic_Single_Entry)
    mock("BatchProgram::Server").checkExpectations();
    mock("Time::Server").checkExpectations();
 
-   time_server->tick(15*(60*60));   // + 15H
+   time_server->tick(15 * (60 * 60));   // + 15H
 
    for (uint8_t i = 1; i < 0x0F; ++i)
    {
@@ -1603,8 +1602,8 @@ TEST(WeeklySchedulingServer, Periodic_Single_Entry)
 ////! @test Periodic two entries overlap.
 TEST(WeeklySchedulingServer, Periodic_two_Entries_overlap)
 {
-   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14,50), 0x01));
-   server->entries().save(Entry(0x2, 0x01, Day(SATURDAY, 14,50), 0x02));
+   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14, 50), 0x01));
+   server->entries().save(Entry(0x2, 0x01, Day(SATURDAY, 14, 50), 0x02));
 
    mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
    mock("Scheduling::Weekly::Server").expectOneCall("periodic");
@@ -1619,7 +1618,7 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_overlap)
    mock("BatchProgram::Server").checkExpectations();
    mock("Time::Server").checkExpectations();
 
-   time_server->tick(15*(60*60));   // + 15H
+   time_server->tick(15 * (60 * 60));   // + 15H
 
    for (uint8_t i = 1; i < 0x0F; ++i)
    {
@@ -1632,8 +1631,8 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_overlap)
          .withParameterOfType("Address", "dest", &addr);
 
       mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
-               .withParameterOfType("Address", "source", &addr)
-               .withParameterOfType("Address", "dest", &addr);
+         .withParameterOfType("Address", "source", &addr)
+         .withParameterOfType("Address", "dest", &addr);
 
       time_server->tick(Day::WEEK);
       server->periodic(0x11);
@@ -1648,8 +1647,8 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_overlap)
 ////! @test Periodic tow entries - disable one during the test.
 TEST(WeeklySchedulingServer, Periodic_two_Entries_disable_one)
 {
-   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14,50), 0x01));
-   server->entries().save(Entry(0x2, 0x01, Day(SATURDAY, 14,50), 0x02));
+   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14, 50), 0x01));
+   server->entries().save(Entry(0x2, 0x01, Day(SATURDAY, 14, 50), 0x02));
 
    mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
    mock("Scheduling::Weekly::Server").expectOneCall("periodic");
@@ -1664,7 +1663,7 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_disable_one)
    mock("BatchProgram::Server").checkExpectations();
    mock("Time::Server").checkExpectations();
 
-   time_server->tick(15*(60*60));   // + 15H
+   time_server->tick(15 * (60 * 60));   // + 15H
 
    for (uint8_t i = 1; i < 0x0F; ++i)
    {
@@ -1677,14 +1676,14 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_disable_one)
          .withParameterOfType("Address", "dest", &addr);
 
       mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
-               .withParameterOfType("Address", "source", &addr)
-               .withParameterOfType("Address", "dest", &addr);
+         .withParameterOfType("Address", "source", &addr)
+         .withParameterOfType("Address", "dest", &addr);
 
       time_server->tick(Day::WEEK);
       server->periodic(0x11);
    }
 
-   server->entries().find(0x01)->status=0x00; //Disable 1st entry
+   server->entries().find(0x01)->status = 0x00; // Disable 1st entry
 
    for (uint8_t i = 1; i < 0x0F; ++i)
    {
@@ -1693,8 +1692,8 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_disable_one)
       mock("Time::Server").expectOneCall("time");
 
       mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
-            .withParameterOfType("Address", "source", &addr)
-            .withParameterOfType("Address", "dest", &addr);
+         .withParameterOfType("Address", "source", &addr)
+         .withParameterOfType("Address", "dest", &addr);
 
       time_server->tick(Day::WEEK);
       server->periodic(0x11);
@@ -1709,8 +1708,8 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_disable_one)
 ////! @test Periodic two entries no overlap.
 TEST(WeeklySchedulingServer, Periodic_two_Entries_no_overlap)
 {
-   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14,50), 0x01));
-   server->entries().save(Entry(0x2, 0x01, Day(SUNDAY, 14,50), 0x02));
+   server->entries().save(Entry(0x1, 0x01, Day(SATURDAY, 14, 50), 0x01));
+   server->entries().save(Entry(0x2, 0x01, Day(SUNDAY, 14, 50), 0x02));
 
    mock("AbstractDevice").expectOneCall("address").andReturnValue(addr.device);
    mock("Scheduling::Weekly::Server").expectOneCall("periodic");
@@ -1725,7 +1724,7 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_no_overlap)
    mock("BatchProgram::Server").checkExpectations();
    mock("Time::Server").checkExpectations();
 
-   time_server->tick(15*(60*60));   // + 15H
+   time_server->tick(15 * (60 * 60));   // + 15H
 
    for (uint8_t i = 1; i < 0x0F; ++i)
    {
@@ -1734,8 +1733,8 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_no_overlap)
       mock("Time::Server").expectOneCall("time");
 
       mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x01)
-            .withParameterOfType("Address", "source", &addr)
-            .withParameterOfType("Address", "dest", &addr);
+         .withParameterOfType("Address", "source", &addr)
+         .withParameterOfType("Address", "dest", &addr);
 
       server->periodic(0x11);
 
@@ -1749,8 +1748,8 @@ TEST(WeeklySchedulingServer, Periodic_two_Entries_no_overlap)
       mock("Time::Server").expectOneCall("time");
 
       mock("BatchProgram::Server").expectOneCall("invoke_program").withParameter("pid", 0x02)
-            .withParameterOfType("Address", "source", &addr)
-            .withParameterOfType("Address", "dest", &addr);
+         .withParameterOfType("Address", "source", &addr)
+         .withParameterOfType("Address", "dest", &addr);
 
       time_server->tick(Day::DAY);           // + 1 DAY
       server->periodic(0x11);

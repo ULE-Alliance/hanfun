@@ -763,7 +763,6 @@ namespace HF
              */
             struct UpdateIntervalMessage
             {
-
                Reference report;    //!< Identification of the rule to delete.
                uint32_t  interval;  //!< The new interval.
 

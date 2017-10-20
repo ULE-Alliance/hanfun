@@ -301,7 +301,6 @@ TEST(EventSchedulingEntries, Save_Duplicate)
 
 TEST_GROUP(EventScheduling_Messages)
 {
-
    Common::ByteArray payload, expected, Test_Entry_payload;
    uint16_t size;
 
@@ -798,7 +797,6 @@ TEST_GROUP(EventSchedulingServer)
                        Interval _it = Interval(0x1, 0xFFFFFFFF, 0x1111),
                        uint8_t _pid = 0x21)
    {
-
       return Entry(_eid, _st, _it, _pid);
    }
 

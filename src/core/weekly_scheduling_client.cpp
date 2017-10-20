@@ -38,7 +38,7 @@ void Weekly::IClient::define_event(const Protocol::Address &addr, uint8_t id, ui
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 
-   HF_ASSERT(addr.unit == 0, { return; });
+   HF_ASSERT(addr.unit == 0, {return;});
 
    message.itf.role   = HF::Interface::SERVER_ROLE;
    message.itf.id     = ITF;

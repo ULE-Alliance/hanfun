@@ -399,8 +399,8 @@ TEST(GroupManagement, CreateGroupResponse_Pack)
 
    CreateResponse message(0x5A55);
 
-   ByteArray expected = ByteArray{Common::Result::OK,   // Response code : OK
-                                  0x5A, 0x55};          // Group Address
+   ByteArray expected = ByteArray {Common::Result::OK,  // Response code : OK
+                                   0x5A, 0x55};         // Group Address
    ByteArray got      = ByteArray(1 + 1 + 1);
 
    UNSIGNED_LONGS_EQUAL(message.size(), message.pack(got));
@@ -417,7 +417,7 @@ TEST(GroupManagement, CreateGroupResponse_Pack)
 
    message  = CreateResponse(Common::Result::FAIL_AUTH, 0x5A55);
 
-   expected = ByteArray{Common::Result::FAIL_AUTH};
+   expected = ByteArray {Common::Result::FAIL_AUTH};
    got      = ByteArray(message.size());
 
    UNSIGNED_LONGS_EQUAL(CreateResponse::min_size, message.pack(got));
@@ -432,8 +432,8 @@ TEST(GroupManagement, CreateGroupResponse_UnPack)
 
    CreateResponse message(0x5A55);
 
-   ByteArray input = ByteArray{Common::Result::OK,    // Response code
-                               0x5A, 0x55};           // Group address
+   ByteArray input = ByteArray {Common::Result::OK,   // Response code
+                                0x5A, 0x55};          // Group address
 
    message.unpack(input);
 
@@ -487,7 +487,7 @@ TEST(GroupManagement, DeleteGroupMessage_UnPack)
    // ----- Normal Case -----
    DeleteMessage message(0x5A55);
 
-   ByteArray input{0x5A, 0x55};
+   ByteArray input {0x5A, 0x55};
 
    message.unpack(input);
 

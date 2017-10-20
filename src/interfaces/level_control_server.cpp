@@ -171,7 +171,6 @@ Common::Result Server::handle_command(Protocol::Packet &packet, Common::ByteArra
 
    switch (cmd)
    {
-
 #ifdef HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD
       case SET_LEVEL_CMD:
       {

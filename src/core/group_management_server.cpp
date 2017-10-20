@@ -164,7 +164,6 @@ Common::Result IServer::handle_command(Protocol::Packet &packet, Common::ByteArr
 
       case ADD_CMD:
       {
-
          AddMessage msg;
          msg.unpack(payload, offset);
 

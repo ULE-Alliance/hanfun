@@ -30,7 +30,6 @@ using namespace HF::Core::Scheduling;
 //! Test Group for Common Scheduler service messages class.
 TEST_GROUP(Scheduling_Messages)
 {
-
    Common::ByteArray payload, expected;
    uint16_t size;
    TEST_SETUP()
@@ -64,7 +63,7 @@ TEST(Scheduling_Messages, ActivateScheduler_pack)
 
    size     = message.pack(payload);
 
-   expected = Common::ByteArray{0x01};
+   expected = Common::ByteArray {0x01};
 
    UNSIGNED_LONGS_EQUAL(1, size);
    CHECK_EQUAL(expected, payload);
@@ -75,7 +74,7 @@ TEST(Scheduling_Messages, ActivateScheduler_unpack)
 {
    ActivateScheduler message;
 
-   payload = Common::ByteArray{0x11};
+   payload = Common::ByteArray {0x11};
 
    size    = message.unpack(payload);
 
@@ -106,7 +105,7 @@ TEST(Scheduling_Messages, DefineEventResponse_pack)
 
    size     = message.pack(payload);
 
-   expected = Common::ByteArray{Common::Result::OK, 0x11};
+   expected = Common::ByteArray {Common::Result::OK, 0x11};
 
    UNSIGNED_LONGS_EQUAL(2, size);
    CHECK_EQUAL(expected, payload);
@@ -144,7 +143,7 @@ TEST(Scheduling_Messages, DefineEventResponse_unpack)
 {
    DefineEventResponse message;
 
-   payload = Common::ByteArray{Common::Result::OK, 0x11};
+   payload = Common::ByteArray {Common::Result::OK, 0x11};
 
    size    = message.unpack(payload);
 
@@ -171,7 +170,7 @@ TEST(Scheduling_Messages, DefineEventResponse_unpack_fail)
 {
    DefineEventResponse message;
 
-   payload = Common::ByteArray{Common::Result::OK};
+   payload = Common::ByteArray {Common::Result::OK};
 
    size    = message.unpack(payload);
 
@@ -198,7 +197,7 @@ TEST(Scheduling_Messages, UpdateStatus_pack)
 
    size     = message.pack(payload);
 
-   expected = Common::ByteArray{0x11, 0x80};
+   expected = Common::ByteArray {0x11, 0x80};
 
    UNSIGNED_LONGS_EQUAL(2, size);
    CHECK_EQUAL(expected, payload);
@@ -224,7 +223,7 @@ TEST(Scheduling_Messages, UpdateStatus_unpack)
 {
    UpdateStatus message;
 
-   payload = Common::ByteArray{0x11, 0x81};
+   payload = Common::ByteArray {0x11, 0x81};
 
    size    = message.unpack(payload);
 
@@ -241,7 +240,7 @@ TEST(Scheduling_Messages, UpdateStatus_unpack_fail)
 {
    UpdateStatus message;
 
-   payload = Common::ByteArray{0x11};
+   payload = Common::ByteArray {0x11};
 
    size    = message.unpack(payload);
 
@@ -268,7 +267,7 @@ TEST(Scheduling_Messages, GetEntry_pack)
 
    size     = message.pack(payload);
 
-   expected = Common::ByteArray{0x11};
+   expected = Common::ByteArray {0x11};
 
    UNSIGNED_LONGS_EQUAL(1, size);
    CHECK_EQUAL(expected, payload);
@@ -279,7 +278,7 @@ TEST(Scheduling_Messages, GetEntry_unpack)
 {
    GetEntry message;
 
-   payload = Common::ByteArray{0x11};
+   payload = Common::ByteArray {0x11};
 
    size    = message.unpack(payload);
 

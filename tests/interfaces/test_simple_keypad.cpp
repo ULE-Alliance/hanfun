@@ -245,7 +245,7 @@ TEST(SimpleKeypadServer, Keypressed)
 
    mock("SimpleKeypad::Server").expectOneCall("key_pressed");
    mock("SimpleKeypad::Server").expectOneCall("key_received")
-         .withParameter("key_id", 0x00001111);
+      .withParameter("key_id", 0x00001111);
 
    packet.message.itf.member = SimpleKeypad::KEYPRESSED_CMD;
 

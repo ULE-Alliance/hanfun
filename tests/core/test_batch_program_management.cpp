@@ -584,8 +584,8 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_unpack)
 {
    DefineProgramResponse response;
 
-   payload = ByteArray  {static_cast<uint8_t>(Common::Result::OK),      // Response code
-                         0x12};                                         // Program ID
+   payload = ByteArray {static_cast<uint8_t>(Common::Result::OK),       // Response code
+                        0x12};                                          // Program ID
 
    response.unpack(payload, 0);
 
@@ -612,7 +612,7 @@ TEST(BatchProgramManagementMessages, DefineProgramResponse_unpack_fail)
 {
    DefineProgramResponse response;
 
-   payload = ByteArray  {static_cast<uint8_t>(Common::Result::OK)      // Response code
+   payload = ByteArray {static_cast<uint8_t>(Common::Result::OK)       // Response code
    };                                                                  // Missing Program ID
 
    UNSIGNED_LONGS_EQUAL(0, response.unpack(payload, 0));
@@ -640,7 +640,7 @@ TEST(BatchProgramManagementMessages, InvokeProgram_pack)
 
    payload  = ByteArray(message.size());
 
-   expected = ByteArray{0x01};
+   expected = ByteArray {0x01};
 
    message.pack(payload, 0);
    CHECK_EQUAL(expected, payload);
@@ -651,7 +651,7 @@ TEST(BatchProgramManagementMessages, InvokeProgram_unpack)
 {
    InvokeProgram message;
 
-   payload = ByteArray{0x01};
+   payload = ByteArray {0x01};
 
    message.unpack(payload, 0);
    CHECK_EQUAL(0x01, message.pid);
@@ -672,7 +672,7 @@ TEST(BatchProgramManagementMessages, InvokeProgram_unpack_fail)
 {
    InvokeProgram message;
 
-   payload = ByteArray{};
+   payload = ByteArray {};
 
    UNSIGNED_LONGS_EQUAL(0, message.unpack(payload, 0));
 }
@@ -773,7 +773,7 @@ TEST(BatchProgramManagementMessages, GetProgramActionsResponse_unpack)
 
    GetProgramActionsResponse response;
 
-   payload = ByteArray{static_cast<uint8_t>(Common::Result::FAIL_AUTH)};
+   payload = ByteArray {static_cast<uint8_t>(Common::Result::FAIL_AUTH)};
    size    = response.unpack(payload);
    UNSIGNED_LONGS_EQUAL(response.size(), size);
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);

@@ -931,13 +931,12 @@ namespace HF
        * Simple Keypad profile implementation.
        */
       class SimpleKeypad: public Profile<SIMPLE_KEYPAD,
-            Interfaces::SimpleKeypad::Server>
+                                         Interfaces::SimpleKeypad::Server>
       {
          public:
 
-         virtual ~SimpleKeypad ()
-         {
-         }
+         virtual ~SimpleKeypad()
+         {}
       };
 
       // =============================================================================

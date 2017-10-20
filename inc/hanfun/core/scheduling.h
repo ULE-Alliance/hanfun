@@ -175,7 +175,7 @@ namespace HF
          struct Entry
          {
             uint8_t id;          //!< %Event ID. (Unique per device)
-            bool status;         //!< %Event %Status.
+            bool    status;      //!< %Event %Status.
             _Type   time;        //!< Scheduler configuration.
             uint8_t pid;         //!< Program ID to be invoked.
 
@@ -224,10 +224,10 @@ namespace HF
             }
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint8_t)   // Event ID
-                                               + sizeof(uint8_t)   // Event Status
-                                               + _Type::min_size   // _Type min size
-                                               + sizeof(uint8_t);  // Program ID
+            static constexpr uint16_t min_size = sizeof(uint8_t)    // Event ID
+                                                 + sizeof(uint8_t)  // Event Status
+                                                 + _Type::min_size  // _Type min size
+                                                 + sizeof(uint8_t); // Program ID
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const
@@ -340,7 +340,7 @@ namespace HF
          struct UpdateStatus
          {
             uint8_t event_id; //!< %Event ID.
-            bool status;      //!< Scheduler status
+            bool    status;   //!< Scheduler status
 
             UpdateStatus(uint8_t _event_id = 0x00, bool _status = false):
                event_id(_event_id), status(_status)
@@ -522,7 +522,7 @@ namespace HF
              *
              * @param [in] func function to apply to all entries in the store.
              */
-            virtual void for_each(std::function<void(EntryType &e)> func) = 0;
+            virtual void for_each(std::function<void(EntryType & e)> func) = 0;
          };
 
          /*!
@@ -552,7 +552,7 @@ namespace HF
             //! @copydoc HF::Common::IEntries::save
             Common::Result save(const EntryType &entry)
             {
-               if(exists(entry.id))
+               if (exists(entry.id))
                {
                   return Common::Result::FAIL_ARG;
                }
@@ -598,9 +598,9 @@ namespace HF
              */
             Common::Result destroy(const uint8_t id)
             {
-               if(exists(id))
+               if (exists(id))
                {
-                  db.remove_if([id](const EntryType &e) { return e.id == id; });
+                  db.remove_if([id](const EntryType &e) {return e.id == id;});
                   return Common::Result::OK;
                }
                else
@@ -625,7 +625,8 @@ namespace HF
             {
                auto it = std::find_if(db.begin(), db.end(),
                                       [id](const EntryType &e)
-                                      { return e.id == id; } );
+                                      {return e.id == id;});
+
                if (it == db.end())
                {
                   return EntryPointer();
@@ -713,7 +714,7 @@ namespace HF
              */
             bool exists(const uint8_t id) const
             {
-               return std::any_of(db.begin(), db.end(), [id](const EntryType &e){
+               return std::any_of(db.begin(), db.end(), [id](const EntryType &e) {
                   return e.id == id;
                });
             }
@@ -857,7 +858,7 @@ namespace HF
             HF::Attributes::IAttribute *attribute(uint8_t uid);
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
-                                            HF::Attributes::Pack::MANDATORY) const;
+                                               HF::Attributes::Pack::MANDATORY) const;
 
             protected:
 

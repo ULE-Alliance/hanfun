@@ -50,7 +50,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(Scheduling::Weekly::IServer *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(Scheduling::Weekly::IServer *server,
+                                                   uint8_t uid);
 
       namespace Scheduling
       {
@@ -91,15 +92,15 @@ namespace HF
 
                Day() = default;
 
-               static constexpr int MINUTE = 60;
-               static constexpr int HOUR = 60*MINUTE;
-               static constexpr int DAY = 24*HOUR;
-               static constexpr uint32_t WEEK = 7*DAY;
+               static constexpr int      MINUTE = 60;
+               static constexpr int      HOUR   = 60 * MINUTE;
+               static constexpr int      DAY    = 24 * HOUR;
+               static constexpr uint32_t WEEK   = 7 * DAY;
 
                // Jan, 1st 2000 was on a Saturday (UTC)
                static constexpr uint8_t DAY_OF_WEEK_BASE = SATURDAY;
 
-               static Day convert (const uint32_t &timestamp)
+               static Day               convert(const uint32_t &timestamp)
                {
                   Day result;
 
@@ -107,13 +108,13 @@ namespace HF
                                                                         // since the start
 
                   result.day = temp.quot % 7                            // n of days MOD 7
-                             + DAY_OF_WEEK_BASE;
+                               + DAY_OF_WEEK_BASE;
 
-                  result.day = result.day % 7;
+                  result.day    = result.day % 7;
 
-                  temp = std::div(temp.rem, HOUR);
-                  result.hour = temp.quot;
-                  temp = std::div(temp.rem, MINUTE);
+                  temp          = std::div(temp.rem, HOUR);
+                  result.hour   = temp.quot;
+                  temp          = std::div(temp.rem, MINUTE);
                   result.minute = temp.quot;
 
                   return result;
@@ -135,9 +136,9 @@ namespace HF
                   result += (this->hour - current.hour) * 60 * 60;
                   result += (this->minute - current.minute) * 60;
 
-                  result += (this->day - current.day)*24*60*60;
+                  result += (this->day - current.day) * 24 * 60 * 60;
 
-                  if(timestamp > result)
+                  if (timestamp > result)
                   {
                      result += WEEK;
                   }
@@ -536,8 +537,8 @@ namespace HF
             /*! @} */
 
          } // namespace Weekly
-      } // namespace Scheduling
-   } // namespace Core
-} // namespace HF
+      }    // namespace Scheduling
+   }       // namespace Core
+}          // namespace HF
 
 #endif /* HF_CORE_WEEKLY_SCHEDULING_H */

@@ -69,7 +69,6 @@ namespace HF
             //! %Event %Scheduler specific part for the @c HF::Scheduling::Entry.
             struct Interval
             {
-
                uint32_t start;          //!< Start Date.
                uint32_t end;            //!< End Date.
                uint32_t repeat;         //!< Repeat interval (in seconds).
@@ -121,9 +120,9 @@ namespace HF
                }
 
                //! Minimum pack/unpack required data size.
-               static constexpr uint16_t min_size = sizeof(uint32_t)   // Start Date.
-                                                  + sizeof(uint32_t)   // End Date.
-                                                  + sizeof(uint32_t);  // Repeat interval.
+               static constexpr uint16_t min_size = sizeof(uint32_t)    // Start Date.
+                                                    + sizeof(uint32_t)  // End Date.
+                                                    + sizeof(uint32_t); // Repeat interval.
 
                //! @copydoc HF::Common::Serializable::size
                uint16_t size() const
@@ -499,8 +498,8 @@ namespace HF
             /*! @} */
 
          } // namespace Event
-      } // namespace Scheduling
-   } // namespace Core
-} // namespace HF
+      }    // namespace Scheduling
+   }       // namespace Core
+}          // namespace HF
 
 #endif /* HF_CORE_EVENT_SCHEDULING_H */

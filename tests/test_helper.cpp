@@ -184,7 +184,8 @@ Common::Result HF::Transport::Group::create(HF::Transport::Endpoint &ep, uint16_
                                          .returnIntValueOrDefault(Common::Result::FAIL_UNKNOWN));
 }
 
-Common::Result HF::Transport::Group::add(HF::Transport::Endpoint &ep, uint16_t group, uint16_t device)
+Common::Result HF::Transport::Group::add(HF::Transport::Endpoint &ep, uint16_t group,
+                                         uint16_t device)
 {
    return static_cast<Common::Result>(mock("HF::Transport::Group").actualCall("add")
                                          .withParameter("ep", &ep)

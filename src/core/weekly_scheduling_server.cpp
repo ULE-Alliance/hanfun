@@ -85,7 +85,7 @@ Common::Result Weekly::IServer::define_event(const Protocol::Packet &packet,
 
    msg.next_run = msg.time.first(unit().device().unit0()->time()->time());
 
-   result = entries().save(static_cast<Entry>(msg));
+   result       = entries().save(static_cast<Entry>(msg));
 
    if (result != Common::Result::OK)
    {
@@ -260,7 +260,7 @@ void Weekly::IServer::periodic(uint32_t time)
 {
    UNUSED(time);
 
-   if(!enabled())
+   if (!enabled())
    {
       return;
    }

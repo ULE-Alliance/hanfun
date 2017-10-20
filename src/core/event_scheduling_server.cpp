@@ -257,7 +257,7 @@ void Event::IServer::periodic(uint32_t time)
 {
    UNUSED(time);
 
-   if(!enabled())
+   if (!enabled())
    {
       return;
    }
