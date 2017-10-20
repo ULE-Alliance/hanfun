@@ -128,12 +128,11 @@ namespace HF
             HS_Colour(uint16_t hue, uint8_t saturation):
                saturation(saturation)
             {
-               this->hue = hue <= HUE_MAX ? hue : HUE_MAX;
+               hue = _hue < HUE ? _hue : HUE - 1;
             }
 
             static constexpr int HUE        = 360;
             static constexpr int SATURATION = 0x100;
-
 
             /*!
              * Helper method to invert a traveling angle.
@@ -168,8 +167,6 @@ namespace HF
              */
             static int32_t get_travel_distance(const Direction dir, uint16_t initial,
                                                uint16_t final, uint16_t max);
-            static constexpr uint16_t HUE_MAX = 359;                    // Max Hue Value
-
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(hue)            // hue
@@ -442,8 +439,6 @@ namespace HF
             Direction                 direction; //!< Direction of movement.
             uint16_t                  time;      //!< Time of transition in units of 100msec.
 
-            static constexpr uint16_t HUE_MAX = 359;                    // Max Hue Value
-
             /*!
              * Constructor
              *
@@ -456,7 +451,7 @@ namespace HF
                              uint16_t time = 0):
                direction(direction), time(time)
             {
-               this->hue = hue <= HUE_MAX ? hue : HUE_MAX;
+               this->hue = hue < HS_Colour::HUE ? hue : HS_Colour::HUE - 1;
             }
 
 
@@ -488,9 +483,6 @@ namespace HF
             Direction                 direction; //!< @c Direction of movement.
             uint16_t                  rate;      //!< Time of transition in units of 100msec.
 
-            static constexpr uint16_t RATE_MAX      = 359;
-            static constexpr uint8_t  DIRECTION_MAX = Direction::DOWN;
-
             /*!
              * Constructor
              *
@@ -500,7 +492,7 @@ namespace HF
             MoveHueMessage(Direction dir = Direction::UP, uint16_t rate = 0):
                direction(dir), rate(rate)
             {
-               this->rate = rate <= RATE_MAX ? rate : RATE_MAX;
+               this->rate = (rate < HS_Colour::HUE ? rate : HS_Colour::HUE - 1);
             }
 
             //! Minimum pack/unpack required data size.
@@ -530,8 +522,6 @@ namespace HF
             uint8_t                  step_size; //!< Step size in degrees.
             Direction                direction; //!< @c Direction of movement.
             uint8_t                  time;      //!< Time of a single step transition in units of 100msec.
-
-            static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
             /*!
              * Constructor
@@ -572,8 +562,6 @@ namespace HF
             uint8_t                  saturation; //!< The value of new saturation.
             Direction                direction;  //!< @c Direction of movement.
             uint16_t                 time;       //!< Time of a single step transition in units of 100msec.
-
-            static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
             /*!
              * Constructor
@@ -616,8 +604,6 @@ namespace HF
             Direction                direction; //!< @c Direction of movement.
             uint8_t                  rate;      //!< Time of transition in units of 100msec.
 
-            static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
-
             /*!
              * Constructor
              *
@@ -655,8 +641,6 @@ namespace HF
             uint8_t                  step_size; //!< Step size in degrees.
             Direction                direction; //!< @c Direction of movement.
             uint8_t                  time;      //!< Time of a single step transition in units of 100msec.
-
-            static constexpr uint8_t DIRECTION_MAX = Direction::DOWN;
 
             /*!
              * Constructor
@@ -699,8 +683,6 @@ namespace HF
             HS_Colour                 colour;    //!< New Hue and Saturation Colour.
             Direction                 direction; //!< @c Direction of movement.
             uint16_t                  time;      //!< Time of a single step transition in units of 100msec.
-
-            static constexpr uint16_t HUE_MAX = 359;
 
             /*!
              * Constructor
