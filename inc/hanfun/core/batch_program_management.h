@@ -753,21 +753,6 @@ namespace HF
             }
 
             /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
-             * to the broadcast network address.
-             *
-             * @param [in] pid        the program ID.
-             * @param [in] name       the name for the program.
-             * @param [in] actions    the list of actions that makes the program.
-             */
-            Common::Result define_program(const uint8_t pid, const std::string name,
-                                          std::vector<Action> &actions)
-            {
-               Protocol::Address addr;
-               return define_program(addr, pid, name, actions);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD, to the given
              * network address.
              *
@@ -776,16 +761,6 @@ namespace HF
              */
             Common::Result define_program(const Protocol::Address &addr,
                                           Entry &program);
-
-            /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
-             * to the broadcast network address.
-             */
-            Common::Result define_program(Entry &program)
-            {
-               Protocol::Address addr;
-               return define_program(addr, program);
-            }
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD, to the given
@@ -798,16 +773,6 @@ namespace HF
                                 uint8_t pid);
 
             /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
-             * to the broadcast network address.
-             */
-            void invoke_program(uint8_t pid)
-            {
-               Protocol::Address addr;
-               invoke_program(addr, pid);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_PROGRAM_CMD, to the given
              * network address.
              *
@@ -818,32 +783,12 @@ namespace HF
                                 uint8_t pid);
 
             /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
-             * to the broadcast network address.
-             */
-            void delete_program(uint8_t pid)
-            {
-               Protocol::Address addr;
-               delete_program(addr, pid);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD, to the given
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
              */
             void delete_all_programs(const Protocol::Address &addr);
-
-            /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD,
-             * to the broadcast network address.
-             */
-            void delete_all_programs()
-            {
-               Protocol::Address addr;
-               delete_all_programs(addr);
-            }
 
 #ifdef HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD
             /*!
@@ -854,18 +799,6 @@ namespace HF
              * @param [in] pid        the program ID to get the information.
              */
             void get_program_actions(const Protocol::Address &addr, uint8_t pid);
-
-            /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD,
-             * to the broadcast network address.
-             *
-             * * @param [in] pid        the program ID to get the information.
-             */
-            void get_program_actions(uint8_t pid)
-            {
-               Protocol::Address addr;
-               get_program_actions(addr, pid);
-            }
 #endif
 
             //! @}
