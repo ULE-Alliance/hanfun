@@ -99,6 +99,71 @@ HF::Attributes::IAttribute *ColourControl::create_attribute(uint8_t uid)
 // =============================================================================
 
 // =============================================================================
+// HS_Colour::invert_angle
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int32_t HS_Colour::invert_angle(const int32_t angle, const uint16_t max_value)
+{
+   int32_t temp = (static_cast<int32_t>(max_value) - std::abs(angle)) % max_value;
+
+   if (angle >= 0)
+   {
+      temp *= -1;
+   }
+
+   return temp;
+}
+
+// =============================================================================
+// HS_Colour::get_travel_distance
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+int32_t HS_Colour::get_travel_distance(const Direction dir, uint16_t initial,
+                                       uint16_t final, uint16_t max)
+{
+   int32_t dist, result;
+
+   if (final < initial)
+   {
+      final += max;
+   }
+
+   dist = (final - initial) % max;
+
+   switch (dir)
+   {
+      case Direction::UP:
+      {
+         result = dist;
+         break;
+      }
+      case Direction::DOWN:
+      {
+         result = invert_angle(dist, max);
+         break;
+      }
+      case Direction::SHORTEST:
+      {
+         result = dist <= max / 2 ? dist : invert_angle(dist, max);
+         break;
+      }
+      case Direction::LONGEST:
+      {
+         result = dist > max / 2 ? dist : invert_angle(dist, max);
+         break;
+      }
+   }
+
+   return result;
+}
+
+// =============================================================================
 // HS_Colour::pack
 // =============================================================================
 /*!

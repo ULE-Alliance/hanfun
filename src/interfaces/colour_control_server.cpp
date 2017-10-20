@@ -528,7 +528,7 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
 {
    auto step = HS_Colour::get_travel_distance(message.direction,
                                               hue_and_saturation().hue,
-                                              message.hue);
+                                              message.hue, HS_Colour::HUE);
 
    Hue_Transition *new_transition = new Hue_Transition(*this,  // server
                                                        1);     // 100msec period
@@ -784,12 +784,10 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
                                                   const MoveToHueSaturationMessage &message)
 {
-   auto hue_step = HS_Colour::get_travel_distance<HS_Colour::HUE>(message.direction,
-                                                                  hue_and_saturation().hue,
-                                                                  message.colour.hue);
-   auto sat_step = HS_Colour::get_travel_distance<HS_Colour::SATURATION>(message.direction,
-                                                                         hue_and_saturation().saturation,
-                                                                         message.colour.saturation);
+   auto hue_step = HS_Colour::get_travel_distance(message.direction, hue_and_saturation().hue,
+                                                  message.colour.hue, HS_Colour::HUE);
+   auto sat_step = HS_Colour::get_travel_distance(message.direction, hue_and_saturation().saturation,
+                                                  message.colour.saturation, HS_Colour::SATURATION);
 
    HS_Transition *new_transition = new HS_Transition(*this,  // server
                                                      1);     // 100msec period

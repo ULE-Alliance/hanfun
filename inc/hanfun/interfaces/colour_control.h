@@ -145,75 +145,29 @@ namespace HF
              *       If the input angle is positive (CW rotation),
              *       the output is negative (CCW rotation).
              *
-             * @param [in] angle    the angle to invert.
+             * @param [in] angle       the angle to invert.
+             * @param [in] max_value   the max value for the angle.
+             *
              * @return              the inverted angle.
              */
-            template<int max_value = HUE>
-            static int32_t invert_angle(const int32_t angle)
-            {
-               int32_t temp = (max_value - std::abs(angle)) % max_value;
-
-               if (angle >= 0)
-               {
-                  temp *= -1;
-               }
-
-               return temp;
-            }
+            static int32_t invert_angle(int32_t angle, uint16_t max_value);
 
             /*!
-             * Helper method to get the angle between two hue values.
+             * Helper method to get the angle between two
+             * hue/saturation values.
              *
-             * This method takes in consideration the direction of travel from the initial
-             * to the final value.
+             * This method takes in consideration the direction of travel from the
+             * initial to the final value.
              *
-             * @param [in] dir            the travel direction.
-             * @param [in] initial_hue    the initial hue value.
-             * @param [in] final_hue      the final hue value.
+             * @param [in] dir      the travel direction.
+             * @param [in] initial  the initial value.
+             * @param [in] final    the final value.
+             * @param [in] max      the maximum value.
              *
-             * @return                    the angle between the final and initial value.
+             * @return  the angle between the final and initial value.
              */
-            template<int max_value = HUE>
-            static int32_t get_travel_distance(const Direction dir,
-                                               const uint16_t initial_hue,
-                                               uint16_t final_hue)
-            {
-               int32_t dist, result;
-
-               if (final_hue < initial_hue)
-               {
-                  final_hue += max_value;
-               }
-
-               dist = (final_hue - initial_hue) % max_value;
-
-               switch (dir)
-               {
-                  case Direction::UP:
-                  {
-                     result = dist;
-                     break;
-                  }
-                  case Direction::DOWN:
-                  {
-                     result = invert_angle<max_value>(dist);
-                     break;
-                  }
-                  case Direction::SHORTEST:
-                  {
-                     result = dist <= max_value / 2 ? dist : invert_angle<max_value>(dist);
-                     break;
-                  }
-                  case Direction::LONGEST:
-                  {
-                     result = dist > max_value / 2 ? dist : invert_angle<max_value>(dist);
-                     break;
-                  }
-               }
-
-               return result;
-            }
-
+            static int32_t get_travel_distance(const Direction dir, uint16_t initial,
+                                               uint16_t final, uint16_t max);
             static constexpr uint16_t HUE_MAX = 359;                    // Max Hue Value
 
 

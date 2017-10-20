@@ -139,23 +139,23 @@ TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
 TEST(ColourControlMessages, HS_Colour_Hue_invert_angle)
 {
    /* *INDENT-OFF* */
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(-360));
-   LONGS_EQUAL( 45,  HS_Colour::invert_angle<HS_Colour::HUE>(-315));
-   LONGS_EQUAL( 90,  HS_Colour::invert_angle<HS_Colour::HUE>(-270));
-   LONGS_EQUAL( 135, HS_Colour::invert_angle<HS_Colour::HUE>(-225));
-   LONGS_EQUAL( 180, HS_Colour::invert_angle<HS_Colour::HUE>(-180));
-   LONGS_EQUAL( 225, HS_Colour::invert_angle<HS_Colour::HUE>(-135));
-   LONGS_EQUAL( 270, HS_Colour::invert_angle<HS_Colour::HUE>(-90));
-   LONGS_EQUAL( 315, HS_Colour::invert_angle<HS_Colour::HUE>(-45));
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(0));
-   LONGS_EQUAL(-315, HS_Colour::invert_angle<HS_Colour::HUE>(45));
-   LONGS_EQUAL(-270, HS_Colour::invert_angle<HS_Colour::HUE>(90));
-   LONGS_EQUAL(-225, HS_Colour::invert_angle<HS_Colour::HUE>(135));
-   LONGS_EQUAL(-180, HS_Colour::invert_angle<HS_Colour::HUE>(180));
-   LONGS_EQUAL(-135, HS_Colour::invert_angle<HS_Colour::HUE>(225));
-   LONGS_EQUAL(-90,  HS_Colour::invert_angle<HS_Colour::HUE>(270));
-   LONGS_EQUAL(-45,  HS_Colour::invert_angle<HS_Colour::HUE>(315));
-   LONGS_EQUAL( 0,   HS_Colour::invert_angle<HS_Colour::HUE>(360));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle(-360, HS_Colour::HUE));
+   LONGS_EQUAL( 45,  HS_Colour::invert_angle(-315, HS_Colour::HUE));
+   LONGS_EQUAL( 90,  HS_Colour::invert_angle(-270, HS_Colour::HUE));
+   LONGS_EQUAL( 135, HS_Colour::invert_angle(-225, HS_Colour::HUE));
+   LONGS_EQUAL( 180, HS_Colour::invert_angle(-180, HS_Colour::HUE));
+   LONGS_EQUAL( 225, HS_Colour::invert_angle(-135, HS_Colour::HUE));
+   LONGS_EQUAL( 270, HS_Colour::invert_angle(-90,  HS_Colour::HUE));
+   LONGS_EQUAL( 315, HS_Colour::invert_angle(-45,  HS_Colour::HUE));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle(0,    HS_Colour::HUE));
+   LONGS_EQUAL(-315, HS_Colour::invert_angle(45,   HS_Colour::HUE));
+   LONGS_EQUAL(-270, HS_Colour::invert_angle(90,   HS_Colour::HUE));
+   LONGS_EQUAL(-225, HS_Colour::invert_angle(135,  HS_Colour::HUE));
+   LONGS_EQUAL(-180, HS_Colour::invert_angle(180,  HS_Colour::HUE));
+   LONGS_EQUAL(-135, HS_Colour::invert_angle(225,  HS_Colour::HUE));
+   LONGS_EQUAL(-90,  HS_Colour::invert_angle(270,  HS_Colour::HUE));
+   LONGS_EQUAL(-45,  HS_Colour::invert_angle(315,  HS_Colour::HUE));
+   LONGS_EQUAL( 0,   HS_Colour::invert_angle(360,  HS_Colour::HUE));
    /* *INDENT-ON* */
 }
 
@@ -165,13 +165,13 @@ TEST(ColourControlMessages, HS_Colour_Hue_invert_angle)
 TEST(ColourControlMessages, HS_Colour_Sat_invert_angle)
 {
    /* *INDENT-OFF* */
-   LONGS_EQUAL(0,   HS_Colour::invert_angle<HS_Colour::SATURATION>(-256));
-   LONGS_EQUAL(46,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-210));
-   LONGS_EQUAL(76,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-180));
-   LONGS_EQUAL(91,  HS_Colour::invert_angle<HS_Colour::SATURATION>(-165));
-   LONGS_EQUAL(121, HS_Colour::invert_angle<HS_Colour::SATURATION>(-135));
-   LONGS_EQUAL(136, HS_Colour::invert_angle<HS_Colour::SATURATION>(-120));
-   LONGS_EQUAL(0,   HS_Colour::invert_angle<HS_Colour::SATURATION>(0));
+   LONGS_EQUAL(0,   HS_Colour::invert_angle(-256, HS_Colour::SATURATION));
+   LONGS_EQUAL(46,  HS_Colour::invert_angle(-210, HS_Colour::SATURATION));
+   LONGS_EQUAL(76,  HS_Colour::invert_angle(-180, HS_Colour::SATURATION));
+   LONGS_EQUAL(91,  HS_Colour::invert_angle(-165, HS_Colour::SATURATION));
+   LONGS_EQUAL(121, HS_Colour::invert_angle(-135, HS_Colour::SATURATION));
+   LONGS_EQUAL(136, HS_Colour::invert_angle(-120, HS_Colour::SATURATION));
+   LONGS_EQUAL(0,   HS_Colour::invert_angle(0,    HS_Colour::SATURATION));
    /* *INDENT-ON* */
 }
 
@@ -179,52 +179,52 @@ TEST(ColourControlMessages, HS_Colour_Sat_invert_angle)
 //! @test HS_Colour get hue travel distance function.
 TEST(ColourControlMessages, HS_Colour_Get_Hue_travel_distance)
 {
-   auto get_travel_distance = HS_Colour::get_travel_distance<HS_Colour::HUE>;
+   auto get_travel_distance = HS_Colour::get_travel_distance;
 
    /* *INDENT-OFF* */
    // Both on the same quadrant. Short distance = CW
-   LONGS_EQUAL(50,   get_travel_distance(Direction::UP,       100, 150));
-   LONGS_EQUAL(-310, get_travel_distance(Direction::DOWN,     100, 150));
-   LONGS_EQUAL(50,   get_travel_distance(Direction::SHORTEST, 100, 150));
-   LONGS_EQUAL(-310, get_travel_distance(Direction::LONGEST,  100, 150));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::UP,       100, 150, HS_Colour::HUE));
+   LONGS_EQUAL(-310, get_travel_distance(Direction::DOWN,     100, 150, HS_Colour::HUE));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::SHORTEST, 100, 150, HS_Colour::HUE));
+   LONGS_EQUAL(-310, get_travel_distance(Direction::LONGEST,  100, 150, HS_Colour::HUE));
 
    // Different quadrants. Short distance = CW
-   LONGS_EQUAL(30,   get_travel_distance(Direction::UP,       340, 10));
-   LONGS_EQUAL(-330, get_travel_distance(Direction::DOWN,     340, 10));
-   LONGS_EQUAL(30,   get_travel_distance(Direction::SHORTEST, 340, 10));
-   LONGS_EQUAL(-330, get_travel_distance(Direction::LONGEST,  340, 10));
+   LONGS_EQUAL(30,   get_travel_distance(Direction::UP,       340, 10, HS_Colour::HUE));
+   LONGS_EQUAL(-330, get_travel_distance(Direction::DOWN,     340, 10, HS_Colour::HUE));
+   LONGS_EQUAL(30,   get_travel_distance(Direction::SHORTEST, 340, 10, HS_Colour::HUE));
+   LONGS_EQUAL(-330, get_travel_distance(Direction::LONGEST,  340, 10, HS_Colour::HUE));
 
    // Different quadrants. Short distance = CCW
-   LONGS_EQUAL(330,  get_travel_distance(Direction::UP,       10,  340));
-   LONGS_EQUAL(-30,  get_travel_distance(Direction::DOWN,     10,  340));
-   LONGS_EQUAL(-30,  get_travel_distance(Direction::SHORTEST, 10,  340));
-   LONGS_EQUAL(330,  get_travel_distance(Direction::LONGEST,  10,  340));
+   LONGS_EQUAL(330,  get_travel_distance(Direction::UP,       10,  340, HS_Colour::HUE));
+   LONGS_EQUAL(-30,  get_travel_distance(Direction::DOWN,     10,  340, HS_Colour::HUE));
+   LONGS_EQUAL(-30,  get_travel_distance(Direction::SHORTEST, 10,  340, HS_Colour::HUE));
+   LONGS_EQUAL(330,  get_travel_distance(Direction::LONGEST,  10,  340, HS_Colour::HUE));
    /* *INDENT-ON* */
 }
 
 //! @test HS_Colour get Sat travel distance function.
 TEST(ColourControlMessages, HS_Colour_Get_Sat_travel_distance)
 {
-   auto get_travel_distance = HS_Colour::get_travel_distance<HS_Colour::SATURATION>;
+   auto get_travel_distance = HS_Colour::get_travel_distance;
 
    /* *INDENT-OFF* */
    // Both on the same quadrant. Short distance = CW
-   LONGS_EQUAL(50,   get_travel_distance(Direction::UP,       100, 150));
-   LONGS_EQUAL(-206, get_travel_distance(Direction::DOWN,     100, 150));
-   LONGS_EQUAL(50,   get_travel_distance(Direction::SHORTEST, 100, 150));
-   LONGS_EQUAL(-206, get_travel_distance(Direction::LONGEST,  100, 150));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::UP,       100, 150, HS_Colour::SATURATION));
+   LONGS_EQUAL(-206, get_travel_distance(Direction::DOWN,     100, 150, HS_Colour::SATURATION));
+   LONGS_EQUAL(50,   get_travel_distance(Direction::SHORTEST, 100, 150, HS_Colour::SATURATION));
+   LONGS_EQUAL(-206, get_travel_distance(Direction::LONGEST,  100, 150, HS_Colour::SATURATION));
 
    // Different quadrants. Short distance = CW
-   LONGS_EQUAL(16,   get_travel_distance(Direction::UP,       250, 10));
-   LONGS_EQUAL(-240, get_travel_distance(Direction::DOWN,     250, 10));
-   LONGS_EQUAL(16,   get_travel_distance(Direction::SHORTEST, 250, 10));
-   LONGS_EQUAL(-240, get_travel_distance(Direction::LONGEST,  250, 10));
+   LONGS_EQUAL(16,   get_travel_distance(Direction::UP,       250, 10, HS_Colour::SATURATION));
+   LONGS_EQUAL(-240, get_travel_distance(Direction::DOWN,     250, 10, HS_Colour::SATURATION));
+   LONGS_EQUAL(16,   get_travel_distance(Direction::SHORTEST, 250, 10, HS_Colour::SATURATION));
+   LONGS_EQUAL(-240, get_travel_distance(Direction::LONGEST,  250, 10, HS_Colour::SATURATION));
 
    // Different quadrants. Short distance = CCW
-   LONGS_EQUAL(240,  get_travel_distance(Direction::UP,       10,  250));
-   LONGS_EQUAL(-16,  get_travel_distance(Direction::DOWN,     10,  250));
-   LONGS_EQUAL(-16,  get_travel_distance(Direction::SHORTEST, 10,  250));
-   LONGS_EQUAL(240,  get_travel_distance(Direction::LONGEST,  10,  250));
+   LONGS_EQUAL(240,  get_travel_distance(Direction::UP,       10,  250, HS_Colour::SATURATION));
+   LONGS_EQUAL(-16,  get_travel_distance(Direction::DOWN,     10,  250, HS_Colour::SATURATION));
+   LONGS_EQUAL(-16,  get_travel_distance(Direction::SHORTEST, 10,  250, HS_Colour::SATURATION));
+   LONGS_EQUAL(240,  get_travel_distance(Direction::LONGEST,  10,  250, HS_Colour::SATURATION));
    /* *INDENT-ON* */
 }
 
