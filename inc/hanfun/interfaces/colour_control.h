@@ -1856,18 +1856,6 @@ namespace HF
                              uint16_t transition);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_CMD,
-             * to the broadcast network address.
-             */
-            void move_to_hue(uint16_t hue,
-                             Direction direction,
-                             uint16_t transition)
-            {
-               Protocol::Address addr;
-               move_to_hue(addr, hue, direction, transition);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD, to the given
              * network address.
              *
@@ -1876,16 +1864,6 @@ namespace HF
              * @param [in] rate        the rate of change.
              */
             void move_hue(const Protocol::Address &addr, Direction direction, uint16_t rate);
-
-            /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD,
-             * to the broadcast network address.
-             */
-            void move_hue(Direction direction, uint16_t rate)
-            {
-               Protocol::Address addr;
-               move_hue(addr, direction, rate);
-            }
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::STEP_HUE_CMD, to the given
@@ -1900,16 +1878,6 @@ namespace HF
                           Direction direction, uint8_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STEP_HUE_CMD,
-             * to the broadcast network address.
-             */
-            void step_hue(uint8_t step, Direction direction, uint8_t time)
-            {
-               Protocol::Address addr;
-               step_hue(addr, step, direction, time);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_SATURATION_CMD, to the given
              * network address.
              *
@@ -1922,16 +1890,6 @@ namespace HF
                                     Direction direction, uint16_t transition);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_SATURATION_CMD,
-             * to the broadcast network address.
-             */
-            void move_to_saturation(uint8_t saturation, Direction direction, uint16_t transition)
-            {
-               Protocol::Address addr;
-               move_to_saturation(addr, saturation, direction, transition);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_SATURATION_CMD, to the given
              * network address.
              *
@@ -1940,16 +1898,6 @@ namespace HF
              * @param [in] rate        the rate of change.
              */
             void move_saturation(const Protocol::Address &addr, Direction direction, uint8_t rate);
-
-            /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_SATURATION_CMD,
-             * to the broadcast network address.
-             */
-            void move_saturation(Direction direction, uint8_t rate)
-            {
-               Protocol::Address addr;
-               move_saturation(addr, direction, rate);
-            }
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD, to the given
@@ -1964,16 +1912,6 @@ namespace HF
                                  uint8_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD,
-             * to the broadcast network address.
-             */
-            void step_saturation(uint8_t step, Direction direction, uint8_t time)
-            {
-               Protocol::Address addr;
-               step_saturation(addr, step, direction, time);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD, to the given
              * network address.
              *
@@ -1984,16 +1922,6 @@ namespace HF
              */
             void move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour colour,
                                             Direction direction, uint16_t time);
-
-            /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
-             * to the broadcast network address.
-             */
-            void move_to_hue_and_saturation(HS_Colour colour, Direction direction, uint16_t time)
-            {
-               Protocol::Address addr;
-               move_to_hue_and_saturation(addr, colour, direction, time);
-            }
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD, to the given
@@ -2007,16 +1935,6 @@ namespace HF
             void move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD,
-             * to the broadcast network address.
-             */
-            void move_to_xy(XY_Colour colour, uint16_t time)
-            {
-               Protocol::Address addr;
-               move_to_xy(addr, colour, time);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD, to the given
              * network address.
              *
@@ -2025,16 +1943,6 @@ namespace HF
              * @param [in] Y_rate     the Y rate of change. (in units of sec)
              */
             void move_xy(const Protocol::Address &addr, int16_t X_rate, int16_t Y_rate);
-
-            /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD,
-             * to the broadcast network address.
-             */
-            void move_xy(int16_t X_rate, int16_t Y_rate)
-            {
-               Protocol::Address addr;
-               move_xy(addr, X_rate, Y_rate);
-            }
 
             /*!
              * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD, to the given
@@ -2049,16 +1957,6 @@ namespace HF
                          int16_t X_step, int16_t Y_step, uint8_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD,
-             * to the broadcast network address.
-             */
-            void step_xy(int16_t X_step, int16_t Y_step, uint8_t time)
-            {
-               Protocol::Address addr;
-               step_xy(addr, X_step, Y_step, time);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD, to the given
              * network address.
              *
@@ -2068,32 +1966,12 @@ namespace HF
                                             uint16_t colour, uint16_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
-             * to the broadcast network address.
-             */
-            void move_to_colour_temperature(uint16_t colour, uint16_t time)
-            {
-               Protocol::Address addr;
-               move_to_colour_temperature(addr, colour, time);
-            }
-
-            /*!
              * Send a HAN-FUN message containing a @c ColourControl::STOP_CMD, to the given
              * network address.
              *
              * @param [in] addr       the network address to send the message to.
              */
             void stop(const Protocol::Address &addr);
-
-            /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STOP_CMD,
-             * to the broadcast network address.
-             */
-            void stop()
-            {
-               Protocol::Address addr;
-               stop(addr);
-            }
 
             //! @}
             // ======================================================================
