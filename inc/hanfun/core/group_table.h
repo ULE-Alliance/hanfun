@@ -39,9 +39,9 @@ namespace HF
        * value.
        *
        * @param [in] server   pointer to the object to read the current value from.
-       * @param [in] uid      attribute's UID to create the attribute object for.
+       * @param [in] uid      attribute's %UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(GroupTable::IServer *server, uint8_t uid);
@@ -52,8 +52,8 @@ namespace HF
       namespace GroupTable
       {
          /*!
-          * @addtogroup group_table_itf  Group Table service
-          * @ingroup interfaces
+          * @addtogroup group_table_itf  Group Table
+          * @ingroup core
           *
           * This module contains the classes that define and implement the Group Table service API.
           * @{
@@ -61,18 +61,18 @@ namespace HF
          //! Command IDs.
          typedef enum _CMD
          {
-            ADD_CMD          = 0x01, //!< Add command UID.
-            REMOVE_CMD       = 0x02, //!< Remove command UID.
-            REMOVE_ALL_CMD   = 0x03, //!< Remove All command UID.
-            READ_ENTRIES_CMD = 0x04, //!< Read Entries command UID.
+            ADD_CMD          = 0x01, //!< Add command %UID.
+            REMOVE_CMD       = 0x02, //!< Remove command %UID.
+            REMOVE_ALL_CMD   = 0x03, //!< Remove All command %%UID.
+            READ_ENTRIES_CMD = 0x04, //!< Read Entries command %UID.
             __LAST_CMD__     = READ_ENTRIES_CMD
          } CMD;
 
          //! Attributes
          typedef enum _Attributes
          {
-            NUMBER_OF_ENTRIES_ATTR     = 0x01, //!< Number Of Entries attribute UID.
-            NUMBER_OF_MAX_ENTRIES_ATTR = 0x02, //!< Number Of Max Entries attribute UID.
+            NUMBER_OF_ENTRIES_ATTR     = 0x01, //!< Number Of Entries attribute %UID.
+            NUMBER_OF_MAX_ENTRIES_ATTR = 0x02, //!< Number Of Max Entries attribute %UID.
             __LAST_ATTR__              = NUMBER_OF_MAX_ENTRIES_ATTR
          } Attributes;
 
@@ -113,7 +113,7 @@ namespace HF
           */
          struct NumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = NUMBER_OF_ENTRIES_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = NUMBER_OF_ENTRIES_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                  //!< Attribute Read/Write
 
             NumberOfEntries(uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -126,7 +126,7 @@ namespace HF
           */
          struct NumberOfMaxEntries: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = NUMBER_OF_MAX_ENTRIES_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = NUMBER_OF_MAX_ENTRIES_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                      //!< Attribute Read/Write
 
             NumberOfMaxEntries(uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -135,14 +135,14 @@ namespace HF
          };
 
          /*!
-          * @copybrief HF::Core::create_attribute (HF::Interfaces::GroupTable::Server *,uint8_t)
+          * @copybrief HF::Core::create_attribute (HF::Core::GroupTable::Server *,uint8_t)
           *
           * @see HF::Core::create_attribute (HF::Core::GroupTable::Server *,uint8_t)
           *
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
           * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @retval  nullptr if the attribute %UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
@@ -150,12 +150,28 @@ namespace HF
          // Messages
          // =============================================================================
 
+         /*!
+          * Base class for responses.
+          */
          struct Response: public Protocol::Response, public Entry
          {
+            /*!
+             * Constructor.
+             *
+             * @param [in] code     response code.
+             * @param [in] group    group address for response.
+             * @param [in] unit     unit ID for response.
+             */
             Response(Common::Result code = Common::Result::FAIL_UNKNOWN,
                      uint16_t group = 0x0000, uint8_t unit = 0x00):
                Protocol::Response(code), Entry(group, unit) {}
 
+            /*!
+             * Constructor.
+             *
+             * @param [in] code     response code.
+             * @param [in] entry    group entry for response.
+             */
             Response(Common::Result code, const Entry &entry):
                Protocol::Response(code), Entry(entry) {}
 
@@ -163,6 +179,7 @@ namespace HF
             // Serializable API
             // =================================================================
 
+            //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = Protocol::Response::min_size
                                                  + Entry::min_size;
 
@@ -274,6 +291,7 @@ namespace HF
             // Serializable API
             // =================================================================
 
+            //! Minimum required data size for pack/unpack.
             static constexpr uint16_t min_size = Protocol::Response::min_size
                                                  + sizeof(uint8_t)
                                                  + sizeof(uint8_t);
@@ -365,6 +383,7 @@ namespace HF
              * Call the given function for all the entries with given @c group address.
              *
              * @param [in] group    group address to search for.
+             * @param [in] func     function to apply to each member of the group.
              */
             virtual void for_each(uint16_t group,
                                   std::function<void(const Entry &)> func) const = 0;
@@ -379,11 +398,13 @@ namespace HF
             virtual Entry const &operator[](uint8_t index) const = 0;
          };
 
+         /*!
+          * Default implementation of the IEntries API.
+          */
          struct Entries: public IEntries
          {
             typedef std::vector<Entry> Container;
 
-            //! @copydoc
             uint16_t size() const;
 
             Common::Result save(const Entry &entry);
@@ -401,6 +422,15 @@ namespace HF
 
             protected:
 
+            /*!
+             * Check if there exists any entry for the group/unit address given.
+             *
+             * @param [in] group    the group address to search for.
+             * @param [in] unit     the unit ID to search for.
+             *
+             * @retval true   if an entry exists,
+             * @retval false  otherwise.
+             */
             bool any_of(uint16_t group, uint8_t unit) const;
 
             Container db;  //!< Group table entries database.
@@ -463,12 +493,12 @@ namespace HF
              * Callback that is called when a @c GroupTable::REMOVE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to the message was received from.
+             * @param [in] addr     the network address to the message was received from.
+             * @param [in] entry    the group table entry to remove.
              *
              * @retval Common::Result::OK          if the @c entry was removed;
              * @retval Common::Result::FAIL_ARG    if no entry exits that matches the given @c entry;
              * @retval Common::Result::FAIL_AUTH   if the request did not came from the Concentrator (0, 0).
-             *
              */
             virtual Common::Result remove(const Protocol::Address &addr, const Entry &entry);
 
@@ -477,6 +507,9 @@ namespace HF
              * is received.
              *
              * @param [in] addr       the network address to send the message to.
+             *
+             * @retval Common::Result::OK          if the entries where removed;
+             * @retval Common::Result::FAIL_AUTH   if the request did not came from the Concentrator (0, 0).
              */
             virtual Common::Result remove_all(const Protocol::Address &addr);
 
@@ -486,6 +519,8 @@ namespace HF
              *
              * @param [in] addr     the network address that sent the message.
              * @param [in] params   the parameters for the command.
+             *
+             * @returns the response to the read entries command.
              */
             virtual ReadEntriesResponse read_entries(const Protocol::Address &addr,
                                                      const ReadEntries &params);
@@ -512,9 +547,9 @@ namespace HF
             uint8_t number_of_max_entries() const;
 
             /*!
-             * Set the Number Of Max Entries for the Group Table server.
+             * Set the Number Of Max %Entries for the %Group Table server.
              *
-             * @param [in] __value the  Number Of Max Entries value to set the server to.
+             * @param [in] __value the  Number Of Max %Entries value to set the server to.
              */
             void number_of_max_entries(uint8_t __value);
 
@@ -586,8 +621,8 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupTable::ADD_CMD, to the given
              * network address.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] entry      the group table entry to add.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] entry    the group table entry to add.
              */
             void add(const Protocol::Address &addr, const Entry &entry);
 
@@ -610,7 +645,7 @@ namespace HF
              *
              * @param [in] addr     the network address to send the message to.
              * @param [in] group    the group address for the entry to add.
-             * @param [in] group    the unit ID for the entry to add.
+             * @param [in] unit     the unit ID for the entry to add.
              */
             void add(const Protocol::Address &addr, uint16_t group, uint8_t unit)
             {
@@ -625,7 +660,7 @@ namespace HF
              *
              * @param [in] device   the device address to send the entry to.
              * @param [in] group    the group address for the entry to add.
-             * @param [in] group    the unit ID for the entry to add.
+             * @param [in] unit     the unit ID for the entry to add.
              */
             void add(const uint16_t device, uint16_t group, uint8_t unit)
             {
@@ -647,7 +682,7 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupTable::REMOVE_CMD, to the given
              * @c device and the given @c entry.
              *
-             * @param [in] device   the device address to send the entry to.
+             * @param [in] device   the device address to remove the entry from.
              * @param [in] entry    the group table entry to remove.
              */
             void remove(const uint16_t device, const Entry &entry)
@@ -662,7 +697,7 @@ namespace HF
              *
              * @param [in] addr     the network address to send the message to.
              * @param [in] group    the group address for the entry to remove.
-             * @param [in] group    the unit ID for the entry to remove.
+             * @param [in] unit     the unit ID for the entry to remove.
              */
             void remove(const Protocol::Address &addr, uint16_t group, uint8_t unit)
             {
@@ -677,7 +712,7 @@ namespace HF
              *
              * @param [in] device   the device address to send the entry to.
              * @param [in] group    the group address for the entry to remove.
-             * @param [in] group    the unit ID for the entry to remove.
+             * @param [in] unit     the unit ID for the entry to remove.
              */
             void remove(const uint16_t device, uint16_t group, uint8_t unit)
             {

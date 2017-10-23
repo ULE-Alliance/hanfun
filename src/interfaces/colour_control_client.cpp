@@ -289,7 +289,6 @@ void Client::move_to_colour_temperature(const Protocol::Address &addr,
 // =============================================================================
 void Client::stop(const Protocol::Address &addr)
 {
-   // FIXME Generated Stub.
    Protocol::Message message;
 
    message.itf.role   = SERVER_ROLE;

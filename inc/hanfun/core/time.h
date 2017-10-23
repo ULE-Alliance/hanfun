@@ -53,7 +53,7 @@ namespace HF
       {
          /*!
           * @addtogroup time_itf  Time service
-          * @ingroup interfaces
+          * @ingroup core
           *
           * This module contains the classes that define and implement the Time service API.
           * @{
@@ -121,7 +121,7 @@ namespace HF
           * Split the time given by @c value to the year, month, day, hour, minute and second
           * values.
           *
-          * @param [in] value    time value to convert.
+          * @param [in] time  value to convert.
           *
           * @return a Date structure containing the time value split into the proper fields.
           */
@@ -341,7 +341,7 @@ inline bool operator>=(const HF::Core::Time::Date &lhs, const HF::Core::Time::Da
  * @param [in] stream      out stream to write the string to.
  * @param [in] attribute   attribute value to convert to a string.
  *
- * @return   <tt>stream</tt>
+ * @return reference to the @c stream.
  */
 std::ostream &operator<<(std::ostream &stream,
                          const HF::Core::Time::Attributes attribute);
@@ -350,9 +350,9 @@ std::ostream &operator<<(std::ostream &stream,
  * Convert the given @c attribute into a string and write it to the given @c stream.
  *
  * @param [in] stream      out stream to write the string to.
- * @param [in] attribute   attribute value to convert to a string.
+ * @param [in] date        date value to convert to a string.
  *
- * @return   <tt>stream</tt>
+ * @return reference to the @c stream.
  */
 std::ostream &operator<<(std::ostream &stream,
                          const HF::Core::Time::Date &date);

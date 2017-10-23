@@ -75,39 +75,46 @@ namespace HF
           */
          virtual HF::Interface const *owner() const = 0;
 
+         using Common::Serializable::size;
+
          /*!
-          * @copydoc HF::Common::Serializable::size
+          * Number bytes needed to serialize the message.
           *
-          * @param [in] with_uid    include uid() size in the calculation.
+          * @param [in] with_uid    include @c uid size in the calculation.
+          *
+          * @return  number of bytes the message requires to be serialized.
           */
          virtual uint16_t size(bool with_uid) const = 0;
 
-         //! @copydoc HF::Common::Serializable::size
-         virtual uint16_t size() const = 0;
+         using Common::Serializable::pack;
 
          /*!
-          * @copydoc HF::Common::Serializable::pack
+          * Write the object on to a ByteArray so it can be sent over the network.
           *
-          * @param [in] with_uid    include uid() in the serialization.
+          * The buffer passed in __MUST__ have enough size to hold the serialized object, e.g.,
+          *
+          * @param [inout] array       ByteArray reference to write the object to.
+          * @param [in]    offset      offset to start writing to.
+          * @param [in]    with_uid    include @c uid field in the serialization.
+          *
+          * @return  the number of bytes written.
           */
          virtual uint16_t pack(Common::ByteArray &array, uint16_t offset, bool with_uid) const = 0;
 
-         //! @copydoc HF::Common::Serializable::pack
-         virtual uint16_t pack(Common::ByteArray &array, uint16_t offset) const = 0;
+         using Common::Serializable::unpack;
 
          /*!
-          * @copydoc HF::Common::Serializable::unpack
+          * Read a message from a ByteArray.
           *
-          * @warning If @c with_uid == @c true, then if the value read from the
-          *          array does not match the attribute's UID, no more data will be read.
+          * @param [in] array       ByteArray reference to read the message from.
+          * @param [in] offset      offset to start reading from.
+          * @param [in] with_uid    @c true if the @c uid field was included in the serialization,
+          *                         @c false otherwise.
           *
-          * @param [in] with_uid    attribute %UID is included in the serialization.
+          * @return  the number of bytes read.
           */
          virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset,
                                  bool with_uid) = 0;
-
-         //! @copydoc HF::Common::Serializable::unpack
-         virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset) = 0;
 
          virtual bool operator==(const IAttribute &other) const                   = 0;
 
@@ -196,13 +203,11 @@ namespace HF
          //! Minimum pack/unpack required data size.
          static constexpr uint8_t min_size = sizeof(uint8_t);
 
-         //! @copydoc HF::Common::Serializable::size
          uint16_t size() const
          {
             return min_size + sizeof(uint8_t) * vector<uint8_t>::size();
          }
 
-         //! @copydoc HF::Common::Serializable::pack
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -223,7 +228,6 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Common::Serializable::unpack
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint8_t count = 0;
@@ -338,7 +342,8 @@ namespace HF
       /*!
        * Helper template class to declare an attribute with the given @c T type.
        *
-       * @tparam T underling data type for the attribute.
+       * @tparam T      underling data type for the attribute.
+       * @tparam _Owner underling data type for the attribute's owner.
        */
       template<typename T, typename _Owner = void, typename = void>
       struct Attribute: public AbstractAttribute
@@ -516,7 +521,8 @@ namespace HF
       /*!
        * Helper template class to declare an attribute with the given @c T type.
        *
-       * @tparam T underling data type for the attribute.
+       * @tparam T      underling data type for the attribute.
+       * @tparam _Owwer underling data type for the attribute's owner.
        */
       template<typename T, typename _Owner>
       struct Attribute<T, _Owner, EnableIf<Parent<HF::Interface, _Owner>>>:
@@ -528,7 +534,7 @@ namespace HF
          typedef typename std::function<void (_Owner &, T)> setter_t;
 
          /*!
-          * Attribute template constructor.
+          * %Attribute template constructor.
           *
           * @param [in] __owner   reference to attribute's interface owner object.
           * @param [in] uid       attribute's UID.
@@ -555,7 +561,7 @@ namespace HF
          {}
 
          /*!
-          * Attribute template constructor.
+          * %Attribute template constructor.
           *
           * @param [in] __owner   reference to attribute's interface owner object.
           * @param [in] uid       attribute's UID.
@@ -573,7 +579,7 @@ namespace HF
          __attribute__((nonnull(1)))
 
          /*!
-          * Attribute template constructor.
+          * %Attribute template constructor.
           *
           * @param [in] __owner   reference to attribute's interface owner object.
           * @param [in] uid       attribute's UID.

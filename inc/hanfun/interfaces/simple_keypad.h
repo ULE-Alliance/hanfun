@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleKeypad
       {
          /*!
-          * @addtogroup simple_keypad_itf  Simple Keypad interface
+          * @addtogroup simple_keypad_itf  Simple Keypad
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Keypad interface API.

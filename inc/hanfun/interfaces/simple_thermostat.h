@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleThermostat
       {
          /*!
-          * @addtogroup simple_thersmostat_itf  Simple Thermostat interface
+          * @addtogroup simple_thersmostat_itf  Simple Thermostat
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Thermostat interface API.

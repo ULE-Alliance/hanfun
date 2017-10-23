@@ -53,7 +53,7 @@ namespace HF
       {
          /*!
           * @addtogroup rssi_itf  RSSI interface
-          * @ingroup interfaces
+          * @ingroup core
           *
           * This module contains the classes that define and implement the RSSI interface API.
           * @{

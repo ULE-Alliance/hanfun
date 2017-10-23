@@ -134,15 +134,14 @@ Common::Result Client::handle_command(Protocol::Packet &packet, Common::ByteArra
 Common::Result Client::define_program(const Protocol::Address &addr, Entry &program)
 {
    Protocol::Message message(program.size());
-   HF_ASSERT(program.pack(message.payload) != 0, return Common::Result::FAIL_ARG;
-
-            );
+   HF_ASSERT(program.pack(message.payload) != 0, {return Common::Result::FAIL_ARG;});
 
    message.itf.role   = SERVER_ROLE;
    message.itf.id     = Interface::BATCH_PROGRAM_MANAGEMENT;
    message.itf.member = DEFINE_PROGRAM_CMD;
 
    send(addr, message);
+
    return Common::Result::OK;
 }
 

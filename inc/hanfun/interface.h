@@ -95,6 +95,9 @@ namespace HF
          ANY_UID  = 0x7FFF,              //!< Any interface UID value.
       } UID;
 
+      /*!
+       * Helper class to match any interface.
+       */
       struct Any: public Common::Interface
       {
          Any(): Common::Interface(ANY_UID)

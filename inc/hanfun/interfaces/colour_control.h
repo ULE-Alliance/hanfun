@@ -39,9 +39,9 @@ namespace HF
        * value.
        *
        * @param [in] server   pointer to the object to read the current value from.
-       * @param [in] uid      attribute's UID to create the attribute object for.
+       * @param [in] uid      attribute's %UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(ColourControl::IServer *server, uint8_t uid);
@@ -52,38 +52,40 @@ namespace HF
       namespace ColourControl
       {
          /*!
-          * @addtogroup colour_control_itf  Colour Control interface
+          * @addtogroup colour_control_itf  Colour Control
           * @ingroup interfaces
           *
-          * This module contains the classes that define and implement the Colour Control interface API.
+          * This module contains the classes that define and implement the Colour Control
+          * interface API.
+          *
           * @{
           */
          //! Command IDs.
          typedef enum _CMD
          {
-            MOVE_TO_HUE_CMD                = 0x01, //!< Move To Hue command UID.
-            MOVE_HUE_CMD                   = 0x02, //!< Move Hue command UID.
-            STEP_HUE_CMD                   = 0x03, //!< Step Hue command UID.
-            MOVE_TO_SATURATION_CMD         = 0x04, //!< Move To Saturation command UID.
-            MOVE_SATURATION_CMD            = 0x05, //!< Move Saturation command UID.
-            STEP_SATURATION_CMD            = 0x06, //!< Step Saturation command UID.
-            MOVE_TO_HUE_AND_SATURATION_CMD = 0x07, //!< Move To Hue And Saturation command UID.
-            MOVE_TO_XY_CMD                 = 0x08, //!< Move To Xy command UID.
-            MOVE_XY_CMD                    = 0x09, //!< Move Xy command UID.
-            STEP_XY_CMD                    = 0x0a, //!< Step Xy command UID.
-            MOVE_TO_COLOUR_TEMPERATURE_CMD = 0x0b, //!< Move To Colour Temperature command UID.
-            STOP_CMD                       = 0x0c, //!< Stop command UID.
+            MOVE_TO_HUE_CMD                = 0x01, //!< Move To Hue command %UID.
+            MOVE_HUE_CMD                   = 0x02, //!< Move Hue command %UID.
+            STEP_HUE_CMD                   = 0x03, //!< Step Hue command %UID.
+            MOVE_TO_SATURATION_CMD         = 0x04, //!< Move To Saturation command %UID.
+            MOVE_SATURATION_CMD            = 0x05, //!< Move Saturation command %UID.
+            STEP_SATURATION_CMD            = 0x06, //!< Step Saturation command %UID.
+            MOVE_TO_HUE_AND_SATURATION_CMD = 0x07, //!< Move To Hue And Saturation command %UID.
+            MOVE_TO_XY_CMD                 = 0x08, //!< Move To %Xy command %UID.
+            MOVE_XY_CMD                    = 0x09, //!< Move %Xy command %UID.
+            STEP_XY_CMD                    = 0x0a, //!< Step %Xy command %UID.
+            MOVE_TO_COLOUR_TEMPERATURE_CMD = 0x0b, //!< Move To Colour Temperature command %UID.
+            STOP_CMD                       = 0x0c, //!< Stop command %UID.
             __LAST_CMD__                   = STOP_CMD
          } CMD;
 
          //! Attributes
          typedef enum _Attributes
          {
-            SUPPORTED_ATTR          = 0x01,  //!< Supported attribute UID.
-            MODE_ATTR               = 0x02,  //!< Mode attribute UID.
-            HUE_AND_SATURATION_ATTR = 0x03,  //!< Hue And Saturation attribute UID.
-            XY_ATTR                 = 0x04,  //!< XY attribute UID.
-            COLOUR_TEMPERATURE_ATTR = 0x05,  //!< Colour Temperature attribute UID.
+            SUPPORTED_ATTR          = 0x01,  //!< %Supported attribute %UID.
+            MODE_ATTR               = 0x02,  //!< %Mode attribute %UID.
+            HUE_AND_SATURATION_ATTR = 0x03,  //!< Hue And Saturation attribute %UID.
+            XY_ATTR                 = 0x04,  //!< XY attribute %UID.
+            COLOUR_TEMPERATURE_ATTR = 0x05,  //!< Colour Temperature attribute %UID.
             __LAST_ATTR__           = COLOUR_TEMPERATURE_ATTR
          } Attributes;
 
@@ -122,11 +124,11 @@ namespace HF
             /*!
              * Constructor
              *
-             * @param [in] hue            hue colour value.
-             * @param [in] saturation     saturation colour value.
+             * @param [in] _hue        hue colour value.
+             * @param [in] _saturation saturation colour value.
              */
-            HS_Colour(uint16_t hue, uint8_t saturation):
-               saturation(saturation)
+            HS_Colour(uint16_t _hue, uint8_t _saturation):
+               saturation(_saturation)
             {
                hue = _hue < HUE ? _hue : HUE - 1;
             }
@@ -147,7 +149,7 @@ namespace HF
              * @param [in] angle       the angle to invert.
              * @param [in] max_value   the max value for the angle.
              *
-             * @return              the inverted angle.
+             * @return the inverted angle.
              */
             static int32_t invert_angle(int32_t angle, uint16_t max_value);
 
@@ -337,7 +339,7 @@ namespace HF
           */
          struct Supported: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = SUPPORTED_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = SUPPORTED_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;          //!< Attribute Read/Write
 
             static constexpr uint8_t get_suport(void)
@@ -361,11 +363,11 @@ namespace HF
          };
 
          /*!
-          * Helper class to handle the Mode attribute for the Colour Control interface.
+          * Helper class to handle the %Mode attribute for the Colour Control interface.
           */
          struct Mode: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = MODE_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = MODE_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;     //!< Attribute Read/Write
 
             Mode(uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -378,7 +380,7 @@ namespace HF
           */
          struct HueAndSaturation: public HF::Attributes::Attribute<HS_Colour>
          {
-            static constexpr uint8_t ID       = HUE_AND_SATURATION_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = HUE_AND_SATURATION_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                   //!< Attribute Read/Write
 
             HueAndSaturation(HS_Colour value = HS_Colour(0, 0), HF::Interface *owner = nullptr):
@@ -391,7 +393,7 @@ namespace HF
           */
          struct Xy: public HF::Attributes::Attribute<XY_Colour>
          {
-            static constexpr uint8_t ID       = XY_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = XY_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;   //!< Attribute Read/Write
 
             Xy(XY_Colour value = XY_Colour(0, 0), HF::Interface *owner = nullptr):
@@ -404,7 +406,7 @@ namespace HF
           */
          struct ColourTemperature: public HF::Attributes::Attribute<uint16_t>
          {
-            static constexpr uint8_t ID       = COLOUR_TEMPERATURE_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = COLOUR_TEMPERATURE_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                   //!< Attribute Read/Write
 
             ColourTemperature(uint16_t value = 0, HF::Interface *owner = nullptr):
@@ -420,7 +422,7 @@ namespace HF
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
           * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @retval  nullptr if the attribute %UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
@@ -442,18 +444,15 @@ namespace HF
             /*!
              * Constructor
              *
-             * @param [in] hue      New hue value.
-             * @param [in] dir      Direction of movement
-             * @param [in] time     Time for the movement
+             * @param [in] hue         New hue value.
+             * @param [in] direction   Direction of movement
+             * @param [in] time        Time for the movement
              */
-            MoveToHueMessage(uint16_t hue = 0,
-                             Direction direction = Direction::SHORTEST,
-                             uint16_t time = 0):
-               direction(direction), time(time)
+            MoveToHueMessage(uint16_t hue = 0, Direction direction = Direction::SHORTEST,
+                             uint16_t time = 0): direction(direction), time(time)
             {
                this->hue = hue < HS_Colour::HUE ? hue : HS_Colour::HUE - 1;
             }
-
 
             //! Minimum pack/unpack required data size.
             static constexpr uint16_t min_size = sizeof(hue)            // Hue
@@ -480,14 +479,14 @@ namespace HF
           */
          struct MoveHueMessage
          {
-            Direction                 direction; //!< @c Direction of movement.
-            uint16_t                  rate;      //!< Time of transition in units of 100msec.
+            Direction   direction; //!< @c Direction of movement.
+            uint16_t    rate;      //!< Rate of change in degrees per second.
 
             /*!
              * Constructor
              *
-             * @param [in] dir      @c Direction of movement
-             * @param [in] time     Time for the movement
+             * @param [in] dir   direction of movement
+             * @param [in] rate  rate of change in degrees per second.
              */
             MoveHueMessage(Direction dir = Direction::UP, uint16_t rate = 0):
                direction(dir), rate(rate)
@@ -521,14 +520,15 @@ namespace HF
          {
             uint8_t                  step_size; //!< Step size in degrees.
             Direction                direction; //!< @c Direction of movement.
-            uint8_t                  time;      //!< Time of a single step transition in units of 100msec.
+            uint8_t                  time;      /*!< Time of a single step transition in
+                                                     units of 100msec. */
 
             /*!
              * Constructor
              *
-             * @param [in] step_size   Step size in degrees.
+             * @param [in] step_size   step size in degrees.
              * @param [in] dir         @c Direction of movement.
-             * @param [in] time        Time of a single step transition in units of 100msec.
+             * @param [in] time        time of a single step transition (units of 100msec).
              */
             StepHueMessage(uint8_t step_size = 0, Direction dir = Direction::UP, uint8_t time = 0):
                step_size(step_size), direction(dir), time(time)
@@ -561,14 +561,14 @@ namespace HF
          {
             uint8_t                  saturation; //!< The value of new saturation.
             Direction                direction;  //!< @c Direction of movement.
-            uint16_t                 time;       //!< Time of a single step transition in units of 100msec.
+            uint16_t                 time;       //!< Time of a single step transition (units of 100msec).
 
             /*!
              * Constructor
              *
-             * @param [in] saturation  The value of new saturation.
+             * @param [in] saturation  the value of new saturation.
              * @param [in] dir         @c Direction of movement.
-             * @param [in] time        Time of a single step transition in units of 100msec.
+             * @param [in] time        time of a single step transition (units of 100msec).
              */
             MoveToSaturationMessage(uint8_t saturation = 0,
                                     Direction dir = Direction::UP,
@@ -602,13 +602,13 @@ namespace HF
          struct MoveSaturationMessage
          {
             Direction                direction; //!< @c Direction of movement.
-            uint8_t                  rate;      //!< Time of transition in units of 100msec.
+            uint8_t                  rate;      //!< Rate of change in degrees per second.
 
             /*!
              * Constructor
              *
              * @param [in] dir      @c Direction of movement
-             * @param [in] time     Time for the movement
+             * @param [in] rate     rate of change in degrees per second.
              */
             MoveSaturationMessage(Direction dir = Direction::UP, uint8_t rate = 0):
                direction(dir), rate(rate)
@@ -645,9 +645,9 @@ namespace HF
             /*!
              * Constructor
              *
-             * @param [in] step_size   Step size in degrees.
+             * @param [in] step_size   step size in degrees.
              * @param [in] dir         @c Direction of movement.
-             * @param [in] time        Time of a single step transition in units of 100msec.
+             * @param [in] time        time of a single step transition (units of 100msec).
              */
             StepSaturationMessage(uint8_t step_size = 0,
                                   Direction dir = Direction::UP,
@@ -687,10 +687,9 @@ namespace HF
             /*!
              * Constructor
              *
-             * @param [in] hue         New hue value.
-             * @param [in] saturation  The value of new saturation.
-             * @param [in] dir         @c Direction of movement.
-             * @param [in] time        Time of a single step transition in units of 100msec.
+             * @param [in] colour   the value of new hue/saturation.
+             * @param [in] dir      @c Direction of movement.
+             * @param [in] time     time of a single step transition in units of 100msec.
              */
             MoveToHueSaturationMessage(HS_Colour colour = HS_Colour(0, 0),
                                        Direction dir = Direction::UP,
@@ -724,13 +723,13 @@ namespace HF
          struct MoveToXYMessage
          {
             XY_Colour colour;
-            uint16_t  time;         //!< Time of a single step transition in units of 100msec.
+            uint16_t  time;         //!< time of a single step transition (units of 100msec).
 
             /*!
              * Constructor
              *
-             * @param [in] colour       The colour value.
-             * @param [in] time        Time of a single step transition in units of 100msec.
+             * @param [in] colour   the colour value.
+             * @param [in] time     time of a single step transition (units of 100msec).
              */
             MoveToXYMessage(XY_Colour colour = XY_Colour(0, 0), uint16_t time = 0):
                colour(colour), time(time)
@@ -761,14 +760,14 @@ namespace HF
           */
          struct MoveXYMessage
          {
-            int16_t X_rate;
-            int16_t Y_rate;
+            int16_t X_rate;   //!< The rate of change of X in units per seconds.
+            int16_t Y_rate;   //!< The rate of change of Y in units per seconds.
 
             /*!
              * Constructor
              *
-             * @param [in] X_rate       The rate of change in units per seconds
-             * @param [in] Y_step       The rate of change in units per seconds
+             * @param [in] X_rate   the rate of change of X in units per seconds.
+             * @param [in] Y_rate   The rate of change of Y in units per seconds.
              */
             MoveXYMessage(int16_t X_rate = 0, int16_t Y_rate = 0):
                X_rate(X_rate), Y_rate(Y_rate)
@@ -798,16 +797,16 @@ namespace HF
           */
          struct StepXYMessage
          {
-            int16_t X_step;
-            int16_t Y_step;
-            uint8_t time;     //!< Time of a single step transition in units of 100msec.
+            int16_t X_step;   //!< The step size for X.
+            int16_t Y_step;   //!< The step size for Y.
+            uint8_t time;     //!< Time of a single step transition (units of 100msec).
 
             /*!
              * Constructor
              *
-             * @param [in] X_step       The rate of change in units per seconds
-             * @param [in] Y_step       The rate of change in units per seconds
-             * @param [in] time         Time of a single step transition in units of 100msec.
+             * @param [in] X_step   the step size for X.
+             * @param [in] Y_step   the step size for Y.
+             * @param [in] time     time of a single step transition (units of 100msec).
              */
             StepXYMessage(int16_t X_step = 0, int16_t Y_step = 0, uint8_t time = 0):
                X_step(X_step), Y_step(Y_step), time(time)
@@ -839,13 +838,13 @@ namespace HF
          struct MoveToTemperatureMessage
          {
             uint16_t colour;
-            uint16_t time;          //!< Time of a single step transition in units of 100msec.
+            uint16_t time;    //!< Time of a single step transition in units of 100msec.
 
             /*!
              * Constructor
              *
-             * @param [in] colour       The colour value.
-             * @param [in] time        Time of a single step transition in units of 100msec.
+             * @param [in] colour   the colour value.
+             * @param [in] time     time of a single step transition (units of 100msec).
              */
             MoveToTemperatureMessage(uint16_t colour = 0, uint16_t time = 0):
                colour(colour), time(time)
@@ -881,7 +880,12 @@ namespace HF
             Base(): Interface<HF::Interface::COLOUR_CONTROL>() {}
          };
 
-         //! Interface for the Transitions
+         /*!
+          * %Interface API for the Transitions.
+          *
+          * A Transition is a class that knows how to update the colour attributes of the
+          * Colour Control interface in order to implement the known commands for the interface.
+          */
          struct ITransition
          {
             IServer  &server;          //!< The server instance
@@ -889,12 +893,11 @@ namespace HF
             uint16_t period;           //!< Time period for the transition (in 100 msec units).
             uint16_t remaining_time;   //!< Remaining time until the transition is ran.
 
-
             /*!
              * Constructor.
              *
-             * @param [in] _server     Server instance
-             * @param [in] period      The Transition period
+             * @param [in] _server  server instance.
+             * @param [in] period   the transition period.
              */
             ITransition(IServer &_server, uint16_t period):
                server(_server), period(period), remaining_time(period)
@@ -903,15 +906,15 @@ namespace HF
             virtual ~ITransition()
             {}
 
-
             /*!
-             * Common part for the transition run code.
+             * Run the transition.
              *
              * This will update the remaining time and check if the transition should run.
              *
              * @param [in] time     time elapsed time since the last call.
-             * @retval 0   Don't run the transition specialization.
-             * @retval 1   Run the transition specialization.
+             *
+             * @retval true    run the transition specialization.
+             * @retval false   don't run the transition specialization.
              */
             virtual bool run(uint16_t time)
             {
@@ -929,10 +932,10 @@ namespace HF
             /*!
              * Check if the transition should continue.
              *
-             * @retval 0   The transition ended.
-             * @retval 1   The transition will continue.
+             * @retval true   the transition continues.
+             * @retval false  the transition ended.
              */
-            virtual bool next() = 0; // check if the transition continues...
+            virtual bool next() = 0;
          };
 
 
@@ -964,16 +967,8 @@ namespace HF
             ~Hue_Transition()
             {}
 
-            /*!
-             * Run the transition.
-             *
-             * @param [in] time elapsed time since the last call.
-             * @retval 0   The transition didn't ran. Only the remaining time was updated.
-             * @retval 1   The transition ran.
-             */
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -987,9 +982,9 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] _server     server instance
-             * @param [in] period      the Transition period. In units of 100msec.
-             * @param [in] step        the step size for each transition iteration.
+             * @param [in] _server  server instance.
+             * @param [in] period   the Transition period (units of 100msec).
+             * @param [in] step     the step size for each transition iteration.
              */
             Hue_Transition_Continuous(IServer &_server, uint16_t period, int32_t step = 0):
                ITransition(_server, period), step(step)
@@ -1002,10 +997,10 @@ namespace HF
             ~Hue_Transition_Continuous()
             {}
 
-            //! @copydoc ColourControl::Hue_Transition::run()
+            // @copydoc ColourControl::Hue_Transition::run()
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
+            // @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -1022,11 +1017,11 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] _server     server instance
-             * @param [in] period      the Transition period. In units of 100msec.
-             * @param [in] step        the step size for each transition iteration.
-             * @param [in] n_steps     number of steps.
-             * @param [in] end         end value for the transition.
+             * @param [in] _server  server instance
+             * @param [in] period   the Transition period. In units of 100msec.
+             * @param [in] step     the step size for each transition iteration.
+             * @param [in] n_steps  number of steps.
+             * @param [in] end      end value for the transition.
              */
             Saturation_Transition(IServer &_server, uint16_t period, int32_t step = 0,
                                   uint16_t n_steps = 0,
@@ -1041,16 +1036,8 @@ namespace HF
             ~Saturation_Transition()
             {}
 
-            /*!
-             * Run the transition.
-             *
-             * @param [in] time elapsed time since the last call.
-             * @retval 0   The transition didn't ran. Only the remaining time was updated.
-             * @retval 1   The transition ran.
-             */
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -1079,10 +1066,8 @@ namespace HF
             ~Saturation_Transition_Continuous()
             {}
 
-            //! @copydoc ColourControl::Hue_Transition::run()
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -1121,16 +1106,8 @@ namespace HF
             ~HS_Transition()
             {}
 
-            /*!
-             * Run the transition.
-             *
-             * @param [in] time elapsed time since the last call.
-             * @retval 0   The transition didn't ran. Only the remaining time was updated.
-             * @retval 1   The transition ran.
-             */
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -1140,20 +1117,20 @@ namespace HF
          //! XY Transition
          struct XY_Transition: public ITransition
          {
-            int32_t   X_step;  //!< X step
-            int32_t   Y_step;  //!< Y step
+            int32_t   X_step;  //!< X step.
+            int32_t   Y_step;  //!< Y step.
             uint16_t  n_steps; //!< Counter for the steps needed.
             XY_Colour end;     //!< End value to stop the iteration.
 
             /*!
              * Constructor.
              *
-             * @param [in] _server     server instance
-             * @param [in] period      the Transition period. In units of 100msec.
-             * @param [in] X_step      the X step size for each transition iteration.
-             * @param [in] Y_step      the Y step size for each transition iteration.
-             * @param [in] n_steps     number of steps.
-             * @param [in] end         end value for the transition.
+             * @param [in] _server  server instance.
+             * @param [in] period   the Transition period (units of 100msec).
+             * @param [in] X_step   the X step size for each transition iteration.
+             * @param [in] Y_step   the Y step size for each transition iteration.
+             * @param [in] n_steps  number of steps.
+             * @param [in] end      end value for the transition.
              */
             XY_Transition(IServer &_server, uint16_t period,
                           int32_t X_step = 0, int32_t Y_step = 0,
@@ -1170,16 +1147,8 @@ namespace HF
             ~XY_Transition()
             {}
 
-            /*!
-             * Run the transition.
-             *
-             * @param [in] time elapsed time since the last call.
-             * @retval 0   The transition didn't ran. Only the remaining time was updated.
-             * @retval 1   The transition ran.
-             */
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -1189,16 +1158,16 @@ namespace HF
          //! XY Transition
          struct XY_Transition_Continuous: public ITransition
          {
-            int16_t X_step;   //!< X step
-            int16_t Y_step;   //!< Y step
+            int16_t X_step;   //!< X step.
+            int16_t Y_step;   //!< Y step.
 
             /*!
              * Constructor.
              *
-             * @param [in] _server     server instance
-             * @param [in] period      the Transition period. In units of 100msec.
-             * @param [in] X_step      the X step size for each transition iteration.
-             * @param [in] Y_step      the Y step size for each transition iteration.
+             * @param [in] _server  server instance.
+             * @param [in] period   the transition period (units of 100msec).
+             * @param [in] X_step   the X step size for each transition iteration.
+             * @param [in] Y_step   the Y step size for each transition iteration.
              */
             XY_Transition_Continuous(IServer &_server, uint16_t period,
                                      int16_t X_step = 0, int16_t Y_step = 0):
@@ -1212,38 +1181,29 @@ namespace HF
             ~XY_Transition_Continuous()
             {}
 
-            /*!
-             * Run the transition.
-             *
-             * @param [in] time elapsed time since the last call.
-             * @retval 0   The transition didn't ran. Only the remaining time was updated.
-             * @retval 1   The transition ran.
-             */
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
             }
          };
 
-         //! ColourTemperature Transition
+         //! Colour Temperature Transition
          struct Temperature_Transition: public ITransition
          {
-            int32_t  step;    //!< temperature step
+            int32_t  step;    //!< Temperature step
             uint16_t n_steps; //!< Counter for the steps needed.
             uint16_t end;     //!< End value to stop the iteration.
 
             /*!
              * Constructor.
              *
-             * @param [in] _server     server instance
-             * @param [in] period      the Transition period. In units of 100msec.
-             * @param [in] X_step      the X step size for each transition iteration.
-             * @param [in] Y_step      the Y step size for each transition iteration.
-             * @param [in] n_steps     number of steps.
-             * @param [in] end         end value for the transition.
+             * @param [in] _server  server instance
+             * @param [in] period   the transition period (units of 100msec).
+             * @param [in] step     the step size for each transition iteration.
+             * @param [in] n_steps  number of steps.
+             * @param [in] end      end value for the transition.
              */
             Temperature_Transition(IServer &_server, uint16_t period,
                                    int32_t step = 0,
@@ -1260,16 +1220,8 @@ namespace HF
             ~Temperature_Transition()
             {}
 
-            /*!
-             * Run the transition.
-             *
-             * @param [in] time elapsed time since the last call.
-             * @retval 0   The transition didn't ran. Only the remaining time was updated.
-             * @retval 1   The transition ran.
-             */
             bool run(uint16_t time);
 
-            //! @copydoc ITransition::next()
             bool next()
             {
                return (period != 0 ? true : false);
@@ -1285,8 +1237,8 @@ namespace HF
          {
             protected:
 
-            uint8_t _supported; //!< Supported
-            uint8_t _mode;      //!< Mode
+            uint8_t _supported; //!< %Supported modes.
+            uint8_t _mode;      //!< Current Active %Mode.
 
 #ifdef HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR
 
@@ -1296,7 +1248,7 @@ namespace HF
 
 #ifdef HF_ITF_COLOUR_CONTROL_XY_ATTR
 
-            XY_Colour _xy;   //!< XY
+            XY_Colour _xy;   //!< XY Colour
 
 #endif
 
@@ -1324,8 +1276,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
              * is received.
              *
-             * @param [in] addr        the network address to send the message to.
-             * @param [in] message     the @c MoveToHueMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveToHueMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_to_hue(const Protocol::Address &addr,
                                                const MoveToHueMessage &message);
@@ -1334,8 +1289,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_HUE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message    the @c MoveHueMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveHueMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_hue(const Protocol::Address &addr,
                                             const MoveHueMessage &message);
@@ -1344,8 +1302,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::STEP_HUE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c StepHueMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c StepHueMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result step_hue(const Protocol::Address &addr,
                                             const StepHueMessage &message);
@@ -1354,8 +1315,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToSaturationMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveToSaturationMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_to_saturation(const Protocol::Address &addr,
                                                       const MoveToSaturationMessage &message);
@@ -1364,8 +1328,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_SATURATION_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveSaturationMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveSaturationMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_saturation(const Protocol::Address &addr,
                                                    const MoveSaturationMessage &message);
@@ -1374,8 +1341,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::STEP_SATURATION_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c StepSaturationMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c StepSaturationMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result step_saturation(const Protocol::Address &addr,
                                                    const StepSaturationMessage &message);
@@ -1384,8 +1354,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToHueSaturationMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveToHueSaturationMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_to_hue_and_saturation(const Protocol::Address &addr,
                                                               const MoveToHueSaturationMessage &message);
@@ -1394,8 +1367,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_TO_XY_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToXYMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveToXYMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_to_xy(const Protocol::Address &addr,
                                               const MoveToXYMessage &message);
@@ -1404,8 +1380,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveXYMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveXYMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_xy(const Protocol::Address &addr,
                                            const MoveXYMessage &message);
@@ -1414,8 +1393,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::STEP_XY_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c StepXYMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c StepXYMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result step_xy(const Protocol::Address &addr,
                                            const StepXYMessage &message);
@@ -1424,8 +1406,11 @@ namespace HF
              * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToTemperatureMessage received.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] message  the @c MoveToTemperatureMessage received.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result move_to_colour_temperature(const Protocol::Address &addr,
                                                               const MoveToTemperatureMessage &message);
@@ -1436,7 +1421,10 @@ namespace HF
              * Callback that is called when a @c ColourControl::STOP_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr  the network address to send the message to.
+             *
+             * @retval Result::OK         if the request could be processed,
+             * @retval Result::FAIL_ARG   otherwise.
              */
             virtual Common::Result stop(const Protocol::Address &addr);
 
@@ -1450,30 +1438,30 @@ namespace HF
             // =============================================================================
 
             /*!
-             * Get the Supported for the Colour Control server.
+             * Get the supported modes bitmask for the Colour Control server.
              *
-             * @return  the current Supported.
+             * @return  the supported modes bitmask.
              */
             uint8_t supported() const;
 
             /*!
-             * Set the Supported for the Colour Control server.
+             * Set the supported modes bitmask for the Colour Control server.
              *
-             * @param [in] __value the  Supported value to set the server to.
+             * @param [in] __value  the supported modes bitmask value to set the server to.
              */
             void supported(uint8_t __value);
 
             /*!
-             * Get the Mode for the Colour Control server.
+             * Get the current active mode for the Colour Control server.
              *
-             * @return  the current Mode.
+             * @return  the current active mode.
              */
             uint8_t mode() const;
 
             /*!
-             * Set the Mode for the Colour Control server.
+             * Set the current mode for the Colour Control server.
              *
-             * @param [in] __value the  Mode value to set the server to.
+             * @param [in] __value  the current mode value to set the server to.
              */
             void mode(uint8_t __value);
 
@@ -1595,145 +1583,55 @@ namespace HF
             //! @name Events
             //! @{
 
-            /*!
-             * Inform the APP that a new transition was added.
-             */
+            //! Inform the APP that a new transition was added.
             virtual void changed(void) {}
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_TO_HUE_CMD,
-             * is received.
-             *
-             * @param [in] addr        the network address to send the message to.
-             * @param [in] message     the @c MoveToHueMessage received.
-             */
             Common::Result move_to_hue(const Protocol::Address &addr,
                                        const MoveToHueMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_HUE_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message    the @c MoveHueMessage received.
-             */
             Common::Result move_hue(const Protocol::Address &addr,
                                     const MoveHueMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::STEP_HUE_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c StepHueMessage received.
-             */
             Common::Result step_hue(const Protocol::Address &addr,
                                     const StepHueMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_TO_SATURATION_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToSaturationMessage received.
-             */
             Common::Result move_to_saturation(const Protocol::Address &addr,
                                               const MoveToSaturationMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_SATURATION_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveSaturationMessage received.
-             */
             Common::Result move_saturation(const Protocol::Address &addr,
                                            const MoveSaturationMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::STEP_SATURATION_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c StepSaturationMessage received.
-             */
             Common::Result step_saturation(const Protocol::Address &addr,
                                            const StepSaturationMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToHueSaturationMessage received.
-             */
-            Common::Result move_to_hue_and_saturation(
-               const Protocol::Address &addr,
-               const MoveToHueSaturationMessage &message);
+            Common::Result move_to_hue_and_saturation(const Protocol::Address &addr,
+                                                      const MoveToHueSaturationMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_TO_XY_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToXYMessage received.
-             */
             Common::Result move_to_xy(const Protocol::Address &addr,
                                       const MoveToXYMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_XY_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveXYMessage received.
-             */
             Common::Result move_xy(const Protocol::Address &addr,
                                    const MoveXYMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::STEP_XY_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c StepXYMessage received.
-             */
             Common::Result step_xy(const Protocol::Address &addr,
                                    const StepXYMessage &message);
 
-            /*!
-             * Callback that is called when a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] message     the @c MoveToTemperatureMessage received.
-             */
-            Common::Result move_to_colour_temperature(
-               const Protocol::Address &addr,
-               const MoveToTemperatureMessage &message);
+            Common::Result move_to_colour_temperature(const Protocol::Address &addr,
+                                                      const MoveToTemperatureMessage &message);
 
 #ifdef HF_ITF_COLOUR_CONTROL_STOP_CMD
-
-            /*!
-             * Callback that is called when a @c ColourControl::STOP_CMD,
-             * is received.
-             *
-             * @param [in] addr       the network address to send the message to.
-             */
             Common::Result stop(const Protocol::Address &addr);
-
 #endif
-
             //! @}
 
             protected:
 
             static Container transitions;
 
-
             /*!
              * Add a transition to the list.
-             * @param [in] t     The transition to be added.
+             *
+             * @param [in] t  the transition to be added.
              */
             void add_transition(ITransition *t)
             {
@@ -1741,10 +1639,10 @@ namespace HF
                changed();
             }
 
-
             /*!
              * Remove a transition from the list.
-             * @param [in] itf      The server reference to search for a transition.
+             *
+             * @param [in] itf   the server reference to search for a transition.
              */
             void remove(IServer const &itf)
             {
@@ -1782,18 +1680,20 @@ namespace HF
             //! @{
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_CMD,
+             * to the given network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr        the network address to send the message to.
+             * @param [in] hue         the hue value to move to.
+             * @param [in] direction   the direction of change.
+             * @param [in] transition  the time interval to make the transition.
              */
             void move_to_hue(const Protocol::Address &addr, uint16_t hue,
-                             Direction direction,
-                             uint16_t transition);
+                             Direction direction, uint16_t transition);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_HUE_CMD,
+             * to the given network address.
              *
              * @param [in] addr        the network address to send the message to.
              * @param [in] direction   the direction of change.
@@ -1802,8 +1702,8 @@ namespace HF
             void move_hue(const Protocol::Address &addr, Direction direction, uint16_t rate);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STEP_HUE_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_HUE_CMD,
+             * to the given network address.
              *
              * @param [in] addr        the network address to send the message to.
              * @param [in] step        the step size.
@@ -1814,8 +1714,8 @@ namespace HF
                           Direction direction, uint8_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_SATURATION_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_SATURATION_CMD,
+             * to the given network address.
              *
              * @param [in] addr        the network address to send the message to.
              * @param [in] saturation  the new saturation value.
@@ -1826,77 +1726,78 @@ namespace HF
                                     Direction direction, uint16_t transition);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_SATURATION_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_SATURATION_CMD,
+             * to the given network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr        the network address to send the message to.
              * @param [in] direction   the direction of change.
              * @param [in] rate        the rate of change.
              */
             void move_saturation(const Protocol::Address &addr, Direction direction, uint8_t rate);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_SATURATION_CMD,
+             * to the given network address.
              *
              * @param [in] addr       the network address to send the message to.
              * @param [in] step        the step size.
              * @param [in] direction   the direction of change.
              * @param [in] time        time to perform a single step.
              */
-            void step_saturation(const Protocol::Address &addr, uint8_t step, Direction direction,
-                                 uint8_t time);
+            void step_saturation(const Protocol::Address &addr, uint8_t step,
+                                 Direction direction, uint8_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_HUE_AND_SATURATION_CMD,
+             * to the given network address.
              *
              * @param [in] addr        the network address to send the message to.
              * @param [in] colour      the new colour value.
              * @param [in] direction   direction of movement.
-             * @param [in] transition  transition time (in units of 100ms).
+             * @param [in] time        transition time (in units of 100ms).
              */
             void move_to_hue_and_saturation(const Protocol::Address &addr, HS_Colour colour,
                                             Direction direction, uint16_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_XY_CMD,
+             * to the given network address.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] colour      the new colour value.
-             * @param [in] transition  transition time (in units of 100ms).
-             *
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] colour   the new colour value.
+             * @param [in] time     transition time (in units of 100ms).
              */
             void move_to_xy(const Protocol::Address &addr, XY_Colour colour, uint16_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_XY_CMD,
+             * to the given network address.
              *
-             * @param [in] addr       the network address to send the message to.
-             * @param [in] X_rate     the X rate of change. (in units of sec)
-             * @param [in] Y_rate     the Y rate of change. (in units of sec)
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] X_rate   the X rate of change (in units of sec).
+             * @param [in] Y_rate   the Y rate of change (in units of sec).
              */
             void move_xy(const Protocol::Address &addr, int16_t X_rate, int16_t Y_rate);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::STEP_XY_CMD,
+             * to the given network address.
              *
-             * @param [in] addr        the network address to send the message to.
-             * @param [in] X_step      the X rate of change. (in units of sec)
-             * @param [in] Y_step      the Y rate of change. (in units of sec)
-             * @param [in] time        time to perform a single step. (in units of 100msec)
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] X_step   the X rate of change. (in units of sec)
+             * @param [in] Y_step   the Y rate of change. (in units of sec)
+             * @param [in] time     time to perform a single step. (in units of 100msec)
              */
-            void step_xy(const Protocol::Address &addr,
-                         int16_t X_step, int16_t Y_step, uint8_t time);
+            void step_xy(const Protocol::Address &addr, int16_t X_step,
+                         int16_t Y_step, uint8_t time);
 
             /*!
-             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c ColourControl::MOVE_TO_COLOUR_TEMPERATURE_CMD,
+             * to the given network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr     the network address to send the message to.
+             * @param [in] colour   the colour temperature to move to.
+             * @param [in] time     the number of milliseconds to perform the move in.
              */
             void move_to_colour_temperature(const Protocol::Address &addr,
                                             uint16_t colour, uint16_t time);
@@ -1905,7 +1806,7 @@ namespace HF
              * Send a HAN-FUN message containing a @c ColourControl::STOP_CMD, to the given
              * network address.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] addr  the network address to send the message to.
              */
             void stop(const Protocol::Address &addr);
 

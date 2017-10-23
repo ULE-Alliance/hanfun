@@ -54,8 +54,8 @@ namespace HF
       namespace SUOTA
       {
          /*!
-          * @addtogroup suota_itf  SUOTA interface
-          * @ingroup interfaces
+          * @addtogroup suota_itf  SUOTA
+          * @ingroup core
           *
           * This module contains the classes that define and implement the SUOTA interface API.
           * @{

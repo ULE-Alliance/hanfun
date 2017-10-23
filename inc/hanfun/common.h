@@ -526,13 +526,11 @@ namespace HF
             return data.unpack(array, offset);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return data.compare(other.data);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<T> &other) const
          {
             return data.changed(other.data);
@@ -576,13 +574,11 @@ namespace HF
             return data->unpack(array, offset);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return data->compare(other.data);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<T> &other) const
          {
             return data->changed(other.data);
@@ -634,13 +630,11 @@ namespace HF
             return min_size;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return data - other.data;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<T> &other) const
          {
             return (((float) (data - other.data)) / other.data);
@@ -708,7 +702,6 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<Common::ByteArray> &other) const
          {
             int res = data.size() - other.size();
@@ -721,7 +714,6 @@ namespace HF
             return res;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<Common::ByteArray> &other) const
          {
             UNUSED(other);
@@ -809,13 +801,11 @@ namespace HF
             return unpack(data, array, offset);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<std::string> &other) const
          {
             return strcmp(data.data(), other.data.data());
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<std::string> &other) const
          {
             UNUSED(other);
@@ -903,13 +893,11 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return std::equal(data.cbegin(), data.cend(), other.data.cbegin()) ? 0 : -1;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
             UNUSED(other);
@@ -1016,13 +1004,11 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return std::equal(data.cbegin(), data.cend(), other.data.cbegin()) ? 0 : -1;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
             UNUSED(other);
@@ -1091,13 +1077,11 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
             return memcmp(data.data(), other.data.data(), data.size());
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
             UNUSED(other);

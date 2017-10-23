@@ -2,7 +2,7 @@
 /*!
  * @file       inc/hanfun/core/group_management.h
  *
- * This file contains the definitions for the Group Management service.
+ * This file contains the definitions for the %Group Management service.
  *
  * @version    1.5.0
  *
@@ -56,65 +56,66 @@ namespace HF
        * @param [in] server   pointer to the object to read the current value from.
        * @param [in] uid      attribute's UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(GroupManagement::IServer *server, uint8_t uid);
 
       /*!
-       * This namespace contains the implementation of the Group Management service.
+       * This namespace contains the implementation of the %Group Management service.
        */
       namespace GroupManagement
       {
          /*!
-          * @addtogroup group_management_itf  Group Management service
-          * @ingroup interfaces
+          * @addtogroup group_management_itf  Group Management
+          * @ingroup core
           *
           * This module contains the classes that define and implement the
-          * Group Management service API.
+          * %Group Management service API.
           *
           * @{
           */
          //! Command IDs.
          typedef enum _CMD
          {
-            CREATE_CMD   = 0x01, //!< Create command UID.
-            DELETE_CMD   = 0x02, //!< Delete command UID.
-            ADD_CMD      = 0x03, //!< Add command UID.
-            REMOVE_CMD   = 0x04, //!< Remove command UID.
-            GET_INFO_CMD = 0x05, //!< Get Info command UID.
+            CREATE_CMD   = 0x01, //!< Create command %UID.
+            DELETE_CMD   = 0x02, //!< Delete command %UID.
+            ADD_CMD      = 0x03, //!< Add command %UID.
+            REMOVE_CMD   = 0x04, //!< Remove command %UID.
+            GET_INFO_CMD = 0x05, //!< Get Info command %UID.
             __LAST_CMD__ = GET_INFO_CMD
          } CMD;
 
          //! Attributes
          typedef enum _Attributes
          {
-            NUMBER_OF_GROUPS_ATTR = 0x01,   //!< Number Of Groups attribute UID.
+            NUMBER_OF_GROUPS_ATTR = 0x01,   //!< Number Of Groups attribute %UID.
             __LAST_ATTR__         = NUMBER_OF_GROUPS_ATTR
          } Attributes;
 
-
+         /*!
+          * This class represents a group address.
+          */
          struct GroupAddress
          {
-            uint16_t                  address; //!< Group Address
+            uint16_t                  address; //!< %Group Address
 
-            constexpr static uint16_t NO_ADDR    = 0x0000;  //!< Empty Group Address.
-            constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN Group Address.
-            constexpr static uint16_t END_ADDR   = 0x7FFF;  //!< Last HAN-FUN Group Address.
+            constexpr static uint16_t NO_ADDR    = 0x0000;  //!< Empty %Group Address.
+            constexpr static uint16_t START_ADDR = 0x0001;  //!< First HAN-FUN %Group Address.
+            constexpr static uint16_t END_ADDR   = 0x7FFF;  //!< Last HAN-FUN %Group Address.
 
             /*!
              * Constructor.
              *
-             * @param [in] address     The group Address
+             * @param [in] address     the group's address.
              */
             GroupAddress(uint16_t address = 0)
             {
-               // static_assert(START_ADDR <= address && address <= END_ADDR, "Group Address outside range");
                this->address = address;
             }
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint16_t);                         // Group Address
+            static constexpr uint16_t min_size = sizeof(uint16_t);   // %Group Address
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -128,24 +129,28 @@ namespace HF
 
 
          // =============================================================================
-         // Group Member Entry Data structure
+         // %Group Member Entry Data structure
          // =============================================================================
 
+         //! This class represents a member of a group.
          typedef Protocol::Address Member;
 
          // =============================================================================
-         // Group Entry Data structure
+         // %Group Entry Data structure
          // =============================================================================
 
+         /*!
+          * This class represents a group of devices.
+          */
          struct Group: public GroupAddress
          {
             using Container = std::vector<Member>;
 
-            std::string name; //!< Group Name
+            std::string name; //!< %Group Name
 
             protected:
 
-            Container _members;  //!< Group Members
+            Container _members;  //!< %Group Members
 
             public:
 
@@ -155,8 +160,8 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] GroupAddr    Group Address
-             * @param [in] GroupName	Group Name
+             * @param [in] address  the group's address.
+             * @param [in] name     the group's name.
              */
             Group(uint16_t address = 0, std::string name = ""):
                GroupAddress(address), name(name)
@@ -166,6 +171,11 @@ namespace HF
             // API
             // =============================================================================
 
+            /*!
+             * Return a reference to the members of the group.
+             *
+             * @return  reference to the members of the group.
+             */
             const Container &members() const
             {
                return _members;
@@ -182,7 +192,7 @@ namespace HF
             Container::iterator find_member(const Member &member);
 
             /*!
-             * @copydoc Group::find_member(const Member &)
+             * @copybrief Group::find_member(const Member &)
              *
              * @param [in] device   device address for the member to look for.
              * @param [in] unit     unit ID for the member to look for.
@@ -212,7 +222,7 @@ namespace HF
             }
 
             /*!
-             * @copydoc exists(const Member &)
+             * @copybrief exists(const Member &)
              *
              * @param [in] device   device address to check the existence for.
              * @param [in] unit     unit ID to check the existence for.
@@ -238,7 +248,7 @@ namespace HF
             bool add(const Member &member);
 
             /*!
-             * @copydoc add(const Member &)
+             * @copybrief add(const Member &)
              *
              * @param [in] device   device address for the new member to add.
              * @param [in] unit     unit ID for the new member to add.
@@ -277,7 +287,7 @@ namespace HF
             bool update(const Member &member);
 
             /*!
-             * @copydoc update(const Member &)
+             * @copybrief update(const Member &)
              *
              * @param device  device address to update the reserved entry with.
              * @param unit    unit ID to update the reserved entry with.
@@ -303,7 +313,7 @@ namespace HF
             bool remove(const Member &member);
 
             /*!
-             * @copydoc remove(const Member &)
+             * @copybrief remove(const Member &)
              *
              * @param device  device address of the member to remove.
              * @param unit    unit ID of the member to remove.
@@ -349,12 +359,12 @@ namespace HF
           */
          struct CreateMessage
          {
-            std::string name; //!< Group Name.
+            std::string name; //!< %Group Name.
 
             /*!
              * Constructor.
              *
-             * @param [in] name     Group Name
+             * @param [in] name  group's name.
              */
             CreateMessage(std::string name = ""):
                name(name)
@@ -367,7 +377,7 @@ namespace HF
             // =============================================================================
 
             //! Minimum pack/unpack required data size.
-            static constexpr uint16_t min_size = sizeof(uint8_t);          // Group Name (length)
+            static constexpr uint16_t min_size = sizeof(uint8_t);          // %Group Name (length)
 
             //! @copydoc HF::Common::Serializable::size
             uint16_t size() const;
@@ -388,7 +398,7 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] address     Group address
+             * @param [in] address  group address.
              */
             CreateResponse(uint16_t address):
                Protocol::Response(), GroupAddress(address)
@@ -397,8 +407,8 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] address     Group address
-             * @param [in] code        Response code.
+             * @param [in] code     response code.
+             * @param [in] address  group address
              */
             CreateResponse(Common::Result code = Common::Result::OK,
                            uint16_t address = GroupAddress::NO_ADDR):
@@ -439,7 +449,9 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param [in] address     Group address
+             * @param [in] group    the group's address.
+             * @param [in] device   the device's address to add/remove to/from the group.
+             * @param [in] unit     the device's unit ID to add/remove to/from the group.
              */
             Message(uint16_t group, uint16_t device, uint8_t unit):
                GroupAddress(group), Protocol::Address(device, unit)
@@ -495,7 +507,7 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param name       Group Name
+             * @param name       %Group Name
              * @param members    Member vector
              */
             InfoResponse(const std::string &name, std::vector<Member> &members):
@@ -505,8 +517,9 @@ namespace HF
             /*!
              * Constructor.
              *
-             * @param name       Group Name
-             * @param members    Member vector
+             * @param code       response code.
+             * @param name       group Name
+             * @param members    members vector
              */
             InfoResponse(Common::Result code, const std::string &name,
                          std::vector<Member> &members):
@@ -539,7 +552,7 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Helper class to handle the Number Of Groups attribute for the Group Management service.
+          * Helper class to handle the Number Of Groups attribute for the %Group Management service.
           */
          struct NumberOfGroups: public HF::Attributes::Attribute<uint8_t>
          {
@@ -552,14 +565,14 @@ namespace HF
          };
 
          /*!
-          * @copybrief HF::Core::create_attribute (HF::Interfaces::GroupManagement::Server *,uint8_t)
+          * @copybrief HF::Core::create_attribute(HF::Core::GroupManagement::IServer *,uint8_t)
           *
-          * @see HF::Core::create_attribute (HF::Core::GroupManagement::Server *,uint8_t)
+          * @see HF::Core::create_attribute (HF::Core::GroupManagement::IServer *,uint8_t)
           *
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
-          * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @retval  pointer to an attribute object.
+          * @retval  nullptr if the attribute %UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
@@ -579,6 +592,18 @@ namespace HF
              */
             virtual Common::Result save(uint16_t address, const std::string &name) = 0;
 
+            using Common::IEntries<Group>::destroy;
+
+            /*!
+             * Destroy the entry given by @c address in the persistent storage.
+             *
+             * @param [in] address   the address to the entry to erase.
+             *
+             * @retval  Common::Result::OK, if the entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG otherwise.
+             */
+            virtual Common::Result destroy(const uint16_t address) = 0;
+
             /*!
              * Find the group with the given group @c address.
              *
@@ -587,7 +612,7 @@ namespace HF
              * @returns  pointer to the group with the given @c address,
              *           @c nullptr otherwise.
              */
-            virtual GroupPtr find(uint16_t address) const = 0;
+            virtual GroupPtr find(const uint16_t address) const = 0;
 
             /*!
              * Find the group with the given @c name.
@@ -626,36 +651,25 @@ namespace HF
 
             Common::Result save(uint16_t address, const std::string &name);
 
-            /*!
-             * @copydoc HF::Common::IEntries::destroy
-             *
-             * @param [in] address     The @c Group address to destroy
-             * @return
-             */
-            Common::Result destroy(const uint16_t &address);
+            Common::Result destroy(const uint16_t address);
 
             /*!
-             * @copydoc HF::Common::IEntries::destroy
+             * Destroy the given @c entry in the persistent storage.
              *
              * @warning the reference passed into this method SHOULD NOT be considered
              *          valid if it was obtained by calling the find method.
              *
+             * @param [in] entry   reference to the entry to erase.
+             *
+             * @retval  Common::Result::OK, if the entry was destroyed.
+             * @retval  Common::Result::FAIL_ARG otherwise.
              */
             Common::Result destroy(const Group &entry);
 
-            /*!
-             * @copydoc IEntries::find(uint16_t)
-             */
             GroupPtr find(uint16_t address) const;
 
-            /*!
-             * @copydoc IEntries::find(const std::string &)
-             */
             GroupPtr find(const std::string &name) const;
 
-            /*!
-             * @copydoc IEntries::next_address
-             */
             uint16_t next_address() const;
 
             /*!
@@ -705,9 +719,9 @@ namespace HF
          };
 
          /*!
-          * Group Management %Service : Parent.
+          * %Group Management %Service : Parent.
           *
-          * This is the parent class for the Group Management service implementation.
+          * This is the parent class for the %Group Management service implementation.
           */
          struct Base: public Service<HF::Interface::GROUP_MANAGEMENT>
          {
@@ -721,9 +735,9 @@ namespace HF
          struct IGroupTable;
 
          /*!
-          * Group Management %Service : %Server side implementation.
+          * %Group Management %Service : %Server side implementation.
           *
-          * This class provides the server side of the Group Management interface.
+          * This class provides the server side of the %Group Management interface.
           */
          class IServer: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
          {
@@ -747,17 +761,18 @@ namespace HF
              * Callback that is called when a @c GroupManagement::CREATE_CMD,
              * is received.
              *
-             * @param [in] packet      The message Packet.
-             * @param [in] msg         The @c CreateMessage sent.
-             * @return                 The response code sent in response.
+             * @param [in] packet   the message Packet.
+             * @param [in] msg      the @c CreateMessage received.
+             *
+             * @return  the response code sent in the response.
              */
             virtual Common::Result create(Protocol::Packet &packet, CreateMessage &msg);
 
             /*!
              * Indicate that a new group was created.
              *
-             * @param [in] group       Pointer to the group entry corresponding to the
-             *                         created group.
+             * @param [in] group    pointer to the group entry corresponding to the
+             *                      created group.
              */
             virtual void created(const GroupPtr &group)
             {
@@ -768,16 +783,17 @@ namespace HF
              * Callback that is called when a @c GroupManagement::DELETE_CMD,
              * is received.
              *
-             * @param [in] packet      The message Packet.
-             * @param [in] msg         The @c DeleteMessage sent.
-             * @return                 The response code sent in response.
+             * @param [in] packet   the message Packet.
+             * @param [in] msg      the @c DeleteMessage received.
+             *
+             * @return  the response code sent in the response.
              */
             virtual Common::Result remove(Protocol::Packet &packet, DeleteMessage &msg);
 
             /*!
              * Indicate that a group was deleted.
              *
-             * @param [in] group     Copy of the group entry that was deleted.
+             * @param [in] group reference to a copy of the group entry that was deleted.
              */
             virtual void deleted(const Group &group)
             {
@@ -788,16 +804,20 @@ namespace HF
              * Callback that is called when a @c GroupManagement::ADD_CMD,
              * is received.
              *
-             * @param [in] packet      The message Packet.
-             * @param [in] msg         The @c CreateMessage sent.
-             * @return                 The response code sent in response.
+             * @param [in] packet   the message Packet.
+             * @param [in] msg      the @c CreateMessage received.
+             *
+             * @return  the response code sent in the response.
              */
             virtual Common::Result add(Protocol::Packet &packet, const AddMessage &msg);
 
             /*!
              * Indicate that a new device/unit was added to an existing group.
              *
-             * @param [in] group       Pointer to the group entry corresponding to the group.
+             * @param [in] group    reference to a pointer to the group entry
+             *                      corresponding to the group where a member was added.
+             *
+             * @param [in] member   reference to the member added.
              */
             virtual void added(const GroupPtr &group, const Member &member)
             {
@@ -809,16 +829,18 @@ namespace HF
              * Callback that is called when a @c GroupManagement::REMOVE_CMD,
              * is received.
              *
-             * @param [in] packet      The message Packet.
-             * @param [in] msg         The @c RemoveMessage sent.
-             * @return                 The response code sent in response.
+             * @param [in] packet   the message Packet.
+             * @param [in] msg      the @c RemoveMessage received.
+             *
+             * @return  the response code sent in the response.
              */
             virtual Common::Result remove(Protocol::Packet &packet, const RemoveMessage &msg);
 
             /*!
              * Indicate that a device/unit was removed from an existing group.
              *
-             * @param [in] group       Pointer to the group entry corresponding to the affected group.
+             * @param [in] group    pointer to the group entry corresponding to the affected group.
+             * @param [in] member   reference to the member entry removed.
              */
             virtual void removed(const GroupPtr &group, const Member &member)
             {
@@ -831,9 +853,10 @@ namespace HF
              * Callback that is called when a @c GroupManagement::GET_INFO_CMD,
              * is received.
              *
-             * @param [in] packet      The message Packet.
-             * @param [in] msg         The @c InfoMessage sent.
-             * @return                 The response code sent in response.
+             * @param [in] packet   the message Packet.
+             * @param [in] msg      the @c InfoMessage received.
+             *
+             * @return  the response code sent in the response.
              */
             virtual Common::Result get_info(Protocol::Packet &packet, const InfoMessage &msg);
 #endif
@@ -902,7 +925,7 @@ namespace HF
             // =============================================================================
 
             /*!
-             * Get the Number Of Groups for the Group Management server.
+             * Get the Number Of Groups for the %Group Management server.
              *
              * @return  the current Number Of Groups.
              */
@@ -924,7 +947,6 @@ namespace HF
                return HF::Attributes::UIDS {NUMBER_OF_GROUPS_ATTR};
             }
 
-            //! @copydoc HF::Interface::handle
             Common::Result handle(Protocol::Packet &packet, Common::ByteArray &payload,
                                   uint16_t offset);
 
@@ -935,9 +957,9 @@ namespace HF
              * can be used by the @c source device affecting the @c destination
              * device configuration on the system.
              *
-             * @param [in] member       interface member UID.
-             * @param [in] source       HF address for the requesting device.
-             * @param [in] destination  HF address for the affected device.
+             * @param [in] member       interface member %UID.
+             * @param [in] source       %HF address for the requesting device.
+             * @param [in] destination  %HF address for the affected device.
              *
              * @retval  true     the operation is allowed,
              * @retval  false    otherwise.
@@ -952,7 +974,7 @@ namespace HF
             }
 
             /*!
-             * Get the Number Of Groups for the Group Management server.
+             * Get the Number Of Groups for the %Group Management server.
              *
              * @param [in] diff  number of groups added/removed.
              *
@@ -968,14 +990,8 @@ namespace HF
                notify(old_attr, new_attr);
             }
 
-            /*!
-             * @copydoc AbstractInterface::payload_size(Protocol::Message::Interface &)
-             */
             uint16_t payload_size(Protocol::Message::Interface &itf) const;
 
-            /*!
-             * @copydoc AbstractInterface::handle_command
-             */
             Common::Result handle_command(Protocol::Packet &packet, Common::ByteArray &payload,
                                           uint16_t offset);
 
@@ -991,6 +1007,11 @@ namespace HF
             void added(const Protocol::Address &addr, Common::Result result,
                        const AddMessage &request, uint8_t reference);
 
+            /*!
+             * Get the %Group Table client associated with this %Group Management server.
+             *
+             * @return  reference to the %Group Table client used by this %Group Management server.
+             */
             virtual IGroupTable &group_table() const = 0;
 
             friend IGroupTable;
@@ -1006,6 +1027,11 @@ namespace HF
           */
          struct IGroupTable: protected GroupTable::Client
          {
+            /*!
+             * Constructor.
+             *
+             * @param [in] _server  reference to the IServer that contains this instance.
+             */
             IGroupTable(IServer &_server): GroupTable::Client(_server.unit()),
                server(_server)
             {}
@@ -1102,7 +1128,6 @@ namespace HF
             virtual ~Server()
             {}
 
-            //! @copydoc IServer::entries
             _Entries &entries() const
             {
                return const_cast<_Entries &>(_entries);
@@ -1110,7 +1135,6 @@ namespace HF
 
             protected:
 
-            //! @copydoc IServer::group_table
             _GroupTable &group_table() const
             {
                return const_cast<_GroupTable &>(_group_table);
@@ -1120,9 +1144,9 @@ namespace HF
          typedef Server<> DefaultServer;
 
          /*!
-          * Group Management %Service : %Client side implementation.
+          * %Group Management %Service : %Client side implementation.
           *
-          * This class provides the client side of the Group Management interface.
+          * This class provides the client side of the %Group Management interface.
           */
          struct Client: public ServiceRole<GroupManagement::Base, HF::Interface::CLIENT_ROLE>
          {
@@ -1141,7 +1165,7 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupManagement::CREATE_CMD,
              * to the D:0/U:0 network address.
              *
-             *  @param [in] name    The name of the group to be created.
+             *  @param [in] name    the name of the group to be created.
              */
             void create(std::string name);
 
@@ -1149,7 +1173,7 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupManagement::DELETE_CMD,
              * to the D:0/U:0 network address.
              *
-             *  @param [in] group      The group address to delete.
+             *  @param [in] group   the group address to delete.
              */
             void remove(uint16_t group);
 
@@ -1157,9 +1181,10 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupManagement::ADD_CMD,
              * to the D:0/U:0 network address.
              *
-             * @param [in] group      the group identifier to add the device.
-             * @param [in] device     the device identifier to add the unit from.
-             * @param [in] unit       the unit identifier of the given @c device to add from the given @c group.
+             * @param [in] group    the group identifier to add the device.
+             * @param [in] device   the device identifier to add the unit from.
+             * @param [in] unit     the unit identifier of the given @c device to
+             *                      add from the given @c group.
              */
             void add(uint16_t group, uint16_t device, uint8_t unit);
 
@@ -1167,9 +1192,10 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupManagement::REMOVE_CMD,
              * to the D:0/U:0 network address.
              *
-             * @param [in] group      the group identifier the device belongs to.
-             * @param [in] device     the device identifier to delete the unit from.
-             * @param [in] unit       the unit identifier of the given @c device to delete from the given @c group.
+             * @param [in] group    the group identifier the device belongs to.
+             * @param [in] device   the device identifier to delete the unit from.
+             * @param [in] unit     the unit identifier of the given @c device to
+             *                      delete from the given @c group.
              */
             void remove(uint16_t group, uint16_t device, uint8_t unit);
 
@@ -1178,7 +1204,7 @@ namespace HF
              * Send a HAN-FUN message containing a @c GroupManagement::GET_INFO_CMD,
              * to the D:0/U:0 network address.
              *
-             *  @param [in] group      The group address for the info request.
+             *  @param [in] group   the group address for the info request.
              */
             void get_info(uint16_t group);
 #endif
@@ -1204,7 +1230,7 @@ namespace HF
              * This method is called when a response to a delete message
              * is received.
              *
-             * @param [in] response    the create response that was received.
+             * @param [in] response    the delete response that was received.
              */
             virtual void deleted(DeleteResponse &response) = 0;
 
@@ -1212,7 +1238,7 @@ namespace HF
              * This method is called when a response to a add message
              * is received.
              *
-             * @param [in] response    the create response that was received.
+             * @param [in] response    the added response that was received.
              */
             virtual void added(AddResponse &response) = 0;
 
@@ -1220,7 +1246,7 @@ namespace HF
              * This method is called when a response to a remove message
              * is received.
              *
-             * @param [in] response    the create response that was received.
+             * @param [in] response    the removed response that was received.
              */
             virtual void removed(RemoveResponse &response) = 0;
 
@@ -1228,7 +1254,7 @@ namespace HF
              * This method is called when a response to a get info message
              * is received.
              *
-             * @param [in] response    the create response that was received.
+             * @param [in] response    the get info response that was received.
              */
             virtual void got_info(InfoResponse &response) = 0;
 

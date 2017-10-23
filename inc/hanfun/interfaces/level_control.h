@@ -52,7 +52,7 @@ namespace HF
       namespace LevelControl
       {
          /*!
-          * @addtogroup level_ctl_itf  Level Control Interface
+          * @addtogroup level_ctl_itf  Level Control
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the %Level Control

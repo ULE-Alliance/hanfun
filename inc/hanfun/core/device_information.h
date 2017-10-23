@@ -100,7 +100,6 @@ namespace HF
           *
           * This module contains the classes that implement the %Device Information service.
           *
-          *
           * @{
           */
          constexpr static uint8_t CORE_VERSION      = HF::CORE_VERSION;             //!< HAN-FUN Core version.

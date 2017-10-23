@@ -59,7 +59,7 @@ namespace HF
          namespace Weekly
          {
             /*!
-             * @addtogroup weekly_scheduling  Weekly Scheduling Service
+             * @addtogroup weekly_scheduling  Weekly Scheduling
              * @ingroup core
              *
              * This module contains the classes that implement the %Weekly %Scheduling service.

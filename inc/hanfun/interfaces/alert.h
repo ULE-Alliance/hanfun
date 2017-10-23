@@ -59,7 +59,7 @@ namespace HF
       namespace Alert
       {
          /*!
-          * @addtogroup alert_itf  Alert Interface
+          * @addtogroup alert_itf  Alert
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the %Alert interface API.

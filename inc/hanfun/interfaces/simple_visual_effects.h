@@ -53,7 +53,7 @@ namespace HF
       namespace SimpleVisualEffects
       {
          /*!
-          * @addtogroup simple_visual_effects_itf  Simple Visual Effects interface
+          * @addtogroup simple_visual_effects_itf  Simple Visual Effects
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Visual Effects interface API.

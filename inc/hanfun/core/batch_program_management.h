@@ -1,6 +1,6 @@
 // =============================================================================
 /*!
- * @file       inc/hanfun/core/batch_program_management_interface.h
+ * @file       inc/hanfun/core/batch_program_management.h
  *
  * This file contains the definitions for the Batch Program Management interface.
  *
@@ -43,9 +43,9 @@ namespace HF
        * value.
        *
        * @param [in] server   pointer to the object to read the current value from.
-       * @param [in] uid      attribute's UID to create the attribute object for.
+       * @param [in] uid      attribute's %UID to create the attribute object for.
        *
-       * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
+       * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
        *          exist.
        */
       HF::Attributes::IAttribute *create_attribute(BatchProgramManagement::IServer *server,
@@ -57,8 +57,8 @@ namespace HF
       namespace BatchProgramManagement
       {
          /*!
-          * @addtogroup batch_program_management_itf  Batch Program Management interface
-          * @ingroup interfaces
+          * @addtogroup batch_program_management_itf  Batch Program Management
+          * @ingroup core
           *
           * This module contains the classes that define and implement the Batch Program Management interface API.
           * @{
@@ -66,19 +66,19 @@ namespace HF
          //! Command IDs.
          typedef enum _CMD
          {
-            DEFINE_PROGRAM_CMD      = 0x01, //!< Define Program command UID.
-            INVOKE_PROGRAM_CMD      = 0x02, //!< Invoke Program command UID.
-            DELETE_PROGRAM_CMD      = 0x03, //!< Delete Program command UID.
-            DELETE_ALL_PROGRAMS_CMD = 0x04, //!< Delete All Programs command UID.
-            GET_PROGRAM_ACTIONS_CMD = 0x05, //!< Get Program Actions command UID.
+            DEFINE_PROGRAM_CMD      = 0x01, //!< Define Program command %UID.
+            INVOKE_PROGRAM_CMD      = 0x02, //!< Invoke Program command %UID.
+            DELETE_PROGRAM_CMD      = 0x03, //!< Delete Program command %UID.
+            DELETE_ALL_PROGRAMS_CMD = 0x04, //!< Delete All Programs command %UID.
+            GET_PROGRAM_ACTIONS_CMD = 0x05, //!< Get Program Actions command %UID.
             __LAST_CMD__            = GET_PROGRAM_ACTIONS_CMD
          } CMD;
 
          //! Attributes
          typedef enum _Attributes
          {
-            MAXIMUM_NUMBER_OF_ENTRIES_ATTR = 0x01, //!< Maximum Number Of Entries attribute UID.
-            NUMBER_OF_ENTRIES_ATTR         = 0x02, //!< Number Of Entries attribute UID.
+            MAXIMUM_NUMBER_OF_ENTRIES_ATTR = 0x01, //!< Maximum Number Of %Entries attribute %UID.
+            NUMBER_OF_ENTRIES_ATTR         = 0x02, //!< Number Of %Entries attribute %UID.
             __LAST_ATTR__                  = NUMBER_OF_ENTRIES_ATTR
          } Attributes;
 
@@ -91,22 +91,21 @@ namespace HF
             /**
              * Constructor
              *
-             * @param [in] _UID         Identifier of the Unit to which this action is to be sent.
+             * @param [in] _uid         Identifier of the Unit to which this action is to be sent.
              * @param [in] _msg_type    Code that specifies how Interface Member is to be interpreted.
              * @param [in] _itf_type    Type of the interface to which this action is to be sent.
-             * @param [in] _itf_UID     ID of the interface to which this action is to be sent.
+             * @param [in] _itf_uid     ID of the interface to which this action is to be sent.
              * @param [in] _itf_member  ID of the interface member to be invoked or acted upon.
              * @param [in] _payload     Content of the attribute or of the payload of the command.
-             *
              */
-            Action(uint8_t _UID, HF::Protocol::Message::Type _msg_type,
-                   uint8_t _itf_type, uint16_t _itf_UID, uint8_t _itf_member,
+            Action(uint8_t _uid, HF::Protocol::Message::Type _msg_type,
+                   uint8_t _itf_type, uint16_t _itf_uid, uint8_t _itf_member,
                    Common::ByteArray &_payload)
             {
-               reference  = _UID;
+               reference  = _uid;
                type       = _msg_type;
                itf.role   = _itf_type;
-               itf.id     = _itf_UID;
+               itf.id     = _itf_uid;
                itf.member = _itf_member;
                payload    = _payload;
             }
@@ -302,12 +301,12 @@ namespace HF
          // =============================================================================
 
          /*!
-          * Helper class to handle the Maximum Number Of Entries attribute for the
+          * Helper class to handle the Maximum Number Of %Entries attribute for the
           * Batch Program Management interface.
           */
          struct MaximumNumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = MAXIMUM_NUMBER_OF_ENTRIES_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = MAXIMUM_NUMBER_OF_ENTRIES_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                          //!< Attribute Read/Write
 
             MaximumNumberOfEntries(uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -317,11 +316,11 @@ namespace HF
          };
 
          /*!
-          * Helper class to handle the Number Of Entries attribute for the Batch Program Management interface.
+          * Helper class to handle the Number Of %Entries attribute for the Batch Program Management interface.
           */
          struct NumberOfEntries: public HF::Attributes::Attribute<uint8_t>
          {
-            static constexpr uint8_t ID       = NUMBER_OF_ENTRIES_ATTR; //!< Attribute UID.
+            static constexpr uint8_t ID       = NUMBER_OF_ENTRIES_ATTR; //!< Attribute %UID.
             static constexpr bool    WRITABLE = false;                  //!< Attribute Read/Write
 
             NumberOfEntries(uint8_t value = 0, HF::Interface *owner = nullptr):
@@ -331,14 +330,14 @@ namespace HF
          };
 
          /*!
-          * @copybrief HF::Core::create_attribute (HF::Interfaces::BatchProgramManagement::Server *,uint8_t)
+          * @copybrief HF::Core::create_attribute (HF::Core::BatchProgramManagement::IServer *,uint8_t)
           *
-          * @see HF::Core::create_attribute (HF::Core::BatchProgramManagement::Server *,uint8_t)
+          * @see HF::Core::create_attribute (HF::Core::BatchProgramManagement::IServer *,uint8_t)
           *
-          * @param [in] uid   attribute %UID to create the attribute object for.
+          * @param [in] uid   attribute %%UID to create the attribute object for.
           *
           * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @retval  nullptr if the attribute %%UID does not exist.
           */
          HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
@@ -365,12 +364,15 @@ namespace HF
             using Common::IEntries<Entry>::destroy;
 
             /*!
-             * @copydoc HF::Common::IEntries::destroy
+             * Remove the program with the given @c pid ftom
              *
-             * @param [in] address     The Program ID to destroy
-             * @return
+             * @param [in] pid   the Program ID to destroy.
+             *
+             * @retval Result::OK            if the entry was destroyed,
+             * @retval Result::FAIL_ARG      if no entry with @c pid exists,
+             * @retval Result::FAIL_UNKNOWN  otherwise.
              */
-            virtual Common::Result destroy(const uint8_t &pid) = 0;
+            virtual Common::Result destroy(const uint8_t pid) = 0;
 
             /*!
              * Erase all the DB entries.
@@ -378,21 +380,21 @@ namespace HF
             virtual void clear(void) = 0;
 
             /*!
-             * Find the group with the given group @c address.
+             * Find the program with the given @c pid.
              *
-             * @param [in] address  HF address to search for.
+             * @param [in] pid  the Program ID to search for.
              *
-             * @returns  pointer to the group with the given @c address,
+             * @returns  pointer to the program with the given @c pid,
              *           @c nullptr otherwise.
              */
-            virtual EntryPtr find(uint8_t pid) const = 0;
+            virtual EntryPtr find(const uint8_t pid) const = 0;
 
             /*!
-             * Find the group with the given @c name.
+             * Find the program with the given @c name.
              *
-             * @param [in] name  group name to search for.
+             * @param [in] name  program name to search for.
              *
-             * @returns  pointer to the group with the given @c name,
+             * @returns  pointer to the program with the given @c name,
              *           @c nullptr otherwise.
              */
             virtual EntryPtr find(const std::string &name) const = 0;
@@ -425,41 +427,22 @@ namespace HF
             Common::Result save(const uint8_t pid, const std::string &name,
                                 std::vector<Action> &actions);
 
-            /*!
-             * @copydoc HF::Common::IEntries::destroy
-             *
-             * @param [in] address     The Program ID to destroy
-             * @return
-             */
-            Common::Result destroy(const uint8_t &pid);
+            Common::Result destroy(const uint8_t pid);
 
             /*!
              * @copydoc HF::Common::IEntries::destroy
              *
              * @warning the reference passed into this method SHOULD NOT be considered
              *          valid if it was obtained by calling the find method.
-             *
              */
             Common::Result destroy(const Entry &entry);
 
-            /*!
-             * Erase all the DB entries.
-             */
             void clear(void);
 
-            /*!
-             * @copydoc IEntries::find(uint16_t)
-             */
-            EntryPtr find(uint8_t pid) const;
+            EntryPtr find(const uint8_t pid) const;
 
-            /*!
-             * @copydoc IEntries::find(const std::string &)
-             */
             EntryPtr find(const std::string &name) const;
 
-            /*!
-             * @copydoc IEntries::next_address
-             */
             uint8_t next_pid() const;
 
             /*!
@@ -531,7 +514,7 @@ namespace HF
          {
             protected:
 
-            uint8_t _maximum_number_of_entries; //!< Maximum Number Of Entries
+            uint8_t _maximum_number_of_entries; //!< Maximum Number Of %Entries
 
             public:
 
@@ -556,8 +539,13 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::DEFINE_PROGRAM_CMD,
              * is received.
              *
-             * @param [in] packet      the network packet to send the message to.
+             * @param [in] packet      the network packet received.
              * @param [in] msg         the DefineProgram message received.
+             *
+             * @retval Result::OK             if the request was processed,
+             * @retval Result::FAIL_ARG       if the message contains invalid arguments to the request,
+             * @retval Result::FAIL_RESOURCES if the new entry could not be created,
+             * @retval Result::FAIL_UNKNOWN   otherwise.
              */
             virtual Common::Result define_program(const Protocol::Packet &packet,
                                                   DefineProgram &msg);
@@ -566,8 +554,11 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::INVOKE_PROGRAM_CMD,
              * is received.
              *
-             * @param [in] packet      the network packet to send the message to.
+             * @param [in] packet      the network packet received.
              * @param [in] msg         the InvokeProgram message received.
+             *
+             * @retval Result::OK        if the request was processed,
+             * @retval Result::FAIL_ARG  if the message contains invalid arguments to the request.
              */
             virtual Common::Result invoke_program(const Protocol::Packet &packet,
                                                   InvokeProgram &msg);
@@ -575,8 +566,11 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::DELETE_PROGRAM_CMD,
              * is received.
              *
-             * @param [in] addr       the network packet to send the message to.
+             * @param [in] packet      the network packet received.
              * @param [in] msg         the DeleteProgram message received.
+             *
+             * @retval Result::OK        if the request was processed,
+             * @retval Result::FAIL_ARG  if the message contains invalid arguments to the request.
              */
             virtual Common::Result delete_program(const Protocol::Packet &packet,
                                                   DeleteProgram &msg);
@@ -585,7 +579,9 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet      the network packet received.
+             *
+             * @retval Result::OK
              */
             virtual Common::Result delete_all_programs(const Protocol::Packet &packet);
 
@@ -593,7 +589,11 @@ namespace HF
              * Callback that is called when a @c BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD,
              * is received.
              *
-             * @param [in] addr       the network address to send the message to.
+             * @param [in] packet      the network packet received.
+             * @param [in] msg         the get program actions message received.
+             *
+             * @retval Result::OK        if the request was processed,
+             * @retval Result::FAIL_ARG  if the message contains invalid arguments to the request.
              */
             virtual Common::Result get_program_actions(const Protocol::Packet &packet,
                                                        GetProgramActions &msg);
@@ -617,7 +617,7 @@ namespace HF
             /*!
              * Get the program entry given by @c pid.
              *
-             * @param [in] PID  Program ID for the program to retrieve.
+             * @param [in] pid  Program ID for the program to retrieve.
              *
              * @return  a pointer to the program entry if it exists,
              *          @c nullptr otherwise.
@@ -641,7 +641,7 @@ namespace HF
             }
 
             /*!
-             * @copydoc IEntries::next_address
+             * @copydoc IEntries::next_pid
              */
             uint8_t next_pid() const
             {
@@ -680,7 +680,7 @@ namespace HF
             HF::Attributes::IAttribute *attribute(uint8_t uid);
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
-                                               HF::Attributes::Pack::MANDATORY) const;
+                                            HF::Attributes::Pack::MANDATORY) const;
 
             protected:
 
@@ -742,10 +742,12 @@ namespace HF
              * @param [in] pid        the program ID.
              * @param [in] name       the name for the program.
              * @param [in] actions    the list of actions that makes the program.
+             *
+             * @retval Result:OK         if the message could be created and sent,
+             * @retval REsult::FAIL_ARG  otherwise.
              */
-            Common::Result define_program(const Protocol::Address &addr,
-                                          const uint8_t pid, const std::string name,
-                                          std::vector<Action> &actions)
+            Common::Result define_program(const Protocol::Address &addr, const uint8_t pid,
+                                          const std::string name, std::vector<Action> &actions)
             {
                DefineProgram request(pid, name, actions);
 
@@ -758,9 +760,11 @@ namespace HF
              *
              * @param [in] addr       the network address to send the message to.
              * @param [in] program     the program to send to the device.
+             *
+             * @retval Result:OK         if the message could be created and sent,
+             * @retval REsult::FAIL_ARG  otherwise.
              */
-            Common::Result define_program(const Protocol::Address &addr,
-                                          Entry &program);
+            Common::Result define_program(const Protocol::Address &addr, Entry &program);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::INVOKE_PROGRAM_CMD, to the given
@@ -769,8 +773,7 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] pid        the ID of the program to run.
              */
-            void invoke_program(const Protocol::Address &addr,
-                                uint8_t pid);
+            void invoke_program(const Protocol::Address &addr, uint8_t pid);
 
             /*!
              * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_PROGRAM_CMD, to the given
@@ -779,12 +782,11 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] pid        the ID of the program to delete.
              */
-            void delete_program(const Protocol::Address &addr,
-                                uint8_t pid);
+            void delete_program(const Protocol::Address &addr, uint8_t pid);
 
             /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c BatchProgramManagement::DELETE_ALL_PROGRAMS_CMD,
+             * to the given network address.
              *
              * @param [in] addr       the network address to send the message to.
              */
@@ -792,8 +794,8 @@ namespace HF
 
 #ifdef HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD
             /*!
-             * Send a HAN-FUN message containing a @c BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD, to the given
-             * network address.
+             * Send a HAN-FUN message containing a @c BatchProgramManagement::GET_PROGRAM_ACTIONS_CMD,
+             * to the given network address.
              *
              * @param [in] addr       the network address to send the message to.
              * @param [in] pid        the program ID to get the information.

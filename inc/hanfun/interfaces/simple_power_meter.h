@@ -104,9 +104,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(
-         HF::Interfaces::SimplePowerMeter::Server *server,
-         uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Interfaces::SimplePowerMeter::Server *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Power Meter interface.
@@ -114,7 +113,7 @@ namespace HF
       namespace SimplePowerMeter
       {
          /*!
-          * @addtogroup spm_itf  Simple Power Meter Interface
+          * @addtogroup spm_itf  Simple Power Meter
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Power Meter

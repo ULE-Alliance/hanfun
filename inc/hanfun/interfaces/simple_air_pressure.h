@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleAirPressure
       {
          /*!
-          * @addtogroup simple_air_pressure_itf  Simple Air Pressure interface
+          * @addtogroup simple_air_pressure_itf  Simple Air Pressure
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Air Pressure interface API.

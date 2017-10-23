@@ -56,7 +56,7 @@ namespace HF
       namespace SimpleButton
       {
          /*!
-          * @addtogroup simple_button_itf  Simple Button interface
+          * @addtogroup simple_button_itf  Simple Button
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Button interface API.

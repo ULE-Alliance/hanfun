@@ -58,7 +58,7 @@ namespace HF
          namespace Event
          {
             /*!
-             * @addtogroup event_scheduling  Event Scheduling Service
+             * @addtogroup event_scheduling  Event Scheduling
              * @ingroup core
              *
              * This module contains the classes that implement the %Event %Scheduling service.

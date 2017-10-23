@@ -43,7 +43,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(SimpleHumidity::Server *server, uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Interfaces::SimpleHumidity::Server *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Humidity interface
@@ -51,7 +52,7 @@ namespace HF
       namespace SimpleHumidity
       {
          /*!
-          * @addtogroup simple_humidity_itf  Simple Humidity Interface
+          * @addtogroup simple_humidity_itf  Simple Humidity
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Humidity
@@ -101,8 +102,8 @@ namespace HF
           *
           * @param [in] uid   attribute %UID to create the attribute object for.
           *
-          * @retval  pointer to an attribute object
-          * @retval  <tt>nullptr</tt> if the attribute UID does not exist.
+          * @return  pointer to an attribute object or @c nullptr if the attribute %UID does not
+          *          exist.
           */
          inline HF::Attributes::IAttribute *create_attribute(uint8_t uid)
          {

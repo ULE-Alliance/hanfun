@@ -201,9 +201,6 @@ void Entries::clear()
 // =============================================================================
 bool Entries::any_of(uint16_t group, uint8_t unit) const
 {
-   UNUSED(group);
-   UNUSED(unit);
-
    Entry value(group, unit);
 
    /* *INDENT-OFF* */

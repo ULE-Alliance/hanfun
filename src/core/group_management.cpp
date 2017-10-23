@@ -596,7 +596,7 @@ Common::Result Entries::save(uint16_t address, const std::string &name)
  *
  */
 // =============================================================================
-Common::Result Entries::destroy(const uint16_t &address)
+Common::Result Entries::destroy(const uint16_t address)
 {
    auto count = db.erase(address);
 

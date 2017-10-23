@@ -51,7 +51,7 @@ namespace HF
       namespace SimpleTemperature
       {
          /*!
-          * @addtogroup simple_temp_itf  Simple Temperature Interface
+          * @addtogroup simple_temp_itf  Simple Temperature
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Temperature

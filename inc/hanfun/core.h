@@ -40,7 +40,6 @@ namespace HF
     * This is the top-level namespace for the Core Services and %Interfaces
     * implementation.
     *
-    * @todo Add support for Group Management service.
     * @todo Add support for Identify interface.
     * @todo Add support for Tamper %Alert interface.
     * @todo Add support for Power service.
@@ -269,6 +268,7 @@ namespace HF
 
       public:
 
+      //! Core Services indexs.
       enum Inferface: uint8_t
       {
          DEV_INFO = 0,     //!< Device Information service index.
@@ -278,17 +278,17 @@ namespace HF
          TIME,             //!< Time service index.
 #endif
 #if HF_BATCH_PROGRAM_SUPPORT
-         BATCH_PROGRAM,
+         BATCH_PROGRAM,    //!< Batch Programming service index.
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
-         EVENT_SCH,
+         EVENT_SCH,        //!< Event Scheduling service index.
 #endif
 #if HF_WEEKLY_SCHEDULING_SUPPORT
-         WEEKLY_SCH,
+         WEEKLY_SCH,       //!< Weekly Scheduling service index.
 #endif
 #if HF_GROUP_SUPPORT
-         GROUP_TABLE,      //!< GroupTable service index.
-         GROUP_MGT,
+         GROUP_TABLE,      //!< Group Table service index.
+         GROUP_MGT,        //!< Group Management service index.
 #endif
          BIND_MGT,         //!< Bind Management service index.
       };

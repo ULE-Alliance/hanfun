@@ -52,7 +52,7 @@ namespace HF
       namespace OnOff
       {
          /*!
-          * @addtogroup on_off_itf  On-Off Interface
+          * @addtogroup on_off_itf  On-Off
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the On-Off interface API.

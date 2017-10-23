@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleLightSensor
       {
          /*!
-          * @addtogroup simple_light_sensor_itf  Simple Light Sensor interface
+          * @addtogroup simple_light_sensor_itf  Simple Light Sensor
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Light Sensor interface API.
