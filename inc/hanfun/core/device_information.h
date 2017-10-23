@@ -139,7 +139,6 @@ namespace HF
             UID_ATTR               = 0x0F,   //!< Device UID attribute.                   (O)
             SERIAL_NUMBER_ATTR     = 0x10,   //!< Serial number attribute.                (O)
             __LAST_ATTR__          = SERIAL_NUMBER_ATTR,
-            MANUFACTURE_NAME_ATTR  = MANUFACTURER_NAME_ATTR, //!< @deprecated
          } Attributes;
 
          /*!
@@ -222,13 +221,6 @@ namespace HF
              */
             Base(Unit0 &unit): Service<HF::Interface::DEVICE_INFORMATION>(unit) {}
          };
-
-         /*!
-          * @copydoc HF::Core::DeviceInformation::Base
-          *
-          * @deprecated This class is deprecated please use HF::Core::DeviceInformation::Base instead.
-          */
-         typedef Base __attribute__((deprecated)) Abstract;
 
          /*!
           * Device Information interface : Server side.

@@ -1405,7 +1405,7 @@ std::ostream &operator<<(std::ostream &stream,
          result = "RFPI / IPUI";
          break;
       }
-      case MANUFACTURE_NAME_ATTR:
+      case MANUFACTURER_NAME_ATTR:
       {
          result = "Manufacture's name";
          break;

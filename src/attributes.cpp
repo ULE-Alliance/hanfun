@@ -1040,7 +1040,7 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
          std::vector<uint8_t> temp(5);
          return new Attribute<std::vector<uint8_t>>(HF::Interface::DEVICE_INFORMATION, attr, temp);
       }
-      case MANUFACTURE_NAME_ATTR:
+      case MANUFACTURER_NAME_ATTR:
       {
 #if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
 

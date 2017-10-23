@@ -381,16 +381,6 @@ namespace HF
          }
       };
 
-      /* *INDENT-OFF* */
-      /*!
-       * @copydoc HF::Interfaces::Interface
-       *
-       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface
-       */
-      template<uint16_t _uid>
-      struct __attribute__((deprecated)) Base: public Interface<_uid>{};
-      /* *INDENT-ON* */
-
       /*!
        * Helper class template for implementing a given interface role.
        *

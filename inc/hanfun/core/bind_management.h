@@ -279,13 +279,6 @@ namespace HF
          };
 
          /*!
-          * @copydoc HF::Core::BindManagement::Base
-          *
-          * @deprecated This class is deprecated please use HF::Core::BindManagement::Base instead.
-          */
-         typedef Base __attribute__((deprecated)) Abstract;
-
-         /*!
           * Bind Management interface : Client side.
           */
          class Client: public ServiceRole<Base, HF::Interface::CLIENT_ROLE>,
