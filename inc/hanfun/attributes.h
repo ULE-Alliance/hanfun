@@ -114,13 +114,13 @@ namespace HF
           * @return  the number of bytes read.
           */
          virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset,
-                                 bool with_uid) = 0;
+                                 bool with_uid)                 = 0;
 
-         virtual bool operator==(const IAttribute &other) const                   = 0;
+         virtual bool operator==(const IAttribute &other) const = 0;
 
-         virtual bool operator<(const IAttribute &other) const                    = 0;
+         virtual bool operator<(const IAttribute &other) const  = 0;
 
-         virtual bool operator>(const IAttribute &other) const                    = 0;
+         virtual bool operator>(const IAttribute &other) const  = 0;
 
          /*!
           * This method is used to get the percentage of change that the

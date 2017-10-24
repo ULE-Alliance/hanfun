@@ -437,9 +437,9 @@ namespace HF
           */
          struct MoveToHueMessage
          {
-            uint16_t                  hue;       //!< The value of the new Hue.
-            Direction                 direction; //!< Direction of movement.
-            uint16_t                  time;      //!< Time of transition in units of 100msec.
+            uint16_t  hue;                       //!< The value of the new Hue.
+            Direction direction;                 //!< Direction of movement.
+            uint16_t  time;                      //!< Time of transition in units of 100msec.
 
             /*!
              * Constructor
@@ -479,8 +479,8 @@ namespace HF
           */
          struct MoveHueMessage
          {
-            Direction   direction; //!< @c Direction of movement.
-            uint16_t    rate;      //!< Rate of change in degrees per second.
+            Direction direction;   //!< @c Direction of movement.
+            uint16_t  rate;        //!< Rate of change in degrees per second.
 
             /*!
              * Constructor
@@ -518,9 +518,9 @@ namespace HF
           */
          struct StepHueMessage
          {
-            uint8_t                  step_size; //!< Step size in degrees.
-            Direction                direction; //!< @c Direction of movement.
-            uint8_t                  time;      /*!< Time of a single step transition in
+            uint8_t   step_size;                //!< Step size in degrees.
+            Direction direction;                //!< @c Direction of movement.
+            uint8_t   time;                     /*!< Time of a single step transition in
                                                      units of 100msec. */
 
             /*!
@@ -559,9 +559,9 @@ namespace HF
           */
          struct MoveToSaturationMessage
          {
-            uint8_t                  saturation; //!< The value of new saturation.
-            Direction                direction;  //!< @c Direction of movement.
-            uint16_t                 time;       //!< Time of a single step transition (units of 100msec).
+            uint8_t   saturation;                //!< The value of new saturation.
+            Direction direction;                 //!< @c Direction of movement.
+            uint16_t  time;                      //!< Time of a single step transition (units of 100msec).
 
             /*!
              * Constructor
@@ -601,8 +601,8 @@ namespace HF
           */
          struct MoveSaturationMessage
          {
-            Direction                direction; //!< @c Direction of movement.
-            uint8_t                  rate;      //!< Rate of change in degrees per second.
+            Direction direction;                //!< @c Direction of movement.
+            uint8_t   rate;                     //!< Rate of change in degrees per second.
 
             /*!
              * Constructor
@@ -638,9 +638,9 @@ namespace HF
           */
          struct StepSaturationMessage
          {
-            uint8_t                  step_size; //!< Step size in degrees.
-            Direction                direction; //!< @c Direction of movement.
-            uint8_t                  time;      //!< Time of a single step transition in units of 100msec.
+            uint8_t   step_size;                //!< Step size in degrees.
+            Direction direction;                //!< @c Direction of movement.
+            uint8_t   time;                     //!< Time of a single step transition in units of 100msec.
 
             /*!
              * Constructor
@@ -680,9 +680,9 @@ namespace HF
           */
          struct MoveToHueSaturationMessage
          {
-            HS_Colour                 colour;    //!< New Hue and Saturation Colour.
-            Direction                 direction; //!< @c Direction of movement.
-            uint16_t                  time;      //!< Time of a single step transition in units of 100msec.
+            HS_Colour colour;                    //!< New Hue and Saturation Colour.
+            Direction direction;                 //!< @c Direction of movement.
+            uint16_t  time;                      //!< Time of a single step transition in units of 100msec.
 
             /*!
              * Constructor

@@ -275,7 +275,7 @@ Common::Result IServer::move_to_hue(const Protocol::Address &addr, const MoveToH
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -292,7 +292,7 @@ Common::Result IServer::move_hue(const Protocol::Address &addr, const MoveHueMes
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -309,7 +309,7 @@ Common::Result IServer::step_hue(const Protocol::Address &addr, const StepHueMes
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -327,7 +327,7 @@ Common::Result IServer::move_to_saturation(const Protocol::Address &addr,
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -345,7 +345,7 @@ Common::Result IServer::move_saturation(const Protocol::Address &addr,
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -363,7 +363,7 @@ Common::Result IServer::step_saturation(const Protocol::Address &addr,
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -381,7 +381,7 @@ Common::Result IServer::move_to_hue_and_saturation(const Protocol::Address &addr
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::HS_MODE);                         // Change mode to HS mode.
+   mode(Mask::HS_MODE);
 
    return Common::Result::OK;
 }
@@ -398,7 +398,7 @@ Common::Result IServer::move_to_xy(const Protocol::Address &addr, const MoveToXY
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::XY_MODE);                         // Change mode to HS mode.
+   mode(Mask::XY_MODE);
 
    return Common::Result::OK;
 }
@@ -415,7 +415,7 @@ Common::Result IServer::move_xy(const Protocol::Address &addr, const MoveXYMessa
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::XY_MODE);                         // Change mode to HS mode.
+   mode(Mask::XY_MODE);
 
    return (Common::Result::OK);
 }
@@ -432,7 +432,7 @@ Common::Result IServer::step_xy(const Protocol::Address &addr, const StepXYMessa
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::XY_MODE);                         // Change mode to HS mode.
+   mode(Mask::XY_MODE);
 
    return (Common::Result::OK);
 }
@@ -450,7 +450,7 @@ Common::Result IServer::move_to_colour_temperature(const Protocol::Address &addr
    UNUSED(addr);
    UNUSED(message);
 
-   mode(Mask::TEMPERATURE_MODE);                         // Change mode to HS mode.
+   mode(Mask::TEMPERATURE_MODE);
 
    return (Common::Result::OK);
 }
@@ -535,7 +535,8 @@ Common::Result Server::move_to_hue(const Protocol::Address &addr, const MoveToHu
 
    if (message.time != 0)
    {
-      new_transition->n_steps = message.time - 1;                               // Run for time-1 (we will run once)
+      // Run for time-1 (we will run once)
+      new_transition->n_steps = message.time - 1;
       new_transition->step    = round(step / static_cast<float>(message.time)); // Step size.
 
       if (new_transition->step == 0)
@@ -610,7 +611,8 @@ Common::Result Server::step_hue(const Protocol::Address &addr, const StepHueMess
 
    if (message.time != 0)
    {
-      new_transition->n_steps = message.time - 1;                               // Run for time-1 (adjust for base 0)
+      // Run for time-1 (adjust for base 0)
+      new_transition->n_steps = message.time - 1;
       new_transition->step    = round(step / static_cast<float>(message.time)); // Step size.
 
       if (new_transition->step == 0)
@@ -662,7 +664,8 @@ Common::Result Server::move_to_saturation(const Protocol::Address &addr,
 
    if (message.time != 0)
    {
-      new_transition->n_steps = message.time - 1;                               // Run for time-1 (adjust for base 0 instead of 1)
+      // Run for time-1 (adjust for base 0 instead of 1)
+      new_transition->n_steps = message.time - 1;
       new_transition->step    = round(step / static_cast<float>(message.time)); // Step size.
 
       if (new_transition->step == 0)
@@ -740,7 +743,8 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 
    if (message.time != 0)
    {
-      new_transition->n_steps = message.time - 1;                               // Run for time-1 (adjust for base 0 instead of 1)
+      // Run for time-1 (adjust for base 0 instead of 1)
+      new_transition->n_steps = message.time - 1;
       new_transition->step    = round(step / static_cast<float>(message.time)); // Step size.
 
       if (new_transition->step == 0)
@@ -784,9 +788,11 @@ Common::Result Server::step_saturation(const Protocol::Address &addr,
 Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
                                                   const MoveToHueSaturationMessage &message)
 {
-   auto hue_step = HS_Colour::get_travel_distance(message.direction, hue_and_saturation().hue,
+   auto current  = hue_and_saturation();
+
+   auto hue_step = HS_Colour::get_travel_distance(message.direction, current.hue,
                                                   message.colour.hue, HS_Colour::HUE);
-   auto sat_step = HS_Colour::get_travel_distance(message.direction, hue_and_saturation().saturation,
+   auto sat_step = HS_Colour::get_travel_distance(message.direction, current.saturation,
                                                   message.colour.saturation, HS_Colour::SATURATION);
 
    HS_Transition *new_transition = new HS_Transition(*this,  // server
@@ -794,9 +800,14 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
 
    if (message.time != 0)
    {
-      new_transition->n_steps  = message.time - 1;                                   // Run for time-1 (adjust for base 0 instead of 1)
-      new_transition->hue_step = round(hue_step / static_cast<float>(message.time)); // Hue Step size.
-      new_transition->sat_step = round(sat_step / static_cast<float>(message.time)); // Saturation Step size.
+      // Run for time-1 (adjust for base 0 instead of 1)
+      new_transition->n_steps  = message.time - 1;
+
+      // Hue Step size.
+      new_transition->hue_step = round(hue_step / static_cast<float>(message.time));
+
+      // Saturation Step size.
+      new_transition->sat_step = round(sat_step / static_cast<float>(message.time));
 
       if (new_transition->hue_step == 0 && new_transition->sat_step == 0)
       {
@@ -846,9 +857,10 @@ Common::Result Server::move_to_xy(const Protocol::Address &addr, const MoveToXYM
 
    if (message.time != 0)
    {
-      new_transition->n_steps = message.time - 1;                                 // Run for time-1 (we will run once)
-      new_transition->X_step  = round(X_dist / static_cast<float>(message.time)); // Step size.
-      new_transition->Y_step  = round(Y_dist / static_cast<float>(message.time)); // Step size.
+      // Run for time-1 (we will run once)
+      new_transition->n_steps = message.time - 1;
+      new_transition->X_step  = round(X_dist / static_cast<float>(message.time)); // X Step size.
+      new_transition->Y_step  = round(Y_dist / static_cast<float>(message.time)); // Y Step size.
 
       if (new_transition->X_step == 0 && new_transition->Y_step == 0)
       {
@@ -917,9 +929,10 @@ Common::Result Server::step_xy(const Protocol::Address &addr, const StepXYMessag
 
    if (message.time != 0)
    {
-      new_transition->n_steps = message.time - 1;                                         // Run for time-1 (adjust for base 0)
-      new_transition->X_step  = round(message.X_step / static_cast<float>(message.time)); // Step size.
-      new_transition->Y_step  = round(message.Y_step / static_cast<float>(message.time)); // Step size.
+      // Run for time-1 (adjust for base 0)
+      new_transition->n_steps = message.time - 1;
+      new_transition->X_step  = round(message.X_step / static_cast<float>(message.time)); // X Step size.
+      new_transition->Y_step  = round(message.Y_step / static_cast<float>(message.time)); // X Step size.
 
       if (new_transition->X_step == 0 && new_transition->Y_step == 0)
       {

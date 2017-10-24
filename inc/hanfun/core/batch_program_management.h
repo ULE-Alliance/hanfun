@@ -680,7 +680,7 @@ namespace HF
             HF::Attributes::IAttribute *attribute(uint8_t uid);
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
-                                            HF::Attributes::Pack::MANDATORY) const;
+                                               HF::Attributes::Pack::MANDATORY) const;
 
             protected:
 
