@@ -1064,10 +1064,31 @@ TEST_GROUP(GroupTableServer)
 };
 
 //! @test Number Of Entries support.
-IGNORE_TEST(GroupTableServer, NumberOfEntries)
+TEST(GroupTableServer, NumberOfEntries)
 {
-   // FIXME Generated Stub.
-   CHECK_ATTRIBUTE(GroupTableServer, NumberOfEntries, false, number_of_entries, 42, 142);
+   auto attr = GroupTable::create_attribute(GroupTable::NUMBER_OF_ENTRIES_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfEntries::ID, attr->uid());
+   CHECK_EQUAL(NumberOfEntries::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::GROUP_TABLE, attr->interface());
+
+   delete attr;
+
+   attr = Core::create_attribute((GroupTable::IServer *) nullptr, NUMBER_OF_ENTRIES_ATTR);
+
+   CHECK_TRUE(attr != nullptr);
+
+   LONGS_EQUAL(NumberOfEntries::ID, attr->uid());
+   CHECK_EQUAL(NumberOfEntries::WRITABLE, attr->isWritable());
+   LONGS_EQUAL(HF::Interface::GROUP_TABLE, attr->interface());
+
+   POINTERS_EQUAL(nullptr, attr->owner());
+
+   delete attr;
+
+   CHECK_ATTRIBUTE_ALLOC(NumberOfEntries);
 }
 
 //! @test Number Of Max Entries support.
