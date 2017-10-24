@@ -3,8 +3,8 @@
 |             |                            |
 | ---------:  | -------------------------- |
 | __Project__ | HAN-FUN CI                 |
-| __Version__ | v1.4.2                     |
-| __Date__    | 01/03/2016                 |
+| __Version__ | v1.5.0                     |
+| __Date__    | 24/10/2017                 |
 
 ## Overview
 
@@ -23,11 +23,32 @@ For more information on requirements, building and using this software package, 
 
 ### New
 
-### 1. Protocol [HF-Protocol v1.2.0]
+* Core Services & Interfaces
+  * Batch Program Management
+  * Event Scheduling
+  * Group Management
+  * Group Table
+  * Time
+  * Weekly Scheduling
 
-* General support for all defined features has been implemented.
+* Profiles
+  * Colour Bulb
+  * Dimmable Colour Bulb
+  * Tracker
+  * Simple Keypad
+  * Simple Pendant
+  * User Interface Lock
 
-### 2. Core Services & Interfaces [HF-Services v1.3.0]
+* Interfaces
+  * Colour Control
+  * Simple Light Sensor
+  * Simple Keypad
+
+### 1. Protocol [HF-Protocol v1.2.1]
+
+ * General support for all defined features has been implemented.
+
+### 2. Core Services & Interfaces [HF-Services v2.0.0]
 
 #### 2.1 Device Management Service [6.1]
 
@@ -61,14 +82,14 @@ For more information on requirements, building and using this software package, 
 
 #### 2.3 Group Management Service [6.3]
 
-| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
-| ------------- | ------------------------- | :------: | --------------  | -------------   |
-| 6.3.2.1       | Number of Groups          | A        | Not Applicable  | Not Implemented |
-| 6.3.5.1       | Create Group              | C        | Not Implemented | Not Implemented |
-| 6.3.5.2       | Delete Group              | C        | Not Implemented | Not Implemented |
-| 6.3.5.3       | Add to Group              | C        | Not Implemented | Not Implemented |
-| 6.3.5.4       | Remove from Group         | C        | Not Implemented | Not Implemented |
-| 6.3.5.5       | Get Group Info            | C        | Not Implemented | Not Implemented |
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__     | __Server__    |
+| ------------- | ------------------------- | :------: | -------------- | ------------- |
+| 6.3.2.1       | Number of Groups          | A        | Not Applicable | Implemented   |
+| 6.3.5.1       | Create Group              | C        | Implemented    | Implemented   |
+| 6.3.5.2       | Delete Group              | C        | Implemented    | Implemented   |
+| 6.3.5.3       | Add to Group              | C        | Implemented    | Implemented   |
+| 6.3.5.4       | Remove from Group         | C        | Implemented    | Implemented   |
+| 6.3.5.5       | Get Group Info            | C        | Implemented    | Implemented   |
 
 #### 2.4 Identify Device Interface [6.4]
 
@@ -118,41 +139,41 @@ For more information on requirements, building and using this software package, 
 
 | __Reference__ | __Commands & Attributes__    | __Type__ | __Client__      | __Server__      |
 | ------------- | ---------------------------- | :------: | --------------- | --------------- |
-| 6.7.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Not Implemented |
-| 6.7.2.2       | Number of Entries            | A        | Not Applicable  | Not Implemented |
-| 6.7.5.1       | Define Program               | C        | Not Implemented | Not Implemented |
-| 6.7.5.2       | Invoke Program               | C        | Not Implemented | Not Implemented |
-| 6.7.5.3       | Delete Program               | C        | Not Implemented | Not Implemented |
-| 6.7.5.4       | Delete All Programs          | C        | Not Implemented | Not Implemented |
-| 6.7.5.5       | Get Program Actions          | C        | Not Implemented | Not Implemented |
+| 6.7.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Implemented     |
+| 6.7.2.2       | Number of Entries            | A        | Not Applicable  | Implemented     |
+| 6.7.5.1       | Define Program               | C        | Implemented     | Implemented     |
+| 6.7.5.2       | Invoke Program               | C        | Implemented     | Implemented     |
+| 6.7.5.3       | Delete Program               | C        | Implemented     | Implemented     |
+| 6.7.5.4       | Delete All Programs          | C        | Implemented     | Implemented     |
+| 6.7.5.5       | Get Program Actions          | C        | Implemented     | Implemented     |
 
 ### 2.8 Event Scheduling Interface [6.8]
 
 | __Reference__ | __Commands & Attributes__    | __Type__ | __Client__      | __Server__      |
 | ------------- | ---------------------------- | :------: | --------------- | --------------- |
-| 6.8.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Not Implemented |
-| 6.8.2.2       | Number of Entries            | A        | Not Applicable  | Not Implemented |
-| 6.8.2.3       | Scheduler Status             | A        | Not Applicable  | Not Implemented |
-| 6.8.5.1       | Activate Scheduler           | C        | Not Implemented | Not Implemented |
-| 6.8.5.2       | Define Event                 | C        | Not Implemented | Not Implemented |
-| 6.8.5.3       | Update Event Status          | C        | Not Implemented | Not Implemented |
-| 6.8.5.4       | Get Event Entry              | C        | Not Implemented | Not Implemented |
-| 6.8.5.5       | Delete Event                 | C        | Not Implemented | Not Implemented |
-| 6.8.5.6       | Delete All Events            | C        | Not Implemented | Not Implemented |
+| 6.8.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Implemented     |
+| 6.8.2.2       | Number of Entries            | A        | Not Applicable  | Implemented     |
+| 6.8.2.3       | Scheduler Status             | A        | Not Applicable  | Implemented     |
+| 6.8.5.1       | Activate Scheduler           | C        | Implemented     | Implemented     |
+| 6.8.5.2       | Define Event                 | C        | Implemented     | Implemented     |
+| 6.8.5.3       | Update Event Status          | C        | Implemented     | Implemented     |
+| 6.8.5.4       | Get Event Entry              | C        | Implemented     | Implemented     |
+| 6.8.5.5       | Delete Event                 | C        | Implemented     | Implemented     |
+| 6.8.5.6       | Delete All Events            | C        | Implemented     | Implemented     |
 
-### 2.9 Event Scheduling Interface [6.9]
+### 2.9 Weekly Scheduling Interface [6.9]
 
 | __Reference__ | __Commands & Attributes__    | __Type__ | __Client__      | __Server__      |
 | ------------- | ---------------------------- | :------: | --------------- | --------------- |
-| 6.9.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Not Implemented |
-| 6.9.2.2       | Number of Entries            | A        | Not Applicable  | Not Implemented |
-| 6.9.2.3       | Weekly Scheduler Status      | A        | Not Applicable  | Not Implemented |
-| 6.9.5.1       | Activate Weekly Scheduler    | C        | Not Implemented | Not Implemented |
-| 6.9.5.2       | Define Weekly Event          | C        | Not Implemented | Not Implemented |
-| 6.9.5.3       | Update Weekly Event Status   | C        | Not Implemented | Not Implemented |
-| 6.9.5.4       | Get Weekly Event Entry       | C        | Not Implemented | Not Implemented |
-| 6.9.5.5       | Delete Weekly Event          | C        | Not Implemented | Not Implemented |
-| 6.9.5.6       | Delete All Weekly Events     | C        | Not Implemented | Not Implemented |
+| 6.9.2.1       | Maximum Number of Entries    | A        | Not Applicable  | Implemented     |
+| 6.9.2.2       | Number of Entries            | A        | Not Applicable  | Implemented     |
+| 6.9.2.3       | Weekly Scheduler Status      | A        | Not Applicable  | Implemented     |
+| 6.9.5.1       | Activate Weekly Scheduler    | C        | Implemented     | Implemented     |
+| 6.9.5.2       | Define Weekly Event          | C        | Implemented     | Implemented     |
+| 6.9.5.3       | Update Weekly Event Status   | C        | Implemented     | Implemented     |
+| 6.9.5.4       | Get Weekly Event Entry       | C        | Implemented     | Implemented     |
+| 6.9.5.5       | Delete Weekly Event          | C        | Implemented     | Implemented     |
+| 6.9.5.6       | Delete All Weekly Events     | C        | Implemented     | Implemented     |
 
 #### 2.10 Tamper Interface [6.10]
 
@@ -166,7 +187,7 @@ For more information on requirements, building and using this software package, 
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 6.11.1.1      | Time                      | A        | Not Applicable  | Not Implemented |
+| 6.11.1.1      | Time                      | A        | Not Applicable  | Implemented |
 
 #### 2.12 Power Interface [6.12]
 
@@ -204,14 +225,14 @@ For more information on requirements, building and using this software package, 
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
 | 6.13.1.1      | RSSI                      | A        | Not Applicable  | Implemented     |
 
-#### 2.14 Keep Alive Interface [6.14]
+#### 2.14 Keep Alive [6.14]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
 | 6.14.1.1      | Interval                  | A        | Not Applicable  | Not Implemented |
 | 6.14.3.1      | I am Alive                | C        | Not Applicable  | Not Implemented |
 
-#### 2.15 SOUTA Interface [6.15]
+#### 2.15 SOUTA [6.15]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
@@ -219,46 +240,50 @@ For more information on requirements, building and using this software package, 
 | 6.15.4.1      | Check Version             | C        | Implemented     | Not Applicable  |
 | 6.15.4.2      | Upgrade Complete          | C        | Implemented     | Not Applicable  |
 
-### 3. Profiles [HF-Profiles v1.3.0]
+### 3. Profiles [HF-Profiles v1.4.0]
 
 | __Reference__ | __Profile__                          | __Status__  |
 | ------------- | ------------------------------------ | ----------- |
-| 5.1.1         | Simple OnOff Switchable              | Implemented |
-| 5.1.2         | Simple On-Off Switch                 | Implemented |
-| 5.1.3         | Simple Level Controllable            | Implemented |
-| 5.1.4         | Simple Level Control                 | Implemented |
-| 5.1.5         | Simple Level Controllable Switchable | Implemented |
-| 5.1.6         | Simple Level Control switch          | Implemented |
-| 5.1.7         | AC Outlet                            | Implemented |
-| 5.1.8         | AC Outlet with Simple Power Metering | Implemented |
-| 5.1.9         | Simple Light                         | Implemented |
-| 5.1.10        | Dimmable Light                       | Implemented |
-| 5.1.11        | Dimmer Switch                        | Implemented |
-| 5.1.12        | Simple Door Lock                     | Implemented |
-| 5.1.13        | Simple Door Bell                     | Implemented |
-| 5.1.14        | Simple Power Meter                   | Implemented |
-| 5.1.15        | Simple Temperature Sensor            | Implemented |
-| 5.1.16        | Simple Humidity Sensor               | Implemented |
-| 5.1.17        | Simple Air Pressure Sensor           | Implemented |
-| 5.1.18        | Simple Button                        | Implemented |
-| 5.1.19        | Controllable Thermostat              | Implemented |
-| 5.1.20        | Simple LED                           | Implemented |
-| 5.1.21        | Environment Monitor                  | Implemented |
-| 5.2.1         | Simple Detector                      | Implemented |
-| 5.2.2         | Door Open Close Detector             | Implemented |
-| 5.2.3         | Window Open Close Detector           | Implemented |
-| 5.2.4         | Motion Detector                      | Implemented |
-| 5.2.5         | Smoke Detector                       | Implemented |
-| 5.2.6         | Gas Detector                         | Implemented |
-| 5.2.7         | Flood Detector                       | Implemented |
-| 5.2.8         | Glass Break Detector                 | Implemented |
-| 5.2.9         | Vibration Detector                   | Implemented |
-| 5.2.10        | Siren                                | Implemented |
-| 5.2.11        | Alertable                            | Implemented |
-| 5.3.1         | Simple Pendant                       | Implemented |
-| 5.4.1         | User Interface Lock                  | Implemented |
-| 5.4.2         | User Interface                       | Implemented |
-| 5.4.3         | Generic Application Logic            | Implemented |
+| 8.1.1         | Simple On-Off Switchable             | Implemented |
+| 8.1.2         | Simple On-Off Switch                 | Implemented |
+| 8.1.3         | Simple Level Controllable            | Implemented |
+| 8.1.4         | Simple Level Control                 | Implemented |
+| 8.1.5         | Simple Level Controllable Switchable | Implemented |
+| 8.1.6         | Simple Level Control switch          | Implemented |
+| 8.1.7         | AC Outlet                            | Implemented |
+| 8.1.8         | AC Outlet with Simple Power Metering | Implemented |
+| 8.1.9         | Simple Light                         | Implemented |
+| 8.1.10        | Dimmable Light                       | Implemented |
+| 8.1.11        | Dimmer Switch                        | Implemented |
+| 8.1.12        | Simple Door Lock                     | Implemented |
+| 8.1.13        | Simple Door Bell                     | Implemented |
+| 8.1.14        | Simple Power Meter                   | Implemented |
+| 8.1.15        | Simple Temperature Sensor            | Implemented |
+| 8.1.16        | Simple Humidity Sensor               | Implemented |
+| 8.1.17        | Simple Air Pressure Sensor           | Implemented |
+| 8.1.18        | Simple Button                        | Implemented |
+| 8.1.19        | Controllable Thermostat              | Implemented |
+| 8.1.20        | Simple LED                           | Implemented |
+| 8.1.21        | Environment Monitor                  | Implemented |
+| 8.1.22        | Colour Bulb                          | Implemented |
+| 8.1.23        | Dimmable Colour Bulb                 | Implemented |
+| 8.1.24        | Tracker                              | Implemented |
+| 8.1.25        | Simple Keypad                        | Implemented |
+| 8.2.1         | Simple Detector                      | Implemented |
+| 8.2.2         | Door Open Close Detector             | Implemented |
+| 8.2.3         | Window Open Close Detector           | Implemented |
+| 8.2.4         | Motion Detector                      | Implemented |
+| 8.2.5         | Smoke Detector                       | Implemented |
+| 8.2.6         | Gas Detector                         | Implemented |
+| 8.2.7         | Flood Detector                       | Implemented |
+| 8.2.8         | Glass Break Detector                 | Implemented |
+| 8.2.9         | Vibration Detector                   | Implemented |
+| 8.2.10        | Siren                                | Implemented |
+| 8.2.11        | Alertable                            | Implemented |
+| 8.3.1         | Simple Pendant                       | Implemented |
+| 8.4.1         | User Interface Lock                  | Implemented |
+| 8.4.2         | User Interface                       | Implemented |
+| 8.4.3         | Generic Application Logic            | Implemented |
 
 ### 4. Interfaces [HF-Interfaces v1.3.0]
 
@@ -285,88 +310,127 @@ For more information on requirements, building and using this software package, 
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
 | 5.3.1.1       | Current Level             | A        | Not Applicable  | Implemented     |
 | 5.3.4.1       | Set Level                 | C        | Implemented     | Implemented     |
+| 5.3.4.2       | Increase Level            | C        | Implemented     | Implemented     |
+| 5.3.4.3       | Decrease Level            | C        | Implemented     | Implemented     |
 
-#### 4.4 Simple Power Meter [5.4]
+#### 4.4 Colour Control [5.4]
 
-| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
-| ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 5.4.1.1       | Energy                    | A        | Not Applicable  | Implemented     |
-| 5.4.1.2       | Energy at Last Reset      | A        | Not Applicable  | Implemented     |
-| 5.4.1.3       | Time at Last Reset        | A        | Not Applicable  | Implemented     |
-| 5.4.1.4       | Instantaneous Power       | A        | Not Applicable  | Implemented     |
-| 5.4.1.5       | Average Power             | A        | Not Applicable  | Implemented     |
-| 5.4.1.6       | Average Power Interval    | A        | Not Applicable  | Implemented     |
-| 5.4.1.7       | Voltage                   | A        | Not Applicable  | Implemented     |
-| 5.4.1.8       | Current                   | A        | Not Applicable  | Implemented     |
-| 5.4.1.9       | Frequency                 | A        | Not Applicable  | Implemented     |
-| 5.4.1.10      | Power Factor              | A        | Not Applicable  | Implemented     |
-| 5.4.1.11      | Report Interval           | A        | Not Applicable  | Implemented     |
-| 5.4.3.1       | Report                    | C        | Implemented     | Implemented     |
-| 5.4.4.1       | Measurement Reset         | C        | Not Implemented | Not Implemented |
+| __Reference__ | __Commands & Attributes__  | __Type__ | __Client__      | __Server__      |
+| ------------- | -------------------------  | :------: | --------------- | --------------- |
+| 5.4.1.1       | Supported Colour Modes     | A        | Not Applicable  | Implemented     |
+| 5.4.1.2       | Current Colour Mode        | A        | Not Applicable  | Implemented     |
+| 5.4.1.3       | Current Hue/Saturation     | A        | Not Applicable  | Implemented     |
+| 5.4.1.4       | Current X/Y                | A        | Not Applicable  | Implemented     |
+| 5.4.1.5       | Current Colour Temperature | A        | Not Applicable  | Implemented     |
+| 5.4.4.1       | Move To Hue                | C        | Implemented     | Implemented     |
+| 5.4.4.2       | Move Hue                   | C        | Implemented     | Implemented     |
+| 5.4.4.3       | Step Hue                   | C        | Implemented     | Implemented     |
+| 5.4.4.4       | Move To Saturation         | C        | Implemented     | Implemented     |
+| 5.4.4.5       | Move Saturation            | C        | Implemented     | Implemented     |
+| 5.4.4.6       | Step Saturation            | C        | Implemented     | Implemented     |
+| 5.4.4.7       | Move To Hue And Saturation | C        | Implemented     | Implemented     |
+| 5.4.4.8       | Move To XY                 | C        | Implemented     | Implemented     |
+| 5.4.4.9       | Move XY                    | C        | Implemented     | Implemented     |
+| 5.4.4.10      | Step XY                    | C        | Implemented     | Implemented     |
+| 5.4.4.11      | Move To Colour Temperature | C        | Implemented     | Implemented     |
+| 5.4.4.12      | Stop                       | C        | Implemented     | Implemented     |
 
-#### 4.5 Simple Temperature [5.5]
-
-| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
-| ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 5.5.1.1       | Measured Temperature      | A        | Not Applicable  | Implemented     |
-| 5.5.1.2       | Min. Measurable Temp.     | A        | Not Applicable  | Implemented     |
-| 5.5.1.3       | Max. Measurable Temp.     | A        | Not Applicable  | Implemented     |
-| 5.5.1.4       | Tolerance                 | A        | Not Applicable  | Implemented     |
-
-#### 4.6 Simple Humidity [5.6]
+#### 4.5 Colour Control [5.5]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 5.6.1.1       | Measured Humidity         | A        | Not Applicable  | Implemented     |
-| 5.6.1.2       | Tolerance                 | A        | Not Applicable  | Implemented     |
+| 5.5.3.1       | KeyPressed                | C        | Implemented     | Implemented     |
 
-#### 4.7 Simple Thermostat [5.7]
+#### 4.6 Simple Power Meter [5.6]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 5.6.1.1       | Energy                    | A        | Not Applicable  | Implemented     |
+| 5.6.1.2       | Energy at Last Reset      | A        | Not Applicable  | Implemented     |
+| 5.6.1.3       | Time at Last Reset        | A        | Not Applicable  | Implemented     |
+| 5.6.1.4       | Instantaneous Power       | A        | Not Applicable  | Implemented     |
+| 5.6.1.5       | Average Power             | A        | Not Applicable  | Implemented     |
+| 5.6.1.6       | Average Power Interval    | A        | Not Applicable  | Implemented     |
+| 5.6.1.7       | Voltage                   | A        | Not Applicable  | Implemented     |
+| 5.6.1.8       | Current                   | A        | Not Applicable  | Implemented     |
+| 5.6.1.9       | Frequency                 | A        | Not Applicable  | Implemented     |
+| 5.6.1.10      | Power Factor              | A        | Not Applicable  | Implemented     |
+| 5.6.1.11      | Report Interval           | A        | Not Applicable  | Implemented     |
+| 5.6.3.1       | Report                    | C        | Implemented     | Implemented     |
+| 5.6.4.1       | Measurement Reset         | C        | Not Implemented | Not Implemented |
+
+#### 4.7 Simple Temperature [5.7]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 5.7.1.1       | Measured Temperature      | A        | Not Applicable  | Implemented     |
+| 5.7.1.2       | Min. Measurable Temp.     | A        | Not Applicable  | Implemented     |
+| 5.7.1.3       | Max. Measurable Temp.     | A        | Not Applicable  | Implemented     |
+| 5.7.1.4       | Tolerance                 | A        | Not Applicable  | Implemented     |
+
+#### 4.8 Simple Humidity [5.8]
+
+| __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
+| ------------- | ------------------------- | :------: | --------------- | --------------- |
+| 5.8.1.1       | Measured Humidity         | A        | Not Applicable  | Implemented     |
+| 5.8.1.2       | Tolerance                 | A        | Not Applicable  | Implemented     |
+
+#### 4.9 Simple Thermostat [5.9]
 
 | __Reference__ | __Commands & Attributes__          | __Type__ | __Client__      | __Server__      |
 | ------------- | ---------------------------------- | :------: | --------------- | --------------- |
-| 5.7.1.1       | Supported Modes                    | A        | Not Applicable  | Implemented     |
-| 5.7.1.2       | Operating Mode                     | A        | Not Applicable  | Implemented     |
-| 5.7.1.3       | Fan Mode                           | A        | Not Applicable  | Implemented     |
-| 5.7.1.4       | Heating Mode Temperature           | A        | Not Applicable  | Implemented     |
-| 5.7.1.5       | Cooling Mode Temperature           | A        | Not Applicable  | Implemented     |
-| 5.7.1.6       | Automatic Mode Heating Temperature | A        | Not Applicable  | Implemented     |
-| 5.7.1.7       | Automatic Mode Cooling Temperature | A        | Not Applicable  | Implemented     |
-| 5.7.1.8       | Heating Mode Temperature Offset    | A        | Not Applicable  | Implemented     |
-| 5.7.1.9       | Cooling Mode Temperature Offset    | A        | Not Applicable  | Implemented     |
-| 5.7.1.10      | Boost Duration                     | A        | Not Applicable  | Implemented     |
-| 5.7.4.1       | Boost Start                        | C        | Implemented     | Implemented     |
-| 5.7.4.2       | Boost Stop                         | C        | Implemented     | Implemented     |
+| 5.9.1.1       | Supported Modes                    | A        | Not Applicable  | Implemented     |
+| 5.9.1.2       | Operating Mode                     | A        | Not Applicable  | Implemented     |
+| 5.9.1.3       | Fan Mode                           | A        | Not Applicable  | Implemented     |
+| 5.9.1.4       | Heating Mode Temperature           | A        | Not Applicable  | Implemented     |
+| 5.9.1.5       | Cooling Mode Temperature           | A        | Not Applicable  | Implemented     |
+| 5.9.1.6       | Automatic Mode Heating Temperature | A        | Not Applicable  | Implemented     |
+| 5.9.1.7       | Automatic Mode Cooling Temperature | A        | Not Applicable  | Implemented     |
+| 5.9.1.8       | Heating Mode Temperature Offset    | A        | Not Applicable  | Implemented     |
+| 5.9.1.9       | Cooling Mode Temperature Offset    | A        | Not Applicable  | Implemented     |
+| 5.9.1.10      | Boost Duration                     | A        | Not Applicable  | Implemented     |
+| 5.9.4.1       | Boost Start                        | C        | Implemented     | Implemented     |
+| 5.9.4.2       | Boost Stop                         | C        | Implemented     | Implemented     |
 
-#### 4.8 Simple Button [5.8]
+#### 4.10 Simple Button [5.10]
 
 | __Reference__ | __Commands & Attributes__         | __Type__ | __Client__      | __Server__      |
 | ------------- | --------------------------------- | :------: | --------------- | --------------- |
-| 5.8.1.1       | Short Press Maximum Duration      | A        | Not Applicable  | Implemented     |
-| 5.8.1.2       | Extra Long Press Minimum Duration | A        | Not Applicable  | Implemented     |
-| 5.8.1.3       | Double Press Gap Duration         | A        | Not Applicable  | Implemented     |
-| 5.8.3.1       | Short Press                       | C        | Implemented     | Implemented     |
-| 5.8.3.2       | Long Press                        | C        | Implemented     | Implemented     |
-| 5.8.3.3       | Extra-Long Press                  | C        | Implemented     | Implemented     |
-| 5.8.3.4       | Double Press                      | C        | Implemented     | Implemented     |
+| 5.10.1.1      | Short Press Maximum Duration      | A        | Not Applicable  | Implemented     |
+| 5.10.1.2      | Extra Long Press Minimum Duration | A        | Not Applicable  | Implemented     |
+| 5.10.1.3      | Double Press Gap Duration         | A        | Not Applicable  | Implemented     |
+| 5.10.3.1      | Short Press                       | C        | Implemented     | Implemented     |
+| 5.10.3.2      | Long Press                        | C        | Implemented     | Implemented     |
+| 5.10.3.3      | Extra-Long Press                  | C        | Implemented     | Implemented     |
+| 5.10.3.4      | Double Press                      | C        | Implemented     | Implemented     |
 
-#### 4.9 Simple Visual Effects [5.9]
+#### 4.11 Simple Visual Effects [5.11]
 
 | __Reference__ | __Commands & Attributes__ | __Type__ | __Client__      | __Server__      |
 | ------------- | ------------------------- | :------: | --------------- | --------------- |
-| 5.9.4.1       | ON                        | C        | Implemented     | Implemented     |
-| 5.9.4.2       | OFF                       | C        | Implemented     | Implemented     |
-| 5.9.4.3       | Blink                     | C        | Implemented     | Implemented     |
-| 5.9.4.4       | Fade                      | C        | Implemented     | Implemented     |
-| 5.9.4.5       | Breath                    | C        | Implemented     | Implemented     |
+| 5.11.4.1      | ON                        | C        | Implemented     | Implemented     |
+| 5.11.4.2      | OFF                       | C        | Implemented     | Implemented     |
+| 5.11.4.3      | Blink                     | C        | Implemented     | Implemented     |
+| 5.11.4.4      | Fade                      | C        | Implemented     | Implemented     |
+| 5.11.4.5      | Breath                    | C        | Implemented     | Implemented     |
 
-#### 4.10 Air Pressure [5.10]
+#### 4.12 Air Pressure [5.12]
 
 | __Reference__ | __Commands & Attributes__     | __Type__ | __Client__      | __Server__      |
 | ------------- | ----------------------------- | :------: | --------------- | --------------- |
-| 5.10.1.1      | Measured Air Pressure         | A        | Not Applicable  | Implemented     |
-| 5.10.1.2      | Min. Measurable Air Pressure  | A        | Not Applicable  | Implemented     |
-| 5.10.1.3      | Max. Measurable Air Pressure  | A        | Not Applicable  | Implemented     |
-| 5.10.1.4      | Tolerance                     | A        | Not Applicable  | Implemented     |
+| 5.12.1.1      | Measured Air Pressure         | A        | Not Applicable  | Implemented     |
+| 5.12.1.2      | Min. Measurable Air Pressure  | A        | Not Applicable  | Implemented     |
+| 5.12.1.3      | Max. Measurable Air Pressure  | A        | Not Applicable  | Implemented     |
+| 5.12.1.4      | Tolerance                     | A        | Not Applicable  | Implemented     |
+
+#### 4.13 Simple Light Sensor [5.13]
+
+| __Reference__ | __Commands & Attributes__     | __Type__ | __Client__      | __Server__      |
+| ------------- | ----------------------------- | :------: | --------------- | --------------- |
+| 5.13.1.1      | Measured Lux                  | A        | Not Applicable  | Implemented     |
+| 5.13.1.2      | Min. Measurable Lux           | A        | Not Applicable  | Implemented     |
+| 5.13.1.3      | Max. Measurable Lux           | A        | Not Applicable  | Implemented     |
+| 5.13.1.4      | Tolerance                     | A        | Not Applicable  | Implemented     |
 
 ## Bug Fixes
 
