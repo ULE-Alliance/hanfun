@@ -430,12 +430,12 @@ namespace HF
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected(HF::Transport::Link *link)
+            void connected(HF::Transport::Link *link) _override
             {
                _link = link;
             }
 
-            void disconnected(HF::Transport::Link *link)
+            void disconnected(HF::Transport::Link *link) _override
             {
                if (_link == link)
                {
@@ -443,7 +443,8 @@ namespace HF
                }
             }
 
-            void receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+            void receive(Protocol::Packet &packet, Common::ByteArray &payload,
+                         uint16_t offset) _override
             {
                AbstractDevice::receive(packet, payload, offset);
             }
@@ -452,12 +453,12 @@ namespace HF
             // IDevice API.
             // =============================================================================
 
-            uint16_t address() const
+            uint16_t address() const _override
             {
                return unit0()->device_management()->address();
             }
 
-            CoreServices *unit0() const
+            CoreServices *unit0() const _override
             {
                return const_cast<CoreServices *>(&_unit0);
             }
@@ -475,7 +476,7 @@ namespace HF
 
             // =============================================================================
 
-            HF::Transport::Link *link(uint16_t addr) const
+            HF::Transport::Link *link(uint16_t addr) const _override
             {
                UNUSED(addr);
                return _link;

@@ -222,6 +222,13 @@ void check_optional_attribute(Interface &itf, bool writable,
       delete temp;                        \
    }
 
+#define CHECK_UNPACK(_expected, _actual)  \
+   {                                      \
+      auto size = _actual;                \
+      auto exp_size = _expected;          \
+      LONGS_EQUAL(exp_size, size)         \
+   }
+
 // =============================================================================
 // Helper Test Classes
 // =============================================================================
@@ -850,7 +857,7 @@ namespace HF
             return dev_info;
          }
 
-         HF::Core::DeviceInformation::Server *device_info()
+         HF::Core::DeviceInformation::Server *device_info() override
          {
             if (dev_info == nullptr)
             {

@@ -611,7 +611,7 @@ TEST(GroupManagement, InfoResponse_UnPack)
                     (uint8_t) name.length(), 'G', 'r', 'o', 'u', 'p',
                     0x00, 0x00};
 
-   UNSIGNED_LONGS_EQUAL(message.size(), message.unpack(input));
+   CHECK_UNPACK(message.size(), message.unpack(input));
 
    UNSIGNED_LONGS_EQUAL(input.size(), message.size());
 
@@ -630,7 +630,7 @@ TEST(GroupManagement, InfoResponse_UnPack)
                         0x00, 0x01,                // dev addr
                         0x12};                     // Unit addr
 
-   UNSIGNED_LONGS_EQUAL(message.size(), message.unpack(input));
+   CHECK_UNPACK(message.size(), message.unpack(input));
 
    UNSIGNED_LONGS_EQUAL(input.size(), message.size());
 
@@ -1093,7 +1093,7 @@ TEST_GROUP(GroupManagementServer)
          }
       }
 
-      uint16_t next_address() const
+      uint16_t next_address() const override
       {
          auto &call = mock("GroupManagement::Entries").actualCall("next_address");
 
@@ -3256,7 +3256,7 @@ TEST(GroupManagementServer, GetInfo_no_group)
    mock("AbstractDevice").checkExpectations();
 
    InfoResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
+   CHECK_UNPACK(resp.size(), resp.unpack(response->message.payload));
    LONGS_EQUAL(Common::Result::FAIL_ARG, resp.code);
 }
 
@@ -3303,7 +3303,7 @@ TEST(GroupManagementServer, GetInfo_No_Members)
    mock("AbstractDevice").checkExpectations();
 
    InfoResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
+   CHECK_UNPACK(resp.size(), resp.unpack(response->message.payload));
    LONGS_EQUAL(Common::Result::OK, resp.code);
    CHECK_EQUAL(group_name, resp.name);
    LONGS_EQUAL(0, resp.members.size());
@@ -3362,7 +3362,7 @@ TEST(GroupManagementServer, GetInfo_10_Members)
    mock("AbstractDevice").checkExpectations();
 
    InfoResponse resp;
-   LONGS_EQUAL(resp.size(), resp.unpack(response->message.payload));
+   CHECK_UNPACK(resp.size(), resp.unpack(response->message.payload));
    LONGS_EQUAL(Common::Result::OK, resp.code);
    CHECK_EQUAL(group_name, resp.name);
    LONGS_EQUAL(10, resp.members.size());
@@ -3403,7 +3403,7 @@ TEST(GroupManagementServer, GetInfo_Fail_No_Group)
    mock("AbstractDevice").checkExpectations();
 
    InfoResponse response;
-   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+   CHECK_UNPACK(response.size(), response.unpack(_packet->message.payload));
    LONGS_EQUAL(InfoResponse::min_size, response.size());
    LONGS_EQUAL(Common::Result::FAIL_ARG, response.code);
    CHECK_TRUE(response.name.empty());
@@ -3447,7 +3447,7 @@ TEST(GroupManagementServer, GetInfo_Fail_Auth)
    mock("AbstractDevice").checkExpectations();
 
    InfoResponse response;
-   LONGS_EQUAL(response.size(), response.unpack(_packet->message.payload));
+   CHECK_UNPACK(response.size(), response.unpack(_packet->message.payload));
    LONGS_EQUAL(InfoResponse::min_size, response.size());
    LONGS_EQUAL(Common::Result::FAIL_AUTH, response.code);
    CHECK_TRUE(response.name.empty());

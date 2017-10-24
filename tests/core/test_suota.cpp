@@ -219,7 +219,7 @@ TEST(SUOTA, CheckVersionResponse_Unpack)
    payload[2] = CheckVersionResponse::FAIL_INFRASTUCTURE;
 
    CheckVersionResponse response;
-   LONGS_EQUAL(response.size(), response.unpack(payload, 2));
+   CHECK_UNPACK(response.size(), response.unpack(payload, 2));
 
    LONGS_EQUAL(CheckVersionResponse::FAIL_INFRASTUCTURE, response.code);
    CHECK_VERSION(response);

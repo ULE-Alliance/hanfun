@@ -34,8 +34,7 @@ SimpleString StringFrom(const Time::Date &date)
    return SimpleString(out.str().c_str());
 }
 
-static std::array<uint8_t, 13> const month_days =
-{
+static std::array<uint8_t, 13> const month_days {{
    0,  // None
    31, // January
    28, // February
@@ -49,7 +48,7 @@ static std::array<uint8_t, 13> const month_days =
    31, // October
    30, // November
    31, // December
-};
+}};
 
 // =============================================================================
 // Time

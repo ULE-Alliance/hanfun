@@ -2338,14 +2338,14 @@ TEST_GROUP(ColourControlServer)
       }
 
       void notify(const HF::Attributes::IAttribute &old_value,
-                  const HF::Attributes::IAttribute &new_value) const
+                  const HF::Attributes::IAttribute &new_value) const override
       {
          mock("Interface").actualCall("notify")
             .withParameterOfType("IAttribute", "old", &old_value)
             .withParameterOfType("IAttribute", "new", &new_value);
       }
 
-      void changed(void)
+      void changed(void) override
       {
          mock("ColourControl::Server").actualCall("changed");
       }

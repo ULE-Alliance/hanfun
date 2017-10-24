@@ -39,19 +39,19 @@ namespace HF
 
       namespace GroupTable
       {
-         struct IServer;
+         class IServer;
 
       }  // namespace GroupTable
 
       namespace Time
       {
-         struct Server;
+         class Server;
 
       }  // namespace Time
 
       namespace BatchProgramManagement
       {
-         struct IServer;
+         class IServer;
       }  // namespace BatchProgramManagement
 
       namespace Scheduling

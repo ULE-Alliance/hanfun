@@ -581,6 +581,8 @@ namespace HF
           */
          struct IEntries: public Common::IEntries<Group>
          {
+            using Common::IEntries<Group>::save;
+
             /*!
              * Store the given @c entry to persistent storage.
              *

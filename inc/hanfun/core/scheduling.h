@@ -893,8 +893,8 @@ namespace HF
              * @param [in] itf_uid  interface UID to use in the message.
              * @param [in] enabled  enable/disable scheduler.
              */
-            virtual void activate_scheduler(const Protocol::Address &addr,
-                                            const Interface::UID itf_uid, bool enabled = true);
+            void activate_scheduler(const Protocol::Address &addr,
+                                    const Interface::UID itf_uid, bool enabled = true);
 
 #ifdef HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD
             /*!
@@ -906,9 +906,8 @@ namespace HF
              * @param [in] id         entry ID to delete.
              * @param [in] enabled    enable/disable entry.
              */
-            virtual void update_event_status(const Protocol::Address &addr,
-                                             const Interface::UID itf_uid,
-                                             uint8_t id, bool enabled);
+            void update_event_status(const Protocol::Address &addr, const Interface::UID itf_uid,
+                                     uint8_t id, bool enabled);
 #endif
 
 #ifdef HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD
@@ -920,8 +919,8 @@ namespace HF
              * @param [in] itf_uid    interface UID to use in the message.
              * @param [in] id         entry ID to delete.
              */
-            virtual void get_event_entry(const Protocol::Address &addr,
-                                         const Interface::UID itf_uid, uint8_t id);
+            void get_event_entry(const Protocol::Address &addr, const Interface::UID itf_uid,
+                                 uint8_t id);
 #endif
 
             /*!
@@ -932,8 +931,8 @@ namespace HF
              * @param [in] itf_uid    interface UID to use in the message.
              * @param [in] id         entry ID to delete.
              */
-            virtual void delete_event(const Protocol::Address &addr,
-                                      const Interface::UID itf_uid, uint8_t id);
+            void delete_event(const Protocol::Address &addr, const Interface::UID itf_uid,
+                              uint8_t id);
 
 #ifdef HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD
             /*!
@@ -943,8 +942,7 @@ namespace HF
              * @param [in] addr       the network address to send the message to.
              * @param [in] itf_uid    interface UID to use in the message.
              */
-            virtual void delete_all_events(const Protocol::Address &addr,
-                                           const Interface::UID itf_uid);
+            void delete_all_events(const Protocol::Address &addr, const Interface::UID itf_uid);
 #endif
 
             virtual void send(const Protocol::Address &addr, Protocol::Message &message) = 0;

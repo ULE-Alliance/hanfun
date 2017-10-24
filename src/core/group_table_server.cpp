@@ -275,7 +275,7 @@ ReadEntriesResponse IServer::read_entries(const Protocol::Address &addr, const R
 
    result.start = offset;
 
-   return std::move(result);
+   return result;
 }
 
 // =============================================================================

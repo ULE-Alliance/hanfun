@@ -19,6 +19,8 @@
 
 #include "hanfun/core/group_table.h"
 
+std::ostream &operator<<(std::ostream &stream, const HF::Core::GroupTable::Entry &entry);
+
 #include "test_helper.h"
 
 using namespace HF;
@@ -1023,7 +1025,7 @@ TEST_GROUP(GroupTableServer)
       }
 
       void notify(const HF::Attributes::IAttribute &old_value,
-                  const HF::Attributes::IAttribute &new_value) const
+                  const HF::Attributes::IAttribute &new_value) const override
       {
          UNUSED(old_value);
          UNUSED(new_value);
@@ -1852,7 +1854,7 @@ TEST_GROUP(GroupTableEntries)
          }
       }
 
-      return std::move(result);
+      return result;
    }
 
    GroupTable::Entry setup_entries(uint8_t groups = 1, uint8_t units = 1)

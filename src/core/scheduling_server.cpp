@@ -169,11 +169,8 @@ Common::Result IServer::activate_scheduler(const Protocol::Packet &packet,
 {
    Common::Result result = Common::Result::OK;
 
-   HF_ASSERT(msg.status <= 0x01, {result = Common::Result::FAIL_ARG;goto _end;})
+   status(msg.status);
 
-   this->status(msg.status);
-
-   _end:
    ActivateSchedulerResponse response(result);
 
    Protocol::Message message(packet.message, response.size());

@@ -178,7 +178,7 @@ TEST(SimpleLightSensorClient, ReadAll_Request)
 
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, client.sendMsg.itf.role);
    LONGS_EQUAL(client.uid(), client.sendMsg.itf.id);
-   LONGS_EQUAL(Attributes::Pack::ALL, client.sendMsg.itf.member);
+   LONGS_EQUAL(HF::Attributes::Pack::ALL, client.sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::GET_ATTR_PACK_REQ, client.sendMsg.type);
 }
 

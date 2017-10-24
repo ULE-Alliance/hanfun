@@ -64,6 +64,12 @@ nullptr = {};
 
    #define __attribute_deprecated__   __attribute__((deprecated))
 
+   #define _override
+
+#else
+
+#define _override override
+
 #endif
 
 #endif /* HF_GCC_H */

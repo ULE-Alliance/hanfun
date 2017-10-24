@@ -569,14 +569,12 @@ namespace HF
           * @param [in] _setter   owner's member function to set the value of the attribute.
           * @param [in] writable  attribute's writable information.
           */
+         __attribute__((__nonnull__(2)))
          Attribute(_Owner *__owner, const uint8_t uid, getter_t _getter, setter_t _setter,
                    bool writable = false):
             AbstractAttribute(__owner->uid(), uid, writable), _owner(__owner), getter(_getter),
             setter(_setter)
-         {
-            assert(__owner != nullptr);
-         }
-         __attribute__((nonnull(1)))
+         {}
 
          /*!
           * %Attribute template constructor.
@@ -586,12 +584,10 @@ namespace HF
           * @param [in] _getter   owner's member function to get the value of the attribute.
           * @param [in] writable  attribute's writable information.
           */
+         __attribute__((__nonnull__(2)))
          Attribute(_Owner *__owner, const uint8_t uid, getter_t _getter, bool writable = false):
             AbstractAttribute(__owner->uid(), uid, writable), _owner(__owner), getter(_getter)
-         {
-            assert(__owner != nullptr);
-         }
-         __attribute__((nonnull(1)))
+         {}
 
          // =============================================================================
          // API

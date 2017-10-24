@@ -281,7 +281,7 @@ uint32_t Time::convert(const HF::Core::Time::Date &date)
 // =============================================================================
 HF::Core::Time::Date Time::convert(const HF::Core::Time::Value &value)
 {
-   return std::move(convert(value.get()));
+   return convert(value.get());
 }
 
 // =============================================================================
@@ -332,5 +332,5 @@ HF::Core::Time::Date Time::convert(uint32_t value)
    result.minute = temp.quot;
    result.second = temp.rem;
 
-   return std::move(result);
+   return result;
 }
