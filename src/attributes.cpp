@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attributes API.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -27,13 +27,22 @@
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/simple_light_sensor.h"
+#include "hanfun/interfaces/colour_control.h"
+#include "hanfun/interfaces/simple_keypad.h"
 
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/group_management.h"
+#include "hanfun/core/group_table.h"
 #include "hanfun/core/rssi.h"
 #include "hanfun/core/suota.h"
+#include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
+#include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 using namespace HF;
 using namespace HF::Attributes;
@@ -85,6 +94,30 @@ static const Entry factories[] =
       HF::Core::SUOTA::create_attribute,
    },
 #endif
+   {
+      HF::Interface::TIME,
+      HF::Core::Time::create_attribute,
+   },
+   {
+      HF::Interface::GROUP_MANAGEMENT,
+      HF::Core::GroupManagement::create_attribute,
+   },
+   {
+      HF::Interface::GROUP_TABLE,
+      HF::Core::GroupTable::create_attribute,
+   },
+   {
+      HF::Interface::BATCH_PROGRAM_MANAGEMENT,
+      HF::Core::BatchProgramManagement::create_attribute,
+   },
+   {
+      HF::Interface::EVENT_SCHEDULING,
+      HF::Core::Scheduling::Event::create_attribute,
+   },
+   {
+      HF::Interface::WEEKLY_SCHEDULING,
+      HF::Core::Scheduling::Weekly::create_attribute,
+   },
    /* Functional Interfaces. */
    {
       HF::Interface::ALERT,
@@ -121,6 +154,18 @@ static const Entry factories[] =
    {
       HF::Interface::SIMPLE_AIR_PRESSURE,
       HF::Interfaces::SimpleAirPressure::create_attribute,
+   },
+   {
+      HF::Interface::SIMPLE_LIGHT_SENSOR,
+      HF::Interfaces::SimpleLightSensor::create_attribute,
+   },
+   {
+      HF::Interface::COLOUR_CONTROL,
+      HF::Interfaces::ColourControl::create_attribute,
+   },
+   {
+      HF::Interface::SIMPLE_KEYPAD,
+      HF::Interfaces::SimpleKeypad::create_attribute,
    },
 };
 
@@ -713,11 +758,11 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::supported_modes;
             auto setter = (void (Server::*)(uint8_t)) & Server::supported_modes;
 
-            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
+            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -730,11 +775,11 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::mode;
             auto setter = (void (Server::*)(uint8_t)) & Server::mode;
 
-            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
          {
-            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
+            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -748,12 +793,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::fan_mode;
             auto setter = (void (Server::*)(uint8_t)) & Server::fan_mode;
 
-            return new::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<uint8_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<uint8_t>(itf_uid, attr, writabble);
+            return new ::Attribute<uint8_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -767,12 +812,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (int16_t (Server::*)(void) const) & Server::heat_mode_temperature;
             auto setter = (void (Server::*)(int16_t)) & Server::heat_mode_temperature;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -786,12 +831,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (int16_t (Server::*)(void) const) & Server::cool_mode_temperature;
             auto setter = (void (Server::*)(int16_t)) & Server::cool_mode_temperature;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -805,12 +850,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (int16_t (Server::*)(void) const) & Server::auto_mode_heat_temperature;
             auto setter = (void (Server::*)(int16_t)) & Server::auto_mode_heat_temperature;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -824,12 +869,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (int16_t (Server::*)(void) const) & Server::auto_mode_cool_temperature;
             auto setter = (void (Server::*)(int16_t)) & Server::auto_mode_cool_temperature;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -843,12 +888,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (int16_t (Server::*)(void) const) & Server::heat_mode_temperature_offset;
             auto setter = (void (Server::*)(int16_t)) & Server::heat_mode_temperature_offset;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -862,12 +907,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (int16_t (Server::*)(void) const) & Server::cool_mode_temperature_offset;
             auto setter = (void (Server::*)(int16_t)) & Server::cool_mode_temperature_offset;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -881,12 +926,12 @@ IAttribute *Interfaces::create_attribute(SimpleThermostat::Server *server, uint8
             auto getter = (uint8_t (Server::*)(void) const) & Server::boost_duration;
             auto setter = (void (Server::*)(uint8_t)) & Server::boost_duration;
 
-            return new::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
+            return new ::Attribute<int16_t, Server>(*server, attr, getter, setter, writabble);
          }
          else
 #endif
          {
-            return new::Attribute<int16_t>(itf_uid, attr, writabble);
+            return new ::Attribute<int16_t>(itf_uid, attr, writabble);
          }
       }
 
@@ -995,7 +1040,7 @@ IAttribute *Core::create_attribute(DeviceInformation::Server *server, uint8_t ui
          std::vector<uint8_t> temp(5);
          return new Attribute<std::vector<uint8_t>>(HF::Interface::DEVICE_INFORMATION, attr, temp);
       }
-      case MANUFACTURE_NAME_ATTR:
+      case MANUFACTURER_NAME_ATTR:
       {
 #if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
 

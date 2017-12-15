@@ -4,7 +4,7 @@
  *
  * This file contains an example demonstrating registration event handling.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -53,15 +53,25 @@ namespace
    /*
     * Custom Unit 0 for node with the custom Device Management service.
     */
-   struct NodeUnit0: public HF::Devices::Node::Unit0<HF::Core::DeviceInformation::Server,
-                                                     DeviceManagementClient,
-                                                     HF::Core::AttributeReporting::Server>
-   {
-      NodeUnit0(HF::IDevice &device):
-         HF::Devices::Node::Unit0<HF::Core::DeviceInformation::Server, DeviceManagementClient,
-                                  HF::Core::AttributeReporting::Server>(device)
-      {}
-   };
+   typedef HF::Devices::Node::Unit0<HF::Core::DeviceInformation::Server,
+                                    DeviceManagementClient,
+                                    HF::Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                                    HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                    HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Weekly::DefaultServer
+#endif
+#if HF_GROUP_SUPPORT
+                                    , HF::Core::GroupTable::DefaultServer
+#endif
+                                   > NodeUnit0;
 
    /*
     * Example node.
@@ -94,19 +104,26 @@ namespace
    /*
     * Custom Unit 0 for concentrator with the custom Device Management service.
     */
-   struct BaseUnit0: public HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
-                                                             DeviceManagementServer,
-                                                             HF::Core::AttributeReporting::Server,
-                                                             HF::Core::BindManagement::
-                                                                DefaultServer>
-   {
-      BaseUnit0(HF::IDevice &device):
-         HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
-                                          DeviceManagementServer,
-                                          HF::Core::AttributeReporting::Server,
-                                          HF::Core::BindManagement::DefaultServer>(device)
-      {}
-   };
+   typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
+                                            DeviceManagementServer,
+                                            HF::Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                                            HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                            HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                                            HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                            HF::Core::Scheduling::Weekly::DefaultServer,
+#endif
+#if HF_GROUP_SUPPORT
+                                            HF::Core::GroupTable::DefaultServer,
+                                            HF::Core::GroupManagement::DefaultServer,
+#endif
+                                            HF::Core::BindManagement::DefaultServer> BaseUnit0;
 
    /*
     * Example concentrator.

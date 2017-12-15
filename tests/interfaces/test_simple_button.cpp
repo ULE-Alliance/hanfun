@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Button interface
  * implementation.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -91,6 +91,7 @@ TEST_GROUP(SimpleButtonClient)
    };
 
    SimpleButtonClient client;
+
    Protocol::Packet packet;
    Common::ByteArray payload;
 
@@ -175,6 +176,7 @@ TEST_GROUP(SimpleButtonServer)
    };
 
    SimpleButtonServer server;
+
    Protocol::Address addr;
 
    TEST_SETUP()
@@ -192,10 +194,10 @@ TEST_GROUP(SimpleButtonServer)
 
    void check_message(SimpleButton::CMD cmd, const char *file, int line)
    {
-      LONGS_EQUAL_LOCATION(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role, file, line);
-      LONGS_EQUAL_LOCATION(server.uid(), server.sendMsg.itf.id, file, line);
-      LONGS_EQUAL_LOCATION(cmd, server.sendMsg.itf.member, file, line);
-      LONGS_EQUAL_LOCATION(Protocol::Message::COMMAND_REQ, server.sendMsg.type, file, line);
+      LONGS_EQUAL_LOCATION(HF::Interface::CLIENT_ROLE, server.sendMsg.itf.role, NULL, file, line);
+      LONGS_EQUAL_LOCATION(server.uid(), server.sendMsg.itf.id, NULL, file, line);
+      LONGS_EQUAL_LOCATION(cmd, server.sendMsg.itf.member, NULL, file, line);
+      LONGS_EQUAL_LOCATION(Protocol::Message::COMMAND_REQ, server.sendMsg.type, NULL, file, line);
    }
 };
 

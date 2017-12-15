@@ -4,7 +4,7 @@
  *
  * This file contains the declaration of the API for a HAN-FUN device.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -35,10 +35,42 @@ namespace HF
       {
          struct IServer;
 
-      }  // namespace DeviceInformation
+      }  // namespace AttributeReporting
 
-   }  // namespace Devices
+      namespace GroupTable
+      {
+         class IServer;
 
+      }  // namespace GroupTable
+
+      namespace Time
+      {
+         class Server;
+
+      }  // namespace Time
+
+      namespace BatchProgramManagement
+      {
+         class IServer;
+      }  // namespace BatchProgramManagement
+
+      namespace Scheduling
+      {
+         namespace Event
+         {
+            struct IServer;
+
+         } // namespace Event
+
+         namespace Weekly
+         {
+            struct IServer;
+
+         } // namespace Weekly
+
+      }  // namespace Scheduling
+
+   }  // namespace Core
 
    // Forward declaration of the units namespace.
    namespace Units
@@ -109,6 +141,87 @@ namespace HF
           * @return  pointer to unit 0 attribute reporting service.
           */
          virtual Core::AttributeReporting::IServer *attribute_reporting() = 0;
+
+#if HF_GROUP_SUPPORT
+         /*!
+          * Get the pointer to the node's Group Table service.
+          *
+          * @return pointer to the node's Group Table service.
+          */
+         virtual HF::Core::GroupTable::IServer *group_table() = 0;
+
+         /*!
+          * Get the pointer to the node's Group Table service.
+          *
+          * @return pointer to the node's Group Table service.
+          */
+         virtual HF::Core::GroupTable::IServer *group_table() const = 0;
+#endif
+
+#if HF_TIME_SUPPORT
+         /*!
+          * Get the pointer to the node's Time service.
+          *
+          * @return pointer to the node's Time service.
+          */
+         virtual HF::Core::Time::Server *time() = 0;
+
+         /*!
+          * Get the pointer to the node's Time service.
+          *
+          * @return pointer to the node's Time service.
+          */
+         virtual HF::Core::Time::Server *time() const = 0;
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+         /*!
+          * Get the pointer to the node's Batch Program service.
+          *
+          * @return pointer to the node's Batch Program service.
+          */
+         virtual HF::Core::BatchProgramManagement::IServer *batch_program() = 0;
+
+         /*!
+          * Get the pointer to the node's Batch Program service.
+          *
+          * @return pointer to the node's Batch Program service.
+          */
+         virtual HF::Core::BatchProgramManagement::IServer *batch_program() const = 0;
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+         /*!
+          * Get the pointer to the node's Event Scheduling service.
+          *
+          * @return pointer to the node's Event Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Event::IServer *event_scheduling() = 0;
+
+         /*!
+          * Get the pointer to the node's Event Scheduling service.
+          *
+          * @return pointer to the node's Event Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Event::IServer *event_scheduling() const = 0;
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+         /*!
+          * Get the pointer to the node's Weekly Scheduling service.
+          *
+          * @return pointer to the node's Weekly Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() = 0;
+
+         /*!
+          * Get the pointer to the node's Weekly Scheduling service.
+          *
+          * @return pointer to the node's Weekly Scheduling service.
+          */
+         virtual HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const = 0;
+#endif
+
       };
 
       /*!

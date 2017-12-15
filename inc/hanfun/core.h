@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -40,13 +40,8 @@ namespace HF
     * This is the top-level namespace for the Core Services and %Interfaces
     * implementation.
     *
-    * @todo Add support for Group Management service.
     * @todo Add support for Identify interface.
-    * @todo Add support for Batch Program Management service.
-    * @todo Add support for Event Scheduling service
-    * @todo Add support for Weekly Scheduling service.
     * @todo Add support for Tamper %Alert interface.
-    * @todo Add support for %Time service.
     * @todo Add support for Power service.
     * @todo Add support for Keep Alive service.
     */
@@ -114,7 +109,8 @@ namespace HF
 
             itfs.erase(std::remove_if(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
             {
-               return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid) {
+               return std::any_of(mandatory.begin(), mandatory.end(), [&itf](uint16_t uid)
+               {
                   return itf.id == uid;
                });
             }), itfs.end());
@@ -185,8 +181,8 @@ namespace HF
       /*!
        * Class template for all core services implementations.
        */
-      template<Interface::UID _uid>
-      struct Service: public AbstractService
+      template<Interface::UID _uid, typename Parent = AbstractService>
+      struct Service: public Parent
       {
          //! @copydoc HF::Interface::uid
          uint16_t uid() const
@@ -202,7 +198,7 @@ namespace HF
           * @param [in] unit  reference to the unit that holds this service.
           */
          Service(Unit0 &unit):
-            AbstractService(unit)
+            Parent(unit)
          {}
 
          /*!
@@ -272,9 +268,30 @@ namespace HF
 
       public:
 
-      static constexpr uint8_t DEV_INFO = 0;    //!< Device Information service index.
-      static constexpr uint8_t DEV_MGT  = 1;    //!< Device Management service index.
-      static constexpr uint8_t ATTR_RPT = 2;    //!< Attribute Reporting service index.
+      //! Core Services indexs.
+      enum Inferface: uint8_t
+      {
+         DEV_INFO = 0,     //!< Device Information service index.
+         DEV_MGT,          //!< Device Management service index.
+         ATTR_RPT,         //!< Attribute Reporting service index.
+#if HF_TIME_SUPPORT
+         TIME,             //!< Time service index.
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+         BATCH_PROGRAM,    //!< Batch Programming service index.
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+         EVENT_SCH,        //!< Event Scheduling service index.
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+         WEEKLY_SCH,       //!< Weekly Scheduling service index.
+#endif
+#if HF_GROUP_SUPPORT
+         GROUP_TABLE,      //!< Group Table service index.
+         GROUP_MGT,        //!< Group Management service index.
+#endif
+         BIND_MGT,         //!< Bind Management service index.
+      };
 
       typedef typename std::tuple_element<DEV_INFO, interfaces_t>::type DeviceInfo;
 
@@ -287,6 +304,41 @@ namespace HF
 
       static_assert(std::is_base_of<HF::Core::AttributeReporting::IServer, AttrReporting>::value,
                     "AttrReporting must be of type HF::Core::AttributeReporting::Server");
+
+#if HF_GROUP_SUPPORT
+      typedef typename std::tuple_element<GROUP_TABLE, interfaces_t>::type GroupTable;
+
+      static_assert(std::is_base_of<HF::Core::GroupTable::IServer, GroupTable>::value,
+                    "GroupTable must be of type HF::Core::GroupTable::IServer");
+#endif
+
+#if HF_TIME_SUPPORT
+      typedef typename std::tuple_element<TIME, interfaces_t>::type Time;
+
+      static_assert(std::is_base_of<HF::Core::Time::Server, Time>::value,
+                    "Time must be of type HF::Core::Time::Server");
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+      typedef typename std::tuple_element<BATCH_PROGRAM, interfaces_t>::type BatchProgram;
+
+      static_assert(std::is_base_of<HF::Core::BatchProgramManagement::IServer, BatchProgram>::value,
+                    "BatchProgram must be of type HF::Core::BatchProgramManagement::IServer");
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+      typedef typename std::tuple_element<EVENT_SCH, interfaces_t>::type EventScheduling;
+
+      static_assert(std::is_base_of<HF::Core::Scheduling::Event::IServer, EventScheduling>::value,
+                    "EventSch must be of type HF::Core::Scheduling::Event::IServer");
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+      typedef typename std::tuple_element<WEEKLY_SCH, interfaces_t>::type WeeklyScheduling;
+
+      static_assert(std::is_base_of<HF::Core::Scheduling::Weekly::IServer, WeeklyScheduling>::value,
+                    "WeeklyScheduling must be of type HF::Core::Scheduling::Weekly::IServer");
+#endif
 
       /*!
        * Constructor.
@@ -306,7 +358,7 @@ namespace HF
        */
       DeviceInfo *device_info() const
       {
-         return const_cast<DeviceInfo *>(InterfacesWrapper::template get<DEV_INFO>());
+         return get<DeviceInfo, DEV_INFO>();
       }
 
       /*!
@@ -316,7 +368,7 @@ namespace HF
        */
       DeviceInfo *device_info()
       {
-         return const_cast<DeviceInfo *>(InterfacesWrapper::template get<DEV_INFO>());
+         return get<DeviceInfo, DEV_INFO>();
       }
 
       /*!
@@ -326,7 +378,7 @@ namespace HF
        */
       DeviceMgt *device_management() const
       {
-         return const_cast<DeviceMgt *>(InterfacesWrapper::template get<DEV_MGT>());
+         return get<DeviceMgt, DEV_MGT>();
       }
 
       /*!
@@ -336,7 +388,7 @@ namespace HF
        */
       DeviceMgt *device_management()
       {
-         return const_cast<DeviceMgt *>(InterfacesWrapper::template get<DEV_MGT>());
+         return get<DeviceMgt, DEV_MGT>();
       }
 
       /*!
@@ -346,7 +398,7 @@ namespace HF
        */
       AttrReporting *attribute_reporting() const
       {
-         return const_cast<AttrReporting *>(InterfacesWrapper::template get<ATTR_RPT>());
+         return get<AttrReporting, ATTR_RPT>();
       }
 
       /*!
@@ -356,8 +408,118 @@ namespace HF
        */
       AttrReporting *attribute_reporting()
       {
-         return const_cast<AttrReporting *>(InterfacesWrapper::template get<ATTR_RPT>());
+         return get<AttrReporting, ATTR_RPT>();
       }
+
+#if HF_GROUP_SUPPORT
+      /*!
+       * Get the pointer to the node's Group Table service.
+       *
+       * @return pointer to the node's Group Table service.
+       */
+      GroupTable *group_table()
+      {
+         return get<GroupTable, GROUP_TABLE>();
+      }
+
+      /*!
+       * Get the pointer to the node's Group Table service.
+       *
+       * @return pointer to the node's Group Table service.
+       */
+      GroupTable *group_table() const
+      {
+         return get<GroupTable, GROUP_TABLE>();
+      }
+#endif
+
+#if HF_TIME_SUPPORT
+      /*!
+       * Get the pointer to the node's time service.
+       *
+       * @return pointer to the node's time service.
+       */
+      Time *time()
+      {
+         return get<Time, TIME>();
+      }
+
+      /*!
+       * Get the pointer to the node's time service.
+       *
+       * @return pointer to the node's time service.
+       */
+      Time *time() const
+      {
+         return get<Time, TIME>();
+      }
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+      /*!
+       * Get the pointer to the node's Batch Program management service.
+       *
+       * @return pointer to the node's Batch Program management service.
+       */
+      BatchProgram *batch_program()
+      {
+         return get<BatchProgram, BATCH_PROGRAM>();
+      }
+
+      /*!
+       * Get the pointer to the node's Batch Program management service.
+       *
+       * @return pointer to the node's Batch Program management service.
+       */
+      BatchProgram *batch_program() const
+      {
+         return get<BatchProgram, BATCH_PROGRAM>();
+      }
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+      /*!
+       * Get the pointer to the node's Event Scheduling service.
+       *
+       * @return pointer to the node's Event Scheduling service.
+       */
+      EventScheduling *event_scheduling()
+      {
+         return get<EventScheduling, EVENT_SCH>();
+      }
+
+      /*!
+       * Get the pointer to the node's Event Scheduling service.
+       *
+       * @return pointer to the node's Event Scheduling service.
+       */
+      EventScheduling *event_scheduling() const
+      {
+         return get<EventScheduling, EVENT_SCH>();
+      }
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+      /*!
+       * Get the pointer to the node's Weekly Scheduling service.
+       *
+       * @return pointer to the node's Weekly Scheduling service.
+       */
+      WeeklyScheduling *weekly_scheduling()
+      {
+         return get<WeeklyScheduling, WEEKLY_SCH>();
+      }
+
+      /*!
+       * Get the pointer to the node's Weekly Scheduling service.
+       *
+       * @return pointer to the node's Weekly Scheduling service.
+       */
+      WeeklyScheduling *weekly_scheduling() const
+      {
+         return get<WeeklyScheduling, WEEKLY_SCH>();
+      }
+#endif
 
       // =============================================================================
       // IUnit API
@@ -367,7 +529,22 @@ namespace HF
       Common::Result handle(HF::Protocol::Packet &packet, Common::ByteArray &payload,
                             uint16_t offset)
       {
+#if HF_GROUP_SUPPORT
+         Common::Result result = Common::Result::FAIL_UNKNOWN;
+         InterfacesWrapper::for_each([&result, &packet, &payload, offset](HF::Interface &itf)
+         {
+            if (result != Common::Result::OK) // Message already handled, skip.
+            {
+               result = itf.handle(packet, payload, offset);
+            }
+         });
+
+         return result;
+
+#else
          return InterfacesWrapper::handle(packet, payload, offset);
+
+#endif
       }
 
       //! @copydoc HF::Profiles::IProfile::attributes
@@ -388,11 +565,20 @@ namespace HF
       std::vector<Common::Interface> interfaces() const
       {
          auto result = InterfacesWrapper::interfaces();
+
          Base::remove_mandatory(result);
          return result;
       }
 
       // =============================================================================
+
+      protected:
+
+      template<typename T, uint8_t N>
+      T *get() const
+      {
+         return const_cast<T *>(InterfacesWrapper::template get<N>());
+      }
    };
 
    /*! @} */

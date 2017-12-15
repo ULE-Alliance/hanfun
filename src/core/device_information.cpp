@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Device Information : Server Role.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -313,7 +313,7 @@ HF::Attributes::UIDS DeviceInformation::Server::attributes(uint8_t pack_id) cons
          result.push_back(HW_VERSION_ATTR);
 #endif
 #if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
-         result.push_back(MANUFACTURE_NAME_ATTR);
+         result.push_back(MANUFACTURER_NAME_ATTR);
 #endif
 
       }

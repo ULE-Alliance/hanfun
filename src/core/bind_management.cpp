@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Bind Management core interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -226,6 +226,7 @@ void Entries::for_each(Protocol::Address const &source, Common::Interface const 
                        std::function<void(const Entry &)> func) const
 {
    auto range = find(source, itf);
+
    std::for_each(range.first, range.second, func);
 }
 

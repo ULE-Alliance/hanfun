@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Thermostat interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -52,7 +52,7 @@ namespace HF
       namespace SimpleThermostat
       {
          /*!
-          * @addtogroup simple_thersmostat_itf  Simple Thermostat interface
+          * @addtogroup simple_thersmostat_itf  Simple Thermostat
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Thermostat interface API.

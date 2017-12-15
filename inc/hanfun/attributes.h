@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the attribute handling API in HAN-FUN.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -75,45 +75,52 @@ namespace HF
           */
          virtual HF::Interface const *owner() const = 0;
 
+         using Common::Serializable::size;
+
          /*!
-          * @copydoc HF::Common::Serializable::size
+          * Number bytes needed to serialize the message.
           *
-          * @param [in] with_uid    include uid() size in the calculation.
+          * @param [in] with_uid    include @c uid size in the calculation.
+          *
+          * @return  number of bytes the message requires to be serialized.
           */
          virtual uint16_t size(bool with_uid) const = 0;
 
-         //! @copydoc HF::Common::Serializable::size
-         virtual uint16_t size() const = 0;
+         using Common::Serializable::pack;
 
          /*!
-          * @copydoc HF::Common::Serializable::pack
+          * Write the object on to a ByteArray so it can be sent over the network.
           *
-          * @param [in] with_uid    include uid() in the serialization.
+          * The buffer passed in __MUST__ have enough size to hold the serialized object, e.g.,
+          *
+          * @param [inout] array       ByteArray reference to write the object to.
+          * @param [in]    offset      offset to start writing to.
+          * @param [in]    with_uid    include @c uid field in the serialization.
+          *
+          * @return  the number of bytes written.
           */
          virtual uint16_t pack(Common::ByteArray &array, uint16_t offset, bool with_uid) const = 0;
 
-         //! @copydoc HF::Common::Serializable::pack
-         virtual uint16_t pack(Common::ByteArray &array, uint16_t offset) const = 0;
+         using Common::Serializable::unpack;
 
          /*!
-          * @copydoc HF::Common::Serializable::unpack
+          * Read a message from a ByteArray.
           *
-          * @warning If @c with_uid == @c true, then if the value read from the
-          *          array does not match the attribute's UID, no more data will be read.
+          * @param [in] array       ByteArray reference to read the message from.
+          * @param [in] offset      offset to start reading from.
+          * @param [in] with_uid    @c true if the @c uid field was included in the serialization,
+          *                         @c false otherwise.
           *
-          * @param [in] with_uid    attribute %UID is included in the serialization.
+          * @return  the number of bytes read.
           */
          virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset,
-                                 bool with_uid) = 0;
+                                 bool with_uid)                 = 0;
 
-         //! @copydoc HF::Common::Serializable::unpack
-         virtual uint16_t unpack(const Common::ByteArray &array, uint16_t offset) = 0;
+         virtual bool operator==(const IAttribute &other) const = 0;
 
-         virtual bool operator==(const IAttribute &other) const                   = 0;
+         virtual bool operator<(const IAttribute &other) const  = 0;
 
-         virtual bool operator<(const IAttribute &other) const                    = 0;
-
-         virtual bool operator>(const IAttribute &other) const                    = 0;
+         virtual bool operator>(const IAttribute &other) const  = 0;
 
          /*!
           * This method is used to get the percentage of change that the
@@ -196,13 +203,11 @@ namespace HF
          //! Minimum pack/unpack required data size.
          static constexpr uint8_t min_size = sizeof(uint8_t);
 
-         //! @copydoc HF::Common::Serializable::size
          uint16_t size() const
          {
             return min_size + sizeof(uint8_t) * vector<uint8_t>::size();
          }
 
-         //! @copydoc HF::Common::Serializable::pack
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
             HF_SERIALIZABLE_CHECK(array, offset, size());
@@ -223,10 +228,10 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Common::Serializable::unpack
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint8_t count = 0;
+
             return unpack(array, offset, count);
          }
 
@@ -337,7 +342,8 @@ namespace HF
       /*!
        * Helper template class to declare an attribute with the given @c T type.
        *
-       * @tparam T underling data type for the attribute.
+       * @tparam T      underling data type for the attribute.
+       * @tparam _Owner underling data type for the attribute's owner.
        */
       template<typename T, typename _Owner = void, typename = void>
       struct Attribute: public AbstractAttribute
@@ -515,7 +521,8 @@ namespace HF
       /*!
        * Helper template class to declare an attribute with the given @c T type.
        *
-       * @tparam T underling data type for the attribute.
+       * @tparam T      underling data type for the attribute.
+       * @tparam _Owwer underling data type for the attribute's owner.
        */
       template<typename T, typename _Owner>
       struct Attribute<T, _Owner, EnableIf<Parent<HF::Interface, _Owner>>>:
@@ -527,7 +534,7 @@ namespace HF
          typedef typename std::function<void (_Owner &, T)> setter_t;
 
          /*!
-          * Attribute template constructor.
+          * %Attribute template constructor.
           *
           * @param [in] __owner   reference to attribute's interface owner object.
           * @param [in] uid       attribute's UID.
@@ -537,7 +544,7 @@ namespace HF
           */
          Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, setter_t _setter,
                    bool writable = false):
-            AbstractAttribute(__owner.uid(), uid, writable), _owner(__owner), getter(_getter),
+            AbstractAttribute(__owner.uid(), uid, writable), _owner(&__owner), getter(_getter),
             setter(_setter)
          {}
 
@@ -550,7 +557,36 @@ namespace HF
           * @param [in] writable  attribute's writable information.
           */
          Attribute(_Owner &__owner, const uint8_t uid, getter_t _getter, bool writable = false):
-            AbstractAttribute(__owner.uid(), uid, writable), _owner(__owner), getter(_getter)
+            AbstractAttribute(__owner.uid(), uid, writable), _owner(&__owner), getter(_getter)
+         {}
+
+         /*!
+          * %Attribute template constructor.
+          *
+          * @param [in] __owner   reference to attribute's interface owner object.
+          * @param [in] uid       attribute's UID.
+          * @param [in] _getter   owner's member function to get the value of the attribute.
+          * @param [in] _setter   owner's member function to set the value of the attribute.
+          * @param [in] writable  attribute's writable information.
+          */
+         __attribute__((__nonnull__(2)))
+         Attribute(_Owner *__owner, const uint8_t uid, getter_t _getter, setter_t _setter,
+                   bool writable = false):
+            AbstractAttribute(__owner->uid(), uid, writable), _owner(__owner), getter(_getter),
+            setter(_setter)
+         {}
+
+         /*!
+          * %Attribute template constructor.
+          *
+          * @param [in] __owner   reference to attribute's interface owner object.
+          * @param [in] uid       attribute's UID.
+          * @param [in] _getter   owner's member function to get the value of the attribute.
+          * @param [in] writable  attribute's writable information.
+          */
+         __attribute__((__nonnull__(2)))
+         Attribute(_Owner *__owner, const uint8_t uid, getter_t _getter, bool writable = false):
+            AbstractAttribute(__owner->uid(), uid, writable), _owner(__owner), getter(_getter)
          {}
 
          // =============================================================================
@@ -569,20 +605,20 @@ namespace HF
 
          value_type value() const
          {
-            return getter(_owner);
+            return getter(*_owner);
          }
 
          void value(value_type __value)
          {
             if (setter)
             {
-               setter(_owner, __value);
+               setter(*_owner, __value);
             }
          }
 
          HF::Interface const *owner() const
          {
-            return &_owner;
+            return _owner;
          }
 
          uint16_t size(bool with_uid) const
@@ -606,7 +642,7 @@ namespace HF
                offset += array.write(offset, uid());
             }
 
-            const_cast<decltype(helper) &>(helper).data = getter(_owner);
+            const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
             offset                                     += helper.pack(array, offset);
 
@@ -615,7 +651,7 @@ namespace HF
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            const_cast<decltype(helper) &>(helper).data = getter(_owner);
+            const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
             return helper.pack(array, offset);
          }
@@ -639,7 +675,7 @@ namespace HF
 
             offset += helper.unpack(array, offset);
 
-            setter(_owner, helper.data);
+            setter(*_owner, helper.data);
 
             _end:
             return offset - start;
@@ -648,7 +684,8 @@ namespace HF
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
             uint16_t result = helper.unpack(array, offset);
-            setter(_owner, helper.data);
+
+            setter(*_owner, helper.data);
             return result;
          }
 
@@ -665,7 +702,7 @@ namespace HF
 
             if (res == 0)
             {
-               const_cast<decltype(helper) &>(helper).data = getter(_owner);
+               const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
                Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
                res = helper.compare(temp->helper);
@@ -680,7 +717,7 @@ namespace HF
 
             if (res == 0)
             {
-               const_cast<decltype(helper) &>(helper).data = getter(_owner);
+               const_cast<decltype(helper) &>(helper).data = getter(*_owner);
 
                Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
                return helper.changed(temp->helper);
@@ -691,7 +728,7 @@ namespace HF
 
          protected:
 
-         _Owner                                 &_owner;
+         _Owner                                 *_owner;
          getter_t                               getter;
          setter_t                               setter;
 
@@ -1102,7 +1139,7 @@ namespace HF
          };
 
       } // namespace SetAttributePack
-        /*! @} */
+      /*! @} */
 
    }  // namespace Protocol
 

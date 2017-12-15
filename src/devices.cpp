@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for HAN-FUN
  * devices.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -68,7 +68,7 @@ Units::IUnit *AbstractDevice::unit(uint8_t id) const
 // =============================================================================
 void AbstractDevice::send(Protocol::Packet &packet)
 {
-   if (is_local(packet) && is_registered())
+   if (to_local(packet) && is_registered())
    {
       receive(packet, packet.message.payload, 0);
       return;
@@ -113,9 +113,7 @@ void AbstractDevice::receive(Protocol::Packet &packet, Common::ByteArray &payloa
 {
    Common::Result result = Common::Result::FAIL_UNKNOWN;
 
-   assert(nullptr != packet.link);
-
-   if (is_local(packet))
+   if (to_local(packet))
    {
       IUnit *unit = this->unit(packet.destination.unit);
 
@@ -126,7 +124,7 @@ void AbstractDevice::receive(Protocol::Packet &packet, Common::ByteArray &payloa
    }
 
    // Send missing response.
-   if (response_filter(packet))
+   if (from_remote(packet) && response_filter(packet))
    {
       Protocol::Message *message = new Protocol::Message(packet.message, 0);
       Protocol::Response resp(result);
@@ -220,7 +218,7 @@ void Concentrator::AbstractBase::receive(Protocol::Packet &packet, Common::ByteA
    {
       route_packet(packet, payload, offset);
    }
-   else if (is_local(packet))   // The message is for us.
+   else if (to_local(packet))   // The message is for us.
    {
       AbstractDevice::receive(packet, payload, offset);
    }
@@ -338,7 +336,7 @@ void Concentrator::AbstractBase::route_packet(Protocol::Packet &packet, Common::
    auto process_entry = [this, &other, &packet](const Core::BindManagement::Entry &entry)
                         {
                            other.destination = entry.destination;
-                           other.link        = this->is_local(other) ? packet.link : nullptr;
+                           other.link        = this->to_local(other) ? packet.link : nullptr;
                            this->send(other);
                         };
 

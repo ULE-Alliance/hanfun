@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Visual Effects interface
  * implementation.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -62,6 +62,7 @@ TEST(SimpleVisualEffects, UID)
 TEST(SimpleVisualEffects, OnEffect_Size)
 {
    OnEffect effect;
+
    LONGS_EQUAL(sizeof(uint16_t), OnEffect::min_size);
    LONGS_EQUAL(sizeof(uint16_t), effect.size());
 }
@@ -97,6 +98,7 @@ TEST(SimpleVisualEffects, OnEffect_Unpack)
    });
 
    OnEffect effect;
+
    LONGS_EQUAL(0, effect.duration);
 
    LONGS_EQUAL(OnEffect::min_size, effect.unpack(payload, 3));
@@ -120,6 +122,7 @@ TEST(SimpleVisualEffects, OnEffect_Unpack)
 TEST(SimpleVisualEffects, BlinkEffect_Size)
 {
    BlinkEffect effect;
+
    LONGS_EQUAL(3 * sizeof(uint16_t), BlinkEffect::min_size);
    LONGS_EQUAL(3 * sizeof(uint16_t), effect.size());
 }
@@ -202,6 +205,7 @@ TEST(SimpleVisualEffects, BlinkEffect_Unpack)
 TEST(SimpleVisualEffects, FadeEffect_Size)
 {
    FadeEffect effect;
+
    LONGS_EQUAL(2 * sizeof(uint8_t) + sizeof(uint16_t), FadeEffect::min_size);
    LONGS_EQUAL(2 * sizeof(uint8_t) + sizeof(uint16_t), effect.size());
 }
@@ -237,6 +241,7 @@ TEST(SimpleVisualEffects, FadeEffect_Unpack)
                                     0x00, 0x00, 0x00});
 
    FadeEffect effect;
+
    LONGS_EQUAL(0, effect.start);
    LONGS_EQUAL(0, effect.end);
    LONGS_EQUAL(0, effect.duration);
@@ -266,6 +271,7 @@ TEST(SimpleVisualEffects, FadeEffect_Unpack)
 TEST(SimpleVisualEffects, BreatheEffect_Size)
 {
    BreatheEffect effect;
+
    LONGS_EQUAL(2 * sizeof(uint8_t) + 5 * sizeof(uint16_t), BreatheEffect::min_size);
    LONGS_EQUAL(2 * sizeof(uint8_t) + 5 * sizeof(uint16_t), effect.size());
 }
@@ -371,6 +377,7 @@ TEST_GROUP(SimpleVisualEffectsClient)
    {};
 
    SimpleVisualEffectsClient client;
+
    Protocol::Address addr;
 
    TEST_SETUP()

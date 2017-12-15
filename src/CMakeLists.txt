@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   @version 1.4.3
+#   @version 1.5.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -53,6 +53,9 @@ add_interface("simple_thermostat")
 add_interface("simple_button")
 add_interface("simple_visual_effects")
 add_interface("simple_air_pressure")
+add_interface("simple_light_sensor")
+add_interface("colour_control")
+add_interface("simple_keypad")
 
 ## Core Services & Interfaces
 macro(add_core __name)
@@ -71,11 +74,18 @@ add_core("device_management")
 add_core("bind_management")
 add_core("device_information")
 add_core("attribute_reporting")
+add_core("group_table")
 add_core("session_management")
+add_core("group_management")
 add_core("rssi")
 if(HF_CORE_SUOTA_SUPPORT)
     add_core("suota")
 endif()
+add_core("time")
+add_core("batch_program_management")
+add_core("scheduling")
+add_core("event_scheduling")
+add_core("weekly_scheduling")
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)

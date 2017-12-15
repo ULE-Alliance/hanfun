@@ -5,7 +5,7 @@
  * This file contains workarounds for the implementation on C++11 in older versions
  * of GCC.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -24,8 +24,7 @@ const class nullptr_t
    public:
 
    /* Return 0 for any class pointer */
-   template<typename T>
-   operator T *() const
+   template<typename T> operator T *() const
    {
       return 0;
    }
@@ -64,6 +63,12 @@ const class nullptr_t
 nullptr = {};
 
    #define __attribute_deprecated__   __attribute__((deprecated))
+
+   #define _override
+
+#else
+
+#define _override override
 
 #endif
 

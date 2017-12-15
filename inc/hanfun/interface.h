@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -57,26 +57,29 @@ namespace HF
       typedef enum _UID
       {
          /* Core Services */
-         DEVICE_MANAGEMENT       = 0x0001, //!< %Device Management interface %UID.
-         BIND_MANAGEMENT         = 0x0002, //!< Bind Management interface %UID.
-         GROUP_MANGEMENT         = 0x0003, //!< Group Management interface %UID. __Not implemented__
-         IDENTIFY                = 0x0004, //!< Identify interface %UID. __Not implemented__
-         DEVICE_INFORMATION      = 0x0005, //!< %Device information interface UID.
-         ATTRIBUTE_REPORTING     = 0x0006, //!< %Attribute Reporting interface UID.
-         BATCH_PROGRAM_MANGEMENT = 0x0007, //!< Batch Program Management interface UID. __Not implemented__
-         EVENT_SCHEDULING        = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
-         WEEKLY_SCHEDULING       = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
-         TAMPER_ALERT            = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
-         TIME                    = 0x0102, //!< %Time interface UID. __Not implemented__
-         POWER                   = 0x0110, //!< Power interface UID. __Not implemented__
-         KEEP_ALIVE              = 0x0115, //!< Keep Alive interface UID. __Not implemented__
-         RSSI                    = 0x0111, //!< %RSSI interface UID.
-         SUOTA                   = 0x0400, //!< %SUOTA interface UID.
+         DEVICE_MANAGEMENT        = 0x0001, //!< %Device Management interface %UID.
+         BIND_MANAGEMENT          = 0x0002, //!< Bind Management interface %UID.
+         GROUP_MANAGEMENT         = 0x0003, //!< Group Management interface %UID.
+         IDENTIFY                 = 0x0004, //!< Identify interface %UID. __Not implemented__
+         DEVICE_INFORMATION       = 0x0005, //!< %Device information interface UID.
+         ATTRIBUTE_REPORTING      = 0x0006, //!< %Attribute Reporting interface UID.
+         BATCH_PROGRAM_MANAGEMENT = 0x0007, //!< Batch Program Management interface UID.
+         EVENT_SCHEDULING         = 0x0008, //!< Event Scheduling interface UID. __Not implemented__
+         WEEKLY_SCHEDULING        = 0x0009, //!< Weekly Scheduling interface UID. __Not implemented__
+         GROUP_TABLE              = 0x000A, //!< Group Table interface UID.
+         TAMPER_ALERT             = 0x0101, //!< Tamper %Alert interface UID. __Not implemented__
+         TIME                     = 0x0102, //!< %Time interface UID. __Not implemented__
+         POWER                    = 0x0110, //!< Power interface UID. __Not implemented__
+         KEEP_ALIVE               = 0x0115, //!< Keep Alive interface UID. __Not implemented__
+         RSSI                     = 0x0111, //!< %RSSI interface UID.
+         SUOTA                    = 0x0400, //!< %SUOTA interface UID.
 
          /* Functional Interfaces. */
          ALERT                 = 0x0100, //!< Alert interface UID
          ON_OFF                = 0x0200, //!< ON-OFF interface UID
          LEVEL_CONTROL         = 0x0201, //!< Level Control interface UID
+         COLOUR_CONTROL        = 0x0202, //!< Colour Control interface UID.
+         SIMPLE_KEYPAD         = 0x0203, //!< Simple Keypad interface UID.
          SIMPLE_POWER_METER    = 0x0300, //!< Simple Power Meter interface UID
          SIMPLE_TEMPERATURE    = 0x0301, //!< Simple Temperature interface UID
          SIMPLE_HUMIDITY       = 0x0302, //!< Simple Humidity interface UID
@@ -84,6 +87,7 @@ namespace HF
          SIMPLE_BUTTON         = 0x0304, //!< Simple Button interface UID.
          SIMPLE_VISUAL_EFFECTS = 0x0305, //!< Simple Visual Effects interface UID.
          SIMPLE_AIR_PRESSURE   = 0x0306, //!< Simple Air Pressure interface UID.
+         SIMPLE_LIGHT_SENSOR   = 0x0307, //!< Simple Light Sensor interface UID.
 
          /* Reserved */
          RESERVED = 0x7F00,              //!< Proprietary interfaces.
@@ -91,6 +95,9 @@ namespace HF
          ANY_UID  = 0x7FFF,              //!< Any interface UID value.
       } UID;
 
+      /*!
+       * Helper class to match any interface.
+       */
       struct Any: public Common::Interface
       {
          Any(): Common::Interface(ANY_UID)
@@ -315,6 +322,7 @@ namespace HF
          uint16_t payload_size_helper() const
          {
             _Message message;
+
             return message.size();
          }
 
@@ -359,8 +367,8 @@ namespace HF
        *
        * @tparam _uid   interface UID to be used by the interface.
        */
-      template<uint16_t _uid>
-      struct Interface: public AbstractInterface
+      template<uint16_t _uid, typename Parent = AbstractInterface>
+      struct Interface: public Parent
       {
          //! @copydoc HF::Interface::uid
          uint16_t uid() const
@@ -375,16 +383,6 @@ namespace HF
             return Interface::uid() == uid;
          }
       };
-
-      /* *INDENT-OFF* */
-      /*!
-       * @copydoc HF::Interfaces::Interface
-       *
-       * @deprecated This template class has been deprecated please use HF::Interfaces::Interface
-       */
-      template<uint16_t _uid>
-      struct __attribute__((deprecated)) Base: public Interface<_uid>{};
-      /* *INDENT-ON* */
 
       /*!
        * Helper class template for implementing a given interface role.
@@ -527,7 +525,7 @@ namespace HF
           * @return  a pointer to the optional implemented interface.
           */
          template<uint8_t N>
-         const typename std::tuple_element<N, interfaces_t>::type::base * get() const
+         const typename std::tuple_element<N, interfaces_t>::type::base *get() const
          {
             return &std::get<N>(_interfaces);
          }

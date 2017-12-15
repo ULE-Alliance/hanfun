@@ -4,7 +4,7 @@
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -50,6 +50,9 @@
 #include "hanfun/interfaces/simple_button.h"
 #include "hanfun/interfaces/simple_visual_effects.h"
 #include "hanfun/interfaces/simple_air_pressure.h"
+#include "hanfun/interfaces/simple_light_sensor.h"
+#include "hanfun/interfaces/colour_control.h"
+#include "hanfun/interfaces/simple_keypad.h"
 
 // =============================================================================
 // Core Services & Interfaces.
@@ -60,8 +63,14 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/attribute_reporting.h"
 #include "hanfun/core/bind_management.h"
+#include "hanfun/core/group_management.h"
+#include "hanfun/core/group_table.h"
 #include "hanfun/core/rssi.h"
 #include "hanfun/core/suota.h"
+#include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
+#include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 // =============================================================================
 // Profiles

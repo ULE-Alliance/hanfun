@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -79,22 +79,36 @@
 /*!
  * @ingroup common
  *
+ * Helper macro to implement attribute notifications.
+ *
+ * @param [in] _Type       helper class that wraps the attribute.
+ * @param [in] _old_value  the previous value of the attribute.
+ * @param [in] _new_value  the current value of the attribute.
+ */
+#define HF_NOTIFY_HELPER(_Type, _old_value, _new_value) \
+   {                                                    \
+      _Type old_attr(_old_value, this);                 \
+      _Type new_attr(_new_value, this);                 \
+                                                        \
+      notify(old_attr, new_attr);                       \
+   }
+
+/*!
+ * @ingroup common
+ *
  * Helper macro to implement attribute setters.
  *
  * @param [in] _Type    helper class that wraps the attribute.
  * @param [in] _name    name of the attribute to generate the setter for.
  * @param [in] _value   name of the variable containing the new value.
  */
-#define HF_SETTER_HELPER(_Type, _name, _value) \
-   {                                           \
-      _Type::value_type old = this->_name;     \
-                                               \
-      this->_name = _value;                    \
-                                               \
-      _Type old_attr(old, this);               \
-      _Type new_attr(this->_name, this);       \
-                                               \
-      notify(old_attr, new_attr);              \
+#define HF_SETTER_HELPER(_Type, _name, _value)  \
+   {                                            \
+      _Type::value_type old = this->_name;      \
+                                                \
+      this->_name = _value;                     \
+                                                \
+      HF_NOTIFY_HELPER(_Type, old, this->_name) \
    }
 
 #ifndef HF_ASSERT // Allow macro to be replaced for testing.
@@ -115,6 +129,11 @@
    }
 #endif
 
+// Allow some static functions to be accessed from the test code.
+#ifndef STATIC
+   #define STATIC   static
+#endif
+
 // =============================================================================
 // API
 // =============================================================================
@@ -129,7 +148,7 @@ namespace HF
     * @{
     */
 
-   constexpr uint8_t CORE_VERSION       = 1; //!< %Core %Service & %Interfaces major version supported.
+   constexpr uint8_t CORE_VERSION       = 2; //!< %Core %Service & %Interfaces major version supported.
    constexpr uint8_t PROFILES_VERSION   = 1; //!< %Profiles major version supported.
    constexpr uint8_t INTERFACES_VERSION = 1; //!< %Interfaces major version supported.
 
@@ -138,9 +157,41 @@ namespace HF
    template<typename T> using Invoke             = typename T::type;
    template<typename C> using EnableIf           = Invoke<std::enable_if<C::value>>;
    template<typename P, typename C> using Parent = std::is_base_of<P, C>;
+   template<typename T> using IsClass            = std::is_class<T>;
 
    template<typename T>
    using IsIntegral = std::is_integral<Invoke<std::remove_reference<T>>>;
+
+   template<typename... Args> struct Or;
+
+   template<typename T, typename... Args>
+   struct Or<T, Args...>
+   {
+      static constexpr bool value = T::value || Or<Args...>::value;
+   };
+
+   template<typename T>
+   struct Or<T>
+   {
+      static constexpr bool value = T::value;
+   };
+
+   template<typename... Args> struct And;
+
+   template<typename T, typename... Args>
+   struct And<T, Args...>
+   {
+      static constexpr bool value = T::value && And<Args...>::value;
+   };
+
+   template<typename T>
+   struct And<T>
+   {
+      static constexpr bool value = T::value;
+   };
+
+   template<typename T> using IsClassPointer = And<std::is_pointer<T>,
+                                                   std::is_class<std::remove_pointer<T>>>;
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -251,7 +302,7 @@ namespace HF
          //! @copydoc ByteArray::write (uint16_t, uint8_t)
          uint16_t write(uint16_t offset, bool data)
          {
-            return write(offset, static_cast<uint8_t>(data));
+            return write(offset, static_cast<uint8_t>(data ? 0x01 : 0x00));
          }
 
          //! @copydoc ByteArray::write (uint16_t, uint8_t)
@@ -475,13 +526,11 @@ namespace HF
             return data.unpack(array, offset);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return data.compare(other.data);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<T> &other) const
          {
             return data.changed(other.data);
@@ -494,7 +543,7 @@ namespace HF
        * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
-      struct SerializableHelper<T, EnableIf<std::is_pointer<T>>>:
+      struct SerializableHelper<T, EnableIf<IsClassPointer<T>>>:
          public Serializable
       {
          //! Pointer to the wrapped instance.
@@ -525,13 +574,11 @@ namespace HF
             return data->unpack(array, offset);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return data->compare(other.data);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<T> &other) const
          {
             return data->changed(other.data);
@@ -583,13 +630,11 @@ namespace HF
             return min_size;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<T> &other) const
          {
             return data - other.data;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<T> &other) const
          {
             return (((float) (data - other.data)) / other.data);
@@ -657,7 +702,6 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<Common::ByteArray> &other) const
          {
             int res = data.size() - other.size();
@@ -670,7 +714,6 @@ namespace HF
             return res;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<Common::ByteArray> &other) const
          {
             UNUSED(other);
@@ -758,17 +801,225 @@ namespace HF
             return unpack(data, array, offset);
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<std::string> &other) const
          {
             return strcmp(data.data(), other.data.data());
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<std::string> &other) const
          {
             UNUSED(other);
             return 0.0;
+         }
+      };
+
+      template<typename T, typename S, typename E = void>
+      struct SerializableHelperVector: public Serializable
+      {};
+
+      template<typename T, typename S>
+      struct SerializableHelperVector<T, S,
+                                      EnableIf<IsIntegral<typename T::value_type>>>: public
+         Serializable
+      {
+         T &data;
+
+         using value_type = typename T::value_type;
+
+         SerializableHelperVector(T &data): data(data) {}
+
+         static constexpr uint16_t min_size = sizeof(S);
+
+         uint16_t size() const
+         {
+            return min_size + data_size() * sizeof(value_type);
+         }
+
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+
+            HF_ASSERT(data.size() > std::numeric_limits<S>::max(), {return 0;});
+
+            uint16_t start = offset;
+            int size       = 0;
+
+            offset += array.write(offset, (S) data_size());
+
+            SerializableHelper<value_type> h;
+            std::all_of(data.cbegin(), data.cend(),
+                        [&h, &offset, &size, &array](const value_type e)
+            {
+               h.data = e;
+               size = h.pack(array, offset);
+
+               if (size == 0)
+               {
+                  size = -1;
+                  return false;
+               }
+
+               return true;
+            });
+
+            HF_ASSERT(size != -1, {return 0;});
+
+            offset += size;
+            return offset - start;
+         }
+
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+            uint16_t start = offset;
+
+            S size         = 0;
+
+            offset += array.read(offset, size);
+
+            HF_SERIALIZABLE_CHECK(array, offset, size * sizeof(value_type));
+
+            SerializableHelper<value_type> h;
+            auto it = std::back_inserter<T>(data);
+
+            for (S i = 0; i < size; ++i)
+            {
+               h.data  = 0;
+               offset += h.unpack(array, offset);
+               it      = h.data;
+            }
+
+            return offset - start;
+         }
+
+         int compare(const SerializableHelper<T> &other) const
+         {
+            return std::equal(data.cbegin(), data.cend(), other.data.cbegin()) ? 0 : -1;
+         }
+
+         float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
+         {
+            UNUSED(other);
+            return 0.0;
+         }
+
+         protected:
+
+         uint16_t data_size() const
+         {
+            return std::distance(data.cbegin(), data.cend());
+         }
+      };
+
+      template<typename T, typename S>
+      struct SerializableHelperVector<T, S,
+                                      EnableIf<IsClass<typename T::value_type>>>: public
+         Serializable
+      {
+         T &data;
+
+         using value_type = typename T::value_type;
+
+         SerializableHelperVector(T &data): data(data) {}
+
+         static constexpr uint16_t min_size = sizeof(S);
+
+         uint16_t size() const
+         {
+            uint16_t result = min_size;
+
+            SerializableHelper<value_type *> h;
+            std::for_each(data.cbegin(), data.cend(), [&h, &result](const value_type e)
+            {
+               h.data = const_cast<value_type *>(&e);
+               result += h.size();
+            });
+
+            return result;
+         }
+
+         uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, size());
+
+            HF_ASSERT(data.size() < std::numeric_limits<S>::max(),
+                      {return 0;});
+
+            uint16_t start = offset;
+            int size       = 0;
+
+            offset += array.write(offset, (S) data_size());
+
+            SerializableHelper<value_type *> h;
+            std::all_of(data.cbegin(), data.cend(),
+                        [&h, &offset, &size, &array](const value_type &e)
+            {
+               h.data = const_cast<value_type *>(&e);
+               size = h.pack(array, offset);
+
+               if (size == 0)
+               {
+                  size = -1;
+                  return false;
+               }
+
+               return true;
+            });
+
+            HF_ASSERT(size != -1, {return 0;});
+            offset += size;
+
+            return offset - start;
+         }
+
+         uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
+         {
+            HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+            uint16_t start = offset;
+
+            S size         = 0;
+
+            offset += array.read(offset, size);
+
+            auto it = std::back_inserter<T>(data);
+
+            for (S i = 0; i < size; ++i)
+            {
+               SerializableHelper<value_type> h;
+               uint16_t temp = 0;
+
+               HF_SERIALIZABLE_CHECK(array, offset, h.size());
+
+               temp = h.unpack(array, offset);
+               /* *INDENT-OFF* */
+               HF_ASSERT(temp > 0, {return 0;});
+               offset += temp;
+               /* *INDENT-ON* */
+
+               it = h.data;
+            }
+
+            return offset - start;
+         }
+
+         int compare(const SerializableHelper<T> &other) const
+         {
+            return std::equal(data.cbegin(), data.cend(), other.data.cbegin()) ? 0 : -1;
+         }
+
+         float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
+         {
+            UNUSED(other);
+            return 0.0;
+         }
+
+         protected:
+
+         uint16_t data_size() const
+         {
+            return std::distance(data.cbegin(), data.cend());
          }
       };
 
@@ -826,13 +1077,11 @@ namespace HF
             return offset - start;
          }
 
-         //! @copydoc HF::Attributes::IAttribute::compare
          int compare(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
             return memcmp(data.data(), other.data.data(), data.size());
          }
 
-         //! @copydoc HF::Attributes::IAttribute::changed
          float changed(const SerializableHelper<std::vector<uint8_t>> &other) const
          {
             UNUSED(other);
@@ -1067,11 +1316,11 @@ namespace HF
          virtual uint16_t size() const = 0;
 
          /*!
-          * Store the given bind @c entry to persistent storage.
+          * Store the given @c entry to persistent storage.
           *
-          * @param [in] entry the bind entry to store.
+          * @param [in] entry the entry to save to storage.
           *
-          * @retval  Common::Result::OK if the bind entry was saved,
+          * @retval  Common::Result::OK if the entry was saved,
           * @retval  Common::Result::FAIL_UNKNOWN otherwise.
           */
          virtual Result save(const T &entry) = 0;
@@ -1079,7 +1328,7 @@ namespace HF
          /*!
           * Destroy the given @c entry in the persistent storage.
           *
-          * @param [in] entry   reference to the bind entry to erase.
+          * @param [in] entry   reference to the entry to erase.
           *
           * @retval  Common::Result::OK, if the entry was destroyed.
           * @retval  Common::Result::FAIL_ARG otherwise.

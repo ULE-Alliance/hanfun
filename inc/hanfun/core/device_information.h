@@ -5,7 +5,7 @@
  * This file contains the definition for the core Device Information interface
  * of the HAN-FUN protocol.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -100,7 +100,6 @@ namespace HF
           *
           * This module contains the classes that implement the %Device Information service.
           *
-          *
           * @{
           */
          constexpr static uint8_t CORE_VERSION      = HF::CORE_VERSION;             //!< HAN-FUN Core version.
@@ -139,7 +138,6 @@ namespace HF
             UID_ATTR               = 0x0F,   //!< Device UID attribute.                   (O)
             SERIAL_NUMBER_ATTR     = 0x10,   //!< Serial number attribute.                (O)
             __LAST_ATTR__          = SERIAL_NUMBER_ATTR,
-            MANUFACTURE_NAME_ATTR  = MANUFACTURER_NAME_ATTR, //!< @deprecated
          } Attributes;
 
          /*!
@@ -222,13 +220,6 @@ namespace HF
              */
             Base(Unit0 &unit): Service<HF::Interface::DEVICE_INFORMATION>(unit) {}
          };
-
-         /*!
-          * @copydoc HF::Core::DeviceInformation::Base
-          *
-          * @deprecated This class is deprecated please use HF::Core::DeviceInformation::Base instead.
-          */
-         typedef Base __attribute__((deprecated)) Abstract;
 
          /*!
           * Device Information interface : Server side.

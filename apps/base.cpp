@@ -5,7 +5,7 @@
  * This file contains the implementation of the Base class that represents the
  * HAN-FUN Concentrator on the base example application.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -48,6 +48,7 @@
 HF::Common::Result DeviceManagement::Entries::save(const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::save(device);
+
    HF::Application::Save();
    return res;
 }
@@ -74,6 +75,7 @@ void DeviceManagement::Entries::insert(const Device &device)
 HF::Common::Result DeviceManagement::Entries::destroy(const Device &device)
 {
    auto res = HF::Core::DeviceManagement::Entries::destroy(device);
+
    HF::Application::Save();
    return res;
 }
@@ -206,6 +208,7 @@ void DeviceManagement::Server::restore(Json::Value root)
 HF::Common::Result BindManagement::Entries::save(const Entry &entry)
 {
    auto res = HF::Core::BindManagement::Entries::save(entry);
+
    HF::Application::Save();
    return res;
 }
@@ -232,6 +235,7 @@ void BindManagement::Entries::insert(Entry &entry)
 HF::Common::Result BindManagement::Entries::destroy(const Entry &entry)
 {
    auto res = HF::Core::BindManagement::Entries::destroy(entry);
+
    HF::Application::Save();
    return res;
 }
@@ -489,7 +493,7 @@ static void handle_device_infomation(HF::Common::ByteArray &payload, uint16_t of
 
             break;
          }
-         case MANUFACTURE_NAME_ATTR:
+         case MANUFACTURER_NAME_ATTR:
          {
             auto *name = adapt <std::string>(attr);
             LOG (APP) << "Manuf. Name (" << Hex <uint8_t>(attr->uid ()) << ") | "

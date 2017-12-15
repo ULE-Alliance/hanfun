@@ -6,7 +6,7 @@
 #
 #   @author  Filipe Alves <filipe.alves@bithium.com>
 #
-#   @version 1.4.3
+#   @version 1.5.0
 #
 #   Copyright (c) 2012 Bithium S.A.
 #

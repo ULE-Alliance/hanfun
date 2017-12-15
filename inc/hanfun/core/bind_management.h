@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Bind Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -277,13 +277,6 @@ namespace HF
                Service(unit)
             {}
          };
-
-         /*!
-          * @copydoc HF::Core::BindManagement::Base
-          *
-          * @deprecated This class is deprecated please use HF::Core::BindManagement::Base instead.
-          */
-         typedef Base __attribute__((deprecated)) Abstract;
 
          /*!
           * Bind Management interface : Client side.

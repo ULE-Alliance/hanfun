@@ -12,6 +12,18 @@
 // Core Services and Interfaces
 // =============================================================================
 
+#define HF_GROUP_SUPPORT                           @HF_GROUP_SUPPORT@
+#define HF_TIME_SUPPORT                            @HF_TIME_SUPPORT@
+#define HF_BATCH_PROGRAM_SUPPORT                   @HF_BATCH_PROGRAM_SUPPORT@
+#define HF_EVENT_SCHEDULING_SUPPORT                @HF_EVENT_SCHEDULING_SUPPORT@
+#define HF_WEEKLY_SCHEDULING_SUPPORT               @HF_WEEKLY_SCHEDULING_SUPPORT@
+
+#if HF_EVENT_SCHEDULING_SUPPORT == 1 || HF_WEEKLY_SCHEDULING_SUPPORT == 1
+    #define HF_TIME_SUPPORT             1
+    #define HF_BATCH_PROGRAM_SUPPORT    1
+#endif
+
+
 // =============================================================================
 // Device Information
 // =============================================================================
@@ -26,6 +38,34 @@
 
 #define HF_CORE_SUOTA_SUPPORT                    @HF_CORE_SUOTA_SUPPORT@
 #define HF_CORE_SUOTA_CHECK_VERSION_CMD          @HF_CORE_SUOTA_CHECK_VERSION_CMD@
+
+// =============================================================================
+// Group Management Configuration
+// =============================================================================
+
+#define HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD   @HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD@
+
+// =============================================================================
+// Batch Program Management Interface Configuration
+// =============================================================================
+
+#define HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD         @HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD@
+
+// =============================================================================
+// Event Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD         @HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD@
+#define HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD             @HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD@
+#define HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD@
+
+// =============================================================================
+// Weekly Scheduling Configuration
+// =============================================================================
+
+#define HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD         @HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD@
+#define HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD             @HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD@
+#define HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD           @HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD@
 
 // =============================================================================
 // Interfaces
@@ -84,5 +124,23 @@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD    @HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD     @HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD@
 #define HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD  @HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD@
+
+// =============================================================================
+// Level Control Configuration
+// =============================================================================
+
+#define HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD          @HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD@
+#define HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD     @HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD@
+#define HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD     @HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD@
+
+// =============================================================================
+// Colour Control Configuration
+// =============================================================================
+
+#define HF_ITF_COLOUR_CONTROL_STOP_CMD                        @HF_ITF_COLOUR_CONTROL_STOP_CMD@
+
+#define HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR         @HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR@
+#define HF_ITF_COLOUR_CONTROL_XY_ATTR                         @HF_ITF_COLOUR_CONTROL_XY_ATTR@
+#define HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR          @HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR@
 
 #endif  /* HF_CONFIG_H */

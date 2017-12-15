@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Button interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -56,7 +56,7 @@ namespace HF
       namespace SimpleButton
       {
          /*!
-          * @addtogroup simple_button_itf  Simple Button interface
+          * @addtogroup simple_button_itf  Simple Button
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Button interface API.

@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -18,6 +18,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include <random>
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -33,8 +34,14 @@
 #include "hanfun/core/device_information.h"
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/attribute_reporting.h"
+#include "hanfun/core/time.h"
+#include "hanfun/core/batch_program_management.h"
+#include "hanfun/core/event_scheduling.h"
+#include "hanfun/core/weekly_scheduling.h"
 
 #include "hanfun/units.h"
+
+#include "hanfun/interfaces/colour_control.h"
 
 using namespace HF;
 using namespace HF::Protocol;
@@ -56,7 +63,13 @@ SimpleString StringFrom(const HF::Common::Serializable &data);
 
 SimpleString StringFrom(const HF::Common::Interface &itf);
 
-template<typename _type>
+SimpleString StringFrom(const HF::Attributes::IAttribute &attr);
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::HS_Colour &colour);
+
+SimpleString StringFrom(const HF::Interfaces::ColourControl::XY_Colour &colour);
+
+template<typename _type = uint8_t>
 void check_index(_type expected, _type actual, uint32_t index, const char *header,
                  const char *fileName,
                  int lineNumber)
@@ -74,96 +87,147 @@ void check_index(_type expected, _type actual, uint32_t index, const char *heade
    }
 }
 
+#define CHECK_INDEX(_header, _index, _expected, _actual) \
+   check_index(_expected, _actual, _index, _header, __FILE__, __LINE__)
 #define CHECK_ATTRIBUTE_UID(_index, _expected, _actual) \
    check_index<uint8_t>(_expected, _actual, _index, "Attribute UID : ", __FILE__, __LINE__)
 
-#define CHECK_TRUE_LOCATION(condition, file, line) \
-   CHECK_LOCATION_TRUE(condition, "CHECK_TRUE", #condition, file, line)
+#define CHECK_LOCATION_TRUE(condition, file, line) \
+   CHECK_TRUE_LOCATION(condition, "CHECK_TRUE", #condition, NULL, file, line)
 
-#define CHECK_FALSE_LOCATION(condition, file, line) \
-   CHECK_LOCATION_FALSE(condition, "CHECK_FALSE", #condition, file, line)
+#define CHECK_LOCATION_FALSE(condition, file, line) \
+   CHECK_FALSE_LOCATION(condition, "CHECK_FALSE", #condition, NULL, file, line)
 
-template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_attribute_common(Interface &itf, bool writable, Value first, Value second,
-                            Getter getter, Setter setter, const char *file, int lineno)
+template<typename T> T &to_ref(T &_ref)
 {
-   mock("Interface").expectNCalls(2, "notify");
+   return _ref;
+}
+template<typename T> T &to_ref(T *_ref)
+{
+   return *_ref;
+}
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter>
+void check_attribute_common(Interface &itf, bool writable,
+                            typename Attribute::value_type first,
+                            typename Attribute::value_type second,
+                            Getter getter, Setter setter,
+                            const char *file, int lineno)
+{
+   mock("Interface").expectNCalls(2, "notify").ignoreOtherParameters();
 
    (itf.*setter)(first);
 
-   LONGS_EQUAL_LOCATION(first, (itf.*getter)(), file, lineno);
+   CHECK_EQUAL_LOCATION(first, (itf.*getter)(), NULL, file, lineno);
 
    typedef HF::Attributes::Attribute<typename Attribute::value_type, Interface> __Attribute;
 
    auto attr = static_cast<__Attribute *>(itf.attribute(Attribute::ID));
-   CHECK_TRUE_LOCATION(attr != nullptr, file, lineno);
+   CHECK_LOCATION_TRUE(attr != nullptr, file, lineno);
 
-   CHECK_EQUAL_LOCATION(writable, attr->isWritable(), file, lineno);
-   POINTERS_EQUAL_LOCATION(&itf, attr->owner(), file, lineno);
-   LONGS_EQUAL_LOCATION(itf.uid(), attr->interface(), file, lineno);
+   CHECK_EQUAL_LOCATION(writable, attr->isWritable(), NULL, file, lineno);
+   POINTERS_EQUAL_LOCATION(&itf, attr->owner(), NULL, file, lineno);
+   LONGS_EQUAL_LOCATION(itf.uid(), attr->interface(), NULL, file, lineno);
 
-   LONGS_EQUAL_LOCATION(first, attr->value(), file, lineno);
+   CHECK_EQUAL_LOCATION(first, attr->value(), NULL, file, lineno);
 
    attr->value(second);
-   LONGS_EQUAL_LOCATION(second, attr->value(), file, lineno);
+   CHECK_EQUAL_LOCATION(second, attr->value(), NULL, file, lineno);
 
    mock("Interface").checkExpectations();
 
    delete attr;
 }
 
-template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_attribute(Interface &itf, bool writable, Value first, Value second,
-                     Getter getter, Setter setter, const char *file, int lineno)
+template<typename Attribute, typename Interface>
+void check_attribute_pack(Interface &itf, const char *file, int lineno)
 {
    auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
 
-   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
    attrs = itf.attributes(HF::Attributes::Pack::ALL);
 
-   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
-
-   check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
 }
 
+
 template<typename Attribute, typename Interface, typename Getter, typename Setter,
-         typename Value = typename Attribute::value_type>
-void check_optional_attribute(Interface &itf, bool writable, Value first, Value second,
-                              Getter getter, Setter setter, const char *file, int lineno)
+         typename = void>
+void check_attribute(Interface &itf, bool writable,
+                     typename Attribute::value_type first,
+                     typename Attribute::value_type second,
+                     Getter getter, Setter setter,
+                     const char *file, int lineno)
+{
+   check_attribute_pack<Attribute>(itf, file, lineno);
+
+   check_attribute_common<Attribute, Interface, Getter, Setter>(itf, writable, first, second,
+                                                                getter, setter, file, lineno);
+}
+
+template<typename Attribute, typename Interface, typename Getter, typename Setter>
+void check_optional_attribute(Interface &itf, bool writable,
+                              typename Attribute::value_type first,
+                              typename Attribute::value_type second,
+                              Getter getter, Setter setter,
+                              const char *file, int lineno)
 {
    auto attrs = itf.attributes(HF::Attributes::Pack::MANDATORY);
 
-   CHECK_TRUE_LOCATION(std::none_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::none_of(attrs.begin(), attrs.end(),
                                     [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
    attrs = itf.attributes(HF::Attributes::Pack::ALL);
 
-   CHECK_TRUE_LOCATION(std::any_of(attrs.begin(), attrs.end(),
+   CHECK_LOCATION_TRUE(std::any_of(attrs.begin(), attrs.end(),
                                    [](uint8_t uid) {return uid == Attribute::ID;}),
                        file, lineno);
 
-   check_attribute_common<Attribute>(itf, writable, first, second, getter, setter, file, lineno);
+   check_attribute_common<Attribute, Interface, Getter, Setter>(itf, writable, first, second,
+                                                                getter, setter, file, lineno);
 }
 
 #define CHECK_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                \
-   check_attribute<Type>(server, _writable, _first, _second,                               \
+   check_attribute<Type>(to_ref(server), _writable, _first, _second,                       \
                          (Type::value_type (Interface::*)(void) const) & Interface::_name, \
-                         (void (Interface::*)(Type::value_type)) & Interface::_name,       \
+                         (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                          __FILE__, __LINE__)
 
+#define CHECK_ATTRIBUTE_PACK(Interface, Type) \
+   check_attribute_pack<Type>(to_ref(server), __FILE__, __LINE__)
+
 #define CHECK_OPT_ATTRIBUTE(Interface, Type, _writable, _name, _first, _second)                     \
-   check_optional_attribute<Type>(server, _writable, _first, _second,                               \
+   check_optional_attribute<Type>(to_ref(server), _writable, _first, _second,                       \
                                   (Type::value_type (Interface::*)(void) const) & Interface::_name, \
-                                  (void (Interface::*)(Type::value_type)) & Interface::_name,       \
+                                  (void (Interface::*) (Type::value_type)) & Interface::_name,      \
                                   __FILE__, __LINE__)
+
+#define CHECK_ATTRIBUTE_ALLOC(_name) \
+   {                                 \
+      auto attr = new _name();       \
+      CHECK_TRUE(attr != nullptr);   \
+      delete attr;                   \
+   }
+
+#define CHECK_ALLOC(_name, ...)           \
+   {                                      \
+      auto temp = new _name(__VA_ARGS__); \
+      CHECK_TRUE(temp != nullptr);        \
+      delete temp;                        \
+   }
+
+#define CHECK_UNPACK(_expected, _actual)  \
+   {                                      \
+      auto size = _actual;                \
+      auto exp_size = _expected;          \
+      LONGS_EQUAL(exp_size, size)         \
+   }
 
 // =============================================================================
 // Helper Test Classes
@@ -231,6 +295,10 @@ namespace HF
          InterfaceHelper()
          {}
 
+         template<typename Arg>
+         InterfaceHelper(Arg &&arg): Base(arg)
+         {}
+
          virtual ~InterfaceHelper()
          {}
 
@@ -255,6 +323,13 @@ namespace HF
       template<class Base>
       struct InterfaceParentHelper: public InterfaceHelper<Base>
       {
+         InterfaceParentHelper(): InterfaceHelper<Base>()
+         {}
+
+         template<typename Arg>
+         InterfaceParentHelper(Arg &&arg): InterfaceHelper<Base>(arg)
+         {}
+
          Interface::Role role() const
          {
             return Interface::SERVER_ROLE;
@@ -475,14 +550,11 @@ namespace HF
       template<class Parent>
       struct AbstractDevice: public Parent
       {
-         uint16_t                        _address;
-
          std::vector<Protocol::Packet *> packets;
 
          Link                            link;
 
-         AbstractDevice():
-            _address(Protocol::BROADCAST_ADDR)
+         AbstractDevice()
          {
             link.address(42);
          }
@@ -532,6 +604,20 @@ namespace HF
             mock("AbstractDevice").actualCall("receive");
             Parent::receive(packet, payload, offset);
          }
+
+         uint16_t address() const
+         {
+            auto &call = mock("AbstractDevice").actualCall("address");
+
+            if (call.hasReturnValue())
+            {
+               return call.returnUnsignedIntValue();
+            }
+            else
+            {
+               return Parent::address();
+            }
+         }
       };
 
 #define SET_SERVICE(_X, _Y) \
@@ -549,12 +635,19 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::Client *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::GroupTable::IServer *group_table_server;
+         HF::Core::Time::Server *time_srv;
+         HF::Core::BatchProgramManagement::IServer *batch_program_server;
+         HF::Core::Scheduling::Event::IServer *event_scheduling_server;
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling_server;
 
          public:
 
          DeviceUnit0(HF::IDevice &device):
             HF::Devices::Node::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr)
+            attr_reporting(nullptr), group_table_server(nullptr), time_srv(nullptr),
+            batch_program_server(nullptr), event_scheduling_server(nullptr),
+            weekly_scheduling_server(nullptr)
          {}
 
          virtual ~DeviceUnit0()
@@ -562,6 +655,11 @@ namespace HF
             delete dev_info;
             delete dev_mgt;
             delete attr_reporting;
+            delete group_table_server;
+            delete time_srv;
+            delete batch_program_server;
+            delete event_scheduling_server;
+            delete weekly_scheduling_server;
          }
 
          void device_info(HF::Core::DeviceInformation::Server *_dev_info)
@@ -624,6 +722,71 @@ namespace HF
             return attr_reporting;
          }
 
+         void group_table(HF::Core::GroupTable::IServer *_group_table)
+         {
+            SET_SERVICE(group_table_server, _group_table);
+         }
+
+         HF::Core::GroupTable::IServer *group_table()
+         {
+            return group_table_server;
+         }
+
+         HF::Core::GroupTable::IServer *group_table() const
+         {
+            return group_table_server;
+         }
+
+         HF::Core::Time::Server *time()
+         {
+            return time_srv;
+         }
+
+         HF::Core::Time::Server *time() const
+         {
+            return time_srv;
+         }
+
+         void time(HF::Core::Time::Server *server)
+         {
+            time_srv = server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program()
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program() const
+         {
+            return batch_program_server;
+         }
+
+         void batch_program(HF::Core::BatchProgramManagement::IServer *server)
+         {
+            batch_program_server = server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling()
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling() const
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling()
+         {
+            return weekly_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const
+         {
+            return weekly_scheduling_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
                                uint16_t offset)
@@ -649,13 +812,21 @@ namespace HF
          HF::Core::DeviceInformation::Server *dev_info;
          HF::Core::DeviceManagement::IServer *dev_mgt;
          HF::Core::AttributeReporting::Server *attr_reporting;
+         HF::Core::GroupTable::IServer *group_tbl;
+         HF::Core::GroupManagement::IServer *group_mgt;
          HF::Core::BindManagement::IServer *bind_mgt;
+         HF::Core::Time::Server *time_srv;
+         HF::Core::BatchProgramManagement::IServer *batch_program_server;
+         HF::Core::Scheduling::Event::IServer *event_scheduling_server;
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling_server;
 
          public:
 
          ConcentratorUnit0(HF::IDevice &device):
             HF::Devices::Concentrator::IUnit0(device), dev_info(nullptr), dev_mgt(nullptr),
-            attr_reporting(nullptr), bind_mgt(nullptr)
+            attr_reporting(nullptr), group_tbl(nullptr), group_mgt(nullptr), bind_mgt(nullptr),
+            time_srv(nullptr), batch_program_server(nullptr), event_scheduling_server(nullptr),
+            weekly_scheduling_server(nullptr)
          {}
 
          virtual ~ConcentratorUnit0()
@@ -663,7 +834,13 @@ namespace HF
             delete dev_info;
             delete dev_mgt;
             delete attr_reporting;
+            delete group_tbl;
+            delete group_mgt;
             delete bind_mgt;
+            delete time_srv;
+            delete batch_program_server;
+            delete event_scheduling_server;
+            delete weekly_scheduling_server;
          }
 
          // =============================================================================
@@ -675,12 +852,12 @@ namespace HF
             SET_SERVICE(dev_info, _dev_info);
          }
 
-         HF::Core::DeviceInformation::Server *device_info() const
+         HF::Core::DeviceInformation::Server *device_info() const override
          {
             return dev_info;
          }
 
-         HF::Core::DeviceInformation::Server *device_info()
+         HF::Core::DeviceInformation::Server *device_info() override
          {
             if (dev_info == nullptr)
             {
@@ -695,7 +872,7 @@ namespace HF
             SET_SERVICE(dev_mgt, _dev_mgt);
          }
 
-         HF::Core::DeviceManagement::IServer *device_management()
+         HF::Core::DeviceManagement::IServer *device_management() override
          {
             if (dev_mgt == nullptr)
             {
@@ -705,7 +882,7 @@ namespace HF
             return dev_mgt;
          }
 
-         HF::Core::DeviceManagement::IServer *device_management() const
+         HF::Core::DeviceManagement::IServer *device_management() const override
          {
             return dev_mgt;
          }
@@ -715,12 +892,12 @@ namespace HF
             SET_SERVICE(attr_reporting, _attr_reporting);
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting() const
+         HF::Core::AttributeReporting::Server *attribute_reporting() const override
          {
             return attr_reporting;
          }
 
-         HF::Core::AttributeReporting::Server *attribute_reporting()
+         HF::Core::AttributeReporting::Server *attribute_reporting() override
          {
             if (attr_reporting == nullptr)
             {
@@ -735,7 +912,7 @@ namespace HF
             SET_SERVICE(bind_mgt, _bind_mgt);
          }
 
-         HF::Core::BindManagement::IServer *bind_management()
+         HF::Core::BindManagement::IServer *bind_management() override
          {
             if (bind_mgt == nullptr)
             {
@@ -745,14 +922,94 @@ namespace HF
             return bind_mgt;
          }
 
-         HF::Core::BindManagement::IServer *bind_management() const
+         HF::Core::BindManagement::IServer *bind_management() const override
          {
             return bind_mgt;
          }
 
+         void group_management(HF::Core::GroupManagement::IServer *_group_mgt)
+         {
+            SET_SERVICE(group_mgt, _group_mgt);
+         }
+
+         HF::Core::GroupManagement::IServer *group_management() override
+         {
+            if (group_mgt == nullptr)
+            {
+               group_management(new HF::Core::GroupManagement::DefaultServer(*this));
+            }
+
+            return group_mgt;
+         }
+
+         HF::Core::GroupManagement::IServer *group_management() const override
+         {
+            return group_mgt;
+         }
+
+         void group_table(HF::Core::GroupTable::IServer *_group_tbl)
+         {
+            SET_SERVICE(group_tbl, _group_tbl);
+         }
+
+         HF::Core::GroupTable::IServer *group_table() override
+         {
+            if (group_tbl == nullptr)
+            {
+               group_table(new HF::Core::GroupTable::DefaultServer(*this));
+            }
+
+            return group_tbl;
+         }
+
+         HF::Core::GroupTable::IServer *group_table() const override
+         {
+            return group_tbl;
+         }
+
+         HF::Core::Time::Server *time() override
+         {
+            return time_srv;
+         }
+
+         HF::Core::Time::Server *time() const override
+         {
+            return time_srv;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program() override
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::BatchProgramManagement::IServer *batch_program() const override
+         {
+            return batch_program_server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling() override
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Event::IServer *event_scheduling() const override
+         {
+            return event_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() override
+         {
+            return weekly_scheduling_server;
+         }
+
+         HF::Core::Scheduling::Weekly::IServer *weekly_scheduling() const override
+         {
+            return weekly_scheduling_server;
+         }
+
          Common::Result handle(HF::Protocol::Packet &packet,
                                Common::ByteArray &payload,
-                               uint16_t offset)
+                               uint16_t offset) override
          {
             switch (packet.message.itf.id)
             {
@@ -772,13 +1029,33 @@ namespace HF
                {
                   return bind_management()->handle(packet, payload, offset);
                }
+               case HF::Interface::GROUP_TABLE:
+               {
+                  return group_table()->handle(packet, payload, offset);
+               }
+               case HF::Interface::TIME:
+               {
+                  return time()->handle(packet, payload, offset);
+               }
+               case HF::Interface::BATCH_PROGRAM_MANAGEMENT:
+               {
+                  return batch_program()->handle(packet, payload, offset);
+               }
+               case HF::Interface::EVENT_SCHEDULING:
+               {
+                  return event_scheduling()->handle(packet, payload, offset);
+               }
+               case HF::Interface::WEEKLY_SCHEDULING:
+               {
+                  return weekly_scheduling()->handle(packet, payload, offset);
+               }
                default:
                   return Common::Result::FAIL_UNKNOWN;
             }
          }
 
          HF::Attributes::List attributes(Common::Interface itf, uint8_t pack_id,
-                                         const HF::Attributes::UIDS &uids) const
+                                         const HF::Attributes::UIDS &uids) const override
          {
             UNUSED(itf);
             UNUSED(pack_id);
@@ -790,6 +1067,31 @@ namespace HF
       typedef AbstractDevice<HF::Devices::Node::Abstract<DeviceUnit0>> Device;
 
       typedef AbstractDevice<HF::Devices::Concentrator::Abstract<ConcentratorUnit0>> Concentrator;
+      template<typename T>
+      T generate_random(T start = std::numeric_limits<T>::min,
+                        T end = std::numeric_limits<T>::max)
+      {
+         std::random_device rd;
+         std::mt19937 generator(rd());
+         std::uniform_int_distribution<T> distribution(start, end);
+
+         return static_cast<T>(distribution(generator));
+      }
+
+      namespace DevMgt
+      {
+         using DevicePtr = HF::Core::DeviceManagement::DevicePtr;
+         using UnitPtr   = HF::Core::DeviceManagement::UnitPtr;
+
+         DevicePtr create_device(Concentrator &base, uint16_t _dev_addr);
+
+         UnitPtr add_unit(DevicePtr &device, uint8_t unit_id, uint16_t profile);
+
+         UnitPtr add_unit0(DevicePtr &device);
+
+         void fill_unit(UnitPtr unit, Interface::UID uid, Interface::Role role);
+
+      }  // namespace DevMgt
 
    } // namespace Testing
 

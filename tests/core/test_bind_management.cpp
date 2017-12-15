@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Bind Management Interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -282,8 +282,7 @@ TEST(BindManagementClient, ResponseOK)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::OK,   // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = BindManagement::ADD_BIND_CMD;
@@ -301,8 +300,7 @@ TEST(BindManagementClient, ResponseFAIL)
 {
    ByteArray payload({0x00, 0x00, 0x00,
                       Result::FAIL_ARG,   // Response Code.
-                      0x00, 0x00, 0x00}
-                    );
+                      0x00, 0x00, 0x00});
 
    packet.message.length     = payload.size();
    packet.message.itf.member = BindManagement::REMOVE_BIND_CMD;
@@ -349,10 +347,10 @@ TEST_GROUP(BindManagementEntries)
 
       auto res      = entries.save(BindManagement::Entry(src, itf, dst));
 
-      LONGS_EQUAL_LOCATION(size + 1, entries.size(), file, line);
+      LONGS_EQUAL_LOCATION(size + 1, entries.size(), NULL, file, line);
       size = entries.size();
 
-      LONGS_EQUAL_LOCATION(Common::Result::OK, res, file, line);
+      LONGS_EQUAL_LOCATION(Common::Result::OK, res, NULL, file, line);
    }
 
    void should_not_create(Protocol::Address src, Protocol::Address dst, Common::Interface itf,
@@ -362,8 +360,8 @@ TEST_GROUP(BindManagementEntries)
 
       auto res      = entries.save(BindManagement::Entry(src, itf, dst));
 
-      LONGS_EQUAL_LOCATION(size, entries.size(), file, line);
-      LONGS_EQUAL_LOCATION(Common::Result::FAIL_ARG, res, file, line);
+      LONGS_EQUAL_LOCATION(size, entries.size(), NULL, file, line);
+      LONGS_EQUAL_LOCATION(Common::Result::FAIL_ARG, res, NULL, file, line);
    }
 
 };
@@ -717,6 +715,7 @@ TEST_GROUP(BindManagementServer)
    };
 
    TestBindManagementServer *server;
+
    Testing::Concentrator *device;
 
    Protocol::Packet packet;

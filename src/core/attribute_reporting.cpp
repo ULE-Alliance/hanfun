@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Attribute Reporting service interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -1445,6 +1445,64 @@ uint16_t Report::AddEntryMessage::unpack(const Common::ByteArray &array, uint16_
 }
 
 // =============================================================================
+// Report::UpdateIntervalMessage::size
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Report::UpdateIntervalMessage::size() const
+{
+   return min_size;
+}
+
+// =============================================================================
+// Report::UpdateIntervalMessage::pack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Report::UpdateIntervalMessage::pack(Common::ByteArray &array, uint16_t offset) const
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   uint16_t start = offset;
+
+   offset += report.pack(array, offset);
+
+   offset += array.write(offset, interval);
+
+   return (offset - start);
+}
+
+// =============================================================================
+// Report::UpdateIntervalMessage::unpack
+// =============================================================================
+/*!
+ *
+ */
+// =============================================================================
+uint16_t Report::UpdateIntervalMessage::unpack(const Common::ByteArray &array, uint16_t offset)
+{
+   HF_SERIALIZABLE_CHECK(array, offset, min_size);
+
+   uint16_t start = offset;
+   uint16_t size;
+
+   size    = report.unpack(array, offset);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   size    = array.read(offset, interval);
+   HF_ASSERT(size != 0, {return 0;});
+   offset += size;
+
+   return (offset - start);
+}
+
+
+// =============================================================================
 // Report::Periodic::AddEntryMessage::size
 // =============================================================================
 /*!
@@ -1709,8 +1767,7 @@ Report::Event::Entry *Report::Event::process(const AttributeReporting::Event::En
 
       // Find if attribute is in pack ID.
       if (std::any_of(expected_uids.begin(), expected_uids.end(),
-                      [actual_uid](uint8_t uid) {return uid == actual_uid;}
-                     ))
+                      [actual_uid](uint8_t uid) {return uid == actual_uid;}))
       {
          const AttributeReporting::Event::Field &field = *entry.fields.begin();
          fields.push_back(process_field(field, old_value, new_value));
@@ -1718,8 +1775,7 @@ Report::Event::Entry *Report::Event::process(const AttributeReporting::Event::En
    }
 
    if (std::any_of(fields.begin(), fields.end(),
-                   [](const Event::Field *field) {return field != nullptr;}
-                  ))
+                   [](const Event::Field *field) {return field != nullptr;}))
    {
       result = new Report::Event::Entry(entry.unit, entry.itf);
 
@@ -1883,6 +1939,7 @@ Protocol::Message *AttributeReporting::create(Protocol::Address &destination, ui
 Protocol::Message *AttributeReporting::destroy(AttributeReporting::Type type, uint8_t report_id)
 {
    Reference report(type, report_id);
+
    return destroy(report);
 }
 
@@ -1957,7 +2014,7 @@ Protocol::Message *AttributeReporting::add(Reference report,
    });
    /* *INDENT-ON* */
 
-   Protocol::Message * message = new Protocol::Message(add_msg->size());
+   Protocol::Message *message = new Protocol::Message(add_msg->size());
    assert(message != nullptr);
 
    if (message == nullptr)
@@ -2002,7 +2059,8 @@ Protocol::Message *AttributeReporting::add(Reference report,
    }
 
    add_msg->report = report;
-   std::for_each(begin, end, [add_msg](const Event::Entry &entry) {
+   std::for_each(begin, end, [add_msg](const Event::Entry &entry)
+   {
       add_msg->add(entry);
    });
 
@@ -2022,6 +2080,46 @@ Protocol::Message *AttributeReporting::add(Reference report,
    message->itf.role   = HF::Interface::SERVER_ROLE;
    message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
    message->itf.member = AttributeReporting::ADD_EVENT_ENTRY_CMD;
+
+   return message;
+}
+
+Protocol::Message *AttributeReporting::update(Reference report,
+                                              uint32_t new_interval)
+{
+   if (report.type != PERIODIC)
+   {
+      return nullptr;
+   }
+
+   Report::UpdateIntervalMessage *update_msg =
+      new Report::UpdateIntervalMessage(static_cast<Type>(report.type),
+                                        report.id,
+                                        new_interval);
+
+   assert(update_msg != nullptr);
+
+   if (update_msg == nullptr)
+   {
+      return nullptr;
+   }
+
+   Protocol::Message *message = new Protocol::Message(update_msg->size());
+   assert(message != nullptr);
+
+   if (message == nullptr)
+   {
+      return nullptr;
+   }
+
+   update_msg->pack(message->payload);
+
+   delete update_msg;
+
+   message->type       = Protocol::Message::COMMAND_REQ;
+   message->itf.role   = HF::Interface::SERVER_ROLE;
+   message->itf.id     = HF::Interface::ATTRIBUTE_REPORTING;
+   message->itf.member = AttributeReporting::UPDATE_INTERVAL_CMD;
 
    return message;
 }

@@ -5,7 +5,7 @@
  * This file contains the implementation of the classes for the protocol layer
  * in the HAN-FUN specification.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -254,9 +254,9 @@ uint16_t Message::unpack(const Common::ByteArray &array, uint16_t offset)
 
    // Payload Length.
    offset += array.read(offset, this->length);
-   assert(this->length <= MAX_PAYLOAD);
+   HF_ASSERT(this->length <= MAX_PAYLOAD, {return 0;});
 
-   assert(array.available(offset, this->length));
+   HF_SERIALIZABLE_CHECK(array, offset, this->length);
 
    return offset - start;
 }

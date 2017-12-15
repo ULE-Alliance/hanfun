@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the session management functionality.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -575,6 +575,7 @@ namespace HF
             Common::Result save(const value_type &entry)
             {
                auto res = Parent::save(entry);
+
                manager.invalidate();
                return res;
             }
@@ -583,21 +584,10 @@ namespace HF
             Common::Result destroy(const value_type &entry)
             {
                auto res = Parent::destroy(entry);
+
                manager.invalidate();
                return res;
             }
-         };
-
-         /*!
-          * @copydoc EntriesWrapper
-          *
-          * @deprecated This template class has been deprecated please use
-          *             HF::Core::SessionManagement::EntriesWrapper
-          */
-         template<typename Parent>
-         struct __attribute__((deprecated)) Entries: public EntriesWrapper<Parent>
-         {
-            Entries(AbstractServer & _manager): EntriesWrapper<Parent>(_manager) {}
          };
 
          /*!
@@ -630,7 +620,7 @@ namespace HF
             /*!
              * Copy-Constructor.
              *
-             * Make sure that the entries are copied mantain this object as the session manager.
+             * Make sure that the entries are copied maintaining this object as the session manager.
              *
              * @param [in] other    reference to the object to copy from.
              */

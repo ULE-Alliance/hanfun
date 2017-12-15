@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the code that implements
  * core functionality of HAN-FUN.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 Bithium S.A.
  *
@@ -73,6 +73,11 @@ namespace
    using UnitImpl = HF::Unit0<HF::Core::Unit0, HF::Core::DeviceInformation::Server,
                               HF::Core::DeviceManagement::Client,
                               HF::Core::AttributeReporting::Server,
+                              HF::Core::Time::Server,
+                              HF::Core::BatchProgramManagement::DefaultServer,
+                              HF::Core::Scheduling::Event::DefaultServer,
+                              HF::Core::Scheduling::Weekly::DefaultServer,
+                              HF::Core::GroupTable::DefaultServer,
                               TestInterface_1, TestInterface_2, TestInterface_3>;
 
    struct TestUnit0: public UnitImpl, public HF::IDevice::IUnit0
@@ -98,6 +103,56 @@ namespace
       AttrReporting *attribute_reporting()
       {
          return UnitImpl::attribute_reporting();
+      }
+
+      GroupTable *group_table() const
+      {
+         return UnitImpl::group_table();
+      }
+
+      GroupTable *group_table()
+      {
+         return UnitImpl::group_table();
+      }
+
+      Time *time()
+      {
+         return UnitImpl::time();
+      }
+
+      Time *time() const
+      {
+         return UnitImpl::time();
+      }
+
+      BatchProgram *batch_program()
+      {
+         return UnitImpl::batch_program();
+      }
+
+      BatchProgram *batch_program() const
+      {
+         return UnitImpl::batch_program();
+      }
+
+      EventScheduling *event_scheduling()
+      {
+         return UnitImpl::event_scheduling();
+      }
+
+      EventScheduling *event_scheduling() const
+      {
+         return UnitImpl::event_scheduling();
+      }
+
+      WeeklyScheduling *weekly_scheduling()
+      {
+         return UnitImpl::weekly_scheduling();
+      }
+
+      WeeklyScheduling *weekly_scheduling() const
+      {
+         return UnitImpl::weekly_scheduling();
       }
    };
 
@@ -126,19 +181,44 @@ TEST_GROUP(Unit0)
 
 TEST(Unit0, OptionalInterfaces)
 {
-   auto itfs = device->unit0()->interfaces();
+   auto itfs             = device->unit0()->interfaces();
 
-   LONGS_EQUAL(3, itfs.size());
+   auto initial_itf_size = 3;
 
-   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf) {
+#if HF_GROUP_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_TIME_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+   initial_itf_size++;
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+   initial_itf_size++;
+#endif
+
+   LONGS_EQUAL(initial_itf_size, itfs.size());
+
+   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+   {
       return itf.id == HF::Interface::POWER;
    }));
 
-   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf) {
+   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+   {
       return itf.id == HF::Interface::RSSI;
    }));
 
-   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf) {
+   CHECK_TRUE(std::any_of(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
+   {
       return itf.id == HF::Interface::TIME;
    }));
 }

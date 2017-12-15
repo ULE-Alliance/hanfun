@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Visual Effects interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -53,7 +53,7 @@ namespace HF
       namespace SimpleVisualEffects
       {
          /*!
-          * @addtogroup simple_visual_effects_itf  Simple Visual Effects interface
+          * @addtogroup simple_visual_effects_itf  Simple Visual Effects
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Visual Effects interface API.

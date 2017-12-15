@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Alert interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -59,7 +59,7 @@ namespace HF
       namespace Alert
       {
          /*!
-          * @addtogroup alert_itf  Alert Interface
+          * @addtogroup alert_itf  Alert
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the %Alert interface API.
@@ -304,9 +304,6 @@ namespace HF
             {
                return Interfaces::create_attribute(this, uid);
             }
-
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(Alert::Server *,
-                                                                            uint8_t);
 
             // ======================================================================
             // Commands

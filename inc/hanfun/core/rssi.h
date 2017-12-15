@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the RSSI interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -53,7 +53,7 @@ namespace HF
       {
          /*!
           * @addtogroup rssi_itf  RSSI interface
-          * @ingroup interfaces
+          * @ingroup core
           *
           * This module contains the classes that define and implement the RSSI interface API.
           * @{

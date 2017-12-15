@@ -5,7 +5,7 @@
  * This file contains an implementation of a HAN-FUN transport layer to be used
  * in the example applications.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -120,5 +120,49 @@ namespace
    };
 
 }  // namespace
+
+#if HF_GROUP_SUPPORT
+namespace HF
+{
+   namespace Transport
+   {
+      namespace Group
+      {
+         HF::Common::Result create(Endpoint &ep, uint16_t group)
+         {
+            UNUSED(ep);
+            UNUSED(group);
+            return HF::Common::Result::FAIL_SUPPORT;
+         }
+
+         HF::Common::Result add(Endpoint &ep, uint16_t group, uint16_t device)
+         {
+            UNUSED(ep);
+            UNUSED(group);
+            UNUSED(device);
+
+            return HF::Common::Result::FAIL_SUPPORT;
+         }
+
+         void remove(Endpoint &ep, uint16_t group, uint16_t device)
+         {
+            UNUSED(ep);
+            UNUSED(group);
+            UNUSED(device);
+         }
+
+         void remove(Endpoint &ep, uint16_t group)
+         {
+            UNUSED(ep);
+            UNUSED(group);
+         }
+
+      } // namespace Group
+
+   } // namespace Transport
+
+}  // namespace HF
+
+#endif /* HF_GROUP_SUPPORT */
 
 #endif /* HF_APP_LOCALLOOP_H */

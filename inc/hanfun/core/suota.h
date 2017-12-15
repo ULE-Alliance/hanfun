@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the SUOTA interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -54,8 +54,8 @@ namespace HF
       namespace SUOTA
       {
          /*!
-          * @addtogroup suota_itf  SUOTA interface
-          * @ingroup interfaces
+          * @addtogroup suota_itf  SUOTA
+          * @ingroup core
           *
           * This module contains the classes that define and implement the SUOTA interface API.
           * @{
@@ -183,14 +183,10 @@ namespace HF
                uint16_t start = offset;
 
                uint16_t size  = Protocol::Response::unpack(array, offset);
-               /* *INDENT-OFF* */
                HF_ASSERT(size != 0, { return 0; });
-               /* *INDENT-ON* */
                offset += size;
                size    = Version::unpack(array, offset);
-               /* *INDENT-OFF* */
                HF_ASSERT(size != 0, { return 0; });
-               /* *INDENT-ON* */
                offset += size;
 
                return offset - start;

@@ -5,7 +5,7 @@
  * This file is used to make the used STL classes work with CppUTest memory leak
  * functionality.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -17,6 +17,8 @@
 #define HF_MEMORY_HELPER_H
 
 #include <forward_list>
+#include <set>
+
 #include "CppUTest/MemoryLeakDetectorMallocMacros.h"
 
 #endif /* HF_MEMORY_HELPER_H */

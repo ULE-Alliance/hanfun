@@ -5,7 +5,7 @@
  * This file contains the definition of the Base class that represents the
  * HAN-FUN Concentrator on the application.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -276,9 +276,25 @@ namespace Commands
 
 //! Custom Unit0 declaration
 typedef HF::Devices::Concentrator::Unit0<HF::Core::DeviceInformation::Server,
-                                            ::DeviceManagement::Server,
+                                         ::DeviceManagement::Server,
                                          HF::Core::AttributeReporting::Server,
-                                            ::BindManagement::Server> Unit0;
+#if HF_TIME_SUPPORT
+                                         HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                         HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                                         HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                         HF::Core::Scheduling::Weekly::DefaultServer,
+#endif
+#if HF_GROUP_SUPPORT
+                                         HF::Core::GroupTable::DefaultServer,
+                                         HF::Core::GroupManagement::DefaultServer,
+#endif
+                                         ::BindManagement::Server> Unit0;
 
 /*!
  * This class represents a HAN-FUN Concentrator.

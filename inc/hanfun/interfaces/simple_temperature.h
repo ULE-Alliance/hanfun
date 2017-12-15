@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Temperature interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -51,7 +51,7 @@ namespace HF
       namespace SimpleTemperature
       {
          /*!
-          * @addtogroup simple_temp_itf  Simple Temperature Interface
+          * @addtogroup simple_temp_itf  Simple Temperature
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Temperature
@@ -236,9 +236,6 @@ namespace HF
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
-
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(
-               SimpleTemperature::Server *, uint8_t);
          };
 
          /*!

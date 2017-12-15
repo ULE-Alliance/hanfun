@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Power Meter interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -104,9 +104,8 @@ namespace HF
        * @return  pointer to an attribute object or @c nullptr if the attribute UID does not
        *          exist.
        */
-      HF::Attributes::IAttribute *create_attribute(
-         HF::Interfaces::SimplePowerMeter::Server *server,
-         uint8_t uid);
+      HF::Attributes::IAttribute *create_attribute(HF::Interfaces::SimplePowerMeter::Server *server,
+                                                   uint8_t uid);
 
       /*!
        * This namespace contains the implementation of the Simple Power Meter interface.
@@ -114,7 +113,7 @@ namespace HF
       namespace SimplePowerMeter
       {
          /*!
-          * @addtogroup spm_itf  Simple Power Meter Interface
+          * @addtogroup spm_itf  Simple Power Meter
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the Simple Power Meter
@@ -199,6 +198,7 @@ namespace HF
             int compare(const Measurement &other) const
             {
                int res = value - other.value;
+
                return res;
             }
 
@@ -617,9 +617,6 @@ namespace HF
 
             HF::Attributes::UIDS attributes(uint8_t pack_id =
                                                HF::Attributes::Pack::MANDATORY) const;
-
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(
-               SimplePowerMeter::Server *, uint8_t);
 
             protected:
 

@@ -5,7 +5,7 @@
  * This file contains an example demonstrating how to read a custom attribute from
  * the device information service.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -63,15 +63,25 @@ namespace
    /*
     * Custom Unit 0 for node devices.
     */
-   struct NodeUnit0: public HF::Devices::Node::Unit0<DeviceInformation,
-                                                     HF::Core::DeviceManagement::Client,
-                                                     HF::Core::AttributeReporting::Server>
-   {
-      NodeUnit0(HF::IDevice &device):
-         HF::Devices::Node::Unit0<DeviceInformation, HF::Core::DeviceManagement::Client,
-                                  HF::Core::AttributeReporting::Server>(device)
-      {}
-   };
+   typedef HF::Devices::Node::Unit0<DeviceInformation,
+                                    HF::Core::DeviceManagement::Client,
+                                    HF::Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                                    HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                                    HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                                    HF::Core::Scheduling::Weekly::DefaultServer
+#endif
+#if HF_GROUP_SUPPORT
+                                    , HF::Core::GroupTable::DefaultServer
+#endif
+                                   > NodeUnit0;
 
    /*!
     * Example node.
@@ -102,8 +112,7 @@ namespace
                {
                   auto attr = new HF::Attributes::Attribute<std::string>(
                      HF::Interface::DEVICE_INFORMATION,
-                     HF::Core::DeviceInformation::SERIAL_NUMBER_ATTR,
-                     nullptr);
+                     HF::Core::DeviceInformation::SERIAL_NUMBER_ATTR, "");
 
                   HF::Attributes::Response resp(attr);
                   resp.unpack(payload, offset);

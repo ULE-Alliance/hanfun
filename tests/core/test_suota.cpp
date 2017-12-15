@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the SUOTA interface
  * implementation.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -40,16 +40,17 @@ static const Common::ByteArray g_version_payload({
 
 static void check_version(const Version &version, const char *file, int line)
 {
-   STRCMP_EQUAL_LOCATION("v1.2.3", version.sw_version.c_str(), file, line);
-   STRCMP_EQUAL_LOCATION("revA", version.hw_version.c_str(), file, line);
-   STRCMP_EQUAL_LOCATION("https", version.url.c_str(), file, line);
+   STRCMP_EQUAL_LOCATION("v1.2.3", version.sw_version.c_str(), NULL, file, line);
+   STRCMP_EQUAL_LOCATION("revA", version.hw_version.c_str(), NULL, file, line);
+   STRCMP_EQUAL_LOCATION("https", version.url.c_str(), file, NULL, line);
 }
 
 static void check_version(const HF::Common::ByteArray &payload, const char *file, int line,
                           uint16_t offset = 0)
 {
    Version version;
-   LONGS_EQUAL_LOCATION(18, version.unpack(payload, offset), file, line);
+
+   LONGS_EQUAL_LOCATION(18, version.unpack(payload, offset), NULL, file, line);
 
    check_version(version, file, line);
 }
@@ -106,6 +107,7 @@ TEST(SUOTA, UID)
 TEST(SUOTA, Version_Size)
 {
    Version version;
+
    LONGS_EQUAL(2 * sizeof(uint8_t), Version::min_size);
    LONGS_EQUAL(2 * sizeof(uint8_t), version.size());
 
@@ -176,6 +178,7 @@ TEST(SUOTA, Version_Unpack)
 TEST(SUOTA, CheckVersionResponse_Size)
 {
    CheckVersionResponse response(CheckVersionResponse::FAIL_INFRASTUCTURE);
+
    LONGS_EQUAL(3 * sizeof(uint8_t), CheckVersionResponse::min_size);
    LONGS_EQUAL(3 * sizeof(uint8_t), response.size());
 
@@ -216,7 +219,7 @@ TEST(SUOTA, CheckVersionResponse_Unpack)
    payload[2] = CheckVersionResponse::FAIL_INFRASTUCTURE;
 
    CheckVersionResponse response;
-   LONGS_EQUAL(response.size(), response.unpack(payload, 2));
+   CHECK_UNPACK(response.size(), response.unpack(payload, 2));
 
    LONGS_EQUAL(CheckVersionResponse::FAIL_INFRASTUCTURE, response.code);
    CHECK_VERSION(response);
@@ -241,6 +244,7 @@ TEST(SUOTA, CheckVersionResponse_Unpack)
 TEST(SUOTA, UpgradeStatus_Size)
 {
    UpgradeStatus status;
+
    LONGS_EQUAL(sizeof(uint8_t), UpgradeStatus::min_size);
    LONGS_EQUAL(sizeof(uint8_t), status.size());
 

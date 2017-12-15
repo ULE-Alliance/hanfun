@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -26,6 +26,27 @@
 #include "hanfun/core/device_management.h"
 #include "hanfun/core/bind_management.h"
 #include "hanfun/core/attribute_reporting.h"
+
+#if HF_GROUP_SUPPORT
+   #include "hanfun/core/group_table.h"
+   #include "hanfun/core/group_management.h"
+#endif
+
+#if HF_TIME_SUPPORT
+   #include "hanfun/core/time.h"
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+   #include "hanfun/core/batch_program_management.h"
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+   #include "hanfun/core/event_scheduling.h"
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+   #include "hanfun/core/weekly_scheduling.h"
+#endif
 
 #include "hanfun/transport.h"
 
@@ -112,11 +133,38 @@ namespace HF
           *
           * @param [in] packet   reference to the incoming packet.
           *
-          * @return
+          * @retval true   if the destination is the local device;
+          * @retval false  otherwise.
           */
-         virtual bool is_local(Protocol::Packet &packet)
+         virtual bool to_local(const Protocol::Packet &packet) const
          {
             return packet.destination.device == address();
+         }
+
+         /*!
+          * Check if the given packet is from the local device.
+          *
+          * @param [in] packet   reference to the incoming packet.
+          *
+          * @retval true   if the source is the local device;
+          * @retval false  otherwise.
+          */
+         bool from_local(const Protocol::Packet &packet) const
+         {
+            return packet.source.device == address();
+         }
+
+         /*!
+          * Check if the given packet is from the a remote device.
+          *
+          * @param [in] packet   reference to the incoming packet.
+          *
+          * @retval true   if the source is a remote device;
+          * @retval false  otherwise.
+          */
+         bool from_remote(const Protocol::Packet &packet)
+         {
+            return !from_local(packet);
          }
 
          /*!
@@ -185,11 +233,28 @@ namespace HF
                                           typename HF::Unit0<IUnit0, ITF...>::DeviceMgt>::value,
                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
+            using interfaces_t = std::tuple<ITF...>;
+
             typedef typename HF::Unit0<IUnit0, ITF...> _Parent;
 
             typedef typename _Parent::DeviceInfo DeviceInfo;
             typedef typename _Parent::DeviceMgt DeviceMgt;
             typedef typename _Parent::AttrReporting AttrReporting;
+#if HF_GROUP_SUPPORT
+            typedef typename _Parent::GroupTable GroupTable;
+#endif
+#if HF_TIME_SUPPORT
+            typedef typename _Parent::Time Time;
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+            typedef typename _Parent::BatchProgram BatchProgram;
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+            typedef typename _Parent::EventScheduling EventScheduling;
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            typedef typename _Parent::WeeklyScheduling WeeklyScheduling;
+#endif
 
             /*!
              * Constructor
@@ -259,20 +324,99 @@ namespace HF
             {
                return _Parent::device_management();
             }
+
+#if HF_GROUP_SUPPORT
+            /*!
+             * Get the pointer to the node's Group Table service.
+             *
+             * @return pointer to the node's Group Table service.
+             */
+            GroupTable *group_table()
+            {
+               return _Parent::group_table();
+            }
+
+            /*!
+             * Get the pointer to the node's Group Table service.
+             *
+             * @return pointer to the node's Group Table service.
+             */
+            GroupTable *group_table() const
+            {
+               return _Parent::group_table();
+            }
+#endif
+#if HF_TIME_SUPPORT
+            Time *time()
+            {
+               return _Parent::time();
+            }
+
+            Time *time() const
+            {
+               return _Parent::time();
+            }
+#endif
+
+#if HF_BATCH_PROGRAM_SUPPORT
+            BatchProgram *batch_program()
+            {
+               return _Parent::batch_program();
+            }
+
+            BatchProgram *batch_program() const
+            {
+               return _Parent::batch_program();
+            }
+#endif
+
+#if HF_EVENT_SCHEDULING_SUPPORT
+            EventScheduling *event_scheduling()
+            {
+               return _Parent::event_scheduling();
+            }
+
+            EventScheduling *event_scheduling() const
+            {
+               return _Parent::event_scheduling();
+            }
+#endif
+
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            WeeklyScheduling *weekly_scheduling()
+            {
+               return _Parent::weekly_scheduling();
+            }
+
+            WeeklyScheduling *weekly_scheduling() const
+            {
+               return _Parent::weekly_scheduling();
+            }
+#endif
          };
 
          /*!
           * Unit0 using default classes to provide the core services for node devices.
           */
-         struct DefaultUnit0: public Unit0<HF::Core::DeviceInformation::Server,
-                                           HF::Core::DeviceManagement::Client,
-                                           HF::Core::AttributeReporting::Server>
-         {
-            DefaultUnit0(IDevice &device):
-               Unit0<Core::DeviceInformation::Server, Core::DeviceManagement::Client,
-                     Core::AttributeReporting::Server>(device)
-            {}
-         };
+         typedef Unit0<Core::DeviceInformation::Server,
+                       Core::DeviceManagement::Client,
+                       Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                       HF::Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                       HF::Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                       HF::Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                       HF::Core::Scheduling::Weekly::DefaultServer
+#endif
+#if HF_GROUP_SUPPORT
+                       , Core::GroupTable::DefaultServer
+#endif
+                      > DefaultUnit0;
 
          /*!
           * Template for declaring HAN-FUN node devices.
@@ -286,12 +430,12 @@ namespace HF
             // Transport::Endpoint API
             // =============================================================================
 
-            void connected(HF::Transport::Link *link)
+            void connected(HF::Transport::Link *link) _override
             {
                _link = link;
             }
 
-            void disconnected(HF::Transport::Link *link)
+            void disconnected(HF::Transport::Link *link) _override
             {
                if (_link == link)
                {
@@ -299,7 +443,8 @@ namespace HF
                }
             }
 
-            void receive(Protocol::Packet &packet, Common::ByteArray &payload, uint16_t offset)
+            void receive(Protocol::Packet &packet, Common::ByteArray &payload,
+                         uint16_t offset) _override
             {
                AbstractDevice::receive(packet, payload, offset);
             }
@@ -308,12 +453,12 @@ namespace HF
             // IDevice API.
             // =============================================================================
 
-            uint16_t address() const
+            uint16_t address() const _override
             {
                return unit0()->device_management()->address();
             }
 
-            CoreServices *unit0() const
+            CoreServices *unit0() const _override
             {
                return const_cast<CoreServices *>(&_unit0);
             }
@@ -331,7 +476,7 @@ namespace HF
 
             // =============================================================================
 
-            HF::Transport::Link *link(uint16_t addr) const
+            HF::Transport::Link *link(uint16_t addr) const _override
             {
                UNUSED(addr);
                return _link;
@@ -345,9 +490,9 @@ namespace HF
              * @retval  true  if the packet if for the node;
              * @retval  false otherwise.
              */
-            bool is_local(Protocol::Packet &packet)
+            bool to_local(const Protocol::Packet &packet) const override
             {
-               return AbstractDevice::is_local(packet) ||
+               return AbstractDevice::to_local(packet) ||
                       // If we are unregistered only allow packets to unit 0.
                       (address() == Protocol::BROADCAST_ADDR && packet.destination.unit == 0);
             }
@@ -484,6 +629,22 @@ namespace HF
              */
             virtual HF::Core::DeviceManagement::IServer *device_management() const = 0;
 
+#if HF_GROUP_SUPPORT
+            /*!
+             * Return a pointer to unit 0 group management service.
+             *
+             * @return  pointer to unit 0 group management service.
+             */
+            virtual HF::Core::GroupManagement::IServer *group_management() = 0;
+
+            /*!
+             * Return a pointer to unit 0 bind management service.
+             *
+             * @return  pointer to unit 0 bind management service.
+             */
+            virtual HF::Core::GroupManagement::IServer *group_management() const = 0;
+#endif
+
             /*!
              * Return a pointer to unit 0 bind management service.
              *
@@ -497,6 +658,7 @@ namespace HF
              * @return  pointer to unit 0 bind management service.
              */
             virtual HF::Core::BindManagement::IServer *bind_management() const = 0;
+
          };
 
          /*!
@@ -517,8 +679,31 @@ namespace HF
 
             using interfaces_t = std::tuple<ITF...>;
 
-            //! Bind Management service index.
-            static constexpr uint8_t BIND_MGT = _Parent::ATTR_RPT + 1;
+#if HF_GROUP_SUPPORT
+            typedef typename _Parent::GroupTable GroupTable;
+
+            //! Group Management service index.
+            static constexpr uint8_t GROUP_MGT = _Parent::GROUP_MGT;
+
+            typedef typename std::tuple_element<GROUP_MGT, interfaces_t>::type GroupMgt;
+
+            static_assert(std::is_base_of<HF::Core::GroupManagement::IServer, GroupMgt>::value,
+                          "GroupMgt must be of type HF::Core::GroupManagement::IServer");
+#endif
+#if HF_TIME_SUPPORT
+            typedef typename _Parent::Time Time;
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+            typedef typename _Parent::BatchProgram BatchProgram;
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+            typedef typename _Parent::EventScheduling EventScheduling;
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            typedef typename _Parent::WeeklyScheduling WeeklyScheduling;
+#endif
+            //! Group Management service index.
+            static constexpr uint8_t BIND_MGT = _Parent::BIND_MGT;
 
             typedef typename std::tuple_element<BIND_MGT, interfaces_t>::type BindMgt;
 
@@ -536,12 +721,12 @@ namespace HF
 
             BindMgt *bind_management() const
             {
-               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
+               return _Parent::template get<BindMgt, BIND_MGT>();
             }
 
             BindMgt *bind_management()
             {
-               return const_cast<BindMgt *>(_Parent::template get<BIND_MGT>());
+               return _Parent::template get<BindMgt, BIND_MGT>();
             }
 
             DeviceInfo *device_info() const
@@ -563,25 +748,100 @@ namespace HF
             {
                return _Parent::attribute_reporting();
             }
+
+#if HF_GROUP_SUPPORT
+            GroupMgt *group_management() const
+            {
+               return _Parent::template get<GroupMgt, GROUP_MGT>();
+            }
+
+            GroupMgt *group_management()
+            {
+               return _Parent::template get<GroupMgt, GROUP_MGT>();
+            }
+
+            GroupTable *group_table()
+            {
+               return _Parent::group_table();
+            }
+
+            GroupTable *group_table() const
+            {
+               return _Parent::group_table();
+            }
+#endif
+
+#if HF_TIME_SUPPORT
+            Time *time()
+            {
+               return _Parent::time();
+            }
+
+            Time *time() const
+            {
+               return _Parent::time();
+            }
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+            BatchProgram *batch_program()
+            {
+               return _Parent::batch_program();
+            }
+
+            BatchProgram *batch_program() const
+            {
+               return _Parent::batch_program();
+            }
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+            EventScheduling *event_scheduling()
+            {
+               return _Parent::event_scheduling();
+            }
+
+            EventScheduling *event_scheduling() const
+            {
+               return _Parent::event_scheduling();
+            }
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+            WeeklyScheduling *weekly_scheduling()
+            {
+               return _Parent::weekly_scheduling();
+            }
+
+            WeeklyScheduling *weekly_scheduling() const
+            {
+               return _Parent::weekly_scheduling();
+            }
+#endif
+
          };
 
          /*!
           * Unit0 using default classes to provide the core services.
           */
-         struct DefaultUnit0: public Unit0<Core::DeviceInformation::Server,
-                                           Core::DeviceManagement::DefaultServer,
-                                           Core::AttributeReporting::Server,
-                                           Core::BindManagement::DefaultServer>
-         {
-            /*!
-             * Constructor
-             *
-             * @param device  reference to the device this unit 0 belongs to.
-             */
-            DefaultUnit0(IDevice &device):
-               Unit0(device)
-            {}
-         };
+         typedef Unit0<Core::DeviceInformation::Server,
+                       Core::DeviceManagement::DefaultServer,
+                       Core::AttributeReporting::Server,
+#if HF_TIME_SUPPORT
+                       Core::Time::Server,
+#endif
+#if HF_BATCH_PROGRAM_SUPPORT
+                       Core::BatchProgramManagement::DefaultServer,
+#endif
+#if HF_EVENT_SCHEDULING_SUPPORT
+                       Core::Scheduling::Event::DefaultServer,
+#endif
+#if HF_WEEKLY_SCHEDULING_SUPPORT
+                       Core::Scheduling::Weekly::DefaultServer,
+#endif
+#if HF_GROUP_SUPPORT
+                       Core::GroupTable::DefaultServer,
+                       Core::GroupManagement::DefaultServer,
+#endif
+                       Core::BindManagement::DefaultServer
+                      > DefaultUnit0;
 
          /*!
           * This is the parent class for the HAN-FUN Concentrator devices

@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for the profiles.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -61,9 +61,12 @@ namespace HF
       HELPER_CLASS(SimpleLED);
 
       HELPER_CLASS(EnvironmentMonitor);
+      HELPER_CLASS(Tracker);
 
       HELPER_CLASS(DoorBell);
       HELPER_CLASS(SimplePowerMeter);
+
+      HELPER_CLASS(SimpleKeypad);
 
       HELPER_CLASS(SimpleDetector);
       HELPER_CLASS(DoorOpenCloseDetector);
@@ -74,6 +77,7 @@ namespace HF
       HELPER_CLASS(FloodDetector);
       HELPER_CLASS(GlassBreakDetector);
       HELPER_CLASS(VibrationDetector);
+      HELPER_CLASS(SimpleLightSensor);
       HELPER_CLASS(Siren);
       HELPER_CLASS(Alertable);
 
@@ -90,6 +94,8 @@ namespace HF
       HELPER_CLASS2(DimmableLight);
       HELPER_CLASS2(DimmerSwitch);
       HELPER_CLASS2(ControlableThermostat);
+      HELPER_CLASS2(ColourBulb);
+      HELPER_CLASS2(DimmableColourBulb);
 
    }  // namespace Testing
 
@@ -208,6 +214,22 @@ TEST(Profiles, UIDs)
    CHECK_EQUAL(Profiles::ENVIRONMENT_MONITOR, profile->uid());
    delete profile;
 
+   profile = new Testing::Tracker();
+   CHECK_EQUAL(Profiles::TRACKER, profile->uid());
+   delete profile;
+
+   profile = new Testing::ColourBulb();
+   CHECK_EQUAL(Profiles::COLOUR_BULB, profile->uid());
+   delete profile;
+
+   profile = new Testing::DimmableColourBulb();
+   CHECK_EQUAL(Profiles::DIMMABLE_COLOUR_BULB, profile->uid());
+   delete profile;
+
+   profile = new Testing::SimpleKeypad();
+   CHECK_EQUAL(Profiles::SIMPLE_KEYPAD, profile->uid());
+   delete profile;
+
    // =============================================================================
    // Security Unit Types
    // =============================================================================
@@ -246,6 +268,10 @@ TEST(Profiles, UIDs)
 
    profile = new VibrationDetector();
    CHECK_EQUAL(Profiles::VIBRATION_DETECTOR, profile->uid());
+   delete profile;
+
+   profile = new SimpleLightSensor();
+   CHECK_EQUAL(Profiles::SIMPLE_LIGHT_SENSOR, profile->uid());
    delete profile;
 
    profile = new Siren();
@@ -352,6 +378,7 @@ TEST(Profiles, Profile2_Handle)
 TEST(Profiles, Profile2_Attributes)
 {
    TestProfile profile;
+
    Common::Interface itf(TestInterface::UID, Interface::SERVER_ROLE);
    HF::Attributes::UIDS uids;
 
@@ -581,6 +608,45 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(HF::Interface::SIMPLE_AIR_PRESSURE, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
+   // HF::Profiles::COLOUR_BULB
+   itf = Profiles::interfaces(HF::Profiles::COLOUR_BULB, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(2, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::COLOUR_CONTROL, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::DIMMABLE_COLOUR_BULB
+   itf = Profiles::interfaces(HF::Profiles::DIMMABLE_COLOUR_BULB, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(3, count);
+
+   LONGS_EQUAL(HF::Interface::ON_OFF, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::COLOUR_CONTROL, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   itf++;
+
+   LONGS_EQUAL(HF::Interface::LEVEL_CONTROL, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_KEYPAD
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_KEYPAD, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_KEYPAD, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
    // =============================================================================
    // Security
    // =============================================================================
@@ -655,6 +721,14 @@ TEST(Profiles, InterfaceMapping)
    LONGS_EQUAL(1, count);
 
    LONGS_EQUAL(HF::Interface::ALERT, itf->id);
+   LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
+
+   // HF::Profiles::SIMPLE_LIGHT_SENSOR
+   itf = Profiles::interfaces(HF::Profiles::SIMPLE_LIGHT_SENSOR, count);
+   CHECK_FALSE(itf == nullptr);
+   LONGS_EQUAL(1, count);
+
+   LONGS_EQUAL(HF::Interface::SIMPLE_LIGHT_SENSOR, itf->id);
    LONGS_EQUAL(HF::Interface::SERVER_ROLE, itf->role);
 
    // HF::Profiles::SIREN

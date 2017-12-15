@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Device Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -162,6 +162,8 @@ namespace HF
             bool has_interface(uint16_t itf_uid, HF::Interface::Role role) const;
          };
 
+         typedef Common::Pointer<const Unit> UnitPtr;
+
          /*!
           * Device Entry.
           */
@@ -218,6 +220,27 @@ namespace HF
             bool operator!=(Device &other)
             {
                return !(*this == other);
+            }
+
+            // =============================================================================
+            // Helpers
+            // =============================================================================
+
+            UnitPtr unit(uint16_t id) const
+            {
+               auto it = std::find_if(units.begin(), units.end(), [id](const Unit &unit)
+               {
+                  return unit.id == id;
+               });
+
+               if (it == units.end())
+               {
+                  return UnitPtr();
+               }
+               else
+               {
+                  return UnitPtr(*(it.base()));
+               }
             }
          };
 
@@ -374,13 +397,6 @@ namespace HF
              */
             Base(Unit0 &unit): Service(unit) {}
          };
-
-         /*!
-          * @copydoc HF::Core::BindManagement::Base
-          *
-          * @deprecated This class is deprecated please use HF::Core::BindManagement::Base instead.
-          */
-         typedef Base __attribute__((deprecated)) Abstract;
 
          /*!
           * Device Management interface : Client side.

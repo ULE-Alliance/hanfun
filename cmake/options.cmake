@@ -6,7 +6,7 @@
 #
 #   This file contains the configuration options for the HAN-FUN library.
 #
-#   @version    1.3.0
+#   @version    1.5.0
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -24,6 +24,7 @@ include(CMakeDependentOption)
 
 option(HF_BUILD_TESTS "Build project's unit tests." NO)
 option(HF_SHARED_SUPPORT "Build HAN-FUN so that it can be compilied into a shared library." NO)
+option(HF_CODE_COVERAGE "Build HAN-FUN with code coverage support" NO)
 
 #
 # Package configuration options.
@@ -73,6 +74,8 @@ option(HF_APP_EXT_REG "Build example application with external registration supp
 # Library Configuration
 # =============================================================================
 
+option(HF_GROUP_SUPPORT "General - Group Support")
+
 # =============================================================================
 # Core Services & Interfaces Configuration
 # =============================================================================
@@ -92,6 +95,34 @@ option(HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR  "Service - Device Information - 
 option(HF_CORE_SUOTA_SUPPORT "Service - SUOTA support")
 cmake_dependent_option(HF_CORE_SUOTA_CHECK_VERSION_CMD "Service - SUOTA - Check Version"
                        OFF "HF_CORE_SUOTA_SUPPORT" OFF)
+
+# =============================================================================
+# Group Management Configuration
+# =============================================================================
+
+option(HF_CORE_GROUP_MANAGEMENT_GET_INFO_CMD          "Service - Group Management - Get Info")
+
+# =============================================================================
+# Batch Program Management Interface Configuration
+# =============================================================================
+
+option(HF_CORE_BATCH_PROGRAM_MANAGEMENT_GET_PROGRAM_ACTIONS_CMD        "Interface - Batch Program Management Interface - Get Program Actions")
+
+# =============================================================================
+# Event Scheduling Configuration
+# =============================================================================
+
+option(HF_CORE_EVENT_SCHEDULING_UPDATE_EVENT_STATUS_CMD        "Service - Event Scheduling - Update Event Status")
+option(HF_CORE_EVENT_SCHEDULING_GET_EVENT_ENTRY_CMD            "Service - Event Scheduling - Get Event Entry")
+option(HF_CORE_EVENT_SCHEDULING_DELETE_ALL_EVENTS_CMD          "Service - Event Scheduling - Delete All Events")
+
+# =============================================================================
+# Weekly Scheduling Configuration
+# =============================================================================
+
+option(HF_CORE_WEEKLY_SCHEDULING_UPDATE_EVENT_STATUS_CMD        "Service - Weekly Scheduling - Update Event Status")
+option(HF_CORE_WEEKLY_SCHEDULING_GET_EVENT_ENTRY_CMD            "Service - Weekly Scheduling - Get Event Entry")
+option(HF_CORE_WEEKLY_SCHEDULING_DELETE_ALL_EVENTS_CMD          "Service - Weekly Scheduling - Delete All Events")
 
 # =============================================================================
 # Interfaces Configuration
@@ -157,6 +188,24 @@ option(HF_ITF_SIMPLE_VISUAL_EFFECTS_OFF_CMD     "Interface - Simple Visual Effec
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BLINK_CMD   "Interface - Simple Visual Effects - Blink")
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_FADE_CMD    "Interface - Simple Visual Effects - Fade")
 option(HF_ITF_SIMPLE_VISUAL_EFFECTS_BREATHE_CMD "Interface - Simple Visual Effects - Breathe")
+
+# =============================================================================
+# Level Control Configuration
+# =============================================================================
+
+option(HF_ITF_LEVEL_CONTROL_SET_LEVEL_CMD       "Interface - Level Control - Set Level")
+option(HF_ITF_LEVEL_CONTROL_INCREASE_LEVEL_CMD  "Interface - Level Control - Increase Level")
+option(HF_ITF_LEVEL_CONTROL_DECREASE_LEVEL_CMD  "Interface - Level Control - Decrease Level")
+
+# =============================================================================
+# Colour Control Configuration
+# =============================================================================
+
+option(HF_ITF_COLOUR_CONTROL_STOP_CMD                       "Interface - Colour Control - Stop")
+
+option(HF_ITF_COLOUR_CONTROL_HUE_AND_SATURATION_ATTR        "Interface - Colour Control - Hue And Saturation")
+option(HF_ITF_COLOUR_CONTROL_XY_ATTR                        "Interface - Colour Control - XY")
+option(HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR         "Interface - Colour Control - Colour Temperature")
 
 # =============================================================================
 # Dependecies

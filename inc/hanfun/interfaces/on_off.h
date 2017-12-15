@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the OnOff interface.
  *
- * @version    1.4.3
+ * @version    1.5.0
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -52,7 +52,7 @@ namespace HF
       namespace OnOff
       {
          /*!
-          * @addtogroup on_off_itf  On-Off Interface
+          * @addtogroup on_off_itf  On-Off
           * @ingroup interfaces
           *
           * This module contains the classes that define and implement the On-Off interface API.
@@ -203,9 +203,6 @@ namespace HF
                return HF::Attributes::UIDS ({ OnOff::STATE_ATTR });
                /* *INDENT-ON* */
             }
-
-            friend HF::Attributes::IAttribute *Interfaces::create_attribute(OnOff::Server *,
-                                                                            uint8_t);
 
             protected:
 
