@@ -1,6 +1,0 @@
-<map id="BindManagement::Server::restore" name="BindManagement::Server::restore">
-<area shape="rect" id="node2" href="$group__dev__info.html#gab677df34320191fe2e28ef1cab87d069" title="Create an attribute object that can hold the attribute with the given uid. (HF::Core::DeviceInformati..." alt="" coords="225,5,415,46"/>
-<area shape="rect" id="node3" href="$group__examples.html#ga0c8c9ef721357e282b2287a769ae95a0" title="Fill a HF::Common::Interface from the given Json::Value object. " alt="" coords="281,71,359,97"/>
-<area shape="rect" id="node4" href="$group__protocol.html#gaee9a7a9160cb9b4b920ec76aeb89f176" title="Check if message is a response. " alt="" coords="241,121,399,148"/>
-<area shape="rect" id="node5" href="$structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html#aedaee53a18b5f26eb7e30feeebc650a3" title="Read a message from a ByteArray. " alt="" coords="233,173,407,214"/>
-</map>

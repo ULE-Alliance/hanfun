@@ -1,4 +1,0 @@
-<map id="HF::Core::SUOTA::CheckVersionResponse::pack" name="HF::Core::SUOTA::CheckVersionResponse::pack">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1Version.html#a02b24bfb728bb7a82b58e4963f436963" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="275,5,458,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Response.html#a210dabf73ca15b0b4d8127e88f41e387" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="285,70,448,111"/>
-</map>

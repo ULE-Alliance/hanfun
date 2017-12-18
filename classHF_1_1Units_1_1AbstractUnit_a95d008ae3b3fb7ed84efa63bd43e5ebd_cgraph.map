@@ -1,3 +1,4 @@
 <map id="HF::Units::AbstractUnit::AbstractUnit" name="HF::Units::AbstractUnit::AbstractUnit">
-<area shape="rect" id="node2" href="$structHF_1_1IDevice.html#a91cf93ead80a0e7cf64be389e00b6dae" title="Add unit to devices unit lists. " alt="" coords="213,12,336,39"/>
+<area shape="rect" id="node2" href="$structHF_1_1IDevice.html#a91cf93ead80a0e7cf64be389e00b6dae" title="Add unit to devices unit lists. " alt="" coords="232,5,355,32"/>
+<area shape="rect" id="node3" href="$classHF_1_1Units_1_1AbstractUnit.html#a65549308c20f5f7ca20fb0da68d320e2" title="Reference to the device this unit belongs to. " alt="" coords="213,57,373,98"/>
 </map>

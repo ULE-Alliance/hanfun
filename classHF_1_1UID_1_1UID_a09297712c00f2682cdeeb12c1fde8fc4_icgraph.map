@@ -1,5 +1,0 @@
-<map id="HF::UID::UID::pack" name="HF::UID::UID::pack">
-<area shape="rect" id="node2" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="195,12,323,39"/>
-<area shape="rect" id="node3" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="371,12,451,39"/>
-<area shape="rect" id="node4" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="499,5,674,46"/>
-</map>

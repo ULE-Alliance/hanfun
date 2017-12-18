@@ -2,31 +2,31 @@ var group__simple__visual__effects__itf =
 [
     [ "OnEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html", [
       [ "OnEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#a1c64da1781fd02fd3983da58eac7e061", null ],
-      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#aaed4beef290bba67a1aff29e91047423", null ],
-      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#a6de8441fb506831507b360930aef39e1", null ],
+      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#ac3b18bbc8e0e017ef11dcbb9b08bb851", null ],
+      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#acbc9d2b0a174911ff2c4570a81fea6cf", null ],
       [ "unpack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#a02cc99fcd2c5409e20f63c9288b0f9ba", null ],
       [ "duration", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1OnEffect.html#a6aec1b40c715f26637bf4edcdeb81d4d", null ]
     ] ],
     [ "BlinkEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html", [
       [ "BlinkEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#a67877b51be2e3bb767cc7069ddf51d93", null ],
-      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#a6590e59fa09d1cad7dccb6afe799cd9a", null ],
-      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#a19db8a225d76b507a980350a8871ed7f", null ],
+      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#ab2380ab11c6723f6b1da2525e2edda20", null ],
+      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#a0a84b0ce5267fe8de67be297a08b02b3", null ],
       [ "unpack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#ac151429071acfe50172387e02657cd47", null ],
       [ "duty_cycle_off", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#aa42fa8ebb645319c9f79edc73dbf66a9", null ],
       [ "duty_cycle_on", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#a1031127ea3d84b28699a377154c84ed0", null ],
       [ "number_of_cycles", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html#a1a64d52536aeb43b25b1092df53ddab6", null ]
     ] ],
     [ "FadeEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html", [
-      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a88869fd16d1bd3835a831b3d010dee2b", null ],
-      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#aa7271cf979d48e2ab6816df0d04ab576", null ],
+      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a4cd3c5c7b00636c00c391ce12330fc8c", null ],
+      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#af07afc4457c9ca2fe1d0c9766a5e581a", null ],
       [ "unpack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a5b7b87d4e49704cc85b53ae3b9ec650e", null ],
       [ "duration", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a8aac71c2aa076a016fb6e8f9b37c27f0", null ],
       [ "end", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#a482fc686ff1619f36078f1f1792e0d1e", null ],
       [ "start", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1FadeEffect.html#af4aef77adcd373312b914439b597e6ea", null ]
     ] ],
     [ "BreatheEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html", [
-      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a0a18268ac01060e49c9fb59b0dba4d13", null ],
-      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a50b51a280c987919620f957d531078ed", null ],
+      [ "pack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a5f694891ce8efeca33c9e06772cb1d0e", null ],
+      [ "size", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a5e47dece08338e62b00618030da589fe", null ],
       [ "unpack", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a381f38521468ed3e51432981ad52be38", null ],
       [ "end", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#ac5e1fb8af837ed18fa06496356785c48", null ],
       [ "end_hold", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BreatheEffect.html#a0c765e084b946784cb06d2a3c7d9cf10", null ],

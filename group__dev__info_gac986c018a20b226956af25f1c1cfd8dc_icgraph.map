@@ -1,5 +1,0 @@
-<map id="HF::Core::DeviceInformation::mandatory" name="HF::Core::DeviceInformation::mandatory">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1Unit0.html#a0742b9ebc0a5e1b6feb9abb600f76a90" title="Return a list of all the attributes for a given interface, pack id and list of attributes UID&#39;s..." alt="" coords="253,5,430,32"/>
-<area shape="rect" id="node3" href="$group__examples.html#gaf91754994d5e0a9c96c8abdf077fe22d" title="Get Device information. " alt="" coords="295,56,388,83"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a48bf7dd6368876ab6adb540137da6b9a" title="Device UID. " alt="" coords="246,107,437,149"/>
-</map>

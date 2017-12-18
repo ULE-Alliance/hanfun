@@ -1,6 +1,6 @@
 <map id="HF::UID::Abstract&lt; _type &gt;" name="HF::UID::Abstract&lt; _type &gt;">
-<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="91,320,209,485"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,147,181,269"/>
-<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="206,162,372,254"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="190,5,388,83"/>
+<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="91,316,210,481"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,145,181,267"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="206,160,373,252"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="190,5,389,83"/>
 </map>

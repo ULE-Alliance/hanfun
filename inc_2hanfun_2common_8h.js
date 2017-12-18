@@ -1,9 +1,10 @@
 var inc_2hanfun_2common_8h =
 [
     [ "HF_ASSERT", "group__common.html#ga97dd3cfb4da2563598a11fe0e0a45c84", null ],
-    [ "HF_SERIALIZABLE_CHECK", "group__common.html#ga3874f9a583d1fe12abb060335cd7fafa", null ],
+    [ "HF_NOTIFY_HELPER", "group__common.html#gaa4ca0dd69877ecbc9704604404a5fd9b", null ],
+    [ "HF_SERIALIZABLE_CHECK", "group__common.html#ga41ddfaa5aad69cf2891abb39a3f50d18", null ],
     [ "HF_SETTER_HELPER", "group__common.html#ga0ff0b91492aaf1b83cac58aac418fd92", null ],
-    [ "UNUSED", "group__common.html#gaf4e671792630e05ded168d006922d59f", null ],
+    [ "UNUSED", "group__common.html#ga86d500a34c624c2cae56bc25a31b12f3", null ],
     [ "Precision", "inc_2hanfun_2common_8h.html#gad56ba1494114e66754fc2151c1da2f0c", [
       [ "BASE", "inc_2hanfun_2common_8h.html#ggad56ba1494114e66754fc2151c1da2f0ca3577a90d53a9787f050148d8afdbf4c7", null ],
       [ "MILI", "inc_2hanfun_2common_8h.html#ggad56ba1494114e66754fc2151c1da2f0cae93c0c9659e35c82a37d61f7a99520fc", null ],

@@ -1,5 +1,5 @@
 <map id="HF::Core::AttributeReporting::Event::Rule" name="HF::Core::AttributeReporting::Event::Rule">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Rule.html" title="Parent class for all report rules. " alt="" coords="84,265,273,415"/>
-<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Address.html" title="Network Address. " alt="" coords="5,5,157,200"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Reference.html" title="Report Identifier. " alt="" coords="181,20,371,185"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Rule.html" title="Parent class for all report rules. " alt="" coords="84,277,273,428"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Address.html" title="Network Address. " alt="" coords="5,5,157,215"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Reference.html" title="Report Identifier. " alt="" coords="181,27,371,193"/>
 </map>

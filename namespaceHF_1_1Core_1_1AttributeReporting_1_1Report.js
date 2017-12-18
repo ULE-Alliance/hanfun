@@ -6,5 +6,6 @@ var namespaceHF_1_1Core_1_1AttributeReporting_1_1Report =
     [ "DeleteMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1DeleteMessage.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1DeleteMessage" ],
     [ "Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Entry.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Entry" ],
     [ "Event", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event" ],
-    [ "Periodic", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic" ]
+    [ "Periodic", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic" ],
+    [ "UpdateIntervalMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1UpdateIntervalMessage.html", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1UpdateIntervalMessage" ]
 ];

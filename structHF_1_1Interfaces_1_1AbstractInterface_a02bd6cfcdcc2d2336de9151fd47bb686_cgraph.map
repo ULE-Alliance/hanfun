@@ -1,4 +1,0 @@
-<map id="HF::Interfaces::AbstractInterface::payload_size_helper" name="HF::Interfaces::AbstractInterface::payload_size_helper">
-<area shape="rect" id="node2" href="$structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b" title="Number bytes needed to serialize the message. " alt="" coords="216,5,373,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interface.html#a7907645f6f59ea6c5c0c7ba412ffa3f7" title="This method returns the interface UID. " alt="" coords="233,71,357,97"/>
-</map>

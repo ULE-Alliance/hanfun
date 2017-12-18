@@ -1,6 +1,0 @@
-<map id="DeviceManagement::Entries::insert" name="DeviceManagement::Entries::insert">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a2350dd09888abaf7f42a2e0d80170aee" title="Destroy the given entry in the persistent storage. " alt="" coords="240,5,440,46"/>
-<area shape="rect" id="node3" href="$group__examples.html#gaa0581a446c239d3fae170963ada22247" title="Save application configuration. " alt="" coords="265,71,415,97"/>
-<area shape="rect" id="node4" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html#a2cb2098ad66f441fe4c9eb6a376007af" title="Get the unit 0 used by this concentrator device. " alt="" coords="488,34,667,75"/>
-<area shape="rect" id="node5" href="$group__examples.html#gab7fc21356c8d13b85f56e659e6a6e0f5" title="Callback indicating that the application configuration has been saved. " alt="" coords="499,100,656,127"/>
-</map>

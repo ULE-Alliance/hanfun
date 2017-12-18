@@ -1,4 +1,5 @@
 <map id="HF::Interfaces::AbstractInterface::send" name="HF::Interfaces::AbstractInterface::send">
-<area shape="rect" id="node2" href="$classHF_1_1Interfaces_1_1SimpleHumidity_1_1Client.html#a7fbdbae8380d922ce9450b3296701c31" title="Send a GET_ATTR_REQ to the given address to get the current humidity. " alt="" coords="226,5,433,46"/>
-<area shape="rect" id="node3" href="$classHF_1_1Interfaces_1_1SimpleTemperature_1_1Client.html#a1526169b9d9248465c1b0fc15abc83c2" title="Send a GET_ATTR_REQ to the given address to get the current temperature. " alt="" coords="216,70,443,111"/>
+<area shape="rect" id="node2" href="$classHF_1_1Interfaces_1_1SimpleHumidity_1_1Client.html#a7fbdbae8380d922ce9450b3296701c31" title="Send a GET_ATTR_REQ to the given address to get the current humidity. " alt="" coords="226,5,433,47"/>
+<area shape="rect" id="node3" href="$classHF_1_1Interfaces_1_1SimpleTemperature_1_1Client.html#a1526169b9d9248465c1b0fc15abc83c2" title="Send a GET_ATTR_REQ to the given address to get the current temperature. " alt="" coords="216,71,443,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Client.html#a8eaa941fc8b629cc1629199449dd2639" title="Send a GET_ATTR_REQ to the given address to get the current lux readings. " alt="" coords="238,136,421,177"/>
 </map>

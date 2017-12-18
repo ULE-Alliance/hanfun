@@ -1,4 +1,4 @@
 <map id="HF::Protocol::GetAttributePack::Response" name="HF::Protocol::GetAttributePack::Response">
-<area shape="rect" id="node2" href="$structHF_1_1Protocol_1_1Response.html" title="Parent class for the response messages. " alt="" coords="5,6,168,157"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1List.html" title="This class has the same behavior has a list, however the list element access methods where overwritte..." alt="" coords="192,43,325,120"/>
+<area shape="rect" id="node2" href="$structHF_1_1Protocol_1_1Response.html" title="Parent class for the response messages. " alt="" coords="5,5,168,156"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1List.html" title="This class has the same behavior has a list, however the list element access methods where overwritte..." alt="" coords="192,42,325,119"/>
 </map>

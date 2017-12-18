@@ -1,9 +1,9 @@
 <map id="application.h" name="application.h">
-<area shape="rect" id="node2" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="5,80,79,107"/>
+<area shape="rect" id="node2" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="5,80,80,107"/>
 <area shape="rect" id="node3" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="105,80,207,107"/>
-<area shape="rect" id="node4" href="$common_8cpp.html" title="This file contains the implementation of the common functionality for the HAN&#45;FUN example application..." alt="" coords="231,80,328,107"/>
-<area shape="rect" id="node5" href="$main_8cpp.html" title="This file contains the implementation of the main entry point for the HAN&#45;FUN example applications..." alt="" coords="353,80,427,107"/>
-<area shape="rect" id="node6" href="$node_8cpp.html" title="This file contains the implementation of the Node class that represents the HAN&#45;FUN Node on the examp..." alt="" coords="452,80,525,107"/>
-<area shape="rect" id="node7" href="$node__app_8cpp.html" title="This file contains the implementation of the example application for a HAN&#45;FUN Node. " alt="" coords="551,80,653,107"/>
+<area shape="rect" id="node4" href="$common_8cpp.html" title="This file contains the implementation of the common functionality for the HAN&#45;FUN example application..." alt="" coords="231,80,329,107"/>
+<area shape="rect" id="node5" href="$main_8cpp.html" title="This file contains the implementation of the main entry point for the HAN&#45;FUN example applications..." alt="" coords="353,80,428,107"/>
+<area shape="rect" id="node6" href="$node_8cpp.html" title="This file contains the implementation of the Node class that represents the HAN&#45;FUN Node on the examp..." alt="" coords="452,80,527,107"/>
+<area shape="rect" id="node7" href="$node__app_8cpp.html" title="This file contains the implementation of the example application for a HAN&#45;FUN Node. " alt="" coords="551,80,654,107"/>
 <area shape="rect" id="node8" href="$transport_8cpp.html" title="This file contains the implementation of the a HAN&#45;FUN transport layer over the libuv library..." alt="" coords="679,80,777,107"/>
 </map>

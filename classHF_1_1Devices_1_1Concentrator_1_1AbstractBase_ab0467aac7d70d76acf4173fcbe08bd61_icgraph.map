@@ -1,4 +1,0 @@
-<map id="HF::Devices::Concentrator::AbstractBase::receive" name="HF::Devices::Concentrator::AbstractBase::receive">
-<area shape="rect" id="node2" href="$group__examples.html#gae79fbea99ae2a8cd83482c482ecbbd74" title="Callback to deliver a packet received from the transport layer. " alt="" coords="233,12,335,39"/>
-<area shape="rect" id="node3" href="$group__examples.html#ga0f82617019df49c7269afd26c75467e4" title="Send TOGGLE command. " alt="" coords="384,12,477,39"/>
-</map>

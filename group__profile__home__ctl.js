@@ -20,5 +20,11 @@ var group__profile__home__ctl =
     [ "SimpleAirPressureSensor", "classHF_1_1Profiles_1_1SimpleAirPressureSensor.html", null ],
     [ "SimpleButton", "classHF_1_1Profiles_1_1SimpleButton.html", null ],
     [ "SimpleLED", "classHF_1_1Profiles_1_1SimpleLED.html", null ],
-    [ "EnvironmentMonitor", "classHF_1_1Profiles_1_1EnvironmentMonitor.html", null ]
+    [ "EnvironmentMonitor", "classHF_1_1Profiles_1_1EnvironmentMonitor.html", null ],
+    [ "ColourBulb", "classHF_1_1Profiles_1_1ColourBulb.html", null ],
+    [ "DimmableColourBulb", "classHF_1_1Profiles_1_1DimmableColourBulb.html", null ],
+    [ "Tracker", "classHF_1_1Profiles_1_1Tracker.html", [
+      [ "periodic", "classHF_1_1Profiles_1_1Tracker.html#a87471439d0b232d9daf5e74e680faf07", null ]
+    ] ],
+    [ "SimpleKeypad", "classHF_1_1Profiles_1_1SimpleKeypad.html", null ]
 ];

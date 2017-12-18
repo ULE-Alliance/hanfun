@@ -21,7 +21,8 @@ var attribute__reporting_8h =
       [ "ADD_EVENT_ENTRY_CMD", "attribute__reporting_8h.html#ggabc48c996b7ab5e5a575122d56c42381ea5d4afafc28e3727fb4367aad627bbd52", null ],
       [ "DELETE_REPORT_CMD", "attribute__reporting_8h.html#ggabc48c996b7ab5e5a575122d56c42381ea59a566e2f498ddad26cf8ab4b61bd29e", null ],
       [ "GET_PERIODIC_ENTRIES", "attribute__reporting_8h.html#ggabc48c996b7ab5e5a575122d56c42381ea8e66c7d7daf9a3d4edfa5b78e65f6dc9", null ],
-      [ "GET_EVENT_ENTRIES", "attribute__reporting_8h.html#ggabc48c996b7ab5e5a575122d56c42381ea4ee37c28f7cb3de60345b81e94fb17b9", null ]
+      [ "GET_EVENT_ENTRIES", "attribute__reporting_8h.html#ggabc48c996b7ab5e5a575122d56c42381ea4ee37c28f7cb3de60345b81e94fb17b9", null ],
+      [ "UPDATE_INTERVAL_CMD", "attribute__reporting_8h.html#ggabc48c996b7ab5e5a575122d56c42381ea8dfd9acbdb80237b812eeffb73165bb9", null ]
     ] ],
     [ "Type", "attribute__reporting_8h.html#ga5dee0ba2828750575a162474b07772dd", [
       [ "PERIODIC", "attribute__reporting_8h.html#gga5dee0ba2828750575a162474b07772dda488fa3a02b292a4782f38008f26dc249", null ],
@@ -41,5 +42,6 @@ var attribute__reporting_8h =
     [ "destroy", "attribute__reporting_8h.html#ga64303b6c1f6d441929d1ea7091f83a6a", null ],
     [ "destroy", "attribute__reporting_8h.html#gafa4ea0e7cd9db1c3bf33f6070853c037", null ],
     [ "operator<<", "group__attr__reporting.html#ga46e5be8bc1a40025e354308517948f1e", null ],
-    [ "operator<<", "group__attr__reporting.html#ga6e2744a3deac4e2f3ea81e42944a9531", null ]
+    [ "operator<<", "group__attr__reporting.html#ga6e2744a3deac4e2f3ea81e42944a9531", null ],
+    [ "update", "attribute__reporting_8h.html#gafcbb496bca808de56c396c0166f7cd1f", null ]
 ];

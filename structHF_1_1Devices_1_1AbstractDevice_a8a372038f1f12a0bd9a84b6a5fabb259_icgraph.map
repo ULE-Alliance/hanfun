@@ -1,5 +1,0 @@
-<map id="HF::Devices::AbstractDevice::receive" name="HF::Devices::AbstractDevice::receive">
-<area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#a9929967af00aae3d2b35724bd739cce0" title="Return the device address on the HAN&#45;FUN network, when the device is registered, or HF_BROADCAST_ADDR..." alt="" coords="256,5,435,46"/>
-<area shape="rect" id="node3" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html#a2493c5452d22e45bc3a0924aba50c8cf" title="HF::Devices::Node::\lAbstract\&lt; HF::Devices\l::Node::DefaultUnit0 \&gt;\l::receive" alt="" coords="267,70,424,141"/>
-<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1AbstractDevice.html#a9080349b793cf0ff7653617a5266e6cb" title="Remove unit from device&#39;s unit list. " alt="" coords="248,165,443,206"/>
-</map>

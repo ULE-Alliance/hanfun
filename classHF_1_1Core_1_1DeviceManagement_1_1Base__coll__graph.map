@@ -1,12 +1,12 @@
 <map id="HF::Core::DeviceManagement::Base" name="HF::Core::DeviceManagement::Base">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="183,1403,345,1539"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="154,987,331,1152"/>
-<area shape="rect" id="node11" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="264,1203,399,1325"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="5,713,136,805"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="85,379,208,544"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="161,595,324,922"/>
-<area shape="rect" id="node7" href="$structHF_1_1Core_1_1Unit0.html" title="This represent the special unit with ID/UID = 0. " alt="" coords="348,683,500,834"/>
-<area shape="rect" id="node8" href="$classHF_1_1Units_1_1AbstractUnit.html" title="This is the parent class for all HAN&#45;FUN units. " alt="" coords="344,379,503,544"/>
-<area shape="rect" id="node9" href="$structHF_1_1Units_1_1IUnit.html" title="This class represents the interface implemented by all HAN&#45;FUN units. " alt="" coords="367,163,481,328"/>
-<area shape="rect" id="node10" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="353,5,493,112"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="298,1223,461,1359"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="155,980,332,1145"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="5,708,137,800"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="79,376,202,541"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="162,591,325,917"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1Unit0.html" title="This represent the special unit with ID/UID = 0. " alt="" coords="349,679,501,829"/>
+<area shape="rect" id="node8" href="$classHF_1_1Units_1_1AbstractUnit.html" title="This is the parent class for all HAN&#45;FUN units. " alt="" coords="345,376,505,541"/>
+<area shape="rect" id="node9" href="$structHF_1_1Units_1_1IUnit.html" title="This class represents the interface implemented by all HAN&#45;FUN units. " alt="" coords="367,161,482,327"/>
+<area shape="rect" id="node10" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="354,5,495,112"/>
+<area shape="rect" id="node11" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="357,1002,493,1123"/>
 </map>

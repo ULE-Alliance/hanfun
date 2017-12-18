@@ -1,4 +1,5 @@
 <map id="ICommand::key" name="ICommand::key">
-<area shape="rect" id="node2" href="$structICommand.html#a3439777150f9e48d6e1a17399f489a64" title="Add a command to the registry. " alt="" coords="180,5,295,32"/>
-<area shape="rect" id="node3" href="$structICommand.html#a9f669075f53e71103a260d1e96e0fab4" title="Remove a command to the registry. " alt="" coords="169,56,306,83"/>
+<area shape="rect" id="node2" href="$structICommand.html#a3439777150f9e48d6e1a17399f489a64" title="Add a command to the registry. " alt="" coords="179,5,294,32"/>
+<area shape="rect" id="node3" href="$structICommand.html#a9f669075f53e71103a260d1e96e0fab4" title="Remove a command to the registry. " alt="" coords="168,56,305,83"/>
+<area shape="rect" id="node4" href="$structICommand.html#afc8249df1de90480be99ea04ce3bd643" title="Find and run the command with the given key, using the arguments in args. " alt="" coords="181,107,293,133"/>
 </map>

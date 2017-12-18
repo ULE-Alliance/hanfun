@@ -1,8 +1,8 @@
 <map id="HF::Devices::Concentrator::Transport" name="HF::Devices::Concentrator::Transport">
-<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLayer.html" title="Parent class for all HF::Transport::Layer implementations. " alt="" coords="29,595,221,819"/>
-<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. " alt="" coords="5,321,147,530"/>
-<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="171,343,289,508"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="85,147,261,269"/>
-<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="286,162,452,254"/>
-<area shape="rect" id="node7" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="270,5,468,83"/>
+<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLayer.html" title="Parent class for all HF::Transport::Layer implementations. " alt="" coords="30,588,222,812"/>
+<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. " alt="" coords="5,316,148,525"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="172,338,291,503"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="86,145,262,267"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="287,160,453,252"/>
+<area shape="rect" id="node7" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="271,5,469,83"/>
 </map>

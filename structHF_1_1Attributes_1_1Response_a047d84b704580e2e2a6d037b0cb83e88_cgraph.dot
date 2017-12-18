@@ -1,0 +1,21 @@
+digraph "HF::Attributes::Response::Response"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="HF::Attributes::Response\l::Response",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="HF::Attributes::IAttribute\l::pack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1IAttribute.html#ac4061bf8b91d358878e4929185a79f3f",tooltip="Write the object on to a ByteArray so it can be sent over the network. "];
+  Node0 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="HF::Protocol::Response\l::pack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Protocol_1_1Response.html#ad297dfd395e0c7c1ea1261cc5f640265",tooltip="Write the object on to a ByteArray so it can be sent over the network. "];
+  Node0 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="HF::Attributes::IAttribute\l::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1IAttribute.html#a56132211331d7400b92916dbf14bd800",tooltip="Number bytes needed to serialize the message. "];
+  Node0 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="HF::Protocol::Response\l::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Protocol_1_1Response.html#a22064475c515ce8ae1cbe762cbc554c5",tooltip="Number bytes needed to serialize the message. "];
+  Node0 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="HF::Common::Serializable\l::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Common_1_1Serializable.html#a8f42af5e150e53d8b453f19f718e3ef9",tooltip="Number bytes needed to serialize the message. "];
+  Node0 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="HF::Attributes::IAttribute\l::unpack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1IAttribute.html#a74da08fa9eb892a2ed3390f25515520c",tooltip="Read a message from a ByteArray. "];
+  Node0 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="HF::Protocol::Response\l::unpack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Protocol_1_1Response.html#a14ce871fee5ac410371594ef286ddd46",tooltip="Read a message from a ByteArray. "];
+}

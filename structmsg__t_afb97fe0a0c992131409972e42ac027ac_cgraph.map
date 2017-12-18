@@ -1,4 +1,0 @@
-<map id="msg_t::pack" name="msg_t::pack">
-<area shape="rect" id="node2" href="$structmsg__t.html#a7240d75b555c774000d2a8289dd6d0f5" title="Number bytes needed to serialize the message. " alt="" coords="188,5,279,32"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="150,57,317,98"/>
-</map>

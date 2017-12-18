@@ -1,0 +1,15 @@
+digraph "HF::Devices::Concentrator::Abstract::unit0"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="HF::Devices::Concentrator\l::Abstract::unit0",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="COMMAND",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__examples.html#ga8ea3a05f2312aeac71f34f150c2a5e82",tooltip="ListRegs List registrations command. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="HF::Application::Save",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__examples.html#gaa0581a446c239d3fae170963ada22247",tooltip="Save application configuration. "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="DeviceManagement::Entries\l::insert",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__examples.html#ga2ba5726b65cb73c5887c40b0844728d4",tooltip="Insert a device management entry into the database. "];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="BindManagement::Entries\l::insert",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__examples.html#gacd6984183874ad1151acc392acc65330",tooltip="Insert a bind management entry into the database. "];
+}

@@ -1,0 +1,9 @@
+digraph "operator&lt;&lt;"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="operator\<\<",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="HF::Interfaces::Container\l\< HF::Units::Unit\< HF::\lProfiles::SimpleOnOffSwitch,\l ITF... \>, Proxy\< ITF, HF::\lUnits::Unit\< HF::Profiles::SimpleOnOff\lSwitch, ITF... \> \>... \>::attributes_itf",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classHF_1_1Interfaces_1_1Container.html#afd8036fa854c7981b5690f0714955e80",tooltip="Helper function used to provide HF::Units::Unit::attributes functionality. "];
+}

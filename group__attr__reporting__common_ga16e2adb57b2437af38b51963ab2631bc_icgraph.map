@@ -1,6 +1,0 @@
-<map id="HF::Core::AttributeReporting::add" name="HF::Core::AttributeReporting::add">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry.html#aa7370895d1c986fb7d5d92285961db4f" title="Constructor. " alt="" coords="284,5,487,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1AddEntryMessage.html#a5694d878d32537110ea00966c5af0eb4" title="Get the minimum number of bytes required for unpacking an entry. " alt="" coords="272,69,499,125"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html#ae5847a3e003d4549b727e14f5498ff62" title="Constructor. " alt="" coords="291,149,480,190"/>
-<area shape="rect" id="node5" href="$group__bind__mgt.html#ga8afe4139ef51933b63de159a30df7214" title="Reference to the session management API. " alt="" coords="293,214,478,255"/>
-</map>

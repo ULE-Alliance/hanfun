@@ -1,8 +1,0 @@
-<map id="HF::Transport::AbstractLayer::uid" name="HF::Transport::AbstractLayer::uid">
-<area shape="rect" id="node2" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="319,27,399,53"/>
-<area shape="rect" id="node4" href="$group__examples.html#ga7d4e44368d960972d8b80cb5f5ae3360" title="Callback indicating that the application configuration has been restored. " alt="" coords="272,107,445,133"/>
-<area shape="rect" id="node3" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="494,5,669,46"/>
-<area shape="rect" id="node5" href="$group__examples.html#ga4c18cb732cc5c8d3b279fefa534092ab" title="Restore application configuration. " alt="" coords="498,121,665,148"/>
-<area shape="rect" id="node7" href="$group__examples.html#gaa911fe543ecf44adc10ca8202fa0f965" title="Send a toggle command from the simple switch. " alt="" coords="933,121,1027,148"/>
-<area shape="rect" id="node6" href="$group__examples.html#ga12f9df6aca9b92f54f4974d4bf95fd7c" title="Initialize the application. " alt="" coords="717,71,885,97"/>
-</map>

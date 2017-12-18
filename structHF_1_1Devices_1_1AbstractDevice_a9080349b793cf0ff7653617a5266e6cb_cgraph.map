@@ -1,6 +1,3 @@
 <map id="HF::Devices::AbstractDevice::remove" name="HF::Devices::AbstractDevice::remove">
-<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html#af3cb1e49bb6821c1a640009303477f17" title="Handle periodic processing. " alt="" coords="248,5,443,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Devices_1_1AbstractDevice.html#a8a372038f1f12a0bd9a84b6a5fabb259" title="Callback to deliver a packet received from the transport layer. " alt="" coords="248,70,443,111"/>
-<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1AbstractDevice.html#a956409f5741fc27e063e4502c767d451" title="Send given packet into the HAN&#45;FUN network. " alt="" coords="248,135,443,177"/>
-<area shape="rect" id="node5" href="$structHF_1_1Devices_1_1AbstractDevice.html#a33127cd044a58fdac5ff445fbeb60869" title="Return pointer to the unit with the given id. " alt="" coords="248,201,443,242"/>
+<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html#a90b9b527baa5beea1b3ce357709defea" title="Return pointer to the unit with the given id. " alt="" coords="248,5,443,47"/>
 </map>

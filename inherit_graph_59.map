@@ -1,5 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="6,5,141,32"/>
-<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLink.html" title="Parent class for all HF::Transport::Link implementations. " alt="" coords="189,5,373,32"/>
-<area shape="rect" id="node3" href="$classHF_1_1Application_1_1Link.html" title="Transport Layer link implementation over TCP/IP using libuv. " alt="" coords="421,5,565,32"/>
+<area shape="rect" id="node1" href="$structHF_1_1Interfaces_1_1ColourControl_1_1StepHueMessage.html" title="Step Hue Message class. " alt="" coords="5,5,200,47"/>
 </map>

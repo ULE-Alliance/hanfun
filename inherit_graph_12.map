@@ -1,6 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Core_1_1AttributeReporting_1_1Reference.html" title="Report Identifier. " alt="" coords="5,38,195,79"/>
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Abstract.html" title="Parent call for all reports. " alt="" coords="243,38,432,79"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event.html" title="Event type notification. " alt="" coords="480,5,669,46"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic.html" title="Periodic report notification. " alt="" coords="480,70,669,111"/>
+<area shape="rect" id="node1" href="$structHF_1_1Core_1_1AttributeReporting_1_1Entry.html" title="Parent class for all report rule entries. " alt="" coords="5,39,195,80"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Event_1_1Entry.html" title="Report event entry. " alt="" coords="243,5,432,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1Periodic_1_1Entry.html" title="This class represents an entry in a periodic rule. " alt="" coords="243,71,432,112"/>
 </map>

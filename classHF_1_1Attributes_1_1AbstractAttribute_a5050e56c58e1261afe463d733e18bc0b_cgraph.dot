@@ -1,0 +1,9 @@
+digraph "HF::Attributes::AbstractAttribute::interface"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node8 [label="HF::Attributes::Abstract\lAttribute::interface",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="HF::Attributes::IAttribute\l::compare",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1IAttribute.html#aedc2b0b0b87b91b8a5f376633765e3e4",tooltip="Compare this attribute with the given attribute in other. "];
+}

@@ -1,8 +1,0 @@
-<map id="HF::Attributes::Attribute::size" name="HF::Attributes::Attribute::size">
-<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Attribute.html#a2db8fa6f722c3aee8e49234ebd186384" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::pack" alt="" coords="217,5,378,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a62e4a76005f3b0ffcc260d59a65fd7f1" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="217,70,378,141"/>
-<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Attribute.html#ace6a37fa1b86f10cf82c766760e3eb2b" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::size" alt="" coords="217,165,378,206"/>
-<area shape="rect" id="node5" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adb36097e05e0c55b8e4ca8043bb0a972" title="Number bytes needed to serialize the message. " alt="" coords="217,230,378,301"/>
-<area shape="rect" id="node6" href="$structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::unpack" alt="" coords="217,325,378,366"/>
-<area shape="rect" id="node7" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adf061212df3cf04ffe3551f4d169dc93" title="Read a message from a ByteArray. " alt="" coords="217,390,378,461"/>
-</map>

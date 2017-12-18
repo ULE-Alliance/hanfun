@@ -1,3 +1,4 @@
 <map id="HF::Common::Interface" name="HF::Common::Interface">
-<area shape="rect" id="node2" href="$structHF_1_1Protocol_1_1Message_1_1Interface.html" title="Interface Address. " alt="" coords="5,206,163,357"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interface_1_1Any.html" title="Helper class to match any interface. " alt="" coords="5,241,136,318"/>
+<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1Message_1_1Interface.html" title="Interface Address. " alt="" coords="160,204,317,355"/>
 </map>

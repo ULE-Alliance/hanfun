@@ -1,0 +1,9 @@
+digraph "HF::Core::DeviceManagement::Entries::end"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node9 [label="HF::Core::DeviceManagement\l::Entries::end",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="DeviceManagement::Server\l::available",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__examples.html#ga595ce42fe36ec8f0ca2a56d1432ae325",tooltip="Check if the given address is available for registration. "];
+}

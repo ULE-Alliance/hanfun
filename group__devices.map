@@ -1,8 +1,8 @@
 <map id="Devices" name="Devices">
-<area shape="rect" id="node2" href="$group__concentrator.html" title="This module contains the classes that define and implement the Device API on the concentrator side..." alt="" coords="126,5,295,32"/>
-<area shape="rect" id="node3" href="$group__node.html" title="This module contains the classes that define and implement the Device API on the node side..." alt="" coords="148,56,273,83"/>
-<area shape="rect" id="node4" href="$group__units.html" title="This module contains the classes that define and implement the Units API. " alt="" coords="171,107,250,133"/>
-<area shape="rect" id="node5" href="$group__uid__t.html" title="This module contains the classes implementing the available UID for HAN&#45;FUN devices. " alt="" coords="184,157,237,184"/>
-<area shape="rect" id="node6" href="$group__transport.html" title="This module contains the classes that define and implement the common functionality of the Transport ..." alt="" coords="141,208,280,235"/>
-<area shape="rect" id="node7" href="$group__dev__common.html" title="This module contains the common classes for the implementation of the Devices API. " alt="" coords="173,259,248,285"/>
+<area shape="rect" id="node2" href="$group__concentrator.html" title="This module contains the classes that define and implement the Device API on the concentrator side..." alt="" coords="124,5,293,32"/>
+<area shape="rect" id="node3" href="$group__node.html" title="This module contains the classes that define and implement the Device API on the node side..." alt="" coords="146,56,271,83"/>
+<area shape="rect" id="node4" href="$group__units.html" title="This module contains the classes that define and implement the Units API. " alt="" coords="169,107,248,133"/>
+<area shape="rect" id="node5" href="$group__uid__t.html" title="This module contains the classes implementing the available UID for HAN&#45;FUN devices. " alt="" coords="182,157,235,184"/>
+<area shape="rect" id="node6" href="$group__transport.html" title="This module contains the classes that define and implement the common functionality of the Transport ..." alt="" coords="139,208,278,235"/>
+<area shape="rect" id="node7" href="$group__dev__common.html" title="This module contains the common classes for the implementation of the Devices API. " alt="" coords="171,259,246,285"/>
 </map>

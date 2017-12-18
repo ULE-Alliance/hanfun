@@ -9,6 +9,7 @@ var group__profile__security =
     [ "FloodDetector", "classHF_1_1Profiles_1_1FloodDetector.html", null ],
     [ "GlassBreakDetector", "classHF_1_1Profiles_1_1GlassBreakDetector.html", null ],
     [ "VibrationDetector", "classHF_1_1Profiles_1_1VibrationDetector.html", null ],
+    [ "SimpleLightSensor", "classHF_1_1Profiles_1_1SimpleLightSensor.html", null ],
     [ "Siren", "classHF_1_1Profiles_1_1Siren.html", null ],
     [ "Alertable", "classHF_1_1Profiles_1_1Alertable.html", null ]
 ];

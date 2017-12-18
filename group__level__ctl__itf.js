@@ -3,12 +3,13 @@ var group__level__ctl__itf =
     [ "Level", "structHF_1_1Interfaces_1_1LevelControl_1_1Level.html", null ],
     [ "Base", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html", [
       [ "check_and_fix", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#a67efea43e5f95b01be5e8c500781c406", null ],
-      [ "payload_size", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#a30d8464550f3efbe6b422e742f3e53f9", null ]
+      [ "check_and_fix", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#a4a7bd10dfa2a86965e94d93adadb55c7", null ],
+      [ "payload_size", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#aeee675e155d3cc09082d4c766c7bd22e", null ]
     ] ],
     [ "Server", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html", [
       [ "Server", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a00d9da717373f2b45c4d1febd1f5fb99", null ],
       [ "attribute", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a12438e47bc1bf8172d03479ad4e1e1d5", null ],
-      [ "attributes", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e1ef2063d35295fa660b235bbb7f6f8", null ],
+      [ "attributes", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e4a5800caf6dc666814a7d437ee0f31", null ],
       [ "handle_attribute", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#ad30a5f5087ea93c6ed15310d0aa91fae", null ],
       [ "handle_command", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#ac2ef0afd4884e06916b08cfbdd647829", null ],
       [ "level", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a9922355932dc3e39e9f294b458587c88", null ],
@@ -27,7 +28,9 @@ var group__level__ctl__itf =
       [ "LEVEL_ATTR", "group__level__ctl__itf.html#ggafc5c75faf837f56d818efe9e771ef640af91925852e447a744a09f13cd1a4325f", null ]
     ] ],
     [ "CMD", "group__level__ctl__itf.html#ga9a21329c7b95153eef5c8afa97e251e9", [
-      [ "SET_LEVEL_CMD", "group__level__ctl__itf.html#gga9a21329c7b95153eef5c8afa97e251e9a6e9fb15ea7c6348a4314021d288a53d8", null ]
+      [ "SET_LEVEL_CMD", "group__level__ctl__itf.html#gga9a21329c7b95153eef5c8afa97e251e9a6e9fb15ea7c6348a4314021d288a53d8", null ],
+      [ "INCREASE_LEVEL_CMD", "group__level__ctl__itf.html#gga9a21329c7b95153eef5c8afa97e251e9a7da15a0e686a26d68e587a39b279963c", null ],
+      [ "DECREASE_LEVEL_CMD", "group__level__ctl__itf.html#gga9a21329c7b95153eef5c8afa97e251e9a359004f8c837e1d19f9b504c26677535", null ]
     ] ],
     [ "create_attribute", "group__level__ctl__itf.html#ga2f7dbdd2134316c03d92196dcd6eee14", null ],
     [ "create_attribute", "group__level__ctl__itf.html#ga3c8ced4908612181659c621e8b1f79f5", null ],

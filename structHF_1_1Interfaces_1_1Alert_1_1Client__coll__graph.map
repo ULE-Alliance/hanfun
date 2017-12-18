@@ -1,9 +1,9 @@
 <map id="HF::Interfaces::Alert::Client" name="HF::Interfaces::Alert::Client">
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="132,1112,316,1219"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="21,928,161,1035"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="5,771,179,877"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="27,222,189,549"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="108,600,272,707"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="47,5,169,171"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="187,935,351,1027"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="267,949,451,1056"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="156,765,297,872"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="139,609,314,716"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
+<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="321,773,487,865"/>
 </map>

@@ -1,0 +1,9 @@
+digraph "HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::size"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node4 [label="HF::Common::Serializable\lHelper\< Common::ByteArray\l \>::size",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="HF::Common::Serializable\lHelper\< Common::ByteArray\l \>::unpack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ad8041b04ce7ee09ded6d524de1c3a7e9",tooltip="Read a message from a ByteArray. "];
+}

@@ -1,33 +1,40 @@
 <map id="profiles.h" name="profiles.h">
-<area shape="rect" id="node2" href="$units_8h.html" title="This file contains the definitions for the HAN&#45;FUN unit implementation. " alt="" coords="562,80,623,107"/>
-<area shape="rect" id="node5" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="963,379,1035,405"/>
-<area shape="rect" id="node3" href="$device__management_8h.html" title="This file contains the definitions for the core Device Management Interface of the HAN&#45;FUN protocol..." alt="" coords="581,229,734,256"/>
-<area shape="rect" id="node27" href="$core_8h.html" title="This file contains the forward declarations of the core services and interfaces implementing classes..." alt="" coords="1016,155,1074,181"/>
-<area shape="rect" id="node4" href="$devices_8h.html" title="This file contains the definitions for the devices in a HAN&#45;FUN network. " alt="" coords="906,304,984,331"/>
-<area shape="rect" id="node6" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="569,453,663,480"/>
-<area shape="rect" id="node8" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="69,603,171,629"/>
-<area shape="rect" id="node13" href="$transport_8cpp.html" title="This file contains the implementation of the a HAN&#45;FUN transport layer over the libuv library..." alt="" coords="759,528,858,555"/>
+<area shape="rect" id="node2" href="$units_8h.html" title="This file contains the definitions for the HAN&#45;FUN unit implementation. " alt="" coords="845,80,907,107"/>
+<area shape="rect" id="node5" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="961,379,1033,405"/>
+<area shape="rect" id="node3" href="$device__management_8h.html" title="This file contains the definitions for the core Device Management Interface of the HAN&#45;FUN protocol..." alt="" coords="257,229,410,256"/>
+<area shape="rect" id="node27" href="$core_8h.html" title="This file contains the forward declarations of the core services and interfaces implementing classes..." alt="" coords="1037,155,1096,181"/>
+<area shape="rect" id="node4" href="$devices_8h.html" title="This file contains the definitions for the devices in a HAN&#45;FUN network. " alt="" coords="542,304,621,331"/>
+<area shape="rect" id="node6" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="549,453,643,480"/>
+<area shape="rect" id="node8" href="$base__app_8cpp.html" title="This file contains an example for a HAN&#45;FUN base application. " alt="" coords="54,603,157,629"/>
+<area shape="rect" id="node13" href="$transport_8cpp.html" title="This file contains the implementation of the a HAN&#45;FUN transport layer over the libuv library..." alt="" coords="757,528,856,555"/>
 <area shape="rect" id="node14" href="$base_8h.html" title="This file contains the definition of the Base class that represents the HAN&#45;FUN Concentrator on the a..." alt="" coords="23,528,84,555"/>
-<area shape="rect" id="node15" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="382,453,463,480"/>
-<area shape="rect" id="node16" href="$example__01_8cpp.html" title="This file contains an example demonstrating basic registration. " alt="" coords="882,528,998,555"/>
-<area shape="rect" id="node17" href="$localloop_8h.html" title="This file contains an implementation of a HAN&#45;FUN transport layer to be used in the example applicati..." alt="" coords="1322,453,1406,480"/>
-<area shape="rect" id="node18" href="$example__02_8cpp.html" title="This file contains an example demonstrating registration event handling. " alt="" coords="1023,528,1139,555"/>
-<area shape="rect" id="node19" href="$example__03_8cpp.html" title="This file contains an usage example of the Alert interface. " alt="" coords="1164,528,1280,555"/>
-<area shape="rect" id="node20" href="$example__04_8cpp.html" title="This file contains an usage example of the On&#45;Off interface. " alt="" coords="1306,528,1422,555"/>
-<area shape="rect" id="node21" href="$example__05_8cpp.html" title="This file contains an example use of the Level control interface. " alt="" coords="1447,528,1563,555"/>
-<area shape="rect" id="node22" href="$example__06_8cpp.html" title="This file contains an example demonstrating how to read a custom attribute from the device informatio..." alt="" coords="1588,528,1704,555"/>
-<area shape="rect" id="node23" href="$example__07_8cpp.html" title="This file contains an example usage of the Attribute reporting service. " alt="" coords="1730,528,1846,555"/>
-<area shape="rect" id="node24" href="$example__08_8cpp.html" title="This file contains an example demonstrating the catch all bind management functionality. " alt="" coords="1871,528,1987,555"/>
-<area shape="rect" id="node25" href="$apps_2transport_8h.html" title="This file contains the declarations of the transport layer over libuv. " alt="" coords="766,453,850,480"/>
-<area shape="rect" id="node26" href="$node_8h.html" title="This file contains the definition of the Node class that represents the HAN&#45;FUN Node on the applicati..." alt="" coords="296,453,358,480"/>
-<area shape="rect" id="node7" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="263,603,336,629"/>
-<area shape="rect" id="node9" href="$common_8cpp.html" title="This file contains the implementation of the common functionality for the HAN&#45;FUN example application..." alt="" coords="437,528,534,555"/>
-<area shape="rect" id="node10" href="$main_8cpp.html" title="This file contains the implementation of the main entry point for the HAN&#45;FUN example applications..." alt="" coords="610,528,683,555"/>
-<area shape="rect" id="node11" href="$node_8cpp.html" title="This file contains the implementation of the Node class that represents the HAN&#45;FUN Node on the examp..." alt="" coords="338,528,411,555"/>
-<area shape="rect" id="node12" href="$node__app_8cpp.html" title="This file contains the implementation of the example application for a HAN&#45;FUN Node. " alt="" coords="109,528,211,555"/>
-<area shape="rect" id="node28" href="$attribute__reporting_8h.html" title="This file contains the definitions for the core Attribute Reporting Service in HAN&#45;FUN. " alt="" coords="977,229,1114,256"/>
-<area shape="rect" id="node29" href="$bind__management_8h.html" title="This file contains the definitions for the core Bind Management Interface of the HAN&#45;FUN protocol..." alt="" coords="1139,229,1278,256"/>
-<area shape="rect" id="node30" href="$device__information_8h.html" title="This file contains the definition for the core Device Information interface of the HAN&#45;FUN protocol..." alt="" coords="758,229,900,256"/>
-<area shape="rect" id="node31" href="$rssi_8h.html" title="This file contains the definitions for the RSSI interface. " alt="" coords="1338,304,1392,331"/>
-<area shape="rect" id="node32" href="$suota_8h.html" title="This file contains the definitions for the SUOTA interface. " alt="" coords="1417,304,1482,331"/>
+<area shape="rect" id="node15" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="367,453,449,480"/>
+<area shape="rect" id="node16" href="$example__01_8cpp.html" title="This file contains an example demonstrating basic registration. " alt="" coords="880,528,997,555"/>
+<area shape="rect" id="node17" href="$localloop_8h.html" title="This file contains an implementation of a HAN&#45;FUN transport layer to be used in the example applicati..." alt="" coords="1321,453,1405,480"/>
+<area shape="rect" id="node18" href="$example__02_8cpp.html" title="This file contains an example demonstrating registration event handling. " alt="" coords="1021,528,1139,555"/>
+<area shape="rect" id="node19" href="$example__03_8cpp.html" title="This file contains an usage example of the Alert interface. " alt="" coords="1163,528,1280,555"/>
+<area shape="rect" id="node20" href="$example__04_8cpp.html" title="This file contains an usage example of the On&#45;Off interface. " alt="" coords="1304,528,1421,555"/>
+<area shape="rect" id="node21" href="$example__05_8cpp.html" title="This file contains an example use of the Level control interface. " alt="" coords="1445,528,1563,555"/>
+<area shape="rect" id="node22" href="$example__06_8cpp.html" title="This file contains an example demonstrating how to read a custom attribute from the device informatio..." alt="" coords="1587,528,1704,555"/>
+<area shape="rect" id="node23" href="$example__07_8cpp.html" title="This file contains an example usage of the Attribute reporting service. " alt="" coords="1728,528,1845,555"/>
+<area shape="rect" id="node24" href="$example__08_8cpp.html" title="This file contains an example demonstrating the catch all bind management functionality. " alt="" coords="1869,528,1987,555"/>
+<area shape="rect" id="node25" href="$apps_2transport_8h.html" title="This file contains the declarations of the transport layer over libuv. " alt="" coords="765,453,849,480"/>
+<area shape="rect" id="node26" href="$node_8h.html" title="This file contains the definition of the Node class that represents the HAN&#45;FUN Node on the applicati..." alt="" coords="281,453,343,480"/>
+<area shape="rect" id="node7" href="$base_8cpp.html" title="This file contains the implementation of the Base class that represents the HAN&#45;FUN Concentrator on t..." alt="" coords="233,603,308,629"/>
+<area shape="rect" id="node9" href="$common_8cpp.html" title="This file contains the implementation of the common functionality for the HAN&#45;FUN example application..." alt="" coords="435,528,533,555"/>
+<area shape="rect" id="node10" href="$main_8cpp.html" title="This file contains the implementation of the main entry point for the HAN&#45;FUN example applications..." alt="" coords="659,528,733,555"/>
+<area shape="rect" id="node11" href="$node_8cpp.html" title="This file contains the implementation of the Node class that represents the HAN&#45;FUN Node on the examp..." alt="" coords="108,528,183,555"/>
+<area shape="rect" id="node12" href="$node__app_8cpp.html" title="This file contains the implementation of the example application for a HAN&#45;FUN Node. " alt="" coords="309,528,411,555"/>
+<area shape="rect" id="node28" href="$attribute__reporting_8h.html" title="This file contains the definitions for the core Attribute Reporting Service in HAN&#45;FUN. " alt="" coords="815,229,953,256"/>
+<area shape="rect" id="node29" href="$batch__program__management_8h.html" title="This file contains the definitions for the Batch Program Management interface. " alt="" coords="798,304,999,331"/>
+<area shape="rect" id="node30" href="$bind__management_8h.html" title="This file contains the definitions for the core Bind Management Interface of the HAN&#45;FUN protocol..." alt="" coords="435,229,573,256"/>
+<area shape="rect" id="node31" href="$device__information_8h.html" title="This file contains the definition for the core Device Information interface of the HAN&#45;FUN protocol..." alt="" coords="649,229,791,256"/>
+<area shape="rect" id="node32" href="$event__scheduling_8h.html" title="This file contains the definitions for the Event Scheduling service. " alt="" coords="1325,304,1459,331"/>
+<area shape="rect" id="node33" href="$group__management_8h.html" title="This file contains the definitions for the Group Management service. " alt="" coords="1024,304,1171,331"/>
+<area shape="rect" id="node34" href="$group__table_8h.html" title="This file contains the definitions for the Group Table service. " alt="" coords="1130,229,1230,256"/>
+<area shape="rect" id="node35" href="$rssi_8h.html" title="This file contains the definitions for the RSSI interface. " alt="" coords="1246,304,1301,331"/>
+<area shape="rect" id="node36" href="$scheduling_8h.html" title="This file contains the common definitions for the scheduling services. " alt="" coords="1357,229,1451,256"/>
+<area shape="rect" id="node37" href="$weekly__scheduling_8h.html" title="This file contains the definitions for the Weekly Scheduling service. " alt="" coords="1483,304,1626,331"/>
+<area shape="rect" id="node38" href="$suota_8h.html" title="This file contains the definitions for the SUOTA interface. " alt="" coords="1702,304,1767,331"/>
+<area shape="rect" id="node39" href="$time_8h.html" title="This file contains the definitions for the Time service. " alt="" coords="1527,229,1585,256"/>
 </map>

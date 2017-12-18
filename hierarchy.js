@@ -4,7 +4,14 @@ var hierarchy =
       [ "HF::Attributes::IAttribute", "structHF_1_1Attributes_1_1IAttribute.html", [
         [ "HF::Attributes::AbstractAttribute", "classHF_1_1Attributes_1_1AbstractAttribute.html", [
           [ "HF::Attributes::Attribute< bool >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Core::Scheduling::Status", "structHF_1_1Core_1_1Scheduling_1_1Status.html", [
+              [ "HF::Core::Scheduling::Event::Status", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1Status.html", null ],
+              [ "HF::Core::Scheduling::Weekly::Status", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1Status.html", null ]
+            ] ],
             [ "HF::Interfaces::OnOff::State", "structHF_1_1Interfaces_1_1OnOff_1_1State.html", null ]
+          ] ],
+          [ "HF::Attributes::Attribute< HS_Colour >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Interfaces::ColourControl::HueAndSaturation", "structHF_1_1Interfaces_1_1ColourControl_1_1HueAndSaturation.html", null ]
           ] ],
           [ "HF::Attributes::Attribute< int16_t >", "structHF_1_1Attributes_1_1Attribute.html", [
             [ "HF::Interfaces::SimpleTemperature::MaximumTemperature", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1MaximumTemperature.html", null ],
@@ -16,6 +23,7 @@ var hierarchy =
             [ "HF::Core::RSSI::Value", "structHF_1_1Core_1_1RSSI_1_1Value.html", null ]
           ] ],
           [ "HF::Attributes::Attribute< uint16_t >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Interfaces::ColourControl::ColourTemperature", "structHF_1_1Interfaces_1_1ColourControl_1_1ColourTemperature.html", null ],
             [ "HF::Interfaces::SimpleAirPressure::Maximum", "structHF_1_1Interfaces_1_1SimpleAirPressure_1_1Maximum.html", null ],
             [ "HF::Interfaces::SimpleAirPressure::Minimum", "structHF_1_1Interfaces_1_1SimpleAirPressure_1_1Minimum.html", null ],
             [ "HF::Interfaces::SimpleAirPressure::Tolerance", "structHF_1_1Interfaces_1_1SimpleAirPressure_1_1Tolerance.html", null ],
@@ -28,15 +36,38 @@ var hierarchy =
             [ "HF::Interfaces::SimpleTemperature::Tolerance", "structHF_1_1Interfaces_1_1SimpleTemperature_1_1Tolerance.html", null ]
           ] ],
           [ "HF::Attributes::Attribute< uint32_t >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Core::Time::Value", "structHF_1_1Core_1_1Time_1_1Value.html", null ],
             [ "HF::Interfaces::Alert::Enable", "structHF_1_1Interfaces_1_1Alert_1_1Enable.html", null ],
-            [ "HF::Interfaces::Alert::State", "structHF_1_1Interfaces_1_1Alert_1_1State.html", null ]
+            [ "HF::Interfaces::Alert::State", "structHF_1_1Interfaces_1_1Alert_1_1State.html", null ],
+            [ "HF::Interfaces::SimpleLightSensor::Maximum", "structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Maximum.html", null ],
+            [ "HF::Interfaces::SimpleLightSensor::Minimum", "structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Minimum.html", null ],
+            [ "HF::Interfaces::SimpleLightSensor::Tolerance", "structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Tolerance.html", null ],
+            [ "HF::Interfaces::SimpleLightSensor::Value", "structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Value.html", null ]
           ] ],
           [ "HF::Attributes::Attribute< uint8_t >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Core::BatchProgramManagement::MaximumNumberOfEntries", "structHF_1_1Core_1_1BatchProgramManagement_1_1MaximumNumberOfEntries.html", null ],
+            [ "HF::Core::BatchProgramManagement::NumberOfEntries", "structHF_1_1Core_1_1BatchProgramManagement_1_1NumberOfEntries.html", null ],
+            [ "HF::Core::GroupManagement::NumberOfGroups", "structHF_1_1Core_1_1GroupManagement_1_1NumberOfGroups.html", null ],
+            [ "HF::Core::GroupTable::NumberOfEntries", "structHF_1_1Core_1_1GroupTable_1_1NumberOfEntries.html", null ],
+            [ "HF::Core::GroupTable::NumberOfMaxEntries", "structHF_1_1Core_1_1GroupTable_1_1NumberOfMaxEntries.html", null ],
+            [ "HF::Core::Scheduling::MaximumNumberOfEntries", "structHF_1_1Core_1_1Scheduling_1_1MaximumNumberOfEntries.html", [
+              [ "HF::Core::Scheduling::Event::MaximumNumberOfEntries", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1MaximumNumberOfEntries.html", null ],
+              [ "HF::Core::Scheduling::Weekly::MaximumNumberOfEntries", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1MaximumNumberOfEntries.html", null ]
+            ] ],
+            [ "HF::Core::Scheduling::NumberOfEntries", "structHF_1_1Core_1_1Scheduling_1_1NumberOfEntries.html", [
+              [ "HF::Core::Scheduling::Event::NumberOfEntries", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1NumberOfEntries.html", null ],
+              [ "HF::Core::Scheduling::Weekly::NumberOfEntries", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1NumberOfEntries.html", null ]
+            ] ],
+            [ "HF::Interfaces::ColourControl::Mode", "structHF_1_1Interfaces_1_1ColourControl_1_1Mode.html", null ],
+            [ "HF::Interfaces::ColourControl::Supported", "structHF_1_1Interfaces_1_1ColourControl_1_1Supported.html", null ],
             [ "HF::Interfaces::LevelControl::Level", "structHF_1_1Interfaces_1_1LevelControl_1_1Level.html", null ],
             [ "HF::Interfaces::SimpleThermostat::BoostDuration", "structHF_1_1Interfaces_1_1SimpleThermostat_1_1BoostDuration.html", null ],
             [ "HF::Interfaces::SimpleThermostat::FanMode", "structHF_1_1Interfaces_1_1SimpleThermostat_1_1FanMode.html", null ],
             [ "HF::Interfaces::SimpleThermostat::HeatCoolMode", "structHF_1_1Interfaces_1_1SimpleThermostat_1_1HeatCoolMode.html", null ],
             [ "HF::Interfaces::SimpleThermostat::SupportedModes", "structHF_1_1Interfaces_1_1SimpleThermostat_1_1SupportedModes.html", null ]
+          ] ],
+          [ "HF::Attributes::Attribute< XY_Colour >", "structHF_1_1Attributes_1_1Attribute.html", [
+            [ "HF::Interfaces::ColourControl::Xy", "structHF_1_1Interfaces_1_1ColourControl_1_1Xy.html", null ]
           ] ],
           [ "HF::Attributes::Attribute< T, _Owner, typename >", "structHF_1_1Attributes_1_1Attribute.html", null ],
           [ "HF::Attributes::Attribute< T, _Owner, EnableIf< Parent< HF::Interface, _Owner > > >", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html", null ]
@@ -98,13 +129,7 @@ var hierarchy =
       [ "HF::Units::InterfacesWrapper< IUnit0, ITF... >", "classHF_1_1Units_1_1InterfacesWrapper.html", [
         [ "HF::Unit0< IUnit0, ITF... >", "classHF_1_1Unit0.html", [
           [ "HF::Devices::Concentrator::Unit0< ITF >", "structHF_1_1Devices_1_1Concentrator_1_1Unit0.html", null ],
-          [ "HF::Devices::Node::Unit0< ITF >", "structHF_1_1Devices_1_1Node_1_1Unit0.html", null ],
-          [ "HF::Devices::Concentrator::Unit0< Core::DeviceInformation::Server, Core::DeviceManagement::DefaultServer, Core::AttributeReporting::Server, Core::BindManagement::DefaultServer >", "structHF_1_1Devices_1_1Concentrator_1_1Unit0.html", [
-            [ "HF::Devices::Concentrator::DefaultUnit0", "structHF_1_1Devices_1_1Concentrator_1_1DefaultUnit0.html", null ]
-          ] ],
-          [ "HF::Devices::Node::Unit0< HF::Core::DeviceInformation::Server, HF::Core::DeviceManagement::Client, HF::Core::AttributeReporting::Server >", "structHF_1_1Devices_1_1Node_1_1Unit0.html", [
-            [ "HF::Devices::Node::DefaultUnit0", "structHF_1_1Devices_1_1Node_1_1DefaultUnit0.html", null ]
-          ] ]
+          [ "HF::Devices::Node::Unit0< ITF >", "structHF_1_1Devices_1_1Node_1_1Unit0.html", null ]
         ] ]
       ] ]
     ] ],
@@ -119,6 +144,11 @@ var hierarchy =
         ] ],
         [ "HF::Profiles::Profile2< SIMPLE_LEVEL_CONTROL_SWITCH, OnOffClient, LevelControlClient >", "structHF_1_1Profiles_1_1Profile2.html", [
           [ "HF::Profiles::SimpleLevelControlSwitch< OnOffClient, LevelControlClient >", "classHF_1_1Profiles_1_1SimpleLevelControlSwitch.html", null ]
+        ] ]
+      ] ],
+      [ "HF::Profiles::ProfileN< _uid, OnOffServer, ColourControlServer >", "classHF_1_1Profiles_1_1ProfileN.html", [
+        [ "HF::Profiles::Profile2< COLOUR_BULB, OnOffServer, ColourControlServer >", "structHF_1_1Profiles_1_1Profile2.html", [
+          [ "HF::Profiles::ColourBulb< OnOffServer, ColourControlServer >", "classHF_1_1Profiles_1_1ColourBulb.html", null ]
         ] ]
       ] ],
       [ "HF::Profiles::ProfileN< _uid, OnOffServer, LevelControlServer >", "classHF_1_1Profiles_1_1ProfileN.html", [
@@ -139,15 +169,20 @@ var hierarchy =
           [ "HF::Profiles::ControlableThermostat< OnOffServer, SimpleThermostatServer >", "classHF_1_1Profiles_1_1ControlableThermostat.html", null ]
         ] ]
       ] ],
+      [ "HF::Profiles::ProfileN< DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer, LevelControlServer >", "classHF_1_1Profiles_1_1ProfileN.html", [
+        [ "HF::Profiles::DimmableColourBulb< OnOffServer, ColourControlServer, LevelControlServer >", "classHF_1_1Profiles_1_1DimmableColourBulb.html", null ]
+      ] ],
       [ "HF::Profiles::ProfileN< ENVIRONMENT_MONITOR, Interfaces::SimpleTemperature::Server, Interfaces::SimpleHumidity::Server, Interfaces::SimpleAirPressure::Server >", "classHF_1_1Profiles_1_1ProfileN.html", [
         [ "HF::Profiles::EnvironmentMonitor", "classHF_1_1Profiles_1_1EnvironmentMonitor.html", null ]
       ] ]
     ] ],
     [ "HF::Core::SessionManagement::EntriesWrapper< _Entries >", "classHF_1_1Core_1_1SessionManagement_1_1EntriesWrapper.html", null ],
+    [ "HF::Core::SessionManagement::EntriesWrapper< Entries >", "classHF_1_1Core_1_1SessionManagement_1_1EntriesWrapper.html", null ],
     [ "hello_msg_t", "structhello__msg__t.html", null ],
     [ "HF::Common::Cloneable< T >", "structHF_1_1Common_1_1Cloneable.html", null ],
     [ "HF::Common::IEntries< T >", "structHF_1_1Common_1_1IEntries.html", null ],
     [ "HF::Common::Interface", "structHF_1_1Common_1_1Interface.html", [
+      [ "HF::Interface::Any", "structHF_1_1Interface_1_1Any.html", null ],
       [ "HF::Protocol::Message::Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html", null ]
     ] ],
     [ "HF::Common::Pointer< T >", "classHF_1_1Common_1_1Pointer.html", null ],
@@ -157,18 +192,20 @@ var hierarchy =
       [ "HF::Common::SerializableHelper< Common::ByteArray >", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html", null ],
       [ "HF::Common::SerializableHelper< std::string >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html", null ],
       [ "HF::Common::SerializableHelper< std::vector< uint8_t > >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html", null ],
+      [ "HF::Common::SerializableHelper< T, EnableIf< IsClassPointer< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html", null ],
       [ "HF::Common::SerializableHelper< T, EnableIf< IsIntegral< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html", null ],
-      [ "HF::Common::SerializableHelper< T, EnableIf< std::is_pointer< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01std_1_1is__pointer_3_01T_01_4_01_4_01_4.html", null ],
       [ "HF::UID::UID", "classHF_1_1UID_1_1UID.html", null ],
       [ "HF::UID::UID_T", "structHF_1_1UID_1_1UID__T.html", null ],
       [ "HF::Common::SerializableHelper< bool >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
+      [ "HF::Common::SerializableHelper< HS_Colour >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< int16_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< int8_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< T >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint16_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint32_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint8_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
-      [ "HF::Common::SerializableHelper< value_type >", "structHF_1_1Common_1_1SerializableHelper.html", null ]
+      [ "HF::Common::SerializableHelper< value_type >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
+      [ "HF::Common::SerializableHelper< XY_Colour >", "structHF_1_1Common_1_1SerializableHelper.html", null ]
     ] ],
     [ "HF::Core::AttributeReporting::Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html", [
       [ "HF::Core::AttributeReporting::Event::Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Event_1_1Entry.html", null ],
@@ -195,6 +232,7 @@ var hierarchy =
       [ "HF::Core::AttributeReporting::Report::Periodic::Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry.html", null ]
     ] ],
     [ "HF::Core::AttributeReporting::Report::Event::Field", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Field.html", null ],
+    [ "HF::Core::AttributeReporting::Report::UpdateIntervalMessage", "structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1UpdateIntervalMessage.html", null ],
     [ "HF::Core::AttributeReporting::Rule", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html", [
       [ "HF::Core::AttributeReporting::Event::Rule", "structHF_1_1Core_1_1AttributeReporting_1_1Event_1_1Rule.html", null ],
       [ "HF::Core::AttributeReporting::Periodic::Rule", "structHF_1_1Core_1_1AttributeReporting_1_1Periodic_1_1Rule.html", null ]
@@ -208,6 +246,23 @@ var hierarchy =
     [ "HF::Core::DeviceManagement::Device", "structHF_1_1Core_1_1DeviceManagement_1_1Device.html", null ],
     [ "HF::Core::DeviceManagement::RegisterMessage", "structHF_1_1Core_1_1DeviceManagement_1_1RegisterMessage.html", null ],
     [ "HF::Core::DeviceManagement::Unit", "structHF_1_1Core_1_1DeviceManagement_1_1Unit.html", null ],
+    [ "HF::Core::GroupManagement::CreateMessage", "structHF_1_1Core_1_1GroupManagement_1_1CreateMessage.html", null ],
+    [ "HF::Core::GroupManagement::GroupAddress", "structHF_1_1Core_1_1GroupManagement_1_1GroupAddress.html", [
+      [ "HF::Core::GroupManagement::CreateResponse", "structHF_1_1Core_1_1GroupManagement_1_1CreateResponse.html", null ],
+      [ "HF::Core::GroupManagement::Group", "structHF_1_1Core_1_1GroupManagement_1_1Group.html", null ],
+      [ "HF::Core::GroupManagement::Message", "structHF_1_1Core_1_1GroupManagement_1_1Message.html", null ]
+    ] ],
+    [ "HF::Core::GroupTable::Entry", "structHF_1_1Core_1_1GroupTable_1_1Entry.html", [
+      [ "HF::Core::GroupTable::Response", "structHF_1_1Core_1_1GroupTable_1_1Response.html", null ]
+    ] ],
+    [ "HF::Core::GroupTable::ReadEntries", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html", null ],
+    [ "HF::Core::Scheduling::ActivateScheduler", "structHF_1_1Core_1_1Scheduling_1_1ActivateScheduler.html", null ],
+    [ "HF::Core::Scheduling::Entry< _Type >", "structHF_1_1Core_1_1Scheduling_1_1Entry.html", null ],
+    [ "HF::Core::Scheduling::Event::Interval", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1Interval.html", null ],
+    [ "HF::Core::Scheduling::GetEntry", "structHF_1_1Core_1_1Scheduling_1_1GetEntry.html", null ],
+    [ "HF::Core::Scheduling::UpdateStatus", "structHF_1_1Core_1_1Scheduling_1_1UpdateStatus.html", null ],
+    [ "HF::Core::Scheduling::Weekly::Day", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1Day.html", null ],
+    [ "HF::Core::Service< _uid, Parent >", "structHF_1_1Core_1_1Service.html", null ],
     [ "HF::Core::ServiceRole< Parent, _role >", "structHF_1_1Core_1_1ServiceRole.html", null ],
     [ "HF::Core::SessionManagement::AbstractClient", "classHF_1_1Core_1_1SessionManagement_1_1AbstractClient.html", [
       [ "HF::Core::SessionManagement::Client< Device >", "structHF_1_1Core_1_1SessionManagement_1_1Client.html", [
@@ -219,11 +274,7 @@ var hierarchy =
       [ "HF::Core::SessionManagement::Client< _Entry >", "structHF_1_1Core_1_1SessionManagement_1_1Client.html", null ]
     ] ],
     [ "HF::Core::SessionManagement::AbstractServer::Session", "structHF_1_1Core_1_1SessionManagement_1_1AbstractServer_1_1Session.html", null ],
-    [ "HF::Core::SessionManagement::EntriesWrapper< Parent >", "classHF_1_1Core_1_1SessionManagement_1_1EntriesWrapper.html", [
-      [ "HF::Core::SessionManagement::Entries< Parent >", "structHF_1_1Core_1_1SessionManagement_1_1Entries.html", [
-        [ "HF::Core::SessionManagement::EntriesWrapper< Entries >", "classHF_1_1Core_1_1SessionManagement_1_1EntriesWrapper.html", null ]
-      ] ]
-    ] ],
+    [ "HF::Core::SessionManagement::EntriesWrapper< Parent >", "classHF_1_1Core_1_1SessionManagement_1_1EntriesWrapper.html", null ],
     [ "HF::Core::SessionManagement::GetEntriesMessage", "structHF_1_1Core_1_1SessionManagement_1_1GetEntriesMessage.html", null ],
     [ "HF::Core::SessionManagement::IServer", "structHF_1_1Core_1_1SessionManagement_1_1IServer.html", [
       [ "HF::Core::SessionManagement::AbstractServer", "classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html", [
@@ -245,6 +296,7 @@ var hierarchy =
     [ "HF::Core::SUOTA::Version", "structHF_1_1Core_1_1SUOTA_1_1Version.html", [
       [ "HF::Core::SUOTA::CheckVersionResponse", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html", null ]
     ] ],
+    [ "HF::Core::Time::Date", "structHF_1_1Core_1_1Time_1_1Date.html", null ],
     [ "HF::IDevice::IUnit0", "structHF_1_1IDevice_1_1IUnit0.html", [
       [ "HF::Devices::Concentrator::IUnit0", "structHF_1_1Devices_1_1Concentrator_1_1IUnit0.html", null ],
       [ "HF::Devices::Node::IUnit0", "structHF_1_1Devices_1_1Node_1_1IUnit0.html", null ]
@@ -256,7 +308,18 @@ var hierarchy =
           [ "HF::Core::AttributeReporting::IServer", "structHF_1_1Core_1_1AttributeReporting_1_1IServer.html", [
             [ "HF::Core::AttributeReporting::Server", "structHF_1_1Core_1_1AttributeReporting_1_1Server.html", null ]
           ] ],
-          [ "HF::Core::Service< _uid >", "structHF_1_1Core_1_1Service.html", null ],
+          [ "HF::Core::Service< HF::Interface::BATCH_PROGRAM_MANAGEMENT >", "structHF_1_1Core_1_1Service.html", [
+            [ "HF::Core::BatchProgramManagement::Base", "structHF_1_1Core_1_1BatchProgramManagement_1_1Base.html", [
+              [ "HF::Core::ServiceRole< BatchProgramManagement::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::BatchProgramManagement::Client", "structHF_1_1Core_1_1BatchProgramManagement_1_1Client.html", null ]
+              ] ],
+              [ "HF::Core::ServiceRole< BatchProgramManagement::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::BatchProgramManagement::IServer", "classHF_1_1Core_1_1BatchProgramManagement_1_1IServer.html", [
+                  [ "HF::Core::BatchProgramManagement::Server< _Entries >", "classHF_1_1Core_1_1BatchProgramManagement_1_1Server.html", null ]
+                ] ]
+              ] ]
+            ] ]
+          ] ],
           [ "HF::Core::Service< HF::Interface::BIND_MANAGEMENT >", "structHF_1_1Core_1_1Service.html", [
             [ "HF::Core::BindManagement::Base", "classHF_1_1Core_1_1BindManagement_1_1Base.html", null ]
           ] ],
@@ -265,6 +328,32 @@ var hierarchy =
           ] ],
           [ "HF::Core::Service< HF::Interface::DEVICE_MANAGEMENT >", "structHF_1_1Core_1_1Service.html", [
             [ "HF::Core::DeviceManagement::Base", "classHF_1_1Core_1_1DeviceManagement_1_1Base.html", null ]
+          ] ],
+          [ "HF::Core::Service< HF::Interface::GROUP_MANAGEMENT >", "structHF_1_1Core_1_1Service.html", [
+            [ "HF::Core::GroupManagement::Base", "structHF_1_1Core_1_1GroupManagement_1_1Base.html", [
+              [ "HF::Core::ServiceRole< GroupManagement::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::GroupManagement::Client", "structHF_1_1Core_1_1GroupManagement_1_1Client.html", null ]
+              ] ],
+              [ "HF::Core::ServiceRole< GroupManagement::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::GroupManagement::IServer", "classHF_1_1Core_1_1GroupManagement_1_1IServer.html", [
+                  [ "HF::Core::GroupManagement::Server< _Entries, _GroupTable >", "classHF_1_1Core_1_1GroupManagement_1_1Server.html", null ]
+                ] ]
+              ] ]
+            ] ]
+          ] ],
+          [ "HF::Core::Service< HF::Interface::GROUP_TABLE >", "structHF_1_1Core_1_1Service.html", [
+            [ "HF::Core::GroupTable::Base", "structHF_1_1Core_1_1GroupTable_1_1Base.html", [
+              [ "HF::Core::ServiceRole< GroupTable::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::GroupTable::Client", "structHF_1_1Core_1_1GroupTable_1_1Client.html", [
+                  [ "HF::Core::GroupManagement::IGroupTable", "structHF_1_1Core_1_1GroupManagement_1_1IGroupTable.html", [
+                    [ "HF::Core::GroupManagement::GroupTableClient", "structHF_1_1Core_1_1GroupManagement_1_1GroupTableClient.html", null ]
+                  ] ]
+                ] ]
+              ] ],
+              [ "HF::Core::ServiceRole< GroupTable::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::GroupTable::IServer", "classHF_1_1Core_1_1GroupTable_1_1IServer.html", null ]
+              ] ]
+            ] ]
           ] ],
           [ "HF::Core::Service< HF::Interface::SUOTA >", "structHF_1_1Core_1_1Service.html", [
             [ "HF::Core::SUOTA::Base", "structHF_1_1Core_1_1SUOTA_1_1Base.html", [
@@ -275,14 +364,24 @@ var hierarchy =
                 [ "HF::Core::SUOTA::Server", "classHF_1_1Core_1_1SUOTA_1_1Server.html", null ]
               ] ]
             ] ]
+          ] ],
+          [ "HF::Core::Service< HF::Interface::TIME >", "structHF_1_1Core_1_1Service.html", [
+            [ "HF::Core::Time::Base", "structHF_1_1Core_1_1Time_1_1Base.html", [
+              [ "HF::Core::ServiceRole< Time::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::Time::Client", "structHF_1_1Core_1_1Time_1_1Client.html", null ]
+              ] ],
+              [ "HF::Core::ServiceRole< Time::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+                [ "HF::Core::Time::Server", "classHF_1_1Core_1_1Time_1_1Server.html", null ]
+              ] ]
+            ] ]
+          ] ],
+          [ "HF::Core::ServiceRole< AbstractService, HF::Interface::SERVER_ROLE >", "structHF_1_1Core_1_1ServiceRole.html", [
+            [ "HF::Core::Scheduling::IServer", "classHF_1_1Core_1_1Scheduling_1_1IServer.html", null ]
           ] ]
         ] ]
       ] ],
       [ "HF::Interfaces::AbstractInterface", "structHF_1_1Interfaces_1_1AbstractInterface.html", [
         [ "HF::Core::AbstractService", "structHF_1_1Core_1_1AbstractService.html", null ],
-        [ "HF::Interfaces::Interface< _uid >", "structHF_1_1Interfaces_1_1Interface.html", [
-          [ "HF::Interfaces::Base< _uid >", "structHF_1_1Interfaces_1_1Base.html", null ]
-        ] ],
         [ "HF::Interfaces::Interface< HF::Interface::ALERT >", "structHF_1_1Interfaces_1_1Interface.html", [
           [ "HF::Interfaces::Alert::Base", "structHF_1_1Interfaces_1_1Alert_1_1Base.html", [
             [ "HF::Interfaces::InterfaceRole< Alert::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
@@ -335,6 +434,18 @@ var hierarchy =
         [ "HF::Interfaces::Interface< HF::Interface::ATTRIBUTE_REPORTING >", "structHF_1_1Interfaces_1_1Interface.html", [
           [ "HF::Core::AttributeReporting::Client", "structHF_1_1Core_1_1AttributeReporting_1_1Client.html", [
             [ "HF::Core::AttributeReporting::AbstractClient", "structHF_1_1Core_1_1AttributeReporting_1_1AbstractClient.html", null ]
+          ] ]
+        ] ],
+        [ "HF::Interfaces::Interface< HF::Interface::COLOUR_CONTROL >", "structHF_1_1Interfaces_1_1Interface.html", [
+          [ "HF::Interfaces::ColourControl::Base", "structHF_1_1Interfaces_1_1ColourControl_1_1Base.html", [
+            [ "HF::Interfaces::InterfaceRole< ColourControl::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::ColourControl::Client", "structHF_1_1Interfaces_1_1ColourControl_1_1Client.html", null ]
+            ] ],
+            [ "HF::Interfaces::InterfaceRole< ColourControl::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::ColourControl::IServer", "classHF_1_1Interfaces_1_1ColourControl_1_1IServer.html", [
+                [ "HF::Interfaces::ColourControl::Server", "structHF_1_1Interfaces_1_1ColourControl_1_1Server.html", null ]
+              ] ]
+            ] ]
           ] ]
         ] ],
         [ "HF::Interfaces::Interface< HF::Interface::LEVEL_CONTROL >", "structHF_1_1Interfaces_1_1Interface.html", [
@@ -437,6 +548,34 @@ var hierarchy =
             ] ]
           ] ]
         ] ],
+        [ "HF::Interfaces::Interface< HF::Interface::SIMPLE_KEYPAD >", "structHF_1_1Interfaces_1_1Interface.html", [
+          [ "HF::Interfaces::SimpleKeypad::Base", "structHF_1_1Interfaces_1_1SimpleKeypad_1_1Base.html", [
+            [ "HF::Interfaces::InterfaceRole< SimpleKeypad::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleKeypad::Client", "structHF_1_1Interfaces_1_1SimpleKeypad_1_1Client.html", null ]
+            ] ],
+            [ "HF::Interfaces::InterfaceRole< SimpleKeypad::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleKeypad::Server", "classHF_1_1Interfaces_1_1SimpleKeypad_1_1Server.html", [
+                [ "HF::Profiles::Profile< SIMPLE_KEYPAD, Interfaces::SimpleKeypad::Server >", "structHF_1_1Profiles_1_1Profile.html", [
+                  [ "HF::Profiles::SimpleKeypad", "classHF_1_1Profiles_1_1SimpleKeypad.html", null ]
+                ] ]
+              ] ]
+            ] ]
+          ] ]
+        ] ],
+        [ "HF::Interfaces::Interface< HF::Interface::SIMPLE_LIGHT_SENSOR >", "structHF_1_1Interfaces_1_1Interface.html", [
+          [ "HF::Interfaces::SimpleLightSensor::Base", "structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Base.html", [
+            [ "HF::Interfaces::InterfaceRole< SimpleLightSensor::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleLightSensor::Client", "structHF_1_1Interfaces_1_1SimpleLightSensor_1_1Client.html", null ]
+            ] ],
+            [ "HF::Interfaces::InterfaceRole< SimpleLightSensor::Base, HF::Interface::SERVER_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+              [ "HF::Interfaces::SimpleLightSensor::Server", "classHF_1_1Interfaces_1_1SimpleLightSensor_1_1Server.html", [
+                [ "HF::Profiles::Profile< SIMPLE_LIGHT_SENSOR, Interfaces::SimpleLightSensor::Server >", "structHF_1_1Profiles_1_1Profile.html", [
+                  [ "HF::Profiles::SimpleLightSensor", "classHF_1_1Profiles_1_1SimpleLightSensor.html", null ]
+                ] ]
+              ] ]
+            ] ]
+          ] ]
+        ] ],
         [ "HF::Interfaces::Interface< HF::Interface::SIMPLE_POWER_METER >", "structHF_1_1Interfaces_1_1Interface.html", [
           [ "HF::Interfaces::SimplePowerMeter::Base", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html", [
             [ "HF::Interfaces::InterfaceRole< SimplePowerMeter::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
@@ -488,16 +627,49 @@ var hierarchy =
               ] ]
             ] ]
           ] ]
+        ] ],
+        [ "HF::Interfaces::InterfaceRole< Interfaces::AbstractInterface, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
+          [ "HF::Core::Scheduling::IClient", "classHF_1_1Core_1_1Scheduling_1_1IClient.html", null ]
         ] ]
       ] ],
       [ "HF::Profiles::Profile< _uid, Interface >", "structHF_1_1Profiles_1_1Profile.html", null ]
     ] ],
     [ "HF::Interfaces::Alert::Message", "structHF_1_1Interfaces_1_1Alert_1_1Message.html", null ],
+    [ "HF::Interfaces::ColourControl::HS_Colour", "structHF_1_1Interfaces_1_1ColourControl_1_1HS__Colour.html", null ],
+    [ "HF::Interfaces::ColourControl::ITransition", "structHF_1_1Interfaces_1_1ColourControl_1_1ITransition.html", [
+      [ "HF::Interfaces::ColourControl::HS_Transition", "structHF_1_1Interfaces_1_1ColourControl_1_1HS__Transition.html", null ],
+      [ "HF::Interfaces::ColourControl::Hue_Transition", "structHF_1_1Interfaces_1_1ColourControl_1_1Hue__Transition.html", null ],
+      [ "HF::Interfaces::ColourControl::Saturation_Transition", "structHF_1_1Interfaces_1_1ColourControl_1_1Saturation__Transition.html", null ],
+      [ "HF::Interfaces::ColourControl::Temperature_Transition", "structHF_1_1Interfaces_1_1ColourControl_1_1Temperature__Transition.html", null ],
+      [ "HF::Interfaces::ColourControl::XY_Transition", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Transition.html", null ],
+      [ "HF::Interfaces::ColourControl::XY_Transition_Continuous", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Transition__Continuous.html", null ]
+    ] ],
+    [ "HF::Interfaces::ColourControl::MoveHueMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveHueMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveSaturationMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveSaturationMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveToHueMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveToHueMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveToHueSaturationMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveToHueSaturationMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveToSaturationMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveToSaturationMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveToTemperatureMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveToTemperatureMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveToXYMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveToXYMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::MoveXYMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1MoveXYMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::StepHueMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1StepHueMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::StepSaturationMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1StepSaturationMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::StepXYMessage", "structHF_1_1Interfaces_1_1ColourControl_1_1StepXYMessage.html", null ],
+    [ "HF::Interfaces::ColourControl::XY_Colour", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html", null ],
     [ "HF::Interfaces::Container< Base, Proxies >", "classHF_1_1Interfaces_1_1Container.html", null ],
+    [ "HF::Interfaces::Interface< _uid, Parent >", "structHF_1_1Interfaces_1_1Interface.html", [
+      [ "HF::Core::Scheduling::Event::IClient", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IClient.html", [
+        [ "HF::Core::Scheduling::Event::Client", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1Client.html", null ]
+      ] ],
+      [ "HF::Core::Scheduling::Weekly::IClient", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1IClient.html", [
+        [ "HF::Core::Scheduling::Weekly::Client", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1Client.html", null ]
+      ] ]
+    ] ],
     [ "HF::Interfaces::InterfaceRole< Itf, _role >", "structHF_1_1Interfaces_1_1InterfaceRole.html", null ],
     [ "HF::Interfaces::Proxy< _Interface, _Proxy >", "structHF_1_1Interfaces_1_1Proxy.html", [
       [ "HF::Units::Proxy< _Interface, _Proxy, typename >", "structHF_1_1Units_1_1Proxy.html", null ]
     ] ],
+    [ "HF::Interfaces::SimpleKeypad::KeyPressed", "structHF_1_1Interfaces_1_1SimpleKeypad_1_1KeyPressed.html", null ],
     [ "HF::Interfaces::SimplePowerMeter::Measurement", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html", null ],
     [ "HF::Interfaces::SimplePowerMeter::Report", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html", null ],
     [ "HF::Interfaces::SimpleVisualEffects::BlinkEffect", "structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1BlinkEffect.html", null ],
@@ -509,6 +681,9 @@ var hierarchy =
         [ "HF::Profiles::GenericApplicationLogic", "classHF_1_1Profiles_1_1GenericApplicationLogic.html", [
           [ "HF::Units::Unit< HF::Profiles::GenericApplicationLogic, Alert, LevelControl, OnOff, SimplePowerMeter >", "classHF_1_1Units_1_1Unit.html", null ]
         ] ]
+      ] ],
+      [ "HF::Profiles::AbstractProfile< TRACKER >", "structHF_1_1Profiles_1_1AbstractProfile.html", [
+        [ "HF::Profiles::Tracker", "classHF_1_1Profiles_1_1Tracker.html", null ]
       ] ],
       [ "HF::Profiles::AbstractProfile< USER_INTERFACE >", "structHF_1_1Profiles_1_1AbstractProfile.html", [
         [ "HF::Profiles::UserInterface", "classHF_1_1Profiles_1_1UserInterface.html", null ]
@@ -534,10 +709,12 @@ var hierarchy =
         [ "HF::Profiles::Profile< SIMPLE_BUTTON, Interfaces::SimpleButton::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_DOOR_LOCK, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_HUMIDITY_SENSOR, Interfaces::SimpleHumidity::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
+        [ "HF::Profiles::Profile< SIMPLE_KEYPAD, Interfaces::SimpleKeypad::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LED, Interfaces::SimpleVisualEffects::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LEVEL_CONTROL, Interfaces::LevelControl::Client >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LEVEL_CONTROLLABLE, Interfaces::LevelControl::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_LIGHT, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
+        [ "HF::Profiles::Profile< SIMPLE_LIGHT_SENSOR, Interfaces::SimpleLightSensor::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_ONOFF_SWITCH, Interfaces::OnOff::Client >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_ONOFF_SWITCHABLE, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::Profile< SIMPLE_POWER_METER, Interfaces::SimplePowerMeter::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
@@ -546,9 +723,11 @@ var hierarchy =
         [ "HF::Profiles::Profile< USER_INTERFACE_LOCK, Interfaces::OnOff::Server >", "structHF_1_1Profiles_1_1Profile.html", null ],
         [ "HF::Profiles::ProfileN< _uid, Interface1, Interface2 >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
         [ "HF::Profiles::ProfileN< _uid, OnOffClient, LevelControlClient >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
+        [ "HF::Profiles::ProfileN< _uid, OnOffServer, ColourControlServer >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
         [ "HF::Profiles::ProfileN< _uid, OnOffServer, LevelControlServer >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
         [ "HF::Profiles::ProfileN< _uid, OnOffServer, SimplePowerMeterServer >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
         [ "HF::Profiles::ProfileN< _uid, OnOffServer, SimpleThermostatServer >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
+        [ "HF::Profiles::ProfileN< DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer, LevelControlServer >", "classHF_1_1Profiles_1_1ProfileN.html", null ],
         [ "HF::Profiles::ProfileN< ENVIRONMENT_MONITOR, Interfaces::SimpleTemperature::Server, Interfaces::SimpleHumidity::Server, Interfaces::SimpleAirPressure::Server >", "classHF_1_1Profiles_1_1ProfileN.html", null ]
       ] ],
       [ "HF::Units::IUnit", "structHF_1_1Units_1_1IUnit.html", [
@@ -564,7 +743,9 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "HF::Protocol::Address", "structHF_1_1Protocol_1_1Address.html", null ],
+    [ "HF::Protocol::Address", "structHF_1_1Protocol_1_1Address.html", [
+      [ "HF::Core::GroupManagement::Message", "structHF_1_1Core_1_1GroupManagement_1_1Message.html", null ]
+    ] ],
     [ "HF::Protocol::Filters::ResponseRequired", "classHF_1_1Protocol_1_1Filters_1_1ResponseRequired.html", null ],
     [ "HF::Protocol::Filters::ResponseRequired::Entry", "structHF_1_1Protocol_1_1Filters_1_1ResponseRequired_1_1Entry.html", null ],
     [ "HF::Protocol::GetAttributePack::Request", "structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html", null ],
@@ -573,6 +754,12 @@ var hierarchy =
     [ "HF::Protocol::Response", "structHF_1_1Protocol_1_1Response.html", [
       [ "HF::Attributes::Response", "structHF_1_1Attributes_1_1Response.html", null ],
       [ "HF::Core::DeviceManagement::RegisterResponse", "structHF_1_1Core_1_1DeviceManagement_1_1RegisterResponse.html", null ],
+      [ "HF::Core::GroupManagement::CreateResponse", "structHF_1_1Core_1_1GroupManagement_1_1CreateResponse.html", null ],
+      [ "HF::Core::GroupManagement::InfoResponse", "structHF_1_1Core_1_1GroupManagement_1_1InfoResponse.html", null ],
+      [ "HF::Core::GroupTable::ReadEntriesResponse", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html", null ],
+      [ "HF::Core::GroupTable::Response", "structHF_1_1Core_1_1GroupTable_1_1Response.html", null ],
+      [ "HF::Core::Scheduling::DefineEventResponse", "structHF_1_1Core_1_1Scheduling_1_1DefineEventResponse.html", null ],
+      [ "HF::Core::Scheduling::GetEntryResponse< _Type >", "structHF_1_1Core_1_1Scheduling_1_1GetEntryResponse.html", null ],
       [ "HF::Core::SessionManagement::StartResponse", "structHF_1_1Core_1_1SessionManagement_1_1StartResponse.html", null ],
       [ "HF::Core::SUOTA::CheckVersionResponse", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html", null ],
       [ "HF::Protocol::GetAttributePack::Response", "structHF_1_1Protocol_1_1GetAttributePack_1_1Response.html", null ]
@@ -663,10 +850,26 @@ var hierarchy =
       ] ]
     ] ],
     [ "HF::Common::IEntries< Entry >", "structHF_1_1Common_1_1IEntries.html", [
+      [ "HF::Core::BatchProgramManagement::IEntries", "structHF_1_1Core_1_1BatchProgramManagement_1_1IEntries.html", [
+        [ "HF::Core::BatchProgramManagement::Entries", "structHF_1_1Core_1_1BatchProgramManagement_1_1Entries.html", null ]
+      ] ],
       [ "HF::Core::BindManagement::IEntries", "structHF_1_1Core_1_1BindManagement_1_1IEntries.html", [
         [ "HF::Core::BindManagement::Entries", "structHF_1_1Core_1_1BindManagement_1_1Entries.html", [
           [ "BindManagement::Entries", "structBindManagement_1_1Entries.html", null ]
         ] ]
+      ] ],
+      [ "HF::Core::GroupTable::IEntries", "structHF_1_1Core_1_1GroupTable_1_1IEntries.html", [
+        [ "HF::Core::GroupTable::Entries", "structHF_1_1Core_1_1GroupTable_1_1Entries.html", null ]
+      ] ]
+    ] ],
+    [ "HF::Common::IEntries< Entry< _Type > >", "structHF_1_1Common_1_1IEntries.html", [
+      [ "HF::Core::Scheduling::IEntries< _Type >", "structHF_1_1Core_1_1Scheduling_1_1IEntries.html", [
+        [ "HF::Core::Scheduling::Entries< _Type >", "structHF_1_1Core_1_1Scheduling_1_1Entries.html", null ]
+      ] ]
+    ] ],
+    [ "HF::Common::IEntries< Group >", "structHF_1_1Common_1_1IEntries.html", [
+      [ "HF::Core::GroupManagement::IEntries", "structHF_1_1Core_1_1GroupManagement_1_1IEntries.html", [
+        [ "HF::Core::GroupManagement::Entries", "structHF_1_1Core_1_1GroupManagement_1_1Entries.html", null ]
       ] ]
     ] ],
     [ "HF::Interfaces::InterfaceRole< RSSI::Base, HF::Interface::CLIENT_ROLE >", "structHF_1_1Interfaces_1_1InterfaceRole.html", [
@@ -676,6 +879,16 @@ var hierarchy =
       [ "HF::Core::RSSI::Server", "classHF_1_1Core_1_1RSSI_1_1Server.html", null ]
     ] ],
     [ "msg_t", "structmsg__t.html", null ],
+    [ "HF::Core::Service< _ITF, _Parent >", "structHF_1_1Core_1_1Service.html", [
+      [ "HF::Core::Scheduling::Base< _ITF, _Parent >", "structHF_1_1Core_1_1Scheduling_1_1Base.html", [
+        [ "HF::Core::Scheduling::Event::IServer", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html", [
+          [ "HF::Core::Scheduling::Event::Server< _Entries >", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1Server.html", null ]
+        ] ],
+        [ "HF::Core::Scheduling::Weekly::IServer", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1IServer.html", [
+          [ "HF::Core::Scheduling::Weekly::Server< _Entries >", "structHF_1_1Core_1_1Scheduling_1_1Weekly_1_1Server.html", null ]
+        ] ]
+      ] ]
+    ] ],
     [ "std::forward_list< T >", null, null ],
     [ "std::list< T >", null, [
       [ "HF::Attributes::List", "structHF_1_1Attributes_1_1List.html", null ]

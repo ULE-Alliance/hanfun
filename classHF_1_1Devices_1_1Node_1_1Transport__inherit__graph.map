@@ -1,4 +1,4 @@
 <map id="HF::Devices::Node::Transport" name="HF::Devices::Node::Transport">
-<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLayer.html" title="Parent class for all HF::Transport::Layer implementations. " alt="" coords="5,265,197,503"/>
-<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. " alt="" coords="30,6,172,215"/>
+<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLayer.html" title="Parent class for all HF::Transport::Layer implementations. " alt="" coords="5,263,197,501"/>
+<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. " alt="" coords="30,5,173,215"/>
 </map>

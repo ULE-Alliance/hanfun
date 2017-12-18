@@ -1,0 +1,21 @@
+digraph "HF::Common::Serializable::size"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node3 [label="HF::Common::Serializable\l::size",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="HF::Attributes::Attribute\l\< bool \>::pack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Attribute.html#a7b2ed4bebfa3819970bbfee9c7ed2d0a"];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="HF::Attributes::Attribute\l\< T, _Owner, EnableIf\<\l Parent\< HF::Interface,\l _Owner \> \> \>::pack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a17be3d4fc5d550194c40d98537587e20",tooltip="Write the object on to a ByteArray so it can be sent over the network. "];
+  Node3 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="HF::Attributes::Response\l::Response",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Response.html#a047d84b704580e2e2a6d037b0cb83e88",tooltip="Constructor. "];
+  Node3 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="HF::Attributes::Attribute\l\< bool \>::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Attribute.html#a58234b8d59308cbb452cce69adcd83c4"];
+  Node3 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="HF::Attributes::Attribute\l\< T, _Owner, EnableIf\<\l Parent\< HF::Interface,\l _Owner \> \> \>::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#a0ddea9d4f25ca27d0c291642cecd0109",tooltip="Number bytes needed to serialize the message. "];
+  Node3 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="HF::Attributes::Attribute\l\< bool \>::unpack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c"];
+  Node3 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="HF::Attributes::Attribute\l\< T, _Owner, EnableIf\<\l Parent\< HF::Interface,\l _Owner \> \> \>::unpack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html#adf061212df3cf04ffe3551f4d169dc93",tooltip="Read a message from a ByteArray. "];
+}

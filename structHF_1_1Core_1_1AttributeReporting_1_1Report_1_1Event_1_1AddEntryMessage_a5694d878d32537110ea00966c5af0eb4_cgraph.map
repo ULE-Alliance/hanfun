@@ -1,6 +1,0 @@
-<map id="HF::Core::AttributeReporting::Report::Event::AddEntryMessage::entry_size" name="HF::Core::AttributeReporting::Report::Event::AddEntryMessage::entry_size">
-<area shape="rect" id="node2" href="$group__attr__reporting__common.html#ga16e2adb57b2437af38b51963ab2631bc" title="Add the periodic entries from start to end into the rule with the given report reference. " alt="" coords="280,5,499,32"/>
-<area shape="rect" id="node3" href="$group__attr__reporting__common.html#ga97ba6170bfd3e3f4fea987c5e7e5ebd4" title="Create a new attribute reporting event rule for the device with the given address. " alt="" coords="295,57,484,98"/>
-<area shape="rect" id="node4" href="$group__attr__reporting__common.html#ga00e8734e745f791b258275d5bc83fca2" title="Create an attribute object that can hold the attribute with the given uid. (HF::Core::AttributeReport..." alt="" coords="295,122,484,163"/>
-<area shape="rect" id="node5" href="$group__attr__reporting__common.html#ga64303b6c1f6d441929d1ea7091f83a6a" title="Remove the rule with the given type and the given report_id. " alt="" coords="295,187,484,229"/>
-</map>

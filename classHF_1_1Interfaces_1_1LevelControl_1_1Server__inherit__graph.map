@@ -1,11 +1,11 @@
 <map id="HF::Interfaces::LevelControl::Server" name="HF::Interfaces::LevelControl::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="124,1605,371,1741"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="137,1173,359,1280"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Base.html" title="Level Control Interface : Parent. " alt="" coords="5,958,192,1079"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="16,785,180,906"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="33,222,196,549"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="115,600,279,707"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="53,5,176,171"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="216,973,380,1065"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleLevelControllable.html" title="Simple Level Controllable profile implementation. " alt="" coords="153,1793,343,1885"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="252,1452,500,1617"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="265,1023,487,1129"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Base.html" title="Level Control Interface : Parent. " alt="" coords="133,795,320,931"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="144,624,309,745"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
+<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="344,817,509,909"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleLevelControllable.html" title="Simple Level Controllable profile implementation. " alt="" coords="281,1667,471,1759"/>
 </map>

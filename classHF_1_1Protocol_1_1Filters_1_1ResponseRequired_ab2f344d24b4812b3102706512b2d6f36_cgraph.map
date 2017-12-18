@@ -1,6 +1,0 @@
-<map id="HF::Protocol::Filters::ResponseRequired::size" name="HF::Protocol::Filters::ResponseRequired::size">
-<area shape="rect" id="node2" href="$group__protocol.html#gadb2721cb64340788cecdd72f8628e579" title="Check if the given message types are the request and response for each other, for example..." alt="" coords="228,5,383,32"/>
-<area shape="rect" id="node3" href="$group__protocol.html#ga79b3df4806287c6b637d963e6f9874a8" title="Convert the given message type into a string and write it to the given stream. " alt="" coords="263,56,348,83"/>
-<area shape="rect" id="node4" href="$group__protocol.html#ga853e5da7e50646bf29c0dfea611c1034" title="Check if message type is a request. " alt="" coords="232,107,379,133"/>
-<area shape="rect" id="node5" href="$group__protocol.html#gaee9a7a9160cb9b4b920ec76aeb89f176" title="Check if message is a response. " alt="" coords="227,157,384,184"/>
-</map>

@@ -1,6 +1,5 @@
 var bind__management_8h =
 [
-    [ "Abstract", "bind__management_8h.html#ga315029e202cb9ed569e7aa7495196cd6", null ],
     [ "Attributes", "bind__management_8h.html#ga05e04666cc904df5f92d72725f90b751", [
       [ "NUMBER_OF_ENTRIES_ATTR", "bind__management_8h.html#gga05e04666cc904df5f92d72725f90b751afa53dfb7436586c0306771bbe8f6c2e4", null ]
     ] ],

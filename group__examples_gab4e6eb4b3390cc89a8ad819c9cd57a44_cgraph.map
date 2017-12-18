@@ -1,7 +1,0 @@
-<map id="to_json" name="to_json">
-<area shape="rect" id="node2" href="$classHF_1_1UID_1_1ByteArray.html#acfff111614fd66fcd98c9696babef5a6" title="Return the number of bytes in the underlining byte array. " alt="" coords="117,5,280,61"/>
-<area shape="rect" id="node3" href="$classHF_1_1UID_1_1UID.html#a27b030fefbb4eb8627eef0498ac4c53f" title="Get the underling wrapped UID_T pointer. " alt="" coords="132,85,265,112"/>
-<area shape="rect" id="node4" href="$classHF_1_1UID_1_1UID.html#a71e5fec487a1c7162b675d44118daf28" title="Type of the UID. " alt="" coords="130,136,267,163"/>
-<area shape="rect" id="node5" href="$structHF_1_1UID_1_1UID__T.html#a67764f54eda28434c5ccdb059ea80219" title="Type of the UID. " alt="" coords="555,136,707,163"/>
-<area shape="rect" id="node6" href="$structHF_1_1UID_1_1UID__T.html#ade600e62de5c626fa9dda2a4703e309c" title="Compare the current UID with the given UID. " alt="" coords="329,161,506,188"/>
-</map>

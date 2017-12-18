@@ -1,0 +1,9 @@
+digraph "HF::Interfaces::SimpleKeypad::create_attribute"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node3 [label="HF::Interfaces::SimpleKeypad\l::create_attribute",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="HF::Interfaces::SimpleKeypad\l::KeyPressed::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Interfaces_1_1SimpleKeypad_1_1KeyPressed.html#a536896527ff61861e3bba7d87516e950",tooltip="Number bytes needed to serialize the message. "];
+}

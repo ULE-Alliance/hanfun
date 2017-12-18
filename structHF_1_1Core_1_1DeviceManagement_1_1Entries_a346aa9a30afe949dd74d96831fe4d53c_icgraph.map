@@ -1,5 +1,0 @@
-<map id="HF::Core::DeviceManagement::Entries::end" name="HF::Core::DeviceManagement::Entries::end">
-<area shape="rect" id="node2" href="$group__examples.html#ga595ce42fe36ec8f0ca2a56d1432ae325" title="Check if the given address is available for registration. " alt="" coords="253,5,437,46"/>
-<area shape="rect" id="node3" href="$group__examples.html#gaa24a5abda0fcd09821ecab556dd9a2c0" title="Save the device entries into the JSON database. " alt="" coords="253,70,437,111"/>
-<area shape="rect" id="node4" href="$group__examples.html#ga6cbf648c24f17825cc0d5aa7ce5a6bfe" title="Save the bind entries into the JSON database. " alt="" coords="261,135,430,177"/>
-</map>

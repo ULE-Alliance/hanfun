@@ -2,15 +2,15 @@ var group__attr__reporting__common =
 [
     [ "Reference", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html", [
       [ "Reference", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#a36aa225d9f0aa10b4a7240f6e3c77fa9", null ],
-      [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#aa1c4fada4de8fe8540798ba7f512ec7a", null ],
-      [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#ad9d7e9917ead618f3debdcc84a732f0e", null ],
+      [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#a2446e476e9682a1409bad1d268c43503", null ],
+      [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#a9c4c1ee7bfbde12fdd34188c1f205934", null ],
       [ "unpack", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#afa0352423b406f81a32fae967b5eb2ce", null ],
       [ "id", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#acf15f84d7d9c0e3f4aa6d9f19f0f573c", null ],
       [ "type", "structHF_1_1Core_1_1AttributeReporting_1_1Reference.html#ad3d89e787bdf433599656448d83d7a6f", null ]
     ] ],
     [ "Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html", [
-      [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#a34f25a3a8778ab5f528d5c629cc929d7", null ],
-      [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#a80013d65f498804c3a45bd50183c1217", null ],
+      [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#a8da431092e7138cf9d250de4b981dcb8", null ],
+      [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#af6cc9f12257c6e014cefa42922adc392", null ],
       [ "unpack", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#a69174811da346732f6599927b2bc980a", null ],
       [ "itf", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#ac8325d66cfb00fff8a68b347fd8401a9", null ],
       [ "pack_id", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html#adbe992e353fe2ef90457913d655c5ec8", null ],
@@ -18,8 +18,8 @@ var group__attr__reporting__common =
     ] ],
     [ "Rule", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html", [
       [ "Rule", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#a4ba95f3818c015effa591581e3dc3399", null ],
-      [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#ac1631a368b73154a27b3513f0ec1d67f", null ],
-      [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#af819cfc09ee98b1108414edd80bb21cf", null ],
+      [ "pack", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#a7b338711ccb66810e503aab3ce0ef1e1", null ],
+      [ "size", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#a5eeb9c546d29f641f49db72541a8bb0c", null ],
       [ "unpack", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#aae1d459c06bf2196ecc82735593351c6", null ],
       [ "destination", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#abd58d6283a8e0cb5ac13dcd7136c79b5", null ],
       [ "report", "structHF_1_1Core_1_1AttributeReporting_1_1Rule.html#a6a213897347cbf98104467db11265f2c", null ]
@@ -38,7 +38,8 @@ var group__attr__reporting__common =
       [ "ADD_EVENT_ENTRY_CMD", "group__attr__reporting__common.html#ggabc48c996b7ab5e5a575122d56c42381ea5d4afafc28e3727fb4367aad627bbd52", null ],
       [ "DELETE_REPORT_CMD", "group__attr__reporting__common.html#ggabc48c996b7ab5e5a575122d56c42381ea59a566e2f498ddad26cf8ab4b61bd29e", null ],
       [ "GET_PERIODIC_ENTRIES", "group__attr__reporting__common.html#ggabc48c996b7ab5e5a575122d56c42381ea8e66c7d7daf9a3d4edfa5b78e65f6dc9", null ],
-      [ "GET_EVENT_ENTRIES", "group__attr__reporting__common.html#ggabc48c996b7ab5e5a575122d56c42381ea4ee37c28f7cb3de60345b81e94fb17b9", null ]
+      [ "GET_EVENT_ENTRIES", "group__attr__reporting__common.html#ggabc48c996b7ab5e5a575122d56c42381ea4ee37c28f7cb3de60345b81e94fb17b9", null ],
+      [ "UPDATE_INTERVAL_CMD", "group__attr__reporting__common.html#ggabc48c996b7ab5e5a575122d56c42381ea8dfd9acbdb80237b812eeffb73165bb9", null ]
     ] ],
     [ "Type", "group__attr__reporting__common.html#ga5dee0ba2828750575a162474b07772dd", [
       [ "PERIODIC", "group__attr__reporting__common.html#gga5dee0ba2828750575a162474b07772dda488fa3a02b292a4782f38008f26dc249", null ],
@@ -49,5 +50,6 @@ var group__attr__reporting__common =
     [ "create", "group__attr__reporting__common.html#gaa330e5c82415a9c760f9db20b6d9086f", null ],
     [ "create_attribute", "group__attr__reporting__common.html#ga00e8734e745f791b258275d5bc83fca2", null ],
     [ "destroy", "group__attr__reporting__common.html#ga64303b6c1f6d441929d1ea7091f83a6a", null ],
-    [ "destroy", "group__attr__reporting__common.html#gafa4ea0e7cd9db1c3bf33f6070853c037", null ]
+    [ "destroy", "group__attr__reporting__common.html#gafa4ea0e7cd9db1c3bf33f6070853c037", null ],
+    [ "update", "group__attr__reporting__common.html#gafcbb496bca808de56c396c0166f7cd1f", null ]
 ];

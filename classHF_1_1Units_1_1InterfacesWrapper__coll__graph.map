@@ -1,4 +1,4 @@
 <map id="HF::Units::InterfacesWrapper&lt; Base, ITF &gt;" name="HF::Units::InterfacesWrapper&lt; Base, ITF &gt;">
-<area shape="rect" id="node2" href="$classHF_1_1Interfaces_1_1Container.html" title="{HF::Interfaces::Container\l\&lt; Base, Proxy\&lt; ITF, Base \&gt;... \&gt;\n||+ Container()\l+ handle()\l+ attributes()\l+ interfaces()\l+ periodic()\l+ get()\l# for_each()\l# for_each()\l# for_each()\l# for_each()\l# find()\l# find()\l# attributes_itf()\l# attributes_itf()\l}" alt="" coords="5,365,216,648"/>
-<area shape="rect" id="node3" href="$classHF_1_1Interfaces_1_1Container.html" title="Helper class to add optional interfaces to other classes. " alt="" coords="25,5,196,288"/>
+<area shape="rect" id="node2" href="$classHF_1_1Interfaces_1_1Container.html" title="{HF::Interfaces::Container\l\&lt; Base, Proxy\&lt; ITF, Base \&gt;... \&gt;\n||+ Container()\l+ handle()\l+ attributes()\l+ interfaces()\l+ periodic()\l+ get()\l# for_each()\l# for_each()\l# for_each()\l# for_each()\l# find()\l# find()\l# attributes_itf()\l# attributes_itf()\l}" alt="" coords="5,365,217,648"/>
+<area shape="rect" id="node3" href="$classHF_1_1Interfaces_1_1Container.html" title="Helper class to add optional interfaces to other classes. " alt="" coords="26,5,197,288"/>
 </map>

@@ -1,6 +1,0 @@
-<map id="HF::Attributes::IAttribute::unpack" name="HF::Attributes::IAttribute::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Response.html#a047d84b704580e2e2a6d037b0cb83e88" title="Constructor. " alt="" coords="220,5,391,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Protocol_1_1SetAttributePack_1_1Response.html#ab1904af59479774a515eec9448df0cf4" title="Number bytes needed to serialize the message. " alt="" coords="219,70,392,111"/>
-<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1UIDS.html#a2703bcad141d2b865bcf528957378af1" title="Read a message from a ByteArray. " alt="" coords="233,135,378,177"/>
-<area shape="rect" id="node5" href="$structHF_1_1Protocol_1_1GetAttributePack_1_1Request.html#a51c0908326d354a98932e3db9329ce09" title="Read a message from a ByteArray. " alt="" coords="441,135,615,177"/>
-</map>

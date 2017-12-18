@@ -1,6 +1,6 @@
 <map id="HF::Interfaces::SimplePowerMeter::Base" name="HF::Interfaces::SimplePowerMeter::Base">
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_POWER_METER \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="27,785,195,906"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,222,168,549"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="108,600,272,707"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_POWER_METER \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 </map>

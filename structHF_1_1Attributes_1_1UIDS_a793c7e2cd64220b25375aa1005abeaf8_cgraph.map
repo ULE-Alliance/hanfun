@@ -1,4 +1,3 @@
 <map id="HF::Attributes::UIDS::unpack" name="HF::Attributes::UIDS::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="213,5,379,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1IAttribute.html#a47aab6577901e32b00c846a0af90a4bb" title="Attribute&#39;s UID. " alt="" coords="201,71,391,97"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#abfe9dbae9b4230dd6951c9063d59ca57" title="Read the byte at offset into data. " alt="" coords="199,5,365,47"/>
 </map>

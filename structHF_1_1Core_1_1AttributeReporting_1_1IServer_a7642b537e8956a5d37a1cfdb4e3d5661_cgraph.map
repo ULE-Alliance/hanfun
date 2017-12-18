@@ -1,4 +1,0 @@
-<map id="HF::Core::AttributeReporting::IServer::attributes" name="HF::Core::AttributeReporting::IServer::attributes">
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1AbstractInterface.html#a65be8e62db921e763111bfa66e9fd8ec" title="Notify that an attribute value as changed. " alt="" coords="243,5,405,46"/>
-<area shape="rect" id="node3" href="$group__protocol.html#gaee9a7a9160cb9b4b920ec76aeb89f176" title="Check if message is a response. " alt="" coords="245,71,403,97"/>
-</map>

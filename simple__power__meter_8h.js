@@ -1,6 +1,6 @@
 var simple__power__meter_8h =
 [
-    [ "ATTR_SETTER", "simple__power__meter_8h.html#aebff4541eabeed2931087f0b6ece5b49", null ],
+    [ "ATTR_SETTER", "simple__power__meter_8h.html#af6cb73a653a9e5b7d01a62cbe4df0dd3", null ],
     [ "Attributes", "simple__power__meter_8h.html#ga388c075746b63df67cfc7ff99fe91a5d", [
       [ "ENERGY_ATTR", "simple__power__meter_8h.html#gga388c075746b63df67cfc7ff99fe91a5dab61d7affd5fc40880590d58bb4861b93", null ],
       [ "ENERGY_AT_RESET_ATTR", "simple__power__meter_8h.html#gga388c075746b63df67cfc7ff99fe91a5daab072d72b9fab642f5e9dc18cbc53242", null ],

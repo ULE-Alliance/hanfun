@@ -1,28 +1,37 @@
 <map id="common.cpp" name="common.cpp">
-<area shape="rect" id="node9" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="2221,80,2303,107"/>
-<area shape="rect" id="node49" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="1406,80,1500,107"/>
-<area shape="rect" id="node11" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="1417,155,1489,181"/>
-<area shape="rect" id="node14" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="842,859,968,885"/>
-<area shape="rect" id="node28" href="$uids_8h.html" title="This file contains the declaration of the classes that implement the HAN&#45;FUN UIDs. " alt="" coords="446,395,545,421"/>
-<area shape="rect" id="node29" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="1493,784,1616,811"/>
-<area shape="rect" id="node30" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="1845,709,1971,736"/>
-<area shape="rect" id="node31" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="1095,627,1257,653"/>
-<area shape="rect" id="node32" href="$on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="1485,619,1624,661"/>
-<area shape="rect" id="node33" href="$level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="1649,619,1801,661"/>
-<area shape="rect" id="node34" href="$simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="2733,619,2896,661"/>
-<area shape="rect" id="node35" href="$simple__thermostat_8h.html" title="This file contains the definitions for the Simple Thermostat interface. " alt="" coords="1826,619,1989,661"/>
-<area shape="rect" id="node36" href="$simple__button_8h.html" title="This file contains the definitions for the Simple Button interface. " alt="" coords="2066,619,2229,661"/>
-<area shape="rect" id="node37" href="$simple__visual__effects_8h.html" title="This file contains the definitions for the Simple Visual Effects interface. " alt="" coords="2254,619,2417,661"/>
-<area shape="rect" id="node38" href="$simple__air__pressure_8h.html" title="This file contains the definitions for the Simple Air Pressure interface. " alt="" coords="2442,619,2605,661"/>
-<area shape="rect" id="node39" href="$core_8h.html" title="This file contains the forward declarations of the core services and interfaces implementing classes..." alt="" coords="997,395,1099,421"/>
-<area shape="rect" id="node40" href="$units_8h.html" title="This file contains the definitions for the HAN&#45;FUN unit implementation. " alt="" coords="748,469,852,496"/>
-<area shape="rect" id="node41" href="$profiles_8h.html" title="This file contains the declarations and definitions for the HAN&#45;FUN Profiles. " alt="" coords="1771,544,1889,571"/>
-<area shape="rect" id="node42" href="$device__management_8h.html" title="This file contains the definitions for the core Device Management Interface of the HAN&#45;FUN protocol..." alt="" coords="773,305,904,346"/>
-<area shape="rect" id="node43" href="$device__information_8h.html" title="This file contains the definition for the core Device Information interface of the HAN&#45;FUN protocol..." alt="" coords="1283,305,1415,346"/>
-<area shape="rect" id="node44" href="$attribute__reporting_8h.html" title="This file contains the definitions for the core Attribute Reporting Service in HAN&#45;FUN. " alt="" coords="445,305,585,346"/>
-<area shape="rect" id="node45" href="$bind__management_8h.html" title="This file contains the definitions for the core Bind Management Interface of the HAN&#45;FUN protocol..." alt="" coords="2392,312,2601,339"/>
-<area shape="rect" id="node46" href="$rssi_8h.html" title="This file contains the definitions for the RSSI interface. " alt="" coords="929,312,1055,339"/>
-<area shape="rect" id="node47" href="$suota_8h.html" title="This file contains the definitions for the SUOTA interface. " alt="" coords="611,312,748,339"/>
-<area shape="rect" id="node48" href="$devices_8h.html" title="This file contains the definitions for the devices in a HAN&#45;FUN network. " alt="" coords="1159,229,1280,256"/>
-<area shape="rect" id="node50" href="$debug_8h.html" title="This file contains the prototypes of the debug functionality in HAN&#45;FUN. " alt="" coords="173,155,283,181"/>
+<area shape="rect" id="node9" href="$apps_2common_8h.html" title="This file contains the definitions for the common functionality in the HAN&#45;FUN example applications..." alt="" coords="2077,80,2160,107"/>
+<area shape="rect" id="node49" href="$application_8h.html" title="This file contains the definitions for the HAN&#45;FUN example applications. " alt="" coords="382,80,477,107"/>
+<area shape="rect" id="node11" href="$hanfun_8h.html" title="This is the top level include file for the HAN&#45;FUN library. " alt="" coords="2083,155,2155,181"/>
+<area shape="rect" id="node14" href="$inc_2hanfun_2common_8h.html" title="This file contains the common defines for the HAN&#45;FUN library. " alt="" coords="841,871,967,897"/>
+<area shape="rect" id="node19" href="$uids_8h.html" title="This file contains the declaration of the classes that implement the HAN&#45;FUN UIDs. " alt="" coords="534,408,634,435"/>
+<area shape="rect" id="node20" href="$protocol_8h.html" title="This file contains the definitions for the HAN&#45;FUN protocol messages. " alt="" coords="2637,796,2760,823"/>
+<area shape="rect" id="node21" href="$interface_8h.html" title="This file contains the definitions common to all interfaces. " alt="" coords="1677,721,1803,748"/>
+<area shape="rect" id="node22" href="$alert_8h.html" title="This file contains the definitions for the Alert interface. " alt="" coords="635,639,797,666"/>
+<area shape="rect" id="node23" href="$on__off_8h.html" title="This file contains the definitions for the OnOff interface. " alt="" coords="2733,632,2873,673"/>
+<area shape="rect" id="node24" href="$level__control_8h.html" title="This file contains the definitions for the Level Control interface. " alt="" coords="2897,632,3050,673"/>
+<area shape="rect" id="node25" href="$simple__power__meter_8h.html" title="This file contains the definitions for the Simple Power Meter interface. " alt="" coords="822,632,986,673"/>
+<area shape="rect" id="node26" href="$simple__thermostat_8h.html" title="This file contains the definitions for the Simple Thermostat interface. " alt="" coords="1265,632,1429,673"/>
+<area shape="rect" id="node27" href="$simple__button_8h.html" title="This file contains the definitions for the Simple Button interface. " alt="" coords="1453,632,1617,673"/>
+<area shape="rect" id="node28" href="$simple__visual__effects_8h.html" title="This file contains the definitions for the Simple Visual Effects interface. " alt="" coords="1693,632,1857,673"/>
+<area shape="rect" id="node29" href="$simple__air__pressure_8h.html" title="This file contains the definitions for the Simple Air Pressure interface. " alt="" coords="1983,632,2147,673"/>
+<area shape="rect" id="node30" href="$simple__light__sensor_8h.html" title="This file contains the definitions for the Simple Light Sensor interface. " alt="" coords="2171,632,2335,673"/>
+<area shape="rect" id="node31" href="$colour__control_8h.html" title="This file contains the definitions for the Colour Control interface. " alt="" coords="2359,632,2521,673"/>
+<area shape="rect" id="node32" href="$simple__keypad_8h.html" title="This file contains the definitions for the Simple Keypad interface. " alt="" coords="2545,632,2709,673"/>
+<area shape="rect" id="node33" href="$core_8h.html" title="This file contains the forward declarations of the core services and interfaces implementing classes..." alt="" coords="2939,408,3040,435"/>
+<area shape="rect" id="node34" href="$units_8h.html" title="This file contains the definitions for the HAN&#45;FUN unit implementation. " alt="" coords="3149,483,3253,509"/>
+<area shape="rect" id="node35" href="$profiles_8h.html" title="This file contains the declarations and definitions for the HAN&#45;FUN Profiles. " alt="" coords="1835,557,1954,584"/>
+<area shape="rect" id="node36" href="$device__management_8h.html" title="This file contains the definitions for the core Device Management Interface of the HAN&#45;FUN protocol..." alt="" coords="2923,319,3055,360"/>
+<area shape="rect" id="node37" href="$device__information_8h.html" title="This file contains the definition for the core Device Information interface of the HAN&#45;FUN protocol..." alt="" coords="1475,319,1607,360"/>
+<area shape="rect" id="node38" href="$attribute__reporting_8h.html" title="This file contains the definitions for the core Attribute Reporting Service in HAN&#45;FUN. " alt="" coords="1309,319,1451,360"/>
+<area shape="rect" id="node39" href="$bind__management_8h.html" title="This file contains the definitions for the core Bind Management Interface of the HAN&#45;FUN protocol..." alt="" coords="1011,326,1221,353"/>
+<area shape="rect" id="node40" href="$group__management_8h.html" title="This file contains the definitions for the Group Management service. " alt="" coords="3361,237,3580,263"/>
+<area shape="rect" id="node41" href="$group__table_8h.html" title="This file contains the definitions for the Group Table service. " alt="" coords="3415,326,3587,353"/>
+<area shape="rect" id="node42" href="$rssi_8h.html" title="This file contains the definitions for the RSSI interface. " alt="" coords="3663,326,3790,353"/>
+<area shape="rect" id="node43" href="$suota_8h.html" title="This file contains the definitions for the SUOTA interface. " alt="" coords="3254,326,3391,353"/>
+<area shape="rect" id="node44" href="$time_8h.html" title="This file contains the definitions for the Time service. " alt="" coords="2283,326,2413,353"/>
+<area shape="rect" id="node45" href="$batch__program__management_8h.html" title="This file contains the definitions for the Batch Program Management interface. " alt="" coords="2974,229,3154,271"/>
+<area shape="rect" id="node46" href="$event__scheduling_8h.html" title="This file contains the definitions for the Event Scheduling service. " alt="" coords="2438,326,2645,353"/>
+<area shape="rect" id="node47" href="$weekly__scheduling_8h.html" title="This file contains the definitions for the Weekly Scheduling service. " alt="" coords="2525,229,2659,271"/>
+<area shape="rect" id="node48" href="$devices_8h.html" title="This file contains the definitions for the devices in a HAN&#45;FUN network. " alt="" coords="1327,237,1449,263"/>
+<area shape="rect" id="node50" href="$debug_8h.html" title="This file contains the prototypes of the debug functionality in HAN&#45;FUN. " alt="" coords="195,155,306,181"/>
 </map>

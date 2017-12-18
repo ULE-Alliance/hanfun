@@ -1,0 +1,17 @@
+digraph "HF::Core::AttributeReporting::Report::Event::AddEntryMessage::entry_size"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node12 [label="HF::Core::AttributeReporting\l::Report::Event::AddEntryMessage\l::entry_size",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node12 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="HF::Core::AttributeReporting::add",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__attr__reporting__common.html#ga16e2adb57b2437af38b51963ab2631bc",tooltip="Add the periodic entries from start to end into the rule with the given report reference. "];
+  Node12 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="HF::Core::AttributeReporting\l::create",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__attr__reporting__common.html#ga97ba6170bfd3e3f4fea987c5e7e5ebd4",tooltip="Create a new attribute reporting event rule for the device with the given address. "];
+  Node12 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="HF::Core::AttributeReporting\l::create_attribute",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__attr__reporting__common.html#ga00e8734e745f791b258275d5bc83fca2",tooltip="Create an attribute object that can hold the attribute with the given uid. (HF::Core::AttributeReport..."];
+  Node12 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="HF::Core::AttributeReporting\l::destroy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__attr__reporting__common.html#ga64303b6c1f6d441929d1ea7091f83a6a",tooltip="Remove the rule with the given type and the given report_id. "];
+  Node12 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="HF::Core::AttributeReporting\l::update",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__attr__reporting__common.html#gafcbb496bca808de56c396c0166f7cd1f",tooltip="Change the Update Interval for the specified report. "];
+}

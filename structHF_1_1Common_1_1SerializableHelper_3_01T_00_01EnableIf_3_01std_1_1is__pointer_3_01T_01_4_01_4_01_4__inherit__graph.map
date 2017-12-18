@@ -1,3 +1,0 @@
-<map id="HF::Common::SerializableHelper&lt; T, EnableIf&lt; std::is_pointer&lt; T &gt; &gt; &gt;" name="HF::Common::SerializableHelper&lt; T, EnableIf&lt; std::is_pointer&lt; T &gt; &gt; &gt;">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,6,181,127"/>
-</map>

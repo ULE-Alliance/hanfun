@@ -1,5 +1,5 @@
 <map id="HF::Core::Unit0" name="HF::Core::Unit0">
-<area shape="rect" id="node2" href="$classHF_1_1Units_1_1AbstractUnit.html" title="This is the parent class for all HAN&#45;FUN units. " alt="" coords="4,373,163,539"/>
-<area shape="rect" id="node3" href="$structHF_1_1Units_1_1IUnit.html" title="This class represents the interface implemented by all HAN&#45;FUN units. " alt="" coords="27,160,141,325"/>
-<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="13,5,153,112"/>
+<area shape="rect" id="node2" href="$classHF_1_1Units_1_1AbstractUnit.html" title="This is the parent class for all HAN&#45;FUN units. " alt="" coords="5,373,165,539"/>
+<area shape="rect" id="node3" href="$structHF_1_1Units_1_1IUnit.html" title="This class represents the interface implemented by all HAN&#45;FUN units. " alt="" coords="28,160,143,325"/>
+<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="15,5,156,112"/>
 </map>

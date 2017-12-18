@@ -1,33 +1,35 @@
 var group__common__profile =
 [
     [ "IProfile", "structHF_1_1Profiles_1_1IProfile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1IProfile.html#a99054eab835ceeb55b39297222338168", null ],
-      [ "uid", "structHF_1_1Profiles_1_1IProfile.html#a96dce7da250d858c9b329c2476f7a01a", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1IProfile.html#ad0bf4997cc500bc4fdf64f91c4b13721", null ],
+      [ "uid", "structHF_1_1Profiles_1_1IProfile.html#aa114bf5ebfc35c22e98c8b4d1c8dd555", null ]
     ] ],
     [ "AbstractProfile", "structHF_1_1Profiles_1_1AbstractProfile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1AbstractProfile.html#a32cb08254edaa9e99b754a81e1acc170", null ],
+      [ "attributes", "structHF_1_1Profiles_1_1AbstractProfile.html#a11c0886bb37602d63ca3e0e28b3d7a29", null ],
       [ "handle", "structHF_1_1Profiles_1_1AbstractProfile.html#a30fa0ec8d758b8e1bb16bec07aa1e720", null ],
-      [ "uid", "structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab", null ]
+      [ "uid", "structHF_1_1Profiles_1_1AbstractProfile.html#aa73ab0b33770113cf9efa46cf06d6c35", null ]
     ] ],
     [ "Profile", "structHF_1_1Profiles_1_1Profile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1Profile.html#ac9f54d760ca1a6ee80c14ebd5ce54c07", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1Profile.html#a9cc66a6cab3cf402ff31407c3f22f286", null ],
+      [ "attributes", "structHF_1_1Profiles_1_1Profile.html#aa638de2c2d5acbc89b96455b5eb70972", null ],
+      [ "handle", "structHF_1_1Profiles_1_1Profile.html#a35c377201d22fbbc1c606313a41a6034", null ]
     ] ],
     [ "ProfileN", "classHF_1_1Profiles_1_1ProfileN.html", [
-      [ "attributes", "classHF_1_1Profiles_1_1ProfileN.html#ab1c160a7c7e53378e00b9a61ea3df02b", null ],
+      [ "attributes", "classHF_1_1Profiles_1_1ProfileN.html#ab43f9bfa977b0a66bb956c68ed61e36a", null ],
       [ "handle", "classHF_1_1Profiles_1_1ProfileN.html#ab016d0ef39c7616883bf90914700d6e8", null ],
-      [ "notify", "classHF_1_1Profiles_1_1ProfileN.html#a4f84307b9f6b6dac163a326feea8b540", null ],
+      [ "notify", "classHF_1_1Profiles_1_1ProfileN.html#a4bd735e85a784cfd219aa8584153b1aa", null ],
       [ "send", "classHF_1_1Profiles_1_1ProfileN.html#af87c93600dfddaadae6e26a4103799a8", null ]
     ] ],
     [ "Profile2", "structHF_1_1Profiles_1_1Profile2.html", [
       [ "first", "structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492", null ],
-      [ "first", "structHF_1_1Profiles_1_1Profile2.html#a9e910c4d956a37991afb8ce8c54ecef0", null ],
+      [ "first", "structHF_1_1Profiles_1_1Profile2.html#ad8a8f74bee08ab15e21289fcd6d6fbb8", null ],
       [ "second", "structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008", null ],
-      [ "second", "structHF_1_1Profiles_1_1Profile2.html#ad4a749c7cca1fbaaf4668eb47ae1cb1d", null ]
+      [ "second", "structHF_1_1Profiles_1_1Profile2.html#a66abc571433fad1c59bbfbc339f23f2b", null ]
     ] ],
     [ "Detector", "structHF_1_1Profiles_1_1Detector.html", [
       [ "alert", "structHF_1_1Profiles_1_1Detector.html#a02724b2e5f83ef4ee472feb61a29d6db", null ],
       [ "alert", "structHF_1_1Profiles_1_1Detector.html#a1af8fcbee50c5b598357eb84a493a330", null ],
-      [ "attributes", "structHF_1_1Profiles_1_1Detector.html#a547b27685fcfb9f6b2619cc0c70cab8e", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1Detector.html#a4a5716f017e20c26e73f8dbcc3bc54af", null ]
     ] ],
     [ "UID", "group__common__profile.html#ga0c568d585cd0b917c43e49b7f16baa70", [
       [ "SIMPLE_ONOFF_SWITCHABLE", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a903b65277d62b90d056a1fac4ef8d75e", null ],
@@ -51,6 +53,10 @@ var group__common__profile =
       [ "CONTROLABLE_THERMOSTAT", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70abf9761850632273b670c04a3cfca36fe", null ],
       [ "SIMPLE_LED", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a916099dcbf5a09df5142509350dc56e8", null ],
       [ "ENVIRONMENT_MONITOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a928b0e632195b210a7443c4b0fdfc87f", null ],
+      [ "COLOUR_BULB", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a89db1b1ac8ac45acc0e41f84ea0e4459", null ],
+      [ "DIMMABLE_COLOUR_BULB", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a8d615fa6aaed3b71b1b2e4cc8136bb84", null ],
+      [ "TRACKER", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a0b61506b3660ca5f91238acd546e1c9f", null ],
+      [ "SIMPLE_KEYPAD", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70af347570b39475a704bb46cbb2d714b4b", null ],
       [ "SIMPLE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70adf8489206c0c4016d174ad741d408fdf", null ],
       [ "DOOR_OPEN_CLOSE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70ae7a32367bbc0df9ad1f32e4ac2449b50", null ],
       [ "WINDOW_OPEN_CLOSE_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a1c68e8fe9b4ec8eff95b8379180ea31d", null ],
@@ -60,6 +66,7 @@ var group__common__profile =
       [ "FLOOD_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a8657587efb7c63e14e1a562c09a22c8f", null ],
       [ "GLASS_BREAK_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a0f8bcc2bc6d2997a125fe91688b0e209", null ],
       [ "VIBRATION_DETECTOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a5bec0d8fc9a3b14bd1fc2cf89f49fc4a", null ],
+      [ "SIMPLE_LIGHT_SENSOR", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a3f6a4bad0b8f7be29ef2b583f8132476", null ],
       [ "SIREN", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a7120b90b54c2f5ad551173459496c77a", null ],
       [ "ALERTABLE", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a6e2f1b1381f80ddff2ae541451f68b2d", null ],
       [ "SIMPLE_PENDANT", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70afd7145f3d55a08b408529be513d3aa41", null ],

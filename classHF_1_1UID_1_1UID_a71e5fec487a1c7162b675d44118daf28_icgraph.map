@@ -1,6 +1,0 @@
-<map id="HF::UID::UID::type" name="HF::UID::UID::type">
-<area shape="rect" id="node2" href="$group__examples.html#gab4e6eb4b3390cc89a8ad819c9cd57a44" title="Serialize a HF::Common::Interface to the given Json::Value. " alt="" coords="192,77,256,104"/>
-<area shape="rect" id="node3" href="$group__examples.html#gaa24a5abda0fcd09821ecab556dd9a2c0" title="Save the device entries into the JSON database. " alt="" coords="304,5,488,46"/>
-<area shape="rect" id="node4" href="$group__examples.html#ga6cbf648c24f17825cc0d5aa7ce5a6bfe" title="Save the bind entries into the JSON database. " alt="" coords="311,70,481,111"/>
-<area shape="rect" id="node5" href="$group__examples.html#ga6b059f30ce7220da606d73f16d9aeec8" title="Serialize a HF::Core::DeviceManagement::Unit to the given Json::Value. " alt="" coords="364,136,428,163"/>
-</map>

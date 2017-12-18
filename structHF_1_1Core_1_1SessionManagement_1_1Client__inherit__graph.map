@@ -1,7 +1,7 @@
 <map id="HF::Core::SessionManagement::Client&lt; _Entry &gt;" name="HF::Core::SessionManagement::Client&lt; _Entry &gt;">
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1SessionManagement_1_1Client.html" title="{HF::Core::SessionManagement\l::Client\&lt; Entry \&gt;\n||+ entries()\l# handle_command()\l* entries()\l}" alt="" coords="5,467,211,589"/>
-<area shape="rect" id="node5" href="$structHF_1_1Core_1_1SessionManagement_1_1Client.html" title="{HF::Core::SessionManagement\l::Client\&lt; Device \&gt;\n||+ entries()\l# handle_command()\l* entries()\l}" alt="" coords="235,467,441,589"/>
-<area shape="rect" id="node2" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractClient.html" title="Parent class for session management functionality &#45; Client side. " alt="" coords="85,5,291,229"/>
-<area shape="rect" id="node4" href="$classHF_1_1Core_1_1BindManagement_1_1Client.html" title="Bind Management interface : Client side. " alt="" coords="15,677,200,1019"/>
-<area shape="rect" id="node6" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html" title="Device Management interface : Client side. " alt="" coords="239,641,437,1055"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1SessionManagement_1_1Client.html" title="{HF::Core::SessionManagement\l::Client\&lt; Entry \&gt;\n||+ entries()\l# handle_command()\l* entries()\l}" alt="" coords="5,463,212,584"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1SessionManagement_1_1Client.html" title="{HF::Core::SessionManagement\l::Client\&lt; Device \&gt;\n||+ entries()\l# handle_command()\l* entries()\l}" alt="" coords="236,463,443,584"/>
+<area shape="rect" id="node2" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractClient.html" title="Parent class for session management functionality &#45; Client side. " alt="" coords="85,5,292,229"/>
+<area shape="rect" id="node4" href="$classHF_1_1Core_1_1BindManagement_1_1Client.html" title="Bind Management interface : Client side. " alt="" coords="16,670,201,1011"/>
+<area shape="rect" id="node6" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html" title="Device Management interface : Client side. " alt="" coords="239,633,439,1048"/>
 </map>

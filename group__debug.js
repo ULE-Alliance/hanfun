@@ -7,6 +7,6 @@ var group__debug =
     [ "HF_LOG_LEVEL_NONE", "group__debug.html#ga40afb167804dbc4625463ea87574cfbd", null ],
     [ "HF_LOG_LEVEL_TRACE", "group__debug.html#ga2572b92303b0bad71acdebd2bc40f6ee", null ],
     [ "HF_LOG_LEVEL_WARN", "group__debug.html#ga9dc64662d07b8dacce037b1872ef66b1", null ],
-    [ "LOG", "group__debug.html#ga4d216c4c0ea8b8f6d414f5d6a80f471a", null ],
+    [ "LOG", "group__debug.html#gadadcbb9e426e1bf6bd7ac06dac7f958b", null ],
     [ "NL", "group__debug.html#ga4fc34b120ed3bd1120c1eb36abbcd6af", null ]
 ];

@@ -1,4 +1,0 @@
-<map id="HF::Core::SUOTA::UpgradeStatus::pack" name="HF::Core::SUOTA::UpgradeStatus::pack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1SerializableHelper.html#a2423e991645b66073fac6cad7fe5f6ff" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="240,5,416,46"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="245,70,411,111"/>
-</map>

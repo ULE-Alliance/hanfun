@@ -1,0 +1,11 @@
+digraph "HF::Devices::AbstractDevice::receive"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node23 [label="HF::Devices::AbstractDevice\l::receive",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node23 -> Node24 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node24 [label="HF::Devices::Concentrator\l::AbstractBase::address",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html#ad0dd04e163140bca05b5d37253d2805c",tooltip="Return the device address on the HAN-FUN network, when the device is registered, or HF_BROADCAST_ADDR..."];
+  Node23 -> Node25 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node25 [label="HF::Devices::AbstractDevice\l::remove",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Devices_1_1AbstractDevice.html#a9080349b793cf0ff7653617a5266e6cb",tooltip="Remove unit from device&#39;s unit list. "];
+}

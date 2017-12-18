@@ -1,6 +1,6 @@
 <map id="HF::Core::SessionManagement::AbstractServer::find" name="HF::Core::SessionManagement::AbstractServer::find">
-<area shape="rect" id="node2" href="$group__sessions.html#gad7cb600975035699353bb19d6bb10e99" title="Terminate the session associated with the device with the given address. " alt="" coords="262,5,469,46"/>
-<area shape="rect" id="node3" href="$group__sessions.html#ga8bee657bbffe64a948ea7e052b4c8037" title="Check if a session for the device with the given address exists. " alt="" coords="262,70,469,111"/>
-<area shape="rect" id="node4" href="$group__sessions.html#ga198975947b97c1d61da94af611190092" title="Check if the session for the device with the given address is valid, i.e., the underling entries have..." alt="" coords="262,135,469,177"/>
-<area shape="rect" id="node5" href="$group__sessions.html#ga1f7d644564b48b266b80a9267b65acbe" title="Start a session for the device with the given address. " alt="" coords="262,200,469,256"/>
+<area shape="rect" id="node2" href="$group__sessions.html#gad7cb600975035699353bb19d6bb10e99" title="Terminate the session associated with the device with the given address. " alt="" coords="260,5,467,47"/>
+<area shape="rect" id="node3" href="$group__sessions.html#ga77c9a059b5bf449dc65f73db3ca56e5a" title="Check if a session for the device with the given address exists. " alt="" coords="260,71,467,112"/>
+<area shape="rect" id="node4" href="$group__sessions.html#gab027d743e15a605f450b7ad6a8d2c460" title="Check if the session for the device with the given address is valid, i.e., the underling entries have..." alt="" coords="260,136,467,177"/>
+<area shape="rect" id="node5" href="$group__sessions.html#ga1f7d644564b48b266b80a9267b65acbe" title="Start a session for the device with the given address. " alt="" coords="260,201,467,257"/>
 </map>
