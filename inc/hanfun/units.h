@@ -166,7 +166,7 @@ namespace HF
        * Proxy class for service objects.
        */
       template<typename _Interface, typename _Proxy>
-      struct Proxy<_Interface, _Proxy, EnableIf<Parent<HF::Core::IService, _Interface>>>:
+      struct Proxy<_Interface, _Proxy, EnableIf(IsParent(HF::Core::IService, _Interface))>:
          public _Interface
       {
          typedef _Interface base;

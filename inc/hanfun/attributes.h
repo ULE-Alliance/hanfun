@@ -525,7 +525,7 @@ namespace HF
        * @tparam _Owwer underling data type for the attribute's owner.
        */
       template<typename T, typename _Owner>
-      struct Attribute<T, _Owner, EnableIf<Parent<HF::Interface, _Owner>>>:
+      struct Attribute<T, _Owner, EnableIf(IsParent(HF::Interface, _Owner))>:
          public AbstractAttribute
       {
          typedef typename std::remove_reference<T>::type value_type;
