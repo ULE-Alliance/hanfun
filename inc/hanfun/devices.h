@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

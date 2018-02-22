@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Group Management service : Server role.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

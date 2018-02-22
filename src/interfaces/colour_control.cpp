@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Colour Control interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
