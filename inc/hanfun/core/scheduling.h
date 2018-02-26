@@ -541,7 +541,7 @@ namespace HF
             typedef typename Container::const_iterator const_iterator;
             typedef typename Container::value_type value_type;
 
-            virtual ~Entries() = default;
+            virtual ~Entries() {}
 
             //! @copydoc HF::Common::IEntries::size
             uint16_t size() const

@@ -645,7 +645,7 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            virtual ~Entries() = default;
+            virtual ~Entries() {}
 
             uint16_t size() const;
 
@@ -751,7 +751,7 @@ namespace HF
             IServer(Unit0 &unit): Server(unit) {}
 
             //! Destructor
-            virtual ~IServer() = default;
+            virtual ~IServer() {}
 
             // ======================================================================
             // Events

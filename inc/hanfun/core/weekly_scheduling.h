@@ -257,7 +257,7 @@ namespace HF
                {}
 
                //! Destructor
-               virtual ~IClient() = default;
+               virtual ~IClient() {}
 
                static constexpr HF::Interface::UID ITF = HF::Interface::WEEKLY_SCHEDULING;
 
@@ -445,7 +445,7 @@ namespace HF
                {}
 
                //! Destructor
-               virtual ~IServer() = default;
+               virtual ~IServer() {}
 
                // =============================================================================
                // Entries API
