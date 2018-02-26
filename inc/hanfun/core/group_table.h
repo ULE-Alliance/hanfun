@@ -459,13 +459,15 @@ namespace HF
             protected:
 
             //! Number Of Max Entries
-            uint8_t _number_of_max_entries = std::numeric_limits<uint8_t>::max();
+            uint8_t _number_of_max_entries;
 
             public:
 
             //! Constructor
             IServer(Unit0 &unit):
-               ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>(unit) {}
+               ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>(unit),
+               _number_of_max_entries(std::numeric_limits<uint8_t>::max())
+            {}
 
             //! Destructor
             virtual ~IServer() {}

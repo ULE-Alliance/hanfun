@@ -123,9 +123,9 @@ namespace HF
           */
          struct BlinkEffect
          {
-            uint16_t duty_cycle_on    = 0;   //!< Number of miliseconds to keep visual indicator @c ON.
-            uint16_t duty_cycle_off   = 0;   //!< Number of miliseconds to keep visual indicator @c OFF.
-            uint16_t number_of_cycles = 1;   //!< Number of times to repeat the ON-OFF cycle.
+            uint16_t duty_cycle_on;      //!< Number of miliseconds to keep visual indicator @c ON.
+            uint16_t duty_cycle_off;     //!< Number of miliseconds to keep visual indicator @c OFF.
+            uint16_t number_of_cycles;   //!< Number of times to repeat the ON-OFF cycle.
 
             /*!
              * Constructor
@@ -190,9 +190,9 @@ namespace HF
           */
          struct FadeEffect
          {
-            uint8_t  start    = 0;  //!< Start brightness in percentage.
-            uint8_t  end      = 0;  //!< End brightness in percentage.
-            uint16_t duration = 0;  //!< Time in miliseconds to go from @c start to @c end brightness.
+            uint8_t  start;     //!< Start brightness in percentage.
+            uint8_t  end;       //!< End brightness in percentage.
+            uint16_t duration;  //!< Time in miliseconds to go from @c start to @c end brightness.
 
             FadeEffect(uint8_t _start = 0, uint8_t _end = 0, uint16_t _duration = 0):
                start(_start), end(_end), duration(_duration) {}
@@ -236,15 +236,15 @@ namespace HF
           */
          struct BreatheEffect
          {
-            uint8_t  start            = 0; //!< Start brightness in percentage.
-            uint16_t start_hold       = 0; //!< Number of miliseconds to hold @c start brightness.
-            uint16_t ste_duration     = 0; //!< Number of miliseconds to go from @c start to @c end brightness.
+            uint8_t  start;        //!< Start brightness in percentage.
+            uint16_t start_hold;   //!< Number of miliseconds to hold @c start brightness.
+            uint16_t ste_duration; //!< Number of miliseconds to go from @c start to @c end brightness.
 
-            uint8_t  end              = 0; //!< End brightness in percentage.
-            uint16_t end_hold         = 0; //!< Number of miliseconds to hold @c end brightness.
-            uint16_t ets_duration     = 0; //!< Number of miliseconds to go from @c end to @c start brightness.
+            uint8_t  end;          //!< End brightness in percentage.
+            uint16_t end_hold;     //!< Number of miliseconds to hold @c end brightness.
+            uint16_t ets_duration; //!< Number of miliseconds to go from @c end to @c start brightness.
 
-            uint16_t number_of_cycles = 1;      //!< Number of times to repeat the Start-End-Start cycle.
+            uint16_t number_of_cycles; //!< Number of times to repeat the Start-End-Start cycle.
 
             BreatheEffect(uint8_t _start = 0, uint16_t _start_hold = 0,
                           uint16_t _ste_duration = 0,
