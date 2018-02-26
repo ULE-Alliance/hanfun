@@ -136,7 +136,7 @@ uint16_t Action::unpack(const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Entry::size() const
 {
-   using SerializableHelper = Common::SerializableHelperVector<std::vector<Action>, uint8_t>;
+   typedef Common::SerializableHelperVector<std::vector<Action>, uint8_t> SerializableHelper;
    SerializableHelper helper(const_cast<std::vector<Action> &>(actions));
 
    return (min_size + name.length() + helper.size() - 1);   // -1 because the helper counts with the

@@ -165,7 +165,7 @@ namespace HF
                uint8_t     id;
                std::string name;
 
-               using string_helper = HF::Common::SerializableHelper<std::string>;
+               typedef HF::Common::SerializableHelper<std::string> string_helper;
 
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = sizeof(uint8_t) + string_helper::min_size;

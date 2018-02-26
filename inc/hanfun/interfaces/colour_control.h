@@ -1542,7 +1542,7 @@ namespace HF
          struct Server: public IServer
          {
             //! Container for the transitions.
-            using Container = typename std::vector<ITransition *>;
+            typedef typename std::vector<ITransition *> Container;
 
             public:
 

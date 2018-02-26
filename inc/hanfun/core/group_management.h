@@ -144,7 +144,7 @@ namespace HF
           */
          struct Group: public GroupAddress
          {
-            using Container = std::vector<Member>;
+            typedef std::vector<Member> Container;
 
             std::string name; //!< %Group Name
 
@@ -743,7 +743,7 @@ namespace HF
           */
          class IServer: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
          {
-            using Server = ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>;
+            typedef ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE> Server;
 
             public:
 
@@ -1070,7 +1070,7 @@ namespace HF
           */
          struct GroupTableClient: public IGroupTable
          {
-            using Entry = std::tuple<Protocol::Address, Message, uint8_t>;
+            typedef std::tuple<Protocol::Address, Message, uint8_t> Entry;
 
             enum Fields
             {

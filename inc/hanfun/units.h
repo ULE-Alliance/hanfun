@@ -181,7 +181,7 @@ namespace HF
       template<typename Base, typename... ITF>
       class InterfacesWrapper: public Interfaces::Container<Base, Proxy<ITF, Base>...>
       {
-         using Container = Interfaces::Container<Base, Proxy<ITF, Base>...>;
+         typedef Interfaces::Container<Base, Proxy<ITF, Base>...> Container;
 
          public:
 
@@ -198,8 +198,8 @@ namespace HF
       {
          uint8_t _id;
 
-         using Base    = Unit<Profile, ITF...>;
-         using Wrapper = InterfacesWrapper<Unit<Profile, ITF...>, ITF...>;
+         typedef Unit<Profile, ITF...> Base;
+         typedef InterfacesWrapper<Unit<Profile, ITF...>, ITF...> Wrapper;
 
          public:
 

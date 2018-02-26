@@ -821,7 +821,7 @@ namespace HF
       {
          T &data;
 
-         using value_type = typename T::value_type;
+         typedef typename T::value_type value_type;
 
          SerializableHelperVector(T &data): data(data) {}
 
@@ -916,7 +916,7 @@ namespace HF
       {
          T &data;
 
-         using value_type = typename T::value_type;
+         typedef typename T::value_type value_type;
 
          SerializableHelperVector(T &data): data(data) {}
 

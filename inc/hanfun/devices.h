@@ -233,7 +233,7 @@ namespace HF
                                           typename HF::Unit0<IUnit0, ITF...>::DeviceMgt>::value,
                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
-            using interfaces_t = std::tuple<ITF...>;
+            typedef std::tuple<ITF...> interfaces_t;
 
             typedef typename HF::Unit0<IUnit0, ITF...> _Parent;
 
@@ -677,7 +677,7 @@ namespace HF
             typedef typename _Parent::DeviceMgt DeviceMgt;
             typedef typename _Parent::AttrReporting AttrReporting;
 
-            using interfaces_t = std::tuple<ITF...>;
+            typedef std::tuple<ITF...> interfaces_t;
 
 #if HF_GROUP_SUPPORT
             typedef typename _Parent::GroupTable GroupTable;

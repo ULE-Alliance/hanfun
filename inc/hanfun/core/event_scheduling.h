@@ -188,11 +188,11 @@ namespace HF
              */
             HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
-            using IServerBase = Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
-                                                 Scheduling::IServer>;
+            typedef Scheduling::Base<HF::Interface::EVENT_SCHEDULING,
+                                     Scheduling::IServer> IServerBase;
 
-            using IClientBase = Interfaces::Interface<HF::Interface::EVENT_SCHEDULING,
-                                                      Scheduling::IClient>;
+            typedef Interfaces::Interface<HF::Interface::EVENT_SCHEDULING,
+                                          Scheduling::IClient> IClientBase;
 
             /*!
              * %Event %Scheduling %Service : %Client side implementation.

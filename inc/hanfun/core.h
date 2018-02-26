@@ -263,8 +263,8 @@ namespace HF
       static_assert(std::is_base_of<HF::Core::Unit0, Base>::value,
                     "Base must be of type HF::Core::Unit0");
 
-      using InterfacesWrapper = Units::InterfacesWrapper<Base, ITF...>;
-      using interfaces_t      = std::tuple<ITF...>;
+      typedef typename Units::InterfacesWrapper<Base, ITF...> InterfacesWrapper;
+      typedef typename std::tuple<ITF...> interfaces_t;
 
       public:
 

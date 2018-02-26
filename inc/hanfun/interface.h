@@ -444,7 +444,7 @@ namespace HF
       template<typename Base, typename... Proxies>
       class Container
       {
-         using interfaces_t = std::tuple<Proxies...>;
+         typedef std::tuple<Proxies...> interfaces_t;
 
          //! Tuple containing the interfaces.
          interfaces_t _interfaces;

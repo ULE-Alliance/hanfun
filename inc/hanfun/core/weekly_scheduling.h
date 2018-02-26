@@ -239,11 +239,11 @@ namespace HF
              */
             HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
-            using IServerBase = Scheduling::Base<HF::Interface::WEEKLY_SCHEDULING,
-                                                 Scheduling::IServer>;
+            typedef Scheduling::Base<HF::Interface::WEEKLY_SCHEDULING,
+                                     Scheduling::IServer> IServerBase;
 
-            using IClientBase = Interfaces::Interface<HF::Interface::WEEKLY_SCHEDULING,
-                                                      Scheduling::IClient>;
+            typedef Interfaces::Interface<HF::Interface::WEEKLY_SCHEDULING,
+                                          Scheduling::IClient> IClientBase;
 
             /*!
              * %Weekly %Scheduling %Service : %Client side implementation.
