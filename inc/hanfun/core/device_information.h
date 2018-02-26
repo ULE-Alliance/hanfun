@@ -109,13 +109,13 @@ namespace HF
          constexpr static uint16_t EMC              = HF_DEVICE_MANUFACTURER_CODE;  //!< Electronic Manufacture Code.
 
 #if HF_CORE_DEV_INFO_APP_VERSION_ATTR
-         constexpr static char *APPLICATION_VERSION = HF_APPLICATION_VERSION; //!< Application Version.
+         constexpr static _const char *APPLICATION_VERSION = HF_APPLICATION_VERSION; //!< Application Version.
 #endif
 #if HF_CORE_DEV_INFO_HW_VERSION_ATTR
-         constexpr static char *HARDWARE_VERSION = HF_HARDWARE_VERSION;       //!< Hardware Version.
+         constexpr static _const char *HARDWARE_VERSION = HF_HARDWARE_VERSION;       //!< Hardware Version.
 #endif
 #if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
-         constexpr static char *MANUFACTURER_NAME = HF_MANUFACTURER_NAME;     //!< Manufacturer Name.
+         constexpr static _const char *MANUFACTURER_NAME = HF_MANUFACTURER_NAME;     //!< Manufacturer Name.
 #endif
 
          //! Attributes.

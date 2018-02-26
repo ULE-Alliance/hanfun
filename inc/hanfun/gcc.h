@@ -66,9 +66,13 @@ nullptr = {};
 
    #define _override
 
+   #define _const
+
 #else
 
 #define _override                     override
+
+#define _const                        const
 
 #endif
 
