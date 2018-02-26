@@ -490,7 +490,7 @@ namespace HF
              * @retval  true  if the packet if for the node;
              * @retval  false otherwise.
              */
-            bool to_local(const Protocol::Packet &packet) const override
+            bool to_local(const Protocol::Packet &packet) const _override
             {
                return AbstractDevice::to_local(packet) ||
                       // If we are unregistered only allow packets to unit 0.
