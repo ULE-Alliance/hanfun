@@ -34,7 +34,7 @@ using namespace HF::Core::Scheduling;
 void Weekly::IClient::define_event(const Protocol::Address &addr, uint8_t id, uint8_t status,
                                    Day &time, uint8_t pid)
 {
-   DefineEvent<Day> msg(id, status, time, pid);
+   HF::Core::Scheduling::Entry<Day> msg(id, status, time, pid);
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 

@@ -103,7 +103,7 @@ Common::Result Weekly::IServer::handle_command(Protocol::Packet &packet, Common:
    {
       case DEFINE_EVENT_CMD:
       {
-         DefineEvent<Day> msg;
+         HF::Core::Scheduling::Entry<Day> msg;
          msg.unpack(payload, offset);
          return define_event(packet, msg);
       }

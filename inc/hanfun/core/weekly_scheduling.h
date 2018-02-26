@@ -387,7 +387,7 @@ namespace HF
                 * @retval  Common::Result::FAIL_UNKNOWN     otherwise.
                 */
                virtual Common::Result define_event(const Protocol::Packet &packet,
-                                                   DefineEvent<Day> &msg);
+                                                   Scheduling::Entry<Day> &msg);
 
                /*!
                 * Callback that is called when a @c Scheduling::UPDATE_STATUS_CMD,

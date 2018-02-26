@@ -103,7 +103,7 @@ Common::Result Event::IServer::handle_command(Protocol::Packet &packet, Common::
    {
       case DEFINE_EVENT_CMD:
       {
-         DefineEvent<Interval> msg;
+         HF::Core::Scheduling::Entry<Interval> msg;
          msg.unpack(payload, offset);
          return define_event(packet, msg);
       }

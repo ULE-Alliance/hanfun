@@ -300,6 +300,7 @@ namespace HF
          //! Response message payload for a @c Scheduling::ACTIVATE_SCHEDULER_CMD request.
          typedef Protocol::Response ActivateSchedulerResponse;
 
+#if __cplusplus >= 201103
          /*!
           * Message payload for a @c Scheduling::DEFINE_EVENT_CMD request.
           *
@@ -307,6 +308,7 @@ namespace HF
           */
          template<class _Type>
          using DefineEvent = Entry<_Type>;
+#endif
 
          //! Response message payload for a @c Scheduling::DEFINE_EVENT_CMD request.
          struct DefineEventResponse: public HF::Protocol::Response

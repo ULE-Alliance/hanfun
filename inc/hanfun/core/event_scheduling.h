@@ -344,7 +344,7 @@ namespace HF
                 * @retval  Common::Result::FAIL_UNKNOWN     otherwise.
                 */
                virtual Common::Result define_event(const Protocol::Packet &packet,
-                                                   Scheduling::DefineEvent<Interval> &msg);
+                                                   Scheduling::Entry<Interval> &msg);
 
                /*!
                 * Callback that is called when a @c Scheduling::UPDATE_STATUS_CMD,

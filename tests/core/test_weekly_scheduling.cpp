@@ -687,7 +687,7 @@ TEST(WeeklySchedulingClient, DefineEvent)
    LONGS_EQUAL(Scheduling::DEFINE_EVENT_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 
-   Scheduling::DefineEvent<Day> message;
+   Scheduling::Entry<Day> message;
 
    message.unpack(client->sendMsg.payload);
 
@@ -798,7 +798,7 @@ TEST_GROUP(WeeklySchedulingServer)
       }
 
       Common::Result define_event(const Protocol::Packet &packet,
-                                  Scheduling::DefineEvent<Day> &msg) override
+                                  Scheduling::Entry<Day> &msg) override
       {
          mock("Scheduling::Weekly::Server").actualCall("define_event");
          return Parent::define_event(packet, msg);
@@ -1061,7 +1061,7 @@ TEST(WeeklySchedulingServer, ActivateScheduler)
 //! @test Define Event support.
 TEST(WeeklySchedulingServer, DefineEvent)
 {
-   Scheduling::DefineEvent<Day> received = GenerateEntry();
+   Scheduling::Entry<Day> received = GenerateEntry();
    payload = ByteArray(received.size());
 
    received.pack(payload);    // pack it
@@ -1114,7 +1114,7 @@ TEST(WeeklySchedulingServer, DefineEvent_next_available)
 
    server->entries().destroy(expected_id);
 
-   Scheduling::DefineEvent<Day> received = GenerateEntry(Entry::AVAILABLE_ID);
+   Scheduling::Entry<Day> received = GenerateEntry(Entry::AVAILABLE_ID);
 
    payload = ByteArray(received.size());
 
@@ -1164,7 +1164,7 @@ TEST(WeeklySchedulingServer, DefineEvent_fail_event_id_in_use)
 {
    server->entries().save(GenerateEntry(0x12));
 
-   Scheduling::DefineEvent<Day> received = GenerateEntry(0x12);
+   Scheduling::Entry<Day> received = GenerateEntry(0x12);
 
    payload = ByteArray(received.size());
 
@@ -1212,7 +1212,7 @@ TEST(WeeklySchedulingServer, DefineEvent_fail_limited_by_atr)
    server->maximum_number_of_entries(10);
    SeedEntries(10);
 
-   Scheduling::DefineEvent<Day> received = GenerateEntry(0x12);
+   Scheduling::Entry<Day> received = GenerateEntry(0x12);
 
    payload = ByteArray(received.size());
 

@@ -48,7 +48,7 @@ uint8_t Weekly::IServer::number_of_entries() const
  */
 // =============================================================================
 Common::Result Weekly::IServer::define_event(const Protocol::Packet &packet,
-                                             Scheduling::DefineEvent<Day> &msg)
+                                             Scheduling::Entry<Day> &msg)
 {
    Common::Result result = Common::Result::OK;
 
@@ -275,7 +275,8 @@ void Weekly::IServer::periodic(uint32_t time)
                          if (e.active(local_time))
                          {
                             BatchProgramManagement::InvokeProgram msg(e.pid);
-                            unit().device().unit0()->batch_program()->invoke_program(packet, msg);
+                            this->unit().device().unit0()->batch_program()->invoke_program(packet,
+                                                                                           msg);
 
                             // set the next time.
                             e.step();
