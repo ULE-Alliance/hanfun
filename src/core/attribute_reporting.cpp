@@ -1058,9 +1058,9 @@ uint16_t Report::Event::Field::unpack(HF::Attributes::Factory factory,
    offset += array.read(offset, temp);    // Read Field Type.
    type    = static_cast<AttributeReporting::Event::Type>(temp);
 
-   assert(type >= AttributeReporting::Event::COV && type <= AttributeReporting::Event::EQ);
+   assert(temp <= AttributeReporting::Event::EQ);
 
-   if (type < AttributeReporting::Event::COV || type > AttributeReporting::Event::EQ)
+   if (temp > AttributeReporting::Event::EQ)
    {
       return 0;
    }
