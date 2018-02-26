@@ -524,7 +524,7 @@ namespace HF
              *
              * @param [in] func function to apply to all entries in the store.
              */
-            virtual void for_each(std::function<void(EntryType & e)> func) = 0;
+            virtual void for_each(std::function<void(EntryType &e)> func) = 0;
          };
 
          /*!
@@ -640,7 +640,7 @@ namespace HF
             }
 
             //! @copydoc IEntries::for_each
-            void for_each(std::function<void(Entry<_Type>&)> func)
+            void for_each(std::function<void(Entry<_Type> &)> func)
             {
                std::for_each(db.begin(), db.end(), func);
             }

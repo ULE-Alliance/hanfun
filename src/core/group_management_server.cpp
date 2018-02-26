@@ -92,7 +92,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
          auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_groups;
-         auto setter = (void (Server::*)(uint8_t)) nullptr;
+         auto setter = (void (Server::*)(uint8_t))nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfGroups::WRITABLE);
       }

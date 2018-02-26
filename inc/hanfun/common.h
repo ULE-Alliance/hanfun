@@ -154,11 +154,11 @@ namespace HF
 
    /*! @} */
 
-#define Invoke(...)       typename __VA_ARGS__::type
-#define EnableIf(...)     Invoke(std::enable_if<__VA_ARGS__::value>)
-#define IsParent(_P,_C)   std::is_base_of<_P,_C>
-#define IsClass(_T)       std::is_class<_T>
-#define IsIntegral(_T)    std::is_integral<Invoke(std::remove_reference<_T>)>
+#define Invoke(...)        typename __VA_ARGS__::type
+#define EnableIf(...)      Invoke(std::enable_if<__VA_ARGS__::value>)
+#define IsParent(_P, _C)   std::is_base_of<_P, _C>
+#define IsClass(_T)        std::is_class<_T>
+#define IsIntegral(_T)     std::is_integral<Invoke(std::remove_reference<_T>)>
 
    template<typename... Args> struct Or;
 

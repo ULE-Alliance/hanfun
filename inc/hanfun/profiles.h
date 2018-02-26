@@ -338,8 +338,8 @@ namespace HF
          typedef Interfaces::Container<ProfileN<_uid, _Interfaces...>,
                                        HF::Interfaces::Proxy<_Interfaces,
                                                              ProfileN<_uid,
-                                                             _Interfaces...>>
-                                                             ...> container_t;
+                                                                      _Interfaces...>>
+                                       ...> container_t;
 
          public:
 

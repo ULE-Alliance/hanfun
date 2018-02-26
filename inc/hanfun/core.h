@@ -104,9 +104,9 @@ namespace HF
             static std::array<uint16_t, 3> const mandatory =
             {
                {
-                HF::Interface::DEVICE_INFORMATION,
-                HF::Interface::DEVICE_MANAGEMENT,
-                HF::Interface::ATTRIBUTE_REPORTING
+                  HF::Interface::DEVICE_INFORMATION,
+                  HF::Interface::DEVICE_MANAGEMENT,
+                  HF::Interface::ATTRIBUTE_REPORTING
                }
             };
 

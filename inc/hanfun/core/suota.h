@@ -183,10 +183,10 @@ namespace HF
                uint16_t start = offset;
 
                uint16_t size  = Protocol::Response::unpack(array, offset);
-               HF_ASSERT(size != 0, { return 0; });
+               HF_ASSERT(size != 0, {return 0;});
                offset += size;
                size    = Version::unpack(array, offset);
-               HF_ASSERT(size != 0, { return 0; });
+               HF_ASSERT(size != 0, {return 0;});
                offset += size;
 
                return offset - start;

@@ -222,11 +222,11 @@ void check_optional_attribute(Interface &itf, bool writable,
       delete temp;                        \
    }
 
-#define CHECK_UNPACK(_expected, _actual)  \
-   {                                      \
-      auto size = _actual;                \
-      auto exp_size = _expected;          \
-      LONGS_EQUAL(exp_size, size)         \
+#define CHECK_UNPACK(_expected, _actual) \
+   {                                     \
+      auto size     = _actual;           \
+      auto exp_size = _expected;         \
+      LONGS_EQUAL(exp_size, size)        \
    }
 
 // =============================================================================

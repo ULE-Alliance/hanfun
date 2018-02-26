@@ -68,7 +68,7 @@ nullptr = {};
 
 #else
 
-#define _override override
+#define _override                     override
 
 #endif
 

@@ -801,7 +801,7 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
    if (message.time != 0)
    {
       // Run for time-1 (adjust for base 0 instead of 1)
-      new_transition->n_steps  = message.time - 1;
+      new_transition->n_steps = message.time - 1;
 
       // Hue Step size.
       new_transition->hue_step = round(hue_step / static_cast<float>(message.time));
