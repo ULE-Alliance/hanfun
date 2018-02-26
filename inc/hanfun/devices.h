@@ -400,18 +400,18 @@ namespace HF
           */
          typedef Unit0<Core::DeviceInformation::Server,
                        Core::DeviceManagement::Client,
-                       Core::AttributeReporting::Server,
+                       Core::AttributeReporting::Server
 #if HF_TIME_SUPPORT
-                       HF::Core::Time::Server,
+                       , HF::Core::Time::Server
 #endif
 #if HF_BATCH_PROGRAM_SUPPORT
-                       HF::Core::BatchProgramManagement::DefaultServer,
+                       , HF::Core::BatchProgramManagement::DefaultServer
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
-                       HF::Core::Scheduling::Event::DefaultServer,
+                       , HF::Core::Scheduling::Event::DefaultServer
 #endif
 #if HF_WEEKLY_SCHEDULING_SUPPORT
-                       HF::Core::Scheduling::Weekly::DefaultServer
+                       , HF::Core::Scheduling::Weekly::DefaultServer
 #endif
 #if HF_GROUP_SUPPORT
                        , Core::GroupTable::DefaultServer
