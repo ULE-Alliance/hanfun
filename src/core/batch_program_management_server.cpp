@@ -196,7 +196,7 @@ Common::Result IServer::define_program(const Protocol::Packet &packet, DefinePro
    // and if the message type is the right one.
    std::all_of(msg.actions.begin(), msg.actions.end(), [&result, this](Action &a)
    {
-      if (unit().device().unit(a.reference) == nullptr || (
+      if (nullptr == this->unit().device().unit(a.reference) || (
              a.type != Protocol::Message::Type::COMMAND_REQ &&
              a.type != Protocol::Message::Type::SET_ATTR_REQ))
       {
@@ -264,7 +264,7 @@ Common::Result IServer::invoke_program(const Protocol::Packet &packet, InvokePro
    {
       localhost.unit = a.reference;
       Protocol::Packet _packet(localhost, localhost, a);
-      auto dest_unit = unit().device().unit(a.reference);
+      auto dest_unit = this->unit().device().unit(a.reference);
 
       if (dest_unit == nullptr)
       {

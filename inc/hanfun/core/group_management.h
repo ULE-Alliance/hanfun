@@ -1016,7 +1016,7 @@ namespace HF
              */
             virtual IGroupTable &group_table() const = 0;
 
-            friend IGroupTable;
+            friend struct IGroupTable;
          };
 
          /*!
