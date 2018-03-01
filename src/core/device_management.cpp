@@ -118,6 +118,9 @@ uint16_t Unit::unpack(const Common::ByteArray &array, uint16_t offset)
    offset += array.read(offset, this->id);
    offset += array.read(offset, this->profile);
 
+   // Ensure clean state before adding the optional interfaces.
+   interfaces.clear();
+
    // Unpack the existing optional interfaces.
    if (offset - start < size)
    {
@@ -243,6 +246,9 @@ uint16_t Device::unpack(const Common::ByteArray &array, uint16_t offset)
    uint8_t count = 0;
    offset += array.read(offset, count);
 
+   // Ensure clean state before adding units to device.
+   units.clear();
+
    for (uint8_t i = 0; i < count; i++)
    {
       Unit unit;
@@ -358,10 +364,12 @@ uint16_t RegisterMessage::unpack(const Common::ByteArray &array, uint16_t offset
 
    HF_SERIALIZABLE_CHECK(array, offset, (count * Unit::min_size));
 
-   Unit unit;
+   // Ensure clean state before adding units to device.
+   units.clear();
 
    for (uint8_t i = 0; i < count; ++i)
    {
+      Unit unit;
       uint16_t res = unit.unpack(array, offset);
 
       if (res)
