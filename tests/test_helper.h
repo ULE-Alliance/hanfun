@@ -4,7 +4,7 @@
  *
  * This file contains the definition of helper classes used for testing.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -222,11 +222,11 @@ void check_optional_attribute(Interface &itf, bool writable,
       delete temp;                        \
    }
 
-#define CHECK_UNPACK(_expected, _actual)  \
-   {                                      \
-      auto size = _actual;                \
-      auto exp_size = _expected;          \
-      LONGS_EQUAL(exp_size, size)         \
+#define CHECK_UNPACK(_expected, _actual) \
+   {                                     \
+      auto size     = _actual;           \
+      auto exp_size = _expected;         \
+      LONGS_EQUAL(exp_size, size)        \
    }
 
 // =============================================================================

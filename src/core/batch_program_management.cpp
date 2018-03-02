@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Batch Program Management interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -136,7 +136,7 @@ uint16_t Action::unpack(const Common::ByteArray &array, uint16_t offset)
 // =============================================================================
 uint16_t Entry::size() const
 {
-   using SerializableHelper = Common::SerializableHelperVector<std::vector<Action>, uint8_t>;
+   typedef Common::SerializableHelperVector<std::vector<Action>, uint8_t> SerializableHelper;
    SerializableHelper helper(const_cast<std::vector<Action> &>(actions));
 
    return (min_size + name.length() + helper.size() - 1);   // -1 because the helper counts with the

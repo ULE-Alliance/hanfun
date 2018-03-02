@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Group Management service : Server role.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -92,7 +92,7 @@ HF::Attributes::IAttribute *IServer::attribute(uint8_t uid)
          typedef HF::Attributes::Attribute<uint8_t, IServer> Attribute;
 
          auto getter = (uint8_t (IServer::*)(void) const) & IServer::number_of_groups;
-         auto setter = nullptr;
+         auto setter = (void (Server::*)(uint8_t))nullptr;
 
          return new Attribute(*this, attr, getter, setter, NumberOfGroups::WRITABLE);
       }

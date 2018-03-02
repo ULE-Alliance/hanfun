@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Colour Control interface : Server role.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -801,7 +801,7 @@ Common::Result Server::move_to_hue_and_saturation(const Protocol::Address &addr,
    if (message.time != 0)
    {
       // Run for time-1 (adjust for base 0 instead of 1)
-      new_transition->n_steps  = message.time - 1;
+      new_transition->n_steps = message.time - 1;
 
       // Hue Step size.
       new_transition->hue_step = round(hue_step / static_cast<float>(message.time));

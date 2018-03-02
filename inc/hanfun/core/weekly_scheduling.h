@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the %Weekly %Scheduling service.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -239,11 +239,11 @@ namespace HF
              */
             HF::Attributes::IAttribute *create_attribute(uint8_t uid);
 
-            using IServerBase = Scheduling::Base<HF::Interface::WEEKLY_SCHEDULING,
-                                                 Scheduling::IServer>;
+            typedef Scheduling::Base<HF::Interface::WEEKLY_SCHEDULING,
+                                     Scheduling::IServer> IServerBase;
 
-            using IClientBase = Interfaces::Interface<HF::Interface::WEEKLY_SCHEDULING,
-                                                      Scheduling::IClient>;
+            typedef Interfaces::Interface<HF::Interface::WEEKLY_SCHEDULING,
+                                          Scheduling::IClient> IClientBase;
 
             /*!
              * %Weekly %Scheduling %Service : %Client side implementation.
@@ -257,7 +257,7 @@ namespace HF
                {}
 
                //! Destructor
-               virtual ~IClient() = default;
+               virtual ~IClient() {}
 
                static constexpr HF::Interface::UID ITF = HF::Interface::WEEKLY_SCHEDULING;
 
@@ -387,7 +387,7 @@ namespace HF
                 * @retval  Common::Result::FAIL_UNKNOWN     otherwise.
                 */
                virtual Common::Result define_event(const Protocol::Packet &packet,
-                                                   DefineEvent<Day> &msg);
+                                                   Scheduling::Entry<Day> &msg);
 
                /*!
                 * Callback that is called when a @c Scheduling::UPDATE_STATUS_CMD,
@@ -445,7 +445,7 @@ namespace HF
                {}
 
                //! Destructor
-               virtual ~IServer() = default;
+               virtual ~IServer() {}
 
                // =============================================================================
                // Entries API

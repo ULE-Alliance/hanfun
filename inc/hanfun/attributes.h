@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the attribute handling API in HAN-FUN.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -525,7 +525,7 @@ namespace HF
        * @tparam _Owwer underling data type for the attribute's owner.
        */
       template<typename T, typename _Owner>
-      struct Attribute<T, _Owner, EnableIf<Parent<HF::Interface, _Owner>>>:
+      struct Attribute<T, _Owner, EnableIf(IsParent(HF::Interface, _Owner))>:
          public AbstractAttribute
       {
          typedef typename std::remove_reference<T>::type value_type;

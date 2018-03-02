@@ -4,7 +4,7 @@
  *
  * This file contains the definitions common to all interfaces.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -444,7 +444,7 @@ namespace HF
       template<typename Base, typename... Proxies>
       class Container
       {
-         using interfaces_t = std::tuple<Proxies...>;
+         typedef std::tuple<Proxies...> interfaces_t;
 
          //! Tuple containing the interfaces.
          interfaces_t _interfaces;

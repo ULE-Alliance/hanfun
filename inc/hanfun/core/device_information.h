@@ -5,7 +5,7 @@
  * This file contains the definition for the core Device Information interface
  * of the HAN-FUN protocol.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -109,13 +109,13 @@ namespace HF
          constexpr static uint16_t EMC              = HF_DEVICE_MANUFACTURER_CODE;  //!< Electronic Manufacture Code.
 
 #if HF_CORE_DEV_INFO_APP_VERSION_ATTR
-         constexpr static const char *APPLICATION_VERSION = HF_APPLICATION_VERSION; //!< Application Version.
+         constexpr static _const char *APPLICATION_VERSION = HF_APPLICATION_VERSION; //!< Application Version.
 #endif
 #if HF_CORE_DEV_INFO_HW_VERSION_ATTR
-         constexpr static const char *HARDWARE_VERSION = HF_HARDWARE_VERSION;       //!< Hardware Version.
+         constexpr static _const char *HARDWARE_VERSION = HF_HARDWARE_VERSION;       //!< Hardware Version.
 #endif
 #if HF_CORE_DEV_INFO_MANUFACTURER_NAME_ATTR
-         constexpr static const char *MANUFACTURER_NAME = HF_MANUFACTURER_NAME;     //!< Manufacturer Name.
+         constexpr static _const char *MANUFACTURER_NAME = HF_MANUFACTURER_NAME;     //!< Manufacturer Name.
 #endif
 
          //! Attributes.
@@ -165,7 +165,7 @@ namespace HF
                uint8_t     id;
                std::string name;
 
-               using string_helper = HF::Common::SerializableHelper<std::string>;
+               typedef HF::Common::SerializableHelper<std::string> string_helper;
 
                //! Minimum pack/unpack required data size.
                static constexpr uint16_t min_size = sizeof(uint8_t) + string_helper::min_size;

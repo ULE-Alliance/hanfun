@@ -5,7 +5,7 @@
  * This file contains the forward declarations of the core services and interfaces
  * implementing classes.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -101,11 +101,14 @@ namespace HF
 
          static void remove_mandatory(std::vector<Common::Interface> &itfs)
          {
-            static std::array<uint16_t, 3> const mandatory({
-               {HF::Interface::DEVICE_INFORMATION,
-                HF::Interface::DEVICE_MANAGEMENT,
-                HF::Interface::ATTRIBUTE_REPORTING}
-            });
+            static std::array<uint16_t, 3> const mandatory =
+            {
+               {
+                  HF::Interface::DEVICE_INFORMATION,
+                  HF::Interface::DEVICE_MANAGEMENT,
+                  HF::Interface::ATTRIBUTE_REPORTING
+               }
+            };
 
             itfs.erase(std::remove_if(itfs.begin(), itfs.end(), [](const Common::Interface &itf)
             {
@@ -263,8 +266,8 @@ namespace HF
       static_assert(std::is_base_of<HF::Core::Unit0, Base>::value,
                     "Base must be of type HF::Core::Unit0");
 
-      using InterfacesWrapper = Units::InterfacesWrapper<Base, ITF...>;
-      using interfaces_t      = std::tuple<ITF...>;
+      typedef typename Units::InterfacesWrapper<Base, ITF...> InterfacesWrapper;
+      typedef typename std::tuple<ITF...> interfaces_t;
 
       public:
 

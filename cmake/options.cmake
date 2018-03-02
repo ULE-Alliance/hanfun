@@ -6,7 +6,7 @@
 #
 #   This file contains the configuration options for the HAN-FUN library.
 #
-#   @version    1.5.0
+#   @version    1.5.1
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -75,6 +75,15 @@ option(HF_APP_EXT_REG "Build example application with external registration supp
 # =============================================================================
 
 option(HF_GROUP_SUPPORT "General - Group Support")
+
+option(HF_TIME_SUPPORT               "General - Time Service Support")
+option(HF_BATCH_PROGRAM_SUPPORT      "General - Batch Program Support")
+
+cmake_dependent_option(HF_EVENT_SCHEDULING_SUPPORT  "General - Event Scheduling Support"
+                       OFF "HF_TIME_SUPPORT;HF_BATCH_PROGRAM_SUPPORT" OFF)
+
+cmake_dependent_option(HF_WEEKLY_SCHEDULING_SUPPORT  "General - Weekly Scheduling Support"
+                       OFF "HF_TIME_SUPPORT;HF_BATCH_PROGRAM_SUPPORT" OFF)
 
 # =============================================================================
 # Core Services & Interfaces Configuration
@@ -213,6 +222,11 @@ option(HF_ITF_COLOUR_CONTROL_COLOUR_TEMPERATURE_ATTR         "Interface - Colour
 
 if(HF_BUILD_TESTS)
     set(HF_CORE_SUOTA_SUPPORT ON)
+    set(HF_GROUP_SUPPORT ON)
+    set(HF_TIME_SUPPORT ON)
+    set(HF_BATCH_PROGRAM_SUPPORT ON)
+    set(HF_EVENT_SCHEDULING_SUPPORT ON)
+    set(HF_WEEKLY_SCHEDULING_SUPPORT ON)
 endif()
 
 ## SUOTA Service

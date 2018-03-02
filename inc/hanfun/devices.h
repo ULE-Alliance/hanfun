@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the devices in a HAN-FUN network.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -233,7 +233,7 @@ namespace HF
                                           typename HF::Unit0<IUnit0, ITF...>::DeviceMgt>::value,
                           "DeviceMgt must be of type HF::Core::DeviceManagement::Client");
 
-            using interfaces_t = std::tuple<ITF...>;
+            typedef std::tuple<ITF...> interfaces_t;
 
             typedef typename HF::Unit0<IUnit0, ITF...> _Parent;
 
@@ -400,18 +400,18 @@ namespace HF
           */
          typedef Unit0<Core::DeviceInformation::Server,
                        Core::DeviceManagement::Client,
-                       Core::AttributeReporting::Server,
+                       Core::AttributeReporting::Server
 #if HF_TIME_SUPPORT
-                       HF::Core::Time::Server,
+                       , HF::Core::Time::Server
 #endif
 #if HF_BATCH_PROGRAM_SUPPORT
-                       HF::Core::BatchProgramManagement::DefaultServer,
+                       , HF::Core::BatchProgramManagement::DefaultServer
 #endif
 #if HF_EVENT_SCHEDULING_SUPPORT
-                       HF::Core::Scheduling::Event::DefaultServer,
+                       , HF::Core::Scheduling::Event::DefaultServer
 #endif
 #if HF_WEEKLY_SCHEDULING_SUPPORT
-                       HF::Core::Scheduling::Weekly::DefaultServer
+                       , HF::Core::Scheduling::Weekly::DefaultServer
 #endif
 #if HF_GROUP_SUPPORT
                        , Core::GroupTable::DefaultServer
@@ -490,7 +490,7 @@ namespace HF
              * @retval  true  if the packet if for the node;
              * @retval  false otherwise.
              */
-            bool to_local(const Protocol::Packet &packet) const override
+            bool to_local(const Protocol::Packet &packet) const _override
             {
                return AbstractDevice::to_local(packet) ||
                       // If we are unregistered only allow packets to unit 0.
@@ -677,7 +677,7 @@ namespace HF
             typedef typename _Parent::DeviceMgt DeviceMgt;
             typedef typename _Parent::AttrReporting AttrReporting;
 
-            using interfaces_t = std::tuple<ITF...>;
+            typedef std::tuple<ITF...> interfaces_t;
 
 #if HF_GROUP_SUPPORT
             typedef typename _Parent::GroupTable GroupTable;

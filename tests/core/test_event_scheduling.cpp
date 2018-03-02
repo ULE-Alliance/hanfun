@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Event Scheduling service
  * implementation.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -554,7 +554,7 @@ TEST(EventSchedulingClient, DefineEvent)
    LONGS_EQUAL(Scheduling::DEFINE_EVENT_CMD, client->sendMsg.itf.member);
    LONGS_EQUAL(Protocol::Message::COMMAND_REQ, client->sendMsg.type);
 
-   Scheduling::DefineEvent<Interval> message;
+   Scheduling::Entry<Interval> message;
 
    message.unpack(client->sendMsg.payload);
 
@@ -665,7 +665,7 @@ TEST_GROUP(EventSchedulingServer)
       }
 
       Common::Result define_event(const Protocol::Packet &packet,
-                                  Scheduling::DefineEvent<Interval> &msg) override
+                                  Scheduling::Entry<Interval> &msg) override
       {
          mock("Scheduling::Event::Server").actualCall("define_event");
          return Parent::define_event(packet, msg);
@@ -915,7 +915,7 @@ TEST(EventSchedulingServer, ActivateScheduler)
 //! @test Define Event support.
 TEST(EventSchedulingServer, DefineEvent)
 {
-   Scheduling::DefineEvent<Interval> received = GenerateEntry();
+   Scheduling::Entry<Interval> received = GenerateEntry();
    payload = ByteArray(received.size());
 
    received.pack(payload);    // pack it
@@ -968,7 +968,7 @@ TEST(EventSchedulingServer, DefineEvent_next_available)
 
    server->entries().destroy(expected_id);
 
-   Scheduling::DefineEvent<Interval> received = GenerateEntry(Entry::AVAILABLE_ID);
+   Scheduling::Entry<Interval> received = GenerateEntry(Entry::AVAILABLE_ID);
 
    payload = ByteArray(received.size());
 
@@ -1018,7 +1018,7 @@ TEST(EventSchedulingServer, DefineEvent_fail_event_id_in_use)
 {
    server->entries().save(GenerateEntry(0x12));
 
-   Scheduling::DefineEvent<Interval> received = GenerateEntry(0x12);
+   Scheduling::Entry<Interval> received = GenerateEntry(0x12);
 
    payload = ByteArray(received.size());
 
@@ -1066,7 +1066,7 @@ TEST(EventSchedulingServer, DefineEvent_fail_limited_by_atr)
    server->maximum_number_of_entries(10);
    SeedEntries(10);
 
-   Scheduling::DefineEvent<Interval> received = GenerateEntry(0x12);
+   Scheduling::Entry<Interval> received = GenerateEntry(0x12);
 
    payload = ByteArray(received.size());
 

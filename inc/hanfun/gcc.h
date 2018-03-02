@@ -5,7 +5,7 @@
  * This file contains workarounds for the implementation on C++11 in older versions
  * of GCC.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -64,11 +64,17 @@ nullptr = {};
 
    #define __attribute_deprecated__   __attribute__((deprecated))
 
+   #define  __attribute_pure__        __attribute__((pure))
+
    #define _override
+
+   #define _const
 
 #else
 
-#define _override override
+#define _override                     override
+
+#define _const                        const
 
 #endif
 

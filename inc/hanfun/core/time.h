@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Time service.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2016 ULE Alliance
  *
@@ -163,13 +163,13 @@ namespace HF
           */
          struct Date
          {
-            uint8_t year   = 0;    //!< Year : 20(00) - 2(255)
-            uint8_t month  = 0;    //!< Month: 1 - 12
-            uint8_t day    = 0;    //!< Day  : 1 - 31
+            uint8_t year;     //!< Year : 20(00) - 2(255)
+            uint8_t month;    //!< Month: 1 - 12
+            uint8_t day;      //!< Day  : 1 - 31
 
-            uint8_t hour   = 0;   //!< Hours   : 0 - 23
-            uint8_t minute = 0;   //!< Minutes : 0 - 59
-            uint8_t second = 0;   //!< Seconds : 0 - 59
+            uint8_t hour;     //!< Hours   : 0 - 23
+            uint8_t minute;   //!< Minutes : 0 - 59
+            uint8_t second;   //!< Seconds : 0 - 59
 
             Date(uint8_t _year = 0, uint8_t _month = 0, uint8_t _day = 0,
                  uint8_t _hour = 0, uint8_t _minute = 0, uint8_t _second = 0):
@@ -221,12 +221,14 @@ namespace HF
          {
             protected:
 
-            uint32_t _time = Value::INVALID;   //!< Time value
+            uint32_t _time;   //!< Time value
 
             public:
 
             //! Constructor
-            Server(Unit0 &unit): ServiceRole<Time::Base, HF::Interface::SERVER_ROLE>(unit) {}
+            Server(Unit0 &unit):
+               ServiceRole<Time::Base, HF::Interface::SERVER_ROLE>(unit),
+               _time(Value::INVALID) {}
 
             //! Destructor
             virtual ~Server() {}

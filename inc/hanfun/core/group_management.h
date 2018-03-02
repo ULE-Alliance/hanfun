@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the %Group Management service.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -144,7 +144,7 @@ namespace HF
           */
          struct Group: public GroupAddress
          {
-            using Container = std::vector<Member>;
+            typedef std::vector<Member> Container;
 
             std::string name; //!< %Group Name
 
@@ -645,7 +645,7 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            virtual ~Entries() = default;
+            virtual ~Entries() {}
 
             uint16_t size() const;
 
@@ -743,7 +743,7 @@ namespace HF
           */
          class IServer: public ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>
          {
-            using Server = ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE>;
+            typedef ServiceRole<GroupManagement::Base, HF::Interface::SERVER_ROLE> Server;
 
             public:
 
@@ -751,7 +751,7 @@ namespace HF
             IServer(Unit0 &unit): Server(unit) {}
 
             //! Destructor
-            virtual ~IServer() = default;
+            virtual ~IServer() {}
 
             // ======================================================================
             // Events
@@ -1016,7 +1016,7 @@ namespace HF
              */
             virtual IGroupTable &group_table() const = 0;
 
-            friend IGroupTable;
+            friend struct IGroupTable;
          };
 
          /*!
@@ -1070,7 +1070,7 @@ namespace HF
           */
          struct GroupTableClient: public IGroupTable
          {
-            using Entry = std::tuple<Protocol::Address, Message, uint8_t>;
+            typedef std::tuple<Protocol::Address, Message, uint8_t> Entry;
 
             enum Fields
             {

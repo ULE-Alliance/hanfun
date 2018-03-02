@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Colour Control interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -1542,7 +1542,7 @@ namespace HF
          struct Server: public IServer
          {
             //! Container for the transitions.
-            using Container = typename std::vector<ITransition *>;
+            typedef typename std::vector<ITransition *> Container;
 
             public:
 
