@@ -1,4 +1,289 @@
 
+1.5.1 / 2018-03-02
+==================
+
+  * CHG: Release Notes update.
+  * FIX: Missing  __attribute_pure__ macro support in GCC 4.5.1
+  * FIX: Bad unpack of Core::DeviceManagement::RegisterMessage.
+  * CHG: Better handling of build options.
+  * FIX: Compilation warnings.
+  * FIX: Some compilation warnings.
+  * CHG: General code formatting.
+  * FIX: More changes for GCC 4.5.1 compatibility.
+  * FIX: Remove one more usage of a template alias.
+  * FIX: Remove unsupported const keyword usage.
+  * FIX: GCC 4.5.1 doesn't support in class field initialization.
+  * FIX: Missing 'override' keyword support in GCC 4.5.1.
+  * FIX: Missing support for default virtual destructors in GCC 4.5.1
+  * FIX: Use typedef instead of the using keyword.
+  * FIX: Don't use template alias.
+  * Bump version (v1.5.1)
+
+1.5.0 / 2017-12-15
+===================
+
+ * CHG: Clang 4.0 compilation fixes.
+ * Release notes update.
+ * CHG: General code formatting.
+ * CHG: Enable ignored test.
+ * CHG: General documentation fixes and update.
+ * CHG: Remove deprecated API.
+ * CHG: Remove unnecessary helper methods.
+ * CHG: Remove unnecessary code duplication.
+ * CHG: Refactor template function into normal call.
+ * CHG: Remove unnecessary methods.
+ * CHG: General code formatting.
+ * CHG: Uncrustify configuration update.
+ * Bump version (v1.5.0)
+ * [TOOLS] FIX: Minor formatting issues in generated code.
+ * [TOOLS] FIX: Interface options generation for config.h.in
+ * [TOOLS] FIX: Generator for new unit tests layout.
+ * CHG: Refactor unit tests to individual binaries.
+ * CHG: Refactor common code to test helper code.
+ * FIX: Test macro usage after CppUTest update.
+ * CHG: Minor documentation fixes.
+ * CHG: Be consistent in method naming.
+ * CHG: Use simple list for default backend.
+ * CHG: Rename day of week enumeration to Days.
+ * CHG: Scheduling Entry status to boolean.
+ * FIX: Don't process events if not enabled.
+ * CHG: Scheduling server status attribute to boolean.
+ * CHG: Fix documentation and minor refactor.
+ * CHG: Move scheduling API to core module documentation.
+ * CHG: Remove redundant code.
+ * CHG: Use bool for status attributes.
+ * CHG: API Refactor for consistency.
+ * CHG: Remove find_if from IEntries API.
+ * CHG: Minor comments refactor.
+ * FIX: Ensure correct values in pack of booleans.
+ * ADD: Simple Keypad profile.
+ * ADD: SimpleKeypad interface - KeyPressed message command implemented.
+ * ADD: Simple keypad initial support.
+ * CHG: Code cleanup.
+ * ADD: Weekly scheduling management interface.
+ * ADD: Weekly scheduling management initial HF code.
+ * ADD: Event Scheduling periodic function.
+ * CHG: global code indentation
+ * ADD: Batch Program Management service to Unit0.
+ * Initial code for the run feature.
+ * ADD: Time and Event Scheduling services to Unit0.
+ * ADD: Event Scheduler Attributes and CHG on the client.
+ * ADD: Event Scheduling - command " Delete All" initial support.
+ * ADD: Event Scheduling - command "Delete event entry" initial support.
+ * ADD: Event Scheduling - command "get event entry" initial support.
+ * ADD: Event Scheduling - Command "Update Status" initial support.
+ * CHG: General code indentation.
+ * ADD: (event) Scheduling - command "Define Program" initial support.
+ * FIX: Scheduling identation
+ * ADD: Scheduling Entries DB.
+ * ADD: Scheduling / Event Scheduling "activate scheduler" cmd.
+ * Fix: Scheduling atributes setter.
+ * FIX: global code format.
+ * ADD: Event Scheduling initial support. Scheduling messages implemented.
+ * CHG: Notify Attribute Reporting of entry add/removal.
+ * FIX: Add override keywords in test helpers.
+ * CHG: Refactor Server to receive custom Entries backend.
+ * ADD: Helper constructor to Entry.
+ * FIX: Make number of entries match entries size.
+ * CHG: Refactor common code in unit tests.
+ * CHG: Minor cleanup & refactor.
+ * FIX: Check maximum number of entries before adding entry.
+ * CHG: Minor code cleanup.
+ * CHG: General code format.
+ * FIX: Include paths
+ * ADD: BatchProgramManagement - check the action message type.
+ * CHG: BatchProgramManagement variable names.
+ * ADD: BatchProgramManagement::Client - Callback handler for comand response.
+ * FIX: BatchProgramManagement - Change function arguments on client side.
+ * ADD: BatchProgramManagement - "Get Program actions" command support.
+ * ADD: BatchProgramManagement - "Delete all programs" support.
+ * ADD: BatchProgramManagement - "DeleteProgram" command.
+ * ADD: BatchProgramManagement - "Invoke Program" support.
+ * ADD: Batch program - "define program" error check
+ * ADD: BatchProgram - "Define program" command implemented.
+ * FIX: Change the batch program management from a interface to a service
+ * ADD: initial support for the Batch program management.
+ * Fix: Nested unpacks error code return.
+ * FIX: Attribute Reporting test code.
+ * FIX: GroupTable test code.
+ * CHG: Compute profile index on the fly.
+ * DD: DimmableColourBulb profile.
+ * ADD: ColorBulb profile.
+ * CHG: ColourControl::Server::changed.
+ * CHG: Remove unnecessary friend conditions.
+ * CHG: General code formatting.
+ * CHG: General code formatting.
+ * FIX: Use correct address when updating group information.
+ * CHG: Minor code formatting.
+ * ADD: Integration test for multicasting.
+ * FIX: Unnecessary interface from Node type.
+ * FIX: Allow devices to send messages between interfaces.
+ * FIX: Use correct parent for group table client in group management.
+ * FIX: Minor typo fix.
+ * FIX: Message routing on unit 0.
+ * ADD: Group interfaces to devices unit 0.
+ * DEL: Remove remaining code from previous implementation.
+ * FIX: Fix ColourControl HS_Colour and XY_Colour attributes test.
+ * CHG: Use CHECK_EQUALS in check_attribute helper.
+ * CHG: Use CHECK_EQUALS in check_attribute helper.
+ * CHG: Use CHECK_EQUALS in check_attribute helper.
+ * ADD: Authorization hook to GroupManagement::IServer API.
+ * ADD: More ColourControl tests to increase code coverage.
+ * CHG: Correct the StepHue, StepSaturation and StepXY commands.
+ * ADD: ColourControl Stop command.
+ * ADD: ColourControl MoveToColourTemperature command.
+ * ADD: ColourControl StepXY command.
+ * ADD: ColourControl MoveXY command.
+ * FIX: ColourControl commands don't change the colour mode twice in FAIL_*.
+ * CHG: ColourControl Support mask is given by the compiler.
+ * ADD: ColourControl::MoveToXY command.
+ * ADD: ColourControl::MoveToHueandSaturation command.
+ * ADD: ColourControl::StepSaturation command.
+ * ADD: ColourControl::MoveSaturation command.
+ * ADD: ColourControl::MovetoSaturation message.
+ * ADD: Support for ColourControl::step_Hue command.
+ * ADD: Support for ColourControl::move_Hue command.
+ * CHG: Port old Move_to_Hue ColourControl::Server implementation to the new transition code.
+ * ADD: ColourControl::ITransition class.
+ * CHG: Better code coverage.
+ * CHG: Minor cleanup.
+ * CHG: Make use of the GroupManagement::Group::update method.
+ * CHG: Make GroupManagement::Entries::next_address check number of groups.
+ * CHG: Documentation refactor.
+ * CHG: GroupManagement::Group refactor.
+ * CHG: Remove CppUTest sources from code coverage.
+ * CHG: Minor code format.
+ * CHG: Add more conditions to adding a device to a group.
+ * ADD: Helper functions to create Device Management devices.
+ * CHG: Minor code cleanup.
+ * CHG: GroupManagement::Server is used on HF Concentrator.
+ * ADD: Helper to get unit from DeviceManagement::Device class.
+ * CHG: Minor refactor and doc update.
+ * CHG: Minor code formatting.
+ * CHG: GroupManagement::DELETE_CMD update.
+ * ADD: CHECK_INDEX helper macro.
+ * CHG: Convert ColourControl::Server to ColourControl::IServer.
+ * CHG: GroupManagement::REMOVE_CMD update.
+ * ADD: Helper function to generate random numbers.
+ * ADD: ColorControl MoveToHue command message.
+ * CHG: Changed the ColorControl command messages prototypes functions.
+ * ADD: Callback functionality for the ColorControl animations.
+ * CHG: Use the HS_Colour type when appropriate.
+ * CHG: Add ColourControl::HS_Colour helper class.
+ * CHG: GroupManagement::ADD_CMD refactor.
+ * CHG: Atribute type for ColorControl::xy.
+ * CHG: Code refactor & docs update.
+ * FIX: Pack payload into messages for GroupManagement::Client commands.
+ * CHG: Remove unused code from GroupManagement::Group.
+ * CHG: Prepare to add GroupTable calls.
+ * ADD: CppUTests - IAttribute comparator
+ * ADD: HF::Transport::Group API.
+ * CHG: Refactor GroupManagement::Server implementation.
+ * FIX: Doc string copy-paste clean up.
+ * ADD: Colour Control Message - MoveToTemperature.
+ * ADD: Colour Control Message - StepXY.
+ * ADD: Colour Control Message - MoveXY.
+ * ADD: Colour Control Message - MoveToXY.
+ * ADD: Colour Control Message - MoveToHueSaturation.
+ * ADD: Colour Control Message - StepSaturation.
+ * ADD: Colour Control Message - MoveSaturation.
+ * ADD: Colour Control Message - MoveToSaturation.
+ * ADD: Colour Control Message - StepHue.
+ * ADD: Colour Control Message - MoveHue.
+ * ADD: Colour Control Message - MoveToHue.
+ * ADD: Helper classes and types for the Colour Control messages.
+ * ADD: Initial commit for the Color Control Interface.
+ * CHG: Group Management tests refactor.
+ * CHG: General code format and cleanup.
+ * CHG: Better code coverage support.
+ * ADD: Tracker profile implementation.
+ * FIX: Copy-paste comment typo.
+ * CHG: Minor cleanup.
+ * ADD: More tests for better code coverage.
+ * ADD: New Level Control options to CMake configuration.
+ * ADD: Initial implementation of the UpdateIntervalMessage - Client side.
+ * CHG: General code format.
+ * ADD: Initial support for READ_ENTRIES command in Group Table interface.
+ * CHG: Minor cleanup.
+ * ADD: Initial support for REMOVE_ALL command in Group Table interface.
+ * ADD: Initial support for REMOVE command in Group Table interface.
+ * ADD: Initial support for ADD command in Group Table interface.
+ * CHG: Refactor Group Table client tests.
+ * ADD: Initial API for Group Table backing store.
+ * ADD: Initial implementation for Group Table entries.
+ * ADD: Initial code scaffold for Group Table service.
+ * CHG: Update uncrustify configuration.
+ * ADD: Initial implementation of the UpdateIntervalMessage - Server side.
+ * ADD: Initial implementation of the UpdateIntervalMessage.
+ * ADD: initial support for Simple Light Sensor profile.
+ * ADD: SimpleLightSensor Client helper functions and tests.
+ * CHG: SimpleLightSensor Server constructor.
+ * ADD: Initial support for the simple light sensor interface.
+ * CHG: Make commands optional as per specification.
+ * ADD: Initial support for Decrease CMD in Level Control.
+ * ADD: Initial support for Increase CMD in Level Control.
+ * CHG: Check notify arguments in set level cmd.
+ * ADD: CppUTests - IAttribute comparator
+ * CHG: Prepare files to include new functions.
+ * FIX: Missing #include directive necessary on GCC 5.4.1
+ * FIX: Bad code coverage function use.
+ * ADD: CppUnitTests for the Group Management code.
+ * CHG: Replace the automatically created GroupManagement functions.
+ * ADD: Created the entries class.
+ * CHG: SerializableHelper calls using the number of members type.
+ * ADD: Group helper funtions.
+ * CHG: From Server to IServer.
+ * FIX: Constructors and const specifier.
+ * CHG: SerializableHelperVector template.
+ * ADD: CppUTests - IAttribute comparator
+ * FIX: Test code template for server role.
+ * FIX: Remove warning due to C++14 compatibility.
+ * FIX: Unit tests due to CppUTest update.
+ * FIX: Remove warning due to C++14 compatibility.
+ * FIX: Unit tests due to CppUTest update.
+ * CHG: Update CppUTest library.
+ * ADD: Example file of YAML config file.
+ * FIX: YAML file scaffold generator support.
+ * FIX: Bad function call in template.
+ * CHG: Rubocop fixes.
+ * FIX: Code template for client role commands.
+ * ADD: CppUTests for the group management messages.
+ * CHG: The min_size and size() for the response message is 1 if code != OK
+ * ADD: Empty constructors or default values in arguments. REM: Equal classes.
+ * FIX: Remove pure virtual destructors.
+ * FIX: Assert logic and function prototype typos
+ * ADD: Initial implementation of SerializebleHelpers for containers.
+ * ADD: Group Management command messages and responses.
+ * CHG: Generalize the SerializableHelper for vector types
+ * CHG: Enable SerializableHelper only for pointers of classes.
+ * ADD: Template logical operation helpers.
+ * FIX: Missing #include directive necessary on GCC 5.4.1
+ * FIX: Bad code coverage function use.
+ * ADD: Initial code for Group Management Service.
+ * CHG: Add tests for attributes in generator helper.
+ * FIX: Build with latest GCC.
+ * CHG: Updated code generator templates.
+ * CHG: Minor changes to code coverage support.
+ * CHG: Generator fixes when generating services.
+ * CHG: Initial support for using generator using a YAML file.
+ * CHG: Helper generator tool refactor.
+ * CHG: Exclude debug functions from code coverage reports.
+ * ADD: Initial support for code coverage reporting.
+ * CHG: Helper generator tool refactor.
+ * FIX: Problem with uncrustify configuration and the formatCode.sh script.
+ * ADD: Date helper class.
+ * ADD: Allow some private functions to be accessed in the unit tests.
+ * ADD: Tick method to Time Service Server class.
+ * ADD: Initial implementation for Time Service.
+ * Fix issue with file paths in Doxygen documentation.
+
+1.4.3 / 2016-03-07
+===================
+
+ * General code formatting.
+ * Only add sent packets to response filter after registration.
+ * Bump version (v1.4.3)
+
 1.4.2 / 2016-03-01
 ==================
 
@@ -7,6 +292,7 @@
  * FIX: Update node link on registration.
  * Change helper method to return parent type.
  * Updated README documentation.
+ * Bump version (v1.4.2)
 
 1.4.1 / 2016-02-29
 ==================

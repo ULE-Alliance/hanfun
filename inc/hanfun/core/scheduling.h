@@ -4,7 +4,7 @@
  *
  * This file contains the common definitions for the scheduling services.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -300,6 +300,7 @@ namespace HF
          //! Response message payload for a @c Scheduling::ACTIVATE_SCHEDULER_CMD request.
          typedef Protocol::Response ActivateSchedulerResponse;
 
+#if __cplusplus >= 201103
          /*!
           * Message payload for a @c Scheduling::DEFINE_EVENT_CMD request.
           *
@@ -307,6 +308,7 @@ namespace HF
           */
          template<class _Type>
          using DefineEvent = Entry<_Type>;
+#endif
 
          //! Response message payload for a @c Scheduling::DEFINE_EVENT_CMD request.
          struct DefineEventResponse: public HF::Protocol::Response
@@ -522,7 +524,7 @@ namespace HF
              *
              * @param [in] func function to apply to all entries in the store.
              */
-            virtual void for_each(std::function<void(EntryType & e)> func) = 0;
+            virtual void for_each(std::function<void(EntryType &e)> func) = 0;
          };
 
          /*!
@@ -541,7 +543,7 @@ namespace HF
             typedef typename Container::const_iterator const_iterator;
             typedef typename Container::value_type value_type;
 
-            virtual ~Entries() = default;
+            virtual ~Entries() {}
 
             //! @copydoc HF::Common::IEntries::size
             uint16_t size() const
@@ -638,7 +640,7 @@ namespace HF
             }
 
             //! @copydoc IEntries::for_each
-            void for_each(std::function<void(Entry<_Type>&)> func)
+            void for_each(std::function<void(Entry<_Type> &)> func)
             {
                std::for_each(db.begin(), db.end(), func);
             }

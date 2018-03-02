@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the HAN-FUN unit implementation.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -166,7 +166,7 @@ namespace HF
        * Proxy class for service objects.
        */
       template<typename _Interface, typename _Proxy>
-      struct Proxy<_Interface, _Proxy, EnableIf<Parent<HF::Core::IService, _Interface>>>:
+      struct Proxy<_Interface, _Proxy, EnableIf(IsParent(HF::Core::IService, _Interface))>:
          public _Interface
       {
          typedef _Interface base;
@@ -181,7 +181,7 @@ namespace HF
       template<typename Base, typename... ITF>
       class InterfacesWrapper: public Interfaces::Container<Base, Proxy<ITF, Base>...>
       {
-         using Container = Interfaces::Container<Base, Proxy<ITF, Base>...>;
+         typedef Interfaces::Container<Base, Proxy<ITF, Base>...> Container;
 
          public:
 
@@ -198,8 +198,8 @@ namespace HF
       {
          uint8_t _id;
 
-         using Base    = Unit<Profile, ITF...>;
-         using Wrapper = InterfacesWrapper<Unit<Profile, ITF...>, ITF...>;
+         typedef Unit<Profile, ITF...> Base;
+         typedef InterfacesWrapper<Unit<Profile, ITF...>, ITF...> Wrapper;
 
          public:
 

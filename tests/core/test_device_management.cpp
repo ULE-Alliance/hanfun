@@ -5,7 +5,7 @@
  * This file contains the implementation of the Device Management service
  * interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -391,6 +391,87 @@ TEST(DeviceManagement_RegisterMessage, EMC)
       CHECK_EQUAL (unit, _unit);
    });
    /* *INDENT-ON* */
+}
+
+TEST(DeviceManagement_RegisterMessage, Unpack)
+{
+   expected = ByteArray {0x00, 0x00, 0x00,
+                         0x80 | UID::DECT_UID,          // Discriminator Type.
+                         0x05,                          // Size of UID.
+                         0x00, 0x73, 0x70, 0xAA, 0xBB,  // IPUI.
+                         0x42, 0x43,                    // EMC.
+                         0x04,                          // Number of units.
+                                                        // Unit 1:
+                         0x0A,                          // - Size
+                         0x01,                          // - ID
+                         0x11, 0x11,                    // - Type
+                         0x03,                          // - # of Opt Itf:
+                         0x10, 0xAB,                    //
+                         0x20, 0xCD,                    //
+                         0x30, 0xEF,                    //
+                                                        // Unit 2:
+                         0x08,                          // - Size
+                         0x02,                          // - ID
+                         0x22, 0x22,                    // - Type
+                         0x02,                          // - # of Opt Itf:
+                         0x40, 0xFE,                    //
+                         0x50, 0xDC,                    //
+                                                        // Unit 3:
+                         0x06,                          // - Size
+                         0x03,                          // - ID
+                         0x33, 0x33,                    // - Type
+                         0x01,                          // - # of Opt Itf:
+                         0x60, 0xBA,                    //
+                                                        // Unit 4:
+                         0x03,                          // - Size
+                         0x04,                          // - ID
+                         0x44, 0x44,                    // - Type
+                         0x00, 0x00, 0x00};
+
+   DeviceManagement::RegisterMessage message;
+
+   uint16_t rsize = message.unpack(expected, 3);
+   LONGS_EQUAL(expected.size() - 6, rsize);
+
+   LONGS_EQUAL(0x4243, message.emc);
+
+   CHECK_EQUAL(ipui, message.uid);
+
+   CHECK_EQUAL(4, message.units.size());
+
+   // Unit 1.
+
+   LONGS_EQUAL(1, message.units[0].id);
+   LONGS_EQUAL(0x1111, message.units[0].profile);
+
+   LONGS_EQUAL(3, message.units[0].interfaces.size());
+
+   LONGS_EQUAL(0x10AB, message.units[0].interfaces[0].id);
+   LONGS_EQUAL(0x20CD, message.units[0].interfaces[1].id);
+   LONGS_EQUAL(0x30EF, message.units[0].interfaces[2].id);
+
+   // Unit 2
+   LONGS_EQUAL(2, message.units[1].id);
+   LONGS_EQUAL(0x2222, message.units[1].profile);
+
+   LONGS_EQUAL(2, message.units[1].interfaces.size());
+
+   LONGS_EQUAL(0x40FE, message.units[1].interfaces[0].id);
+   LONGS_EQUAL(0x50DC, message.units[1].interfaces[1].id);
+
+   // Unit 3
+   LONGS_EQUAL(3, message.units[2].id);
+   LONGS_EQUAL(0x3333, message.units[2].profile);
+
+   LONGS_EQUAL(1, message.units[2].interfaces.size());
+
+   LONGS_EQUAL(0x60BA, message.units[2].interfaces[0].id);
+
+   // Unit 3
+   LONGS_EQUAL(4, message.units[3].id);
+   LONGS_EQUAL(0x4444, message.units[3].profile);
+
+   LONGS_EQUAL(0, message.units[3].interfaces.size());
 }
 
 // =============================================================================

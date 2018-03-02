@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Button interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -158,18 +158,18 @@ namespace HF
          {
             protected:
 
-            uint16_t _short_press_max_duration      = 0;  //!< Short Press Max Duration
-            uint16_t _extra_long_press_min_duration = 0;  //!< Extra Long Press Minimum Duration
+            uint16_t _short_press_max_duration;      //!< Short Press Max Duration
+            uint16_t _extra_long_press_min_duration; //!< Extra Long Press Minimum Duration
 
 #ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
             //! Double Click Gap Duration
-            uint16_t _double_click_gap_duration = DOUBLE_CLICK_GAP_DURATION_MIN_VALUE;
+            uint16_t _double_click_gap_duration;
 #endif
 
-            uint16_t _timestamp = 0;         //!< Timestamp of last call.
+            uint16_t _timestamp;         //!< Timestamp of last call.
 
 #ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
-            bool _short_click_cmd = false;   //!< Indicate if last click detected was a short click.
+            bool _short_click_cmd;   //!< Indicate if last click detected was a short click.
 #endif
 
             public:
@@ -178,7 +178,16 @@ namespace HF
             static constexpr uint16_t DOUBLE_CLICK_GAP_DURATION_MIN_VALUE = 0x0064;
 
             //! Constructor
-            Server(): InterfaceRole<SimpleButton::Base, HF::Interface::SERVER_ROLE>() {}
+            Server(): InterfaceRole<SimpleButton::Base, HF::Interface::SERVER_ROLE>(),
+               _short_press_max_duration(0), _extra_long_press_min_duration(0),
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
+               _double_click_gap_duration(DOUBLE_CLICK_GAP_DURATION_MIN_VALUE),
+#endif
+               _timestamp(0),
+#ifdef HF_ITF_SIMPLE_BUTTON_DOUBLE_CLICK_PRESS_CMD
+               _short_click_cmd(false)
+#endif
+            {}
 
             //! Destructor
             virtual ~Server() {}

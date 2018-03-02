@@ -4,7 +4,7 @@
  *
  * This file contains the declarations and definitions for the HAN-FUN Profiles.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -334,12 +334,12 @@ namespace HF
                                       HF::Interfaces::Proxy<_Interfaces,
                                                             ProfileN<_uid, _Interfaces...>>...>
       {
-         using profile_t   = ProfileN<_uid, _Interfaces...>;
-         using container_t = Interfaces::Container<ProfileN<_uid, _Interfaces...>,
-                                                   HF::Interfaces::Proxy<_Interfaces,
-                                                                         ProfileN<_uid,
-                                                                                  _Interfaces...>>
-                                                   ...>;
+         typedef ProfileN<_uid, _Interfaces...> profile_t;
+         typedef Interfaces::Container<ProfileN<_uid, _Interfaces...>,
+                                       HF::Interfaces::Proxy<_Interfaces,
+                                                             ProfileN<_uid,
+                                                                      _Interfaces...>>
+                                       ...> container_t;
 
          public:
 
@@ -386,9 +386,9 @@ namespace HF
          virtual ~Profile2()
          {}
 
-         using profile_t    = Profile2<_uid, Interface1, Interface2>;
-         using first_itf_t  = HF::Interfaces::Proxy<Interface1, profile_t>;
-         using second_itf_t = HF::Interfaces::Proxy<Interface2, profile_t>;
+         typedef Profile2<_uid, Interface1, Interface2> profile_t;
+         typedef HF::Interfaces::Proxy<Interface1, profile_t> first_itf_t;
+         typedef HF::Interfaces::Proxy<Interface2, profile_t> second_itf_t;
 
          /*!
           * Pointer to the first interface instance.
@@ -876,8 +876,8 @@ namespace HF
       class DimmableColourBulb:
          public ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer, LevelControlServer>
       {
-         using profile_t = ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer,
-                                    LevelControlServer>;
+         typedef ProfileN<DIMMABLE_COLOUR_BULB, OnOffServer, ColourControlServer,
+                          LevelControlServer> profile_t;
 
          static_assert(std::is_base_of<Interfaces::OnOff::Server, OnOffServer>::value,
                        "OnOffServer MUST be of type Interfaces::OnOff::Server !");

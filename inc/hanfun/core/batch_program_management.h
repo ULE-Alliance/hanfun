@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Batch Program Management interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -418,7 +418,7 @@ namespace HF
             typedef Container::const_iterator const_iterator;
             typedef Container::value_type value_type;
 
-            virtual ~Entries() = default;
+            virtual ~Entries() {}
 
             uint16_t size() const;
 
@@ -700,7 +700,7 @@ namespace HF
 
             Server(Unit0 &unit): IServer(unit) {}
 
-            virtual ~Server() = default;
+            virtual ~Server() {}
 
             _Entries &entries() const
             {

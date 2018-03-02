@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   @version 1.5.0
+#   @version 1.5.1
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -76,16 +76,35 @@ add_core("device_information")
 add_core("attribute_reporting")
 add_core("group_table")
 add_core("session_management")
-add_core("group_management")
 add_core("rssi")
-if(HF_CORE_SUOTA_SUPPORT)
-    add_core("suota")
+
+if(${HF_GROUP_SUPPORT})
+   add_core("group_management")
 endif()
-add_core("time")
-add_core("batch_program_management")
-add_core("scheduling")
-add_core("event_scheduling")
-add_core("weekly_scheduling")
+
+if(${HF_CORE_SUOTA_SUPPORT})
+   add_core("suota")
+endif()
+
+if(${HF_TIME_SUPPORT})
+   add_core("time")
+endif()
+
+if(${HF_BATCH_PROGRAM_SUPPORT})
+   add_core("batch_program_management")
+endif()
+
+if(${HF_EVENT_SCHEDULING_SUPPORT} OR ${HF_WEEKLY_SCHEDULING_SUPPORT})
+   add_core("scheduling")
+endif()
+
+if(${HF_EVENT_SCHEDULING_SUPPORT})
+   add_core("event_scheduling")
+endif()
+
+if(${HF_WEEKLY_SCHEDULING_SUPPORT})
+   add_core("weekly_scheduling")
+endif()
 
 ## Units ##
 set(HF_UNITS_SRCS units.cpp)

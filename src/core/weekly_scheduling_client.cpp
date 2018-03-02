@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Weekly Scheduling service : Client role.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -34,7 +34,7 @@ using namespace HF::Core::Scheduling;
 void Weekly::IClient::define_event(const Protocol::Address &addr, uint8_t id, uint8_t status,
                                    Day &time, uint8_t pid)
 {
-   DefineEvent<Day> msg(id, status, time, pid);
+   HF::Core::Scheduling::Entry<Day> msg(id, status, time, pid);
    Protocol::Message message(msg.size());
    msg.pack(message.payload);
 

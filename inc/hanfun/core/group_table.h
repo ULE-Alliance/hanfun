@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Group Table service.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -459,13 +459,15 @@ namespace HF
             protected:
 
             //! Number Of Max Entries
-            uint8_t _number_of_max_entries = std::numeric_limits<uint8_t>::max();
+            uint8_t _number_of_max_entries;
 
             public:
 
             //! Constructor
             IServer(Unit0 &unit):
-               ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>(unit) {}
+               ServiceRole<GroupTable::Base, HF::Interface::SERVER_ROLE>(unit),
+               _number_of_max_entries(std::numeric_limits<uint8_t>::max())
+            {}
 
             //! Destructor
             virtual ~IServer() {}

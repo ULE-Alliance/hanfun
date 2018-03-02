@@ -5,7 +5,7 @@
  * This file contains the definition of the Node class that represents the
  * HAN-FUN Node on the application.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

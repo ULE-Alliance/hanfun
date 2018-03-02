@@ -4,7 +4,7 @@
  *
  * This file contains the common defines for the HAN-FUN library.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -154,13 +154,11 @@ namespace HF
 
    /*! @} */
 
-   template<typename T> using Invoke             = typename T::type;
-   template<typename C> using EnableIf           = Invoke<std::enable_if<C::value>>;
-   template<typename P, typename C> using Parent = std::is_base_of<P, C>;
-   template<typename T> using IsClass            = std::is_class<T>;
-
-   template<typename T>
-   using IsIntegral = std::is_integral<Invoke<std::remove_reference<T>>>;
+#define Invoke(...)        typename __VA_ARGS__::type
+#define EnableIf(...)      Invoke(std::enable_if<__VA_ARGS__::value>)
+#define IsParent(_P, _C)   std::is_base_of<_P, _C>
+#define IsClass(_T)        std::is_class<_T>
+#define IsIntegral(_T)     std::is_integral<Invoke(std::remove_reference<_T>)>
 
    template<typename... Args> struct Or;
 
@@ -190,8 +188,7 @@ namespace HF
       static constexpr bool value = T::value;
    };
 
-   template<typename T> using IsClassPointer = And<std::is_pointer<T>,
-                                                   std::is_class<std::remove_pointer<T>>>;
+   #define IsClassPointer(_T)   And<std::is_pointer<_T>, std::is_class<std::remove_pointer<_T>>>
 
    /*!
     * This namespace contains helper classes to be used though out the HAN-FUN
@@ -543,7 +540,7 @@ namespace HF
        * @tparam T   pointer for the data type to warp.
        */
       template<typename T>
-      struct SerializableHelper<T, EnableIf<IsClassPointer<T>>>:
+      struct SerializableHelper<T, EnableIf(IsClassPointer(T))>:
          public Serializable
       {
          //! Pointer to the wrapped instance.
@@ -591,7 +588,7 @@ namespace HF
        * @tparam T   integral data type to warp.
        */
       template<typename T>
-      struct SerializableHelper<T, EnableIf<IsIntegral<T>>>:
+      struct SerializableHelper<T, EnableIf(IsIntegral(T))>:
          public Common::Serializable
       {
          //! Data type instance wrapped.
@@ -819,12 +816,12 @@ namespace HF
 
       template<typename T, typename S>
       struct SerializableHelperVector<T, S,
-                                      EnableIf<IsIntegral<typename T::value_type>>>: public
+                                      EnableIf(IsIntegral(typename T::value_type))>: public
          Serializable
       {
          T &data;
 
-         using value_type = typename T::value_type;
+         typedef typename T::value_type value_type;
 
          SerializableHelperVector(T &data): data(data) {}
 
@@ -914,12 +911,12 @@ namespace HF
 
       template<typename T, typename S>
       struct SerializableHelperVector<T, S,
-                                      EnableIf<IsClass<typename T::value_type>>>: public
+                                      EnableIf(IsClass(typename T::value_type))>: public
          Serializable
       {
          T &data;
 
-         using value_type = typename T::value_type;
+         typedef typename T::value_type value_type;
 
          SerializableHelperVector(T &data): data(data) {}
 

@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the SUOTA interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -183,10 +183,10 @@ namespace HF
                uint16_t start = offset;
 
                uint16_t size  = Protocol::Response::unpack(array, offset);
-               HF_ASSERT(size != 0, { return 0; });
+               HF_ASSERT(size != 0, {return 0;});
                offset += size;
                size    = Version::unpack(array, offset);
-               HF_ASSERT(size != 0, { return 0; });
+               HF_ASSERT(size != 0, {return 0;});
                offset += size;
 
                return offset - start;

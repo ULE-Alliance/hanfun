@@ -4,7 +4,7 @@
  *
  * This file contains an usage example of the On-Off interface.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

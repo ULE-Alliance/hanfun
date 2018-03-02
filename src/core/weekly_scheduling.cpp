@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Weekly Scheduling service.
  *
- * @version    1.5.0
+ * @version    1.5.1
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -103,7 +103,7 @@ Common::Result Weekly::IServer::handle_command(Protocol::Packet &packet, Common:
    {
       case DEFINE_EVENT_CMD:
       {
-         DefineEvent<Day> msg;
+         HF::Core::Scheduling::Entry<Day> msg;
          msg.unpack(payload, offset);
          return define_event(packet, msg);
       }
