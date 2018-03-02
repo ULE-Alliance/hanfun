@@ -1,5 +1,5 @@
 <map id="HF::Core::DeviceManagement::Server&lt; _Entries &gt;" name="HF::Core::DeviceManagement::Server&lt; _Entries &gt;">
-<area shape="rect" id="node18" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="244,2715,444,2924"/>
+<area shape="rect" id="node18" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="244,2685,444,2865"/>
 <area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="107,2140,307,2393"/>
 <area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="107,1793,307,2076"/>
 <area shape="rect" id="node4" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="129,1601,284,1722"/>
@@ -16,5 +16,5 @@
 <area shape="rect" id="node15" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="Helper template to inject session management functionality into services requiring it &#45; Server side..." alt="" coords="331,2184,538,2349"/>
 <area shape="rect" id="node16" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="331,1779,538,2091"/>
 <area shape="rect" id="node17" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="331,1593,538,1729"/>
-<area shape="rect" id="node19" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="252,2973,436,3153"/>
+<area shape="rect" id="node19" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="252,2915,436,3095"/>
 </map>

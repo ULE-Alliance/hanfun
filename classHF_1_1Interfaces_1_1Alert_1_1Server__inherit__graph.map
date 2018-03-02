@@ -10,7 +10,7 @@
 <area shape="rect" id="node25" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; VIBRATION_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1924,1709,2124,1860"/>
 <area shape="rect" id="node27" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; WINDOW_OPEN_CLOSE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="2177,1709,2461,1860"/>
 <area shape="rect" id="node29" href="$structHF_1_1Profiles_1_1Detector.html" title="Class template for Detector type profiles. " alt="" coords="1278,1481,1429,1632"/>
-<area shape="rect" id="node30" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; DOOR_BELL, Interfaces\l::Alert::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="2488,1481,2667,1632"/>
+<area shape="rect" id="node30" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; DOOR_BELL, Interfaces\l::Alert::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2488,1496,2667,1617"/>
 <area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="1383,949,1575,1056"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="1287,765,1428,872"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1270,609,1445,716"/>

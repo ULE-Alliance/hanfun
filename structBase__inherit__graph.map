@@ -19,11 +19,11 @@
 <area shape="rect" id="node23" href="$structHF_1_1Core_1_1DeviceInformation_1_1Server.html" title="Device Information interface : Server side. " alt="" coords="942,1955,1133,2193"/>
 <area shape="rect" id="node24" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="1157,1933,1357,2215"/>
 <area shape="rect" id="node19" href="$structHF_1_1Core_1_1BindManagement_1_1AbstractServer.html" title="Parent class for bind management &#45; server role. " alt="" coords="733,2367,918,2547"/>
-<area shape="rect" id="node20" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="713,2633,898,2843"/>
-<area shape="rect" id="node21" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="787,2905,973,3115"/>
-<area shape="rect" id="node22" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="795,3201,965,3307"/>
+<area shape="rect" id="node20" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="713,2633,898,2813"/>
+<area shape="rect" id="node21" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="787,2876,973,3056"/>
+<area shape="rect" id="node22" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="795,3142,965,3249"/>
 <area shape="rect" id="node25" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="1157,2331,1357,2584"/>
-<area shape="rect" id="node26" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="1047,2633,1247,2843"/>
-<area shape="rect" id="node27" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="1051,2905,1251,3115"/>
-<area shape="rect" id="node28" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="1059,3164,1243,3344"/>
+<area shape="rect" id="node26" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="1047,2633,1247,2813"/>
+<area shape="rect" id="node27" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="1051,2876,1251,3056"/>
+<area shape="rect" id="node28" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="1059,3105,1243,3285"/>
 </map>

@@ -8,7 +8,7 @@ var group__simple__temp__itf =
     [ "Server", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html", [
       [ "Server", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a9c62d42dc938c33d365ba5198a8874a1", null ],
       [ "attribute", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a0f5d3867b02050f545e0b0a5af0f3228", null ],
-      [ "attributes", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a08925c646ce299e0e1993c9ee03f30ff", null ],
+      [ "attributes", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#af462331c58d06a319414cc8f502354ec", null ],
       [ "maximum_temperature", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a3b37b04fe3f0358578b5f95d9dc394fb", null ],
       [ "minimum_temperature", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#a2f3b277d737f94b4d8f5966b0a1ad366", null ],
       [ "temperature", "classHF_1_1Interfaces_1_1SimpleTemperature_1_1Server.html#af23c5bf3372254be6a13dc41adcb9208", null ],

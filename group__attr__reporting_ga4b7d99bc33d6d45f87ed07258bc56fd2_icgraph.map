@@ -1,3 +1,4 @@
 <map id="HF::Core::create_attribute" name="HF::Core::create_attribute">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a2f25c6e4d17dd654f52f1a7e25e63bef" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="228,5,417,47"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a2f25c6e4d17dd654f52f1a7e25e63bef" title="Return a pointer to the interface attribute with the given uid. " alt="" coords="233,5,423,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html#a371c2cccb30c4194982b8755c7c40697" title="Return the Device entry for the given UID. " alt="" coords="228,71,428,112"/>
 </map>

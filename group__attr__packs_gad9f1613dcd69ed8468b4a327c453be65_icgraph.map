@@ -1,5 +1,5 @@
 <map id="HF::Attributes::get" name="HF::Attributes::get">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html#aa638de2c2d5acbc89b96455b5eb70972" title="HF::Profiles::Profile\l\&lt; SIMPLE_LIGHT_SENSOR,\l Interfaces::SimpleLightSensor\l::Server \&gt;::attributes" alt="" coords="209,5,410,76"/>
-<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1Detector.html#a4a5716f017e20c26e73f8dbcc3bc54af" title="Return a list of all the attributes for a given interface, pack id and list of attributes UID&#39;s..." alt="" coords="192,100,427,141"/>
-<area shape="rect" id="node4" href="$classHF_1_1Interfaces_1_1Container.html#ac63374ef814e97bd2ce828a47621552f" title="Helper function used to provide HF::Units::Unit::attributes functionality. " alt="" coords="184,165,435,265"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html#ac9f54d760ca1a6ee80c14ebd5ce54c07" title="HF::Profiles::Profile\l\&lt; SIMPLE_LIGHT_SENSOR,\l Interfaces::SimpleLightSensor\l::Server \&gt;::attributes" alt="" coords="227,5,429,76"/>
+<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1Detector.html#a547b27685fcfb9f6b2619cc0c70cab8e" title="Return a list of all the attributes for a given interface, pack id and list of attributes UID&#39;s..." alt="" coords="211,100,445,141"/>
+<area shape="rect" id="node4" href="$classHF_1_1Interfaces_1_1Container.html#a3ad9a759fa59dee163a16a0094d09f9f" title="Helper function used to provide HF::Units::Unit::attributes functionality. " alt="" coords="184,165,472,265"/>
 </map>

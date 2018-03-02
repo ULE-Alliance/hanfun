@@ -33,7 +33,7 @@
 <area shape="rect" id="node33" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; GroupTable::Base, HF\l::Interface::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="1341,1468,1541,1589"/>
 <area shape="rect" id="node30" href="$structHF_1_1Core_1_1GroupTable_1_1Client.html" title="Group Table Service : Client side implementation. " alt="" coords="1146,1637,1297,2301"/>
 <area shape="rect" id="node31" href="$structHF_1_1Core_1_1GroupManagement_1_1IGroupTable.html" title="Interface to the HF::GroupTable API used to update the device&#39;s group tables entries on add/remove ev..." alt="" coords="1124,2371,1319,2493"/>
-<area shape="rect" id="node32" href="$structHF_1_1Core_1_1GroupManagement_1_1GroupTableClient.html" title="Default implementation of the IGroupTable interface. " alt="" coords="1124,2563,1319,2699"/>
+<area shape="rect" id="node32" href="$structHF_1_1Core_1_1GroupManagement_1_1GroupTableClient.html" title="Default implementation of the IGroupTable interface. " alt="" coords="1124,2563,1319,2684"/>
 <area shape="rect" id="node34" href="$classHF_1_1Core_1_1GroupTable_1_1IServer.html" title="Group Table Service : Server side implementation. " alt="" coords="1351,1799,1532,2140"/>
 <area shape="rect" id="node36" href="$structHF_1_1Core_1_1SUOTA_1_1Base.html" title="SUOTA Interfaces::Interface : Parent. " alt="" coords="1583,1225,1751,1303"/>
 <area shape="rect" id="node37" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; SUOTA::Base, HF::Interface\l::CLIENT_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="1565,1468,1768,1589"/>

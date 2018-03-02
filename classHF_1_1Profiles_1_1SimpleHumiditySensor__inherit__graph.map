@@ -1,7 +1,7 @@
 <map id="HF::Profiles::SimpleHumiditySensor" name="HF::Profiles::SimpleHumiditySensor">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_HUMIDITY_SENSOR,\l Interfaces::SimpleHumidity\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="185,1465,409,1631"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_HUMIDITY_SENSOR,\l Interfaces::SimpleHumidity\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="185,1465,409,1601"/>
 <area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="111,993,298,1129"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1208,143,1344"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1223,143,1329"/>
 <area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="131,795,273,901"/>
 <area shape="rect" id="node5" href="$classHF_1_1Interfaces_1_1SimpleHumidity_1_1Server.html" title="Simple Humidity Interface : Server side interface. " alt="" coords="335,1179,541,1373"/>
 <area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="327,1008,549,1115"/>

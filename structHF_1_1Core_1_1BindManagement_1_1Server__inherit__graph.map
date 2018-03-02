@@ -1,5 +1,5 @@
 <map id="HF::Core::BindManagement::Server&lt; _Entries &gt;" name="HF::Core::BindManagement::Server&lt; _Entries &gt;">
-<area shape="rect" id="node18" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="247,2641,433,2851"/>
+<area shape="rect" id="node18" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="247,2612,433,2792"/>
 <area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1AbstractServer.html" title="Parent class for bind management &#45; server role. " alt="" coords="114,2140,299,2320"/>
 <area shape="rect" id="node3" href="$structHF_1_1Core_1_1BindManagement_1_1IServer.html" title="Bind Management interface : Server side API. " alt="" coords="114,1830,299,2039"/>
 <area shape="rect" id="node4" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="129,1601,284,1722"/>
@@ -16,5 +16,5 @@
 <area shape="rect" id="node15" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="Helper template to inject session management functionality into services requiring it &#45; Server side..." alt="" coords="323,2147,530,2313"/>
 <area shape="rect" id="node16" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="323,1779,530,2091"/>
 <area shape="rect" id="node17" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="323,1593,530,1729"/>
-<area shape="rect" id="node19" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="255,2900,425,3007"/>
+<area shape="rect" id="node19" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="255,2841,425,2948"/>
 </map>

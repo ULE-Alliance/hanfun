@@ -7,7 +7,7 @@ var structHF_1_1Core_1_1GroupManagement_1_1Client =
     [ "deleted", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#a9067ab174952bce15e12fd61e178f63f", null ],
     [ "got_info", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#ac6b0a180814af7863f44039d9d9d4b4e", null ],
     [ "handle_command", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#abcc4fa9a9f8c15f9fe0ba87493cce711", null ],
-    [ "payload_size", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#a5a1697afba3c432344b16c2967a80e7b", null ],
+    [ "payload_size", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#aa24b16849edef16e17d2ba2178f92aa4", null ],
     [ "remove", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#a04a4c6c95c68f9ddb33ec8cdcd914e52", null ],
     [ "remove", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#af6efc63887bcd155e74a974d09d75db2", null ],
     [ "removed", "structHF_1_1Core_1_1GroupManagement_1_1Client.html#adc52c1d1b701a0037e85cac955fe892c", null ]

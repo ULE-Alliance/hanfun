@@ -2,7 +2,7 @@ var classHF_1_1Interfaces_1_1LevelControl_1_1Server =
 [
     [ "Server", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a00d9da717373f2b45c4d1febd1f5fb99", null ],
     [ "attribute", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a12438e47bc1bf8172d03479ad4e1e1d5", null ],
-    [ "attributes", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e4a5800caf6dc666814a7d437ee0f31", null ],
+    [ "attributes", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e1ef2063d35295fa660b235bbb7f6f8", null ],
     [ "handle_attribute", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#ad30a5f5087ea93c6ed15310d0aa91fae", null ],
     [ "handle_command", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#ac2ef0afd4884e06916b08cfbdd647829", null ],
     [ "level", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a9922355932dc3e39e9f294b458587c88", null ],

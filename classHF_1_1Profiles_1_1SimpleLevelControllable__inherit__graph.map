@@ -1,7 +1,7 @@
 <map id="HF::Profiles::SimpleLevelControllable" name="HF::Profiles::SimpleLevelControllable">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="190,1524,438,1689"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="190,1524,438,1660"/>
 <area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="111,1023,298,1159"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1252,143,1388"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1267,143,1373"/>
 <area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="133,809,274,916"/>
 <area shape="rect" id="node5" href="$classHF_1_1Interfaces_1_1LevelControl_1_1Server.html" title="Level Control Interface : Server side implementation. " alt="" coords="351,1208,538,1432"/>
 <area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="333,1037,556,1144"/>

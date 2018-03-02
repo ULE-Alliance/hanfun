@@ -1,7 +1,7 @@
 var structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report =
 [
-    [ "pack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a7c8cd715873d8188435bbf5591ba7821", null ],
-    [ "size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#afe67a23d1ac999ae93e70d6a653296ff", null ],
+    [ "pack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a83d19dc4fbfa7b21e4b878fcf9cb6a64", null ],
+    [ "size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a657d1afb504bf31d871e79318f25ac47", null ],
     [ "unpack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#ac6b0e69eab0e2bbb92adb174ce7ea03a", null ],
     [ "avg_power", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a85a83235359dd58bd4cd51a87f630347", null ],
     [ "avg_power_interval", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a06ae9fe01689c03f513f60d31cb49b48", null ],

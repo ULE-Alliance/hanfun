@@ -1,17 +1,17 @@
 var group__spm__itf =
 [
     [ "Measurement", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html", [
-      [ "changed", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a73c5b62bc7dcd2986e8fc967dbccf3cc", null ],
-      [ "compare", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a34a70f0be1fbdbea7dba2c49df18c784", null ],
-      [ "pack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a468aba66c6f257211a7fbfe7efa4a05d", null ],
-      [ "size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a45705438fe6cd72fffc191f717f63190", null ],
+      [ "changed", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a4119cfbcc7fcc53baa140ce6fc832ef3", null ],
+      [ "compare", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#adcfc386e781bfbd1b914839a2b700273", null ],
+      [ "pack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a6533b3c4626b1b8a00713b27077ae149", null ],
+      [ "size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ad268e097648130c0f1cbd99111ffe558", null ],
       [ "unpack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ad9dc1a3f6c784e3c74b9558914eb70e4", null ],
       [ "unit", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#ac72e982db9c64daef9a38b3e69011017", null ],
       [ "value", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Measurement.html#a384e72e627f3ba1983b6c28bbf17a815", null ]
     ] ],
     [ "Report", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html", [
-      [ "pack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a7c8cd715873d8188435bbf5591ba7821", null ],
-      [ "size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#afe67a23d1ac999ae93e70d6a653296ff", null ],
+      [ "pack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a83d19dc4fbfa7b21e4b878fcf9cb6a64", null ],
+      [ "size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a657d1afb504bf31d871e79318f25ac47", null ],
       [ "unpack", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#ac6b0e69eab0e2bbb92adb174ce7ea03a", null ],
       [ "avg_power", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a85a83235359dd58bd4cd51a87f630347", null ],
       [ "avg_power_interval", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#a06ae9fe01689c03f513f60d31cb49b48", null ],
@@ -26,12 +26,12 @@ var group__spm__itf =
       [ "voltage", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Report.html#aafa894c4dfb3e6a9375565581ad86a51", null ]
     ] ],
     [ "Base", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html", [
-      [ "payload_size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html#afd41b5d37f632f889b3a2e1976855a2b", null ]
+      [ "payload_size", "structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html#af2a4f23b4e3d72f8c78b2f95b34bbf4a", null ]
     ] ],
     [ "Server", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html", [
       [ "Server", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#a4eb44141386d2df7b1dc31331a327ee8", null ],
       [ "attribute", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#a6e8c8721c821abd14a8447aaf64a5c12", null ],
-      [ "attributes", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#a75d393ad9759e7ea332da45c254de7bf", null ],
+      [ "attributes", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#ad0d3062f1752d608476de5c970d00362", null ],
       [ "periodic", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#a4fd922b1878b46df98cfbcbc8fd3d62a", null ],
       [ "report", "classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html#a563405efe84d8b885d90d896730947ee", null ]
     ] ],

@@ -4,12 +4,12 @@ var group__level__ctl__itf =
     [ "Base", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html", [
       [ "check_and_fix", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#a67efea43e5f95b01be5e8c500781c406", null ],
       [ "check_and_fix", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#a4a7bd10dfa2a86965e94d93adadb55c7", null ],
-      [ "payload_size", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#aeee675e155d3cc09082d4c766c7bd22e", null ]
+      [ "payload_size", "structHF_1_1Interfaces_1_1LevelControl_1_1Base.html#a30d8464550f3efbe6b422e742f3e53f9", null ]
     ] ],
     [ "Server", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html", [
       [ "Server", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a00d9da717373f2b45c4d1febd1f5fb99", null ],
       [ "attribute", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a12438e47bc1bf8172d03479ad4e1e1d5", null ],
-      [ "attributes", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e4a5800caf6dc666814a7d437ee0f31", null ],
+      [ "attributes", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a3e1ef2063d35295fa660b235bbb7f6f8", null ],
       [ "handle_attribute", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#ad30a5f5087ea93c6ed15310d0aa91fae", null ],
       [ "handle_command", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#ac2ef0afd4884e06916b08cfbdd647829", null ],
       [ "level", "classHF_1_1Interfaces_1_1LevelControl_1_1Server.html#a9922355932dc3e39e9f294b458587c88", null ],

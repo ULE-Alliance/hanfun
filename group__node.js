@@ -7,12 +7,12 @@ var group__node =
     ] ],
     [ "Unit0", "structHF_1_1Devices_1_1Node_1_1Unit0.html", [
       [ "Unit0", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a8e67142fd57e4d7822991e6982501f7e", null ],
-      [ "attribute_reporting", "structHF_1_1Devices_1_1Node_1_1Unit0.html#aff3431a2c3c931f0cad7e990f8af9248", null ],
+      [ "attribute_reporting", "structHF_1_1Devices_1_1Node_1_1Unit0.html#ae1c6899ff510e91e1b900028c0c449d5", null ],
       [ "attribute_reporting", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a862cfa406fc5e3f3ed139345c2aab5ff", null ],
-      [ "device_info", "structHF_1_1Devices_1_1Node_1_1Unit0.html#acd5d84217ce4776e2a016c68a84f5508", null ],
+      [ "device_info", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a93aa679ddd13f939846f6a2e2329f144", null ],
       [ "device_info", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a2756a9da62bfa97d34f2bab808213667", null ],
       [ "device_management", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a27e417cd4b11b433052616771a28201c", null ],
-      [ "device_management", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a54b85a9520c0e1791cab73cf73611dcf", null ]
+      [ "device_management", "structHF_1_1Devices_1_1Node_1_1Unit0.html#a708bc876a81d54edc749b5a336313017", null ]
     ] ],
     [ "Abstract", "classHF_1_1Devices_1_1Node_1_1Abstract.html", [
       [ "address", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a654eba486c847f64eac686be7170c153", null ],
@@ -20,7 +20,7 @@ var group__node =
       [ "disconnected", "classHF_1_1Devices_1_1Node_1_1Abstract.html#ab96c6532bb0b82391c8d4c0d764cf52a", null ],
       [ "link", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a046e6f31a5f24cc6d49df74e1299143e", null ],
       [ "receive", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a77a04647274de7a23259077d2fca1f77", null ],
-      [ "to_local", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a7a01f61200975058c6cf90f46bc0edb3", null ],
+      [ "to_local", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a8172d1d535ef07900dd296eb3a670f80", null ],
       [ "unit0", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a3829d466a7c220fd807471875640defc", null ],
       [ "_link", "classHF_1_1Devices_1_1Node_1_1Abstract.html#aceb489c8b5d53c32e738f63b8d1aa9df", null ],
       [ "_unit0", "classHF_1_1Devices_1_1Node_1_1Abstract.html#a81ad568f8902cad5ff8d82f00c483870", null ]
@@ -33,5 +33,5 @@ var group__node =
       [ "remove", "classHF_1_1Devices_1_1Node_1_1Transport.html#ad008724f39d1fe29cd159ce173bad491", null ],
       [ "link", "classHF_1_1Devices_1_1Node_1_1Transport.html#a5ab4e9b24a7903960386106401666f28", null ]
     ] ],
-    [ "DefaultUnit0", "group__node.html#ga3ff23954fc24380fba77d7d8e5e4d28d", null ]
+    [ "DefaultUnit0", "group__node.html#gae03185a5c2a032bce64a630e7509dab7", null ]
 ];

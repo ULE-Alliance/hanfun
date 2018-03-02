@@ -7,6 +7,6 @@
 <area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1Client.html" title="Simple Visual Effects Interface : Client side implementation. " alt="" coords="53,1129,243,1235"/>
 <area shape="rect" id="node9" href="$classHF_1_1Interfaces_1_1SimpleVisualEffects_1_1Server.html" title="Simple Visual Effects Interface : Server side implementation. " alt="" coords="337,1092,527,1272"/>
-<area shape="rect" id="node10" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LED, Interfaces\l::SimpleVisualEffects::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="329,1321,535,1472"/>
-<area shape="rect" id="node11" href="$classHF_1_1Profiles_1_1SimpleLED.html" title="Simple LED profile implementation. " alt="" coords="349,1521,515,1599"/>
+<area shape="rect" id="node10" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LED, Interfaces\l::SimpleVisualEffects::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="329,1321,535,1443"/>
+<area shape="rect" id="node11" href="$classHF_1_1Profiles_1_1SimpleLED.html" title="Simple LED profile implementation. " alt="" coords="349,1492,515,1569"/>
 </map>

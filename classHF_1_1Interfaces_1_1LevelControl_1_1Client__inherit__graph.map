@@ -1,5 +1,5 @@
 <map id="HF::Interfaces::LevelControl::Client" name="HF::Interfaces::LevelControl::Client">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROL,\l Interfaces::LevelControl\l::Client \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="273,1423,479,1588"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROL,\l Interfaces::LevelControl\l::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="273,1423,479,1559"/>
 <area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; LevelControl::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="269,1023,483,1129"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1LevelControl_1_1Base.html" title="Level Control Interface : Parent. " alt="" coords="133,795,320,931"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="144,624,309,745"/>
@@ -7,5 +7,5 @@
 <area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 <area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="344,817,509,909"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleLevelControl.html" title="Simple Level Control profile implementation. " alt="" coords="291,1637,461,1729"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleLevelControl.html" title="Simple Level Control profile implementation. " alt="" coords="291,1608,461,1700"/>
 </map>

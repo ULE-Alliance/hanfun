@@ -1,7 +1,8 @@
 <map id="HF::IDevice::address" name="HF::IDevice::address">
-<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html#a3d87fabe514f7db1531d60c59e0acca6" title="Check if the given packet is from the local device. " alt="" coords="200,5,395,47"/>
-<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1AbstractDevice.html#a7a33df409b28d679888aeae251c37434" title="Check if the device has a valid, i.e. " alt="" coords="200,71,395,112"/>
-<area shape="rect" id="node5" href="$structHF_1_1Devices_1_1AbstractDevice.html#a724135ee65e47845462afc05ee44b2c2" title="Check if the given packet is for this device. " alt="" coords="200,136,395,177"/>
-<area shape="rect" id="node3" href="$structHF_1_1Devices_1_1AbstractDevice.html#a158bc8af77447d555882128fa18ba873" title="Check if the given packet is from the a remote device. " alt="" coords="443,5,637,47"/>
-<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html#a7a01f61200975058c6cf90f46bc0edb3" title="Check if an incoming packet is for the node. " alt="" coords="461,121,619,192"/>
+<area shape="rect" id="node2" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html#a29becfcea0f7a833dfded68cb8746a8a" title="Add the given link to the list of known links and call the connected method for all registered end&#45;po..." alt="" coords="208,5,387,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Devices_1_1AbstractDevice.html#a631db1409b1700843f6e32680d4f729b" title="Check if the given packet is from the local device. " alt="" coords="200,71,395,112"/>
+<area shape="rect" id="node5" href="$structHF_1_1Devices_1_1AbstractDevice.html#a7a33df409b28d679888aeae251c37434" title="Check if the device has a valid, i.e. " alt="" coords="200,136,395,177"/>
+<area shape="rect" id="node6" href="$structHF_1_1Devices_1_1AbstractDevice.html#adedc4d64c57b794155a4f4ebbe5969dd" title="Check if the given packet is for this device. " alt="" coords="200,201,395,243"/>
+<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html#a8172d1d535ef07900dd296eb3a670f80" title="Check if an incoming packet is for the node. " alt="" coords="461,216,619,287"/>
+<area shape="rect" id="node4" href="$structHF_1_1Devices_1_1AbstractDevice.html#a158bc8af77447d555882128fa18ba873" title="Check if the given packet is from the a remote device. " alt="" coords="443,71,637,112"/>
 </map>

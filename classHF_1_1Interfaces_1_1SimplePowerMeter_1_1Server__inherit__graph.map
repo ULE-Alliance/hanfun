@@ -1,5 +1,5 @@
 <map id="HF::Interfaces::SimplePowerMeter::Server" name="HF::Interfaces::SimplePowerMeter::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_POWER_METER,\l Interfaces::SimplePowerMeter\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="277,1349,480,1515"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_POWER_METER,\l Interfaces::SimplePowerMeter\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="277,1349,480,1485"/>
 <area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimplePowerMeter\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="247,993,511,1100"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimplePowerMeter_1_1Base.html" title="Simple Power Meter Interface : Parent. " alt="" coords="131,795,322,901"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_POWER_METER \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
@@ -7,5 +7,5 @@
 <area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 <area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="347,802,512,894"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimplePowerMeter.html" title="Simple Power Meter profile implementation. " alt="" coords="290,1564,467,1656"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimplePowerMeter.html" title="Simple Power Meter profile implementation. " alt="" coords="290,1535,467,1627"/>
 </map>

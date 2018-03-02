@@ -1,7 +1,7 @@
 <map id="HF::Profiles::Siren" name="HF::Profiles::Siren">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIREN, Interfaces::\lOnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="144,1495,295,1645"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIREN, Interfaces::\lOnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="144,1495,295,1616"/>
 <area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="90,964,277,1100"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1215,143,1351"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1230,143,1337"/>
 <area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="113,780,254,887"/>
 <area shape="rect" id="node5" href="$classHF_1_1Interfaces_1_1OnOff_1_1Server.html" title="On&#45;Off Interface : Server side implementation. " alt="" coords="267,1149,417,1417"/>
 <area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; OnOff::Base, HF::\lInterface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="301,979,493,1085"/>

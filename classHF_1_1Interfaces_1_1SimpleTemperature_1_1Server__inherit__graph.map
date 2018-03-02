@@ -1,5 +1,5 @@
 <map id="HF::Interfaces::SimpleTemperature::Server" name="HF::Interfaces::SimpleTemperature::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_TEMPERATURE\l_SENSOR, Interfaces::SimpleTemperature\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="254,1437,527,1603"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_TEMPERATURE\l_SENSOR, Interfaces::SimpleTemperature\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="254,1437,527,1573"/>
 <area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleTemperature\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="259,979,523,1085"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleTemperature_1_1Base.html" title="Simple Temperature Interface : Parent. " alt="" coords="113,795,340,887"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_TEMPERATURE \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
@@ -7,5 +7,5 @@
 <area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 <area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="364,795,529,887"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleTemperatureSensor.html" title="Simple Temperature Sensor profile implementation. " alt="" coords="284,1652,497,1744"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleTemperatureSensor.html" title="Simple Temperature Sensor profile implementation. " alt="" coords="284,1623,497,1715"/>
 </map>

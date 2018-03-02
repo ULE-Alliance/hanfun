@@ -10,6 +10,6 @@ var namespaceHF_1_1Common =
     [ "SerializableHelper< Common::ByteArray >", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4" ],
     [ "SerializableHelper< std::string >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4" ],
     [ "SerializableHelper< std::vector< uint8_t > >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4" ],
-    [ "SerializableHelper< T, EnableIf< IsClassPointer< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4" ],
-    [ "SerializableHelper< T, EnableIf< IsIntegral< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4" ]
+    [ "SerializableHelper< T, EnableIf(IsClassPointer(T))>", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4" ],
+    [ "SerializableHelper< T, EnableIf(IsIntegral(T))>", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4" ]
 ];

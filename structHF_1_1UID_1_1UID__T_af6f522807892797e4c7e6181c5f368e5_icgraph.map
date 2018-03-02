@@ -1,5 +1,9 @@
 <map id="HF::UID::UID_T::unpack" name="HF::UID::UID_T::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="223,5,392,32"/>
-<area shape="rect" id="node3" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="227,56,387,112"/>
-<area shape="rect" id="node4" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="230,136,385,163"/>
+<area shape="rect" id="node2" href="$classHF_1_1UID_1_1UID.html#a09297712c00f2682cdeeb12c1fde8fc4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="237,13,377,39"/>
+<area shape="rect" id="node6" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="223,63,392,90"/>
+<area shape="rect" id="node7" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="227,114,387,170"/>
+<area shape="rect" id="node8" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="230,194,385,221"/>
+<area shape="rect" id="node3" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="440,13,568,39"/>
+<area shape="rect" id="node4" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="616,13,696,39"/>
+<area shape="rect" id="node5" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="744,5,919,47"/>
 </map>

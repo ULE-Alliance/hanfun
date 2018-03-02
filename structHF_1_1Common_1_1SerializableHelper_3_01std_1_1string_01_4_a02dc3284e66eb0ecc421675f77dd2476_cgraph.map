@@ -1,3 +1,7 @@
 <map id="HF::Common::SerializableHelper&lt; std::string &gt;::unpack" name="HF::Common::SerializableHelper&lt; std::string &gt;::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2" title="Read a message from a ByteArray. " alt="" coords="229,13,405,54"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1SerializableHelper.html#a2423e991645b66073fac6cad7fe5f6ff" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="229,5,405,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="234,71,401,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1SerializableHelper.html#a653b5ade746f301854b8bf7409b4fe60" title="Number bytes needed to serialize the message. " alt="" coords="229,136,405,177"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2" title="Read a message from a ByteArray. " alt="" coords="229,201,405,243"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a" title="Write a byte into the array at the given offset. " alt="" coords="234,267,401,308"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="BindManagement::Server" name="BindManagement::Server">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="314,3401,499,3611"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="314,3401,499,3581"/>
 <area shape="rect" id="node3" href="$structHF_1_1Core_1_1BindManagement_1_1AbstractServer.html" title="Parent class for bind management &#45; server role. " alt="" coords="577,2828,762,3008"/>
-<area shape="rect" id="node34" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="446,3100,631,3309"/>
+<area shape="rect" id="node34" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="446,3115,631,3295"/>
 <area shape="rect" id="node4" href="$structHF_1_1Core_1_1BindManagement_1_1IServer.html" title="Bind Management interface : Server side API. " alt="" coords="577,2518,762,2727"/>
 <area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="592,2224,747,2345"/>
 <area shape="rect" id="node6" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="1341,1908,1440,2088"/>

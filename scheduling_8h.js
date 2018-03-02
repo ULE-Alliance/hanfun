@@ -2,7 +2,6 @@ var scheduling_8h =
 [
     [ "HF_SCHEDULING_SETTER_HELPER", "scheduling_8h.html#a18f4b35406887a8f048a9f41cc89a7b4", null ],
     [ "ActivateSchedulerResponse", "scheduling_8h.html#ga77773344d79e24fc034f1fce00aa870d", null ],
-    [ "DefineEvent", "scheduling_8h.html#ga762659010457e8ab4ca9fbfccec3ce97", null ],
     [ "DeleteAllResponse", "scheduling_8h.html#gafa2467e0e5de9636505bcd911c97756d", null ],
     [ "DeleteEvent", "scheduling_8h.html#ga56f95a1c921be0cea9ccd4e84b50956e", null ],
     [ "DeleteEventResponse", "scheduling_8h.html#ga8c8e6594a836528165243c203343dcb2", null ],

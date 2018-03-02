@@ -32,7 +32,7 @@
 <area shape="rect" id="node32" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; GroupTable::Base, HF\l::Interface::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="1729,655,1929,777"/>
 <area shape="rect" id="node29" href="$structHF_1_1Core_1_1GroupTable_1_1Client.html" title="Group Table Service : Client side implementation. " alt="" coords="1534,951,1685,1615"/>
 <area shape="rect" id="node30" href="$structHF_1_1Core_1_1GroupManagement_1_1IGroupTable.html" title="Interface to the HF::GroupTable API used to update the device&#39;s group tables entries on add/remove ev..." alt="" coords="1512,1686,1707,1807"/>
-<area shape="rect" id="node31" href="$structHF_1_1Core_1_1GroupManagement_1_1GroupTableClient.html" title="Default implementation of the IGroupTable interface. " alt="" coords="1512,1879,1707,2015"/>
+<area shape="rect" id="node31" href="$structHF_1_1Core_1_1GroupManagement_1_1GroupTableClient.html" title="Default implementation of the IGroupTable interface. " alt="" coords="1512,1879,1707,2000"/>
 <area shape="rect" id="node33" href="$classHF_1_1Core_1_1GroupTable_1_1IServer.html" title="Group Table Service : Server side implementation. " alt="" coords="1736,1112,1917,1453"/>
 <area shape="rect" id="node35" href="$classHF_1_1Core_1_1DeviceInformation_1_1Base.html" title="Parent class for the Device Information interface implementation. " alt="" coords="1827,389,2018,481"/>
 <area shape="rect" id="node37" href="$structHF_1_1Core_1_1Scheduling_1_1Base.html" title="Scheduling Service : Parent. " alt="" coords="2042,389,2206,481"/>

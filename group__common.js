@@ -5,15 +5,15 @@ var group__common =
       [ "ByteArray", "structHF_1_1Common_1_1ByteArray.html#a7fdaa84052c277565428c8ab55956930", null ],
       [ "ByteArray", "structHF_1_1Common_1_1ByteArray.html#a96f8d466802bba46ffb27e3160b376b0", null ],
       [ "~ByteArray", "structHF_1_1Common_1_1ByteArray.html#a38e01f7b2ed80aa7f70cb3e0557543cc", null ],
-      [ "available", "structHF_1_1Common_1_1ByteArray.html#aa512e9c7500f1ee6ab6a876ff6d6bcaa", null ],
-      [ "available", "structHF_1_1Common_1_1ByteArray.html#ac1b4add22d4791e357cd43e0da22f6c7", null ],
+      [ "available", "structHF_1_1Common_1_1ByteArray.html#a6e9f9e29c1907295bc1c8c5934cda4f3", null ],
+      [ "available", "structHF_1_1Common_1_1ByteArray.html#a07293a50501ff39265a5c86a279aaeab", null ],
       [ "ensure", "structHF_1_1Common_1_1ByteArray.html#ab11a7ca8a645deec79fe6b0c2ec64202", null ],
       [ "extend", "structHF_1_1Common_1_1ByteArray.html#ae0c13cceba7f7ab49425829ff30c24e4", null ],
-      [ "read", "structHF_1_1Common_1_1ByteArray.html#abfe9dbae9b4230dd6951c9063d59ca57", null ],
-      [ "read", "structHF_1_1Common_1_1ByteArray.html#a928cf8ce6823cedd6eba6e8b3c6058e9", null ],
-      [ "read", "structHF_1_1Common_1_1ByteArray.html#a203fa088fa50cdc40976a6d70fd6e9aa", null ],
-      [ "read", "structHF_1_1Common_1_1ByteArray.html#ab8cde807783f1f9c2ba86e489c5d4165", null ],
-      [ "read", "structHF_1_1Common_1_1ByteArray.html#ac144682fa5125683f06bdcb44e10b3a2", null ],
+      [ "read", "structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a", null ],
+      [ "read", "structHF_1_1Common_1_1ByteArray.html#aa41213d3a61b5c6a0a9cf1dfff6cc991", null ],
+      [ "read", "structHF_1_1Common_1_1ByteArray.html#a90ca5cb7138f6939c4a23e242d70bd58", null ],
+      [ "read", "structHF_1_1Common_1_1ByteArray.html#ae945cf20657dd5a300dc851795d8805e", null ],
+      [ "read", "structHF_1_1Common_1_1ByteArray.html#a5bb80a47d85708778bdc91cb8d6a92b5", null ],
       [ "write", "structHF_1_1Common_1_1ByteArray.html#a4d8497059b06cf33f1e2b899bbf7f08a", null ],
       [ "write", "structHF_1_1Common_1_1ByteArray.html#a3770bad5a4ee141fb3e8a6f76489caf5", null ],
       [ "write", "structHF_1_1Common_1_1ByteArray.html#a1312172eda4778987c0db48e66569bb5", null ],
@@ -27,36 +27,36 @@ var group__common =
       [ "unpack", "structHF_1_1Common_1_1Serializable.html#a97b583a90b618f96fa72860628e78467", null ]
     ] ],
     [ "SerializableHelper", "structHF_1_1Common_1_1SerializableHelper.html", [
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper.html#a3babd4857a35f31aa059b6f52197cc81", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper.html#af2d5d08ca4a5a702edd68efb2ea2bffb", null ],
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper.html#a2423e991645b66073fac6cad7fe5f6ff", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper.html#a653b5ade746f301854b8bf7409b4fe60", null ],
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper.html#a708e4bccd060556ce9e2fcfc91bb89f2", null ],
       [ "data", "structHF_1_1Common_1_1SerializableHelper.html#adcd4c900617de660b7c6a87e0d3a5b75", null ]
     ] ],
-    [ "SerializableHelper< T, EnableIf< IsClassPointer< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html", [
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html#ac26a08377062bb78c3a2f44a01e4dd66", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html#a0b2d1b19c09e427fb0cd13725ff59b0e", null ],
-      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html#a27e1cf5505b2f67200487d6a1845f833", null ],
-      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html#a37e3c665b581088918e13411de8467d1", null ]
+    [ "SerializableHelper< T, EnableIf(IsClassPointer(T))>", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html", [
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html#a320436939ee1880af5689c19e29a68c4", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html#a2f713c4762a34bfff9a2c0d7c88fb19f", null ],
+      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html#a3d4567cb17069feff893b88b762e398f", null ],
+      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html#abfbbf92bf83f99dd453cbeaf78670681", null ]
     ] ],
-    [ "SerializableHelper< T, EnableIf< IsIntegral< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html", [
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a54df8f029e878267c7301a75e30e0f46", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a7d487e8890e76251aac85acdcdbcffc8", null ],
-      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a7e21f5c3bfc12df18ddfdccb8f91e064", null ],
-      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html#a978073bb8eeb470e3d7eec72c3466353", null ]
+    [ "SerializableHelper< T, EnableIf(IsIntegral(T))>", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html", [
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html#a59f60526bf86f3518560774cc7131a24", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html#ae892e15bd2a90f92e90fb830a3eab7b3", null ],
+      [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html#a1e44ff2e9bcba704784de91528efa670", null ],
+      [ "data", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html#a80f59ca03089bdaaf607c1a858fa69ca", null ]
     ] ],
     [ "SerializableHelper< Common::ByteArray >", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html", [
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#abda72e053ba3b587dea42bd28a39585b", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ae796369d4636a751ca9a548f0a889389", null ],
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ab1750a0190ad31034af123f8af747d02", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#acaf3cced7bed5c260825f0890cba3f9b", null ],
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#ad8041b04ce7ee09ded6d524de1c3a7e9", null ]
     ] ],
     [ "SerializableHelper< std::string >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html", [
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a40466b523bcfafc0560edb1c70f69b8b", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#ab1c998f355e89c35ce3090f8212d5eb8", null ],
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a34eb0528b0fa0c0b1ed64b9d0fa10c39", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a882aad84b79963aa1e54063e569b7435", null ],
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476", null ]
     ] ],
     [ "SerializableHelper< std::vector< uint8_t > >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html", [
-      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a458b73092464c45ab575d553913232bb", null ],
-      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a71d17201f54490e122eef9f3bebba71f", null ],
+      [ "pack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a9c49b07f36045d0d9fbb8e81d2548b1e", null ],
+      [ "size", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a757620f224cd7551d6a3a4af61248663", null ],
       [ "unpack", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html#a49bb5c9d3608d0159de8e66ce0dcad86", null ]
     ] ],
     [ "Cloneable", "structHF_1_1Common_1_1Cloneable.html", [
@@ -64,8 +64,8 @@ var group__common =
     ] ],
     [ "Interface", "structHF_1_1Common_1_1Interface.html", [
       [ "Interface", "structHF_1_1Common_1_1Interface.html#a56b682f6c56f0453289ef5fe7cee4b28", null ],
-      [ "pack", "structHF_1_1Common_1_1Interface.html#a387a6bde755de993b8294c049628ed14", null ],
-      [ "size", "structHF_1_1Common_1_1Interface.html#a55038cad577a9d3e234579cd3de3c900", null ],
+      [ "pack", "structHF_1_1Common_1_1Interface.html#a4a0552827063527ae82c19e12f71c002", null ],
+      [ "size", "structHF_1_1Common_1_1Interface.html#a7c9576eeec89696fd2895de89e2ef688", null ],
       [ "unpack", "structHF_1_1Common_1_1Interface.html#ab4d3c71b264266d11a9d64e12dd0509c", null ],
       [ "id", "structHF_1_1Common_1_1Interface.html#a6b99d6eda5fca8baf579285f974d3e6f", null ],
       [ "role", "structHF_1_1Common_1_1Interface.html#aac2bdd1c901a93edcfe073d972bf44c7", null ]

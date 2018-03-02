@@ -1,7 +1,7 @@
 <map id="HF::Profiles::SimpleOnOffSwitch" name="HF::Profiles::SimpleOnOffSwitch">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_ONOFF_SWITCH,\l Interfaces::OnOff::Client \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="177,1480,379,1631"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_ONOFF_SWITCH,\l Interfaces::OnOff::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="177,1480,379,1601"/>
 <area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="106,964,293,1100"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1208,143,1344"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1223,143,1329"/>
 <area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="129,780,270,887"/>
 <area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1OnOff_1_1Client.html" title="On&#45;Off Interface : Client side implementation. " alt="" coords="318,1149,467,1403"/>
 <area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; OnOff::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="317,979,501,1085"/>

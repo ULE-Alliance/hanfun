@@ -1,5 +1,5 @@
 <map id="HF::Interfaces::SimpleButton::Server" name="HF::Interfaces::SimpleButton::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_BUTTON, Interfaces\l::SimpleButton::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="273,1657,484,1808"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_BUTTON, Interfaces\l::SimpleButton::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="273,1657,484,1779"/>
 <area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleButton::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="267,979,490,1085"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleButton_1_1Base.html" title="Simple Button Interface : Parent. " alt="" coords="131,795,323,887"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_BUTTON \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
@@ -7,5 +7,5 @@
 <area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 <area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="347,795,512,887"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleButton.html" title="Simple Button profile implementation. " alt="" coords="289,1857,468,1935"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleButton.html" title="Simple Button profile implementation. " alt="" coords="289,1828,468,1905"/>
 </map>

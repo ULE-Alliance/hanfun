@@ -7,7 +7,7 @@ var structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse =
       [ "FAIL_UNKNOWN", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a06b157d32d81efab2e0c2d6ab581d77ca687063cc056f368ada95417a355eecc6", null ]
     ] ],
     [ "CheckVersionResponse", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#ac792f49cd7ae7dbab83d1f6ae1e1717b", null ],
-    [ "pack", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#aa31e901cd75f0d437fbc2dd4b1517c89", null ],
-    [ "size", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a1cb4532e544638add6963aa449cb9497", null ],
+    [ "pack", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a61ab5e95ea13b0f2b961e6ae868c6ab3", null ],
+    [ "size", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a780e28393e12e3f21d66a7aa765a37c9", null ],
     [ "unpack", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a8c07ab5a4d5be85966bfb28b886672a9", null ]
 ];

@@ -1,9 +1,9 @@
 <map id="HF::Profiles::Alertable" name="HF::Profiles::Alertable">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; ALERTABLE, Interfaces\l::Alert::Client \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="165,1348,343,1499"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; ALERTABLE, Interfaces\l::Alert::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="165,1333,343,1455"/>
 <area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="99,949,286,1085"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1135,143,1271"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1142,143,1249"/>
 <area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="122,765,263,872"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Alert_1_1Client.html" title="Alert Interface : Client side implementation. " alt="" coords="299,1142,441,1263"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Alert_1_1Client.html" title="Alert Interface : Client side implementation. " alt="" coords="299,1135,441,1256"/>
 <area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="310,964,494,1071"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="287,765,429,872"/>
 <area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="271,609,445,716"/>

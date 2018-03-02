@@ -1,5 +1,5 @@
 <map id="HF::Interfaces::Alert::Client" name="HF::Interfaces::Alert::Client">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; ALERTABLE, Interfaces\l::Alert::Client \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="270,1276,447,1427"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; ALERTABLE, Interfaces\l::Alert::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="270,1276,447,1397"/>
 <area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="267,949,451,1056"/>
 <area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="156,765,297,872"/>
 <area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="139,609,314,716"/>
@@ -7,5 +7,5 @@
 <area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
 <area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
 <area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="321,773,487,865"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1Alertable.html" title="Alertable profile implementation. " alt="" coords="283,1476,434,1553"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1Alertable.html" title="Alertable profile implementation. " alt="" coords="283,1447,434,1524"/>
 </map>

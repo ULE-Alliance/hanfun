@@ -1,17 +1,24 @@
 <map id="HF::UID::UID_T::type" name="HF::UID::UID_T::type">
-<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html#a4db1a5a266e646e1454d4f4da2b563ff" title="Compare the current UID with the given UID. " alt="" coords="205,111,383,137"/>
-<area shape="rect" id="node6" href="$structHF_1_1UID_1_1UID__T.html#a55d974a48859264887615734b78c54d6" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="217,275,371,301"/>
-<area shape="rect" id="node12" href="$classHF_1_1UID_1_1UID.html#a03e2cd558345931e9fe93a9db2c39f72" title="Type of the UID. " alt="" coords="225,325,363,352"/>
-<area shape="rect" id="node13" href="$structHF_1_1UID_1_1UID__T.html#af6f522807892797e4c7e6181c5f368e5" title="Read a message from a ByteArray. " alt="" coords="209,437,379,464"/>
-<area shape="rect" id="node3" href="$classHF_1_1UID_1_1ByteArray.html#a7e79d4fbc5cea43696d7fb70958d9204" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::compare" alt="" coords="449,5,609,61"/>
-<area shape="rect" id="node4" href="$structHF_1_1UID_1_1URI.html#a9339b218b71d4f31c7b89d15e910c8cd" title="Compare the current UID with the given UID. " alt="" coords="447,85,610,112"/>
-<area shape="rect" id="node5" href="$classHF_1_1UID_1_1UID.html#a77b2b171473c6f8712475cb4cd882885" title="Compare the current UID with the given UID. " alt="" coords="447,136,610,163"/>
-<area shape="rect" id="node7" href="$structHF_1_1UID_1_1NONE.html#ae1eb3748310308c1375cd984c1d404ef" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="451,187,606,213"/>
-<area shape="rect" id="node8" href="$classHF_1_1UID_1_1ByteArray.html#a4dfb6116b30a16f669ac53e96714837e" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;::pack" alt="" coords="431,238,627,279"/>
-<area shape="rect" id="node9" href="$structHF_1_1UID_1_1URI.html#ae4587f49f33268a1158d24439c8ed994" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="459,304,599,331"/>
-<area shape="rect" id="node10" href="$classHF_1_1UID_1_1UID.html#a075f387501870cac11a00aeb5775e14f" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="459,355,599,381"/>
-<area shape="rect" id="node11" href="$structhello__msg__t.html#a252a38a5332f6cdce3aad45bcd43fb2e" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="675,355,803,381"/>
-<area shape="rect" id="node14" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="444,405,613,432"/>
-<area shape="rect" id="node15" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="449,456,609,512"/>
-<area shape="rect" id="node16" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="451,536,606,563"/>
+<area shape="rect" id="node2" href="$structHF_1_1UID_1_1UID__T.html#ade600e62de5c626fa9dda2a4703e309c" title="Compare the current UID with the given UID. " alt="" coords="205,136,383,163"/>
+<area shape="rect" id="node7" href="$classHF_1_1UID_1_1UID.html#a71e5fec487a1c7162b675d44118daf28" title="Type of the UID. " alt="" coords="460,187,597,213"/>
+<area shape="rect" id="node12" href="$structHF_1_1UID_1_1UID__T.html#aa183da3a9d5966eec85b878eea8de2b4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="217,296,371,323"/>
+<area shape="rect" id="node20" href="$structHF_1_1UID_1_1UID__T.html#af6f522807892797e4c7e6181c5f368e5" title="Read a message from a ByteArray. " alt="" coords="209,456,379,483"/>
+<area shape="rect" id="node3" href="$classHF_1_1UID_1_1ByteArray.html#aca2c86a14d85bafd4810f37c4fa82e8b" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::compare" alt="" coords="449,5,609,61"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1URI.html#aafcbaebd46d56d7ab5f9dc5a4e01a31d" title="Compare the current UID with the given UID. " alt="" coords="447,85,610,112"/>
+<area shape="rect" id="node5" href="$classHF_1_1UID_1_1UID.html#ab84d1c6e72bb893801cb9825f485bc41" title="Compare the current UID with the given UID. " alt="" coords="447,136,610,163"/>
+<area shape="rect" id="node6" href="$classHF_1_1UID_1_1UID.html#a1e0f1e5e4e86115faf4f3f5fa1e2c821" title="This method is used to get the percentage of change that the attribute has in relation to the value p..." alt="" coords="675,136,836,163"/>
+<area shape="rect" id="node8" href="$group__examples.html#gab4e6eb4b3390cc89a8ad819c9cd57a44" title="Serialize a HF::Common::Interface to the given Json::Value. " alt="" coords="723,187,787,213"/>
+<area shape="rect" id="node9" href="$group__examples.html#gaa24a5abda0fcd09821ecab556dd9a2c0" title="Save the device entries into the JSON database. " alt="" coords="884,114,1068,155"/>
+<area shape="rect" id="node10" href="$group__examples.html#ga6cbf648c24f17825cc0d5aa7ce5a6bfe" title="Save the bind entries into the JSON database. " alt="" coords="891,179,1061,221"/>
+<area shape="rect" id="node11" href="$group__examples.html#ga6b059f30ce7220da606d73f16d9aeec8" title="Serialize a HF::Core::DeviceManagement::Unit to the given Json::Value. " alt="" coords="944,245,1008,272"/>
+<area shape="rect" id="node13" href="$structHF_1_1UID_1_1NONE.html#af04afc4dca05135a84c949105ce9cf39" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="451,237,606,264"/>
+<area shape="rect" id="node14" href="$classHF_1_1UID_1_1ByteArray.html#aa9bbd18bf39d2b61647b767ba4e1643c" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;::pack" alt="" coords="431,289,627,330"/>
+<area shape="rect" id="node15" href="$structHF_1_1UID_1_1URI.html#aff63e4946aca336e739d56c3ec4435d5" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="459,355,599,381"/>
+<area shape="rect" id="node16" href="$classHF_1_1UID_1_1UID.html#a09297712c00f2682cdeeb12c1fde8fc4" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="459,405,599,432"/>
+<area shape="rect" id="node17" href="$structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077" title="Write the object on to a ByteArray so it can be sent over the network. " alt="" coords="691,405,819,432"/>
+<area shape="rect" id="node18" href="$group__examples.html#ga4b4934e7cf68c1c0003d98d08becdfdc" title="Print a user friendly string for given status code. " alt="" coords="936,405,1016,432"/>
+<area shape="rect" id="node19" href="$group__examples.html#ga8256d1cc4a00c6cfb9d7c52a9aa6a688" title="Initialize the associated transport layer. " alt="" coords="1116,398,1291,439"/>
+<area shape="rect" id="node21" href="$structHF_1_1UID_1_1NONE.html#ab9cb32a699be648742fd1617f517695e" title="Read a message from a ByteArray. " alt="" coords="444,456,613,483"/>
+<area shape="rect" id="node22" href="$classHF_1_1UID_1_1ByteArray.html#a390038ba669203384b92aa88988ee8c8" title="HF::UID::ByteArray\l\&lt; MAC, 6, MAC_UID \&gt;\l::unpack" alt="" coords="449,507,609,563"/>
+<area shape="rect" id="node23" href="$structHF_1_1UID_1_1URI.html#acab4975d3663d2e3670cdb3bb45a2ea5" title="Read a message from a ByteArray. " alt="" coords="451,587,606,613"/>
 </map>

@@ -1,9 +1,0 @@
-digraph "HF::Core::BindManagement::Client::session"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node72 [label="HF::Core::BindManagement\l::Client::session",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node72 -> Node73 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node73 [label="HF::Core::AttributeReporting::add",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__attr__reporting__common.html#ga16e2adb57b2437af38b51963ab2631bc",tooltip="Add the periodic entries from start to end into the rule with the given report reference. "];
-}

@@ -1,6 +1,7 @@
 <map id="HF::Protocol::Response::unpack" name="HF::Protocol::Response::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a8c07ab5a4d5be85966bfb28b886672a9" title="Read a message from a ByteArray. " alt="" coords="216,5,436,47"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1GroupTable_1_1Response.html#a6cecbf55f464a44f4b661815c4d555d3" title="Read a message from a ByteArray. " alt="" coords="251,71,401,112"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a907464d070cd3229cc91cd30e6c79da1" title="Read a message from a ByteArray. " alt="" coords="245,135,407,191"/>
-<area shape="rect" id="node5" href="$structHF_1_1Core_1_1Scheduling_1_1GetEntryResponse.html#a332ffef7e15e948925b865bfc2471b9b" title="Read a message from a ByteArray. " alt="" coords="231,215,421,256"/>
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1Response.html#a047d84b704580e2e2a6d037b0cb83e88" title="Constructor. " alt="" coords="241,5,411,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a8c07ab5a4d5be85966bfb28b886672a9" title="Read a message from a ByteArray. " alt="" coords="216,71,436,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1GroupTable_1_1Response.html#a6cecbf55f464a44f4b661815c4d555d3" title="Read a message from a ByteArray. " alt="" coords="251,136,401,177"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a907464d070cd3229cc91cd30e6c79da1" title="Read a message from a ByteArray. " alt="" coords="245,201,407,257"/>
+<area shape="rect" id="node6" href="$structHF_1_1Core_1_1Scheduling_1_1GetEntryResponse.html#a332ffef7e15e948925b865bfc2471b9b" title="Read a message from a ByteArray. " alt="" coords="231,280,421,321"/>
 </map>

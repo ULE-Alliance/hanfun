@@ -1,4 +1,3 @@
 <map id="HF::Interfaces::SimpleTemperature::Server::attribute" name="HF::Interfaces::SimpleTemperature::Server::attribute">
-<area shape="rect" id="node2" href="$group__alert__itf.html#ga569f37dfb107e55549cd2789b38f7d66" title="Create an attribute object that can hold the attribute with the given uid. " alt="" coords="289,5,439,47"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Interface.html#a60c224b9a14595c7432c22cc194158c6" title="This method returns the interface UID. " alt="" coords="280,70,448,126"/>
+<area shape="rect" id="node2" href="$group__alert__itf.html#ga569f37dfb107e55549cd2789b38f7d66" title="Create an attribute object that can hold the attribute with the given uid. " alt="" coords="280,5,431,47"/>
 </map>

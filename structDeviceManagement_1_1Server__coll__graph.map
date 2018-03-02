@@ -1,7 +1,7 @@
 <map id="DeviceManagement::Server" name="DeviceManagement::Server">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="237,3416,437,3625"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="237,3387,437,3567"/>
 <area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="374,2828,574,3081"/>
-<area shape="rect" id="node30" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="237,3144,437,3353"/>
+<area shape="rect" id="node30" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="237,3144,437,3324"/>
 <area shape="rect" id="node4" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="374,2481,574,2764"/>
 <area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="397,2224,551,2345"/>
 <area shape="rect" id="node6" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="713,1908,811,2088"/>
@@ -10,7 +10,7 @@
 <area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="711,809,890,1004"/>
 <area shape="rect" id="node13" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="875,1739,1054,1845"/>
 <area shape="rect" id="node14" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="873,1213,1056,1320"/>
-<area shape="rect" id="node15" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n||+ unit0()\l# Abstract()\l}" alt="" coords="739,3195,918,3302"/>
+<area shape="rect" id="node15" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n||+ unit0()\l# Abstract()\l}" alt="" coords="739,3181,918,3287"/>
 <area shape="rect" id="node9" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="703,448,898,716"/>
 <area shape="rect" id="node10" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="649,205,742,385"/>
 <area shape="rect" id="node11" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="614,5,777,156"/>
@@ -24,7 +24,7 @@
 <area shape="rect" id="node21" href="$classHF_1_1Units_1_1InterfacesWrapper.html" title="Helper class to handle optional interfaces in units. " alt="" coords="1243,1746,1438,1838"/>
 <area shape="rect" id="node24" href="$classHF_1_1Units_1_1InterfacesWrapper.html" title="{HF::Units::InterfacesWrapper\l\&lt; Base, ITF... \&gt;\n||+ InterfacesWrapper()\l}" alt="" coords="1129,1952,1323,2044"/>
 <area shape="rect" id="node25" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="373,1945,527,2051"/>
-<area shape="rect" id="node26" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="{HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;\n||+ entries()\l# entries()\l# Server()\l# Server()\l# ~Server()\l# entries_size()\l}" alt="" coords="5,3166,212,3331"/>
+<area shape="rect" id="node26" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="{HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;\n||+ entries()\l# entries()\l# Server()\l# Server()\l# ~Server()\l# entries_size()\l}" alt="" coords="5,3151,212,3317"/>
 <area shape="rect" id="node27" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="72,2467,279,2779"/>
 <area shape="rect" id="node29" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="Helper template to inject session management functionality into services requiring it &#45; Server side..." alt="" coords="143,2872,349,3037"/>
 <area shape="rect" id="node28" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="72,2217,279,2353"/>

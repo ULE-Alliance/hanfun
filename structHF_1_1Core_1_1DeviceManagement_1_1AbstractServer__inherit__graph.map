@@ -1,6 +1,6 @@
 <map id="HF::Core::DeviceManagement::AbstractServer" name="HF::Core::DeviceManagement::AbstractServer">
-<area shape="rect" id="node14" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="5,2399,205,2608"/>
-<area shape="rect" id="node15" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="85,2671,285,2880"/>
+<area shape="rect" id="node14" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="5,2399,205,2579"/>
+<area shape="rect" id="node15" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="85,2641,285,2821"/>
 <area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="108,1764,308,2047"/>
 <area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="131,1593,285,1715"/>
 <area shape="rect" id="node4" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="47,1336,145,1516"/>
@@ -13,5 +13,5 @@
 <area shape="rect" id="node8" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="236,205,329,385"/>
 <area shape="rect" id="node9" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="201,5,364,156"/>
 <area shape="rect" id="node13" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="169,1373,324,1479"/>
-<area shape="rect" id="node16" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="93,2929,277,3109"/>
+<area shape="rect" id="node16" href="$structDeviceManagement_1_1Server.html" title="Custom Device Management class. " alt="" coords="93,2871,277,3051"/>
 </map>

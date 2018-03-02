@@ -1,7 +1,7 @@
 <map id="HF::Profiles::SimplePowerMeter" name="HF::Profiles::SimplePowerMeter">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_POWER_METER,\l Interfaces::SimplePowerMeter\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="174,1421,377,1587"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_POWER_METER,\l Interfaces::SimplePowerMeter\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="174,1421,377,1557"/>
 <area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="101,993,287,1129"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1186,143,1322"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Profile.html" title="Class template for profiles containing only one interface. " alt="" coords="5,1201,143,1307"/>
 <area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="121,795,262,901"/>
 <area shape="rect" id="node5" href="$classHF_1_1Interfaces_1_1SimplePowerMeter_1_1Server.html" title="Simple Power Meter Interface : Server side implementation. " alt="" coords="319,1179,509,1329"/>
 <area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimplePowerMeter\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="311,1008,575,1115"/>

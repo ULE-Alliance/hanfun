@@ -1,6 +1,6 @@
 <map id="HF::Core::BindManagement::AbstractServer" name="HF::Core::BindManagement::AbstractServer">
-<area shape="rect" id="node14" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="17,2252,202,2461"/>
-<area shape="rect" id="node15" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="93,2524,278,2733"/>
+<area shape="rect" id="node14" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="Helper class used to implement custom functionality to the bind management server side..." alt="" coords="17,2252,202,2432"/>
+<area shape="rect" id="node15" href="$structHF_1_1Core_1_1BindManagement_1_1Server.html" title="{HF::Core::BindManagement\l::Server\&lt; Entries \&gt;\n|# _entries\l|+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="93,2495,278,2675"/>
 <area shape="rect" id="node2" href="$structHF_1_1Core_1_1BindManagement_1_1IServer.html" title="Bind Management interface : Server side API. " alt="" coords="114,1764,299,1973"/>
 <area shape="rect" id="node3" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="129,1593,284,1715"/>
 <area shape="rect" id="node4" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="45,1336,144,1516"/>
@@ -13,5 +13,5 @@
 <area shape="rect" id="node8" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="235,205,328,385"/>
 <area shape="rect" id="node9" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="200,5,363,156"/>
 <area shape="rect" id="node13" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="168,1373,323,1479"/>
-<area shape="rect" id="node16" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="101,2783,270,2889"/>
+<area shape="rect" id="node16" href="$structBindManagement_1_1Server.html" title="Custom Bind Management class. " alt="" coords="101,2724,270,2831"/>
 </map>

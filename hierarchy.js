@@ -70,7 +70,7 @@ var hierarchy =
             [ "HF::Interfaces::ColourControl::Xy", "structHF_1_1Interfaces_1_1ColourControl_1_1Xy.html", null ]
           ] ],
           [ "HF::Attributes::Attribute< T, _Owner, typename >", "structHF_1_1Attributes_1_1Attribute.html", null ],
-          [ "HF::Attributes::Attribute< T, _Owner, EnableIf< Parent< HF::Interface, _Owner > > >", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_3_01Parent_3_01HF_1_1Interface_00_01__Owner_01_4_01_4_01_4.html", null ]
+          [ "HF::Attributes::Attribute< T, _Owner, EnableIf(IsParent(HF::Interface, _Owner))>", "structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_07IsParent_07HF_1_1Interface_00_01__Owner_08_08_4.html", null ]
         ] ]
       ] ]
     ] ],
@@ -192,8 +192,8 @@ var hierarchy =
       [ "HF::Common::SerializableHelper< Common::ByteArray >", "structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html", null ],
       [ "HF::Common::SerializableHelper< std::string >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html", null ],
       [ "HF::Common::SerializableHelper< std::vector< uint8_t > >", "structHF_1_1Common_1_1SerializableHelper_3_01std_1_1vector_3_01uint8__t_01_4_01_4.html", null ],
-      [ "HF::Common::SerializableHelper< T, EnableIf< IsClassPointer< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsClassPointer_3_01T_01_4_01_4_01_4.html", null ],
-      [ "HF::Common::SerializableHelper< T, EnableIf< IsIntegral< T > > >", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_3_01IsIntegral_3_01T_01_4_01_4_01_4.html", null ],
+      [ "HF::Common::SerializableHelper< T, EnableIf(IsClassPointer(T))>", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsClassPointer_07T_08_08_4.html", null ],
+      [ "HF::Common::SerializableHelper< T, EnableIf(IsIntegral(T))>", "structHF_1_1Common_1_1SerializableHelper_3_01T_00_01EnableIf_07IsIntegral_07T_08_08_4.html", null ],
       [ "HF::UID::UID", "classHF_1_1UID_1_1UID.html", null ],
       [ "HF::UID::UID_T", "structHF_1_1UID_1_1UID__T.html", null ],
       [ "HF::Common::SerializableHelper< bool >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
@@ -838,7 +838,7 @@ var hierarchy =
         [ "HF::Application::Link", "classHF_1_1Application_1_1Link.html", null ]
       ] ]
     ] ],
-    [ "HF::Units::Proxy< _Interface, _Proxy, EnableIf< Parent< HF::Core::IService, _Interface > > >", "structHF_1_1Units_1_1Proxy_3_01__Interface_00_01__Proxy_00_01EnableIf_3_01Parent_3_01HF_1_1Core_7750275fa4fb095581919b39e1ab50de.html", null ],
+    [ "HF::Units::Proxy< _Interface, _Proxy, EnableIf(IsParent(HF::Core::IService, _Interface))>", "structHF_1_1Units_1_1Proxy_3_01__Interface_00_01__Proxy_00_01EnableIf_07IsParent_07HF_1_1Core_1_b93b22a7e793ce9a37452be91a085710.html", null ],
     [ "ICommand", "structICommand.html", [
       [ "Command", "classCommand.html", null ]
     ] ],
