@@ -64,6 +64,8 @@ nullptr = {};
 
    #define __attribute_deprecated__   __attribute__((deprecated))
 
+   #define  __attribute_pure__        __attribute__((pure))
+
    #define _override
 
    #define _const
