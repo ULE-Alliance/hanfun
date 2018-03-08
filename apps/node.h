@@ -14,8 +14,8 @@
  * Initial development by Bithium S.A. [http://www.bithium.com]
  */
 // =============================================================================
-#ifndef HF_APP_BASE_H
-#define HF_APP_BASE_H
+#ifndef HF_APP_NODE_H
+#define HF_APP_NODE_H
 
 #include "hanfun.h"
 
@@ -33,6 +33,8 @@
  */
 struct Node: public HF::Devices::Node::Abstract<HF::Devices::Node::DefaultUnit0>
 {
+   virtual ~Node() = default;
+
    void receive(HF::Protocol::Packet &packet, HF::Common::ByteArray &payload, uint16_t offset);
 };
 
