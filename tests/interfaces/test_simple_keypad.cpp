@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Keypad interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

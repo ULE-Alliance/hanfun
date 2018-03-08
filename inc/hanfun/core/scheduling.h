@@ -4,7 +4,7 @@
  *
  * This file contains the common definitions for the scheduling services.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

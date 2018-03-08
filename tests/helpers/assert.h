@@ -5,7 +5,7 @@
  * This file is used to make the used to provide an override to HAN-FUN assert
  * functionality.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 Bithium S.A.
  *
