@@ -73,6 +73,7 @@ TEST_GROUP(Devices)
       device._address = 0x5A5A;
       link.address(0x7AA5);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
 
       device.connected(&link);
@@ -87,6 +88,7 @@ TEST_GROUP(Devices)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -340,6 +342,7 @@ TEST_GROUP(Concentrator)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
 
       base      = new BaseHelper();
@@ -372,6 +375,7 @@ TEST_GROUP(Concentrator)
 
       delete base;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -609,6 +613,7 @@ TEST_GROUP(Multicasting)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
 
       base      = new BaseHelper();
@@ -641,6 +646,7 @@ TEST_GROUP(Multicasting)
 
       delete base;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

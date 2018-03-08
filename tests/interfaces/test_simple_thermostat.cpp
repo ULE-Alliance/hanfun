@@ -97,11 +97,13 @@ TEST_GROUP(SimpleThermostat)
       server    = SimpleThermostatServer();
       client    = SimpleThermostatClient();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -278,11 +280,13 @@ TEST_GROUP(SimpleThermostatClient)
    TEST_SETUP()
    {
       client = SimpleThermostatClient();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -302,11 +306,13 @@ TEST_GROUP(SimpleThermostatServer)
    TEST_SETUP()
    {
       server = SimpleThermostatServer();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

@@ -40,11 +40,13 @@ TEST_GROUP(SimpleKeypad)
    {
       interface = SimpleKeypadBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -65,11 +67,13 @@ TEST_GROUP(SimpleKeypadMessages)
    {
       expected = Common::ByteArray();
       payload  = Common::ByteArray();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -160,11 +164,13 @@ TEST_GROUP(SimpleKeypadClient)
 
       addr   = Protocol::Address(42);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -226,11 +232,13 @@ TEST_GROUP(SimpleKeypadServer)
       packet.message.itf.id     = server.uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

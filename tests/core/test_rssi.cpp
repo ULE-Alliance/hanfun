@@ -40,11 +40,13 @@ TEST_GROUP(RSSI)
    {
       interface = RSSIBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -70,11 +72,13 @@ TEST_GROUP(RSSIClient)
    TEST_SETUP()
    {
       client = RSSIClient();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -94,11 +98,13 @@ TEST_GROUP(RSSIServer)
    TEST_SETUP()
    {
       server = RSSIServer();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

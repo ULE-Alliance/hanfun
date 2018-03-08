@@ -65,6 +65,7 @@ TEST_GROUP(GroupTable)
       device  = new Testing::Device();
       service = new GroupTableBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -73,6 +74,7 @@ TEST_GROUP(GroupTable)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -526,6 +528,7 @@ TEST_GROUP(GroupTableClient)
 
       packet.source             = addr;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -534,6 +537,7 @@ TEST_GROUP(GroupTableClient)
       delete client;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -1053,6 +1057,7 @@ TEST_GROUP(GroupTableServer)
 
       packet.source             = Protocol::Address(0, 0);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -1061,6 +1066,7 @@ TEST_GROUP(GroupTableServer)
       delete server;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -1785,6 +1791,7 @@ TEST_GROUP(GroupTableEntries)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 

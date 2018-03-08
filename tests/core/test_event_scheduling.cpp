@@ -54,6 +54,7 @@ TEST_GROUP(Scheduling_Event)
       device  = new Testing::Device();
       service = new EventSchedulingBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -62,6 +63,7 @@ TEST_GROUP(Scheduling_Event)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -149,11 +151,13 @@ TEST_GROUP(EventSchedulingEntries)
    TEST_SETUP()
    {
       entries = TestEntries();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -327,11 +331,13 @@ TEST_GROUP(EventScheduling_Messages)
                                               0x33, 0x33, 0x33, 0x33, // Interval
                                               0x12                    // Program ID.
       };
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -503,6 +509,7 @@ TEST_GROUP(EventSchedulingClient)
 
       addr   = Protocol::Address(42, 0);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -510,6 +517,7 @@ TEST_GROUP(EventSchedulingClient)
    {
       delete client;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -781,6 +789,7 @@ TEST_GROUP(EventSchedulingServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -789,6 +798,7 @@ TEST_GROUP(EventSchedulingServer)
       delete server;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

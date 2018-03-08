@@ -173,6 +173,7 @@ TEST_GROUP(Transport)
       tsp_uid = UID::URI("tsp://foobar@example.com");
       tsp     = new Testing::Transport(&tsp_uid);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -181,6 +182,7 @@ TEST_GROUP(Transport)
       mock("Link").checkExpectations();
       tsp->destroy();
       delete tsp;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

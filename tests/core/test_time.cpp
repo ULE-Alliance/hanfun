@@ -77,6 +77,7 @@ TEST_GROUP(Time)
       device  = new Testing::Device();
       service = new TimeBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -84,6 +85,7 @@ TEST_GROUP(Time)
    {
       delete service;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -339,6 +341,7 @@ TEST_GROUP(TimeClient)
    {
       device = new Testing::Device();
       client = new TimeClient(*(device->unit0()));
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -346,6 +349,7 @@ TEST_GROUP(TimeClient)
    {
       delete client;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -372,6 +376,7 @@ TEST_GROUP(TimeServer)
    {
       device = new Testing::Device();
       server = new TimeServer(*(device->unit0()));
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -379,6 +384,7 @@ TEST_GROUP(TimeServer)
    {
       delete server;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

@@ -443,11 +443,13 @@ TEST_GROUP(SimplePowerMeterServer)
 
       temp          = other;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
 
       delete server;
@@ -854,6 +856,7 @@ TEST_GROUP(SimplePowerMeterClient)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

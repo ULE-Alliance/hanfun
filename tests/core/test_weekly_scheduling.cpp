@@ -55,6 +55,7 @@ TEST_GROUP(Scheduling_Weekly)
       device  = new Testing::Device();
       service = new WeeklySchedulingBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -63,6 +64,7 @@ TEST_GROUP(Scheduling_Weekly)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -150,11 +152,13 @@ TEST_GROUP(WeeklySchedulingEntries)
    TEST_SETUP()
    {
       entries = TestEntries();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -328,11 +332,13 @@ TEST_GROUP(WeeklyScheduling_Messages)
                                               50,                             // Minute
                                               0x12                            // Program ID.
       };
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -636,6 +642,7 @@ TEST_GROUP(WeeklySchedulingClient)
 
       addr   = Protocol::Address(42, 0);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -643,6 +650,7 @@ TEST_GROUP(WeeklySchedulingClient)
    {
       delete client;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -925,6 +933,7 @@ TEST_GROUP(WeeklySchedulingServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -935,6 +944,7 @@ TEST_GROUP(WeeklySchedulingServer)
 
       // NOTE: The batch_server & time_server are deleted by the "delete device"
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

@@ -41,6 +41,7 @@ TEST_GROUP(AbstractInterface)
       packet.message.itf.id   = itf->uid();
       packet.message.itf.role = itf->role();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -48,6 +49,7 @@ TEST_GROUP(AbstractInterface)
    {
       delete itf;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

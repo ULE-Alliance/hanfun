@@ -68,11 +68,13 @@ TEST_GROUP(SimpleHumidityClient)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -254,6 +256,7 @@ TEST_GROUP(SimpleHumidityServer)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
       delete server;
    }

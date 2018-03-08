@@ -126,6 +126,7 @@ TEST_GROUP(AlertServer)
    TEST_TEARDOWN()
    {
       delete server;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -393,6 +394,7 @@ TEST_GROUP(AlertClient)
    TEST_TEARDOWN()
    {
       delete client;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

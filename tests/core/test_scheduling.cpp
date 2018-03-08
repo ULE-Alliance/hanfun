@@ -35,11 +35,13 @@ TEST_GROUP(Scheduling_Messages)
    TEST_SETUP()
    {
       size = 0;
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

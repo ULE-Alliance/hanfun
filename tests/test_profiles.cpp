@@ -113,11 +113,13 @@ TEST_GROUP(Profiles)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

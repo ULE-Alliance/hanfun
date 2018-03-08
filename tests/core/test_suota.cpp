@@ -83,6 +83,7 @@ TEST_GROUP(SUOTA)
       device  = new Testing::Device();
       service = new SOUTABase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -90,6 +91,7 @@ TEST_GROUP(SUOTA)
    {
       delete service;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -373,6 +375,7 @@ TEST_GROUP(SUOTAClient)
       packet.message.itf.id     = client->uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -381,6 +384,7 @@ TEST_GROUP(SUOTAClient)
       delete client;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -576,6 +580,7 @@ TEST_GROUP(SUOTAServer)
       packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -583,6 +588,7 @@ TEST_GROUP(SUOTAServer)
    {
       delete server;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

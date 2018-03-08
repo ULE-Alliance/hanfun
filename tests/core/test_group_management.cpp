@@ -43,11 +43,13 @@ TEST_GROUP(GroupManagementEntries)
    TEST_SETUP()
    {
       entries = TestEntries();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -199,6 +201,7 @@ TEST_GROUP(GroupManagement)
       device  = new Testing::Device();
       service = new GroupManagementBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -207,6 +210,7 @@ TEST_GROUP(GroupManagement)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -708,6 +712,7 @@ TEST_GROUP(GroupManagementClient)
       packet.message.itf.id   = HF::Interface::GROUP_MANAGEMENT;
       packet.link             = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -716,6 +721,7 @@ TEST_GROUP(GroupManagementClient)
       delete client;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -1223,6 +1229,7 @@ TEST_GROUP(GroupManagementServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -1231,6 +1238,7 @@ TEST_GROUP(GroupManagementServer)
       delete server;
       delete base;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

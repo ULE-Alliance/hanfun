@@ -56,11 +56,13 @@ TEST_GROUP(LevelControlClient)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -220,6 +222,7 @@ TEST_GROUP(LevelControlServer)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

@@ -37,11 +37,13 @@ TEST_GROUP(ColourControlMessages)
    {
       expected = ByteArray();
       payload  = ByteArray();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -1858,11 +1860,13 @@ TEST_GROUP(ColourControl)
    {
       interface = ColourControlBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -1977,11 +1981,13 @@ TEST_GROUP(ColourControlClient)
 
       addr   = Protocol::Address(42);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -2404,6 +2410,7 @@ TEST_GROUP(ColourControlServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -2411,6 +2418,7 @@ TEST_GROUP(ColourControlServer)
    {
       payload = ByteArray(0);
       server.clear_transitions();
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

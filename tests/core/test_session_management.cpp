@@ -230,6 +230,7 @@ TEST_GROUP(SessionManagementServer)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
 
       for (uint16_t i = 1; i <= 20; i++)
@@ -240,6 +241,7 @@ TEST_GROUP(SessionManagementServer)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
       server.entries().clear();
    }
@@ -640,11 +642,13 @@ TEST_GROUP(SessionManagementClient)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

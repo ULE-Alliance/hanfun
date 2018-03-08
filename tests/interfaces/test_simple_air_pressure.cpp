@@ -40,11 +40,13 @@ TEST_GROUP(SimpleAirPressure)
    {
       interface = SimpleAirPressureBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -70,11 +72,13 @@ TEST_GROUP(SimpleAirPressureClient)
    TEST_SETUP()
    {
       client = SimpleAirPressureClient();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -95,11 +99,13 @@ TEST_GROUP(SimpleAirPressureServer)
    TEST_SETUP()
    {
       server = SimpleAirPressureServer();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

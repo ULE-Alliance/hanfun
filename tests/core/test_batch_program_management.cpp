@@ -46,11 +46,13 @@ TEST_GROUP(BatchProgramEntries)
    TEST_SETUP()
    {
       entries = TestEntries();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -269,6 +271,7 @@ TEST_GROUP(BatchProgramManagement)
       device  = new Testing::Device();
       service = new BatchProgramManagementBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -277,6 +280,7 @@ TEST_GROUP(BatchProgramManagement)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -341,6 +345,7 @@ TEST_GROUP(BatchProgramManagementMessages)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -920,6 +925,7 @@ TEST_GROUP(BatchProgramManagementClient)
       packet.message.itf.id   = HF::Interface::BATCH_PROGRAM_MANAGEMENT;
       packet.link             = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -930,6 +936,7 @@ TEST_GROUP(BatchProgramManagementClient)
 
       actions.clear();
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -1327,6 +1334,7 @@ TEST_GROUP(BatchProgramManagementServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -1336,6 +1344,7 @@ TEST_GROUP(BatchProgramManagementServer)
       delete unit;
       delete base;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

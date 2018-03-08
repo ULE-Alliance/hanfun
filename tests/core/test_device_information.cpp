@@ -71,6 +71,7 @@ TEST_GROUP(DeviceInformation)
 
       dev_info->device_uid = new HF::UID::URI("hf://device@example.com");
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -80,6 +81,7 @@ TEST_GROUP(DeviceInformation)
 
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

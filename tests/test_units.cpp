@@ -79,6 +79,7 @@ TEST_GROUP(Unit)
       device = new Testing::Device();
       unit   = new TestUnit(1, *device);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -87,6 +88,7 @@ TEST_GROUP(Unit)
       delete unit;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

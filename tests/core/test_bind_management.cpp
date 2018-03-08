@@ -155,6 +155,7 @@ TEST_GROUP(BindManagementClient)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
 
       device                  = new Testing::Device();
@@ -172,6 +173,7 @@ TEST_GROUP(BindManagementClient)
       delete client;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -731,6 +733,7 @@ TEST_GROUP(BindManagementServer)
       packet.message.itf.role = HF::Interface::SERVER_ROLE;
       packet.message.itf.id   = HF::Interface::BIND_MANAGEMENT;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -739,6 +742,7 @@ TEST_GROUP(BindManagementServer)
       delete server;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

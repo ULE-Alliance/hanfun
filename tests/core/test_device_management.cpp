@@ -647,6 +647,7 @@ TEST_GROUP(DeviceManagementClient)
 
       packet.link             = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -658,6 +659,7 @@ TEST_GROUP(DeviceManagementClient)
 
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -931,6 +933,7 @@ TEST_GROUP(DeviceManagementServer)
       link        = new Testing::Link(uid, nullptr);
       packet.link = link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -940,6 +943,7 @@ TEST_GROUP(DeviceManagementServer)
 
       delete link;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
