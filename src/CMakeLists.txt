@@ -25,6 +25,10 @@
 ## Common ##
 set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp uids.cpp debug.cpp)
 
+if(HF_BUILD_TESTS)
+   list(APPEND HF_COMMON_SRCS ${PROJECT_SOURCE_DIR}/tests/helpers/assert.cpp)
+endif()
+
 ## Protocol ##
 set(HF_PROTOCOL_SRCS protocol.cpp)
 
