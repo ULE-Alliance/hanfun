@@ -4,7 +4,7 @@
 #
 #   HAN-FUN Library CMakeList.
 #
-#   @version 1.5.1
+#   @version 1.5.2
 #
 #   @copyright  Copyright (c) 2014  ULE Alliance
 #
@@ -24,6 +24,10 @@
 
 ## Common ##
 set(HF_COMMON_SRCS common.cpp attributes.cpp devices.cpp profiles.cpp uids.cpp debug.cpp)
+
+if(HF_BUILD_TESTS)
+   list(APPEND HF_COMMON_SRCS ${PROJECT_SOURCE_DIR}/tests/helpers/assert.cpp)
+endif()
 
 ## Protocol ##
 set(HF_PROTOCOL_SRCS protocol.cpp)

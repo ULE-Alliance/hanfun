@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Colour Control interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -37,11 +37,14 @@ TEST_GROUP(ColourControlMessages)
    {
       expected = ByteArray();
       payload  = ByteArray();
+
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -66,7 +69,14 @@ TEST(ColourControlMessages, HS_Colour_wrong_array_size)
 
    expected = ByteArray(2);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, colour.pack(expected, 1));
+
+   mock("support").expectOneCall("assert")
+      .ignoreOtherParameters();
+
    LONGS_EQUAL(0, colour.unpack(expected));
 }
 
@@ -128,7 +138,11 @@ TEST(ColourControlMessages, HS_Colour_unpack_incomplete_keep_values)
                                           // Y value
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, colour.unpack(payload));
+
    LONGS_EQUAL(0x0111, colour.hue);
    LONGS_EQUAL(0x22, colour.saturation);
 }
@@ -248,7 +262,14 @@ TEST(ColourControlMessages, XY_Colour_wrong_array_size)
 
    expected = ByteArray(2);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, colour.pack(expected, 1));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, colour.unpack(expected));
 }
 
@@ -310,7 +331,11 @@ TEST(ColourControlMessages, XY_Colour_unpack_incomplete_keep_values)
       0x56                                // Y value
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, colour.unpack(payload));
+
    LONGS_EQUAL(0x1234, colour.X);
    LONGS_EQUAL(0x5678, colour.Y);
 }
@@ -336,7 +361,14 @@ TEST(ColourControlMessages, MoveToHue_wrong_array_size)
 
    expected = ByteArray(2);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -399,6 +431,9 @@ TEST(ColourControlMessages, MoveToHue_pack_invalid_value)
 
    payload     = ByteArray(message.size());
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
 
@@ -453,7 +488,11 @@ TEST(ColourControlMessages, MoveToHue_unpack_incomplete)
       0x12                                         // Transition time (incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.hue);
    CHECK_EQUAL(Direction::SHORTEST, message.direction);
    LONGS_EQUAL(0, message.time);
@@ -474,7 +513,11 @@ TEST(ColourControlMessages, MoveToHue_unpack_incomplete_keep_values)
       0x21,                                  // Transition time (incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x0118, message.hue);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x1234, message.time);
@@ -501,7 +544,14 @@ TEST(ColourControlMessages, MoveHue_wrong_array_size)
 
    expected = ByteArray(2);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -559,11 +609,17 @@ TEST(ColourControlMessages, MoveHue_pack_invalid_value)
 
    message.rate = 600;
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 
    // -- Direct access - Direction --
    message.rate      = 300;
    message.direction = Direction::LONGEST;   // Invalid Value.
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
 
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
@@ -605,6 +661,9 @@ TEST(ColourControlMessages, MoveHue_unpack_invalid_value)
       0x01, 0x18                                      // Rate
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
 
@@ -621,7 +680,11 @@ TEST(ColourControlMessages, MoveHue_unpack_incomplete)
       0x01                                // Rate (incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0, message.rate);
 }
@@ -640,7 +703,11 @@ TEST(ColourControlMessages, MoveHue_unpack_incomplete_keep_values)
       0x01,                                  // Rate (incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x0118, message.rate);
 }
@@ -665,7 +732,14 @@ TEST(ColourControlMessages, StepHue_wrong_array_size)
 
    expected = ByteArray(2);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -713,11 +787,17 @@ TEST(ColourControlMessages, StepHue_pack_invalid_value)
 
    payload = ByteArray(message.size());
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 
    // -- Direct access - Direction --
 
    message.direction = Direction::LONGEST;   // Invalid Value.
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
 
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
@@ -753,6 +833,9 @@ TEST(ColourControlMessages, StepHue_unpack_invalid_value)
       0xA5                                      // time
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
 
@@ -770,7 +853,11 @@ TEST(ColourControlMessages, StepHue_unpack_incomplete)
                                                 // time (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.step_size);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0, message.time);
@@ -791,7 +878,11 @@ TEST(ColourControlMessages, StepHue_unpack_incomplete_keep_values)
                                                 // time (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x5A, message.step_size);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0xA5, message.time);
@@ -817,7 +908,14 @@ TEST(ColourControlMessages, MoveToSaturation_wrong_array_size)
 
    expected = ByteArray(2);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -863,6 +961,9 @@ TEST(ColourControlMessages, MoveToSaturation_pack_invalid_value)
 
    payload = ByteArray(message.size());
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
 
@@ -897,6 +998,9 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_invalid_value)
       0x12, 0x34                                // Time
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
 
@@ -914,7 +1018,11 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete)
                                                 // time (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0, message.time);
@@ -935,7 +1043,11 @@ TEST(ColourControlMessages, MoveToSaturation_unpack_incomplete_keep_values)
                                                 // time (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x5A, message.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x1234, message.time);
@@ -962,7 +1074,14 @@ TEST(ColourControlMessages, MoveSaturation_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1006,6 +1125,9 @@ TEST(ColourControlMessages, MoveSaturation_pack_invalid_value)
 
    payload = ByteArray(message.size());
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
 
@@ -1037,6 +1159,9 @@ TEST(ColourControlMessages, MoveSaturation_unpack_invalid_value)
       0x12                                      // Rate
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
 
@@ -1053,7 +1178,11 @@ TEST(ColourControlMessages, MoveSaturation_unpack_incomplete)
                                                 // Rate (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0, message.rate);
 }
@@ -1072,7 +1201,11 @@ TEST(ColourControlMessages, MoveSaturation_unpack_incomplete_keep_values)
                                                 // time (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x12, message.rate);
 }
@@ -1098,7 +1231,14 @@ TEST(ColourControlMessages, StepSaturation_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1144,6 +1284,9 @@ TEST(ColourControlMessages, StepSaturation_pack_invalid_value)
 
    payload = ByteArray(message.size());
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
 
@@ -1177,6 +1320,8 @@ TEST(ColourControlMessages, StepSaturation_unpack_invalid_value)
       Direction::SHORTEST,                      // Direction (invalid)
       0x34                                      // Time
    });
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
 
    LONGS_EQUAL(0, message.unpack(payload));     // Returns 0 as an error.
 }
@@ -1194,7 +1339,12 @@ TEST(ColourControlMessages, StepSaturation_unpack_incomplete)
       Direction::UP                       // Direction
                                           // Time (missing)
    });
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.step_size);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0, message.time);
@@ -1215,7 +1365,11 @@ TEST(ColourControlMessages, StepSaturation_unpack_incomplete_keep_values)
                                                 // time (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x12, message.step_size);
    CHECK_EQUAL(Direction::UP, message.direction);
    LONGS_EQUAL(0x34, message.time);
@@ -1242,7 +1396,14 @@ TEST(ColourControlMessages, MoveToHueSaturation_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1309,6 +1470,9 @@ TEST(ColourControlMessages, MoveToHueSaturation_pack_invalid_value)
 
    payload            = ByteArray(message.size());
 
+   mock("support").expectNCalls(2, "assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(payload));    // Returns 0 as an error.
 }
 
@@ -1368,7 +1532,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete)
       0x67                             // Transition time   (Incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.colour.hue);
    LONGS_EQUAL(0, message.colour.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -1391,7 +1559,11 @@ TEST(ColourControlMessages, MoveToHueSaturation_unpack_incomplete_keep_values)
       0x00                             // Transition time   (Incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x0123, message.colour.hue);
    LONGS_EQUAL(0x45, message.colour.saturation);
    CHECK_EQUAL(Direction::UP, message.direction);
@@ -1419,7 +1591,14 @@ TEST(ColourControlMessages, MoveToXY_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1486,7 +1665,11 @@ TEST(ColourControlMessages, MoveToXY_unpack_incomplete)
       0x9A                                // Time (incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.colour.X);
    LONGS_EQUAL(0, message.colour.Y);
    LONGS_EQUAL(0, message.time);
@@ -1507,7 +1690,11 @@ TEST(ColourControlMessages, MoveToXY_unpack_incomplete_keep_values)
       0x43                                // Time (incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x1234, message.colour.X);
    LONGS_EQUAL(0x5678, message.colour.Y);
    LONGS_EQUAL(0x9ABC, message.time);
@@ -1534,7 +1721,14 @@ TEST(ColourControlMessages, MoveXY_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1596,7 +1790,11 @@ TEST(ColourControlMessages, MoveXY_unpack_incomplete)
       0x56,                               // Rate of Y (Incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.X_rate);
    LONGS_EQUAL(0, message.Y_rate);
 }
@@ -1615,7 +1813,11 @@ TEST(ColourControlMessages, MoveXY_unpack_incomplete_keep_values)
       0x87,                               // Y
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x1234, message.X_rate);
    LONGS_EQUAL(0x5678, message.Y_rate);
 }
@@ -1641,7 +1843,14 @@ TEST(ColourControlMessages, StepXY_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1708,7 +1917,11 @@ TEST(ColourControlMessages, StepXY_unpack_incomplete)
                                        // Time        (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.X_step);
    LONGS_EQUAL(0, message.Y_step);
    LONGS_EQUAL(0, message.time);
@@ -1729,7 +1942,11 @@ TEST(ColourControlMessages, StepXY_unpack_incomplete_keep_values)
                                        // Time        (Missing)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x1234, message.X_step);
    LONGS_EQUAL(0x5678, message.Y_step);
    LONGS_EQUAL(0x9A, message.time);
@@ -1756,7 +1973,14 @@ TEST(ColourControlMessages, MoveToTemperature_wrong_array_size)
 
    expected = ByteArray(1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.pack(expected));
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(expected));
 }
 
@@ -1818,7 +2042,11 @@ TEST(ColourControlMessages, MoveToTemperature_unpack_incomplete)
       0x56                                // Time        (Incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0, message.colour);
    LONGS_EQUAL(0, message.time);
 }
@@ -1837,7 +2065,11 @@ TEST(ColourControlMessages, MoveToTemperature_unpack_incomplete_keep_values)
       0x21                               // Time        (Incomplete)
    });
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, message.unpack(payload));
+
    LONGS_EQUAL(0x1234, message.colour);
    LONGS_EQUAL(0x5678, message.time);
 }
@@ -1858,11 +2090,13 @@ TEST_GROUP(ColourControl)
    {
       interface = ColourControlBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -1977,11 +2211,13 @@ TEST_GROUP(ColourControlClient)
 
       addr   = Protocol::Address(42);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -2404,6 +2640,7 @@ TEST_GROUP(ColourControlServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -2411,6 +2648,7 @@ TEST_GROUP(ColourControlServer)
    {
       payload = ByteArray(0);
       server.clear_transitions();
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

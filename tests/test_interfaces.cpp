@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the common functionality
  * of the interfaces.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -41,6 +41,7 @@ TEST_GROUP(AbstractInterface)
       packet.message.itf.id   = itf->uid();
       packet.message.itf.role = itf->role();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -48,6 +49,7 @@ TEST_GROUP(AbstractInterface)
    {
       delete itf;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

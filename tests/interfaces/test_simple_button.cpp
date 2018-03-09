@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Button interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -40,11 +40,13 @@ TEST_GROUP(SimpleButton)
    {
       interface = SimpleButtonBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -103,11 +105,13 @@ TEST_GROUP(SimpleButtonClient)
       packet.message.itf.id     = client.uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -184,11 +188,13 @@ TEST_GROUP(SimpleButtonServer)
       server = SimpleButtonServer();
       addr   = Protocol::Address(42);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 

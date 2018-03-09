@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Alert Interface implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -126,6 +126,7 @@ TEST_GROUP(AlertServer)
    TEST_TEARDOWN()
    {
       delete server;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -393,6 +394,7 @@ TEST_GROUP(AlertClient)
    TEST_TEARDOWN()
    {
       delete client;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

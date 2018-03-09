@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Temperature %Interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -81,11 +81,13 @@ TEST_GROUP(SimpleTemperatureClient)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -372,6 +374,7 @@ TEST_GROUP(SimpleTemperatureServer)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
       delete server;
    }

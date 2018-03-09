@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Event Scheduling service
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -54,6 +54,7 @@ TEST_GROUP(Scheduling_Event)
       device  = new Testing::Device();
       service = new EventSchedulingBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -62,6 +63,7 @@ TEST_GROUP(Scheduling_Event)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -149,11 +151,13 @@ TEST_GROUP(EventSchedulingEntries)
    TEST_SETUP()
    {
       entries = TestEntries();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -327,11 +331,13 @@ TEST_GROUP(EventScheduling_Messages)
                                               0x33, 0x33, 0x33, 0x33, // Interval
                                               0x12                    // Program ID.
       };
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -373,6 +379,8 @@ TEST(EventScheduling_Messages, Entry_unpack)
 
 TEST(EventScheduling_Messages, Entry_pack_fail_no_size)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    Entry message = Test_entry;
 
    payload = Common::ByteArray(message.size() - 1);
@@ -384,6 +392,8 @@ TEST(EventScheduling_Messages, Entry_pack_fail_no_size)
 
 TEST(EventScheduling_Messages, Entry_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    Entry message;
 
    payload = Common::ByteArray {0x11,                   // Event ID
@@ -443,6 +453,8 @@ TEST(EventScheduling_Messages, GetEntryResponse_pack)
 
 TEST(EventScheduling_Messages, GetEntryResponse_pack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message(Common::Result::OK, Test_entry);
 
    payload = Common::ByteArray(message.size() - 1);
@@ -468,6 +480,8 @@ TEST(EventScheduling_Messages, GetEntryResponse_unpack)
 
 TEST(EventScheduling_Messages, GetEntryResponse_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message;
 
    payload = Test_Entry_payload;
@@ -503,6 +517,7 @@ TEST_GROUP(EventSchedulingClient)
 
       addr   = Protocol::Address(42, 0);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -510,6 +525,7 @@ TEST_GROUP(EventSchedulingClient)
    {
       delete client;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -781,6 +797,7 @@ TEST_GROUP(EventSchedulingServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -789,6 +806,7 @@ TEST_GROUP(EventSchedulingServer)
       delete server;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

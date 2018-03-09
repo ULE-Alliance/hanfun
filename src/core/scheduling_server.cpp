@@ -5,7 +5,7 @@
  * This file contains the implementation of the common Server functionality for the
  * Scheduling service.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

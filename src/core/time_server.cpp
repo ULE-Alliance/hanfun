@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Time service : Server role.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2016 ULE Alliance
  *

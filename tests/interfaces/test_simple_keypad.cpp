@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Keypad interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -40,11 +40,13 @@ TEST_GROUP(SimpleKeypad)
    {
       interface = SimpleKeypadBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -65,11 +67,13 @@ TEST_GROUP(SimpleKeypadMessages)
    {
       expected = Common::ByteArray();
       payload  = Common::ByteArray();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -110,6 +114,9 @@ TEST(SimpleKeypadMessages, KeyPressed_pack_fail_size)
 
    payload = Common::ByteArray(key.size() - 1);
 
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
+
    LONGS_EQUAL(0, key.pack(payload));
 }
 
@@ -134,6 +141,9 @@ TEST(SimpleKeypadMessages, KeyPressed_unpack_fail_missing_octet)
    payload = Common::ByteArray({
       0x01, 0x23, 0x45
    });
+
+   mock("support").expectOneCall("assert")
+         .ignoreOtherParameters();
 
    LONGS_EQUAL(0, key.unpack(payload));
    CHECK_EQUAL(0x00000000, key.key_id);
@@ -160,11 +170,13 @@ TEST_GROUP(SimpleKeypadClient)
 
       addr   = Protocol::Address(42);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -226,11 +238,13 @@ TEST_GROUP(SimpleKeypadServer)
       packet.message.itf.id     = server.uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Humidity %Interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -68,11 +68,13 @@ TEST_GROUP(SimpleHumidityClient)
 
    TEST_SETUP()
    {
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -254,6 +256,7 @@ TEST_GROUP(SimpleHumidityServer)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
       delete server;
    }

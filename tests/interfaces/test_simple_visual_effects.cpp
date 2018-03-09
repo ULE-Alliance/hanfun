@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Visual Effects interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -40,11 +40,13 @@ TEST_GROUP(SimpleVisualEffects)
    {
       interface = SimpleVisualEffectsBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -385,11 +387,13 @@ TEST_GROUP(SimpleVisualEffectsClient)
       client = SimpleVisualEffectsClient();
       addr   = Protocol::Address(42);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -572,11 +576,13 @@ TEST_GROUP(SimpleVisualEffectsServer)
       packet.message.itf.id     = server.uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

@@ -4,7 +4,7 @@
  *
  * This file contains helper functions used the tests.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -97,12 +97,13 @@ HF::Attributes::Factory HF::Testing::FactoryGetter(HF::Common::Interface itf)
    return result;
 }
 
-void HF::Testing::Assert(const char *expr, const char *file, int line)
+void HF::Testing::Assert(const char *expr, const char *file, int line, const char *func)
 {
    mock("support").actualCall("assert")
-      .withParameter("expr", expr)
-      .withParameter("file", file)
-      .withParameter("line", line);
+         .withParameter("expr", expr)
+         .withParameter("file", file)
+         .withParameter("line", line)
+         .withParameter("func", func);
 }
 
 HF::Core::DeviceManagement::DevicePtr HF::Testing::DevMgt::create_device(Concentrator &base,
