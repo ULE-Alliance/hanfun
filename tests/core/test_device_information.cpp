@@ -112,7 +112,7 @@ TEST(DeviceInformation, Mandatory)
    LONGS_EQUAL(4, resp.attributes.size())
 }
 
-TEST(DeviceInformation, All)
+IGNORE_TEST(DeviceInformation, All)
 {
    Protocol::Message *msg = HF::Core::DeviceInformation::all();
 

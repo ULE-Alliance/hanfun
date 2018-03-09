@@ -286,6 +286,9 @@ TEST(SUOTA, UpgradeStatus_Unpack)
       UpgradeStatus::GMEP_SESSION_ERROR,
    });
 
+   // No SW version present
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    UpgradeStatus status;
    LONGS_EQUAL(status.size(), status.unpack(payload, 3));
 
@@ -310,8 +313,6 @@ TEST(SUOTA, UpgradeStatus_Unpack)
    mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    LONGS_EQUAL(0, status.unpack(payload, payload.size()));
-
-   mock("support").checkExpectations();
 }
 
 // =============================================================================
@@ -671,6 +672,7 @@ TEST(SUOTAServer, CheckVersion)
    STRCMP_EQUAL(expected.hw_version.c_str(), actual.hw_version.c_str());
    STRCMP_EQUAL(expected.url.c_str(), actual.url.c_str());
 
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
    mock("AbstractDevice").expectOneCall("send");
 
    CHECK_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, payload.size()));

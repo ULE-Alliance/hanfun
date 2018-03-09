@@ -100,6 +100,8 @@ TEST(Time, Convert_Date2Time_Bounds)
 {
    Time::Date date;
 
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
    date.year   = Time::YEARS_MIN;
@@ -111,9 +113,13 @@ TEST(Time, Convert_Date2Time_Bounds)
 
    LONGS_EQUAL(0x00000000, Time::convert(date));
 
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    // Check for month values
    date.month = Time::MONTHS_MIN - 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    date.month = Time::MONTHS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
@@ -121,8 +127,12 @@ TEST(Time, Convert_Date2Time_Bounds)
    date.month = Time::MONTHS_MIN;
 
    // Check for day values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.day = Time::DAYS_MIN - 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    date.day = Time::DAYS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
@@ -130,18 +140,24 @@ TEST(Time, Convert_Date2Time_Bounds)
    date.day = Time::DAYS_MIN;
 
    // Check for hour values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.hour = Time::HOURS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
    date.hour = Time::HOURS_MIN;
 
    // Check for minutes values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.minute = Time::MINUTES_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
    date.minute = Time::MINUTES_MIN;
 
    // Check for seconds values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.second = Time::SECONDS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 

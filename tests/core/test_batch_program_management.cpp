@@ -1020,16 +1020,18 @@ TEST(BatchProgramManagementClient, DefineProgram)
 //! @test Define Program support.
 TEST(BatchProgramManagementClient, DefineProgram_fail)
 {
+   mock("support").expectNCalls(4, "assert").ignoreOtherParameters();
+
    mock("Interface").expectNoCall("send");
 
    auto msg_type = Message::Type::GET_ATTR_REQ;                 // wrong type
 
-   actions.push_back(GenerateAction(0x11,                                     // UID
-                                    msg_type,                                 // Msg type
-                                    0x00,                                     // Itf type
-                                    0x2233,                                   // Itf UID
-                                    0x44,                                     // Itf Member
-                                    10));                                     // Payload size
+   actions.push_back(GenerateAction(0x11,                       // UID
+                                    msg_type,                   // Msg type
+                                    0x00,                       // Itf type
+                                    0x2233,                     // Itf UID
+                                    0x44,                       // Itf Member
+                                    10));                       // Payload size
 
    Entry test(0x12, std::string("TEST"), actions);
 
@@ -1627,6 +1629,11 @@ TEST(BatchProgramManagementServer, DefineProgram_fail_wrong_message_type)
    DefineProgram received(_received);
 
    payload = ByteArray(received.size());
+
+   // Action serialization fail
+   // Vector serialization fail
+   // Actions serialization fail
+   mock("support").expectNCalls(3, "assert").ignoreOtherParameters();
 
    received.pack(payload);
 

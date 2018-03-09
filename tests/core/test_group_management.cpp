@@ -412,10 +412,13 @@ TEST(GroupManagement, CreateGroupResponse_Pack)
    CHECK_EQUAL(expected, got);
 
    // ----- Wrong address -----
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
 
    message = CreateResponse(0x8FFF);
 
    UNSIGNED_LONGS_EQUAL(0, message.pack(got));
+
+   mock("support").checkExpectations();
 
    // ----- FAIL response code -----
 
@@ -752,7 +755,7 @@ TEST(GroupManagementClient, Delete)
 {
    mock("Interface").expectOneCall("send");
 
-   client->remove(0x00);
+   client->remove(0x5A5A);
 
    mock("Interface").checkExpectations();
 
@@ -764,7 +767,7 @@ TEST(GroupManagementClient, Delete)
    DeleteMessage message;
 
    message.unpack(client->sendMsg.payload);
-   LONGS_EQUAL(0x00, message.address);
+   LONGS_EQUAL(0x5A5A, message.address);
 }
 
 //! @test Add support.
@@ -798,7 +801,7 @@ TEST(GroupManagementClient, Remove)
 {
    mock("Interface").expectOneCall("send");
 
-   client->remove(0x00, 0x00, 0x00);
+   client->remove(0x12, 0x3456, 0x78);
 
    mock("Interface").checkExpectations();
 
@@ -811,9 +814,9 @@ TEST(GroupManagementClient, Remove)
 
    message.unpack(client->sendMsg.payload);
 
-   LONGS_EQUAL(0x00, message.address);
-   LONGS_EQUAL(0x0000, message.device);
-   LONGS_EQUAL(0x00, message.unit);
+   LONGS_EQUAL(0x12, message.address);
+   LONGS_EQUAL(0x3456, message.device);
+   LONGS_EQUAL(0x78, message.unit);
 }
 
 //! @test Get Info support.
@@ -1006,11 +1009,11 @@ TEST(GroupManagementClient, GOT_INFO_OK)
 {
    Common::ByteArray payload {
       0x00, 0x00, 0x00,
-      Common::Result::OK,
-      0x04, 'N', 'A', 'M', 'E',
-      0x01,
-      0x12, 0x34,
-      0x56,
+      Common::Result::OK,        // Response code.
+      0x04, 'N', 'A', 'M', 'E',  // Name.
+      0x00, 0x01,                // Number of members.
+      0x12, 0x34,                // Entry 1 - Device Address.
+      0x56,                      // Entry 1 - Unit ID.
       0x00, 0x00, 0x00,
    };
 
@@ -1019,8 +1022,7 @@ TEST(GroupManagementClient, GOT_INFO_OK)
 
    mock("GroupManagement::Client").expectOneCall("got_info");
 
-   UNSIGNED_LONGS_EQUAL(Common::Result::OK,
-                        client->handle(packet, payload, 3));
+   UNSIGNED_LONGS_EQUAL(Common::Result::OK, client->handle(packet, payload, 3));
 
    mock("GroupManagement::Client").checkExpectations();
 }
@@ -2350,6 +2352,9 @@ TEST(GroupManagementServer, Add_Step1_Fail_Size)
    mock("GroupManagement::Server").expectOneCall("add");
    mock("AbstractDevice").expectOneCall("send");
 
+   // Failure condition - All member filled.
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_RESOURCES, server->handle(packet, payload, 3));
 
    mock("GroupManagement::Server").checkExpectations();
@@ -2404,6 +2409,9 @@ TEST(GroupManagementServer, Add_Step1_Fail_Size_Pending)
 
    mock("GroupManagement::Server").expectOneCall("add");
    mock("AbstractDevice").expectOneCall("send");
+
+   // Group does not support more members.
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    UNSIGNED_LONGS_EQUAL(Common::Result::FAIL_RESOURCES, server->handle(packet, payload, 3));
 
@@ -2672,6 +2680,9 @@ TEST(GroupManagementServer, Add_Step2_NoRequest)
    mock("GroupManagement::Server").expectNoCall("added");
    mock("HF::Transport::Group").expectNoCall("add");
    mock("AbstractDevice").expectNoCall("send");
+
+   // Failure condition - No previous request.
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    UNSIGNED_LONGS_EQUAL(Common::Result::OK, server->handle(packet, payload, 3));
 

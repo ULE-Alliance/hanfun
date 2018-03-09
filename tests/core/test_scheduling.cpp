@@ -131,6 +131,8 @@ TEST(Scheduling_Messages, DefineEventResponse_pack)
  */
 TEST(Scheduling_Messages, DefineEventResponse_pack_fail_no_space)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    DefineEventResponse message(Common::Result::OK, 0x11);
 
    payload = Common::ByteArray(message.size() - 1);
@@ -170,6 +172,8 @@ TEST(Scheduling_Messages, DefineEventResponse_unpack)
  */
 TEST(Scheduling_Messages, DefineEventResponse_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    DefineEventResponse message;
 
    payload = Common::ByteArray {Common::Result::OK};
@@ -211,6 +215,8 @@ TEST(Scheduling_Messages, UpdateStatus_pack)
  */
 TEST(Scheduling_Messages, UpdateStatus_pack_fail_no_size)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    UpdateStatus message(0x11, 0x01);
 
    payload = Common::ByteArray(message.size() - 1);
@@ -240,6 +246,8 @@ TEST(Scheduling_Messages, UpdateStatus_unpack)
  */
 TEST(Scheduling_Messages, UpdateStatus_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    UpdateStatus message;
 
    payload = Common::ByteArray {0x11};

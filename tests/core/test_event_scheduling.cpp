@@ -379,6 +379,8 @@ TEST(EventScheduling_Messages, Entry_unpack)
 
 TEST(EventScheduling_Messages, Entry_pack_fail_no_size)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    Entry message = Test_entry;
 
    payload = Common::ByteArray(message.size() - 1);
@@ -390,6 +392,8 @@ TEST(EventScheduling_Messages, Entry_pack_fail_no_size)
 
 TEST(EventScheduling_Messages, Entry_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    Entry message;
 
    payload = Common::ByteArray {0x11,                   // Event ID
@@ -449,6 +453,8 @@ TEST(EventScheduling_Messages, GetEntryResponse_pack)
 
 TEST(EventScheduling_Messages, GetEntryResponse_pack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message(Common::Result::OK, Test_entry);
 
    payload = Common::ByteArray(message.size() - 1);
@@ -474,6 +480,8 @@ TEST(EventScheduling_Messages, GetEntryResponse_unpack)
 
 TEST(EventScheduling_Messages, GetEntryResponse_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message;
 
    payload = Test_Entry_payload;

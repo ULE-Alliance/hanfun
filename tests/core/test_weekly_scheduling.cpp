@@ -380,6 +380,8 @@ TEST(WeeklyScheduling_Messages, Entry_unpack)
 
 TEST(WeeklyScheduling_Messages, Entry_pack_fail_no_size)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    Entry message = Test_entry;
 
    payload = Common::ByteArray(message.size() - 1);
@@ -400,6 +402,9 @@ TEST(WeeklyScheduling_Messages, Entry_unpack_fail)
                                 50,                             // Minute
                                                                 // Program ID.   (missing)
    };
+
+   mock("support").expectOneCall("assert")
+      .ignoreOtherParameters();
 
    size = message.unpack(payload);
 
@@ -582,6 +587,8 @@ TEST(WeeklyScheduling_Messages, GetEntryResponse_pack)
 
 TEST(WeeklyScheduling_Messages, GetEntryResponse_pack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message(Common::Result::OK, Test_entry);
 
    payload = Common::ByteArray(message.size() - 1);
@@ -607,6 +614,8 @@ TEST(WeeklyScheduling_Messages, GetEntryResponse_unpack)
 
 TEST(WeeklyScheduling_Messages, GetEntryResponse_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message;
 
    payload = Test_Entry_payload;
