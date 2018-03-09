@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the RSSI interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -40,11 +40,13 @@ TEST_GROUP(RSSI)
    {
       interface = RSSIBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -70,11 +72,13 @@ TEST_GROUP(RSSIClient)
    TEST_SETUP()
    {
       client = RSSIClient();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -94,11 +98,13 @@ TEST_GROUP(RSSIServer)
    TEST_SETUP()
    {
       server = RSSIServer();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

@@ -4,7 +4,7 @@
  *
  * This is file contains the unit tests for the Time service implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2016 ULE Alliance
  *
@@ -77,6 +77,7 @@ TEST_GROUP(Time)
       device  = new Testing::Device();
       service = new TimeBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -84,6 +85,7 @@ TEST_GROUP(Time)
    {
       delete service;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -98,6 +100,8 @@ TEST(Time, Convert_Date2Time_Bounds)
 {
    Time::Date date;
 
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
    date.year   = Time::YEARS_MIN;
@@ -109,9 +113,13 @@ TEST(Time, Convert_Date2Time_Bounds)
 
    LONGS_EQUAL(0x00000000, Time::convert(date));
 
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    // Check for month values
    date.month = Time::MONTHS_MIN - 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    date.month = Time::MONTHS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
@@ -119,8 +127,12 @@ TEST(Time, Convert_Date2Time_Bounds)
    date.month = Time::MONTHS_MIN;
 
    // Check for day values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.day = Time::DAYS_MIN - 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
+
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    date.day = Time::DAYS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
@@ -128,18 +140,24 @@ TEST(Time, Convert_Date2Time_Bounds)
    date.day = Time::DAYS_MIN;
 
    // Check for hour values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.hour = Time::HOURS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
    date.hour = Time::HOURS_MIN;
 
    // Check for minutes values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.minute = Time::MINUTES_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
    date.minute = Time::MINUTES_MIN;
 
    // Check for seconds values
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    date.second = Time::SECONDS_MAX + 1;
    LONGS_EQUAL(Value::INVALID, Time::convert(date));
 
@@ -339,6 +357,7 @@ TEST_GROUP(TimeClient)
    {
       device = new Testing::Device();
       client = new TimeClient(*(device->unit0()));
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -346,6 +365,7 @@ TEST_GROUP(TimeClient)
    {
       delete client;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -372,6 +392,7 @@ TEST_GROUP(TimeServer)
    {
       device = new Testing::Device();
       server = new TimeServer(*(device->unit0()));
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -379,6 +400,7 @@ TEST_GROUP(TimeServer)
    {
       delete server;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

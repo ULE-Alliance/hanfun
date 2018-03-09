@@ -5,7 +5,7 @@
  * This file is used to make the used to provide an override to HAN-FUN assert
  * functionality.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 Bithium S.A.
  *
@@ -26,20 +26,21 @@ namespace HF
        * @param [in] expr  string representation of the assert condition.
        * @param [in] file  file name the assert was declared.
        * @param [in] line  line number in the above file the assert was declared.
+       * @param [in] func  function name where the assert was declared.
        */
-      void Assert(const char *expr, const char *file, int line);
+      void Assert(const char *expr, const char *file, int line, const char *func);
 
    } // namespace Testing
 
 }  // namespace HF
 
-#define HF_ASSERT(_expr, _block)                          \
-   {                                                      \
-      if (!(_expr))                                       \
-      {                                                   \
-         HF::Testing::Assert(#_expr, __FILE__, __LINE__); \
-         _block                                           \
-      }                                                   \
+#define HF_ASSERT(_expr, _block)                                        \
+   {                                                                    \
+      if (!(_expr))                                                     \
+      {                                                                 \
+         HF::Testing::Assert(#_expr, __FILE__, __LINE__, __FUNCTION__); \
+         _block                                                         \
+      }                                                                 \
    }
 
 #endif /* HF_ASSERT_HELPER_H */

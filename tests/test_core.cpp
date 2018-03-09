@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the code that implements
  * core functionality of HAN-FUN.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 Bithium S.A.
  *

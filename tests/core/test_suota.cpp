@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the SUOTA interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
@@ -83,6 +83,7 @@ TEST_GROUP(SUOTA)
       device  = new Testing::Device();
       service = new SOUTABase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -90,6 +91,7 @@ TEST_GROUP(SUOTA)
    {
       delete service;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -284,6 +286,9 @@ TEST(SUOTA, UpgradeStatus_Unpack)
       UpgradeStatus::GMEP_SESSION_ERROR,
    });
 
+   // No SW version present
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    UpgradeStatus status;
    LONGS_EQUAL(status.size(), status.unpack(payload, 3));
 
@@ -308,8 +313,6 @@ TEST(SUOTA, UpgradeStatus_Unpack)
    mock("support").expectOneCall("assert").ignoreOtherParameters();
 
    LONGS_EQUAL(0, status.unpack(payload, payload.size()));
-
-   mock("support").checkExpectations();
 }
 
 // =============================================================================
@@ -373,6 +376,7 @@ TEST_GROUP(SUOTAClient)
       packet.message.itf.id     = client->uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -381,6 +385,7 @@ TEST_GROUP(SUOTAClient)
       delete client;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -576,6 +581,7 @@ TEST_GROUP(SUOTAServer)
       packet.message.itf.id     = server->uid();
       packet.message.itf.member = 0xFF;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -583,6 +589,7 @@ TEST_GROUP(SUOTAServer)
    {
       delete server;
       delete device;
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -665,6 +672,7 @@ TEST(SUOTAServer, CheckVersion)
    STRCMP_EQUAL(expected.hw_version.c_str(), actual.hw_version.c_str());
    STRCMP_EQUAL(expected.url.c_str(), actual.url.c_str());
 
+   mock("support").expectNCalls(2, "assert").ignoreOtherParameters();
    mock("AbstractDevice").expectOneCall("send");
 
    CHECK_EQUAL(Common::Result::FAIL_ARG, server->handle(packet, payload, payload.size()));

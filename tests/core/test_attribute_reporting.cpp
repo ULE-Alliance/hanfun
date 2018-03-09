@@ -5,7 +5,7 @@
  * This file contains the implementation of the unit tests for the Attribute
  * Reporting core service in HAN-FUN.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -2811,11 +2811,13 @@ TEST_GROUP(AttributeReporting_Client)
 
       packet.message.itf.id = HF::Interface::ATTRIBUTE_REPORTING;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -2961,6 +2963,7 @@ TEST_GROUP(AttributeReporting_Server)
 
       unit = new Testing::Unit(1, *base);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -2969,6 +2972,7 @@ TEST_GROUP(AttributeReporting_Server)
       delete unit;
       delete base;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

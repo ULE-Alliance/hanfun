@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Weekly Scheduling service
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -55,6 +55,7 @@ TEST_GROUP(Scheduling_Weekly)
       device  = new Testing::Device();
       service = new WeeklySchedulingBase(*(device->unit0()));
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -63,6 +64,7 @@ TEST_GROUP(Scheduling_Weekly)
       delete service;
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -150,11 +152,13 @@ TEST_GROUP(WeeklySchedulingEntries)
    TEST_SETUP()
    {
       entries = TestEntries();
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 
@@ -328,11 +332,13 @@ TEST_GROUP(WeeklyScheduling_Messages)
                                               50,                             // Minute
                                               0x12                            // Program ID.
       };
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -374,6 +380,8 @@ TEST(WeeklyScheduling_Messages, Entry_unpack)
 
 TEST(WeeklyScheduling_Messages, Entry_pack_fail_no_size)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    Entry message = Test_entry;
 
    payload = Common::ByteArray(message.size() - 1);
@@ -394,6 +402,9 @@ TEST(WeeklyScheduling_Messages, Entry_unpack_fail)
                                 50,                             // Minute
                                                                 // Program ID.   (missing)
    };
+
+   mock("support").expectOneCall("assert")
+      .ignoreOtherParameters();
 
    size = message.unpack(payload);
 
@@ -576,6 +587,8 @@ TEST(WeeklyScheduling_Messages, GetEntryResponse_pack)
 
 TEST(WeeklyScheduling_Messages, GetEntryResponse_pack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message(Common::Result::OK, Test_entry);
 
    payload = Common::ByteArray(message.size() - 1);
@@ -601,6 +614,8 @@ TEST(WeeklyScheduling_Messages, GetEntryResponse_unpack)
 
 TEST(WeeklyScheduling_Messages, GetEntryResponse_unpack_fail)
 {
+   mock("support").expectOneCall("assert").ignoreOtherParameters();
+
    GetEntryResponse message;
 
    payload = Test_Entry_payload;
@@ -636,6 +651,7 @@ TEST_GROUP(WeeklySchedulingClient)
 
       addr   = Protocol::Address(42, 0);
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -643,6 +659,7 @@ TEST_GROUP(WeeklySchedulingClient)
    {
       delete client;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -925,6 +942,7 @@ TEST_GROUP(WeeklySchedulingServer)
       packet.message.type       = Protocol::Message::COMMAND_REQ;
       packet.link               = &link;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -935,6 +953,7 @@ TEST_GROUP(WeeklySchedulingServer)
 
       // NOTE: The batch_server & time_server are deleted by the "delete device"
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 

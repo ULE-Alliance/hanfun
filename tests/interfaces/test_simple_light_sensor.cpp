@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Light Sensor interface
  * implementation.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -41,11 +41,13 @@ TEST_GROUP(SimpleLightSensor)
    {
       interface = SimpleLightSensorBase();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -156,11 +158,13 @@ TEST_GROUP(SimpleLightSensorClient)
    {
       client = SimpleLightSensorClient();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -427,11 +431,13 @@ TEST_GROUP(SimpleLightSensorServer)
    {
       server = SimpleLightSensorServer();
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

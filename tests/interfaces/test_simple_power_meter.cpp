@@ -5,7 +5,7 @@
  * This file contains the implementation of the tests for the Simple Metering
  * Interface.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 Bithium S.A.
  *
@@ -443,11 +443,13 @@ TEST_GROUP(SimplePowerMeterServer)
 
       temp          = other;
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
 
       delete server;
@@ -854,6 +856,7 @@ TEST_GROUP(SimplePowerMeterClient)
 
    TEST_TEARDOWN()
    {
+      mock("support").checkExpectations();
       mock().clear();
    }
 };

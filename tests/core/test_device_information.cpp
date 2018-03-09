@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the tests for Device Information Interface.
  *
- * @version    1.5.1
+ * @version    1.5.2
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -71,6 +71,7 @@ TEST_GROUP(DeviceInformation)
 
       dev_info->device_uid = new HF::UID::URI("hf://device@example.com");
 
+      mock("support").expectNoCall("assert");
       mock().ignoreOtherCalls();
    }
 
@@ -80,6 +81,7 @@ TEST_GROUP(DeviceInformation)
 
       delete device;
 
+      mock("support").checkExpectations();
       mock().clear();
    }
 };
@@ -133,7 +135,7 @@ TEST(DeviceInformation, All)
    resp.unpack(packet_resp->message.payload);
 
    LONGS_EQUAL(Result::OK, resp.code);
-   LONGS_EQUAL(8, resp.attributes.size())
+   LONGS_EQUAL(9, resp.attributes.size());
 }
 
 TEST(DeviceInformation, ExtraCapabilities)
