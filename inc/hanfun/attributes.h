@@ -628,6 +628,7 @@ namespace HF
 
          uint16_t size() const
          {
+            Common::SerializableHelper<value_type> helper(value());
             return helper.size();
          }
 
@@ -642,16 +643,16 @@ namespace HF
                offset += array.write(offset, uid());
             }
 
-            const_cast<decltype(helper) &>(helper).data = getter(*_owner);
+            Common::SerializableHelper<value_type> helper(value());
 
-            offset                                     += helper.pack(array, offset);
+            offset += helper.pack(array, offset);
 
             return offset - start;
          }
 
          uint16_t pack(Common::ByteArray &array, uint16_t offset = 0) const
          {
-            const_cast<decltype(helper) &>(helper).data = getter(*_owner);
+            Common::SerializableHelper<value_type> helper(value());
 
             return helper.pack(array, offset);
          }
@@ -660,6 +661,7 @@ namespace HF
          {
             HF_SERIALIZABLE_CHECK(array, offset, size(with_uid));
 
+            Common::SerializableHelper<value_type> helper;
             uint16_t start = offset;
 
             if (with_uid)
@@ -683,6 +685,7 @@ namespace HF
 
          uint16_t unpack(const Common::ByteArray &array, uint16_t offset = 0)
          {
+            Common::SerializableHelper<value_type> helper;
             uint16_t result = helper.unpack(array, offset);
 
             setter(*_owner, helper.data);
@@ -702,10 +705,10 @@ namespace HF
 
             if (res == 0)
             {
-               const_cast<decltype(helper) &>(helper).data = getter(*_owner);
+               Common::SerializableHelper<value_type> lhs(value());
+               Common::SerializableHelper<value_type> rhs(((Attribute<T> *) & other)->value());
 
-               Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
-               res = helper.compare(temp->helper);
+               res = lhs.compare(rhs);
             }
 
             return res;
@@ -717,10 +720,10 @@ namespace HF
 
             if (res == 0)
             {
-               const_cast<decltype(helper) &>(helper).data = getter(*_owner);
+               Common::SerializableHelper<value_type> lhs(value());
+               Common::SerializableHelper<value_type> rhs(((Attribute<T> *) & other)->value());
 
-               Attribute<T, _Owner> *temp = (Attribute<T, _Owner> *) & other;
-               return helper.changed(temp->helper);
+               return lhs.changed(rhs);
             }
 
             return 0.0;
@@ -731,8 +734,6 @@ namespace HF
          _Owner                                 *_owner;
          getter_t                               getter;
          setter_t                               setter;
-
-         Common::SerializableHelper<value_type> helper;
 
          private:
 
