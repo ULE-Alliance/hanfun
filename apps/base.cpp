@@ -54,7 +54,7 @@ HF::Common::Result DeviceManagement::Entries::save(const Device &device)
 }
 
 // =============================================================================
-// DeviceManagement::Entries::save
+// DeviceManagement::Entries::insert
 // =============================================================================
 /*!
  *
@@ -214,7 +214,7 @@ HF::Common::Result BindManagement::Entries::save(const Entry &entry)
 }
 
 // =============================================================================
-// BindManagement::Entries::save
+// BindManagement::Entries::insert
 // =============================================================================
 /*!
  *
