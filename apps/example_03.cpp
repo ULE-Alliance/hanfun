@@ -4,7 +4,7 @@
  *
  * This file contains an usage example of the Alert interface.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

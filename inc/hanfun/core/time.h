@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Time service.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2016 ULE Alliance
  *

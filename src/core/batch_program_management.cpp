@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Batch Program Management interface.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

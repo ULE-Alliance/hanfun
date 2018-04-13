@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the SUOTA interface
  * implementation.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2015 ULE Alliance
  *
