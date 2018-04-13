@@ -158,6 +158,11 @@ int32_t HS_Colour::get_travel_distance(const Direction dir, uint16_t initial,
          result = dist > max / 2 ? dist : invert_angle(dist, max);
          break;
       }
+      default:
+      {
+         result = 0;
+         break;
+      }
    }
 
    return result;
