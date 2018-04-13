@@ -731,9 +731,9 @@ namespace HF
 
          protected:
 
-         _Owner                                 *_owner;
-         getter_t                               getter;
-         setter_t                               setter;
+         _Owner   *_owner;
+         getter_t getter;
+         setter_t setter;
 
          private:
 

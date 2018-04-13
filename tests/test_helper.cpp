@@ -100,10 +100,10 @@ HF::Attributes::Factory HF::Testing::FactoryGetter(HF::Common::Interface itf)
 void HF::Testing::Assert(const char *expr, const char *file, int line, const char *func)
 {
    mock("support").actualCall("assert")
-         .withParameter("expr", expr)
-         .withParameter("file", file)
-         .withParameter("line", line)
-         .withParameter("func", func);
+      .withParameter("expr", expr)
+      .withParameter("file", file)
+      .withParameter("line", line)
+      .withParameter("func", func);
 }
 
 HF::Core::DeviceManagement::DevicePtr HF::Testing::DevMgt::create_device(Concentrator &base,
