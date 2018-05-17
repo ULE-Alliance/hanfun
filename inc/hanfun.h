@@ -4,7 +4,7 @@
  *
  * This is the top level include file for the HAN-FUN library.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

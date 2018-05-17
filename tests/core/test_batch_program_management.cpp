@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Batch Program Management interface
  * implementation.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *

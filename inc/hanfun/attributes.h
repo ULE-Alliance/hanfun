@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the attribute handling API in HAN-FUN.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *
@@ -731,9 +731,9 @@ namespace HF
 
          protected:
 
-         _Owner                                 *_owner;
-         getter_t                               getter;
-         setter_t                               setter;
+         _Owner   *_owner;
+         getter_t getter;
+         setter_t setter;
 
          private:
 
