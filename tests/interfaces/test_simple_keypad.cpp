@@ -5,7 +5,7 @@
  * This is file contains the unit tests for the Simple Keypad interface
  * implementation.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -115,7 +115,7 @@ TEST(SimpleKeypadMessages, KeyPressed_pack_fail_size)
    payload = Common::ByteArray(key.size() - 1);
 
    mock("support").expectOneCall("assert")
-         .ignoreOtherParameters();
+      .ignoreOtherParameters();
 
    LONGS_EQUAL(0, key.pack(payload));
 }
@@ -143,7 +143,7 @@ TEST(SimpleKeypadMessages, KeyPressed_unpack_fail_missing_octet)
    });
 
    mock("support").expectOneCall("assert")
-         .ignoreOtherParameters();
+      .ignoreOtherParameters();
 
    LONGS_EQUAL(0, key.unpack(payload));
    CHECK_EQUAL(0x00000000, key.key_id);

@@ -4,7 +4,7 @@
  *
  * This file contains the implementation of the Simple Humidity interface : Server role.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

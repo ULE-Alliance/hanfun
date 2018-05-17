@@ -5,7 +5,7 @@
  * This file contains the implementation of the common functionality for the
  * Colour Control interface.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
@@ -156,6 +156,11 @@ int32_t HS_Colour::get_travel_distance(const Direction dir, uint16_t initial,
       case Direction::LONGEST:
       {
          result = dist > max / 2 ? dist : invert_angle(dist, max);
+         break;
+      }
+      default:
+      {
+         result = 0;
          break;
       }
    }

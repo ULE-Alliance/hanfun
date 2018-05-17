@@ -5,7 +5,7 @@
  * This file contains the definitions for the core Bind Management Interface
  * of the HAN-FUN protocol.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2014 ULE Alliance
  *

@@ -4,7 +4,7 @@
  *
  * This file contains the definitions for the Simple Keypad interface.
  *
- * @version    1.5.2
+ * @version    1.5.3
  *
  * @copyright  Copyright &copy; &nbsp; 2017 ULE Alliance
  *
