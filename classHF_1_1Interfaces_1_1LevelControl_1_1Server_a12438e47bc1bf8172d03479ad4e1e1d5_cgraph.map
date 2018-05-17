@@ -1,3 +1,4 @@
 <map id="HF::Interfaces::LevelControl::Server::attribute" name="HF::Interfaces::LevelControl::Server::attribute">
-<area shape="rect" id="node2" href="$group__alert__itf.html#ga569f37dfb107e55549cd2789b38f7d66" title="Create an attribute object that can hold the attribute with the given uid. " alt="" coords="240,5,391,47"/>
+<area shape="rect" id="node2" href="$group__alert__itf.html#ga569f37dfb107e55549cd2789b38f7d66" title="Create an attribute object that can hold the attribute with the given uid. " alt="" coords="247,5,398,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Interface.html#a60c224b9a14595c7432c22cc194158c6" title="This method returns the interface UID. " alt="" coords="240,70,405,126"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="Profiles" name="Profiles">
-<area shape="rect" id="node2" href="$group__profile__home__care.html" title="This module contains the classes that implement the home care profile types. " alt="" coords="140,5,229,32"/>
-<area shape="rect" id="node3" href="$group__profile__home__ctl.html" title="This module contains the classes that implement the home control profile types. " alt="" coords="133,56,236,83"/>
-<area shape="rect" id="node4" href="$group__profile__security.html" title="This module contains the classes that implement the security profile types. " alt="" coords="149,107,220,133"/>
-<area shape="rect" id="node5" href="$group__common__profile.html" title="This module contains the common classes for the Profiles API implementation. " alt="" coords="147,157,222,184"/>
-<area shape="rect" id="node6" href="$group__profile__other.html" title="This module contains the classes that implement the other applications profile types. " alt="" coords="120,208,249,235"/>
+<area shape="rect" id="node2" href="$group__profile__home__care.html" title="This module contains the classes that implement the home care profile types. " alt="" coords="140,5,229,31"/>
+<area shape="rect" id="node3" href="$group__profile__home__ctl.html" title="This module contains the classes that implement the home control profile types. " alt="" coords="133,55,236,80"/>
+<area shape="rect" id="node4" href="$group__profile__security.html" title="This module contains the classes that implement the security profile types. " alt="" coords="149,104,220,129"/>
+<area shape="rect" id="node5" href="$group__common__profile.html" title="This module contains the common classes for the Profiles API implementation. " alt="" coords="147,153,222,179"/>
+<area shape="rect" id="node6" href="$group__profile__other.html" title="This module contains the classes that implement the other applications profile types. " alt="" coords="120,203,249,228"/>
 </map>

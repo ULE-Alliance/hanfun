@@ -1,11 +1,11 @@
 var structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour =
 [
     [ "XY_Colour", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a05a96f3cbd9020a2ac59b2ef54157ea8", null ],
-    [ "changed", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a5f9fbc9ec145752a7c130298d7de1161", null ],
-    [ "compare", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a44f632c9df18d5fa39803a4a7925707f", null ],
-    [ "operator!=", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a78052e2e7226ac92d60e460284ea1bf1", null ],
-    [ "operator==", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a3a20a4d13c9a77248422f1a8828b55c6", null ],
-    [ "pack", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a4f486c530b7e054bd5af058f2863a152", null ],
-    [ "size", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a5ad4bac9c31236622fdad2167474d878", null ],
+    [ "changed", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a25a4a3d1e700e91f2f7818d2f9b79c2d", null ],
+    [ "compare", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a8905b414f5bc4c15868b6a7370c0018e", null ],
+    [ "operator!=", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a8c51960945069af76f3cb848f71075a6", null ],
+    [ "operator==", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a3e26d4b880a0145d3f806c67c703dcdc", null ],
+    [ "pack", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a7a4ae276a4bf363a6b4a5c97a668ddc8", null ],
+    [ "size", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#ab01108c21465b6df62859f0d352bfe26", null ],
     [ "unpack", "structHF_1_1Interfaces_1_1ColourControl_1_1XY__Colour.html#a6967c2c20ad96ce02531e1fbba010414", null ]
 ];

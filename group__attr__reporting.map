@@ -1,7 +1,7 @@
 <map id="Attribute Reporting" name="Attribute Reporting">
-<area shape="rect" id="node2" href="$group__attr__report__event.html" title="This module contains the class that implement the support for the event rules in the Attribute Report..." alt="" coords="421,5,477,32"/>
-<area shape="rect" id="node3" href="$group__attr__reporting__report.html" title="This module contains the classes that implement the messages used in the Attribute Reporting service ..." alt="" coords="415,56,483,83"/>
-<area shape="rect" id="node4" href="$group__attr__reporting__common.html" title="This module contains the common definitions for the Attribute Reporting service implementation. " alt="" coords="412,107,487,133"/>
-<area shape="rect" id="node5" href="$group__attr__report__periodic.html" title="This module contains the class that implement the support for the periodic rules in the Attribute Rep..." alt="" coords="415,157,484,184"/>
-<area shape="rect" id="node6" href="$group__core.html" title="This module contains the classes defining and implementing the Core Services and Interfaces API..." alt="" coords="5,81,185,108"/>
+<area shape="rect" id="node2" href="$group__attr__report__event.html" title="This module contains the class that implement the support for the event rules in the Attribute Report..." alt="" coords="421,5,477,31"/>
+<area shape="rect" id="node3" href="$group__attr__reporting__report.html" title="This module contains the classes that implement the messages used in the Attribute Reporting service ..." alt="" coords="415,55,483,80"/>
+<area shape="rect" id="node4" href="$group__attr__reporting__common.html" title="This module contains the common definitions for the Attribute Reporting service implementation. " alt="" coords="412,104,487,129"/>
+<area shape="rect" id="node5" href="$group__attr__report__periodic.html" title="This module contains the class that implement the support for the periodic rules in the Attribute Rep..." alt="" coords="415,153,484,179"/>
+<area shape="rect" id="node6" href="$group__core.html" title="This module contains the classes defining and implementing the Core Services and Interfaces API..." alt="" coords="5,80,185,105"/>
 </map>

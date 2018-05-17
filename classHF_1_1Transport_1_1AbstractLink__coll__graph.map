@@ -1,7 +1,6 @@
 <map id="HF::Transport::AbstractLink" name="HF::Transport::AbstractLink">
-<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="5,331,140,467"/>
-<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="164,316,283,481"/>
-<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="78,145,254,267"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="279,160,445,252"/>
-<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="263,5,461,83"/>
+<area shape="rect" id="node2" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="5,191,140,327"/>
+<area shape="rect" id="node3" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="164,176,283,341"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="37,5,213,127"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="237,20,404,112"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="HF::Interfaces::SimpleHumidity::Client::read" name="HF::Interfaces::SimpleHumidity::Client::read">
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html#a302bdf633c6972833c559ea55c2684dc" title="This method returns the interface UID. " alt="" coords="260,5,428,61"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1AbstractInterface.html#a8347ec57ee4a1a820eb30fecbc51589c" title="Send message msg to the network address given by addr. " alt="" coords="263,5,425,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Interface.html#a60c224b9a14595c7432c22cc194158c6" title="This method returns the interface UID. " alt="" coords="260,70,428,126"/>
 </map>

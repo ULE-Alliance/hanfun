@@ -1,12 +1,11 @@
 <map id="HF::Application::Link" name="HF::Application::Link">
-<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLink.html" title="Parent class for all HF::Transport::Link implementations. " alt="" coords="27,625,211,775"/>
-<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="5,353,140,489"/>
-<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="164,338,283,503"/>
-<area shape="rect" id="node10" href="$classHF_1_1Transport_1_1AbstractLayer.html" title="Parent class for all HF::Transport::Layer implementations. " alt="" coords="235,588,427,812"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="78,145,254,267"/>
-<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="279,160,445,252"/>
-<area shape="rect" id="node7" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="263,5,461,83"/>
-<area shape="rect" id="node8" href="$classHF_1_1Application_1_1Transport.html" title="Transport Layer implementation over TCP/IP using libuv. " alt="" coords="203,1076,377,1183"/>
-<area shape="rect" id="node9" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html" title="Parent class for transport layer implementations on a HAN&#45;FUN Concentrator device. " alt="" coords="210,861,389,1027"/>
-<area shape="rect" id="node11" href="$structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. " alt="" coords="307,316,449,525"/>
+<area shape="rect" id="node2" href="$classHF_1_1Transport_1_1AbstractLink.html" title="Parent class for all HF::Transport::Link implementations. " alt="" coords="27,485,211,635"/>
+<area shape="rect" id="node3" href="$structHF_1_1Transport_1_1Link.html" title="This interface represents a link on the transport layer, used to send data to the remote end&#45;point..." alt="" coords="5,213,140,349"/>
+<area shape="rect" id="node4" href="$structHF_1_1UID_1_1UID__T.html" title="API for all UIDs. " alt="" coords="164,198,283,363"/>
+<area shape="rect" id="node9" href="$classHF_1_1Transport_1_1AbstractLayer.html" title="Parent class for all HF::Transport::Layer implementations. " alt="" coords="235,448,427,672"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="37,5,213,127"/>
+<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; UID_T \&gt;\n||+ clone()\l}" alt="" coords="237,20,404,112"/>
+<area shape="rect" id="node7" href="$classHF_1_1Application_1_1Transport.html" title="Transport Layer implementation over TCP/IP using libuv. " alt="" coords="203,936,377,1043"/>
+<area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Concentrator_1_1Transport.html" title="Parent class for transport layer implementations on a HAN&#45;FUN Concentrator device. " alt="" coords="210,721,389,887"/>
+<area shape="rect" id="node10" href="$structHF_1_1Transport_1_1Layer.html" title="This class defines the API for the transport layer. " alt="" coords="307,176,449,385"/>
 </map>

@@ -1,12 +1,8 @@
 <map id="HF::Protocol::response" name="HF::Protocol::response">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a7642b537e8956a5d37a1cfdb4e3d5661" title="Return a vector containing the attribute UIDs, for the given pack ID. " alt="" coords="237,5,427,47"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1BatchProgramManagement_1_1Client.html#af51ec5e34fca9a0bbb2337fb246a7409" title="Send a HAN&#45;FUN message containing a BatchProgramManagement::DEFINE_PROGRAM_CMD, to the given network ..." alt="" coords="211,71,453,112"/>
-<area shape="rect" id="node4" href="$group__bind__mgt.html#ga2111d1e49963dee69a5e2c515e948996" title="End read entries session. " alt="" coords="239,136,425,177"/>
-<area shape="rect" id="node5" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#a1854edcd4d38d067b7282601955c7f10" title="End read entries session. " alt="" coords="232,201,432,243"/>
-<area shape="rect" id="node6" href="$group__sessions.html#gaa6b3b6b6ca6edc4c4aa28721646c7592" title="HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;::entries" alt="" coords="229,267,435,308"/>
-<area shape="rect" id="node7" href="$group__sessions.html#ga78a7df9505cc3b366e6db431eb18723c" title="This event is called when a response to a get entries is received. " alt="" coords="229,332,435,373"/>
-<area shape="rect" id="node8" href="$structHF_1_1Core_1_1GroupTable_1_1Client.html#adb1a5cd1d4e5113566f18fdee635d284" title="Send a HAN&#45;FUN message containing a GroupTable::REMOVE_ALL_CMD, to the device with the given address..." alt="" coords="257,397,407,439"/>
-<area shape="rect" id="node9" href="$group__examples.html#ga8f7c62314e86a932696850abe655df3f" title="Restore the bind entries from the JSON database. " alt="" coords="247,463,417,504"/>
-<area shape="rect" id="node10" href="$classHF_1_1Protocol_1_1Filters_1_1ResponseRequired.html#ab2f344d24b4812b3102706512b2d6f36" title="Number of entries in the filter&#39;s database. " alt="" coords="245,528,419,569"/>
-<area shape="rect" id="node11" href="$structHF_1_1Core_1_1SUOTA_1_1Client.html#a69423c9333463c22b89b11e58b2a7271" title="Send a HAN&#45;FUN message containing a SUOTA::UPGRADE_COMPLETE_CMD, to the broadcast network address..." alt="" coords="246,593,418,635"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html#a1ea11894227502493105ece20b113195" title="Event indicating the result of a ADD_PERIODIC_ENTRY_CMD or ADD_EVENT_ENTRY_CMD. " alt="" coords="219,5,409,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html#af85f53eba92d89256c663e06224aca10" title="Event indicating the result of a CREATE_PERIODIC_CMD or CREATE_EVENT_CMD. " alt="" coords="219,71,409,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html#a37244db60e09c929eb29288914081ec7" title="Event indicating the result of a DELETE_REPORT_CMD. " alt="" coords="219,136,409,177"/>
+<area shape="rect" id="node5" href="$group__sessions.html#gaa6b3b6b6ca6edc4c4aa28721646c7592" title="HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;::entries" alt="" coords="211,201,417,243"/>
+<area shape="rect" id="node6" href="$group__sessions.html#ga78a7df9505cc3b366e6db431eb18723c" title="This event is called when a response to a get entries is received. " alt="" coords="211,267,417,308"/>
+<area shape="rect" id="node7" href="$structHF_1_1Core_1_1AttributeReporting_1_1Client.html#a75868469efdb21644704885ab6de3c3d" title="Event indicating the result of a UPDATE_INTERVAL_CMD. " alt="" coords="219,332,409,373"/>
 </map>

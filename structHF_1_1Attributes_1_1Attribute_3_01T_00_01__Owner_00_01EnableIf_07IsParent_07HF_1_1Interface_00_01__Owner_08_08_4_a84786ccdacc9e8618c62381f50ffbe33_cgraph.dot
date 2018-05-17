@@ -1,9 +1,0 @@
-digraph "HF::Attributes::Attribute&lt; T, _Owner, EnableIf(IsParent(HF::Interface, _Owner))&gt;::size"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node33 [label="HF::Attributes::Attribute\l\< T, _Owner, EnableIf(IsParent\l(HF::Interface, _Owner))\>::size",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node33 -> Node34 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node34 [label="HF::Common::Serializable\l::size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structHF_1_1Common_1_1Serializable.html#a8f42af5e150e53d8b453f19f718e3ef9",tooltip="Number bytes needed to serialize the message. "];
-}

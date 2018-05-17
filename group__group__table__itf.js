@@ -1,8 +1,8 @@
 var group__group__table__itf =
 [
     [ "Entry", "structHF_1_1Core_1_1GroupTable_1_1Entry.html", [
-      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#a32b60bbbb6635d3e7753c42ed9f5ff5c", null ],
-      [ "size", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#a2aa7c291a7e876758e35c08fd60d8345", null ],
+      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#aabdc2282053229b4f970e864d811dc68", null ],
+      [ "size", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#ad00f26af0ec0e444e933f1cbd8333024", null ],
       [ "unpack", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#ac51c0a119218bce197f00956973dd3ed", null ],
       [ "group", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#a139a4150a212131cfec8d12d287c7355", null ],
       [ "unit", "structHF_1_1Core_1_1GroupTable_1_1Entry.html#aab287a3726514d0ee0eefa2b95860b56", null ]
@@ -12,21 +12,21 @@ var group__group__table__itf =
     [ "Response", "structHF_1_1Core_1_1GroupTable_1_1Response.html", [
       [ "Response", "structHF_1_1Core_1_1GroupTable_1_1Response.html#afb577a1ef619332e15fe7db1e288e45b", null ],
       [ "Response", "structHF_1_1Core_1_1GroupTable_1_1Response.html#adaca9ebf1fb6949254a3ceb6e19987b2", null ],
-      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1Response.html#a50fc0b93b69b8d4ddffe8cb705ea4703", null ],
-      [ "size", "structHF_1_1Core_1_1GroupTable_1_1Response.html#afce241390558acddec7832fd264e1340", null ],
+      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1Response.html#aa1e01ab310c71f65e147f54da8e1eab7", null ],
+      [ "size", "structHF_1_1Core_1_1GroupTable_1_1Response.html#abeb1b96519cedc175ef8b3b091c3f633", null ],
       [ "unpack", "structHF_1_1Core_1_1GroupTable_1_1Response.html#a6cecbf55f464a44f4b661815c4d555d3", null ]
     ] ],
     [ "ReadEntries", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html", [
-      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#a9c71fab74d3cedf05af89b0187bb2d18", null ],
-      [ "size", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#a9975181cf29c4040cd056564598ab148", null ],
+      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#a373b6726584b58df22fac9efc4f8951c", null ],
+      [ "size", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#abf24cab9fc714259c59f98277d7ffddb", null ],
       [ "unpack", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#ab560c2d542bb67f7ac499e9622de1ad3", null ],
       [ "count", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#ab3ec6bc66d11aa7132f923ef580867e3", null ],
       [ "start", "structHF_1_1Core_1_1GroupTable_1_1ReadEntries.html#a783a2200785997fa7d2b281886aff3df", null ]
     ] ],
     [ "ReadEntriesResponse", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html", [
       [ "ReadEntriesResponse", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a88983d38b150957d50e89799decd8593", null ],
-      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a0575337cbef89509a1866f036c5b66b5", null ],
-      [ "size", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#adea9203f159f77a54b140426199c2ad1", null ],
+      [ "pack", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a2e5ac0455b4296d9a4ba433cce2fd9f8", null ],
+      [ "size", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a6478f4feea12c42965a42ef66f5d7832", null ],
       [ "unpack", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#a907464d070cd3229cc91cd30e6c79da1", null ],
       [ "entries", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#aad1ebceb04bb0b49fa3e0402a4cd0c71", null ],
       [ "start", "structHF_1_1Core_1_1GroupTable_1_1ReadEntriesResponse.html#ab7aa86730a355201673728f305336453", null ]
@@ -37,11 +37,11 @@ var group__group__table__itf =
       [ "operator[]", "structHF_1_1Core_1_1GroupTable_1_1IEntries.html#af5b9a743edd7ad28bc886a9d9f2f6f15", null ]
     ] ],
     [ "Entries", "structHF_1_1Core_1_1GroupTable_1_1Entries.html", [
-      [ "any_of", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#a0fba21cc9b64e7a57b6e9d806fcba95e", null ],
+      [ "any_of", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#a21409bb90fe4530d0db3ca3934a05139", null ],
       [ "clear", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#a0432570c4361e909a4680e7bb01e6ab1", null ],
-      [ "for_each", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#af82287868d2b38db5a7283b39b1931e5", null ],
-      [ "operator[]", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#adabf99f05f3b9509a4abf262c8b228f8", null ],
-      [ "size", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#ac7fd2c34e2d23c6561f994ec955f1f92", null ],
+      [ "for_each", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#a7298470c759aeb0ef5ecb70c8f0f2a00", null ],
+      [ "operator[]", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#a1e427e25d5395564c975d09b71ddfcdf", null ],
+      [ "size", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#ad234aa7e714426e0c67983ba7fe69895", null ],
       [ "db", "structHF_1_1Core_1_1GroupTable_1_1Entries.html#aab1e7b58b46fe54d9f3bd402dc0188c6", null ]
     ] ],
     [ "Base", "structHF_1_1Core_1_1GroupTable_1_1Base.html", [
@@ -52,12 +52,12 @@ var group__group__table__itf =
       [ "~IServer", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a63b58e7868e187c04e7151f745514573", null ],
       [ "add", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a6a9ad6279a8bec45c0e71343a43fc4a5", null ],
       [ "attribute", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a40e510881557a5244109f5228981866b", null ],
-      [ "attributes", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#ad930d1f298ab1b0c46cc40a174ce61fe", null ],
+      [ "attributes", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a6320e4c1179ccd9eca5f27c1269e3249", null ],
       [ "handle_command", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#ac02b13fd9ad31c97de9aa1df36e0fa02", null ],
-      [ "number_of_entries", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a356e2052401e21a8d035703a81746da3", null ],
-      [ "number_of_max_entries", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a2d0b611d9a57654ca1be449dc8c5a0d9", null ],
+      [ "number_of_entries", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a60b347697f6a2b942a2475ab8e45ba98", null ],
+      [ "number_of_max_entries", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a83e6f94803f1d4f0a0eea81d3f95e110", null ],
       [ "number_of_max_entries", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#acf26bcd3336089e7c9cef54862ab7c94", null ],
-      [ "payload_size", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a0f83ceb99dcc5217a9c4ce4370e40c51", null ],
+      [ "payload_size", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#a5e92186d7df7c3674c4231cb7bff138d", null ],
       [ "read_entries", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#acf6d5663dce3676c0dd808e147b9fe7b", null ],
       [ "remove", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#af87de7f6a8eddbe57126f4f0c384254c", null ],
       [ "remove_all", "classHF_1_1Core_1_1GroupTable_1_1IServer.html#adb62b7955de21d8e9f799842d07e5876", null ],
@@ -70,7 +70,7 @@ var group__group__table__itf =
       [ "add", "structHF_1_1Core_1_1GroupTable_1_1Client.html#a9816ed68b8561a7b5c8f77f62e9c7786", null ],
       [ "added", "structHF_1_1Core_1_1GroupTable_1_1Client.html#ad3d4e682ef8c110c203b8d6de19cc35b", null ],
       [ "handle_command", "structHF_1_1Core_1_1GroupTable_1_1Client.html#a2529ce3b170fb35f638899e7d50bf0e8", null ],
-      [ "payload_size", "structHF_1_1Core_1_1GroupTable_1_1Client.html#a52004b629f0f5868bbda7345dad9a7a4", null ],
+      [ "payload_size", "structHF_1_1Core_1_1GroupTable_1_1Client.html#ab1147b655cb7b88403ba2d57de112683", null ],
       [ "read_entries", "structHF_1_1Core_1_1GroupTable_1_1Client.html#a35ffad2a741dc1611289ce3b05706485", null ],
       [ "read_entries", "structHF_1_1Core_1_1GroupTable_1_1Client.html#a1f2ca0b2f50bde2c094eb614a7764f96", null ],
       [ "read_entries", "structHF_1_1Core_1_1GroupTable_1_1Client.html#a751e35f97958ff64a886ce19e5523b91", null ],

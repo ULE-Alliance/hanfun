@@ -1,47 +1,5 @@
 <map id="HF::Profiles::Profile&lt; _uid, Interface &gt;" name="HF::Profiles::Profile&lt; _uid, Interface &gt;">
-<area shape="rect" id="node5" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; ALERTABLE, Interfaces\l::Alert::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="5,582,183,703"/>
-<area shape="rect" id="node7" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_KEYPAD, Interfaces\l::SimpleKeypad::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="207,582,418,703"/>
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROL,\l Interfaces::LevelControl\l::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="443,575,649,711"/>
-<area shape="rect" id="node11" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_ONOFF_SWITCH,\l Interfaces::OnOff::Client \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="673,582,875,703"/>
-<area shape="rect" id="node15" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_AIR_PRESSURE\l_SENSOR, Interfaces::SimpleAir\lPressure::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="899,575,1115,711"/>
-<area shape="rect" id="node17" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; AC_OUTLET, Interfaces\l::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="1139,582,1318,703"/>
-<area shape="rect" id="node19" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LEVEL_CONTROLLABLE,\l Interfaces::LevelControl\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="1342,575,1590,711"/>
-<area shape="rect" id="node21" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LED, Interfaces\l::SimpleVisualEffects::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="1615,582,1821,703"/>
-<area shape="rect" id="node23" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_ONOFF_SWITCHABLE,\l Interfaces::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="1846,582,2081,703"/>
-<area shape="rect" id="node25" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_TEMPERATURE\l_SENSOR, Interfaces::SimpleTemperature\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2104,575,2377,711"/>
-<area shape="rect" id="node27" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; DOOR_BELL, Interfaces\l::Alert::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2402,582,2581,703"/>
-<area shape="rect" id="node29" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_POWER_METER,\l Interfaces::SimplePowerMeter\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2605,575,2807,711"/>
-<area shape="rect" id="node31" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_BUTTON, Interfaces\l::SimpleButton::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2831,582,3042,703"/>
-<area shape="rect" id="node33" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_HUMIDITY_SENSOR,\l Interfaces::SimpleHumidity\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3066,575,3290,711"/>
-<area shape="rect" id="node35" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIREN, Interfaces::\lOnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3315,582,3465,703"/>
-<area shape="rect" id="node37" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_DOOR_LOCK, Interfaces\l::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3489,582,3728,703"/>
-<area shape="rect" id="node39" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; USER_INTERFACE_LOCK,\l Interfaces::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3753,582,3955,703"/>
-<area shape="rect" id="node41" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LIGHT, Interfaces\l::OnOff::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="3979,582,4174,703"/>
-<area shape="rect" id="node45" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LIGHT_SENSOR,\l Interfaces::SimpleLightSensor\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="4199,575,4400,711"/>
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="2014,176,2201,312"/>
-<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="2037,5,2178,112"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="2225,161,2347,327"/>
-<area shape="rect" id="node6" href="$classHF_1_1Profiles_1_1Alertable.html" title="Alertable profile implementation. " alt="" coords="19,767,169,845"/>
-<area shape="rect" id="node8" href="$classHF_1_1Profiles_1_1SimpleKeypad.html" title="Simple Keypad profile implementation. " alt="" coords="221,767,405,845"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleLevelControl.html" title="Simple Level Control profile implementation. " alt="" coords="461,760,631,852"/>
-<area shape="rect" id="node12" href="$classHF_1_1Profiles_1_1SimpleOnOffSwitch.html" title="Simple On/Off Switch profile implementation. " alt="" coords="687,760,861,852"/>
-<area shape="rect" id="node13" href="$classHF_1_1Units_1_1Unit.html" title="{HF::Units::Unit\&lt; HF\l::Profiles::SimpleOnOffSwitch \&gt;\n||+ Unit()\l+ id()\l+ uid()\l+ handle()\l+ attributes()\l+ send()\l+ notify()\l+ interfaces()\l+ periodic()\l}" alt="" coords="669,901,879,1111"/>
-<area shape="rect" id="node14" href="$structSimpleSwitch.html" title="Unit implementing a Simple Switch. " alt="" coords="713,1182,835,1259"/>
-<area shape="rect" id="node16" href="$classHF_1_1Profiles_1_1SimpleAirPressureSensor.html" title="Simple Air Pressure Sensor profile implementation. " alt="" coords="903,760,1111,852"/>
-<area shape="rect" id="node18" href="$classHF_1_1Profiles_1_1AC__Outlet.html" title="AC Outlet profile implementation. " alt="" coords="1148,767,1309,845"/>
-<area shape="rect" id="node20" href="$classHF_1_1Profiles_1_1SimpleLevelControllable.html" title="Simple Level Controllable profile implementation. " alt="" coords="1371,760,1561,852"/>
-<area shape="rect" id="node22" href="$classHF_1_1Profiles_1_1SimpleLED.html" title="Simple LED profile implementation. " alt="" coords="1635,767,1801,845"/>
-<area shape="rect" id="node24" href="$classHF_1_1Profiles_1_1SimpleOnOffSwitchable.html" title="Simple On/Off Switchable profile implementation. " alt="" coords="1869,760,2058,852"/>
-<area shape="rect" id="node26" href="$classHF_1_1Profiles_1_1SimpleTemperatureSensor.html" title="Simple Temperature Sensor profile implementation. " alt="" coords="2134,760,2347,852"/>
-<area shape="rect" id="node28" href="$classHF_1_1Profiles_1_1DoorBell.html" title="Door Bell profile implementation. " alt="" coords="2416,767,2567,845"/>
-<area shape="rect" id="node30" href="$classHF_1_1Profiles_1_1SimplePowerMeter.html" title="Simple Power Meter profile implementation. " alt="" coords="2617,760,2795,852"/>
-<area shape="rect" id="node32" href="$classHF_1_1Profiles_1_1SimpleButton.html" title="Simple Button profile implementation. " alt="" coords="2847,767,3026,845"/>
-<area shape="rect" id="node34" href="$classHF_1_1Profiles_1_1SimpleHumiditySensor.html" title="Simple Humidity Sensor profile implementation. " alt="" coords="3082,760,3274,852"/>
-<area shape="rect" id="node36" href="$classHF_1_1Profiles_1_1Siren.html" title="Siren profile implementation. " alt="" coords="3325,767,3455,845"/>
-<area shape="rect" id="node38" href="$classHF_1_1Profiles_1_1SimpleDoorLock.html" title="Simple Door Lock profile implementation. " alt="" coords="3511,767,3707,845"/>
-<area shape="rect" id="node40" href="$classHF_1_1Profiles_1_1UserInterfaceLock.html" title="User Interface Lock profile implementation. " alt="" coords="3751,767,3957,845"/>
-<area shape="rect" id="node42" href="$classHF_1_1Profiles_1_1SimpleLight.html" title="Simple Light profile implementation. " alt="" coords="3993,767,4161,845"/>
-<area shape="rect" id="node43" href="$classHF_1_1Units_1_1Unit.html" title="{HF::Units::Unit\&lt; HF\l::Profiles::SimpleLight \&gt;\n||+ Unit()\l+ id()\l+ uid()\l+ handle()\l+ attributes()\l+ send()\l+ notify()\l+ interfaces()\l+ periodic()\l}" alt="" coords="3995,901,4158,1111"/>
-<area shape="rect" id="node44" href="$structSimpleLight.html" title="Unit implementing a Simple Light. " alt="" coords="4021,1160,4132,1281"/>
-<area shape="rect" id="node46" href="$classHF_1_1Profiles_1_1SimpleLightSensor.html" title="Simple Light Sensor profile implementation. " alt="" coords="4215,760,4383,852"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="5,175,192,311"/>
+<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="28,5,169,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="216,160,339,325"/>
 </map>

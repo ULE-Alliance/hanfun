@@ -1,8 +1,7 @@
 <map id="HF::Core::DeviceManagement::Base" name="HF::Core::DeviceManagement::Base">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="177,839,339,975"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="33,596,211,761"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="5,337,137,429"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="113,5,235,171"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="162,220,325,547"/>
-<area shape="rect" id="node7" href="$structHF_1_1Core_1_1Service.html" title="Class template for all core services implementations. " alt="" coords="235,618,371,739"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1Service.html" title="{HF::Core::Service\&lt;\l HF::Interface::DEVICE\l_MANAGEMENT \&gt;\n||+ uid()\l# Service()\l# check_uid()\l}" alt="" coords="75,807,238,943"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AbstractService.html" title="This is the parent class for all services implementations. " alt="" coords="68,593,245,759"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1IService.html" title="This is the interface common to all Services. " alt="" coords="5,336,137,428"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="95,5,218,171"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="162,219,325,545"/>
 </map>

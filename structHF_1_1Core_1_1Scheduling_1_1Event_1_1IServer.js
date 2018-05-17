@@ -6,8 +6,8 @@ var structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer =
     [ "delete_all_events", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#a3b59d17048e211a7fb5b28dfdd85d79c", null ],
     [ "delete_event", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#a6304fe9ada0a2c099a1ec9ba5e89c8ab", null ],
     [ "entries", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#ac4252b07bdd779c0e5644e91fa023c2c", null ],
-    [ "entry", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#ab0d86882bf40c73e681876328e2d9de6", null ],
+    [ "entry", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#aa9336adaa751c8783ac44136e43ca97f", null ],
     [ "get_event_entry", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#a7bde87c820b5ac672242e3b5d01a7db4", null ],
-    [ "next_id", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#aa7877ad8b336a2ecdd06580aa0e6daea", null ],
+    [ "next_id", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#afac5a6b5e42068b16ef0044c0a044ecc", null ],
     [ "update_event_status", "structHF_1_1Core_1_1Scheduling_1_1Event_1_1IServer.html#ac1f8c360e69d4d87986a899b25474a5e", null ]
 ];

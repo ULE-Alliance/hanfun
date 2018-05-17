@@ -204,7 +204,6 @@ var hierarchy =
       [ "HF::Common::SerializableHelper< uint16_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint32_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< uint8_t >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
-      [ "HF::Common::SerializableHelper< value_type >", "structHF_1_1Common_1_1SerializableHelper.html", null ],
       [ "HF::Common::SerializableHelper< XY_Colour >", "structHF_1_1Common_1_1SerializableHelper.html", null ]
     ] ],
     [ "HF::Core::AttributeReporting::Entry", "structHF_1_1Core_1_1AttributeReporting_1_1Entry.html", [

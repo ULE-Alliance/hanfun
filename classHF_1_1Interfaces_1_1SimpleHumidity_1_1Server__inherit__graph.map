@@ -1,11 +1,9 @@
 <map id="HF::Interfaces::SimpleHumidity::Server" name="HF::Interfaces::SimpleHumidity::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_HUMIDITY_SENSOR,\l Interfaces::SimpleHumidity\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="272,1379,496,1515"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="273,979,495,1085"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html" title="Simple Humidity Interface : Parent. " alt="" coords="123,795,330,887"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_HUMIDITY \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="355,795,520,887"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleHumiditySensor.html" title="Simple Humidity Sensor profile implementation. " alt="" coords="288,1564,480,1656"/>
+<area shape="rect" id="node7" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_HUMIDITY_SENSOR,\l Interfaces::SimpleHumidity\l::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="5,1300,229,1465"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="6,903,229,1009"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html" title="Simple Humidity Interface : Parent. " alt="" coords="14,763,221,855"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_HUMIDITY \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="33,593,201,715"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="36,219,199,545"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="56,5,179,171"/>
+<area shape="rect" id="node8" href="$classHF_1_1Profiles_1_1SimpleHumiditySensor.html" title="Simple Humidity Sensor profile implementation. " alt="" coords="21,1513,213,1605"/>
 </map>

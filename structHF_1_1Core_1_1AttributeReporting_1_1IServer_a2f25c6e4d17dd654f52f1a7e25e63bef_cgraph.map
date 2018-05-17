@@ -1,3 +1,4 @@
 <map id="HF::Core::AttributeReporting::IServer::attribute" name="HF::Core::AttributeReporting::IServer::attribute">
-<area shape="rect" id="node2" href="$group__attr__reporting.html#ga4b7d99bc33d6d45f87ed07258bc56fd2" title="Create an attribute object that can hold the attribute with the given uid. " alt="" coords="243,13,417,39"/>
+<area shape="rect" id="node2" href="$group__attr__reporting.html#ga4b7d99bc33d6d45f87ed07258bc56fd2" title="Create an attribute object that can hold the attribute with the given uid. " alt="" coords="250,5,425,32"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1IServer.html#a9dd0bc6afd31fb5528e1f7268d012e68" title="This method returns the interface UID. " alt="" coords="243,57,432,98"/>
 </map>

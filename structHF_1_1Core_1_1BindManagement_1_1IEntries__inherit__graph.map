@@ -1,6 +1,5 @@
 <map id="HF::Core::BindManagement::IEntries" name="HF::Core::BindManagement::IEntries">
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1BindManagement_1_1Entries.html" title="Default implementation of the bind entries container. " alt="" coords="6,531,191,799"/>
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Entry \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="21,175,176,296"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1IEntries.html" title="Basic API for persistent storage implementations. " alt="" coords="5,5,192,112"/>
-<area shape="rect" id="node5" href="$structBindManagement_1_1Entries.html" title="Custom Bind Management Entries class. " alt="" coords="13,848,185,955"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1BindManagement_1_1Entries.html" title="Default implementation of the bind entries container. " alt="" coords="5,359,191,627"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Entry \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="21,5,175,127"/>
+<area shape="rect" id="node4" href="$structBindManagement_1_1Entries.html" title="Custom Bind Management Entries class. " alt="" coords="12,675,184,781"/>
 </map>

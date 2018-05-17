@@ -1,6 +1,5 @@
 <map id="HF::Attributes::AbstractAttribute" name="HF::Attributes::AbstractAttribute">
-<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="68,316,233,555"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,145,181,267"/>
-<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; IAttribute \&gt;\n||+ clone()\l}" alt="" coords="206,160,373,252"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="190,5,389,83"/>
+<area shape="rect" id="node2" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="108,175,273,413"/>
+<area shape="rect" id="node3" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="5,5,181,127"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; IAttribute \&gt;\n||+ clone()\l}" alt="" coords="206,20,373,112"/>
 </map>

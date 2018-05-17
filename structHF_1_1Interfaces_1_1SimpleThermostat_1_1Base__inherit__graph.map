@@ -1,10 +1,9 @@
 <map id="HF::Interfaces::SimpleThermostat::Base" name="HF::Interfaces::SimpleThermostat::Base">
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleThermostat\l::Base, HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="20,936,276,1043"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleThermostat\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="300,936,564,1043"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_THERMOSTAT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1SimpleThermostat_1_1Client.html" title="Simple Thermostat Interface : Client side implementation. " alt="" coords="38,1151,258,1243"/>
-<area shape="rect" id="node9" href="$classHF_1_1Interfaces_1_1SimpleThermostat_1_1Server.html" title="Simple Thermostat Interface : Server side implementation. " alt="" coords="322,1092,542,1301"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleThermostat\l::Base, HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="5,903,261,1009"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleThermostat\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="285,903,549,1009"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_THERMOSTAT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="191,593,359,715"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="193,219,356,545"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="213,5,336,171"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1SimpleThermostat_1_1Client.html" title="Simple Thermostat Interface : Client side implementation. " alt="" coords="23,1116,243,1208"/>
+<area shape="rect" id="node8" href="$classHF_1_1Interfaces_1_1SimpleThermostat_1_1Server.html" title="Simple Thermostat Interface : Server side implementation. " alt="" coords="307,1057,527,1267"/>
 </map>

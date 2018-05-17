@@ -2,8 +2,8 @@ var group__suota__itf =
 [
     [ "Version", "structHF_1_1Core_1_1SUOTA_1_1Version.html", [
       [ "Version", "structHF_1_1Core_1_1SUOTA_1_1Version.html#a4acc371860d294d268a470b79801bc35", null ],
-      [ "pack", "structHF_1_1Core_1_1SUOTA_1_1Version.html#a02b24bfb728bb7a82b58e4963f436963", null ],
-      [ "size", "structHF_1_1Core_1_1SUOTA_1_1Version.html#ae81052dc4c5db1a451df8b1a0a198277", null ],
+      [ "pack", "structHF_1_1Core_1_1SUOTA_1_1Version.html#a6429e9a4898aa7412cf7228d784871dd", null ],
+      [ "size", "structHF_1_1Core_1_1SUOTA_1_1Version.html#ae6d230ee731cc5e92e701881b60079c8", null ],
       [ "unpack", "structHF_1_1Core_1_1SUOTA_1_1Version.html#a967bb797a1642c6e17c1746e19a67a30", null ],
       [ "hw_version", "structHF_1_1Core_1_1SUOTA_1_1Version.html#aa9a33b4780b83794dbcff27a5ef2d72b", null ],
       [ "sw_version", "structHF_1_1Core_1_1SUOTA_1_1Version.html#ad7387a04fca60b9661cb1d657aa200c1", null ],
@@ -17,8 +17,8 @@ var group__suota__itf =
         [ "FAIL_UNKNOWN", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a06b157d32d81efab2e0c2d6ab581d77ca687063cc056f368ada95417a355eecc6", null ]
       ] ],
       [ "CheckVersionResponse", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#ac792f49cd7ae7dbab83d1f6ae1e1717b", null ],
-      [ "pack", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a61ab5e95ea13b0f2b961e6ae868c6ab3", null ],
-      [ "size", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a780e28393e12e3f21d66a7aa765a37c9", null ],
+      [ "pack", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#aa31e901cd75f0d437fbc2dd4b1517c89", null ],
+      [ "size", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a1cb4532e544638add6963aa449cb9497", null ],
       [ "unpack", "structHF_1_1Core_1_1SUOTA_1_1CheckVersionResponse.html#a8c07ab5a4d5be85966bfb28b886672a9", null ]
     ] ],
     [ "UpgradeStatus", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html", [
@@ -32,8 +32,8 @@ var group__suota__itf =
         [ "FAIL_UNKNOWN", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#a9922a5b13feab3df459a37ac74875defaa7a91e13a7dca73e28ebdafcb1edd61b", null ]
       ] ],
       [ "UpgradeStatus", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#a1df18e0238061215ae6304d92f325296", null ],
-      [ "pack", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#ac24dc5bdd55ceebfb43870a0c822d502", null ],
-      [ "size", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#a2ceaf6c6d0c11284681cc91fa937dc50", null ],
+      [ "pack", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#a600107d823d46dc7f7477e0fe621cb3f", null ],
+      [ "size", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#affd69d95e3ce4a13ea93c441943592c4", null ],
       [ "unpack", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#aba1f97508db1d83ed4a234fc4a97778f", null ],
       [ "sw_version", "structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#a3f3ca2a9b87e88cd5a7545c81a52da2c", null ]
     ] ],

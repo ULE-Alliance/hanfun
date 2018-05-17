@@ -1,13 +1,11 @@
 <map id="HF::Core::DeviceInformation::Server" name="HF::Core::DeviceInformation::Server">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="129,1593,284,1715"/>
-<area shape="rect" id="node3" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="45,1336,144,1516"/>
-<area shape="rect" id="node4" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="5,1180,184,1287"/>
-<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="192,767,371,961"/>
-<area shape="rect" id="node9" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="208,1180,387,1287"/>
-<area shape="rect" id="node10" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="279,1011,462,1117"/>
-<area shape="rect" id="node11" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="411,1180,589,1287"/>
-<area shape="rect" id="node6" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="184,435,379,717"/>
-<area shape="rect" id="node7" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="235,205,328,385"/>
-<area shape="rect" id="node8" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="200,5,363,156"/>
-<area shape="rect" id="node12" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="168,1373,323,1479"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="23,1388,178,1509"/>
+<area shape="rect" id="node3" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="51,1160,150,1340"/>
+<area shape="rect" id="node4" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="11,1005,190,1112"/>
+<area shape="rect" id="node5" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="214,763,393,957"/>
+<area shape="rect" id="node9" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="214,1005,393,1112"/>
+<area shape="rect" id="node10" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="417,1005,595,1112"/>
+<area shape="rect" id="node6" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="206,432,401,715"/>
+<area shape="rect" id="node7" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="257,204,350,384"/>
+<area shape="rect" id="node8" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="222,5,385,156"/>
 </map>

@@ -5,29 +5,31 @@ var group__common__profile =
       [ "uid", "structHF_1_1Profiles_1_1IProfile.html#aa114bf5ebfc35c22e98c8b4d1c8dd555", null ]
     ] ],
     [ "AbstractProfile", "structHF_1_1Profiles_1_1AbstractProfile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1AbstractProfile.html#a32cb08254edaa9e99b754a81e1acc170", null ],
+      [ "attributes", "structHF_1_1Profiles_1_1AbstractProfile.html#a11c0886bb37602d63ca3e0e28b3d7a29", null ],
       [ "handle", "structHF_1_1Profiles_1_1AbstractProfile.html#a30fa0ec8d758b8e1bb16bec07aa1e720", null ],
-      [ "uid", "structHF_1_1Profiles_1_1AbstractProfile.html#af2550e2edbc11a6e924c0415c2d787ab", null ]
+      [ "uid", "structHF_1_1Profiles_1_1AbstractProfile.html#aa73ab0b33770113cf9efa46cf06d6c35", null ]
     ] ],
     [ "Profile", "structHF_1_1Profiles_1_1Profile.html", [
-      [ "attributes", "structHF_1_1Profiles_1_1Profile.html#ac9f54d760ca1a6ee80c14ebd5ce54c07", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1Profile.html#a9cc66a6cab3cf402ff31407c3f22f286", null ],
+      [ "attributes", "structHF_1_1Profiles_1_1Profile.html#aa638de2c2d5acbc89b96455b5eb70972", null ],
+      [ "handle", "structHF_1_1Profiles_1_1Profile.html#a35c377201d22fbbc1c606313a41a6034", null ]
     ] ],
     [ "ProfileN", "classHF_1_1Profiles_1_1ProfileN.html", [
-      [ "attributes", "classHF_1_1Profiles_1_1ProfileN.html#ab1c160a7c7e53378e00b9a61ea3df02b", null ],
+      [ "attributes", "classHF_1_1Profiles_1_1ProfileN.html#ab43f9bfa977b0a66bb956c68ed61e36a", null ],
       [ "handle", "classHF_1_1Profiles_1_1ProfileN.html#ab016d0ef39c7616883bf90914700d6e8", null ],
       [ "notify", "classHF_1_1Profiles_1_1ProfileN.html#a4bd735e85a784cfd219aa8584153b1aa", null ],
       [ "send", "classHF_1_1Profiles_1_1ProfileN.html#af87c93600dfddaadae6e26a4103799a8", null ]
     ] ],
     [ "Profile2", "structHF_1_1Profiles_1_1Profile2.html", [
       [ "first", "structHF_1_1Profiles_1_1Profile2.html#ae2e449b914d35105c6ef8006bc6d7492", null ],
-      [ "first", "structHF_1_1Profiles_1_1Profile2.html#a9e910c4d956a37991afb8ce8c54ecef0", null ],
+      [ "first", "structHF_1_1Profiles_1_1Profile2.html#ad8a8f74bee08ab15e21289fcd6d6fbb8", null ],
       [ "second", "structHF_1_1Profiles_1_1Profile2.html#a879b189ad39afbed5c1ff98e6c42e008", null ],
-      [ "second", "structHF_1_1Profiles_1_1Profile2.html#ad4a749c7cca1fbaaf4668eb47ae1cb1d", null ]
+      [ "second", "structHF_1_1Profiles_1_1Profile2.html#a66abc571433fad1c59bbfbc339f23f2b", null ]
     ] ],
     [ "Detector", "structHF_1_1Profiles_1_1Detector.html", [
       [ "alert", "structHF_1_1Profiles_1_1Detector.html#a02724b2e5f83ef4ee472feb61a29d6db", null ],
       [ "alert", "structHF_1_1Profiles_1_1Detector.html#a1af8fcbee50c5b598357eb84a493a330", null ],
-      [ "attributes", "structHF_1_1Profiles_1_1Detector.html#a547b27685fcfb9f6b2619cc0c70cab8e", null ]
+      [ "attributes", "structHF_1_1Profiles_1_1Detector.html#a4a5716f017e20c26e73f8dbcc3bc54af", null ]
     ] ],
     [ "UID", "group__common__profile.html#ga0c568d585cd0b917c43e49b7f16baa70", [
       [ "SIMPLE_ONOFF_SWITCHABLE", "group__common__profile.html#gga0c568d585cd0b917c43e49b7f16baa70a903b65277d62b90d056a1fac4ef8d75e", null ],

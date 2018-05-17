@@ -1,32 +1,30 @@
 <map id="HF::Interfaces::Alert::Server" name="HF::Interfaces::Alert::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; DOOR_OPEN_CLOSE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="5,1709,269,1860"/>
-<area shape="rect" id="node11" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; FLOOD_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="351,1709,523,1860"/>
-<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; GAS_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="575,1709,729,1860"/>
-<area shape="rect" id="node15" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; GLASS_BREAK_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="769,1709,993,1860"/>
-<area shape="rect" id="node17" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; MOTION_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1037,1709,1217,1860"/>
-<area shape="rect" id="node19" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SIMPLE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1269,1709,1445,1860"/>
-<area shape="rect" id="node21" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SIMPLE_PENDANT \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1499,1709,1666,1860"/>
-<area shape="rect" id="node23" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SMOKE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1714,1709,1889,1860"/>
-<area shape="rect" id="node25" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; VIBRATION_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1924,1709,2124,1860"/>
-<area shape="rect" id="node27" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; WINDOW_OPEN_CLOSE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="2177,1709,2461,1860"/>
-<area shape="rect" id="node29" href="$structHF_1_1Profiles_1_1Detector.html" title="Class template for Detector type profiles. " alt="" coords="1278,1481,1429,1632"/>
-<area shape="rect" id="node30" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; DOOR_BELL, Interfaces\l::Alert::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="2488,1496,2667,1617"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="1383,949,1575,1056"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="1287,765,1428,872"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1270,609,1445,716"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="1136,220,1299,547"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="1156,5,1279,171"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="1323,330,1488,437"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="1452,773,1617,865"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1DoorOpenCloseDetector.html" title="Door Open Close Detector profile implementation. " alt="" coords="41,1909,234,2001"/>
-<area shape="rect" id="node12" href="$classHF_1_1Profiles_1_1FloodDetector.html" title="Flood Detector profile implementation. " alt="" coords="346,1917,529,1994"/>
-<area shape="rect" id="node14" href="$classHF_1_1Profiles_1_1GasDetector.html" title="Gas Detector profile implementation. " alt="" coords="565,1917,739,1994"/>
-<area shape="rect" id="node16" href="$classHF_1_1Profiles_1_1GlassBreakDetector.html" title="Glass Break Detector profile implementation. " alt="" coords="797,1909,965,2001"/>
-<area shape="rect" id="node18" href="$classHF_1_1Profiles_1_1MotionDetector.html" title="Motion Detector profile implementation. " alt="" coords="1032,1917,1221,1994"/>
-<area shape="rect" id="node20" href="$classHF_1_1Profiles_1_1SimpleDetector.html" title="Simple Detector profile implementation. " alt="" coords="1262,1917,1453,1994"/>
-<area shape="rect" id="node22" href="$classHF_1_1Profiles_1_1SimplePendant.html" title="Simple Pendant profile implementation. " alt="" coords="1489,1917,1677,1994"/>
-<area shape="rect" id="node24" href="$classHF_1_1Profiles_1_1SmokeDetector.html" title="Smoke Detector profile implementation. " alt="" coords="1706,1917,1897,1994"/>
-<area shape="rect" id="node26" href="$classHF_1_1Profiles_1_1VibrationDetector.html" title="Vibration Detector profile implementation. " alt="" coords="1923,1917,2125,1994"/>
-<area shape="rect" id="node28" href="$classHF_1_1Profiles_1_1WindowOpenCloseDetector.html" title="Window Open Close Detector profile implementation. " alt="" coords="2213,1909,2425,2001"/>
-<area shape="rect" id="node31" href="$classHF_1_1Profiles_1_1DoorBell.html" title="Door Bell profile implementation. " alt="" coords="2502,1746,2653,1823"/>
+<area shape="rect" id="node7" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; DOOR_OPEN_CLOSE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="5,1432,269,1583"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; FLOOD_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="294,1432,466,1583"/>
+<area shape="rect" id="node11" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; GAS_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="491,1432,645,1583"/>
+<area shape="rect" id="node13" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; GLASS_BREAK_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="669,1432,893,1583"/>
+<area shape="rect" id="node15" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; MOTION_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="918,1432,1098,1583"/>
+<area shape="rect" id="node17" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SIMPLE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1123,1432,1299,1583"/>
+<area shape="rect" id="node19" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SIMPLE_PENDANT \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1323,1432,1490,1583"/>
+<area shape="rect" id="node21" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; SMOKE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1514,1432,1689,1583"/>
+<area shape="rect" id="node23" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; VIBRATION_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1713,1432,1913,1583"/>
+<area shape="rect" id="node25" href="$structHF_1_1Profiles_1_1Detector.html" title="{HF::Profiles::Detector\l\&lt; WINDOW_OPEN_CLOSE_DETECTOR \&gt;\n||+ Detector()\l+ ~Detector()\l+ alert()\l+ alert()\l+ attributes()\l}" alt="" coords="1937,1432,2221,1583"/>
+<area shape="rect" id="node27" href="$structHF_1_1Profiles_1_1Detector.html" title="Class template for Detector type profiles. " alt="" coords="2245,1432,2395,1583"/>
+<area shape="rect" id="node28" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; DOOR_BELL, Interfaces\l::Alert::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="2420,1432,2599,1583"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; Alert::Base, HF::\lInterface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="1212,903,1404,1009"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1Alert_1_1Base.html" title="Alert Interface : Parent. " alt="" coords="1237,748,1379,855"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::ALERT \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="1221,593,1395,700"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="1227,219,1389,545"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="1247,5,1369,171"/>
+<area shape="rect" id="node8" href="$classHF_1_1Profiles_1_1DoorOpenCloseDetector.html" title="Door Open Close Detector profile implementation. " alt="" coords="41,1631,234,1723"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1FloodDetector.html" title="Flood Detector profile implementation. " alt="" coords="281,1638,463,1715"/>
+<area shape="rect" id="node12" href="$classHF_1_1Profiles_1_1GasDetector.html" title="Gas Detector profile implementation. " alt="" coords="487,1638,662,1715"/>
+<area shape="rect" id="node14" href="$classHF_1_1Profiles_1_1GlassBreakDetector.html" title="Glass Break Detector profile implementation. " alt="" coords="695,1631,863,1723"/>
+<area shape="rect" id="node16" href="$classHF_1_1Profiles_1_1MotionDetector.html" title="Motion Detector profile implementation. " alt="" coords="887,1638,1076,1715"/>
+<area shape="rect" id="node18" href="$classHF_1_1Profiles_1_1SimpleDetector.html" title="Simple Detector profile implementation. " alt="" coords="1101,1638,1291,1715"/>
+<area shape="rect" id="node20" href="$classHF_1_1Profiles_1_1SimplePendant.html" title="Simple Pendant profile implementation. " alt="" coords="1315,1638,1503,1715"/>
+<area shape="rect" id="node22" href="$classHF_1_1Profiles_1_1SmokeDetector.html" title="Smoke Detector profile implementation. " alt="" coords="1527,1638,1718,1715"/>
+<area shape="rect" id="node24" href="$classHF_1_1Profiles_1_1VibrationDetector.html" title="Vibration Detector profile implementation. " alt="" coords="1742,1638,1943,1715"/>
+<area shape="rect" id="node26" href="$classHF_1_1Profiles_1_1WindowOpenCloseDetector.html" title="Window Open Close Detector profile implementation. " alt="" coords="1973,1631,2185,1723"/>
+<area shape="rect" id="node29" href="$classHF_1_1Profiles_1_1DoorBell.html" title="Door Bell profile implementation. " alt="" coords="2434,1638,2585,1715"/>
 </map>

@@ -1,11 +1,9 @@
 <map id="HF::Interfaces::SimpleVisualEffects::Server" name="HF::Interfaces::SimpleVisualEffects::Server">
-<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LED, Interfaces\l::SimpleVisualEffects::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="275,1364,482,1485"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleVisualEffects\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="247,979,511,1085"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1Base.html" title="Simple Visual Effects Interface : Parent. " alt="" coords="131,795,322,887"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_VISUAL_EFFECTS \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="347,795,512,887"/>
-<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleLED.html" title="Simple LED profile implementation. " alt="" coords="295,1535,462,1612"/>
+<area shape="rect" id="node7" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_LED, Interfaces\l::SimpleVisualEffects::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="34,1285,241,1436"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleVisualEffects\l::Base, HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="5,903,269,1009"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleVisualEffects_1_1Base.html" title="Simple Visual Effects Interface : Parent. " alt="" coords="42,763,233,855"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_VISUAL_EFFECTS \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="53,593,221,715"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="56,219,219,545"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="76,5,199,171"/>
+<area shape="rect" id="node8" href="$classHF_1_1Profiles_1_1SimpleLED.html" title="Simple LED profile implementation. " alt="" coords="54,1484,221,1561"/>
 </map>

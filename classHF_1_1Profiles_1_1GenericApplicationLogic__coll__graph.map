@@ -1,5 +1,4 @@
 <map id="HF::Profiles::GenericApplicationLogic" name="HF::Profiles::GenericApplicationLogic">
-<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="{HF::Profiles::AbstractProfile\l\&lt; GENERIC_APPLICATION \&gt;\n||+ ~AbstractProfile()\l+ uid()\l+ attributes()\l+ handle()\l}" alt="" coords="8,360,212,496"/>
-<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="58,5,199,112"/>
-<area shape="rect" id="node4" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="Class template for all profile implementations. " alt="" coords="126,161,313,297"/>
+<area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1AbstractProfile.html" title="{HF::Profiles::AbstractProfile\l\&lt; GENERIC_APPLICATION \&gt;\n||+ ~AbstractProfile()\l+ uid()\l+ attributes()\l+ handle()\l}" alt="" coords="8,160,212,296"/>
+<area shape="rect" id="node3" href="$structHF_1_1Profiles_1_1IProfile.html" title="Top level class representing a HAN&#45;FUN profile. " alt="" coords="39,5,181,112"/>
 </map>

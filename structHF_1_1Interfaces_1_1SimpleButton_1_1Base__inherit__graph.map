@@ -1,12 +1,11 @@
 <map id="HF::Interfaces::SimpleButton::Base" name="HF::Interfaces::SimpleButton::Base">
-<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleButton::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="51,936,266,1043"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleButton::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="291,936,514,1043"/>
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_BUTTON \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1SimpleButton_1_1Client.html" title="Simple Button Interface : Client side implementation. " alt="" coords="63,1268,255,1389"/>
-<area shape="rect" id="node9" href="$classHF_1_1Interfaces_1_1SimpleButton_1_1Server.html" title="Simple Button Interface : Server side implementation. " alt="" coords="279,1092,529,1565"/>
-<area shape="rect" id="node10" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_BUTTON, Interfaces\l::SimpleButton::Server \&gt;\n||+ ~Profile()\l+ attributes()\l}" alt="" coords="299,1615,509,1736"/>
-<area shape="rect" id="node11" href="$classHF_1_1Profiles_1_1SimpleButton.html" title="Simple Button profile implementation. " alt="" coords="315,1785,493,1863"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleButton::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="5,903,220,1009"/>
+<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleButton::Base,\l HF::Interface::SERVER_ROLE \&gt;\n||+ role()\l}" alt="" coords="245,903,468,1009"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_BUTTON \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="150,593,318,715"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="153,219,315,545"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="173,5,295,171"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interfaces_1_1SimpleButton_1_1Client.html" title="Simple Button Interface : Client side implementation. " alt="" coords="17,1233,209,1355"/>
+<area shape="rect" id="node8" href="$classHF_1_1Interfaces_1_1SimpleButton_1_1Server.html" title="Simple Button Interface : Server side implementation. " alt="" coords="233,1057,483,1531"/>
+<area shape="rect" id="node9" href="$structHF_1_1Profiles_1_1Profile.html" title="{HF::Profiles::Profile\l\&lt; SIMPLE_BUTTON, Interfaces\l::SimpleButton::Server \&gt;\n||+ ~Profile()\l+ attributes()\l+ attributes()\l+ handle()\l}" alt="" coords="253,1579,463,1729"/>
+<area shape="rect" id="node10" href="$classHF_1_1Profiles_1_1SimpleButton.html" title="Simple Button profile implementation. " alt="" coords="269,1777,447,1855"/>
 </map>

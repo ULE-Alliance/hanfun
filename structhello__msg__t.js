@@ -1,7 +1,7 @@
 var structhello__msg__t =
 [
-    [ "pack", "structhello__msg__t.html#ac7c95b52205fa3d9b0202c0422c24077", null ],
-    [ "size", "structhello__msg__t.html#a83da2253be72bd608c02bd60f5782eff", null ],
+    [ "pack", "structhello__msg__t.html#a252a38a5332f6cdce3aad45bcd43fb2e", null ],
+    [ "size", "structhello__msg__t.html#aa39e4af679e2c84112327f75a0f0b174", null ],
     [ "unpack", "structhello__msg__t.html#a4d746f44c2715597c2eec054ce442848", null ],
     [ "core", "structhello__msg__t.html#a55376d544ee1fcf4ebb3be1c63eab451", null ],
     [ "interfaces", "structhello__msg__t.html#a1cfc736064143f5f8d5f095a6808df51", null ],

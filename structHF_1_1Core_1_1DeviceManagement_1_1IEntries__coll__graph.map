@@ -1,4 +1,3 @@
 <map id="HF::Core::DeviceManagement::IEntries" name="HF::Core::DeviceManagement::IEntries">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Device \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="28,175,183,296"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1IEntries.html" title="Basic API for persistent storage implementations. " alt="" coords="12,5,199,112"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Device \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="28,5,183,127"/>
 </map>

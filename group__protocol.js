@@ -5,8 +5,8 @@ var group__protocol =
     [ "Message", "structHF_1_1Protocol_1_1Message.html", [
       [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html", [
         [ "Interface", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a36863f52c27dc7d0772042025fd3d577", null ],
-        [ "pack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#aa00c0886f69755990b53800aa879cf88", null ],
-        [ "size", "structHF_1_1Protocol_1_1Message_1_1Interface.html#ad2e4f3c9b2ebecaa5fe4c3e3bdfb9066", null ],
+        [ "pack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a0234d1157f0c6ef8384a8f0ae882a681", null ],
+        [ "size", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a14be8f841fe150884206c8d1bc03d9a4", null ],
         [ "unpack", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a73ba00981c86375f76fec482131fd45e", null ],
         [ "member", "structHF_1_1Protocol_1_1Message_1_1Interface.html#a6467a70f5ba9868ec04da3e9df7706e3", null ]
       ] ],
@@ -30,10 +30,10 @@ var group__protocol =
       ] ],
       [ "Message", "structHF_1_1Protocol_1_1Message.html#a4b229abdbe07c40c0e0bcc8ee5b96456", null ],
       [ "Message", "structHF_1_1Protocol_1_1Message.html#aff4180756b28359a81e909fa6f30bdb2", null ],
-      [ "isCommand", "structHF_1_1Protocol_1_1Message.html#ac27938f93cd222fa5bca6893363fab6f", null ],
-      [ "isCommandResponse", "structHF_1_1Protocol_1_1Message.html#a4e99fd02773238c8908b0c8e8b76ac3e", null ],
-      [ "pack", "structHF_1_1Protocol_1_1Message.html#a05a9eb06626391d2736b85ca7ce39a4c", null ],
-      [ "size", "structHF_1_1Protocol_1_1Message.html#a34204af3729b208319c9bc769502b94b", null ],
+      [ "isCommand", "structHF_1_1Protocol_1_1Message.html#aa74ba28deef87da7e97cdc26a08de468", null ],
+      [ "isCommandResponse", "structHF_1_1Protocol_1_1Message.html#adc5681e32e08f8ff8983fc5f6698cdfa", null ],
+      [ "pack", "structHF_1_1Protocol_1_1Message.html#a88ea18ef4d80c409ab1be0d7d2402050", null ],
+      [ "size", "structHF_1_1Protocol_1_1Message.html#a58df73e607eec891a931bcfa50c3e65e", null ],
       [ "unpack", "structHF_1_1Protocol_1_1Message.html#a390d0384b5e38d65afaa61aaf7e5bd1d", null ],
       [ "itf", "structHF_1_1Protocol_1_1Message.html#abfbe381dd8d59ff77ba886e265691bd1", null ],
       [ "length", "structHF_1_1Protocol_1_1Message.html#a68d26f119d538fb9a66ee4270e4cdeb4", null ],
@@ -47,11 +47,11 @@ var group__protocol =
         [ "GROUP", "structHF_1_1Protocol_1_1Address.html#ab0c5df77b62e94f2474291e28a959941aaf6a1d4cf6a3c62d3f0a245c235cc8a7", null ]
       ] ],
       [ "Address", "structHF_1_1Protocol_1_1Address.html#a1a486e27d6bb025f614c7cb91df68f7d", null ],
-      [ "compare", "structHF_1_1Protocol_1_1Address.html#a2c81e6ae404dd64f67deb57c23805b06", null ],
+      [ "compare", "structHF_1_1Protocol_1_1Address.html#a7ad89284c121f850f4d4deb737775503", null ],
       [ "is_broadcast", "structHF_1_1Protocol_1_1Address.html#a0807ac1695c9ab6aca0232ad557db9b3", null ],
       [ "is_local", "structHF_1_1Protocol_1_1Address.html#ab8e2f21b697f0a016d329dd283294f60", null ],
-      [ "pack", "structHF_1_1Protocol_1_1Address.html#aa62ffb5f13e8eb2a41381cb3e3b55283", null ],
-      [ "size", "structHF_1_1Protocol_1_1Address.html#a442c08e6c83754308281063721b35307", null ],
+      [ "pack", "structHF_1_1Protocol_1_1Address.html#a7cdbc22b1c4a461fe064bafa31d94c22", null ],
+      [ "size", "structHF_1_1Protocol_1_1Address.html#a7090ec3da4c3aedc69eda81136aab646", null ],
       [ "unpack", "structHF_1_1Protocol_1_1Address.html#a8b70d708c74cee2f3c2b16d53c5132f1", null ],
       [ "device", "structHF_1_1Protocol_1_1Address.html#a1630bceee83f553efd9adf5a8b6a7600", null ],
       [ "mod", "structHF_1_1Protocol_1_1Address.html#ac59e981381bec35736bfcb411e25d882", null ],
@@ -61,8 +61,8 @@ var group__protocol =
       [ "Packet", "structHF_1_1Protocol_1_1Packet.html#a9d36e80495da6a98cb3c666d29952ae6", null ],
       [ "Packet", "structHF_1_1Protocol_1_1Packet.html#a6356fa72ba688adf80567354703857de", null ],
       [ "Packet", "structHF_1_1Protocol_1_1Packet.html#af4f0d8b657becef46847cbbe8f8b70b8", null ],
-      [ "pack", "structHF_1_1Protocol_1_1Packet.html#af12b768cd6d64a5f9a750c4546f8b73f", null ],
-      [ "size", "structHF_1_1Protocol_1_1Packet.html#ae16f471a80a8dc2d691f9c8b91916e4f", null ],
+      [ "pack", "structHF_1_1Protocol_1_1Packet.html#ae3f3e728ab1f111d14747b963f75e8bd", null ],
+      [ "size", "structHF_1_1Protocol_1_1Packet.html#aa43c8393743fb42d0c6c9c16600ac99a", null ],
       [ "unpack", "structHF_1_1Protocol_1_1Packet.html#a905bccfbeb81a9b427ea2bcb68d682be", null ],
       [ "destination", "structHF_1_1Protocol_1_1Packet.html#a83993508cf6e964a7c46be323c78132e", null ],
       [ "link", "structHF_1_1Protocol_1_1Packet.html#ad26f0bcf814530e1e8fd582e674f4b33", null ],
@@ -70,8 +70,8 @@ var group__protocol =
       [ "source", "structHF_1_1Protocol_1_1Packet.html#a453714e9d031b64d14b9f83c81036045", null ]
     ] ],
     [ "Response", "structHF_1_1Protocol_1_1Response.html", [
-      [ "pack", "structHF_1_1Protocol_1_1Response.html#a210dabf73ca15b0b4d8127e88f41e387", null ],
-      [ "size", "structHF_1_1Protocol_1_1Response.html#a462c58382879995579cbc95cd7310d7e", null ],
+      [ "pack", "structHF_1_1Protocol_1_1Response.html#ad297dfd395e0c7c1ea1261cc5f640265", null ],
+      [ "size", "structHF_1_1Protocol_1_1Response.html#a22064475c515ce8ae1cbe762cbc554c5", null ],
       [ "unpack", "structHF_1_1Protocol_1_1Response.html#a14ce871fee5ac410371594ef286ddd46", null ]
     ] ],
     [ "matches", "group__protocol.html#gadb2721cb64340788cecdd72f8628e579", null ],

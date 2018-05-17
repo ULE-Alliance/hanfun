@@ -1,4 +1,4 @@
 <map id="HF::Units::AbstractUnit::send" name="HF::Units::AbstractUnit::send">
-<area shape="rect" id="node2" href="$classHF_1_1Units_1_1Unit.html#a9b4b5285d07d4800fb548fdb5907f2c4" title="Return a list of all the attributes for a given interface, pack id and list of attributes UID&#39;s..." alt="" coords="213,5,364,61"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1Unit0.html#af67c109a6e2d4f9a26424ca4071a04e0" title="Return this profile HAN&#45;FUN UID. " alt="" coords="219,85,359,112"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AbstractService.html#a743b9b04ff501b7605be2ef3bc2d9ff8" title="Send message msg to the network address given by addr. " alt="" coords="213,5,391,47"/>
+<area shape="rect" id="node3" href="$classHF_1_1Units_1_1Unit.html#aa72ae8ae7d01f63c005fe333ff39ebd3" title="Send message msg to the network address given by addr. " alt="" coords="227,70,377,126"/>
 </map>

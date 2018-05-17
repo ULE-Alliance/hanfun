@@ -1,6 +1,5 @@
 <map id="HF::Interfaces::LevelControl::Base" name="HF::Interfaces::LevelControl::Base">
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="144,624,309,745"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::LEVEL\l_CONTROL \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="16,593,181,715"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="17,219,180,545"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="37,5,160,171"/>
 </map>

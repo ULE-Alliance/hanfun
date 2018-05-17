@@ -1,9 +1,7 @@
 <map id="HF::Interfaces::SimpleHumidity::Client" name="HF::Interfaces::SimpleHumidity::Client">
-<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="277,979,491,1085"/>
-<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html" title="Simple Humidity Interface : Parent. " alt="" coords="123,795,330,887"/>
-<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_HUMIDITY \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="143,624,311,745"/>
-<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="5,220,168,547"/>
-<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="25,5,148,171"/>
-<area shape="rect" id="node7" href="$structHF_1_1Interfaces_1_1Interface.html" title="Helper class template for parent class implementation of the interfaces. " alt="" coords="192,330,357,437"/>
-<area shape="rect" id="node8" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="Helper class template for implementing a given interface role. " alt="" coords="355,795,520,887"/>
+<area shape="rect" id="node2" href="$structHF_1_1Interfaces_1_1InterfaceRole.html" title="{HF::Interfaces::Interface\lRole\&lt; SimpleHumidity::Base,\l HF::Interface::CLIENT_ROLE \&gt;\n||+ role()\l}" alt="" coords="5,903,220,1009"/>
+<area shape="rect" id="node3" href="$structHF_1_1Interfaces_1_1SimpleHumidity_1_1Base.html" title="Simple Humidity Interface : Parent. " alt="" coords="9,763,216,855"/>
+<area shape="rect" id="node4" href="$structHF_1_1Interfaces_1_1Interface.html" title="{HF::Interfaces::Interface\l\&lt; HF::Interface::SIMPLE\l_HUMIDITY \&gt;\n||+ uid()\l# check_uid()\l}" alt="" coords="29,593,197,715"/>
+<area shape="rect" id="node5" href="$structHF_1_1Interfaces_1_1AbstractInterface.html" title="Top&#45;level parent class for all implemented interfaces. " alt="" coords="31,219,194,545"/>
+<area shape="rect" id="node6" href="$structHF_1_1Interface.html" title="Common interface for all Interfaces. " alt="" coords="51,5,174,171"/>
 </map>

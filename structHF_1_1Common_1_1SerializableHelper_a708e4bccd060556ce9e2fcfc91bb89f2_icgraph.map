@@ -1,4 +1,6 @@
 <map id="HF::Common::SerializableHelper::unpack" name="HF::Common::SerializableHelper::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#aba1f97508db1d83ed4a234fc4a97778f" title="Read a message from a ByteArray. " alt="" coords="229,5,416,47"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476" title="Read a message from a ByteArray. " alt="" coords="235,70,411,126"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1SUOTA_1_1UpgradeStatus.html#aba1f97508db1d83ed4a234fc4a97778f" title="Read a message from a ByteArray. " alt="" coords="247,5,434,47"/>
+<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1Attribute.html#a16e39c6d32516ab4ddd946daace8ca0c" title="HF::Attributes::Attribute\l\&lt; bool \&gt;::unpack" alt="" coords="260,71,421,112"/>
+<area shape="rect" id="node4" href="$structHF_1_1Attributes_1_1Attribute_3_01T_00_01__Owner_00_01EnableIf_07IsParent_07HF_1_1Interface_00_01__Owner_08_08_4.html#a495872a5393f8517ed7511b1f7873a9c" title="Read a message from a ByteArray. " alt="" coords="229,135,452,191"/>
+<area shape="rect" id="node5" href="$structHF_1_1Common_1_1SerializableHelper_3_01std_1_1string_01_4.html#a02dc3284e66eb0ecc421675f77dd2476" title="Read a message from a ByteArray. " alt="" coords="253,215,429,271"/>
 </map>

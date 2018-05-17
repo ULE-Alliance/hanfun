@@ -20,9 +20,9 @@ var group__transport =
       [ "uid", "structHF_1_1Transport_1_1Layer.html#a79906e1127b8aab5902c3a7dfff70151", null ]
     ] ],
     [ "AbstractLink", "classHF_1_1Transport_1_1AbstractLink.html", [
-      [ "address", "classHF_1_1Transport_1_1AbstractLink.html#a390f169a96fae8e4b148ddab012fbfa1", null ],
+      [ "address", "classHF_1_1Transport_1_1AbstractLink.html#a5768c391a9fc18d30174c0e71e8ff81e", null ],
       [ "address", "classHF_1_1Transport_1_1AbstractLink.html#a2649d59c4facf2ec398021e95621ab2a", null ],
-      [ "uid", "classHF_1_1Transport_1_1AbstractLink.html#a54346404454be8ce0ea97a2ba83aeb93", null ],
+      [ "uid", "classHF_1_1Transport_1_1AbstractLink.html#a2fd0007a7642cbf379269ca304ddf7b1", null ],
       [ "_address", "classHF_1_1Transport_1_1AbstractLink.html#af60b5c7459f3ae17f16723451c820e1f", null ],
       [ "_uid", "classHF_1_1Transport_1_1AbstractLink.html#a1804104da282f774936b789c39b9e809", null ]
     ] ],
@@ -34,7 +34,7 @@ var group__transport =
       [ "initialize", "classHF_1_1Transport_1_1AbstractLayer.html#a9295cb94cd50063bed39edc572861f51", null ],
       [ "receive", "classHF_1_1Transport_1_1AbstractLayer.html#a76ee3b31361c1bfe5fdbd2c9cc6dc532", null ],
       [ "remove", "classHF_1_1Transport_1_1AbstractLayer.html#a981706cdb74c7cf0bfb721ee4dd2994d", null ],
-      [ "uid", "classHF_1_1Transport_1_1AbstractLayer.html#adf1ef3bc1ae4b615bd0918f8832baed5", null ],
+      [ "uid", "classHF_1_1Transport_1_1AbstractLayer.html#a7f838eef227553f502a74a2f44f4ffb0", null ],
       [ "uid", "classHF_1_1Transport_1_1AbstractLayer.html#ada46ab23a7a43d381bdd0895dd0a1846", null ],
       [ "_uid", "classHF_1_1Transport_1_1AbstractLayer.html#a102524ec3fa02b372e306050fbcb9aab", null ],
       [ "endpoints", "classHF_1_1Transport_1_1AbstractLayer.html#a5c4dc78810af5726973e161f45ca1235", null ]

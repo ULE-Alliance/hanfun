@@ -1,6 +1,5 @@
 <map id="DeviceManagement::Entries" name="DeviceManagement::Entries">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html" title="Default implementation of the persistence API. " alt="" coords="5,516,205,740"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html" title="Device Management &#45; Persistent Storage API. " alt="" coords="5,345,205,467"/>
-<area shape="rect" id="node4" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Device \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="28,175,183,296"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1IEntries.html" title="Basic API for persistent storage implementations. " alt="" coords="12,5,199,112"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html" title="Default implementation of the persistence API. " alt="" coords="5,344,205,568"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1IEntries.html" title="Device Management &#45; Persistent Storage API. " alt="" coords="5,175,205,296"/>
+<area shape="rect" id="node4" href="$structHF_1_1Common_1_1IEntries.html" title="{HF::Common::IEntries\l\&lt; Device \&gt;\n||+ size()\l+ save()\l+ destroy()\l}" alt="" coords="28,5,183,127"/>
 </map>

@@ -2,14 +2,14 @@ var group__dev__info =
 [
     [ "FriendlyName", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html", [
       [ "Unit", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html", [
-        [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a424b7b2c0c6e80cb82cb6b5b2d6971bf", null ],
-        [ "size", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a5f5f70090db239c3a1524924aef88ced", null ],
+        [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a1ba21e498835745c83c824a4b1dbd308", null ],
+        [ "size", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#ad9b75aed39a2fe4b17f5d6d645861594", null ],
         [ "unpack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName_1_1Unit.html#a4e96577615d8b6e34ef337c1ca6371bd", null ]
       ] ],
-      [ "changed", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a4961cbb897cb74828e3eafc53f5d08ee", null ],
-      [ "compare", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a850cd7d972e3f8655de61cc8c94e48b8", null ],
-      [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#abeb55461e01dd769fd00f6db12cc8387", null ],
-      [ "size", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#aa274acdce8a7ddf7f9da0aac0a1f69c0", null ],
+      [ "changed", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a19b6eed6045426c2235231e980130713", null ],
+      [ "compare", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a96777432ca0a04592ab3667a35947af7", null ],
+      [ "pack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a6dc906f34868f270705428d669312fe5", null ],
+      [ "size", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a8ac31eb8e5ed4fd71f00548ab0f4e508", null ],
       [ "unpack", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a440017f8e4f48000ac7f0c124907b45c", null ],
       [ "units", "structHF_1_1Core_1_1DeviceInformation_1_1FriendlyName.html#a5951f27fc8000b08856e0f2f55da3cf4", null ]
     ] ],
@@ -21,8 +21,8 @@ var group__dev__info =
       [ "broadcast", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a0eead3b04217c92e89029c5c5c36cfe2", null ],
       [ "capabilities", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#ad08c4e408bbb4f809bae52a747c80715", null ],
       [ "capabilities", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a992165fd218c8a8b18e0b1c4ce7b94c9", null ],
-      [ "has_broadcast", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a99e341252eaf41e05e96011165ca66fa", null ],
-      [ "has_paging", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a58c0031c9fa3ff5dbb18fe28ece4a870", null ],
+      [ "has_broadcast", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a4e13429f0656c61217b5208010f59c1b", null ],
+      [ "has_paging", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a12cfe711c8ed3d29ddff219c41acb07f", null ],
       [ "paging", "structHF_1_1Core_1_1DeviceInformation_1_1Server.html#a9d0be3fb63f62b73fb9d42df45d599b4", null ]
     ] ],
     [ "Attributes", "group__dev__info.html#ga2552fe5efd8a60efd040c5174671b10d", [

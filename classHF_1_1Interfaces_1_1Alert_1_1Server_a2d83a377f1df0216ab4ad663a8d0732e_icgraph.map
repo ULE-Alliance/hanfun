@@ -1,3 +1,4 @@
 <map id="HF::Interfaces::Alert::Server::status" name="HF::Interfaces::Alert::Server::status">
 <area shape="rect" id="node2" href="$structHF_1_1Profiles_1_1Detector.html#a02724b2e5f83ef4ee472feb61a29d6db" title="Send an alert command to the remote device given by the address in addr. " alt="" coords="195,5,400,47"/>
+<area shape="rect" id="node3" href="$classHF_1_1Interfaces_1_1Alert_1_1Server.html#aed9fd4a047301e00c7fa69febb0be3fe" title="Send a HAN&#45;FUN message containing a Alert::STATUS_CMD, to the broadcast network address. " alt="" coords="227,71,368,112"/>
 </map>

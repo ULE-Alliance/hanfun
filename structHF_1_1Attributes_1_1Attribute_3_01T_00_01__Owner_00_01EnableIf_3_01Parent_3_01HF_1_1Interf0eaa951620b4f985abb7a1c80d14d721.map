@@ -1,9 +1,0 @@
-<map id="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;" name="HF::Attributes::Attribute&lt; T, _Owner, EnableIf&lt; Parent&lt; HF::Interface, _Owner &gt; &gt; &gt;">
-<area shape="rect" id="node2" href="$classHF_1_1Attributes_1_1AbstractAttribute.html" title="Parent class for Attribute API implementation. " alt="" coords="242,617,404,885"/>
-<area shape="rect" id="node3" href="$structHF_1_1Attributes_1_1IAttribute.html" title="Interface/Service Attribute API. " alt="" coords="242,316,407,555"/>
-<area shape="rect" id="node4" href="$structHF_1_1Common_1_1Serializable.html" title="This represents the common interface for message serialization. " alt="" coords="40,145,216,267"/>
-<area shape="rect" id="node7" href="$structHF_1_1Common_1_1SerializableHelper.html" title="{HF::Common::Serializable\lHelper\&lt; value_type \&gt;\n|+ data\l|+ SerializableHelper()\l+ SerializableHelper()\l+ size()\l+ pack()\l+ unpack()\l+ compare()\l+ changed()\l}" alt="" coords="42,661,218,841"/>
-<area shape="rect" id="node8" href="$structHF_1_1Common_1_1SerializableHelper.html" title="Wrapper for classes that implement the Serializable concept. " alt="" coords="42,345,218,525"/>
-<area shape="rect" id="node5" href="$structHF_1_1Common_1_1Cloneable.html" title="{HF::Common::Cloneable\l\&lt; IAttribute \&gt;\n||+ clone()\l}" alt="" coords="241,160,408,252"/>
-<area shape="rect" id="node6" href="$structHF_1_1Common_1_1Cloneable.html" title="This class represents the interface that cloneable objects need to implement. " alt="" coords="225,5,424,83"/>
-</map>

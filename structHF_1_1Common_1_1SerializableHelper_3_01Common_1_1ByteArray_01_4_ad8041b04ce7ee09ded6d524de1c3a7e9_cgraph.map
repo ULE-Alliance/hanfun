@@ -1,4 +1,3 @@
 <map id="HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::unpack" name="HF::Common::SerializableHelper&lt; Common::ByteArray &gt;::unpack">
-<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#a6e5634544a5b09d00786d0befe46f88a" title="Read the byte at offset into data. " alt="" coords="256,5,423,47"/>
-<area shape="rect" id="node3" href="$structHF_1_1Common_1_1SerializableHelper_3_01Common_1_1ByteArray_01_4.html#acaf3cced7bed5c260825f0890cba3f9b" title="Number bytes needed to serialize the message. " alt="" coords="244,70,435,126"/>
+<area shape="rect" id="node2" href="$structHF_1_1Common_1_1ByteArray.html#abfe9dbae9b4230dd6951c9063d59ca57" title="Read the byte at offset into data. " alt="" coords="244,13,411,54"/>
 </map>

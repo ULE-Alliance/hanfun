@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Entry.html" title="Parent class for all notification entries. " alt="" coords="5,39,195,80"/>
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1Entry.html" title="Event notification entry. " alt="" coords="243,5,432,47"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Periodic_1_1Entry.html" title="Periodic notification entry. " alt="" coords="243,71,432,112"/>
-</map>

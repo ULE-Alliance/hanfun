@@ -1,21 +1,17 @@
 <map id="DeviceManagement::Server" name="DeviceManagement::Server">
-<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# payload_size()\l# handle_command()\l}" alt="" coords="237,2699,437,2879"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="374,2140,574,2393"/>
-<area shape="rect" id="node20" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="Helper class used to implement custom functionality to the device management server side..." alt="" coords="237,2456,437,2636"/>
-<area shape="rect" id="node4" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="374,1793,574,2076"/>
-<area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="397,1601,551,1722"/>
-<area shape="rect" id="node6" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="322,1336,421,1516"/>
-<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="282,1180,461,1287"/>
-<area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="469,767,647,961"/>
-<area shape="rect" id="node12" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="485,1180,663,1287"/>
-<area shape="rect" id="node13" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="556,1011,739,1117"/>
-<area shape="rect" id="node14" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="687,1180,866,1287"/>
-<area shape="rect" id="node9" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="461,435,655,717"/>
-<area shape="rect" id="node10" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="511,205,605,385"/>
-<area shape="rect" id="node11" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="477,5,639,156"/>
-<area shape="rect" id="node15" href="$structHF_1_1Core_1_1ServiceRole.html" title="Class template for all interfaces role implementations. " alt="" coords="445,1373,599,1479"/>
-<area shape="rect" id="node16" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="{HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;\n||+ entries()\l# entries()\l# Server()\l# Server()\l# ~Server()\l# entries_size()\l}" alt="" coords="5,2463,212,2629"/>
-<area shape="rect" id="node17" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="72,1779,279,2091"/>
-<area shape="rect" id="node19" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="Helper template to inject session management functionality into services requiring it &#45; Server side..." alt="" coords="143,2184,349,2349"/>
-<area shape="rect" id="node18" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="72,1593,279,1729"/>
+<area shape="rect" id="node2" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html" title="{HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;\n||+ Server()\l+ ~Server()\l+ entries()\l+ sessions()\l+ send()\l# entries()\l# entries()\l# payload_size()\l# handle_command()\l}" alt="" coords="119,2233,319,2443"/>
+<area shape="rect" id="node3" href="$structHF_1_1Core_1_1DeviceManagement_1_1AbstractServer.html" title="Device Management interface : Server side default implementation. " alt="" coords="5,1932,205,2185"/>
+<area shape="rect" id="node4" href="$structHF_1_1Core_1_1DeviceManagement_1_1IServer.html" title="Device Management interface : Server side API. " alt="" coords="5,1587,205,1869"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1ServiceRole.html" title="{HF::Core::ServiceRole\l\&lt; Base, HF::Interface\l::SERVER_ROLE \&gt;\n||+ role()\l# ServiceRole()\l}" alt="" coords="28,1395,183,1517"/>
+<area shape="rect" id="node6" href="$structBase.html" title="This class represents a HAN&#45;FUN Concentrator. " alt="" coords="56,1160,155,1340"/>
+<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="Template for HAN&#45;FUN concentrator devices. " alt="" coords="16,1005,195,1112"/>
+<area shape="rect" id="node8" href="$classHF_1_1Devices_1_1Concentrator_1_1AbstractBase.html" title="This is the parent class for the HAN&#45;FUN Concentrator devices implementation. " alt="" coords="219,763,397,957"/>
+<area shape="rect" id="node12" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; BaseUnit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="219,1005,397,1112"/>
+<area shape="rect" id="node13" href="$classHF_1_1Devices_1_1Concentrator_1_1Abstract.html" title="{HF::Devices::Concentrator\l::Abstract\&lt; Unit0 \&gt;\n|# _unit0\l|+ unit0()\l# Abstract()\l}" alt="" coords="421,1005,600,1112"/>
+<area shape="rect" id="node9" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="211,432,405,715"/>
+<area shape="rect" id="node10" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="261,204,355,384"/>
+<area shape="rect" id="node11" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="227,5,389,156"/>
+<area shape="rect" id="node14" href="$structHF_1_1Core_1_1SessionManagement_1_1Server.html" title="{HF::Core::SessionManagement\l::Server\&lt; Entries \&gt;\n||+ entries()\l# entries()\l# Server()\l# Server()\l# ~Server()\l# entries_size()\l}" alt="" coords="230,1976,437,2141"/>
+<area shape="rect" id="node15" href="$classHF_1_1Core_1_1SessionManagement_1_1AbstractServer.html" title="Parent class for session management functionality &#45; Server side. " alt="" coords="230,1572,437,1884"/>
+<area shape="rect" id="node16" href="$structHF_1_1Core_1_1SessionManagement_1_1IServer.html" title="Session Management API : Server side. " alt="" coords="230,1388,437,1524"/>
 </map>

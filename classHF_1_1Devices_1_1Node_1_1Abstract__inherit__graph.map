@@ -1,8 +1,6 @@
 <map id="HF::Devices::Node::Abstract&lt; CoreServices &gt;" name="HF::Devices::Node::Abstract&lt; CoreServices &gt;">
-<area shape="rect" id="node5" href="$structNode.html" title="This class represents a node in the HAN&#45;FUN network. " alt="" coords="61,1327,145,1404"/>
-<area shape="rect" id="node6" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; NodeUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# to_local()\l}" alt="" coords="188,1061,345,1270"/>
-<area shape="rect" id="node7" href="$classHF_1_1Devices_1_1Node_1_1Abstract.html" title="{HF::Devices::Node::\lAbstract\&lt; HF::Devices\l::Node::DefaultUnit0 \&gt;\n|# _link\l# _unit0\l|+ connected()\l+ disconnected()\l+ receive()\l+ address()\l+ unit0()\l# Abstract()\l# link()\l# to_local()\l}" alt="" coords="369,1053,527,1277"/>
-<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="5,435,200,717"/>
-<area shape="rect" id="node3" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="56,205,149,385"/>
+<area shape="rect" id="node5" href="$structNode.html" title="This class represents a node in the HAN&#45;FUN network. " alt="" coords="61,1020,145,1112"/>
+<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html" title="This class provides the basic implementation for the Device&#39;s interface. " alt="" coords="5,432,200,715"/>
+<area shape="rect" id="node3" href="$structHF_1_1IDevice.html" title="This class represents the interface common to all HAN&#45;FUN devices. " alt="" coords="56,204,149,384"/>
 <area shape="rect" id="node4" href="$structHF_1_1Transport_1_1Endpoint.html" title="This is the interface used by the transport layer to signal events comming in from the network..." alt="" coords="21,5,184,156"/>
 </map>

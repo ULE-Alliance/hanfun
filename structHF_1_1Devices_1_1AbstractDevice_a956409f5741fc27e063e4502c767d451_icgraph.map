@@ -1,3 +1,6 @@
 <map id="HF::Devices::AbstractDevice::send" name="HF::Devices::AbstractDevice::send">
-<area shape="rect" id="node2" href="$structHF_1_1Devices_1_1AbstractDevice.html#a9080349b793cf0ff7653617a5266e6cb" title="Remove unit from device&#39;s unit list. " alt="" coords="248,5,443,47"/>
+<area shape="rect" id="node2" href="$group__bind__mgt.html#ga3a63b85104abb01dd833d91bce9b31c7" title="Send message msg to the network address given by addr. " alt="" coords="255,5,441,47"/>
+<area shape="rect" id="node3" href="$classHF_1_1Core_1_1DeviceManagement_1_1Client.html#ac46802e51c43b6303a25c34a1052e352" title="Send message msg to the network address given by addr. " alt="" coords="248,71,448,112"/>
+<area shape="rect" id="node4" href="$group__bind__mgt.html#gadedf7c63ee4ebcf22008d2a80f05f3c3" title="HF::Core::BindManagement\l::Server\&lt; Entries \&gt;::send" alt="" coords="255,136,441,177"/>
+<area shape="rect" id="node5" href="$structHF_1_1Core_1_1DeviceManagement_1_1Server.html#a3029e68c59376e291ba5458a4c102787" title="HF::Core::DeviceManagement\l::Server\&lt; Entries \&gt;::send" alt="" coords="248,201,448,243"/>
 </map>

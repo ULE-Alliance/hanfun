@@ -1,7 +1,3 @@
 <map id="HF::Core::AttributeReporting::destroy" name="HF::Core::AttributeReporting::destroy">
-<area shape="rect" id="node2" href="$group__sessions.html#gab614067caf81531ef13e16cf9bdf1134" title="Destroy the given entry in the persistent storage. " alt="" coords="253,5,459,61"/>
-<area shape="rect" id="node3" href="$structHF_1_1Core_1_1Scheduling_1_1Entries.html#a2d1257b3f2b8c6f28545012807b03abc" title="Destroy the given entry in the persistent storage. " alt="" coords="282,85,430,126"/>
-<area shape="rect" id="node4" href="$group__bind__mgt.html#ga8e413e3c07260df695c8790face0270b" title="Destroy the entries in the persistent storage, for which the given predicate function returns true..." alt="" coords="263,150,449,191"/>
-<area shape="rect" id="node5" href="$structHF_1_1Core_1_1AttributeReporting_1_1Report_1_1Event_1_1AddEntryMessage.html#a5694d878d32537110ea00966c5af0eb4" title="Get the minimum number of bytes required for unpacking an entry. " alt="" coords="243,215,469,271"/>
-<area shape="rect" id="node6" href="$structHF_1_1Core_1_1DeviceManagement_1_1Entries.html#a4485e0a408bb586eadf667d223bee635" title="Return the number of entries in the container. " alt="" coords="256,294,456,335"/>
+<area shape="rect" id="node2" href="$group__sessions.html#gab614067caf81531ef13e16cf9bdf1134" title="Destroy the given entry in the persistent storage. " alt="" coords="243,5,449,61"/>
 </map>
